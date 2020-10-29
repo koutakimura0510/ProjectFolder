@@ -1,7 +1,7 @@
-#!/bash/sh
+#!/bin/bash
 
 git add .
 git commit
 git push
 
-exit(0)
+exit 0
