@@ -3,7 +3,11 @@
 echo -n "add > "
 read str
 git add $str
-git commit
-git push
+
+echo -n "commit > "
+read str
+git commit -m "$str"
+
+git push origin master
 
 exit 0
