@@ -1,7 +1,6 @@
 #!/bin/bash
 
-echo "add > "
-echo -n INPUT_STR
+echo -n "add > "
 read str
 git add $str
 git commit
