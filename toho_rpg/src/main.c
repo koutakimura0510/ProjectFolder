@@ -23,8 +23,6 @@
 
 static int32_t x = 5+5;
 static int32_t y = 5+5;
-static int32_t caracterx = 5;
-static int32_t caractery = 5;
 static int32_t mapx = 0;
 static int32_t mapy = 0;
 
@@ -36,8 +34,9 @@ static bool key_press(GtkWidget *widget, GdkEventKey *key, gpointer user_data)
     switch (key->keyval)
     {
         case GDK_KEY_Right:
-			x++;
-			if (x > 5+(FIELD_WIDTH/2)) {
+			if (0 == xpos_move(mapx, x)) {
+				x++;
+			}else{
 				mapx++;
 			}
             break;
@@ -70,22 +69,7 @@ static bool key_press(GtkWidget *widget, GdkEventKey *key, gpointer user_data)
             break;
     }
 
-    if (x < 1) {
-        x = 1;
-    }
-
-    if (x > 80) {
-        x = 80;
-    }
-
-    if (y < 2) {
-        y = 2;
-    }
-
-
-
-
-    mapdraw(GLASS, mapx, mapy);
+    mapdraw(mapx, mapy);
     reimu_draw(x, y, RED, "霊");
 
     return false;
@@ -116,9 +100,12 @@ int main(int argc, char **argv)
     //g_signal_connect(G_OBJECT(window), "key_press_event", G_CALLBACK(key_debug), NULL); //デバッグ
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);   //プログラム終了
     gtk_widget_show_all(window);    //windowを描画
+
     CURSOL_OFF();
-    mapdraw(GLASS,0,0);
+	map_info_struct_write(GLASS);
+    mapdraw(0, 0);
     reimu_draw(x, y, RED, "霊");
+	
     gtk_main(); //gtkメインループを行う
 
 	clear_screen();
