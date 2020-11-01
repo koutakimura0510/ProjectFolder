@@ -20,11 +20,12 @@ void xypos_draw(uint32_t x, uint32_t y);
 char **searchfield_map(uint32_t id);
 int32_t search_field_para(uint32_t id, uint8_t para);
 void flame_draw(uint8_t color);
-void flame_input(char **field, uint32_t xpos, uint32_t ypos);
+void flame_input(int32_t xpos, int32_t ypos);
 void flameclear(uint8_t height, uint8_t width, uint8_t color, char s);
 void flamenull(void);
-void mapdraw(uint8_t map, uint32_t x, uint32_t y);
-uint32_t xpos_move(uint32_t field_maxwidth, uint32_t field_xpos, uint32_t chara_xpos);
+void mapdraw(uint32_t x, uint32_t y);
+void xpos_move(void);
+void map_info_struct_write(uint8_t map);
 
 
 #define NUM(ary) (sizeof(ary)/sizeof(ary[0]))
@@ -132,7 +133,7 @@ static const char *nullfield[] = {
  * **field_adr:フィールド情報の先頭アドレスを取得
  * -------------------------------------------------*/
 typedef struct {
-    int32_t id;			//フィールド名を指定
+    uint32_t id;		//フィールド名を指定
     char **field_adr;	//フィールド情報の先頭アドレスを指定
 } t_map;
 

@@ -26,15 +26,17 @@ typedef struct {
 	uint32_t character_xpos;		//ユニットのx座標
 	uint32_t character_ypos;		//ユニットのy座標
 	uint8_t  character_direction;	//ユニットの現在向いている方向
-} t_character;
+} t_charapos;
 
 
 /**-------------------------------------------------
  * 現在のフィールド情報を保存
  * -------------------------------------------------*/
 typedef struct {
-	uint32_t field_maxwidth;	//現在フィールドの最大横幅指定
-	uint32_t field_maxheight;	//現在フィールドの最大高さ指定
+	int32_t ypos_animation_check;	//
+	int32_t xpos_animation_check;
+	int32_t field_maxwidth;		//現在フィールドの最大横幅指定
+	int32_t field_maxheight;	//現在フィールドの最大高さ指定
 	char **map_id;				//現在フィールドの先頭アドレス指定
 } t_fieldinfo;
 
@@ -45,8 +47,8 @@ typedef struct {
  * スクロールを行うか判定する
  * -------------------------------------------------*/
 typedef struct {
-	uint32_t field_xpos;
-	uint32_t field_ypos;
+	int32_t field_xpos;
+	int32_t field_ypos;
 } t_fieldpos;
 
 
@@ -64,7 +66,7 @@ typedef struct {
 /**-------------------------------------------------
  * 構造体の確保
  * -------------------------------------------------*/
-static t_character character;
+static t_charapos  charapos;
 static t_fieldinfo fieldinfo;
 static t_fieldpos  fieldpos;
 static t_bufferpos bufferpos;
@@ -84,25 +86,23 @@ void debug(char *s, int32_t d)
 
 
 /**-------------------------------------------------
- * x軸移動の座標計算
- * -------------------------------------------------
- * arg1: field_maxwidth	現在のフィールドの最大横幅を指定
- * arg2: field_xpos		フィールドの現在の座標を指定
- * arg3: chara_xpos		キャラクターの現在座標を指定
- * -------------------------------------------------
- * 
+ * x軸右移動の座標計算
  * -------------------------------------------------*/
-uint32_t xpos_move(uint32_t field_maxwidth, uint32_t field_xpos, uint32_t chara_xpos)
+void xpos_move_on(void)
 {
-	if ((FIELD_WIDTH + field_xpos) >= field_maxwidth) {
-		return 0;
+	t_fieldinfo *info = &fieldinfo;
+	t_charapos  *cpos = &charapos;
+	t_fieldpos  *fpos = &fieldpos;
+
+	if ((FIELD_WIDTH + fpos->field_xpos) >= info->field_maxwidth) {
+		cpos->character_xpos++;
 	}
 
-	if (chara_xpos > (FIELD_WIDTH >> 1)) {
-		return 1;
+	if (cpos->character_xpos > (FIELD_WIDTH >> 1)) {
+		fpos->field_xpos++;
 	}
 
-	return 0;
+	cpos->character_xpos++;
 }
 
 
@@ -239,28 +239,23 @@ void flame_draw(uint8_t color)
  * arg2: xpos       キャラクターの位置に対する描画xposを指定
  * arg3: ypos       キャラクターに位置に対する描画yposを指定
  *--------------------------------------------*/
-void flame_input(char **field, uint32_t xpos, uint32_t ypos)
+void flame_input(int32_t xpos, int32_t ypos)
 {
-    int32_t len, height, ymax, xmax;
+    int32_t len, height, y_animation, x_animation;
+	t_fieldinfo *info = &fieldinfo;
+	char **field;
 
-    height = get_height(field); //フィールドの縦幅を取得
-    ymax = height-FIELD_HEIGHT; //フィールド描画の最大縦幅取得
-    xmax = get_maxwidth(field, height)-FIELD_WIDTH; //フィールド描画の最大横幅取得
+	field  = info->map_id;	//フィールドの各情報を一時保存
+	height = info->field_maxheight; 
+	y_animation = info->ypos_animation_check;
+	x_animation = info->xpos_animation_check;
 
-    if (ymax & 0x8000) { //フィールドの縦幅がバッファ以下の場合
-        ymax = 0;       //縦移動のアニメーションは行わない
+    if (y_animation < ypos) {  //画面描画最大値チェック
+        ypos = y_animation;
     }
 
-    if (ymax < ypos) {  //画面描画最大値チェック
-        ypos = ymax;
-    }
-
-    if (xmax & 0x8000) {
-        xmax = 0;
-    }
-
-    if (xmax < xpos) {
-        xpos = xmax;
+    if (x_animation < xpos) {
+        xpos = x_animation;
     }
 
     for (uint8_t i = 0; i < FIELD_HEIGHT && i < height-ypos; i++) {
@@ -275,6 +270,7 @@ void flame_input(char **field, uint32_t xpos, uint32_t ypos)
 
 /**--------------------------------------------
  * フレームバッファに指定した文字を書き込む
+ * 通常は画面クリア描画に使用する
  * --------------------------------------------
  * arg1: height     縦幅を指定
  * arg2: width      横幅を指定
@@ -309,51 +305,46 @@ void flamenull(void)
  * arg2: x		キャラクターの現在位置におけるx座標指定
  * arg3: y		キャラクターの現在位置におけるy座標指定
  *--------------------------------------------*/
-void mapdraw(uint8_t map, uint32_t x, uint32_t y)
+void mapdraw(uint32_t x, uint32_t y)
 {
-	char **p;
-
 	clear_screen();
-	p = search_field_map(map);
     flameclear(FIELD_HEIGHT, FIELD_WIDTH, 0, ' ');
     //    flamenull();
-    flame_input(p, x, y);
+    flame_input(x, y);
 }
 
 
 /**-------------------------------------------------
- * 現在のフィールド情報保存
- * -------------------------------------------------
+ * 描画に必要な情報を取得し構造体に保存を行う
  *
+ * -------------------------------------------------
+ * arg1: map	現在のフィールドIDを指定
  * -------------------------------------------------*/
-void map_info_struct_write(uint8_t map, )
+void map_info_struct_write(uint8_t map)
 {
-	t_fieldinfo *info = &fieldpos;
-	char **p;	//フィールド情報先頭アドレス取得用ポインタ
-	int32_t height, ymax, xmax;
+	t_fieldinfo *info = &fieldinfo;
+	char **p;
+	int32_t height, width, y_animation, x_animation;
 
-	info->map_id = search_field_map(map);
-    height = get_height(field); //フィールドの縦幅を取得
-	info->field_maxheight = height-FIELD_HEIGHT;	//フィールド描画の最大横幅取得
-    info->field_maxwidth  = get_maxwidth(p, height)-FIELD_WIDTH; //フィールド描画の最大横幅取得
-
+	p = search_field_map(map);
+    height = get_height(p);	//フィールドの縦幅を取得
+	width  = get_maxwidth(p, height);
+	y_animation = height - FIELD_HEIGHT;	//フィールド描画の最縦幅大幅取得
+    x_animation = width - FIELD_WIDTH; 		//フィールド描画の最大横幅取得
 	
-    if (ymax & 0x8000) { 	//フィールドの縦幅がフレームバッファ以下の場合
-        ymax = 0;       	//縦移動のアニメーションは行わない
+    if (y_animation & 0x8000) { //フィールドの縦幅がフレームバッファ以下の場合
+        y_animation = 0;       	//縦移動のアニメーションは行わない
     }
 
-    if (ymax < ypos) {  	//画面描画最大値チェック
-        ypos = ymax;
+    if (x_animation & 0x8000) {	//フィールドの横幅がフレームバッファ以下の場合
+        x_animation = 0;		//横移動のアニメーションは行わない
     }
 
-    if (xmax & 0x8000) {	//フィールドの横幅がフレームバッファ以下の場合
-        xmax = 0;			//横移動のアニメーションは行わない
-    }
-
-    if (xmax < xpos) {
-        xpos = xmax;
-    }
-
+	info->map_id = p;
+	info->field_maxheight = height;
+	info->field_maxwidth  = width;
+	info->ypos_animation_check = y_animation;
+	info->xpos_animation_check = x_animation;
 }
 
 
