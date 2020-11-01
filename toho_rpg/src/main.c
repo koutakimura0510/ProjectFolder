@@ -36,6 +36,11 @@ static bool key_press(GtkWidget *widget, GdkEventKey *key, gpointer user_data)
     switch (key->keyval)
     {
         case GDK_KEY_Right:
+			if (0 == xpos_move()) {
+
+			}else{
+				
+			}
 			x++;
 			if (x > 5+(FIELD_WIDTH/2)) {
 				mapx++;

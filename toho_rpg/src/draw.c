@@ -61,6 +61,15 @@ typedef struct {
 } t_bufferpos;
 
 
+/**-------------------------------------------------
+ * 構造体の確保
+ * -------------------------------------------------*/
+static t_character character;
+static t_fieldinfo fieldinfo;
+static t_fieldpos  fieldpos;
+static t_bufferpos bufferpos;
+
+
 /**--------------------------------------------
  * デバッグ出力
  * --------------------------------------------
@@ -77,9 +86,11 @@ void debug(char *s, int32_t d)
 /**-------------------------------------------------
  * x軸移動の座標計算
  * -------------------------------------------------
- * arg1: field_maxwidth	
- * arg2: field_xpos
- * arg3: chara_xpos
+ * arg1: field_maxwidth	現在のフィールドの最大横幅を指定
+ * arg2: field_xpos		フィールドの現在の座標を指定
+ * arg3: chara_xpos		キャラクターの現在座標を指定
+ * -------------------------------------------------
+ * 
  * -------------------------------------------------*/
 uint32_t xpos_move(uint32_t field_maxwidth, uint32_t field_xpos, uint32_t chara_xpos)
 {
@@ -309,6 +320,41 @@ void mapdraw(uint8_t map, uint32_t x, uint32_t y)
     flame_input(p, x, y);
 }
 
+
+/**-------------------------------------------------
+ * 現在のフィールド情報保存
+ * -------------------------------------------------
+ *
+ * -------------------------------------------------*/
+void map_info_struct_write(uint8_t map, )
+{
+	t_fieldinfo *info = &fieldpos;
+	char **p;	//フィールド情報先頭アドレス取得用ポインタ
+	int32_t height, ymax, xmax;
+
+	info->map_id = search_field_map(map);
+    height = get_height(field); //フィールドの縦幅を取得
+	info->field_maxheight = height-FIELD_HEIGHT;	//フィールド描画の最大横幅取得
+    info->field_maxwidth  = get_maxwidth(p, height)-FIELD_WIDTH; //フィールド描画の最大横幅取得
+
+	
+    if (ymax & 0x8000) { 	//フィールドの縦幅がフレームバッファ以下の場合
+        ymax = 0;       	//縦移動のアニメーションは行わない
+    }
+
+    if (ymax < ypos) {  	//画面描画最大値チェック
+        ypos = ymax;
+    }
+
+    if (xmax & 0x8000) {	//フィールドの横幅がフレームバッファ以下の場合
+        xmax = 0;			//横移動のアニメーションは行わない
+    }
+
+    if (xmax < xpos) {
+        xpos = xmax;
+    }
+
+}
 
 
 /*----------------------------------------------
