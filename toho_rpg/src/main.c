@@ -16,7 +16,6 @@
 #include "../include/LIB.H"
 #include "../include/DRAW.H"
 #include "../include/MODE.H"
-#include "../include/KEYBOARD.H"
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
