@@ -29,8 +29,8 @@ static bool key_press(GtkWidget *widget, GdkEventKey *key, gpointer user_data)
 
     switch (key->keyval)
     {
-        case GDK_KEY_Right:
-			id = RIGHT;
+        case GDK_KEY_Left:
+			id = LEFT;
             break;
 
         case GDK_KEY_Up:
@@ -41,8 +41,8 @@ static bool key_press(GtkWidget *widget, GdkEventKey *key, gpointer user_data)
 			id = DOWN;
             break;
 
-        case GDK_KEY_Left:
-			id = LEFT;
+        case GDK_KEY_Right:
+			id = RIGHT;
             break;
 
         case GDK_KEY_S:
