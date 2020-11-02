@@ -8,6 +8,8 @@
 #ifndef PARA_H_
 #define PARA_H_
 
+#define NUM(ary) (sizeof(ary)/sizeof(ary[0]))
+
 #define SET_PLACE(x, y);   printf("\033[%d;%dH", y, x);  //座標の設定
 #define SET_BACKCOLOR(n);  printf("\033[4%dm", (n));    //背景色の設定
 #define SET_CHAR_COLOR(n); printf("\033[3%dm", (n));    //文字色の設定

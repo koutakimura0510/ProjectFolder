@@ -12,14 +12,12 @@
 /**-------------------------------------------------
  * 外部関数
  * -------------------------------------------------*/
-void debug(char *s, int32_t d);
 void clear_screen(void);
 void map_info_struct_write(uint8_t map);
 void animation_move(uint8_t id);
 
-#define NUM(ary) (sizeof(ary)/sizeof(ary[0]))
-#define CAST_SIZE ((sizeof (cast))/(sizeof (t_cast)))
-#define FIELD_SIZE ((sizeof (map))/(sizeof (t_map)))
+#define CAST_SIZE  ((sizeof (cast))/(sizeof (t_cast)))
+#define FIELD_SIZE ((sizeof (map)) /(sizeof (t_map)))
 
 /**-------------------------------------------------
  * 最大画面描画幅を指定
@@ -44,6 +42,7 @@ typedef enum {
 	LEFT,
 	NON,
 } MOVE_ID;
+
 
 /**-------------------------------------------------
  * フィールド番号
