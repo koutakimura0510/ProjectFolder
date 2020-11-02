@@ -4,6 +4,4 @@
 
 void mode(void)
 {
-    CURSOL_OFF();
-    CURSOL_ON();
 }

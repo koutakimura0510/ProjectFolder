@@ -5,6 +5,7 @@
  * 描画に関する関数をまとめたファイル
  *
  *--------------------------------------------*/
+#include <stddef.h>
 #include "../include/LIB.H"
 #define DRAWPARA
 #include "../include/DRAW.H"
@@ -16,11 +17,10 @@
 typedef struct {
 	int32_t character_xpos;	//ユニットのx座標
 	int32_t character_ypos;	//ユニットのy座標
-	int8_t  character_direction;	//ユニットの現在向いている方向
-	int32_t field_xpos;		//フィールドのx座標
-	int32_t field_ypos;		//フィールドのy座標
-	int32_t buffer_xpos;	//配列参照用x変数
-	int32_t buffer_ypos;	//配列参照用y変数
+	int32_t field_xpos;		//フィールドのx座標、アニメーションを行うか判定
+	int32_t field_ypos;		//フィールドのy座標、アニメーションを行うか判定
+	uint8_t character_direction;	//ユニットの現在向いている方向
+	uint8_t info_direction;	//どの座標を更新したか判定を行う変数
 } t_posinfo;
 
 
@@ -40,7 +40,7 @@ typedef struct {
  * 構造体の確保
  * -------------------------------------------------*/
 static t_fieldinfo fieldinfo;
-static t_posinfo posinfo = {10, 10, 0, 0, 0, 0, 0};
+static t_posinfo posinfo = {10, 10, 0, 0, 0,};
 
 
 /**----------------------------------------
@@ -53,15 +53,17 @@ static void xpos_move_right(t_fieldinfo *info, t_posinfo *p);
 static void xpos_move_left(t_posinfo *p);
 static void ypos_move_up(t_posinfo *p);
 static void ypos_move_down(t_fieldinfo *info, t_posinfo *p);
+static void direction(t_posinfo *p);
+static bool detect(t_posinfo *p);
 static void mapdraw(int32_t x, int32_t y);
 static void cast_draw(uint32_t x, uint32_t y, uint8_t color, char *str);
 static void xypos_draw(void);
-static char **search_field_map(uint32_t id);
-static int32_t search_field_para(uint32_t id, uint8_t para);
 static void asciidraw(char *s);
 static void flame_draw(uint8_t color);
 static void flame_input(int32_t xpos, int32_t ypos);
 static void flameclear(uint8_t height, uint8_t width, char s);
+static char **search_field_map(uint32_t id);
+static int32_t search_field_para(uint32_t id, uint8_t para);
 
 
 /**-------------------------------------------------
@@ -90,7 +92,12 @@ void animation_move(uint8_t id)
 			break;
 
 		default:
-			break;
+			return;
+	}
+
+	if (false == detect(p)) {
+		direction(p);
+		return;
 	}
 
 	xypos_draw();
@@ -111,10 +118,10 @@ void map_info_struct_write(uint8_t map)
 	int32_t height, width, y_animation, x_animation;
 
 	p = search_field_map(map);
-    height = get_height(p);	//フィールドの縦幅を取得
+    height = get_height(p);		//フィールドの縦幅を取得
 	width  = get_maxwidth(p, height);
 	y_animation = height - FIELD_HEIGHT;	//フィールド描画の最縦幅大幅取得
-    x_animation = width - FIELD_WIDTH; 		//フィールド描画の最大横幅取得
+    x_animation = width  - FIELD_WIDTH;		//フィールド描画の最大横幅取得
 	
     if (y_animation & 0x8000) { //フィールドの縦幅がフレームバッファ以下の場合
         y_animation = 0;       	//縦移動のアニメーションは行わない
@@ -138,37 +145,6 @@ void map_info_struct_write(uint8_t map)
 void clear_screen(void)
 {
     CLEAR_SCREEN();
-}
-
-
-
-/**--------------------------------------------
- * 文字列出力
- * --------------------------------------------
- * arg1: *s    文字列のアドレスを指定
- *--------------------------------------------*/
-static void asciidraw(char *s)
-{
-    printf("%s", s);
-}
-
-
-/**-------------------------------------------
- * 現在のキャラクタとフィールドの座標を描画する
- * デバッグ用
- * -------------------------------------------*/
-static void xypos_draw(void)
-{
-	t_posinfo *p = &posinfo;
-
-    SET_TYPE(NORMAL);
-    SET_CHAR_COLOR(WHITE);
-    SET_CHAR_BOLD();
-    SET_PLACE(2, 2);
-    printf("\r%s%d\r\n", "c_xpos = ", p->character_xpos);
-    printf("%s%d\r\n",   "c_ypos = ", p->character_ypos);
-    printf("%s%d\r\n",   "f_xpos = ", p->field_xpos);
-    printf("%s%d\r\n",   "f_ypos = ", p->field_ypos);
 }
 
 
@@ -235,17 +211,22 @@ static uint32_t get_maxwidth(char **s, uint32_t height)
  * -------------------------------------------*/
 static void xpos_move_right(t_fieldinfo *info, t_posinfo *p)
 {
+	p->character_direction = RIGHT;
+
 	if ((FIELD_WIDTH + p->field_xpos) >= info->field_maxwidth) {
 		p->character_xpos++;
+		p->info_direction = C_XPOS;
 		return;
 	}
 
 	if (p->character_xpos > (FIELD_WIDTH >> 1)) {
 		p->field_xpos++;
+		p->info_direction = F_XPOS;
 		return;
 	}
 
 	p->character_xpos++;
+	p->info_direction = C_XPOS;
 }
 
 
@@ -254,17 +235,23 @@ static void xpos_move_right(t_fieldinfo *info, t_posinfo *p)
  * -------------------------------------------------*/
 static void xpos_move_left(t_posinfo *p)
 {
+	p->character_direction = LEFT;
+
 	if (p->character_xpos > (FIELD_WIDTH >> 1)) {
 		p->character_xpos--;
+		p->info_direction = C_XPOS;
 		return;
 	}
 
 	if (p->field_xpos != 0) {
 		p->field_xpos--;
+		p->info_direction = F_XPOS;
 		return;
 	}
 
 	p->character_xpos--;
+	p->info_direction = C_XPOS;
+	return;
 }
 
 
@@ -273,18 +260,23 @@ static void xpos_move_left(t_posinfo *p)
  * -------------------------------------------------*/
 static void ypos_move_up(t_posinfo *p)
 {
+	p->character_direction = UP;
+
 	if (p->character_ypos > (FIELD_HEIGHT >> 1)) {
 		p->character_ypos--;
+		p->info_direction = C_YPOS;
 		return;
 	}
 
 	if (p->field_ypos != 0) {
 		p->field_ypos--;
+		p->info_direction = F_YPOS;
 		return;
 	}
 
 	p->character_ypos--;
-
+	p->info_direction = C_YPOS;
+	return;
 }
 
 
@@ -293,17 +285,90 @@ static void ypos_move_up(t_posinfo *p)
  * -------------------------------------------------*/
 static void ypos_move_down(t_fieldinfo *info, t_posinfo *p)
 {
+	p->character_direction = DOWN;
+
 	if ((FIELD_HEIGHT + p->field_ypos) >= info->field_maxheight) {
 		p->character_ypos++;
+		p->info_direction = C_YPOS;
 		return;
 	}
 
 	if (p->character_ypos > (FIELD_HEIGHT >> 1)) {
 		p->field_ypos++;
+		p->info_direction = C_YPOS;
 		return;
 	}
 
 	p->character_ypos++;
+	p->info_direction = C_YPOS;
+	return;
+}
+
+
+/**-------------------------------------------------
+ * 当たり判定がfalseの場合、キャラクターの向きと
+ * offsetof関数で取得したバイト分アドレスを進めて
+ * 座標の調整を行う
+ * -------------------------------------------------*/
+static void direction(t_posinfo *p)
+{
+	int32_t *ptr;
+
+	uint8_t skip[] = {
+		offsetof(t_posinfo, character_xpos),
+		offsetof(t_posinfo, character_ypos),
+		offsetof(t_posinfo, field_xpos),
+		offsetof(t_posinfo, field_ypos),
+	};
+
+	ptr = (int32_t *)((uint8_t *)p + skip[C_XPOS - p->info_direction]);
+
+	switch (p->character_direction) {
+		case RIGHT:
+			*ptr = *(ptr) - 1;
+			break;
+
+		case LEFT:
+			*ptr = (*ptr) + 1;
+			break;
+
+		case UP:
+			*ptr = (*ptr) + 1;
+			break;
+
+		case DOWN:
+			*ptr = (*ptr) - 1;
+			break;
+
+		default:
+			break;
+	}
+}
+
+
+/**-------------------------------------------------
+ * 当たり判定を行う関数
+ * -------------------------------------------------
+ * 座標(0, 0)から開始
+ * x = 5 + 0 - 5 ...0
+ * y = 7 + 0 - 7 ...0 
+ * flame_buffer[x=0][y=0] ...'|'
+ * ' '空白文字ではないので、障害物があると判定される
+ * -------------------------------------------------*/
+static bool detect(t_posinfo *p)
+{
+	int32_t x, y;
+	char s;
+
+	x = p->character_xpos + p->field_xpos - FIELD_DRAW_XPOS;
+	y = p->character_ypos + p->field_ypos - FIELD_DRAW_YPOS;
+	s = field_flamebuffer[y][x];
+
+	if (s != ' ') {
+		return false;
+	}
+
+	return true;
 }
 
 
@@ -341,11 +406,41 @@ static void cast_draw(uint32_t x, uint32_t y, uint8_t color, char *str)
 }
 
 
+/**-------------------------------------------
+ * 現在のキャラクタとフィールドの座標を描画する
+ * デバッグ用
+ * -------------------------------------------*/
+static void xypos_draw(void)
+{
+	t_posinfo *p = &posinfo;
+
+    SET_TYPE(NORMAL);
+    SET_CHAR_COLOR(WHITE);
+    SET_CHAR_BOLD();
+    SET_PLACE(2, 2);
+    printf("\r%s%d\r\n", "chara_xpos = ", p->character_xpos);
+    printf("%s%d\r\n",   "chara_ypos = ", p->character_ypos);
+    printf("%s%d\r\n",   "field_xpos = ", p->field_xpos);
+    printf("%s%d\r\n",   "field_ypos = ", p->field_ypos);
+}
+
+
+/**--------------------------------------------
+ * 文字列出力
+ * --------------------------------------------
+ * arg1: *s    文字列のアドレスを指定
+ *--------------------------------------------*/
+static void asciidraw(char *s)
+{
+    printf("%s", s);
+}
+
+
 /**--------------------------------------------
  * フレームバッファにフィールドの情報を格納
  * --------------------------------------------
- * arg1: xpos       キャラクターの位置に対する描画xposを指定
- * arg2: ypos       キャラクターに位置に対する描画yposを指定
+ * arg1: xpos	キャラクターの位置に対する描画xposを指定
+ * arg2: ypos	キャラクターに位置に対する描画yposを指定
  *--------------------------------------------*/
 static void flame_input(int32_t xpos, int32_t ypos)
 {
@@ -381,8 +476,7 @@ static void flame_input(int32_t xpos, int32_t ypos)
  * --------------------------------------------
  * arg1: height     縦幅を指定
  * arg2: width      横幅を指定
- * arg3: color      書き込む色を指定
- * arg4: s          文字を指定
+ * arg3: s          文字を指定
  *--------------------------------------------*/
 static void flameclear(uint8_t height, uint8_t width, char s)
 {
