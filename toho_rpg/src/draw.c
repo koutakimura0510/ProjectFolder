@@ -79,7 +79,7 @@ void animation_move(uint8_t id)
 			xpos_move_right(info, p);
 			break;
 
-		case UP:
+		case LEFT:
 			xpos_move_left(p);
 			break;
 
@@ -87,7 +87,7 @@ void animation_move(uint8_t id)
 			ypos_move_down(info, p);
 			break;
 
-		case LEFT:
+		case UP:
 			ypos_move_up(p);
 			break;
 
