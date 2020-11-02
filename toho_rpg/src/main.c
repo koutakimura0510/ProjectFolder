@@ -21,40 +21,29 @@
 #include <gdk/gdkkeysyms.h>
 
 
-static int32_t x = 5+5;
-static int32_t y = 5+5;
-static int32_t mapx = 0;
-static int32_t mapy = 0;
-
-/**-------------------------------------------------------------------------------------
+/**----------------------------------------------------
  * key動作処理
- * -------------------------------------------------------------------------------------*/
+ * ---------------------------------------------------*/
 static bool key_press(GtkWidget *widget, GdkEventKey *key, gpointer user_data)
 {
+	uint8_t id;
+
     switch (key->keyval)
     {
         case GDK_KEY_Right:
-			if (0 == xpos_move(mapx, x)) {
-				x++;
-			}else{
-				mapx++;
-			}
+			id = RIGHT;
             break;
 
         case GDK_KEY_Up:
-            y--;
+			id = UP;
             break;
 
         case GDK_KEY_Down:
-			if (y > 5+(FIELD_HEIGHT/2)) {
-				mapy++;
-			}else{
-				y++;
-			}
+			id = DOWN;
             break;
 
         case GDK_KEY_Left:
-            x--;
+			id = LEFT;
             break;
 
         case GDK_KEY_S:
@@ -66,19 +55,18 @@ static bool key_press(GtkWidget *widget, GdkEventKey *key, gpointer user_data)
 			break;
 
         default:
-            break;
+            return false;
     }
 
-    mapdraw(mapx, mapy);
-    reimu_draw(x, y, RED, "霊");
+	animation_move(id);
 
     return false;
 }
 
 
-/**-------------------------------------------------------------------------------------
+/**---------------------------------------------------
  * デバッグ用keycode取得
- * -------------------------------------------------------------------------------------*/
+ * ---------------------------------------------------*/
 static bool key_debug(GtkWidget *widget, GdkEventKey *key, gpointer user_data)
 {
     g_print("keyval=%d static=%d string=%s\n", key->keyval, key->state, key->string);
@@ -86,9 +74,9 @@ static bool key_debug(GtkWidget *widget, GdkEventKey *key, gpointer user_data)
 }
 
 
-/**-------------------------------------------------------------------------------------
+/**---------------------------------------------------
  * メインループ
- * -------------------------------------------------------------------------------------*/
+ * ---------------------------------------------------*/
 int main(int argc, char **argv)
 {
     GtkWidget *window;
@@ -103,9 +91,7 @@ int main(int argc, char **argv)
 
     CURSOL_OFF();
 	map_info_struct_write(GLASS);
-    mapdraw(0, 0);
-    reimu_draw(x, y, RED, "霊");
-	
+	animation_move(NON);
     gtk_main(); //gtkメインループを行う
 
 	clear_screen();

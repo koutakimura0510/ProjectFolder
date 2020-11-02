@@ -13,23 +13,12 @@
  * 外部関数
  * -------------------------------------------------*/
 void debug(char *s, int32_t d);
-void asciidraw(char *s);
 void clear_screen(void);
-void reimu_draw(uint32_t x, uint32_t y, uint8_t color, char *str);
-void xypos_draw(uint32_t x, uint32_t y);
-char **searchfield_map(uint32_t id);
-int32_t search_field_para(uint32_t id, uint8_t para);
-void flame_draw(uint8_t color);
-void flame_input(int32_t xpos, int32_t ypos);
-void flameclear(uint8_t height, uint8_t width, uint8_t color, char s);
-void flamenull(void);
-void mapdraw(uint32_t x, uint32_t y);
-void xpos_move(void);
 void map_info_struct_write(uint8_t map);
-
+void animation_move(uint8_t id);
 
 #define NUM(ary) (sizeof(ary)/sizeof(ary[0]))
-#define CARA_SIZE ((sizeof (caracter))/(sizeof (t_caracter)))
+#define CAST_SIZE ((sizeof (cast))/(sizeof (t_cast)))
 #define FIELD_SIZE ((sizeof (map))/(sizeof (t_map)))
 
 /**-------------------------------------------------
@@ -38,6 +27,23 @@ void map_info_struct_write(uint8_t map);
 #define FIELD_HEIGHT 32
 #define FIELD_WIDTH  32
 
+/**-------------------------------------------------
+ * フィールド描画位置指定
+ * -------------------------------------------------*/
+#define FIELD_DRAW_XPOS	5
+#define FIELD_DRAW_YPOS	7
+
+
+/**-------------------------------------------------
+ * 移動番号
+ * -------------------------------------------------*/
+typedef enum {
+	RIGHT,
+	UP,
+	DOWN,
+	LEFT,
+	NON,
+} MOVE_ID;
 
 /**-------------------------------------------------
  * フィールド番号
@@ -57,7 +63,7 @@ typedef enum {
 	REIMU,
 	MARISA,
 	TOTAL_CARACTER,
-} CARACTER_ID;
+} CAST_ID;
 
 
 #ifdef DRAWPARA
@@ -154,22 +160,13 @@ typedef struct {
 	uint8_t color;	//draw color
 	uint8_t x;		//init x pos
 	uint8_t y;		//init y pos
-} t_caracter;
+} t_cast;
 
-static const t_caracter caracter[] = {
+static const t_cast cast[] = {
 	{REIMU,		"霊", 	RED,	10,	10},
 	{MARISA,	"魔",	YELLOW,	10,	10},
 };
 
-
-
-/*--------------------------------------------------
- * 現在位置情報
- *-------------------------------------------------*/
-typedef struct {
-	int32_t xpos;	//now xpos
-	int32_t ypos;	//now ypos
-} t_pos;
 
 
 #endif
