@@ -23,7 +23,7 @@
 /**----------------------------------------------------
  * key動作処理
  * ---------------------------------------------------*/
-static bool key_press(GtkWidget *widget, GdkEventKey *key, gpointer user_data)
+static bool key_press(GtkWidget *widget, GdkEventKey *key)
 {
 	uint8_t id;
 

@@ -73,6 +73,8 @@ void animation_move(uint8_t id)
 {
 	t_fieldinfo *info = &fieldinfo;
 	t_posinfo *p = &posinfo;
+	int32_t x, y;
+	int32_t s;
 
 	switch (id) {
 		case RIGHT:
@@ -92,17 +94,24 @@ void animation_move(uint8_t id)
 			break;
 
 		default:
-			return;
+			break;
 	}
 
 	if (false == detect(p)) {
 		direction(p);
-		return;
 	}
 
-	xypos_draw();
 	mapdraw(p->field_xpos, p->field_ypos);
-	cast_draw(p->character_xpos, p->character_ypos, RED, "霊");
+	cast_draw(p->character_xpos, p->character_ypos, RED, "巫");
+	xypos_draw();
+
+	SET_PLACE(5, 30);
+	x = p->character_xpos - FIELD_DRAW_XPOS;
+	y = p->character_ypos - FIELD_DRAW_YPOS;
+	s = field_flamebuffer[y][x];
+	printf("\rx =  %d\n", x);
+	printf("y =  %d\n", y);
+	printf("s =  %d\n", s);
 }
 
 
@@ -219,7 +228,7 @@ static void xpos_move_right(t_fieldinfo *info, t_posinfo *p)
 		return;
 	}
 
-	if (p->character_xpos > (FIELD_WIDTH >> 1)) {
+	if (p->character_xpos >= (FIELD_WIDTH >> 1)+FIELD_DRAW_XPOS) {
 		p->field_xpos++;
 		p->info_direction = F_XPOS;
 		return;
@@ -237,7 +246,7 @@ static void xpos_move_left(t_posinfo *p)
 {
 	p->character_direction = LEFT;
 
-	if (p->character_xpos > (FIELD_WIDTH >> 1)) {
+	if (p->character_xpos > (FIELD_WIDTH >> 1)+FIELD_DRAW_XPOS) {
 		p->character_xpos--;
 		p->info_direction = C_XPOS;
 		return;
@@ -262,7 +271,7 @@ static void ypos_move_up(t_posinfo *p)
 {
 	p->character_direction = UP;
 
-	if (p->character_ypos > (FIELD_HEIGHT >> 1)) {
+	if (p->character_ypos > (FIELD_HEIGHT >> 1)+FIELD_DRAW_YPOS) {
 		p->character_ypos--;
 		p->info_direction = C_YPOS;
 		return;
@@ -293,15 +302,87 @@ static void ypos_move_down(t_fieldinfo *info, t_posinfo *p)
 		return;
 	}
 
-	if (p->character_ypos > (FIELD_HEIGHT >> 1)) {
+	if (p->character_ypos > (FIELD_HEIGHT >> 1)+FIELD_DRAW_YPOS) {
 		p->field_ypos++;
-		p->info_direction = C_YPOS;
+		p->info_direction = F_YPOS;
 		return;
 	}
 
 	p->character_ypos++;
 	p->info_direction = C_YPOS;
 	return;
+}
+
+
+/**-------------------------------------------------
+ * 当たり判定を行う関数
+ * -------------------------------------------------
+ * 座標(0, 0)から開始
+ * x = 5 + 0 - 5 ...0
+ * y = 7 + 0 - 7 ...0 
+ * flame_buffer[x=0][y=0] ...'|'
+ * ' '空白文字ではないので、障害物があると判定される
+ * -------------------------------------------------*/
+static bool detect(t_posinfo *p)
+{
+	uint8_t utf_bit = 0;
+	int32_t x, y, s;
+	int32_t dir_x = 0, dir_y = 0;
+
+	if ((p->info_direction == F_XPOS) && (p->character_direction == RIGHT)) {
+		dir_x++;
+	}
+	else if ((p->info_direction == F_XPOS) && (p->character_direction == LEFT)) {
+		dir_x--;
+	}
+	else if ((p->info_direction == F_YPOS) && (p->character_direction == UP)) {
+		dir_y--;
+	}
+	else if ((p->info_direction == F_YPOS) && (p->character_direction == DOWN)) {
+		dir_y++;
+	}
+
+	x = p->character_xpos - FIELD_DRAW_XPOS + dir_x;
+	y = p->character_ypos - FIELD_DRAW_YPOS + dir_y;
+
+	for (uint8_t i = 0; i < 3; i++) {
+		s = field_flamebuffer[y][x-i];
+		if (s < 0) {
+			utf_bit++;
+		}
+	}
+
+	s = field_flamebuffer[y][x];
+	if ((s != ' ') && (s > 0)) {
+		s = field_flamebuffer[y][x-1];
+		if (s < 0) {
+			s = field_flamebuffer[y][x-2];
+			if (s < 0) {
+				return true;
+			}
+		}
+	}
+
+	if (utf_bit == 3) {
+		s = field_flamebuffer[y][x+1];
+		if (s != ' ') {
+			return false;
+		}
+		return true;
+	}
+
+	for (uint8_t i = 0; i < 2; i++) {
+		s = field_flamebuffer[y][x+i];
+		if (s != ' ') {
+			return false;
+		}
+	}
+
+	if (x == 0) {
+		return false;
+	}
+
+	return true;
 }
 
 
@@ -321,54 +402,39 @@ static void direction(t_posinfo *p)
 		offsetof(t_posinfo, field_ypos),
 	};
 
-	ptr = (int32_t *)((uint8_t *)p + skip[C_XPOS - p->info_direction]);
+	ptr = (int32_t *)((uint8_t *)p + skip[p->info_direction - C_XPOS]);
 
 	switch (p->character_direction) {
 		case RIGHT:
-			*ptr = *(ptr) - 1;
+			*ptr = *ptr - 1;
 			break;
 
 		case LEFT:
-			*ptr = (*ptr) + 1;
+			*ptr = *ptr + 1;
 			break;
 
 		case UP:
-			*ptr = (*ptr) + 1;
+			*ptr = *ptr + 1;
 			break;
 
 		case DOWN:
-			*ptr = (*ptr) - 1;
+			*ptr = *ptr - 1;
 			break;
 
 		default:
 			break;
 	}
-}
 
+    /*SET_PLACE(2, 40);
+	printf("p->info_direction-C_XPOS  =  %d\n", p->info_direction - C_XPOS);
+	printf("\rp   address =  %p\n", p);
+	printf("ptr address =  %p\n", ptr);
+	printf("ptr data    =  %d\n", *ptr);
 
-/**-------------------------------------------------
- * 当たり判定を行う関数
- * -------------------------------------------------
- * 座標(0, 0)から開始
- * x = 5 + 0 - 5 ...0
- * y = 7 + 0 - 7 ...0 
- * flame_buffer[x=0][y=0] ...'|'
- * ' '空白文字ではないので、障害物があると判定される
- * -------------------------------------------------*/
-static bool detect(t_posinfo *p)
-{
-	int32_t x, y;
-	char s;
-
-	x = p->character_xpos + p->field_xpos - FIELD_DRAW_XPOS;
-	y = p->character_ypos + p->field_ypos - FIELD_DRAW_YPOS;
-	s = field_flamebuffer[y][x];
-
-	if (s != ' ') {
-		return false;
-	}
-
-	return true;
+	printf("p->character_xpos   address =  %p\n", &p->character_xpos);
+	printf("p->character_ypos   address =  %p\n", &p->character_ypos);
+	printf("p->field_xpos       address =  %p\n", &p->field_xpos);
+	printf("p->field_ypos       address =  %p\n", &p->field_ypos);*/
 }
 
 
