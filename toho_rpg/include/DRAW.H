@@ -16,6 +16,10 @@ void clear_screen(void);
 void map_info_struct_write(uint8_t map);
 void animation_move(uint8_t id);
 
+
+/**-------------------------------------------------
+ * 構造体サイズ
+ * -------------------------------------------------*/
 #define CAST_SIZE  ((sizeof (cast))/(sizeof (t_cast)))
 #define FIELD_SIZE ((sizeof (map)) /(sizeof (t_map)))
 
@@ -25,6 +29,7 @@ void animation_move(uint8_t id);
  * -------------------------------------------------*/
 #define FIELD_HEIGHT 16
 #define FIELD_WIDTH  32
+#define FLAME_SHIFT	 5
 
 
 /**-------------------------------------------------
@@ -32,6 +37,12 @@ void animation_move(uint8_t id);
  * -------------------------------------------------*/
 #define FIELD_DRAW_XPOS	5
 #define FIELD_DRAW_YPOS	7
+
+
+/**-------------------------------------------------
+ * 描画キャラクターの幅
+ * -------------------------------------------------*/
+#define CAST_WIDTH_SIZE	2
 
 
 /**-------------------------------------------------
