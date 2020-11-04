@@ -39,8 +39,8 @@ typedef struct {
 /**-------------------------------------------------
  * 構造体の確保
  * -------------------------------------------------*/
+static t_posinfo posinfo = {10, 10, 0, 0, 0, 0};
 static t_fieldinfo fieldinfo;
-static t_posinfo posinfo = {10, 10, 0, 0, 0,};
 
 
 /**----------------------------------------
@@ -55,15 +55,14 @@ static void ypos_move_up(t_posinfo *p);
 static void ypos_move_down(t_fieldinfo *info, t_posinfo *p);
 static void direction(t_posinfo *p);
 static bool detect(t_posinfo *p);
-static void mapdraw(int32_t x, int32_t y);
 static void cast_draw(uint32_t x, uint32_t y, uint8_t color, char *str);
-static void xypos_draw(void);
+static void xypos_draw(t_posinfo *p);
 static void asciidraw(char *s);
 static void flame_draw(uint8_t color);
-static void flame_input(int32_t xpos, int32_t ypos);
+static void flame_input(t_fieldinfo *info, t_posinfo *p);
 static void flameclear(uint8_t height, uint8_t width, char s);
+static char *get_flamebuffer_address(void);
 static char **search_field_map(uint32_t id);
-static int32_t search_field_para(uint32_t id, uint8_t para);
 
 
 /**-------------------------------------------------
@@ -73,8 +72,6 @@ void animation_move(uint8_t id)
 {
 	t_fieldinfo *info = &fieldinfo;
 	t_posinfo *p = &posinfo;
-	int32_t x, y;
-	int32_t s;
 
 	switch (id) {
 		case RIGHT:
@@ -101,17 +98,12 @@ void animation_move(uint8_t id)
 		direction(p);
 	}
 
-	mapdraw(p->field_xpos, p->field_ypos);
+	clear_screen();
+    flameclear(FIELD_HEIGHT, FIELD_WIDTH, ' ');
+    flame_input(info, p);
+	flame_draw(YELLOW);
 	cast_draw(p->character_xpos, p->character_ypos, RED, "巫");
-	xypos_draw();
-
-	SET_PLACE(5, 30);
-	x = p->character_xpos - FIELD_DRAW_XPOS;
-	y = p->character_ypos - FIELD_DRAW_YPOS;
-	s = field_flamebuffer[y][x];
-	printf("\rx =  %d\n", x);
-	printf("y =  %d\n", y);
-	printf("s =  %d\n", s);
+	xypos_draw(p);
 }
 
 
@@ -260,7 +252,6 @@ static void xpos_move_left(t_posinfo *p)
 
 	p->character_xpos--;
 	p->info_direction = C_XPOS;
-	return;
 }
 
 
@@ -285,7 +276,6 @@ static void ypos_move_up(t_posinfo *p)
 
 	p->character_ypos--;
 	p->info_direction = C_YPOS;
-	return;
 }
 
 
@@ -310,7 +300,6 @@ static void ypos_move_down(t_fieldinfo *info, t_posinfo *p)
 
 	p->character_ypos++;
 	p->info_direction = C_YPOS;
-	return;
 }
 
 
@@ -318,10 +307,11 @@ static void ypos_move_down(t_fieldinfo *info, t_posinfo *p)
  * 当たり判定を行う関数
  * -------------------------------------------------
  * 座標(0, 0)から開始
- * x = 5 + 0 - 5 ...0
- * y = 7 + 0 - 7 ...0 
  * flame_buffer[x=0][y=0] ...'|'
  * ' '空白文字ではないので、障害物があると判定される
+ * -------------------------------------------------
+ * true : remap draw
+ * false: not draw
  * -------------------------------------------------*/
 static bool detect(t_posinfo *p)
 {
@@ -371,8 +361,8 @@ static bool detect(t_posinfo *p)
 		return true;
 	}
 
-	for (uint8_t i = 0; i < 2; i++) {
-		s = field_flamebuffer[y][x+i];
+	for (uint8_t i = 0; i < CAST_WIDTH_SIZE; i++) {
+		s = field_flamebuffer[y][x+i];	//キャラクターの描画幅分、当たり判定を行う
 		if (s != ' ') {
 			return false;
 		}
@@ -424,32 +414,6 @@ static void direction(t_posinfo *p)
 		default:
 			break;
 	}
-
-    /*SET_PLACE(2, 40);
-	printf("p->info_direction-C_XPOS  =  %d\n", p->info_direction - C_XPOS);
-	printf("\rp   address =  %p\n", p);
-	printf("ptr address =  %p\n", ptr);
-	printf("ptr data    =  %d\n", *ptr);
-
-	printf("p->character_xpos   address =  %p\n", &p->character_xpos);
-	printf("p->character_ypos   address =  %p\n", &p->character_ypos);
-	printf("p->field_xpos       address =  %p\n", &p->field_xpos);
-	printf("p->field_ypos       address =  %p\n", &p->field_ypos);*/
-}
-
-
-/**-------------------------------------------
- * フィールド描画関数呼び出し
- * -------------------------------------------
- * arg1: x		キャラクターの現在位置におけるx座標指定
- * arg2: y		キャラクターの現在位置におけるy座標指定
- *--------------------------------------------*/
-static void mapdraw(int32_t x, int32_t y)
-{
-	clear_screen();
-    flameclear(FIELD_HEIGHT, FIELD_WIDTH, ' ');
-    flame_input(x, y);
-	flame_draw(YELLOW);
 }
 
 
@@ -468,7 +432,6 @@ static void cast_draw(uint32_t x, uint32_t y, uint8_t color, char *str)
     SET_CHAR_BOLD();
     SET_PLACE(x, y);
 	strprintf(str);
-//    asciidraw(str);
 }
 
 
@@ -476,10 +439,8 @@ static void cast_draw(uint32_t x, uint32_t y, uint8_t color, char *str)
  * 現在のキャラクタとフィールドの座標を描画する
  * デバッグ用
  * -------------------------------------------*/
-static void xypos_draw(void)
+static void xypos_draw(t_posinfo *p)
 {
-	t_posinfo *p = &posinfo;
-
     SET_TYPE(NORMAL);
     SET_CHAR_COLOR(WHITE);
     SET_CHAR_BOLD();
@@ -504,22 +465,22 @@ static void asciidraw(char *s)
 
 /**--------------------------------------------
  * フレームバッファにフィールドの情報を格納
- * --------------------------------------------
- * arg1: xpos	キャラクターの位置に対する描画xposを指定
- * arg2: ypos	キャラクターに位置に対する描画yposを指定
  *--------------------------------------------*/
-static void flame_input(int32_t xpos, int32_t ypos)
+static void flame_input(t_fieldinfo *info, t_posinfo *p)
 {
-    int32_t len, height, y_animation, x_animation;
-	t_fieldinfo *info = &fieldinfo;
-	char **field;
+    int32_t xpos, ypos, len, height, y_animation, x_animation;
+	char **field;	//filed pointer
+	char *ptr;		//flame buffer pointer
 
-	field  = info->map_id;	//フィールドの各情報を一時保存
+	ptr = get_flamebuffer_address();
+	field  = info->map_id;
 	height = info->field_maxheight; 
 	y_animation = info->ypos_animation_check;
 	x_animation = info->xpos_animation_check;
+	xpos = p->field_xpos;
+	ypos = p->field_ypos;
 
-    if (y_animation < ypos) {  //画面描画最大値チェック
+    if (y_animation < ypos) {	//画面描画最大値チェック
         ypos = y_animation;
     }
 
@@ -530,7 +491,8 @@ static void flame_input(int32_t xpos, int32_t ypos)
     for (uint8_t i = 0; i < FIELD_HEIGHT && i < height-ypos; i++) {
         len = get_width(field, i+ypos);  //各行の横幅を取得
         for (uint8_t j = 0; j < FIELD_WIDTH && j < len-xpos; j++) {
-            field_flamebuffer[i][j] = (char)field[i+ypos][j+xpos];
+            //field_flamebuffer[i][j] = (char)field[i+ypos][j+xpos];
+			ptr[(i << FLAME_SHIFT) + j] = (char)field[i+ypos][j+xpos];
         }
     }
 }
@@ -546,9 +508,13 @@ static void flame_input(int32_t xpos, int32_t ypos)
  *--------------------------------------------*/
 static void flameclear(uint8_t height, uint8_t width, char s)
 {
+	char *ptr;
+
+	ptr = get_flamebuffer_address();
+
     for (uint8_t i = 0; i < height; i++) {
         for (uint8_t j = 0; j < width; j++) {
-            field_flamebuffer[i][j] = s;
+			ptr[(i << FLAME_SHIFT) + j] = s;
         }
     }
 }
@@ -562,14 +528,27 @@ static void flameclear(uint8_t height, uint8_t width, char s)
  *--------------------------------------------*/
 static void flame_draw(uint8_t color)
 {
+	char *ptr;
+
+	ptr = get_flamebuffer_address();
     SET_TYPE(NORMAL);
     SET_CHAR_COLOR(color);
     SET_CHAR_BOLD();
 
     for (uint8_t i = 0; i < FIELD_HEIGHT; i++) {
 		SET_PLACE(FIELD_DRAW_XPOS, FIELD_DRAW_YPOS+i);
-        asciidraw(&field_flamebuffer[i][0]);
+        //asciidraw(&field_flamebuffer[i][0]);
+		asciidraw(&ptr[i << FLAME_SHIFT]);
     }
+}
+
+
+/**-------------------------------------------------
+ * フレームバッファ先頭アドレス取得
+ * -------------------------------------------------*/
+static char *get_flamebuffer_address(void)
+{
+	return &field_flamebuffer[0][0];
 }
 
 
@@ -589,30 +568,4 @@ static char **search_field_map(uint32_t id)
     }
 
     return (char **)nullfield;
-}
-
-
-/**--------------------------------------------
- * フィールドのデータを取得する
- * --------------------------------------------
- * arg1: id    フィールドのIDを指定
- *--------------------------------------------*/
-static int32_t search_field_para(uint32_t id, uint8_t para)
-{
-    const t_map *p = map;
-
-    for (uint8_t i = 0; i < FIELD_SIZE; i++, p++) {
-        if (p->id == id) {
-            break;
-        }
-    }
-
-    switch (para) {
-        case 0:
-            return 0;
-        case 1:
-            return 0;
-        default:
-            return 0;
-    }
 }
