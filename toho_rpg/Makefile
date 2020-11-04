@@ -33,8 +33,8 @@ all: clean $(TARGET)
 run:
 	$(TARGET)
 
-zip:
-	zip -P $(PASS) -r $(ZIP) ../$(ZIP)/
+install:
+	sudo apt install sox
 
 clean:
 	-rm -f $(OBJECTS) $(DEPENDS) $(TARGET)
