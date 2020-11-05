@@ -1,6 +1,5 @@
 /**--------------------------------------------
- * 2020/09/22 koutakimura
- * Ubuntu LTS 20.04
+ * Ubuntu LTS 20.04 kimura
  *
  * 描画に関する関数をまとめたファイル
  *
@@ -452,7 +451,8 @@ static void cast_draw(uint32_t x, uint32_t y, uint8_t color, char *str)
     SET_CHAR_COLOR(color);
     SET_CHAR_BOLD();
     SET_PLACE(x, y);
-	strprintf(str);
+    printf("%s\r\n", str);
+	//strprintf(str);
 }
 
 
@@ -470,6 +470,15 @@ static void xypos_draw(t_posinfo *p)
     printf("%s%d\r\n",   "chara_ypos = ", p->character_ypos);
     printf("%s%d\r\n",   "field_xpos = ", p->field_xpos);
     printf("%s%d\r\n",   "field_ypos = ", p->field_ypos);
+}
+
+
+/**-------------------------------------------------
+ * イベントのメッセージを描画する関数
+ * -------------------------------------------------*/
+static void event_msg_draw(void)
+{
+
 }
 
 

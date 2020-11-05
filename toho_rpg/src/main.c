@@ -1,9 +1,9 @@
 /**------------------------------------------------/
  * KeyBoard Toho RPG Game
  * -----------------------------------------------
- * 2020/09/16 kouta kimura
- * Ubuntu LTS 20.04
+ * OS Ubuntu LTS 20.04
  * Editor vim non plugin
+ * Compiler gcc
  * ------------------------------------------------*/
 
 
@@ -19,6 +19,7 @@
 #include "../include/FILE.H"
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+
 
 
 /**----------------------------------------------------

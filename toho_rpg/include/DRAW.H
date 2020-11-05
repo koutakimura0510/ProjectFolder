@@ -1,8 +1,6 @@
 /**---------------------------------------------
  * DRAW_H
- * 
- * created on:2020/09/16
- * Author    :kouta kimura
+ * Author kimura
  * ---------------------------------------------*/
 
 #ifndef DRAW_H_
@@ -124,8 +122,10 @@ typedef enum {
 /**-------------------------------------------------
  * フィールド描画位置指定
  * -------------------------------------------------*/
-#define FIELD_DRAW_XPOS	5
-#define FIELD_DRAW_YPOS	7
+#define DEBUG_XPOS		2	//xpos draw
+#define DEBUG_YPOS		2	//ypos draw
+#define FIELD_DRAW_XPOS	5	//field xpos
+#define FIELD_DRAW_YPOS	7	//field ypos
 
 
 /**-------------------------------------------------

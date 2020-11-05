@@ -1,9 +1,9 @@
-obj/main.o: src/main.c src/../include/LIB.H src/../include/PARA.H \
- src/../include/DEBUG.H src/../include/TIMER.H src/../include/DRAW.H \
- src/../include/MODE.H src/../include/FILE.H \
- /usr/include/gtk-3.0/gtk/gtk.h /usr/include/gtk-3.0/gdk/gdk.h \
- /usr/include/gtk-3.0/gdk/gdkconfig.h /usr/include/glib-2.0/glib.h \
- /usr/include/glib-2.0/glib/galloca.h /usr/include/glib-2.0/glib/gtypes.h \
+obj/main.o: src/main.c src/../include/LIB.H src/../include/DEBUG.H \
+ src/../include/TIMER.H src/../include/DRAW.H src/../include/MODE.H \
+ src/../include/FILE.H /usr/include/gtk-3.0/gtk/gtk.h \
+ /usr/include/gtk-3.0/gdk/gdk.h /usr/include/gtk-3.0/gdk/gdkconfig.h \
+ /usr/include/glib-2.0/glib.h /usr/include/glib-2.0/glib/galloca.h \
+ /usr/include/glib-2.0/glib/gtypes.h \
  /usr/lib/x86_64-linux-gnu/glib-2.0/include/glibconfig.h \
  /usr/include/glib-2.0/glib/gmacros.h \
  /usr/include/glib-2.0/glib/gversionmacros.h \
@@ -582,8 +582,6 @@ obj/main.o: src/main.c src/../include/LIB.H src/../include/PARA.H \
  /usr/include/gtk-3.0/gtk/gtk-autocleanups.h
 
 src/../include/LIB.H:
-
-src/../include/PARA.H:
 
 src/../include/DEBUG.H:
 
