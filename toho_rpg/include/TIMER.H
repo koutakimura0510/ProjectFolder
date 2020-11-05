@@ -1,0 +1,23 @@
+/**-------------------------------------------------
+ * TIMER.H
+ * -------------------------------------------------*/
+
+
+#ifndef TIMER_H_
+#define TIMER_H_
+
+#define GETMAXTIME		10000	//取得可能最大時間-(100us)
+#define SECOND(n)		(n*10000)	//1秒
+#define MS_100(n)  		(n*1000)	//100ms
+#define MS_10(n)		(n*100)		//10ms
+#define MS_1(n)			(n*10)		//1ms
+#define US_100(n)		(n*1)		//100us
+#define MSG_SPEED(n)	(n*MS_10)
+
+
+long gettime(void);
+bool comtimer(long *t, uint32_t timer);
+void waittime(uint32_t timer);
+
+
+#endif

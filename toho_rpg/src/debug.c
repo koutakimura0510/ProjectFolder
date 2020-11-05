@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdint.h>
-#include "DEBUG.H"
+#include <LIB.H>
 
 
 /**--------------------------------------------

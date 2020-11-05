@@ -16,6 +16,7 @@
 #include "../include/LIB.H"
 #include "../include/DRAW.H"
 #include "../include/MODE.H"
+#include "../include/FILE.H"
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -91,6 +92,8 @@ int main(int argc, char **argv)
     CURSOL_OFF();
 	map_info_struct_write(GLASS);
 	animation_move(NON);
+	savewrite();
+	saveing();
     gtk_main(); //gtkメインループを行う
 
 	clear_screen();

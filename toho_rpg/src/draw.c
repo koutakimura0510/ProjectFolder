@@ -37,14 +37,14 @@ typedef struct {
 
 
 /**-------------------------------------------------
- * 構造体の確保
+ * ファイル内構造体の確保
  * -------------------------------------------------*/
 static t_posinfo posinfo = {10, 10, 0, 0, 0, 0};
 static t_fieldinfo fieldinfo;
 
 
 /**----------------------------------------
- * static関数・変数
+ * static関数
  *-----------------------------------------*/
 static uint32_t get_width(char **s, uint32_t height);
 static uint32_t get_height(char **s);
@@ -137,6 +137,27 @@ void map_info_struct_write(uint8_t map)
 	info->field_maxwidth  = width;
 	info->ypos_animation_check = y_animation;
 	info->xpos_animation_check = x_animation;
+}
+
+
+/**-------------------------------------------------
+ * セーブ中アニメーション関数
+ * -------------------------------------------------*/
+void saveing(void)
+{
+    SET_TYPE(NORMAL);
+    SET_CHAR_COLOR(WHITE);
+    SET_CHAR_BOLD();
+	SET_PLACE(2, 40);
+
+	for (uint8_t i = 0; i <= 100; i++) {
+		fprintf(stderr, "\rデータを保存しています [%3d / 100]", i);
+		waittime(MS_10(3));
+	}
+
+	waittime(SECOND(1));
+	fprintf(stderr, "\r\n");
+	fprintf(stderr, "セーブが完了しました\r\n");
 }
 
 
@@ -569,3 +590,5 @@ static char **search_field_map(uint32_t id)
 
     return (char **)nullfield;
 }
+
+
