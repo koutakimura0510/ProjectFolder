@@ -26,8 +26,6 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.$(FILE)
 	-mkdir -p $(OBJDIR)
 	$(COMPILER) $(CFLAGS) $(INCLUDE) -o $@ -$(FILE) $< $(THREAD) $$$(GTK)
 
-PASS 		= kouta5100
-
 all: clean $(TARGET)
 
 run:
