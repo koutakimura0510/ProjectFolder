@@ -96,7 +96,8 @@ void animation_move(uint8_t id)
 	if (false == detect(p)) {
 		direction(p);
 	}
-
+	
+	//clear関数はいらないかもしれない
 	clear_screen();
     flameclear(FIELD_HEIGHT, FIELD_WIDTH, ' ');
     flame_input(info, p);
@@ -123,12 +124,12 @@ void map_info_struct_write(uint8_t map)
 	y_animation = height - FIELD_HEIGHT;	//フィールド描画の最縦幅大幅取得
     x_animation = width  - FIELD_WIDTH;		//フィールド描画の最大横幅取得
 	
-    if (y_animation & 0x8000) { //フィールドの縦幅がフレームバッファ以下の場合
-        y_animation = 0;       	//縦移動のアニメーションは行わない
+    if (y_animation & SIGNED_CHECK) { 	//フィールドの縦幅がフレームバッファ以下の場合
+        y_animation = 0;       			//縦移動のアニメーションは行わない
     }
 
-    if (x_animation & 0x8000) {	//フィールドの横幅がフレームバッファ以下の場合
-        x_animation = 0;		//横移動のアニメーションは行わない
+    if (x_animation & SIGNED_CHECK) {	//フィールドの横幅がフレームバッファ以下の場合
+        x_animation = 0;				//横移動のアニメーションは行わない
     }
 
 	info->map_id = p;
@@ -145,9 +146,7 @@ void map_info_struct_write(uint8_t map)
 void saveing(void)
 {
     SET_TYPE(NORMAL);
-    SET_CHAR_COLOR(WHITE);
-    SET_CHAR_BOLD();
-	SET_PLACE(2, 40);
+	SET_PLACE(ANIMATION_MSG_XPOS, ANIMATION_MSG_YPOS);
 
 	for (uint8_t i = 0; i <= 100; i++) {
 		fprintf(stderr, "\rデータを保存しています [%3d / 100]", i);
@@ -355,7 +354,7 @@ static bool detect(t_posinfo *p)
 	x = p->character_xpos - FIELD_DRAW_XPOS + dir_x;
 	y = p->character_ypos - FIELD_DRAW_YPOS + dir_y;
 
-	for (uint8_t i = 0; i < 3; i++) {
+	for (uint8_t i = 0; i < SJIS_BYTE_CHECK; i++) {
 		s = field_flamebuffer[y][x-i];
 		if (s < 0) {
 			utf_bit++;
@@ -463,9 +462,7 @@ static void cast_draw(uint32_t x, uint32_t y, uint8_t color, char *str)
 static void xypos_draw(t_posinfo *p)
 {
     SET_TYPE(NORMAL);
-    SET_CHAR_COLOR(WHITE);
-    SET_CHAR_BOLD();
-    SET_PLACE(2, 2);
+    SET_PLACE(NOW_XPOS, NOW_YPOS);
     printf("\r%s%d\r\n", "chara_xpos = ", p->character_xpos);
     printf("%s%d\r\n",   "chara_ypos = ", p->character_ypos);
     printf("%s%d\r\n",   "field_xpos = ", p->field_xpos);
@@ -478,7 +475,8 @@ static void xypos_draw(t_posinfo *p)
  * -------------------------------------------------*/
 static void event_msg_draw(void)
 {
-
+    SET_TYPE(NORMAL);
+    SET_PLACE(MSG_XPOS, MSG_YPOS);
 }
 
 
@@ -563,7 +561,6 @@ static void flame_draw(uint8_t color)
 	ptr = get_flamebuffer_address();
     SET_TYPE(NORMAL);
     SET_CHAR_COLOR(color);
-    SET_CHAR_BOLD();
 
     for (uint8_t i = 0; i < FIELD_HEIGHT; i++) {
 		SET_PLACE(FIELD_DRAW_XPOS, FIELD_DRAW_YPOS+i);

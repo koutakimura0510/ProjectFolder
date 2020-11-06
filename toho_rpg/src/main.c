@@ -99,7 +99,6 @@ int main(int argc, char **argv)
 
 	clear_screen();
 	SET_TYPE(NORMAL);
-	SET_CHAR_COLOR(WHITE);
     strprintf("GTK RPG END");
 
     return 0;
