@@ -53,6 +53,11 @@ static bool key_press(GtkWidget *widget, GdkEventKey *key)
 			id = RIGHT;
             break;
 
+		case GDK_KEY_C:
+            saveing();    //プログラム終了
+            break;
+
+
         case GDK_KEY_S:
             gtk_main_quit();    //プログラム終了
             break;
@@ -97,14 +102,15 @@ int main(int argc, char **argv)
     gtk_widget_show_all(window);    //windowを描画
 
     CURSOL_OFF();
+	clear_screen();
 	map_info_struct_write(GLASS);
 	animation_move(NON);
 	savewrite();
-	saveing();
     gtk_main(); //gtkメインループを行う
 
 	clear_screen();
 	SET_TYPE(NORMAL);
+	CURSOL_ON();
     strprintf("GTK RPG END");
 
     return 0;

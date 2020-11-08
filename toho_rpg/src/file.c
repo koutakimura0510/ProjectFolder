@@ -65,7 +65,7 @@ typedef struct t_file_access{
  * ファイル内グローバル変数
  * -------------------------------------------------*/
 static uint32_t savefile[ROM_BUFFER];
-static const char filename[] = "../savedata/sd.dat";
+static const char filename[] = "SaveData/sd.dat";
 static char wbuffer[MAX_DIGIT+1];	//指定桁数+改行文字
 
 

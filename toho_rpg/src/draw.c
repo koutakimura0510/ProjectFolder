@@ -100,9 +100,8 @@ void animation_move(uint8_t id)
 		direction(p);
 	}
 	
-	//clear関数はいらないかもしれない
 	clear_screen();
-    flameclear(FIELD_HEIGHT, FIELD_WIDTH, ' ');
+    //flameclear(FIELD_HEIGHT, FIELD_WIDTH, ' ');
     flame_input(info, p);
 	flame_draw(YELLOW);
 	cast_draw(p->character_xpos, p->character_ypos, RED, "巫");
@@ -149,9 +148,9 @@ void map_info_struct_write(uint8_t map)
 void saveing(void)
 {
     SET_TYPE(NORMAL);
-	SET_PLACE(ANIMATION_MSG_XPOS, ANIMATION_MSG_YPOS);
 
 	for (uint8_t i = 0; i <= 100; i++) {
+		SET_PLACE(ANIMATION_MSG_XPOS, ANIMATION_MSG_YPOS);
 		fprintf(stderr, "\rデータを保存しています [%3d / 100]", i);
 		waittime(MS_10(3));
 	}
@@ -358,17 +357,17 @@ static bool detect(t_posinfo *p)
 	y = p->character_ypos - FIELD_DRAW_YPOS + dir_y;
 
 	for (uint8_t i = 0; i < SJIS_BYTE_CHECK; i++) {
-		s = field_flamebuffer[y][x-i];
+		s = flamebuffer[y][x-i];
 		if (s < 0) {
 			utf_bit++;
 		}
 	}
 
-	s = field_flamebuffer[y][x];
+	s = flamebuffer[y][x];
 	if ((s != ' ') && (s > 0)) {
-		s = field_flamebuffer[y][x-1];
+		s = flamebuffer[y][x-1];
 		if (s < 0) {
-			s = field_flamebuffer[y][x-2];
+			s = flamebuffer[y][x-2];
 			if (s < 0) {
 				return true;
 			}
@@ -376,7 +375,7 @@ static bool detect(t_posinfo *p)
 	}
 
 	if (utf_bit == 3) {
-		s = field_flamebuffer[y][x+1];
+		s = flamebuffer[y][x+1];
 		if (s != ' ') {
 			return false;
 		}
@@ -384,7 +383,7 @@ static bool detect(t_posinfo *p)
 	}
 
 	for (uint8_t i = 0; i < CAST_WIDTH_SIZE; i++) {
-		s = field_flamebuffer[y][x+i];	//キャラクターの描画幅分、当たり判定を行う
+		s = flamebuffer[y][x+i];	//キャラクターの描画幅分、当たり判定を行う
 		if (s != ' ') {
 			return false;
 		}
@@ -499,7 +498,7 @@ static void asciidraw(char *s)
  *--------------------------------------------*/
 static void flame_input(t_fieldinfo *info, t_posinfo *p)
 {
-    int32_t xpos, ypos, len, height, y_animation, x_animation;
+    int32_t i, j, xpos, ypos, len, height, y_animation, x_animation;
 	char **field;	//filed pointer
 	char *ptr;		//flame buffer pointer
 
@@ -519,12 +518,32 @@ static void flame_input(t_fieldinfo *info, t_posinfo *p)
         xpos = x_animation;
     }
 
-    for (uint8_t i = 0; i < FIELD_HEIGHT && i < height-ypos; i++) {
+    for (i = 0; i < FIELD_HEIGHT && i < height-ypos; i++) {
         len = get_width(field, i+ypos);  //各行の横幅を取得
-        for (uint8_t j = 0; j < FIELD_WIDTH && j < len-xpos; j++) {
-            //field_flamebuffer[i][j] = (char)field[i+ypos][j+xpos];
+        for (j = 0; j < FIELD_WIDTH && j < len-xpos; j++) {
 			ptr[(i << FLAME_SHIFT) + j] = (char)field[i+ypos][j+xpos];
         }
+    }
+}
+
+
+/**--------------------------------------------
+ * フレームバッファ描画
+ * ヌル文字の格納場所に注意すること
+ * -------------------------------------------
+ * arg1: color	描画色を指定
+ *--------------------------------------------*/
+static void flame_draw(uint8_t color)
+{
+	char *ptr;
+
+	ptr = get_flamebuffer_address();
+    SET_TYPE(NORMAL);
+    SET_CHAR_COLOR(color);
+
+    for (uint8_t i = 0; i < FIELD_HEIGHT; i++) {
+		SET_PLACE(FIELD_DRAW_XPOS, FIELD_DRAW_YPOS+i);
+		asciidraw(&ptr[i << FLAME_SHIFT]);
     }
 }
 
@@ -551,34 +570,12 @@ static void flameclear(uint8_t height, uint8_t width, char s)
 }
 
 
-/**--------------------------------------------
- * フレームバッファ描画
- * ヌル文字の格納場所に注意すること
- * -------------------------------------------
- * arg1: color	描画色を指定
- *--------------------------------------------*/
-static void flame_draw(uint8_t color)
-{
-	char *ptr;
-
-	ptr = get_flamebuffer_address();
-    SET_TYPE(NORMAL);
-    SET_CHAR_COLOR(color);
-
-    for (uint8_t i = 0; i < FIELD_HEIGHT; i++) {
-		SET_PLACE(FIELD_DRAW_XPOS, FIELD_DRAW_YPOS+i);
-        //asciidraw(&field_flamebuffer[i][0]);
-		asciidraw(&ptr[i << FLAME_SHIFT]);
-    }
-}
-
-
 /**-------------------------------------------------
  * フレームバッファ先頭アドレス取得
  * -------------------------------------------------*/
 static char *get_flamebuffer_address(void)
 {
-	return &field_flamebuffer[0][0];
+	return (char *)flamebuffer;
 }
 
 
@@ -599,5 +596,3 @@ static char **search_field_map(uint32_t id)
 
     return (char **)nullfield;
 }
-
-
