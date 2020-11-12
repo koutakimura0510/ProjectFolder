@@ -11,7 +11,8 @@
 #include "../include/LIB.H"
 #define DRAWPARA
 #include "../include/DRAW.H"
-
+#include <locale.h>
+#include <stdlib.h>
 
 /**-------------------------------------------------
  * 座標と向きを保存
@@ -51,6 +52,7 @@ static t_fieldinfo fieldinfo;
 static uint32_t get_width(char **s, uint32_t height);
 static uint32_t get_height(char **s);
 static uint32_t get_maxwidth(char **s, uint32_t height);
+static int32_t get_res(int32_t xpos, int32_t ypos, int32_t *res, char **field);
 static void xpos_move_right(t_fieldinfo *info, t_posinfo *p);
 static void xpos_move_left(t_posinfo *p);
 static void ypos_move_up(t_posinfo *p);
@@ -59,10 +61,9 @@ static void direction(t_posinfo *p);
 static bool detect(t_posinfo *p);
 static void cast_draw(uint32_t x, uint32_t y, uint8_t color, char *str);
 static void xypos_draw(t_posinfo *p);
-static void asciidraw(char *s);
+static void event_msg_draw(void);
 static void flame_draw(uint8_t color);
 static void flame_input(t_fieldinfo *info, t_posinfo *p);
-static void flameclear(uint8_t height, uint8_t width, char s);
 static char *get_flamebuffer_address(void);
 static char **search_field_map(uint32_t id);
 
@@ -95,13 +96,13 @@ void animation_move(uint8_t id)
 		default:
 			break;
 	}
+	clear_screen();
 
 	if (false == detect(p)) {
 		direction(p);
+		event_msg_draw();
 	}
 	
-	clear_screen();
-    //flameclear(FIELD_HEIGHT, FIELD_WIDTH, ' ');
     flame_input(info, p);
 	flame_draw(YELLOW);
 	cast_draw(p->character_xpos, p->character_ypos, RED, "巫");
@@ -126,12 +127,12 @@ void map_info_struct_write(uint8_t map)
 	y_animation = height - FIELD_HEIGHT;	//フィールド描画の最縦幅大幅取得
     x_animation = width  - FIELD_WIDTH;		//フィールド描画の最大横幅取得
 	
-    if (y_animation & SIGNED_CHECK) { 	//フィールドの縦幅がフレームバッファ以下の場合
-        y_animation = 0;       			//縦移動のアニメーションは行わない
+    if (y_animation & SIGNED_CHECK) { 	//フィールドが描画幅以下の場合
+        y_animation = 0;       			//移動のアニメーションは行わない
     }
 
-    if (x_animation & SIGNED_CHECK) {	//フィールドの横幅がフレームバッファ以下の場合
-        x_animation = 0;				//横移動のアニメーションは行わない
+    if (x_animation & SIGNED_CHECK) {
+        x_animation = 0;
     }
 
 	info->map_id = p;
@@ -151,7 +152,8 @@ void saveing(void)
 
 	for (uint8_t i = 0; i <= 100; i++) {
 		SET_PLACE(ANIMATION_MSG_XPOS, ANIMATION_MSG_YPOS);
-		fprintf(stderr, "\rデータを保存しています [%3d / 100]", i);
+		//fprintf(stderr, "\rデータを保存しています [%3d / 100]", i);
+		printf("データを保存しています [%3d / 100]", i);
 		waittime(MS_10(3));
 	}
 
@@ -172,15 +174,20 @@ void clear_screen(void)
 
 /**--------------------------------------------
  * フィールドの横幅を取得する
+ * マルチバイトと混合のため、バイト数ではなく文字数を取得する
  * --------------------------------------------
  * arg1: **s    fieldの先頭アドレス
  * arg2: height 横幅を取得する行を指定
  *--------------------------------------------*/
 static uint32_t get_width(char **s, uint32_t height)
 {
+	uint32_t byte = 0;
     uint32_t count = 0;
 
-    while (s[height][count++] != '\0');
+    while (s[height][byte] != '\0') {
+		byte += mblen(&s[height][byte], MB_CUR_MAX);	//xposからの文字列バイト数をresに格納
+		count++;
+	}
 
     return count;
 }
@@ -205,22 +212,55 @@ static uint32_t get_height(char **s)
 
 /**--------------------------------------------
  * フィールドの最大横幅を取得
+ * マルチバイトと混合のため、バイト数ではなく文字数を取得する
  * --------------------------------------------
  * arg1: **s    fieldの先頭アドレス
  *--------------------------------------------*/
 static uint32_t get_maxwidth(char **s, uint32_t height)
 {
-    uint32_t com = 0;
-    uint32_t count = 0;
+    uint32_t maxwidth = 0;
+	uint32_t count, total_byte;
 
-    for (uint8_t i = 0; i < height; i++) {
-        while (s[i][count++] != '\0');
-        if (com < count) {
-            com = count;
-        }
-        count = 0;
-    }
-    return com;
+	for (uint8_t i = 0; i < height; i++) {
+		count = 0;
+		total_byte = 0;
+		while (s[i][total_byte] != '\0') {
+			total_byte += mblen(&s[i][total_byte], MB_CUR_MAX);
+			count++;
+		}
+		if (maxwidth < count) {
+			maxwidth = count;
+		}
+	}
+
+	return maxwidth;
+}
+
+
+/**-------------------------------------------------
+ * 文字列配列の要素数を取得し各文字のバイト数を配列に格納する関数
+ * -------------------------------------------------
+ * arg1: ypos 	 行番号を指定
+ * arg2: *res  	 バイト数を格納する配列のアドレスを指定
+ * arg3: **field バイト数をチェックするフィールドを指定
+ * return:		 合計バイト数を返す
+ * -------------------------------------------------*/
+static int32_t get_res(int32_t xpos, int32_t ypos, int32_t *res, char **field)
+{
+	int32_t i, d;
+	int32_t byte = 0;
+	
+	for (i = 0; i < xpos && (char)field[ypos][byte] != '\0'; i++) {	//0からxposまでのバイト数取得
+		byte += mblen(&field[ypos][byte], MB_CUR_MAX);
+	}
+	d = byte;	//xposまでの合計バイト数を保存
+
+	for (i = 0; i < FIELD_WIDTH && (char)field[ypos][byte] != '\0'; i++) {
+		res[i] = mblen(&field[ypos][byte], MB_CUR_MAX);	//xposからの文字列バイト数をresに格納
+		byte += res[i];
+	}
+
+	return d;
 }
 
 
@@ -327,18 +367,16 @@ static void ypos_move_down(t_fieldinfo *info, t_posinfo *p)
 /**-------------------------------------------------
  * 当たり判定を行う関数
  * -------------------------------------------------
- * 座標(0, 0)から開始
- * flame_buffer[x=0][y=0] ...'|'
- * ' '空白文字ではないので、障害物があると判定される
- * -------------------------------------------------
  * true : remap draw
  * false: not draw
  * -------------------------------------------------*/
 static bool detect(t_posinfo *p)
 {
-	uint8_t utf_bit = 0;
-	int32_t x, y, s;
-	int32_t dir_x = 0, dir_y = 0;
+	int32_t x, y;
+	int32_t dir_x = 0;
+	int32_t dir_y = 0;
+	char s1, s2;
+	char *ptr;
 
 	if ((p->info_direction == F_XPOS) && (p->character_direction == RIGHT)) {
 		dir_x++;
@@ -355,41 +393,15 @@ static bool detect(t_posinfo *p)
 
 	x = p->character_xpos - FIELD_DRAW_XPOS + dir_x;
 	y = p->character_ypos - FIELD_DRAW_YPOS + dir_y;
+	ptr = get_flamebuffer_address();
+	s1 = ptr[(y << FLAME_SHIFT) + x];
+	s2 = ptr[(y << FLAME_SHIFT) + x + 1];
 
-	for (uint8_t i = 0; i < SJIS_BYTE_CHECK; i++) {
-		s = flamebuffer[y][x-i];
-		if (s < 0) {
-			utf_bit++;
-		}
-	}
-
-	s = flamebuffer[y][x];
-	if ((s != ' ') && (s > 0)) {
-		s = flamebuffer[y][x-1];
-		if (s < 0) {
-			s = flamebuffer[y][x-2];
-			if (s < 0) {
-				return true;
-			}
-		}
-	}
-
-	if (utf_bit == 3) {
-		s = flamebuffer[y][x+1];
-		if (s != ' ') {
-			return false;
-		}
+	if ((s1 < 0) && (s2 == ' ')) {
 		return true;
 	}
 
-	for (uint8_t i = 0; i < CAST_WIDTH_SIZE; i++) {
-		s = flamebuffer[y][x+i];	//キャラクターの描画幅分、当たり判定を行う
-		if (s != ' ') {
-			return false;
-		}
-	}
-
-	if (x == 0) {
+	if ((s1 != ' ') || (s2 != ' ')) {
 		return false;
 	}
 
@@ -479,17 +491,7 @@ static void event_msg_draw(void)
 {
     SET_TYPE(NORMAL);
     SET_PLACE(MSG_XPOS, MSG_YPOS);
-}
-
-
-/**--------------------------------------------
- * 文字列出力
- * --------------------------------------------
- * arg1: *s    文字列のアドレスを指定
- *--------------------------------------------*/
-static void asciidraw(char *s)
-{
-    printf("%s", s);
+	printf("壁にぶつかった！");
 }
 
 
@@ -498,9 +500,12 @@ static void asciidraw(char *s)
  *--------------------------------------------*/
 static void flame_input(t_fieldinfo *info, t_posinfo *p)
 {
-    int32_t i, j, xpos, ypos, len, height, y_animation, x_animation;
-	char **field;	//filed pointer
-	char *ptr;		//flame buffer pointer
+	int32_t res[FIELD_WIDTH];
+	int32_t xpos, ypos, len, height, y_animation, x_animation;	//座標計算用変数
+    int32_t i, j, k; 		//ループ用変数
+	int32_t count, d, byte;	//文字バイト数取得用変数
+	char **field;			//filed pointer
+	char *ptr;				//flame buffer pointer
 
 	ptr = get_flamebuffer_address();
 	field  = info->map_id;
@@ -510,7 +515,7 @@ static void flame_input(t_fieldinfo *info, t_posinfo *p)
 	xpos = p->field_xpos;
 	ypos = p->field_ypos;
 
-    if (y_animation < ypos) {	//画面描画最大値チェック
+    if (y_animation < ypos) {
         ypos = y_animation;
     }
 
@@ -519,10 +524,17 @@ static void flame_input(t_fieldinfo *info, t_posinfo *p)
     }
 
     for (i = 0; i < FIELD_HEIGHT && i < height-ypos; i++) {
-        len = get_width(field, i+ypos);  //各行の横幅を取得
-        for (j = 0; j < FIELD_WIDTH && j < len-xpos; j++) {
-			ptr[(i << FLAME_SHIFT) + j] = (char)field[i+ypos][j+xpos];
+		count = 0;
+		len = get_width(field, i+ypos) - xpos;	//フィールド幅取得
+		d = get_res(xpos, i+ypos, res, field);	//配列に文字のバイト数を格納し、xposに対応したバイト数取得
+        for (j = 0; j < FIELD_WIDTH && j < len; j++) {
+			byte = res[j];
+			for (k  = 0; k < byte; k++) {
+				ptr[(i << FLAME_SHIFT)+k+count] = (char)field[i+ypos][k+d+count];
+			}
+			count += byte;
         }
+		ptr[(i << FLAME_SHIFT)+count] = '\0';	//末尾にヌル文字を格納
     }
 }
 
@@ -543,29 +555,8 @@ static void flame_draw(uint8_t color)
 
     for (uint8_t i = 0; i < FIELD_HEIGHT; i++) {
 		SET_PLACE(FIELD_DRAW_XPOS, FIELD_DRAW_YPOS+i);
-		asciidraw(&ptr[i << FLAME_SHIFT]);
-    }
-}
-
-
-/**--------------------------------------------
- * フレームバッファに指定した文字を書き込む
- * 通常は画面クリア描画に使用する
- * --------------------------------------------
- * arg1: height     縦幅を指定
- * arg2: width      横幅を指定
- * arg3: s          文字を指定
- *--------------------------------------------*/
-static void flameclear(uint8_t height, uint8_t width, char s)
-{
-	char *ptr;
-
-	ptr = get_flamebuffer_address();
-
-    for (uint8_t i = 0; i < height; i++) {
-        for (uint8_t j = 0; j < width; j++) {
-			ptr[(i << FLAME_SHIFT) + j] = s;
-        }
+		//asciidraw(&ptr[i << FLAME_SHIFT]);
+		printf("%s", &ptr[i << FLAME_SHIFT]);
     }
 }
 
