@@ -22,8 +22,7 @@
 
 #define SCREEN_WIDTH	640		//ウィンドウの幅を指定
 #define SCREEN_HEIGHT	480		//ウィンドウの高さを指定
-#define MAP_WIDTH		32		//マップ描画データのpixel幅を指定
-#define MAP_HEIGHT		32		//マップ描画データのpixel高さを指定
+#define GRID_SIZE		32		//マップ描画データのpixel幅と高さを指定
 #define MAP_SIZE_SHIFT	5		//5bitシフトすれば32になる
 #define MAP_DRAW_WIDTH	(SCREEN_WIDTH >> MAP_SIZE_SHIFT)	//幅のループ回数
 #define MAP_DRAW_HEIGHT	(SCREEN_HEIGHT >> MAP_SIZE_SHIFT)	//高さのループ回数
@@ -475,9 +474,10 @@ static void sdl_finish(SDL_Window **window, SDL_Renderer **renderer, TTF_Font **
 
 
 /**-------------------------------------------------
- * プレイヤーの描画
+ * 操作キャラクターの描画
  * -------------------------------------------------
- *
+ * arg1:レンダリング情報
+ * arg2:座標データの構造体のアドレス
  * -------------------------------------------------*/
 static bool player_draw(SDL_Renderer *renderer, t_posinfo *pos)
 {
@@ -490,8 +490,8 @@ static bool player_draw(SDL_Renderer *renderer, t_posinfo *pos)
 
 	x = ((frame / animation_cycle) % 3) * UNIT_WIDTH;
 	SDL_Rect res  = (SDL_Rect){x, pos->res_ypos, UNIT_WIDTH, UNIT_HEIGHT};		//x座標からwidth分、画像データ切り抜き
-	SDL_Rect draw = (SDL_Rect){pos->unit_xpos << 5, pos->unit_ypos << 5, UNIT_WIDTH+8, UNIT_HEIGHT};	//(x,y)にw32 h32の大きさで描画する
-	SDL_RenderCopy(renderer, player_tx, &res, &draw);			//第四引数に指定した幅と高さに自動で拡大縮小してくれる
+	SDL_Rect draw = (SDL_Rect){pos->unit_xpos << 5, pos->unit_ypos << 5, UNIT_WIDTH, UNIT_HEIGHT};	//(x,y)にw,hの大きさで描画する
+	SDL_RenderCopy(renderer, player_tx, &res, &draw);	//第四引数に指定した幅と高さに自動で拡大縮小してくれる
 	frame += 1;
 	frame &= 65535;
 	SDL_DestroyTexture(player_tx);
@@ -503,6 +503,9 @@ static bool player_draw(SDL_Renderer *renderer, t_posinfo *pos)
 
 /**-------------------------------------------------
  * マップの描画
+ * 使用マップ情報は縦横GRID_SIZEで固定
+ * 16,32,の大きさを使用する場合は構造体を用意しデータを取得するよう変更
+ * ウィンドウの大きさに対して必要な分だけ描画を行う
  * -------------------------------------------------
  * arg1:　レンダリング情報
  * -------------------------------------------------*/
@@ -514,11 +517,11 @@ static bool map_draw(SDL_Renderer *renderer)
 		return false;
 	}
 
-	SDL_Rect map_res  = (SDL_Rect){0, 0, MAP_WIDTH, MAP_HEIGHT};	//取りあえず草原情報取得
+	SDL_Rect map_res  = (SDL_Rect){0, 0, GRID_SIZE, GRID_SIZE};	//取りあえず草原情報取得
 
 	for (uint32_t i = 0; i < MAP_DRAW_HEIGHT; i++) {
 		for (uint32_t j = 0; j < MAP_DRAW_WIDTH; j++) {
-			SDL_Rect map_draw = (SDL_Rect){j << MAP_SIZE_SHIFT, i << MAP_SIZE_SHIFT, MAP_WIDTH, MAP_HEIGHT};
+			SDL_Rect map_draw = (SDL_Rect){j << MAP_SIZE_SHIFT, i << MAP_SIZE_SHIFT, GRID_SIZE, GRID_SIZE};
 			SDL_RenderCopy(renderer, map_tx, &map_res, &map_draw);
 		}
 	}
