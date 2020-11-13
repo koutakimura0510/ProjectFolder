@@ -27,17 +27,10 @@
 #define FONT_PATH		"res/font/PixelMplus12-Regular.ttf"
 #define MAP_PATH		"res/img/map/map5.png"
 #define UNIT_PATH		"res/img/unit/akisys.png"
-#define WAV_PATH		"res/bgm/touhou.wav"
+#define BGM_PATH		"res/bgm/touhou.wav"
+#define EFFECT_PATH		"res/bgm/mapmove.mp3"
 
 #define RENDERER	(SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
-
-
-/**-------------------------------------------------
- * SDL構造体の確保
- * 同一スレッド内で全てのSDL関数を使用しなければならない。
- * -------------------------------------------------*/
-Mix_Chunk *wav;
-Mix_Music *music;
 
 
 /**-------------------------------------------------
@@ -45,6 +38,7 @@ Mix_Music *music;
  * -------------------------------------------------*/
 static int32_t animation_cycle = 100;
 static int32_t frame = 0;
+static int32_t channel = 0;
 
 
 /**-------------------------------------------------
@@ -58,6 +52,10 @@ static bool load_ttf_msg(const char *msg, SDL_Texture **tx, TTF_Font **p, SDL_Re
 static bool player_draw(SDL_Renderer *renderer);
 static bool map_draw(SDL_Renderer *renderer);
 static bool font_draw(SDL_Renderer *renderer, TTF_Font **font);
+static bool sound_effect_start(const char *sound, Mix_Chunk **effect);
+static void sound_effect_stop(int32_t channel, Mix_Chunk **effect);
+static bool bgm_start(const char *sound, Mix_Music **music);
+static void bgm_stop(Mix_Music **music);
 
 
 
@@ -82,11 +80,6 @@ static bool sdl_init(void)
 
 	if (TTF_Init() != 0) {
 		fprintf(stderr, "TTF FONT Init Error!: %s\n", TTF_GetError());
-		return false;
-	}
-
-	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) != 0) {
-		fprintf(stderr, "Audio Init Error!: %s\n", Mix_GetError());
 		return false;
 	}
 
@@ -181,6 +174,7 @@ static bool load_ttf_msg(const char *msg, SDL_Texture **tx, TTF_Font **p, SDL_Re
  * -------------------------------------------------*/
 static void sdl_finish(SDL_Window **window, SDL_Renderer **renderer, TTF_Font **font)
 {
+	Mix_CloseAudio();
 	TTF_CloseFont(*font);
 	TTF_Quit();
 	IMG_Quit();
@@ -209,6 +203,7 @@ static bool player_draw(SDL_Renderer *renderer)
 	frame += 1;
 	frame &= 65535;
 	SDL_DestroyTexture(player_tx);
+	player_tx = NULL;
 
 	return true;
 }
@@ -228,6 +223,7 @@ static bool map_draw(SDL_Renderer *renderer)
 	SDL_Rect maprect = (SDL_Rect){0, 0, MAP_WIDTH, MAP_HEIGHT};
 	SDL_RenderCopy(renderer, map_tx, NULL, &maprect);	//マップ描画
 	SDL_DestroyTexture(map_tx);
+	map_tx = NULL;
 
 	return true;
 }
@@ -250,23 +246,98 @@ static bool font_draw(SDL_Renderer *renderer, TTF_Font **font)
 	SDL_Rect pasteRect = (SDL_Rect){200, 200, iw, ih};	//{描画x, 描画y, 描画幅, 描画高さ}
 	SDL_RenderCopy(renderer, font_tx, &txtRext, &pasteRect);
 	SDL_DestroyTexture(font_tx);
+	font_tx = NULL;
 
 	return true;
 }
 
 
 /**-------------------------------------------------
+ * 効果音を再生
+ * -------------------------------------------------*/
+static bool sound_effect_start(const char *sound, Mix_Chunk **effect)
+{
+	*effect = Mix_LoadWAV(sound);
+
+	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) != 0) {
+		fprintf(stderr, "Audio Init Error!: %s\n", Mix_GetError());
+		return false;
+	}
+
+	if (*effect == NULL) {
+		fprintf(stderr, "Mix_LoadWAV Error!: %s\n", Mix_GetError());
+		return false;
+	}
+
+	channel = Mix_PlayChannel(-1, *effect, 0);	//チャンネル自動割り当て,0で一回再生
+
+	return true;
+}
+
+
+/**-------------------------------------------------
+ * 効果音を停止
+ * -------------------------------------------------*/
+static void sound_effect_stop(int32_t channel, Mix_Chunk **effect)
+{
+	Mix_HaltChannel(channel);
+	Mix_FreeChunk(*effect);
+	*effect = NULL;
+}
+
+
+/**-------------------------------------------------
+ * BGMを再生
+ * -------------------------------------------------
+ * arg1: file path
+ * -------------------------------------------------*/
+static bool bgm_start(const char *sound, Mix_Music **music)
+{
+	*music = Mix_LoadMUS(sound);
+
+	if (Mix_SetMusicCMD("play -q") != 0) {
+		fprintf(stderr, "Mix_SetMusicCMD");
+		return false;
+	}
+
+	if (*music == NULL) {
+		fprintf(stderr, "Mix_LoadMUS Error!: %s\n", Mix_GetError());
+		return false;
+	}
+
+	if (Mix_PlayMusic(*music, 1) != 0) {	//一回再生,-1の場合無限に再生
+		return false;
+	}
+
+	//while (Mix_PlayingMusic());	//再生中の場合1を返す
+
+	return true;
+}
+
+/**-------------------------------------------------
+ * BGMの停止
+ * -------------------------------------------------*/
+static void bgm_stop(Mix_Music **music)
+{
+	Mix_HaltMusic();		//再生停止
+	Mix_FreeMusic(*music);	//リソース解放
+	*music = NULL;
+}
+
+
+/**-------------------------------------------------
  * メイン関数
  * -------------------------------------------------
- * メインルーチンではSDLの生成、初期設定を行う
- * 外部関数で値の操作を行うようにする
+ * SDLは同一スレッド内で扱わなければならない
  * -------------------------------------------------*/
-int main(int argc, char **argv)
+int main(void)
 {
 
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 	TTF_Font *font;
+	Mix_Music *music;
+	Mix_Chunk *effect;
 	int32_t quit = false;
 
 	if (false == sdl_init()) {
@@ -279,12 +350,15 @@ int main(int argc, char **argv)
 	}
 
 	//SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);	//r, g, b, a
+	bgm_start(BGM_PATH, &music);
 	SDL_Event e;
 
 	while (!quit) {
 		while (SDL_PollEvent(&e)) {		//イベント処理が終わるまでループ
 			if (e.type == SDL_QUIT) {	//ウィンドウの閉じるボタンが押されたら抜ける
 				quit = true;
+				bgm_stop(&music);
+				sound_effect_start(EFFECT_PATH, &effect);
 				break;
 			}
 		}
@@ -297,6 +371,7 @@ int main(int argc, char **argv)
 		player_draw(renderer);
 		SDL_RenderPresent(renderer);
 	}
+	sound_effect_stop(channel, &effect);
 	sdl_finish(&window, &renderer, &font);
 
 	return 0;
