@@ -1,7 +1,7 @@
 COMPILER    = gcc
 FILE		= c
 CFLAGS      = -g -MMD -MP -std=c11 -Wall -Wextra -Winit-self -Wno-missing-field-initializers
-BACKLIBS	=  `sdl2-config --cflags --libs` -lSDL2_image -lSDL2 -lSDL2_ttf -lpthread
+BACKLIBS	=  `sdl2-config --cflags --libs` -lSDL2_image -lSDL2 -lSDL2_ttf -lSDL2_mixer -lpthread
 LIBS		=
 INCLUDE     = -I ./include/
 TARGET      = ./bin/$(shell basename `readlink -f .`)
