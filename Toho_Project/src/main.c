@@ -20,14 +20,15 @@
 #include "../include/DRAW.H"
 
 
-#define SCREEN_WIDTH	640		//ウィンドウの幅を指定
-#define SCREEN_HEIGHT	480		//ウィンドウの高さを指定
+#define SCREEN_WIDTH	1280	//ウィンドウの幅を指定
+#define SCREEN_HEIGHT	720		//ウィンドウの高さを指定
 #define GRID_SIZE		32		//マップ描画データのpixel幅と高さを指定
 #define MAP_SIZE_SHIFT	5		//5bitシフトすれば32になる
 #define MAP_DRAW_WIDTH	(SCREEN_WIDTH >> MAP_SIZE_SHIFT)	//幅のループ回数
 #define MAP_DRAW_HEIGHT	(SCREEN_HEIGHT >> MAP_SIZE_SHIFT)	//高さのループ回数
 #define UNIT_WIDTH		24		//描画ユニットデータの幅を指定
 #define UNIT_HEIGHT		32		//描画ユニットデータの高さを指定
+#define UNIT_SHIFT		(MAP_SIZE_SHIFT-1)		//32x32の半分ずつ描画する
 #define FONT_SIZE		40		//描画フォントサイズを指定
 
 
@@ -372,6 +373,12 @@ static bool sdl_init(void)
 		return false;
 	}
 
+	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) != 0) {
+		fprintf(stderr, "Audio Init Error!: %s\n", Mix_GetError());
+		return false;
+	}
+
+
 	return true;
 }
 
@@ -490,7 +497,7 @@ static bool player_draw(SDL_Renderer *renderer, t_posinfo *pos)
 
 	x = ((frame / animation_cycle) % 3) * UNIT_WIDTH;
 	SDL_Rect res  = (SDL_Rect){x, pos->res_ypos, UNIT_WIDTH, UNIT_HEIGHT};		//x座標からwidth分、画像データ切り抜き
-	SDL_Rect draw = (SDL_Rect){pos->unit_xpos << 5, pos->unit_ypos << 5, UNIT_WIDTH, UNIT_HEIGHT};	//(x,y)にw,hの大きさで描画する
+	SDL_Rect draw = (SDL_Rect){pos->unit_xpos << UNIT_SHIFT, pos->unit_ypos << UNIT_SHIFT, UNIT_WIDTH, UNIT_HEIGHT};	//(x,y)にw,hの大きさで描画する
 	SDL_RenderCopy(renderer, player_tx, &res, &draw);	//第四引数に指定した幅と高さに自動で拡大縮小してくれる
 	frame += 1;
 	frame &= 65535;
@@ -565,11 +572,6 @@ static bool font_draw(SDL_Renderer *renderer, TTF_Font **font)
 static bool sound_effect_start(const char *sound, Mix_Chunk **effect)
 {
 	*effect = Mix_LoadWAV(sound);
-
-	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) != 0) {
-		fprintf(stderr, "Audio Init Error!: %s\n", Mix_GetError());
-		return false;
-	}
 
 	if (*effect == NULL) {
 		fprintf(stderr, "Mix_LoadWAV Error!: %s\n", Mix_GetError());

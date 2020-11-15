@@ -109,8 +109,8 @@ int main(int argc, char **argv)
     gtk_main(); //gtkメインループを行う
 
 	clear_screen();
-	SET_TYPE(NORMAL);
 	CURSOL_ON();
+	SET_TYPE(NORMAL);
     strprintf("GTK RPG END");
 
     return 0;

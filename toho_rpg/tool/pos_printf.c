@@ -45,7 +45,7 @@ static const char *str[] ={
 };
 
 static const char *str1[] = {
-	"■■■あ",
+	"■■■あいうえお漢字",
 	"\0",
 };
 
@@ -219,7 +219,7 @@ static bool multibyte_eof(int id)
 							}
 						}
 					}
-					printf("- event(%s) pos(x = %2d, y = %2d)\r\n", s, count, i);
+					//printf("- event(%s) pos(x = %2d, y = %2d)\r\n", s, count, i);
 					if (res == com) {
 						fprintf(fp, "	{%2d, %2d,	(char **)common_msg},	//%s\n", count, i, s);
 					}else{
@@ -227,10 +227,21 @@ static bool multibyte_eof(int id)
 					}
 				}
 			}
+			if (check == wallinfo) {
+				for (int num = 0; num < res; num++) {
+					printf("%c", field[i][num+byte]);
+				}
+			}else{
+				for (int num = 0; num < res; num++) {
+					printf("%c", field[i][num+byte]);
+				}
+				printf(" ");
+			}
 			check = 0;
 			byte += res;
 			count++;
 		}
+		printf("\r\n");
 		byte = 0;
 		count = 0;
 	}
@@ -238,6 +249,7 @@ static bool multibyte_eof(int id)
 	fprintf(fp, "};\n\n");
 	fprintf(fp, "	 0   2   4   6   8  10  12  14  16  18  20  22  24  26  28  30  32  34  36  38  40  42\n");
 	fprintf(fp, "	   1   3   5   7   9  11  13  15  17  19  21  23  25  27  29  31  33  35  37  39  41  \n");
+
 	for (int i = 0; i < height; i++) {
 		fprintf(fp, "%2d. %s\n", i, &field[i][0]);
 	}

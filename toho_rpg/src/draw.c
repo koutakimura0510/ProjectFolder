@@ -42,7 +42,7 @@ typedef struct {
 /**-------------------------------------------------
  * ファイル内構造体の確保
  * -------------------------------------------------*/
-static t_posinfo posinfo = {10, 10, 0, 0, 0, 0};
+static t_posinfo posinfo = {20, 10, 0, 0, 0, 0};
 static t_fieldinfo fieldinfo;
 
 
@@ -98,10 +98,10 @@ void animation_move(uint8_t id)
 	}
 	clear_screen();
 
-	if (false == detect(p)) {
+	/*if (false == detect(p)) {
 		direction(p);
 		event_msg_draw();
-	}
+	}*/
 	
     flame_input(info, p);
 	flame_draw(YELLOW);
