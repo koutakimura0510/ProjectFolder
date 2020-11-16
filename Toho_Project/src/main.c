@@ -18,6 +18,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "../include/DRAW.H"
+#include "../include/TIMER.H"
 
 
 #define SCREEN_WIDTH	1280	//ウィンドウの幅を指定
@@ -28,16 +29,16 @@
 #define MAP_DRAW_HEIGHT	(SCREEN_HEIGHT >> MAP_SIZE_SHIFT)	//高さのループ回数
 #define UNIT_WIDTH		24		//描画ユニットデータの幅を指定
 #define UNIT_HEIGHT		32		//描画ユニットデータの高さを指定
-#define UNIT_SHIFT		(MAP_SIZE_SHIFT-1)		//32x32の半分ずつ描画する
+#define UNIT_SHIFT		(MAP_SIZE_SHIFT-3)		//ユニットの描画位置を指定
 #define FONT_SIZE		40		//描画フォントサイズを指定
 
 
 //file pathは構造体に変更予定
-#define FONT_PATH		"res/font/PixelMplus12-Regular.ttf"
-#define MAP_PATH		"res/img/map/field/width32/map001.png"
-#define UNIT_PATH		"res/img/unit/akisys.png"
-#define BGM_PATH		"res/sound/bgm/touhou.wav"
-#define EFFECT_PATH		"res/sound/effect/mapmove.wav"
+#define FONT_PATH		"./res/font/PixelMplus12-Regular.ttf"
+#define MAP_PATH		"./res/img/map/field/width32/map001.png"
+#define UNIT_PATH		"./res/img/unit/akisys.png"
+#define BGM_PATH		"./res/sound/bgm/touhou.wav"
+#define EFFECT_PATH		"./res/sound/effect/mapmove.wav"
 
 
 #define RENDERER	(SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)	//レンダリング方法を指定
@@ -72,8 +73,6 @@ typedef struct {
 /**-------------------------------------------------
  * ファイル内グローバル変数
  * -------------------------------------------------*/
-static int32_t animation_cycle = 100;
-static int32_t frame = 0;
 static int32_t channel = 0;
 
 
@@ -82,7 +81,6 @@ static int32_t channel = 0;
  * -------------------------------------------------*/
 static t_posinfo posinfo = {0, 0, 0, 0, 0, 0};
 static t_fieldinfo fieldinfo = {0, 0, MAP_DRAW_WIDTH, MAP_DRAW_HEIGHT};
-
 
 
 /**-------------------------------------------------
@@ -106,6 +104,12 @@ static void bgm_stop(Mix_Music **music);
  * キー操作
  * -------------------------------------------------*/
 static bool key_event(t_fieldinfo *info, t_posinfo *p);
+
+
+/**-------------------------------------------------
+ * アニメーション管理
+ * -------------------------------------------------*/
+static uint32_t animation_cycle(uint32_t time);
 
 
 /**-------------------------------------------------
@@ -481,26 +485,60 @@ static void sdl_finish(SDL_Window **window, SDL_Renderer **renderer, TTF_Font **
 
 
 /**-------------------------------------------------
+ * プレイヤーのアニメーションサイクル時間取得関数
+ * 使用する画像データは、歩、立、歩の順で並んでいる
+ * -------------------------------------------------
+ * arg1	 : time	アニメーションを行う間隔時間を指定
+ * return: x	歩き部分だけ使用するため、0pixel.48pixelの部分だけ切り抜き
+ * -------------------------------------------------*/
+static uint32_t animation_cycle(uint32_t time)
+{
+	static uint8_t x = 0;
+	static long t = 0;
+
+	if (true == comtimer(&t, time)) {
+		x++;
+		x &= 0x01;	//0と1を判定
+	}
+
+	return ((UNIT_WIDTH & (~x + 1)) << x);
+}
+
+
+/**-------------------------------------------------
  * 操作キャラクターの描画
  * -------------------------------------------------
  * arg1:レンダリング情報
  * arg2:座標データの構造体のアドレス
+ * -------------------------------------------------
+ * SDL_Rect	res		arg1:画像データの切り抜きを開始する、x_Pixel数を指定
+ * 					arg2:画像データの切り抜きを開始する、y_Pixel数を指定
+ * 					arg3:x地点から切り抜きを終了する、x_Pixel数を指定
+ * 					arg4:y地点から切り抜きを終了する、y_Pixel数を指定
+ *
+ * SDL_Rect draw	arg1:描画を開始する、x_positionを指定
+ * 					arg2:描画を開始する、y_positionを指定
+ * 					arg3:指定したポジションに、描画を行う幅を指定
+ * 					arg4:指定したポジションに、描画を行う高さを指定
+ *
+ * SDL_RenderCopy	arg1: レンダリング情報を指定
+ * 					arg2: 使用するテクスチャー情報を指定
+ * 					arg3: 使用する画像データの情報を指定し、長方形を描画する
+ * 					arg4: この引数に指定した、幅と高さに自動で拡大縮小する
  * -------------------------------------------------*/
 static bool player_draw(SDL_Renderer *renderer, t_posinfo *pos)
 {
 	SDL_Texture *player_tx;
-	int32_t x;
+	uint32_t x;
 
 	if (false == load_texture(UNIT_PATH, &player_tx, renderer)) {
 		return false;
 	}
 
-	x = ((frame / animation_cycle) % 3) * UNIT_WIDTH;
-	SDL_Rect res  = (SDL_Rect){x, pos->res_ypos, UNIT_WIDTH, UNIT_HEIGHT};		//x座標からwidth分、画像データ切り抜き
+	x = animation_cycle(MS_100(300));
+	SDL_Rect res  = (SDL_Rect){x, pos->res_ypos, UNIT_WIDTH, UNIT_HEIGHT};
 	SDL_Rect draw = (SDL_Rect){pos->unit_xpos << UNIT_SHIFT, pos->unit_ypos << UNIT_SHIFT, UNIT_WIDTH, UNIT_HEIGHT};	//(x,y)にw,hの大きさで描画する
-	SDL_RenderCopy(renderer, player_tx, &res, &draw);	//第四引数に指定した幅と高さに自動で拡大縮小してくれる
-	frame += 1;
-	frame &= 65535;
+	SDL_RenderCopy(renderer, player_tx, &res, &draw);
 	SDL_DestroyTexture(player_tx);
 	player_tx = NULL;
 
@@ -524,7 +562,7 @@ static bool map_draw(SDL_Renderer *renderer)
 		return false;
 	}
 
-	SDL_Rect map_res  = (SDL_Rect){0, 0, GRID_SIZE, GRID_SIZE};	//取りあえず草原情報取得
+	SDL_Rect map_res  = (SDL_Rect){0, 0, GRID_SIZE, GRID_SIZE};
 
 	for (uint32_t i = 0; i < MAP_DRAW_HEIGHT; i++) {
 		for (uint32_t j = 0; j < MAP_DRAW_WIDTH; j++) {
