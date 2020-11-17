@@ -1,0 +1,180 @@
+#define	STANDERD_S (0)
+#define	STANDERD_MAP0 (STANDERD_S+0)
+#define	STANDERD_MAP1 (STANDERD_S+1)
+#define	STANDERD_MAP2 (STANDERD_S+2)
+#define	STANDERD_MAP3 (STANDERD_S+3)
+#define	STANDERD_MAP4 (STANDERD_S+4)
+#define	STANDERD_MAP5 (STANDERD_S+5)
+#define	STANDERD_MAP6 (STANDERD_S+6)
+#define	STANDERD_MAP7 (STANDERD_S+7)
+#define	STANDERD_MAP8 (STANDERD_S+8)
+#define	STANDERD_MAP9 (STANDERD_S+9)
+#define	STANDERD_MAP10 (STANDERD_S+10)
+#define	STANDERD_MAP11 (STANDERD_S+11)
+#define	STANDERD_MAP12 (STANDERD_S+12)
+#define	STANDERD_MAP13 (STANDERD_S+13)
+#define	STANDERD_MAP14 (STANDERD_S+14)
+#define	STANDERD_MAP15 (STANDERD_S+15)
+#define	STANDERD_MAP16 (STANDERD_S+16)
+#define	STANDERD_MAP17 (STANDERD_S+17)
+#define	STANDERD_MAP18 (STANDERD_S+18)
+#define	STANDERD_MAP19 (STANDERD_S+19)
+#define	STANDERD_MAP20 (STANDERD_S+20)
+#define	STANDERD_MAP21 (STANDERD_S+21)
+#define	STANDERD_MAP22 (STANDERD_S+22)
+#define	STANDERD_MAP23 (STANDERD_S+23)
+#define	STANDERD_MAP24 (STANDERD_S+24)
+#define	STANDERD_MAP25 (STANDERD_S+25)
+#define	STANDERD_MAP26 (STANDERD_S+26)
+#define	STANDERD_MAP27 (STANDERD_S+27)
+#define	STANDERD_MAP28 (STANDERD_S+28)
+#define	STANDERD_MAP29 (STANDERD_S+29)
+#define	STANDERD_MAP30 (STANDERD_S+30)
+#define	STANDERD_MAP31 (STANDERD_S+31)
+#define	STANDERD_MAP32 (STANDERD_S+32)
+#define	STANDERD_MAP33 (STANDERD_S+33)
+#define	STANDERD_MAP34 (STANDERD_S+34)
+#define	STANDERD_MAP35 (STANDERD_S+35)
+#define	STANDERD_MAP36 (STANDERD_S+36)
+#define	STANDERD_MAP37 (STANDERD_S+37)
+#define	STANDERD_MAP38 (STANDERD_S+38)
+#define	STANDERD_MAP39 (STANDERD_S+39)
+#define	STANDERD_MAP40 (STANDERD_S+40)
+#define	STANDERD_MAP41 (STANDERD_S+41)
+#define	STANDERD_MAP42 (STANDERD_S+42)
+#define	STANDERD_MAP43 (STANDERD_S+43)
+#define	STANDERD_MAP44 (STANDERD_S+44)
+#define	STANDERD_MAP45 (STANDERD_S+45)
+#define	STANDERD_MAP46 (STANDERD_S+46)
+#define	STANDERD_MAP47 (STANDERD_S+47)
+#define	STANDERD_MAP48 (STANDERD_S+48)
+#define	STANDERD_MAP49 (STANDERD_S+49)
+#define	STANDERD_MAP50 (STANDERD_S+50)
+#define	STANDERD_MAP51 (STANDERD_S+51)
+#define	STANDERD_MAP52 (STANDERD_S+52)
+#define	STANDERD_MAP53 (STANDERD_S+53)
+#define	STANDERD_MAP54 (STANDERD_S+54)
+#define	STANDERD_MAP55 (STANDERD_S+55)
+#define	STANDERD_MAP56 (STANDERD_S+56)
+#define	STANDERD_MAP57 (STANDERD_S+57)
+#define	STANDERD_MAP58 (STANDERD_S+58)
+#define	STANDERD_MAP59 (STANDERD_S+59)
+#define	STANDERD_MAP60 (STANDERD_S+60)
+#define	STANDERD_MAP61 (STANDERD_S+61)
+#define	STANDERD_MAP62 (STANDERD_S+62)
+#define	STANDERD_MAP63 (STANDERD_S+63)
+#define	STANDERD_MAP64 (STANDERD_S+64)
+#define	STANDERD_MAP65 (STANDERD_S+65)
+#define	STANDERD_MAP66 (STANDERD_S+66)
+#define	STANDERD_MAP67 (STANDERD_S+67)
+#define	STANDERD_MAP68 (STANDERD_S+68)
+#define	STANDERD_MAP69 (STANDERD_S+69)
+#define	STANDERD_MAP70 (STANDERD_S+70)
+#define	STANDERD_MAP71 (STANDERD_S+71)
+#define	STANDERD_MAP72 (STANDERD_S+72)
+#define	STANDERD_MAP73 (STANDERD_S+73)
+#define	STANDERD_MAP74 (STANDERD_S+74)
+#define	STANDERD_MAP75 (STANDERD_S+75)
+#define	STANDERD_MAP76 (STANDERD_S+76)
+#define	STANDERD_MAP77 (STANDERD_S+77)
+#define	STANDERD_MAP78 (STANDERD_S+78)
+#define	STANDERD_MAP79 (STANDERD_S+79)
+#define	STANDERD_MAP80 (STANDERD_S+80)
+#define	STANDERD_MAP81 (STANDERD_S+81)
+#define	STANDERD_MAP82 (STANDERD_S+82)
+#define	STANDERD_MAP83 (STANDERD_S+83)
+#define	STANDERD_MAP84 (STANDERD_S+84)
+#define	STANDERD_MAP85 (STANDERD_S+85)
+#define	STANDERD_MAP86 (STANDERD_S+86)
+#define	STANDERD_MAP87 (STANDERD_S+87)
+#define	STANDERD_E (STANDERD_MAP87)
+
+{	STANDERD_MAP0,   0,  (char **)mappass,    0,    0,  0  },
+{	STANDERD_MAP1,   0,  (char **)mappass,   32,    0,  0  },
+{	STANDERD_MAP2,   0,  (char **)mappass,   64,    0,  0  },
+{	STANDERD_MAP3,   0,  (char **)mappass,   96,    0,  0  },
+{	STANDERD_MAP4,   0,  (char **)mappass,  128,    0,  0  },
+{	STANDERD_MAP5,   0,  (char **)mappass,  160,    0,  0  },
+{	STANDERD_MAP6,   0,  (char **)mappass,  192,    0,  0  },
+{	STANDERD_MAP7,   0,  (char **)mappass,  224,    0,  0  },
+{	STANDERD_MAP8,   0,  (char **)mappass,    0,   32,  0  },
+{	STANDERD_MAP9,   0,  (char **)mappass,   32,   32,  0  },
+{	STANDERD_MAP10,  0,  (char **)mappass,   64,   32,  0  },
+{	STANDERD_MAP11,  0,  (char **)mappass,   96,   32,  0  },
+{	STANDERD_MAP12,  0,  (char **)mappass,  128,   32,  0  },
+{	STANDERD_MAP13,  0,  (char **)mappass,  160,   32,  0  },
+{	STANDERD_MAP14,  0,  (char **)mappass,  192,   32,  0  },
+{	STANDERD_MAP15,  0,  (char **)mappass,  224,   32,  0  },
+{	STANDERD_MAP16,  0,  (char **)mappass,    0,   64,  0  },
+{	STANDERD_MAP17,  0,  (char **)mappass,   32,   64,  0  },
+{	STANDERD_MAP18,  0,  (char **)mappass,   64,   64,  0  },
+{	STANDERD_MAP19,  0,  (char **)mappass,   96,   64,  0  },
+{	STANDERD_MAP20,  0,  (char **)mappass,  128,   64,  0  },
+{	STANDERD_MAP21,  0,  (char **)mappass,  160,   64,  0  },
+{	STANDERD_MAP22,  0,  (char **)mappass,  192,   64,  0  },
+{	STANDERD_MAP23,  0,  (char **)mappass,  224,   64,  0  },
+{	STANDERD_MAP24,  0,  (char **)mappass,    0,   96,  0  },
+{	STANDERD_MAP25,  0,  (char **)mappass,   32,   96,  0  },
+{	STANDERD_MAP26,  0,  (char **)mappass,   64,   96,  0  },
+{	STANDERD_MAP27,  0,  (char **)mappass,   96,   96,  0  },
+{	STANDERD_MAP28,  0,  (char **)mappass,  128,   96,  0  },
+{	STANDERD_MAP29,  0,  (char **)mappass,  160,   96,  0  },
+{	STANDERD_MAP30,  0,  (char **)mappass,  192,   96,  0  },
+{	STANDERD_MAP31,  0,  (char **)mappass,  224,   96,  0  },
+{	STANDERD_MAP32,  0,  (char **)mappass,    0,  128,  0  },
+{	STANDERD_MAP33,  0,  (char **)mappass,   32,  128,  0  },
+{	STANDERD_MAP34,  0,  (char **)mappass,   64,  128,  0  },
+{	STANDERD_MAP35,  0,  (char **)mappass,   96,  128,  0  },
+{	STANDERD_MAP36,  0,  (char **)mappass,  128,  128,  0  },
+{	STANDERD_MAP37,  0,  (char **)mappass,  160,  128,  0  },
+{	STANDERD_MAP38,  0,  (char **)mappass,  192,  128,  0  },
+{	STANDERD_MAP39,  0,  (char **)mappass,  224,  128,  0  },
+{	STANDERD_MAP40,  0,  (char **)mappass,    0,  160,  0  },
+{	STANDERD_MAP41,  0,  (char **)mappass,   32,  160,  0  },
+{	STANDERD_MAP42,  0,  (char **)mappass,   64,  160,  0  },
+{	STANDERD_MAP43,  0,  (char **)mappass,   96,  160,  0  },
+{	STANDERD_MAP44,  0,  (char **)mappass,  128,  160,  0  },
+{	STANDERD_MAP45,  0,  (char **)mappass,  160,  160,  0  },
+{	STANDERD_MAP46,  0,  (char **)mappass,  192,  160,  0  },
+{	STANDERD_MAP47,  0,  (char **)mappass,  224,  160,  0  },
+{	STANDERD_MAP48,  0,  (char **)mappass,    0,  192,  0  },
+{	STANDERD_MAP49,  0,  (char **)mappass,   32,  192,  0  },
+{	STANDERD_MAP50,  0,  (char **)mappass,   64,  192,  0  },
+{	STANDERD_MAP51,  0,  (char **)mappass,   96,  192,  0  },
+{	STANDERD_MAP52,  0,  (char **)mappass,  128,  192,  0  },
+{	STANDERD_MAP53,  0,  (char **)mappass,  160,  192,  0  },
+{	STANDERD_MAP54,  0,  (char **)mappass,  192,  192,  0  },
+{	STANDERD_MAP55,  0,  (char **)mappass,  224,  192,  0  },
+{	STANDERD_MAP56,  0,  (char **)mappass,    0,  224,  0  },
+{	STANDERD_MAP57,  0,  (char **)mappass,   32,  224,  0  },
+{	STANDERD_MAP58,  0,  (char **)mappass,   64,  224,  0  },
+{	STANDERD_MAP59,  0,  (char **)mappass,   96,  224,  0  },
+{	STANDERD_MAP60,  0,  (char **)mappass,  128,  224,  0  },
+{	STANDERD_MAP61,  0,  (char **)mappass,  160,  224,  0  },
+{	STANDERD_MAP62,  0,  (char **)mappass,  192,  224,  0  },
+{	STANDERD_MAP63,  0,  (char **)mappass,  224,  224,  0  },
+{	STANDERD_MAP64,  0,  (char **)mappass,    0,  256,  0  },
+{	STANDERD_MAP65,  0,  (char **)mappass,   32,  256,  0  },
+{	STANDERD_MAP66,  0,  (char **)mappass,   64,  256,  0  },
+{	STANDERD_MAP67,  0,  (char **)mappass,   96,  256,  0  },
+{	STANDERD_MAP68,  0,  (char **)mappass,  128,  256,  0  },
+{	STANDERD_MAP69,  0,  (char **)mappass,  160,  256,  0  },
+{	STANDERD_MAP70,  0,  (char **)mappass,  192,  256,  0  },
+{	STANDERD_MAP71,  0,  (char **)mappass,  224,  256,  0  },
+{	STANDERD_MAP72,  0,  (char **)mappass,    0,  288,  0  },
+{	STANDERD_MAP73,  0,  (char **)mappass,   32,  288,  0  },
+{	STANDERD_MAP74,  0,  (char **)mappass,   64,  288,  0  },
+{	STANDERD_MAP75,  0,  (char **)mappass,   96,  288,  0  },
+{	STANDERD_MAP76,  0,  (char **)mappass,  128,  288,  0  },
+{	STANDERD_MAP77,  0,  (char **)mappass,  160,  288,  0  },
+{	STANDERD_MAP78,  0,  (char **)mappass,  192,  288,  0  },
+{	STANDERD_MAP79,  0,  (char **)mappass,  224,  288,  0  },
+{	STANDERD_MAP80,  0,  (char **)mappass,    0,  320,  0  },
+{	STANDERD_MAP81,  0,  (char **)mappass,   32,  320,  0  },
+{	STANDERD_MAP82,  0,  (char **)mappass,   64,  320,  0  },
+{	STANDERD_MAP83,  0,  (char **)mappass,   96,  320,  0  },
+{	STANDERD_MAP84,  0,  (char **)mappass,  128,  320,  0  },
+{	STANDERD_MAP85,  0,  (char **)mappass,  160,  320,  0  },
+{	STANDERD_MAP86,  0,  (char **)mappass,  192,  320,  0  },
+{	STANDERD_MAP87,  0,  (char **)mappass,  224,  320,  0  },
+{	STANDERD_S,	  32,   32,  256,  352,	 5  },

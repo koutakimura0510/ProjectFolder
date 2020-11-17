@@ -1,6 +1,6 @@
 CC = gcc
 CFLAG = -std=c11 -Wall
-SRC = png.c
+SRC = mapchip.c
 SDL = sdl.c
 LIBS = `sdl2-config --cflags --libs`
 DFLAG = -lSDL2_image -lSDL2 -lSDL2_ttf

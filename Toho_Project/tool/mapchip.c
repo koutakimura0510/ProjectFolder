@@ -12,36 +12,52 @@
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "../include/DRAW.H"
-#include "../include/TIMER.H"
-
+#include "./DRAW.H"
+#include "./MAPCHIP.H"
+ 
+#define NUM(ary) (sizeof(ary)/sizeof(ary[0]))
 
 #define SCREEN_WIDTH	1280	//ウィンドウの幅を指定
-#define SCREEN_HEIGHT	720		//ウィンドウの高さを指定
+#define SCREEN_HEIGHT	960		//ウィンドウの高さを指定
 #define GRID_SIZE		32		//マップ描画データのpixel幅と高さを指定
 #define MAP_SIZE_SHIFT	5		//5bitシフトすれば32になる
 #define MAP_DRAW_WIDTH	(SCREEN_WIDTH >> MAP_SIZE_SHIFT)	//幅のループ回数
 #define MAP_DRAW_HEIGHT	(SCREEN_HEIGHT >> MAP_SIZE_SHIFT)	//高さのループ回数
 #define UNIT_WIDTH		24		//描画ユニットデータの幅を指定
 #define UNIT_HEIGHT		32		//描画ユニットデータの高さを指定
-#define UNIT_SHIFT		(MAP_SIZE_SHIFT-3)		//ユニットの描画位置を指定
+#define UNIT_SHIFT		(MAP_SIZE_SHIFT-0)		//ユニットの描画位置を指定
 #define FONT_SIZE		40		//描画フォントサイズを指定
-
+#define MAPCHIP_SIZE	12
 
 //file pathは構造体に変更予定
-#define FONT_PATH		"./res/font/PixelMplus12-Regular.ttf"
-#define MAP_PATH		"./res/img/map/field/width32/map001.png"
-#define UNIT_PATH		"./res/img/unit/akisys.png"
-#define BGM_PATH		"./res/sound/bgm/touhou.wav"
-#define EFFECT_PATH		"./res/sound/effect/mapmove.wav"
+#define FONT_PATH		"../res/font/PixelMplus12-Regular.ttf"
+#define UNIT_PATH		"../res/img/unit/akisys.png"
 
 
 #define RENDERER	(SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)	//レンダリング方法を指定
+
+
+/**-------------------------------------------------
+ * データ読み書き用配列確保
+ * -------------------------------------------------*/
+static uint32_t map40_30[40*30]	 = {0};
+static uint32_t map80_60[80*60]	 = {0};
+static uint32_t map120_90[120*90] = {0};
+static uint32_t map160_120[160*120] = {0};
+static uint32_t map320_240[320*240] = {0};
+
+
+/**-------------------------------------------------
+ * マップチップ用変数
+ * -------------------------------------------------*/
+static uint8_t mapchip_flag = 0;
+static uint32_t mapchip_direct = 0;
+static uint32_t ychip = 0;
+static uint32_t xchip = 0;
 
 
 /**-------------------------------------------------
@@ -55,6 +71,8 @@ typedef struct {
 	uint8_t unit_direction;	//ユニットの現在向いている方向
 	uint8_t info_direction;	//どの座標を更新したか判定を行う変数
 	uint32_t res_ypos;		//描画ファイルの切り取りを行うy座標を指定
+	int32_t ypos_animation_check;
+	int32_t xpos_animation_check;
 } t_posinfo;
 
 
@@ -62,25 +80,31 @@ typedef struct {
  * 現在のフィールド情報を保存
  * -------------------------------------------------*/
 typedef struct {
-	int32_t ypos_animation_check;
-	int32_t xpos_animation_check;
 	int32_t field_maxwidth;		//現在フィールドの最大横幅指定
 	int32_t field_maxheight;	//現在フィールドの最大高さ指定
-	char **map_id;				//現在フィールドの先頭アドレス指定
 } t_fieldinfo;
 
 
-/**-------------------------------------------------
- * ファイル内グローバル変数
- * -------------------------------------------------*/
-static int32_t channel = 0;
+typedef struct {
+	uint8_t id;
+	uint32_t *map;
+} t_fieldmap;
+
+static const t_fieldmap fieldmap[] = {
+	{ 0, map40_30	},
+	{ 0, map80_60	},
+	{ 0, map120_90	},
+	{ 0, map160_120	},
+	{ 0, map320_240	},
+};
+
 
 
 /**-------------------------------------------------
  * 構造体の確保
  * -------------------------------------------------*/
-static t_posinfo posinfo = {0, 0, 0, 0, 0, 0};
-static t_fieldinfo fieldinfo = {0, 0, MAP_DRAW_WIDTH, MAP_DRAW_HEIGHT};
+static t_posinfo posinfo = {0, 0, 0, 0, 0, 0, 0};
+static t_fieldinfo fieldinfo = {MAP_DRAW_WIDTH, MAP_DRAW_HEIGHT};
 
 
 /**-------------------------------------------------
@@ -92,12 +116,11 @@ static void sdl_finish(SDL_Window **window, SDL_Renderer **renderer, TTF_Font **
 static bool load_texture(const char *path, SDL_Texture **p, SDL_Renderer *renderer);
 static bool load_ttf_msg(const char *msg, SDL_Texture **tx, TTF_Font **p, SDL_Renderer *renderer);
 static bool player_draw(SDL_Renderer *renderer, t_posinfo *pos);
-static bool map_draw(SDL_Renderer *renderer);
+static bool map_draw(SDL_Renderer *renderer, t_fieldinfo *info, const t_mapid *p, const t_mapinfo *map);
 static bool font_draw(SDL_Renderer *renderer, TTF_Font **font);
-static bool sound_effect_start(const char *sound, Mix_Chunk **effect);
-static void sound_effect_stop(int32_t channel, Mix_Chunk **effect);
-static bool bgm_start(const char *sound, Mix_Music **music);
-static void bgm_stop(Mix_Music **music);
+static bool mapchip_draw(SDL_Renderer *renderer, const t_mapid *p, const t_mapinfo *map);
+static bool map_direct(SDL_Renderer *renderer, const t_mapid *p, const t_mapinfo *map, t_fieldinfo *info, t_posinfo *pos);
+
 
 
 /**-------------------------------------------------
@@ -107,19 +130,50 @@ static bool key_event(t_fieldinfo *info, t_posinfo *p);
 
 
 /**-------------------------------------------------
- * アニメーション管理
- * -------------------------------------------------*/
-static uint32_t animation_cycle(uint32_t time);
-
-
-/**-------------------------------------------------
  * 座標計算
  * -------------------------------------------------*/
 static void xpos_move_right(t_fieldinfo *info, t_posinfo *p);
 static void xpos_move_left(t_posinfo *p);
 static void ypos_move_up(t_posinfo *p);
 static void ypos_move_down(t_fieldinfo *info, t_posinfo *p);
+static void direct(t_fieldinfo *info, t_posinfo *p);
 
+
+/**-------------------------------------------------
+ * フレームバッファ操作
+ * -------------------------------------------------*/
+static uint32_t *get_framebuffer_address(uint8_t id);
+static char **get_mapchip_path(const t_mapid *p);
+
+
+/**-------------------------------------------------
+ * ファイル操作
+ * -------------------------------------------------*/
+void mapf_write(void);
+void mapf_read(void);
+
+
+
+/**-------------------------------------------------
+ * フレームバッファの先頭アドレス取得
+ * -------------------------------------------------*/
+static uint32_t *get_framebuffer_address(uint8_t id)
+{
+	const t_fieldmap *p = fieldmap;
+
+	p = p + id;
+
+	return &p->map[0];
+}
+
+
+/**-------------------------------------------------
+ * mapchipのpassを取得
+ * -------------------------------------------------*/
+static char **get_mapchip_path(const t_mapid *p)
+{
+	return (char **)p->path[p->select];
+}
 
 
 /**-------------------------------------------
@@ -227,6 +281,40 @@ static void ypos_move_down(t_fieldinfo *info, t_posinfo *p)
 
 
 /**-------------------------------------------------
+ * 当たり判定
+ * -------------------------------------------------*/
+static void direct(t_fieldinfo *info, t_posinfo *p)
+{
+	int32_t ux = p->unit_xpos;
+	int32_t uy = p->unit_ypos;
+	int32_t fx = p->field_xpos;
+	int32_t fy = p->field_ypos;
+	int32_t fmx = info->field_maxwidth;
+	int32_t fmy = info->field_maxheight;
+
+	if (fmx < (fx + ux)) {
+		p->unit_xpos--;
+		return;
+	}
+
+	if ((ux - fx) < 0) {
+		p->unit_xpos++;
+		return;
+	}
+
+	if (fmy < (fy + uy)) {
+		p->unit_ypos--;
+		return;
+	}
+
+	if ((uy - fy) < 0) {
+		p->unit_ypos++;
+		return;
+	}
+}
+
+
+/**-------------------------------------------------
  * sdlの初期化関数
  * -------------------------------------------------*/
 static bool sdl_init(void)
@@ -247,11 +335,6 @@ static bool sdl_init(void)
 
 	if (TTF_Init() != 0) {
 		fprintf(stderr, "TTF FONT Init Error!: %s\n", TTF_GetError());
-		return false;
-	}
-
-	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) != 0) {
-		fprintf(stderr, "Audio Init Error!: %s\n", Mix_GetError());
 		return false;
 	}
 
@@ -347,34 +430,12 @@ static bool load_ttf_msg(const char *msg, SDL_Texture **tx, TTF_Font **p, SDL_Re
  * -------------------------------------------------*/
 static void sdl_finish(SDL_Window **window, SDL_Renderer **renderer, TTF_Font **font)
 {
-	Mix_CloseAudio();
 	TTF_CloseFont(*font);
 	TTF_Quit();
 	IMG_Quit();
 	SDL_DestroyRenderer(*renderer);
 	SDL_DestroyWindow(*window);
 	SDL_Quit();
-}
-
-
-/**-------------------------------------------------
- * プレイヤーのアニメーションサイクル時間取得関数
- * 使用する画像データは、歩、立、歩の順で並んでいる
- * -------------------------------------------------
- * arg1	 : time	アニメーションを行う間隔時間を指定
- * return: x	歩き部分だけ使用するため、0pixel.48pixelの部分だけ切り抜き
- * -------------------------------------------------*/
-static uint32_t animation_cycle(uint32_t time)
-{
-	static uint8_t x = 0;
-	static long t = 0;
-
-	if (true == comtimer(&t, time)) {
-		x++;
-		x &= 0x01;	//0と1を判定
-	}
-
-	return ((UNIT_WIDTH & (~x + 1)) << x);
 }
 
 
@@ -402,14 +463,12 @@ static uint32_t animation_cycle(uint32_t time)
 static bool player_draw(SDL_Renderer *renderer, t_posinfo *pos)
 {
 	SDL_Texture *player_tx;
-	uint32_t x;
 
 	if (false == load_texture(UNIT_PATH, &player_tx, renderer)) {
 		return false;
 	}
 
-	x = animation_cycle(MS_100(300));
-	SDL_Rect res  = (SDL_Rect){x, pos->res_ypos, UNIT_WIDTH, UNIT_HEIGHT};
+	SDL_Rect res  = (SDL_Rect){0, pos->res_ypos, UNIT_WIDTH, UNIT_HEIGHT};
 	SDL_Rect draw = (SDL_Rect){pos->unit_xpos << UNIT_SHIFT, pos->unit_ypos << UNIT_SHIFT, UNIT_WIDTH, UNIT_HEIGHT};	//(x,y)にw,hの大きさで描画する
 	SDL_RenderCopy(renderer, player_tx, &res, &draw);
 	SDL_DestroyTexture(player_tx);
@@ -427,20 +486,31 @@ static bool player_draw(SDL_Renderer *renderer, t_posinfo *pos)
  * -------------------------------------------------
  * arg1:　レンダリング情報
  * -------------------------------------------------*/
-static bool map_draw(SDL_Renderer *renderer)
+static bool map_draw(SDL_Renderer *renderer, t_fieldinfo *info, const t_mapid *p, const t_mapinfo *map)
 {
+	const t_mapid *oldp = p;
 	SDL_Texture *map_tx;
+	SDL_Rect map_res;
+	SDL_Rect map_draw;
+	uint32_t x, y, i, j, d;
+	uint32_t *ptr;	//frame buffer先頭アドレス取得用ポインタ
+	char **path;
 
-	if (false == load_texture(MAP_PATH, &map_tx, renderer)) {
-		return false;
-	}
 
-	SDL_Rect map_res  = (SDL_Rect){0, 0, GRID_SIZE, GRID_SIZE};
+	ptr = get_framebuffer_address(0);
+	x = info->field_maxwidth;
+	y = info->field_maxheight;
 
-	for (uint32_t i = 0; i < MAP_DRAW_HEIGHT; i++) {
-		for (uint32_t j = 0; j < MAP_DRAW_WIDTH; j++) {
-			SDL_Rect map_draw = (SDL_Rect){j << MAP_SIZE_SHIFT, i << MAP_SIZE_SHIFT, GRID_SIZE, GRID_SIZE};
+	for (i = 0; i < y; i++) {
+		for (j = 0; j < x; j++) {
+			d = ptr[(i * x)+j];
+			p = p + d;
+			path = get_mapchip_path(p);
+			load_texture((char *)path, &map_tx, renderer);
+			map_res  = (SDL_Rect){p->xpos, p->ypos, map->xpixel, map->ypixel};
+			map_draw = (SDL_Rect){j << MAP_SIZE_SHIFT, i << MAP_SIZE_SHIFT, GRID_SIZE, GRID_SIZE};
 			SDL_RenderCopy(renderer, map_tx, &map_res, &map_draw);
+			p = oldp;	//アドレスのポインタを初期値に戻す
 		}
 	}
 
@@ -449,6 +519,83 @@ static bool map_draw(SDL_Renderer *renderer)
 
 	return true;
 }
+
+
+/**-------------------------------------------------
+ * マップチップ選択画面描画
+ * -------------------------------------------------*/
+static bool mapchip_draw(SDL_Renderer *renderer, const t_mapid *p, const t_mapinfo *map)
+{
+	SDL_Texture *mapchip;
+	char **path;
+	uint32_t maxwidth = map->maxwidth;
+	uint32_t xpixel   = map->xpixel;
+	uint32_t ypixel   = map->ypixel;
+
+	if (mapchip_flag == 0) {
+		return false;
+	}
+
+	p = p + (xchip + (ychip * (maxwidth / xpixel)));
+	path = get_mapchip_path(p);
+
+	if (false == load_texture((char *)path, &mapchip, renderer)) {
+		return false;
+	}
+
+	SDL_Rect chip_draw = (SDL_Rect){0, ychip*ypixel, maxwidth, ypixel};	//マップチップを描画
+	SDL_Rect rend  = (SDL_Rect){0, 0, MAPCHIP_SIZE, MAPCHIP_SIZE};		//描画座標とマップチップ大きさ指定
+	SDL_RenderCopy(renderer, mapchip, &chip_draw, &rend);
+
+	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	SDL_Rect back_black = (SDL_Rect){xchip*MAPCHIP_SIZE, 0, MAPCHIP_SIZE, MAPCHIP_SIZE};
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 100);
+	SDL_RenderFillRect(renderer, &back_black);
+
+	SDL_DestroyTexture(mapchip);
+	mapchip = NULL;
+
+	return true;
+}
+
+
+/**-------------------------------------------------
+ * マップチップを置く
+ * -------------------------------------------------*/
+static bool map_direct(SDL_Renderer *renderer, const t_mapid *p, const t_mapinfo *map, t_fieldinfo *info, t_posinfo *pos)
+{
+	SDL_Texture *mapchip;
+	uint32_t uxpos = pos->unit_xpos;
+	uint32_t uypos = pos->unit_ypos;
+	uint32_t d;
+	char **path;
+	uint32_t *ptr;
+
+	if (mapchip_direct == 0) {
+		return false;
+	}
+
+	d = (xchip + (ychip * (map->maxwidth / map->xpixel)));
+	p = p + d;
+	path = get_mapchip_path(p);
+
+	if (false == load_texture((char *)path, &mapchip, renderer)) {
+		return false;
+	}
+
+	SDL_Rect chip_draw = (SDL_Rect){xchip*map->xpixel, ychip*map->ypixel, GRID_SIZE, GRID_SIZE};
+	SDL_Rect draw = (SDL_Rect){uxpos << UNIT_SHIFT, uypos << UNIT_SHIFT, GRID_SIZE, GRID_SIZE};
+	SDL_RenderCopy(renderer, mapchip, &chip_draw, &draw);
+
+	SDL_DestroyTexture(mapchip);
+	mapchip = NULL;
+	mapchip_direct = 0;
+	ptr = get_framebuffer_address(0);
+	ptr[uxpos + (uypos*info->field_maxheight)] = d;
+
+	return true;
+}
+
 
 
 /**-------------------------------------------------
@@ -477,72 +624,6 @@ static bool font_draw(SDL_Renderer *renderer, TTF_Font **font)
 }
 
 
-/**-------------------------------------------------
- * 効果音を再生
- * -------------------------------------------------*/
-static bool sound_effect_start(const char *sound, Mix_Chunk **effect)
-{
-	*effect = Mix_LoadWAV(sound);
-
-	if (*effect == NULL) {
-		fprintf(stderr, "Mix_LoadWAV Error!: %s\n", Mix_GetError());
-		return false;
-	}
-
-	channel = Mix_PlayChannel(-1, *effect, 0);	//チャンネル自動割り当て,0で一回再生
-
-	return true;
-}
-
-
-/**-------------------------------------------------
- * 効果音を停止
- * -------------------------------------------------*/
-static void sound_effect_stop(int32_t channel, Mix_Chunk **effect)
-{
-	Mix_HaltChannel(channel);
-	Mix_FreeChunk(*effect);
-	*effect = NULL;
-}
-
-
-/**-------------------------------------------------
- * BGMを再生
- * -------------------------------------------------
- * arg1: file path
- * -------------------------------------------------*/
-static bool bgm_start(const char *sound, Mix_Music **music)
-{
-	*music = Mix_LoadMUS(sound);
-
-	if (Mix_SetMusicCMD("play -q") != 0) {
-		fprintf(stderr, "Mix_SetMusicCMD");
-		return false;
-	}
-
-	if (*music == NULL) {
-		fprintf(stderr, "Mix_LoadMUS Error!: %s\n", Mix_GetError());
-		return false;
-	}
-
-	if (Mix_PlayMusic(*music, 1) != 0) {	//一回再生,-1の場合無限に再生
-		return false;
-	}
-
-	//while (Mix_PlayingMusic());	//再生中の場合1を返す
-
-	return true;
-}
-
-/**-------------------------------------------------
- * BGMの停止
- * -------------------------------------------------*/
-static void bgm_stop(Mix_Music **music)
-{
-	Mix_HaltMusic();		//再生停止
-	Mix_FreeMusic(*music);	//リソース解放
-	*music = NULL;
-}
 
 
 /**-------------------------------------------------
@@ -578,6 +659,41 @@ static bool key_event(t_fieldinfo *info, t_posinfo *p)
 				xpos_move_right(info, p);
 				return true;
 
+			case SDLK_p:	//マップチップを配置
+				mapchip_direct = 1;
+				return true;
+
+			case SDLK_o:	//草原を配置
+				return true;
+
+			case SDLK_k:	//マップロード
+				mapf_read();
+				return true;
+
+			case SDLK_l:	//セーブ
+				mapf_write();
+				return true;
+
+			case SDLK_q:	//閉じる
+				mapchip_flag = 0;
+				return true;
+
+			case SDLK_e:	//マップチップ選択
+				mapchip_flag = 1;
+				xchip++;
+				xchip &= 7;	//マップデータによって変化	
+				return true;
+
+			case SDLK_r:	//マップチップ次の選択
+				ychip++;
+				if (ychip <= 11) {	//mapdata change
+					ychip = 0;
+				}
+				return true;
+
+			case SDLK_t:	//次のマップチップ画像データ読み込み
+				return true;
+
 			default:
 				return true;
 		}
@@ -586,6 +702,45 @@ static bool key_event(t_fieldinfo *info, t_posinfo *p)
 	return true;
 }
 
+
+
+//配列データ書き込み
+void mapf_write(void)
+{
+	FILE *fp = NULL;
+
+	fp = fopen("map.bin", "wb");
+
+	if (fp == NULL) {
+		printf("ファイルopenエラー\n");
+		return;
+	}
+
+	fwrite(map40_30, sizeof(uint32_t), NUM(map40_30), fp);
+
+	fclose(fp);
+}
+
+
+//配列データ読み込み
+void mapf_read(void)
+{
+	FILE *fp = NULL;
+
+	fp = fopen("map.bin", "rb");
+
+	if (fp == NULL) {
+		printf("ファイルreadエラー\n");
+		return;
+	}
+	fread(map40_30, sizeof(uint32_t), NUM(map40_30), fp);
+
+	for (uint32_t i = 0; i < MAP_DRAW_WIDTH*MAP_DRAW_HEIGHT; i++) {
+		printf("0x%04x \r\n", map40_30[i]);
+	}
+
+	fclose(fp);
+}
 
 /**-------------------------------------------------
  * メイン関数
@@ -597,10 +752,10 @@ int main(void)
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 	TTF_Font *font;
-	Mix_Music *music;
-	Mix_Chunk *effect;
-	t_posinfo *pos = &posinfo;
+	t_posinfo *pos    = &posinfo;
 	t_fieldinfo *info = &fieldinfo;
+	const t_mapid *p  = mapid;
+	const t_mapinfo *map = mapinfo;
 
 	if (false == sdl_init()) {
 		return 1;
@@ -611,27 +766,23 @@ int main(void)
 		return 1;
 	}
 
-	if (false == bgm_start(BGM_PATH, &music)) {
-		return 1;
-	}
-
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);	//r, g, b, a ウィンドウを黒に設定
 
 	while (1) {
 		if (false == key_event(info, pos)) {
-			sound_effect_start(EFFECT_PATH, &effect);
 			break;
 		}
 
+		direct(info, pos);
 		SDL_RenderClear(renderer);
-		map_draw(renderer);
-		font_draw(renderer, &font);
+		map_draw(renderer, info, p, map);
+		//font_draw(renderer, &font);
+		mapchip_draw(renderer, p, map);
+		map_direct(renderer, p, map, info, pos);
 		player_draw(renderer, pos);
 		SDL_RenderPresent(renderer);
 	}
 
-	bgm_stop(&music);
-	sound_effect_stop(channel, &effect);
 	sdl_finish(&window, &renderer, &font);
 
 	return 0;
