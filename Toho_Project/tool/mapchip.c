@@ -158,6 +158,7 @@ static void direct(t_fieldinfo *info, t_posinfo *p);
  * -------------------------------------------------*/
 static char **get_mapchip_path(const t_mapinfo *p);
 static const t_mapinfo *map_address_advance(const t_mapinfo *p, uint32_t d);
+static void back_mapchip(const t_mapinfo *p, t_chipinfo *chip);
 static void next_mapchip(const t_mapinfo *p, t_chipinfo *chip);
 static void chip_advance(const t_mapinfo *p, t_chipinfo *chip, char s);
 static void fieldmap_info_push(uint8_t id, t_fieldinfo *info);
@@ -220,6 +221,25 @@ static char **get_mapchip_path(const t_mapinfo *p)
 	select = p->select;
 
 	return (char **)p->path[select];
+}
+
+
+/**-------------------------------------------------
+ * マップチップデータpath更新
+ * -------------------------------------------------*/
+static void back_mapchip(const t_mapinfo *p, t_chipinfo *chip)
+{
+	int32_t id;
+
+	chip->xchip = 0;
+	chip->ychip = 0;
+	id = p->startid;
+
+	if ((id-1) < 0) {
+		id = END_CHIPID;
+	}
+
+	chip->nowid = id-1;
 }
 
 
@@ -788,7 +808,11 @@ static bool key_event(const t_mapid *p, const t_mapinfo *map, t_fieldinfo *info,
 				chip_advance(map, chip, 'y');
 				return true;
 
-			case SDLK_t:	//次のマップチップ画像データ読み込み
+			case SDLK_t:	//前のマップチップ画像データ読み込み
+				back_mapchip(map, chip);
+				return true;
+
+			case SDLK_y:	//次のマップチップ画像データ読み込み
 				next_mapchip(map, chip);
 				return true;
 
