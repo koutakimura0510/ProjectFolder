@@ -9,6 +9,10 @@
 #define CHIP_SIZE	((sizeof (mapid)) / (sizeof (t_mapid)))
 #define CHIP_INFO	((sizeof (mapinfo)) / (sizeof (t_mapinfo)))
 
+
+
+
+
 /**-------------------------------------------------
  * Map Chip ID
  * -------------------------------------------------*/
@@ -102,10 +106,68 @@
 #define	STANDERD_MAP86 (STANDERD_S+86)
 #define	STANDERD_MAP87 (STANDERD_S+87)
 #define	STANDERD_E	   (STANDERD_MAP87)
+#define	MITI_S (STANDERD_E+1)
+#define	MITI0 (MITI_S+0)
+#define	MITI1 (MITI_S+1)
+#define	MITI2 (MITI_S+2)
+#define	MITI3 (MITI_S+3)
+#define	MITI4 (MITI_S+4)
+#define	MITI_E (MITI4)
+#define	MORI_S (MITI_E+1)
+#define	MORI0 (MORI_S+0)
+#define	MORI1 (MORI_S+1)
+#define	MORI2 (MORI_S+2)
+#define	MORI3 (MORI_S+3)
+#define	MORI4 (MORI_S+4)
+#define	MORI_E (MORI4)
+#define	SABAKU_S (MORI_E+1)
+#define	SABAKU0 (SABAKU_S+0)
+#define	SABAKU1 (SABAKU_S+1)
+#define	SABAKU2 (SABAKU_S+2)
+#define	SABAKU3 (SABAKU_S+3)
+#define	SABAKU4 (SABAKU_S+4)
+#define	SABAKU_E (SABAKU4)
+#define	TUTI_S (SABAKU_E+1)
+#define	TUTI0 (TUTI_S+0)
+#define	TUTI1 (TUTI_S+1)
+#define	TUTI2 (TUTI_S+2)
+#define	TUTI3 (TUTI_S+3)
+#define	TUTI4 (TUTI_S+4)
+#define	TUTI_E (TUTI4)
+#define	UMI_S (TUTI_E+1)
+#define	UMI0 (UMI_S+0)
+#define	UMI1 (UMI_S+1)
+#define	UMI2 (UMI_S+2)
+#define	UMI3 (UMI_S+3)
+#define	UMI4 (UMI_S+4)
+#define	UMI_E (UMI4)
+#define	YAMA_GRASS_S (UMI_E+1)
+#define	YAMA_GRASS0 (YAMA_GRASS_S+0)
+#define	YAMA_GRASS1 (YAMA_GRASS_S+1)
+#define	YAMA_GRASS2 (YAMA_GRASS_S+2)
+#define	YAMA_GRASS3 (YAMA_GRASS_S+3)
+#define	YAMA_GRASS4 (YAMA_GRASS_S+4)
+#define	YAMA_GRASS_E (YAMA_GRASS4)
+#define	YAMA_MOUNTAIN_S (YAMA_GRASS_E+1)
+#define	YAMA_MOUNTAIN0 (YAMA_MOUNTAIN_S+0)
+#define	YAMA_MOUNTAIN1 (YAMA_MOUNTAIN_S+1)
+#define	YAMA_MOUNTAIN2 (YAMA_MOUNTAIN_S+2)
+#define	YAMA_MOUNTAIN3 (YAMA_MOUNTAIN_S+3)
+#define	YAMA_MOUNTAIN4 (YAMA_MOUNTAIN_S+4)
+#define	YAMA_MOUNTAIN_E (YAMA_MOUNTAIN4)
+#define	YAMA_STONE_S (YAMA_MOUNTAIN_E+1)
+#define	YAMA_STONE0 (YAMA_STONE_S+0)
+#define	YAMA_STONE1 (YAMA_STONE_S+1)
+#define	YAMA_STONE2 (YAMA_STONE_S+2)
+#define	YAMA_STONE3 (YAMA_STONE_S+3)
+#define	YAMA_STONE4 (YAMA_STONE_S+4)
+#define	YAMA_STONE_E (YAMA_STONE4)
+
+#define END_CHIPID	(YAMA_STONE_E + 1)
 
 
 
-static const char *mappass[] = {
+static const char *mappath[] = {
 	"../res/img/map/field/width32/map001.png",
 	"../res/img/map/field/width32/miti.png",
 	"../res/img/map/field/width32/mori.png",
@@ -117,109 +179,168 @@ static const char *mappass[] = {
 	"../res/img/map/field/width32/yama3.png",
 };
 
+static const char *moveobj[] = {
+	"../res/img/item/obj/move_obj1.png"
+	"../res/img/item/obj/move_obj2.png"
+	"../res/img/item/obj/move_obj3.png"
+	"../res/img/item/obj/move_obj4.png"
+	"../res/img/item/obj/move_obj5.png"
+	"../res/img/item/obj/move_obj6.png"
+	"../res/img/item/obj/move_obj7.png"
+	"../res/img/item/obj/switch.png"
+	"../res/img/item/obj/tobira1.png"
+	"../res/img/item/obj/tobira2.png"
+	"../res/img/item/obj/tobira3.png"
+};
+
+static const char *tohoitem[] = {
+	"../res/img/item/toho/itemicon.png"
+};
+
 typedef struct {
 	uint32_t id;	//一つの要素数のID
-	uint8_t select;	//使用する画像データを選択
-	char **path;	//データまでのパスを指定
-	int32_t xpos;	//開始xpixel数を指定
+	uint32_t xpos;	//開始xpixel数を指定
 	uint32_t ypos;	//開始ypixel数を指定
-	uint8_t direct;	//当たり判定の有無を指定
+	uint8_t direct;	//当たり判定の有無を指定、1.有 0.無
 } t_mapid;
 
 static const t_mapid mapid[] = {
-	{	STANDERD_MAP0,   0,  (char **)mappass,    0,    0,  0  },
-	{	STANDERD_MAP1,   0,  (char **)mappass,   32,    0,  0  },
-	{	STANDERD_MAP2,   0,  (char **)mappass,   64,    0,  0  },
-	{	STANDERD_MAP3,   0,  (char **)mappass,   96,    0,  0  },
-	{	STANDERD_MAP4,   0,  (char **)mappass,  128,    0,  0  },
-	{	STANDERD_MAP5,   0,  (char **)mappass,  160,    0,  0  },
-	{	STANDERD_MAP6,   0,  (char **)mappass,  192,    0,  0  },
-	{	STANDERD_MAP7,   0,  (char **)mappass,  224,    0,  0  },
-	{	STANDERD_MAP8,   0,  (char **)mappass,    0,   32,  0  },
-	{	STANDERD_MAP9,   0,  (char **)mappass,   32,   32,  0  },
-	{	STANDERD_MAP10,  0,  (char **)mappass,   64,   32,  0  },
-	{	STANDERD_MAP11,  0,  (char **)mappass,   96,   32,  0  },
-	{	STANDERD_MAP12,  0,  (char **)mappass,  128,   32,  0  },
-	{	STANDERD_MAP13,  0,  (char **)mappass,  160,   32,  0  },
-	{	STANDERD_MAP14,  0,  (char **)mappass,  192,   32,  0  },
-	{	STANDERD_MAP15,  0,  (char **)mappass,  224,   32,  0  },
-	{	STANDERD_MAP16,  0,  (char **)mappass,    0,   64,  0  },
-	{	STANDERD_MAP17,  0,  (char **)mappass,   32,   64,  0  },
-	{	STANDERD_MAP18,  0,  (char **)mappass,   64,   64,  0  },
-	{	STANDERD_MAP19,  0,  (char **)mappass,   96,   64,  0  },
-	{	STANDERD_MAP20,  0,  (char **)mappass,  128,   64,  0  },
-	{	STANDERD_MAP21,  0,  (char **)mappass,  160,   64,  0  },
-	{	STANDERD_MAP22,  0,  (char **)mappass,  192,   64,  0  },
-	{	STANDERD_MAP23,  0,  (char **)mappass,  224,   64,  0  },
-	{	STANDERD_MAP24,  0,  (char **)mappass,    0,   96,  0  },
-	{	STANDERD_MAP25,  0,  (char **)mappass,   32,   96,  0  },
-	{	STANDERD_MAP26,  0,  (char **)mappass,   64,   96,  0  },
-	{	STANDERD_MAP27,  0,  (char **)mappass,   96,   96,  0  },
-	{	STANDERD_MAP28,  0,  (char **)mappass,  128,   96,  0  },
-	{	STANDERD_MAP29,  0,  (char **)mappass,  160,   96,  0  },
-	{	STANDERD_MAP30,  0,  (char **)mappass,  192,   96,  0  },
-	{	STANDERD_MAP31,  0,  (char **)mappass,  224,   96,  0  },
-	{	STANDERD_MAP32,  0,  (char **)mappass,    0,  128,  0  },
-	{	STANDERD_MAP33,  0,  (char **)mappass,   32,  128,  0  },
-	{	STANDERD_MAP34,  0,  (char **)mappass,   64,  128,  0  },
-	{	STANDERD_MAP35,  0,  (char **)mappass,   96,  128,  0  },
-	{	STANDERD_MAP36,  0,  (char **)mappass,  128,  128,  0  },
-	{	STANDERD_MAP37,  0,  (char **)mappass,  160,  128,  0  },
-	{	STANDERD_MAP38,  0,  (char **)mappass,  192,  128,  0  },
-	{	STANDERD_MAP39,  0,  (char **)mappass,  224,  128,  0  },
-	{	STANDERD_MAP40,  0,  (char **)mappass,    0,  160,  0  },
-	{	STANDERD_MAP41,  0,  (char **)mappass,   32,  160,  0  },
-	{	STANDERD_MAP42,  0,  (char **)mappass,   64,  160,  0  },
-	{	STANDERD_MAP43,  0,  (char **)mappass,   96,  160,  0  },
-	{	STANDERD_MAP44,  0,  (char **)mappass,  128,  160,  0  },
-	{	STANDERD_MAP45,  0,  (char **)mappass,  160,  160,  0  },
-	{	STANDERD_MAP46,  0,  (char **)mappass,  192,  160,  0  },
-	{	STANDERD_MAP47,  0,  (char **)mappass,  224,  160,  0  },
-	{	STANDERD_MAP48,  0,  (char **)mappass,    0,  192,  0  },
-	{	STANDERD_MAP49,  0,  (char **)mappass,   32,  192,  0  },
-	{	STANDERD_MAP50,  0,  (char **)mappass,   64,  192,  0  },
-	{	STANDERD_MAP51,  0,  (char **)mappass,   96,  192,  0  },
-	{	STANDERD_MAP52,  0,  (char **)mappass,  128,  192,  0  },
-	{	STANDERD_MAP53,  0,  (char **)mappass,  160,  192,  0  },
-	{	STANDERD_MAP54,  0,  (char **)mappass,  192,  192,  0  },
-	{	STANDERD_MAP55,  0,  (char **)mappass,  224,  192,  0  },
-	{	STANDERD_MAP56,  0,  (char **)mappass,    0,  224,  0  },
-	{	STANDERD_MAP57,  0,  (char **)mappass,   32,  224,  0  },
-	{	STANDERD_MAP58,  0,  (char **)mappass,   64,  224,  0  },
-	{	STANDERD_MAP59,  0,  (char **)mappass,   96,  224,  0  },
-	{	STANDERD_MAP60,  0,  (char **)mappass,  128,  224,  0  },
-	{	STANDERD_MAP61,  0,  (char **)mappass,  160,  224,  0  },
-	{	STANDERD_MAP62,  0,  (char **)mappass,  192,  224,  0  },
-	{	STANDERD_MAP63,  0,  (char **)mappass,  224,  224,  0  },
-	{	STANDERD_MAP64,  0,  (char **)mappass,    0,  256,  0  },
-	{	STANDERD_MAP65,  0,  (char **)mappass,   32,  256,  0  },
-	{	STANDERD_MAP66,  0,  (char **)mappass,   64,  256,  0  },
-	{	STANDERD_MAP67,  0,  (char **)mappass,   96,  256,  0  },
-	{	STANDERD_MAP68,  0,  (char **)mappass,  128,  256,  0  },
-	{	STANDERD_MAP69,  0,  (char **)mappass,  160,  256,  0  },
-	{	STANDERD_MAP70,  0,  (char **)mappass,  192,  256,  0  },
-	{	STANDERD_MAP71,  0,  (char **)mappass,  224,  256,  0  },
-	{	STANDERD_MAP72,  0,  (char **)mappass,    0,  288,  0  },
-	{	STANDERD_MAP73,  0,  (char **)mappass,   32,  288,  0  },
-	{	STANDERD_MAP74,  0,  (char **)mappass,   64,  288,  0  },
-	{	STANDERD_MAP75,  0,  (char **)mappass,   96,  288,  0  },
-	{	STANDERD_MAP76,  0,  (char **)mappass,  128,  288,  0  },
-	{	STANDERD_MAP77,  0,  (char **)mappass,  160,  288,  0  },
-	{	STANDERD_MAP78,  0,  (char **)mappass,  192,  288,  0  },
-	{	STANDERD_MAP79,  0,  (char **)mappass,  224,  288,  0  },
-	{	STANDERD_MAP80,  0,  (char **)mappass,    0,  320,  0  },
-	{	STANDERD_MAP81,  0,  (char **)mappass,   32,  320,  0  },
-	{	STANDERD_MAP82,  0,  (char **)mappass,   64,  320,  0  },
-	{	STANDERD_MAP83,  0,  (char **)mappass,   96,  320,  0  },
-	{	STANDERD_MAP84,  0,  (char **)mappass,  128,  320,  0  },
-	{	STANDERD_MAP85,  0,  (char **)mappass,  160,  320,  0  },
-	{	STANDERD_MAP86,  0,  (char **)mappass,  192,  320,  0  },
-	{	STANDERD_MAP87,  0,  (char **)mappass,  224,  320,  0  },
+	{	STANDERD_MAP0,     0,    0,  0  },
+	{	STANDERD_MAP1,    32,    0,  0  },
+	{	STANDERD_MAP2,    64,    0,  0  },
+	{	STANDERD_MAP3,    96,    0,  0  },
+	{	STANDERD_MAP4,   128,    0,  0  },
+	{	STANDERD_MAP5,   160,    0,  0  },
+	{	STANDERD_MAP6,   192,    0,  0  },
+	{	STANDERD_MAP7,   224,    0,  0  },
+	{	STANDERD_MAP8,     0,   32,  0  },
+	{	STANDERD_MAP9,    32,   32,  0  },
+	{	STANDERD_MAP10,   64,   32,  0  },
+	{	STANDERD_MAP11,   96,   32,  0  },
+	{	STANDERD_MAP12,  128,   32,  0  },
+	{	STANDERD_MAP13,  160,   32,  0  },
+	{	STANDERD_MAP14,  192,   32,  0  },
+	{	STANDERD_MAP15,  224,   32,  0  },
+	{	STANDERD_MAP16,    0,   64,  0  },
+	{	STANDERD_MAP17,   32,   64,  0  },
+	{	STANDERD_MAP18,   64,   64,  0  },
+	{	STANDERD_MAP19,   96,   64,  0  },
+	{	STANDERD_MAP20,  128,   64,  0  },
+	{	STANDERD_MAP21,  160,   64,  0  },
+	{	STANDERD_MAP22,  192,   64,  0  },
+	{	STANDERD_MAP23,  224,   64,  0  },
+	{	STANDERD_MAP24,    0,   96,  0  },
+	{	STANDERD_MAP25,   32,   96,  0  },
+	{	STANDERD_MAP26,   64,   96,  0  },
+	{	STANDERD_MAP27,   96,   96,  0  },
+	{	STANDERD_MAP28,  128,   96,  0  },
+	{	STANDERD_MAP29,  160,   96,  0  },
+	{	STANDERD_MAP30,  192,   96,  0  },
+	{	STANDERD_MAP31,  224,   96,  0  },
+	{	STANDERD_MAP32,    0,  128,  0  },
+	{	STANDERD_MAP33,   32,  128,  0  },
+	{	STANDERD_MAP34,   64,  128,  0  },
+	{	STANDERD_MAP35,   96,  128,  0  },
+	{	STANDERD_MAP36,  128,  128,  0  },
+	{	STANDERD_MAP37,  160,  128,  0  },
+	{	STANDERD_MAP38,  192,  128,  0  },
+	{	STANDERD_MAP39,  224,  128,  0  },
+	{	STANDERD_MAP40,    0,  160,  0  },
+	{	STANDERD_MAP41,   32,  160,  0  },
+	{	STANDERD_MAP42,   64,  160,  0  },
+	{	STANDERD_MAP43,   96,  160,  0  },
+	{	STANDERD_MAP44,  128,  160,  0  },
+	{	STANDERD_MAP45,  160,  160,  0  },
+	{	STANDERD_MAP46,  192,  160,  0  },
+	{	STANDERD_MAP47,  224,  160,  0  },
+	{	STANDERD_MAP48,    0,  192,  0  },
+	{	STANDERD_MAP49,   32,  192,  0  },
+	{	STANDERD_MAP50,   64,  192,  0  },
+	{	STANDERD_MAP51,   96,  192,  0  },
+	{	STANDERD_MAP52,  128,  192,  0  },
+	{	STANDERD_MAP53,  160,  192,  0  },
+	{	STANDERD_MAP54,  192,  192,  0  },
+	{	STANDERD_MAP55,  224,  192,  0  },
+	{	STANDERD_MAP56,    0,  224,  0  },
+	{	STANDERD_MAP57,   32,  224,  0  },
+	{	STANDERD_MAP58,   64,  224,  0  },
+	{	STANDERD_MAP59,   96,  224,  0  },
+	{	STANDERD_MAP60,  128,  224,  0  },
+	{	STANDERD_MAP61,  160,  224,  0  },
+	{	STANDERD_MAP62,  192,  224,  0  },
+	{	STANDERD_MAP63,  224,  224,  0  },
+	{	STANDERD_MAP64,    0,  256,  0  },
+	{	STANDERD_MAP65,   32,  256,  0  },
+	{	STANDERD_MAP66,   64,  256,  0  },
+	{	STANDERD_MAP67,   96,  256,  0  },
+	{	STANDERD_MAP68,  128,  256,  0  },
+	{	STANDERD_MAP69,  160,  256,  0  },
+	{	STANDERD_MAP70,  192,  256,  0  },
+	{	STANDERD_MAP71,  224,  256,  0  },
+	{	STANDERD_MAP72,    0,  288,  0  },
+	{	STANDERD_MAP73,   32,  288,  0  },
+	{	STANDERD_MAP74,   64,  288,  0  },
+	{	STANDERD_MAP75,   96,  288,  0  },
+	{	STANDERD_MAP76,  128,  288,  0  },
+	{	STANDERD_MAP77,  160,  288,  0  },
+	{	STANDERD_MAP78,  192,  288,  0  },
+	{	STANDERD_MAP79,  224,  288,  0  },
+	{	STANDERD_MAP80,    0,  320,  0  },
+	{	STANDERD_MAP81,   32,  320,  0  },
+	{	STANDERD_MAP82,   64,  320,  0  },
+	{	STANDERD_MAP83,   96,  320,  0  },
+	{	STANDERD_MAP84,  128,  320,  0  },
+	{	STANDERD_MAP85,  160,  320,  0  },
+	{	STANDERD_MAP86,  192,  320,  0  },
+	{	STANDERD_MAP87,  224,  320,  0  },
+	{	MITI0,			   0,    0,  0  },
+	{	MITI1,    		   0,   32,  0  },
+	{	MITI2,    		   0,   64,  0  },
+	{	MITI3,    		   0,   96,  0  },
+	{	MITI4,    		   0,  128,  0  },
+	{	MORI0,    		   0,    0,  0  },
+	{	MORI1,    		   0,   32,  0  },
+	{	MORI2,    		   0,   64,  0  },
+	{	MORI3,    		   0,   96,  0  },
+	{	MORI4,    		   0,  128,  0  },
+	{	SABAKU0,    	   0,    0,  0  },
+	{	SABAKU1,    	   0,   32,  0  },
+	{	SABAKU2,    	   0,   64,  0  },
+	{	SABAKU3,    	   0,   96,  0  },
+	{	SABAKU4,    	   0,  128,  0  },
+	{	TUTI0,    		   0,    0,  0  },
+	{	TUTI1,    		   0,   32,  0  },
+	{	TUTI2,    		   0,   64,  0  },
+	{	TUTI3,    		   0,   96,  0  },
+	{	TUTI4,    		   0,  128,  0  },
+	{	UMI0,    		   0,    0,  0  },
+	{	UMI1,    		   0,   32,  0  },
+	{	UMI2,    		   0,   64,  0  },
+	{	UMI3,    		   0,   96,  0  },
+	{	UMI4,    		   0,  128,  0  },
+	{	YAMA_GRASS0,       0,    0,  0  },
+	{	YAMA_GRASS1,       0,   32,  0  },
+	{	YAMA_GRASS2,       0,   64,  0  },
+	{	YAMA_GRASS3,       0,   96,  0  },
+	{	YAMA_GRASS4,       0,  128,  0  },
+	{	YAMA_MOUNTAIN0,    0,    0,  0  },
+	{	YAMA_MOUNTAIN1,    0,   32,  0  },
+	{	YAMA_MOUNTAIN2,    0,   64,  0  },
+	{	YAMA_MOUNTAIN3,    0,   96,  0  },
+	{	YAMA_MOUNTAIN4,    0,  128,  0  },
+	{	YAMA_STONE0,       0,    0,  0  },
+	{	YAMA_STONE1,       0,   32,  0  },
+	{	YAMA_STONE2,       0,   64,  0  },
+	{	YAMA_STONE3,       0,   96,  0  },
+	{	YAMA_STONE4,       0,  128,  0  },
+
 };
 
 typedef struct {
 	uint32_t startid;
 	uint32_t endid;
+	uint8_t select;
+	char **path;
 	uint32_t xpixel;	//横pixel数を指定
 	uint32_t ypixel;	//縦pixel数を指定
 	uint32_t maxwidth;	//画像データの最大横幅を指定
@@ -228,7 +349,15 @@ typedef struct {
 } t_mapinfo;
 
 static const t_mapinfo mapinfo[] = {
-	{	STANDERD_S,  STANDERD_E,  32,  32,  256,  352,	 5  },
+	{	STANDERD_S,  	 	STANDERD_E,		 0,  (char **)mappath,   32,   32,  256,  352,  5  },
+	{	MITI_S,  		 	MITI_E,  		 1,  (char **)mappath,   32,   32,   32,  160,  5  },
+	{	MORI_S,  		 	MORI_E,  		 2,  (char **)mappath,   32,   32,   32,  160,  5  },
+	{	SABAKU_S,	   	   	SABAKU_E,  		 3,  (char **)mappath,   32,   32,   32,  160,  5  },
+	{	TUTI_S,  		 	TUTI_E,  		 4,  (char **)mappath,   32,   32,   32,  160,  5  },
+	{	UMI_S,  		  	UMI_E,  		 5,  (char **)mappath,   32,   32,   32,  160,  5  },
+	{	YAMA_GRASS_S,  		YAMA_GRASS_E,  	 6,  (char **)mappath,   32,   32,   32,  160,  5  },
+	{	YAMA_MOUNTAIN_S,  	YAMA_MOUNTAIN_E, 7,  (char **)mappath,   32,   32,   32,  160,  5  },
+	{	YAMA_STONE_S,  		YAMA_STONE_E,  	 8,  (char **)mappath,   32,   32,   32,  160,  5  },
 };
 
 #endif
