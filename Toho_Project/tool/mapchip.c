@@ -161,7 +161,7 @@ static uint8_t world_update(void)
 
 	worldid++;
 
-	if (worldid < TOTAL_FIERL) {
+	if (worldid > TOTAL_FIERL) {
 		worldid = WORLD_MAP;
 	}
 
@@ -1059,10 +1059,14 @@ int main(void)
 		mapchip_draw(renderer, map, chip);
 		map_direct(renderer, map, pos, info, chip);
 		player_draw(renderer, pos);
-		make_msgbox(renderer, 'r');
+		//make_msgbox(renderer, 'r');
 		SDL_RenderPresent(renderer);	//フレームの情報を全て描画する
 	}
-
+//マップチップサイズおかしい
+//右と下の当たり判定がおかしい
+//マップチップ置く箇所がおかしい
+//メッセージウィンドウがおかしい
+//プレイヤーがアニメーション市内
 	sdl_finish(&window, &renderer, &font);
 
 	return 0;

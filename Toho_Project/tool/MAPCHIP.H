@@ -26,7 +26,7 @@
 #define UNIT_HEIGHT		32		//描画ユニットデータの高さを指定
 #define UNIT_SHIFT		(MAP_SIZE_SHIFT-0)		//ユニットの描画位置を指定
 #define FONT_SIZE		40		//描画フォントサイズを指定
-#define MAPCHIP_SIZE	12		//マップチップのサイズ
+#define MAPCHIP_SIZE	32		//マップチップのサイズ
 #define MSG_FLAME_SIZE	10		//メッセージウィンドウの白枠のサイズ
 
 
@@ -231,7 +231,7 @@ static const char *mappath[] = {
 	"../res/img/map/field/width32/mori.png",
 	"../res/img/map/field/width32/sabaku.png",
 	"../res/img/map/field/width32/tuti.png",
-	"../res/img/map/field/width32/uni.png",
+	"../res/img/map/field/width32/umi.png",
 	"../res/img/map/field/width32/yama1.png",
 	"../res/img/map/field/width32/yama2.png",
 	"../res/img/map/field/width32/yama3.png",
