@@ -16,41 +16,34 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "./DRAW.H"
 #include "./MAPCHIP.H"
  
-#define NUM(ary) (sizeof(ary)/sizeof(ary[0]))
-#define FIELDMAP_SIZE ((sizeof (fieldmap)) / (sizeof (t_fieldmap)))
-
-
-#define SCREEN_WIDTH	1280	//ウィンドウの幅を指定
-#define SCREEN_HEIGHT	960		//ウィンドウの高さを指定
-#define GRID_SIZE		32		//マップ描画データのpixel幅と高さを指定
-#define MAP_SIZE_SHIFT	5		//5bitシフトすれば32になる
-#define MAP_DRAW_WIDTH	(SCREEN_WIDTH >> MAP_SIZE_SHIFT)	//幅のループ回数
-#define MAP_DRAW_HEIGHT	(SCREEN_HEIGHT >> MAP_SIZE_SHIFT)	//高さのループ回数
-#define UNIT_WIDTH		24		//描画ユニットデータの幅を指定
-#define UNIT_HEIGHT		32		//描画ユニットデータの高さを指定
-#define UNIT_SHIFT		(MAP_SIZE_SHIFT-0)		//ユニットの描画位置を指定
-#define FONT_SIZE		40		//描画フォントサイズを指定
-#define MAPCHIP_SIZE	12
 
 //file pathは構造体に変更予定
 #define FONT_PATH		"../res/font/PixelMplus12-Regular.ttf"
 #define UNIT_PATH		"../res/img/unit/akisys.png"
-
-
 #define RENDERER	(SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)	//レンダリング方法を指定
 
 
 /**-------------------------------------------------
- * データ読み書き用配列確保
+ * モード番号
+ * -------------------------------------------------*/
+typedef enum {
+	MAP_MOVE,
+	MSG_WINDOW,
+	MODE_END,
+} T_MODE;
+
+
+/**-------------------------------------------------
+ * フレームバッファの確保
  * -------------------------------------------------*/
 static uint32_t map40_30[MAP_DRAW_WIDTH*MAP_DRAW_HEIGHT]             = {0};
 static uint32_t map80_60[(MAP_DRAW_WIDTH*2) * (MAP_DRAW_HEIGHT*2)]   = {0};
 static uint32_t map120_90[(MAP_DRAW_WIDTH*3) * (MAP_DRAW_HEIGHT*3)]  = {0};
 static uint32_t map160_120[(MAP_DRAW_WIDTH*4) * (MAP_DRAW_HEIGHT*4)] = {0};
 static uint32_t map320_240[(MAP_DRAW_WIDTH*5) * (MAP_DRAW_HEIGHT*5)] = {0};
+
 
 
 /**-------------------------------------------------
@@ -77,28 +70,8 @@ typedef struct {
 	uint32_t *framebuffer_address;
 	int32_t field_maxwidth;		//現在フィールドの最大横幅指定
 	int32_t field_maxheight;	//現在フィールドの最大高さ指定
+	char *binpath;
 } t_fieldinfo;
-
-
-/**-------------------------------------------------
- * フレームバッファ情報
- * -------------------------------------------------*/
-typedef struct {
-	uint8_t id;
-	uint32_t *map;
-	uint32_t fieldmap_width;
-	uint32_t fieldmap_height;
-} t_fieldmap;
-
-static const t_fieldmap fieldmap[] = {
-	{ 0, map40_30,		MAP_DRAW_WIDTH,		MAP_DRAW_HEIGHT   },
-	{ 1, map80_60,		MAP_DRAW_WIDTH*2,	MAP_DRAW_HEIGHT*2 },
-	{ 2, map120_90,		MAP_DRAW_WIDTH*3,	MAP_DRAW_HEIGHT*3 },
-	{ 3, map160_120,	MAP_DRAW_WIDTH*4,	MAP_DRAW_HEIGHT*4 },
-	{ 4, map320_240,	MAP_DRAW_WIDTH*5,	MAP_DRAW_HEIGHT*5 },
-};
-
-//マップ名(.バイナリファイル名)、上記のフレームバッファIDを保存してある構造体を本編では追加する。
 
 
 /**-------------------------------------------------
@@ -134,13 +107,13 @@ static bool map_draw(SDL_Renderer *renderer, const t_mapid *p, const t_mapinfo *
 static bool font_draw(SDL_Renderer *renderer, TTF_Font **font);
 static bool mapchip_draw(SDL_Renderer *renderer, const t_mapinfo *map, t_chipinfo *chip);
 static bool map_direct(SDL_Renderer *renderer, const t_mapinfo *map, t_posinfo *pos, t_fieldinfo *info, t_chipinfo *chip);
-
+static bool make_msgbox(SDL_Renderer *renderer, char mag);
 
 
 /**-------------------------------------------------
- * キー操作
+ * モード関数
  * -------------------------------------------------*/
-static bool key_event(const t_mapid *p, const t_mapinfo *map, t_fieldinfo *info, t_posinfo *pos, t_chipinfo *chip);
+static uint8_t map_move(const t_mapid *p, const t_mapinfo *map, t_fieldinfo *info, t_posinfo *pos, t_chipinfo *chip);
 
 
 /**-------------------------------------------------
@@ -161,47 +134,113 @@ static const t_mapinfo *map_address_advance(const t_mapinfo *p, uint32_t d);
 static void back_mapchip(const t_mapinfo *p, t_chipinfo *chip);
 static void next_mapchip(const t_mapinfo *p, t_chipinfo *chip);
 static void chip_advance(const t_mapinfo *p, t_chipinfo *chip, char s);
-static void fieldmap_info_push(uint8_t id, t_fieldinfo *info);
+static void mapchip_disp_set(t_chipinfo *chip);
+
+
+/**-------------------------------------------------
+ * フレームバッファ操作
+ * -------------------------------------------------*/
+static void fieldmap_info_push(uint8_t mapname, t_fieldinfo *info);
+static uint32_t *get_framebuffer_address(uint8_t id);
+static uint8_t world_update(void);
 
 
 /**-------------------------------------------------
  * ファイル操作
  * -------------------------------------------------*/
-void mapf_write(void);
-void mapf_read(void);
+static bool mapf_write(t_fieldinfo *info);
+static bool mapf_read(t_fieldinfo *info);
+
+
+/**-------------------------------------------------
+ * マップ作製ID更新
+ * -------------------------------------------------*/
+static uint8_t world_update(void)
+{
+	static uint8_t worldid = WORLD_MAP;
+
+	worldid++;
+
+	if (worldid < TOTAL_FIERL) {
+		worldid = WORLD_MAP;
+	}
+
+	return worldid;
+}
 
 
 
 /**-------------------------------------------------
  * 現在のフィールドマップ情報を保存する関数
+ * -------------------------------------------------
+ * arg1: id		フレームバッファのIDを指定
+ * arg2: *info	マップ情報を保存する構造体のアドレスを指定
  * -------------------------------------------------*/
-static void fieldmap_info_push(uint8_t id, t_fieldinfo *info)
+static void fieldmap_info_push(uint8_t mapname, t_fieldinfo *info)
 {
 	const t_fieldmap *p = fieldmap;
+	const t_buildinfo *build = buildinfo;
+	uint8_t i, id;
 
-	for (uint8_t i = 0; i < FIELDMAP_SIZE; i++, p++) {
+	for (i = 0; i < BUILD_SIZE; i++, build++) {
+		if (build->mapname == mapname) {
+			id = build->id;
+			break;
+		}
+	}
+
+	for (i = 0; i < FIELDMAP_SIZE; i++, p++) {
 		if (p->id == id) {
 			break;
 		}
 	}
 
 	info->id = p->id;
-	info->framebuffer_address = p->map;
+	info->framebuffer_address = get_framebuffer_address(id);
 	info->field_maxwidth  = p->fieldmap_width;
 	info->field_maxheight = p->fieldmap_height;
+	info->binpath = build->binfile;
+}
+
+
+/**-------------------------------------------------
+ * フレームバッファ先頭アドレス取得
+ * -------------------------------------------------*/
+static uint32_t *get_framebuffer_address(uint8_t id)
+{
+	switch (id) {
+		case MAP40:
+			return &map40_30[0];
+
+		case MAP80:
+			return &map80_60[0];
+
+		case MAP120:
+			return &map120_90[0];
+
+		case MAP160:
+			return &map160_120[0];
+
+		case MAP320:
+			return &map320_240[0];
+
+		default:
+			return &map40_30[0];
+	}
 }
 
 
 /**-------------------------------------------------
  * t_mapinfoのアドレスを進める
+ * マップチップの開始IDと終了IDの範囲内になるまでループを行う
  * -------------------------------------------------
- * arg1: 構造体のアドレス
- * arg2: フレームバッファに格納されているデータ
+ * arg1: *p マップチップ構造体のアドレスを指定
+ * arg2: d	IDを指定する
  * -------------------------------------------------*/
 static const t_mapinfo *map_address_advance(const t_mapinfo *p, uint32_t d)
 {
 	for (uint8_t i = 0; i < CHIP_INFO; i++, p++) {
-		if ((p->startid < d) && (d < p->endid)) {
+		if ((p->startid <= d) && (d <= p->endid)) {
 			break;
 		}
 	}
@@ -213,6 +252,9 @@ static const t_mapinfo *map_address_advance(const t_mapinfo *p, uint32_t d)
 
 /**-------------------------------------------------
  * mapchipのpathを取得
+ * pathはchar型の二次元配列に格納されている
+ * -------------------------------------------------
+ * arg1: *p マップチップ構造体のアドレスを指定
  * -------------------------------------------------*/
 static char **get_mapchip_path(const t_mapinfo *p)
 {
@@ -225,26 +267,33 @@ static char **get_mapchip_path(const t_mapinfo *p)
 
 
 /**-------------------------------------------------
- * マップチップデータpath更新
+ * ひとつ前のマップチップデータのIDに更新
+ * ------------------------------------------------- 
+ * arg1: *p 	マップチップ構造体のアドレスを指定
+ * arg2: *chip	マップチップの現在の情報を保存する構造体のアドレスを指定
  * -------------------------------------------------*/
 static void back_mapchip(const t_mapinfo *p, t_chipinfo *chip)
 {
-	int32_t id;
+	uint32_t id;
 
 	chip->xchip = 0;
 	chip->ychip = 0;
-	id = p->startid;
+	p = map_address_advance(p, chip->nowid);
+	id = p->startid;	//現在のマップチップIDを取得
 
-	if ((id-1) < 0) {
+	if (id == 0) {		//ID番号0であれば最終IDに更新
 		id = END_CHIPID;
 	}
 
-	chip->nowid = id-1;
+	chip->nowid = id-1;	//ひとつ前のIDに更新
 }
 
 
 /**-------------------------------------------------
- * マップチップデータpath更新
+ * 次のマップチップデータのIDに更新
+ * ------------------------------------------------- 
+ * arg1: *p 	マップチップ構造体のアドレスを指定
+ * arg2: *chip	マップチップの取得用構造体のアドレスを指定
  * -------------------------------------------------*/
 static void next_mapchip(const t_mapinfo *p, t_chipinfo *chip)
 {
@@ -252,26 +301,29 @@ static void next_mapchip(const t_mapinfo *p, t_chipinfo *chip)
 
 	chip->xchip = 0;
 	chip->ychip = 0;
-	id = p->endid+1;
+	p = map_address_advance(p, chip->nowid);
+	id = p->endid+1;		//次のマップチップIDに進める
 
-	if (id == END_CHIPID) {
+	if (id < END_CHIPID) {	//0~最終IDをループ
 		id = 0;
 	}
 
-	chip->nowid = id;
+	chip->nowid = id;		//IDを更新する
 }
 
 
 /**-------------------------------------------------
- * mapchip取得用変数計算
+ * マップチップを取得するために必要な、座標指定用変数を更新
+ * -------------------------------------------------
+ * arg1: *p		マップチップ構造体のアドレスを指定
+ * arg2: *chip	マップチップ取得用構造体のアドレスを指定
+ * arg3: s		'x'xchipを更新　'y'ychipを更新
  * -------------------------------------------------*/
 static void chip_advance(const t_mapinfo *p, t_chipinfo *chip, char s)
 {
-	chip->mapchip_flag = 1;
-
 	if (s == 'x') {
 		chip->xchip++;
-		if ((p->maxwidth / p->xpixel) == chip->xchip) {
+		if ((p->maxwidth / p->xpixel) < chip->xchip) {
 			chip->xchip = 0;
 		}
 		return;
@@ -279,12 +331,22 @@ static void chip_advance(const t_mapinfo *p, t_chipinfo *chip, char s)
 
 	if (s == 'y') {
 		chip->ychip++;
-		if ((p->maxheight / p->ypixel) == chip->ychip) {
+		if ((p->maxheight / p->ypixel) < chip->ychip) {
 			chip->ychip = 0;
 		}
+		return;
 	}
+}
 
-	return;
+
+/**-------------------------------------------------
+ * マップチップ選択画面のON/OFF設定関数
+ * -------------------------------------------------
+ * arg1: *chip	マップチップ取得用構造体のアドレスを指定
+ * -------------------------------------------------*/
+static void mapchip_disp_set(t_chipinfo *chip)
+{
+	chip->mapchip_flag = ~chip->mapchip_flag & 0x01;
 }
 
 
@@ -297,7 +359,9 @@ static void chip_advance(const t_mapinfo *p, t_chipinfo *chip, char s)
  *
  * ウィンドウのサイズよりもマップのサイズが大きい場合
  * アニメーションを行うためにマップの座標軸を移動させる
- *
+ * -------------------------------------------
+ * arg1: *info	現在のフィールド情報が格納されている構造体のアドレス
+ * arg2: *p		プレイヤーの位置情報が格納されている構造体のアドレス
  * -------------------------------------------*/
 static void xpos_move_right(t_fieldinfo *info, t_posinfo *p)
 {
@@ -405,10 +469,10 @@ static void direct(t_fieldinfo *info, t_posinfo *p)
 	int32_t uy = p->unit_ypos;
 	int32_t fx = p->field_xpos;
 	int32_t fy = p->field_ypos;
-	int32_t fmx = info->field_maxwidth;
-	int32_t fmy = info->field_maxheight;
+	int32_t width  = info->field_maxwidth;
+	int32_t height = info->field_maxheight;
 
-	if (fmx < (fx + ux)) {
+	if (width < (fx + ux)) {
 		p->unit_xpos--;
 		return;
 	}
@@ -418,7 +482,7 @@ static void direct(t_fieldinfo *info, t_posinfo *p)
 		return;
 	}
 
-	if (fmy < (fy + uy)) {
+	if (height < (fy + uy)) {
 		p->unit_ypos--;
 		return;
 	}
@@ -431,7 +495,7 @@ static void direct(t_fieldinfo *info, t_posinfo *p)
 
 
 /**-------------------------------------------------
- * sdlの初期化関数
+ * sdlの初期化関数、main関数の最初に呼び出すこと
  * -------------------------------------------------*/
 static bool sdl_init(void)
 {
@@ -596,11 +660,15 @@ static bool player_draw(SDL_Renderer *renderer, t_posinfo *pos)
 
 /**-------------------------------------------------
  * マップの描画
- * 使用マップ情報は縦横GRID_SIZEで固定
+ * 一つの要素の描画は縦横GRID_SIZEで固定
  * 16,32,の大きさを使用する場合は構造体を用意しデータを取得するよう変更
  * ウィンドウの大きさに対して必要な分だけ描画を行う
  * -------------------------------------------------
- * arg1:　レンダリング情報
+ * arg1: *renderer	レンダリング情報
+ * arg2: *p			マップチップの一つの要素の座標が保存されている構造体のアドレス
+ * arg3: *map		マップチップの座標以外の情報が保存されている構造体のアドレス
+ * arg4: *pos		プレイヤーの位置情報が保存されている構造体のアドレス
+ * arg5: *info		現在のフィールドバッファの情報が保存されている構造体のアドレス
  * -------------------------------------------------*/
 static bool map_draw(SDL_Renderer *renderer, const t_mapid *p, const t_mapinfo *map, t_posinfo *pos, t_fieldinfo *info)
 {
@@ -614,25 +682,25 @@ static bool map_draw(SDL_Renderer *renderer, const t_mapid *p, const t_mapinfo *
 	uint32_t *ptr;
 	char **path;
 
-	ptr = info->framebuffer_address;
+	ptr = info->framebuffer_address;				//フレームバッファの先頭アドレスを取得
 	x = pos->field_xpos;
 	y = pos->field_ypos;
 
-	for (i = 0; i < MAP_DRAW_HEIGHT; i++) {	//ウィンドウのサイズ分ループして描画する
+	for (i = 0; i < MAP_DRAW_HEIGHT; i++) {			//ウィンドウのサイズ分ループして描画する
 		for (j = 0; j < MAP_DRAW_WIDTH; j++) {
 			d = ptr[((i+y) * MAP_DRAW_WIDTH)+j+x];	//マップチップに対応したバイナリデータを取得
-			p = p + d;
-			map = map_address_advance(map, d);
+			p = p + d;								//使用する画像データの切り抜き座標を更新
+			map = map_address_advance(map, d);		//画像データの情報を更新
 
-			if (load != map->endid) {
+			if (load != map->endid) {	//前回のデータと同じ場合テクスチャーの更新を行わない
 				path = get_mapchip_path(map);
 				load_texture((char *)path, &map_tx, renderer);
 			}
 			map_res  = (SDL_Rect){p->xpos, p->ypos, map->xpixel, map->ypixel};
 			map_draw = (SDL_Rect){j << MAP_SIZE_SHIFT, i << MAP_SIZE_SHIFT, GRID_SIZE, GRID_SIZE};
 			SDL_RenderCopy(renderer, map_tx, &map_res, &map_draw);
-			load = map->endid;
-			p = oldp;
+			load = map->endid;	//前回のデータを一時保存しておく
+			p = oldp;			//アドレスを初期位置に戻す
 			map = oldmap;
 		}
 	}
@@ -646,6 +714,11 @@ static bool map_draw(SDL_Renderer *renderer, const t_mapid *p, const t_mapinfo *
 
 /**-------------------------------------------------
  * マップチップ選択画面描画
+ * 16*16のサイズで描画、画像データの上に薄い黒の四角形を描画し選択カーソルを再現
+ * -------------------------------------------------
+ * arg1: *renderer	レンダリング情報
+ * arg2: *map		マップチップの座標以外の情報が保存されている構造体のアドレス
+ * arg3: *chip		マップチップの描画に必要な情報が格納されている構造体のアドレス
  * -------------------------------------------------*/
 static bool mapchip_draw(SDL_Renderer *renderer, const t_mapinfo *map, t_chipinfo *chip)
 {
@@ -683,7 +756,13 @@ static bool mapchip_draw(SDL_Renderer *renderer, const t_mapinfo *map, t_chipinf
 
 
 /**-------------------------------------------------
- * マップチップを置く
+ * 指定した座標にマップチップ配置
+ * -------------------------------------------------
+ * arg1: *renderer	レンダリング情報
+ * arg2: *map		マップチップの座標以外の情報が保存されている構造体のアドレス
+ * arg3: *pos		プレイヤーの位置情報が保存されている構造体のアドレス
+ * arg4: *info		現在のフィールドバッファの情報が保存されている構造体のアドレス
+ * arg5: *chip		マップチップの描画に必要な情報が格納されている構造体のアドレス
  * -------------------------------------------------*/
 static bool map_direct(SDL_Renderer *renderer, const t_mapinfo *map, t_posinfo *pos, t_fieldinfo *info, t_chipinfo *chip)
 {
@@ -701,7 +780,7 @@ static bool map_direct(SDL_Renderer *renderer, const t_mapinfo *map, t_posinfo *
 	xchip = chip->xchip;
 	ychip = chip->ychip;
 	d = ychip * (map->maxwidth / map->xpixel);
-	d = d + xchip + map->startid;
+	d = d + xchip + map->startid;	//フレームバッファに保存するバイナリデータを計算
 	path = get_mapchip_path(map);
 
 	if (false == load_texture((char *)path, &mapchip, renderer)) {
@@ -719,7 +798,6 @@ static bool map_direct(SDL_Renderer *renderer, const t_mapinfo *map, t_posinfo *
 
 	return true;
 }
-
 
 
 /**-------------------------------------------------
@@ -749,125 +827,193 @@ static bool font_draw(SDL_Renderer *renderer, TTF_Font **font)
 
 
 /**-------------------------------------------------
- * キーイベント処理
+ * メッセージウィンドウの描画
+ * 白枠を描画後、黒の四角形を描画
+ * -------------------------------------------------
+ * arg1: *renderer	レンダリング情報
+ * arg2: msg		'w'write 文字を入力する 'r'文字を描画する
  * -------------------------------------------------*/
-static bool key_event(const t_mapid *p, const t_mapinfo *map, t_fieldinfo *info, t_posinfo *pos, t_chipinfo *chip)
+static bool make_msgbox(SDL_Renderer *renderer, char mag)
 {
-	SDL_Event e;
+	/*if (false == get_msgcheck()) {
+		return false;
+	}*/
 
-	while (SDL_PollEvent(&e)) {		//イベント処理が終わるまでループ
-		if (e.type == SDL_QUIT) {	//ウィンドウの閉じるボタンが押されたら抜ける
-			return false;
-		}
+	SDL_Rect white;
+	SDL_Rect black;
 
-		if (e.type != SDL_KEYDOWN) {
-			return true;
-		}
+	white.x = (SCREEN_WIDTH >> 2) - MSG_FLAME_SIZE;
+	white.y = (SCREEN_HEIGHT >> 2) + (SCREEN_HEIGHT >> 1) - MSG_FLAME_SIZE;
+	white.w = (SCREEN_WIDTH >> 1) + MSG_FLAME_SIZE;
+	white.h = 200 + MSG_FLAME_SIZE;
 
-		switch (e.key.keysym.sym) {
-			case SDLK_w:
-				ypos_move_up(pos);
-				return true;
+	black.x = SCREEN_WIDTH >> 2;
+	black.y = (SCREEN_HEIGHT >> 2) + (SCREEN_HEIGHT >> 1);
+	black.w = SCREEN_WIDTH >> 1;
+	black.h = 200;
 
-			case SDLK_a:
-				xpos_move_left(pos);
-				return true;
+	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_RenderFillRect(renderer, &white);
 
-			case SDLK_s:
-				ypos_move_down(info, pos);
-				return true;
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_RenderFillRect(renderer, &black);
 
-			case SDLK_d:
-				xpos_move_right(info, pos);
-				return true;
-
-			case SDLK_p:	//マップチップを配置
-				chip->mapchip_direct = 1;
-				return true;
-
-			case SDLK_o:	//草原を配置
-				return true;
-
-			case SDLK_k:	//マップロード
-				mapf_read();
-				return true;
-
-			case SDLK_l:	//セーブ
-				mapf_write();
-				return true;
-
-			case SDLK_q:	//閉じる
-				chip->mapchip_flag = 0;
-				return true;
-
-			case SDLK_e:	//マップチップ選択
-				chip_advance(map, chip, 'x');
-				return true;
-
-			case SDLK_r:	//マップチップ次の選択
-				chip_advance(map, chip, 'y');
-				return true;
-
-			case SDLK_t:	//前のマップチップ画像データ読み込み
-				back_mapchip(map, chip);
-				return true;
-
-			case SDLK_y:	//次のマップチップ画像データ読み込み
-				next_mapchip(map, chip);
-				return true;
-
-			default:
-				return true;
-		}
-	}
+	//while
+	//set_msgcheck();
 
 	return true;
 }
 
 
 
-//配列データ書き込み
-void mapf_write(void)
+/**-------------------------------------------------
+ * キーイベント処理
+ * -------------------------------------------------
+ * arg1: p			マップチップの当たり判定が格納されている構造体のアドレス
+ * arg2: *map		マップチップの座標以外の情報が保存されている構造体のアドレス
+ * arg3: *pos		プレイヤーの位置情報が保存されている構造体のアドレス
+ * arg4: *info		現在のフィールドバッファの情報が保存されている構造体のアドレス
+ * arg5: *chip		マップチップの描画に必要な情報が格納されている構造体のアドレス
+ * -------------------------------------------------*/
+static uint8_t map_move(const t_mapid *p, const t_mapinfo *map, t_fieldinfo *info, t_posinfo *pos, t_chipinfo *chip)
 {
-	FILE *fp = NULL;
+	SDL_Event e;
 
-	fp = fopen("map.bin", "wb");
+	while (SDL_PollEvent(&e)) {		//イベント処理が終わるまでループ
+		if (e.type == SDL_QUIT) {	//ウィンドウの閉じるボタンが押されたら抜ける
+			return MODE_END;
+		}
 
-	if (fp == NULL) {
-		printf("ファイルopenエラー\n");
-		return;
+		if (e.type != SDL_KEYDOWN) {
+			return MAP_MOVE;
+		}
+
+		switch (e.key.keysym.sym) {
+			case SDLK_w:
+				ypos_move_up(pos);
+				break;
+
+			case SDLK_a:
+				xpos_move_left(pos);
+				break;
+
+			case SDLK_s:
+				ypos_move_down(info, pos);
+				break;
+
+			case SDLK_d:
+				xpos_move_right(info, pos);
+				break;
+
+			case SDLK_p:	//マップチップを配置
+				chip->mapchip_direct = 1;
+				break;
+
+			case SDLK_o:	//草原を配置
+				break;
+
+			case SDLK_k:	//マップロード
+				mapf_read(info);
+				break;
+
+			case SDLK_n:
+				fieldmap_info_push(world_update(), info);
+				break;
+
+			case SDLK_l:	//セーブ
+				mapf_write(info);
+				break;
+
+			case SDLK_q:	//マップチップ選択画面、ON/OFF
+				mapchip_disp_set(chip);
+				break;
+
+			case SDLK_e:	//マップチップカーソル右移動
+				chip_advance(map, chip, 'x');
+				break;
+
+			case SDLK_r:	//マップチップカーソル縦移動
+				chip_advance(map, chip, 'y');
+				break;
+
+			case SDLK_t:	//前のマップチップ画像データ読み込み
+				back_mapchip(map, chip);
+				break;
+
+			case SDLK_y:	//次のマップチップ画像データ読み込み
+				next_mapchip(map, chip);
+				break;
+
+			default:
+				break;
+		}
 	}
 
-	fwrite(map40_30, sizeof(uint32_t), NUM(map40_30), fp);
-
-	fclose(fp);
+	return MAP_MOVE;
 }
 
 
-//配列データ読み込み
-void mapf_read(void)
+
+/**-------------------------------------------------
+ * フレームバッファのデータをバイナリファイルに書き込む
+ * -------------------------------------------------*/
+static bool mapf_write(t_fieldinfo *info)
 {
 	FILE *fp = NULL;
+	uint32_t mapsize;
 
-	fp = fopen("map.bin", "rb");
+	fp = fopen(info->binpath, "wb");
+
+	if (fp == NULL) {
+		printf("ファイルopenエラー\n");
+		return false;
+	}
+
+	mapsize = info->field_maxwidth * info->field_maxheight;
+	fwrite(info->framebuffer_address, sizeof(uint32_t), mapsize, fp);
+
+	fclose(fp);
+
+	return true;
+}
+
+
+/**-------------------------------------------------
+ * バイナリファイルのデータをフレームバッファに読み込む
+ * -------------------------------------------------*/
+static bool mapf_read(t_fieldinfo *info)
+{
+	FILE *fp = NULL;
+	uint32_t mapsize;
+
+	fp = fopen(info->binpath, "rb");
 
 	if (fp == NULL) {
 		printf("ファイルreadエラー\n");
-		return;
+		return false;
 	}
-	fread(map40_30, sizeof(uint32_t), NUM(map40_30), fp);
 
-	for (uint32_t i = 0; i < MAP_DRAW_WIDTH*MAP_DRAW_HEIGHT; i++) {
-		printf("0x%04x \r\n", map40_30[i]);
-	}
+	mapsize = info->field_maxwidth * info->field_maxheight;
+	fread(info->framebuffer_address, sizeof(uint32_t), mapsize, fp);
+	//fread(map40_30, sizeof(uint32_t), NUM(map40_30), fp);
+
+	/*for (uint32_t i = 0; i < mapsize; i++) {
+		printf("0x%04x \r\n", p[i]);
+	}*/
 
 	fclose(fp);
+
+	return true;
 }
 
 /**-------------------------------------------------
  * メイン関数
  * -------------------------------------------------
  * SDLは同一スレッド内で扱わなければならない
+ * SDLのレンダリング関数群は背面バッファを操作するため直接画面には描画されない
+ * よって、描画を行うためにはフレームに描画情報を全て保存し、RenderPresent関数で
+ * 一気に描画を行う必要がある
  * -------------------------------------------------*/
 int main(void)
 {
@@ -879,6 +1025,7 @@ int main(void)
 	t_chipinfo *chip  = &chipinfo;
 	const t_mapid *p  = mapid;
 	const t_mapinfo *map = mapinfo;
+	uint8_t mode = MAP_MOVE;
 
 	if (false == sdl_init()) {
 		return 1;
@@ -889,22 +1036,31 @@ int main(void)
 		return 1;
 	}
 
-	fieldmap_info_push(0, info);
+	fieldmap_info_push(world_update(), info);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);	//r, g, b, a ウィンドウを黒に設定
 
-	while (1) {
-		if (false == key_event(p, map, info, pos, chip)) {
-			break;
+	while (mode != MODE_END) {
+		switch (mode) {
+			case MAP_MOVE:
+				mode = map_move(p, map, info, pos, chip);
+				direct(info, pos);
+				break;
+
+			case MSG_WINDOW:
+				break;
+
+			default:
+				break;
 		}
 
-		direct(info, pos);
-		SDL_RenderClear(renderer);
+		SDL_RenderClear(renderer);	//チラつきを防ぐため背面バッファを毎回クリアする
 		map_draw(renderer, p, map, pos, info);
 		//font_draw(renderer, &font);
 		mapchip_draw(renderer, map, chip);
 		map_direct(renderer, map, pos, info, chip);
 		player_draw(renderer, pos);
-		SDL_RenderPresent(renderer);
+		make_msgbox(renderer, 'r');
+		SDL_RenderPresent(renderer);	//フレームの情報を全て描画する
 	}
 
 	sdl_finish(&window, &renderer, &font);

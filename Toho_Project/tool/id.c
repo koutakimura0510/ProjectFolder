@@ -13,7 +13,7 @@
  * -------------------------------------------------*/
 int main(int argc, char **argv)
 {
-	uint32_t max_x, max_y, xpixel, ypixel, d, dx, dy, i, check, number, bit = 0;
+	uint32_t max_x, max_y, xpixel, ypixel, d, dx, dy, i, check, number;
 	char str1[16], nid[16], pass[16], fi[32];
 	FILE *fp = NULL;
 
@@ -87,14 +87,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-	for (i = 0; i < 50; i++) {
-		if (1 & (xpixel >> i)) {
-			break;
-		}
-		bit++;
-	}
-
-	fprintf(fp, "{	%s_S,  %s_E,  %d,  (char **)%s,  %3d,  %3d,  %3d,  %3d,  %d  },\n", str1, str1, number, pass, xpixel, ypixel, max_x, max_y, bit);
+	fprintf(fp, "{	%s_S,  %s_E,  %d,  (char **)%s,  %3d,  %3d,  %3d,  %3d  },\n", str1, str1, number, pass, xpixel, ypixel, max_x, max_y);
 
 	fclose(fp);
 
