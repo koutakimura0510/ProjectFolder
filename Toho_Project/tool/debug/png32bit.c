@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 //#include <SDL/SDL.h>
@@ -37,8 +38,9 @@ int main(int argc, char **argv)
 	SDL_Surface *image;	//ピクセルデータを扱う構造体の確保
 	SDL_PixelFormat *fmt;
 	FILE *fp;
-	int i, j;
-	int r, g, b;
+	uint32_t i, j, temp, pixel, pixel_at;
+	uint32_t *p;
+	uint8_t r, g, b ,alpha;
 
 	if (!argv[1]) {
 		fprintf(stderr, "img load error");
@@ -60,24 +62,36 @@ int main(int argc, char **argv)
 
 	fmt = image->format;
 
-	if (fmt->BitsPerPixel != 8) {
-		fprintf(stderr, "8bitではない\n");
-	}
-
-	if (fmt->BytesPerPixel != 1) {
-		fprintf(stderr, "1byteではない\n");
-		return 1;
-	}
+	fprintf(stderr, "%dbit\n", fmt->BitsPerPixel);
+	fprintf(stderr, "%dbyte\n", fmt->BytesPerPixel);
+	SDL_LockSurface(image);
+	p = ((uint32_t *)image->pixels);
+	SDL_UnlockSurface(image);
 
 	for (i = 0; i < image->h; i++) {
 		for (j = 0; j < image->w; j++) {
-			unsigned char *p = (unsigned char *)image->pixels;
-			int pixel_at = (i * (image->w) + j) * fmt->BytesPerPixel;
-			r = p[pixel_at];
-			g = p[pixel_at + 1];
-			b = p[pixel_at + 2];
-			fprintf(stderr, "%3d, %3d = (%3d, %3d, %3d)\n", i, j, r, g, b);
-			fprintf(fp,     "%3d, %3d = (%3d, %3d, %3d)\n", i, j, r, g, b);
+			pixel_at = (i * (image->w) + j);
+			pixel = p[pixel_at];
+			//g = p[pixel_at + 1];
+			//b = p[pixel_at + 2];
+			temp = pixel & fmt->Rmask;
+			temp = temp >> fmt->Rshift;
+			temp = temp << fmt->Rloss;
+			r = (uint8_t)temp;
+			temp = pixel & fmt->Gmask;
+			temp = temp >> fmt->Gshift;
+			temp = temp << fmt->Gloss;
+			g = (uint8_t)temp;
+			temp = pixel & fmt->Bmask;
+			temp = temp >> fmt->Bshift;
+			temp = temp << fmt->Bloss;
+			b = (uint8_t)temp;
+			temp = pixel & fmt->Amask;
+			temp = temp >> fmt->Ashift;
+			temp = temp << fmt->Aloss;
+			alpha = (uint8_t)temp;
+			fprintf(stderr, "%3d, %3d = (%3d, %3d, %3d, %3d)\n", i, j, r, g, b, alpha);
+			fprintf(fp,     "%3d, %3d = (%3d, %3d, %3d, %3d)\n", i, j, r, g, b, alpha);
 		}
 	}
 

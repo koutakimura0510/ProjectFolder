@@ -3,7 +3,7 @@
 int main(int argc, char **argv)
 {
 	int a = 50;
-	int b = 0;
+	int b = 5;
 
 
 	if (a <= 50) {
@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 		printf("tiisai\n");
 	}
 
-	if (b <= 0) {
+	if (5 < b) {
 		printf("ookii\n");
 	}else{
 		printf("tiisai\n");

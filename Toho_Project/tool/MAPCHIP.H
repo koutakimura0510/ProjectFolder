@@ -15,19 +15,45 @@
 
 /**-------------------------------------------------
  * windowデータ定義
+ * -------------------------------------------------
+ * SCREEN_WIDTH	 :	windowの幅
+ * SCREEN_HEIGHTY:	windowの高さを指定
+ * GRID_SIZE	 :	mapdraw dataのpixel幅と高さを指定
+ * MAP_SIZE_SHIFT:	GRID_SIZE計算用
+ * MAP_DRAW_WIDTH:	幅のループ回数
+ * MAP_DRAW_HEIGH:	高さのループ回数
+ * FONT_SIZE	 :	フォントの大きさ
+ * MAPCHIP_SIZE	 :	選択用マップチップの大きさ
+ * MSG_FLAME_SIZE:	msgwindowの白枠のサイズ
  * -------------------------------------------------*/
-#define SCREEN_WIDTH	1280	//ウィンドウの幅を指定
-#define SCREEN_HEIGHT	960		//ウィンドウの高さを指定
-#define GRID_SIZE		32		//マップ描画データのpixel幅と高さを指定
-#define MAP_SIZE_SHIFT	5		//5bitシフトすれば32になる
-#define MAP_DRAW_WIDTH	(SCREEN_WIDTH >> MAP_SIZE_SHIFT)	//幅のループ回数
-#define MAP_DRAW_HEIGHT	(SCREEN_HEIGHT >> MAP_SIZE_SHIFT)	//高さのループ回数
-#define UNIT_WIDTH		24		//描画ユニットデータの幅を指定
-#define UNIT_HEIGHT		32		//描画ユニットデータの高さを指定
-#define UNIT_SHIFT		(MAP_SIZE_SHIFT-0)		//ユニットの描画位置を指定
-#define FONT_SIZE		40		//描画フォントサイズを指定
-#define MAPCHIP_SIZE	32		//マップチップのサイズ
-#define MSG_FLAME_SIZE	10		//メッセージウィンドウの白枠のサイズ
+#define SCREEN_WIDTH	1280
+#define SCREEN_HEIGHT	960	
+#define GRID_SIZE		32
+#define MAP_SIZE_SHIFT	5
+#define MAP_DRAW_WIDTH	(SCREEN_WIDTH >> MAP_SIZE_SHIFT)
+#define MAP_DRAW_HEIGHT	(SCREEN_HEIGHT >> MAP_SIZE_SHIFT)
+#define UNIT_WIDTH		24
+#define UNIT_HEIGHT		32
+#define FONT_SIZE		40
+#define MAPCHIP_SIZE	32
+#define MSG_FLAME_SIZE	10
+
+#define MAP_FOLD_WIDTH	50
+#define MAP_FOLD_HEIGHT	50
+
+
+/**-------------------------------------------------
+ * FPS数
+ * -------------------------------------------------
+ * ANIMATION_FPS:	最低値1 最高値GRID_SIZEまでの値を設定
+ * 					この値を上げると移動アニメーションが増える
+ *
+ * FPS_INTERVAL :	GRID_SIZEに対するアニメーション数の増え幅
+ * 					glidsize/fps = pixelずつ増えるアニメーションを行う
+ * -------------------------------------------------*/
+#define ANIMATION_FPS	1
+#define FPS_INTERVAL	(GRID_SIZE/ANIMATION_FPS)
+
 
 
 /**-------------------------------------------------
@@ -187,11 +213,11 @@
  * フレームバッファID定義
  * -------------------------------------------------*/
 typedef enum {
-	MAP40,
-	MAP80,
-	MAP120,
-	MAP160,
-	MAP320,
+	MAPSAME,
+	MAPTWO,
+	MAPTHREE,
+	MAPFOUR,
+	MAPFIVE,
 } T_FRAMEBUFFER_ID;
 
 
@@ -203,10 +229,6 @@ typedef enum {
 	UP,
 	DOWN,
 	LEFT,
-	C_XPOS,
-	C_YPOS,
-	F_XPOS,
-	F_YPOS,
 	NON,
 } MOVE_ID;
 
@@ -258,16 +280,21 @@ static const char *tohoitem[] = {
 
 /**-------------------------------------------------
  * マップチップの切り取り座標と当たり判定を確保
+ * -------------------------------------------------
+ * arg1: id		一つの要素数のID
+ * arg2: xpos	開始xpixelを指定
+ * arg3: ypos	開始ypixelを指定
+ * arg4: direct	当たり判定の有無を指定、1.有 0.無
  * -------------------------------------------------*/
 typedef struct {
-	uint32_t id;	//一つの要素数のID
-	uint32_t xpos;	//開始xpixel数を指定
-	uint32_t ypos;	//開始ypixel数を指定
-	uint8_t direct;	//当たり判定の有無を指定、1.有 0.無
+	uint32_t id;
+	uint32_t xpos;
+	uint32_t ypos;
+	uint8_t direct;	
 } t_mapid;
 
 static const t_mapid mapid[] = {
-	{	STANDERD_MAP0,     0,    0,  0  },
+	{	STANDERD_MAP0,     0,    0,  0  },	//草原
 	{	STANDERD_MAP1,    32,    0,  0  },
 	{	STANDERD_MAP2,    64,    0,  0  },
 	{	STANDERD_MAP3,    96,    0,  0  },
@@ -275,11 +302,11 @@ static const t_mapid mapid[] = {
 	{	STANDERD_MAP5,   160,    0,  0  },
 	{	STANDERD_MAP6,   192,    0,  0  },
 	{	STANDERD_MAP7,   224,    0,  0  },
-	{	STANDERD_MAP8,     0,   32,  0  },
-	{	STANDERD_MAP9,    32,   32,  0  },
-	{	STANDERD_MAP10,   64,   32,  1  },
-	{	STANDERD_MAP11,   96,   32,  1  },
-	{	STANDERD_MAP12,  128,   32,  1  },
+	{	STANDERD_MAP8,     0,   32,  0  },	//木
+	{	STANDERD_MAP9,    32,   32,  0  },	//木々
+	{	STANDERD_MAP10,   64,   32,  1  },	//大きい木
+	{	STANDERD_MAP11,   96,   32,  1  },	//岩
+	{	STANDERD_MAP12,  128,   32,  1  },	//砕けそうな岩
 	{	STANDERD_MAP13,  160,   32,  1  },	//穴event
 	{	STANDERD_MAP14,  192,   32,  1  },	//泉event
 	{	STANDERD_MAP15,  224,   32,  0  },
@@ -401,16 +428,25 @@ static const t_mapid mapid[] = {
 
 /**-------------------------------------------------
  * マップチップのデータ構造確保
+ * -------------------------------------------------
+ * arg1: 一つの画像データの開始ID
+ * arg2: 一つの画像データの終了ID
+ * arg3: 相対パスが保存されている配列の列番号を指定
+ * arg4: 使用するマップチップの相対パスが保存されている配列のアドレスを指定
+ * arg5: 横pixel数を指定
+ * arg6: 縦pixel数を指定
+ * arg7: 画像データの最大横幅を指定
+ * arg8: 画像データの最大縦幅を指定
  * -------------------------------------------------*/
 typedef struct {
-	uint32_t startid;	//一つの画像データの開始ID
-	uint32_t endid;		//一つの画像データの終了ID
-	uint8_t select;		//相対パスが保存されている配列の列番号を指定
-	char **path;		//相対パスのアドレス
-	uint32_t xpixel;	//横pixel数を指定
-	uint32_t ypixel;	//縦pixel数を指定
-	uint32_t maxwidth;	//画像データの最大横幅を指定
-	uint32_t maxheight;	//画像データの最大縦幅を指定
+	uint32_t startid;
+	uint32_t endid;
+	uint8_t select;
+	char **path;
+	uint32_t xpixel;
+	uint32_t ypixel;
+	uint32_t maxwidth;
+	uint32_t maxheight;
 } t_mapinfo;
 
 static const t_mapinfo mapinfo[] = {
@@ -427,7 +463,11 @@ static const t_mapinfo mapinfo[] = {
 
 
 /**-------------------------------------------------
- * フレームバッファのデータ構造確保
+ * フレームバッファのサイズ確保
+ * -------------------------------------------------
+ * arg1: フレームバッファのID
+ * arg2: 幅を指定
+ * arg3: 高さを指定
  * -------------------------------------------------*/
 typedef struct {
 	uint8_t id;
@@ -436,16 +476,20 @@ typedef struct {
 } t_fieldmap;
 
 static const t_fieldmap fieldmap[] = {
-	{ MAP40,    MAP_DRAW_WIDTH,		MAP_DRAW_HEIGHT   },
-	{ MAP80,    MAP_DRAW_WIDTH*2,	MAP_DRAW_HEIGHT*2 },
-	{ MAP120,   MAP_DRAW_WIDTH*3,	MAP_DRAW_HEIGHT*3 },
-	{ MAP160,   MAP_DRAW_WIDTH*4,	MAP_DRAW_HEIGHT*4 },
-	{ MAP320,   MAP_DRAW_WIDTH*5,	MAP_DRAW_HEIGHT*5 },
+	{ MAPSAME,   MAP_DRAW_WIDTH,	MAP_DRAW_HEIGHT   },
+	{ MAPTWO,    MAP_FOLD_WIDTH,	MAP_FOLD_HEIGHT   },
+	{ MAPTHREE,  MAP_FOLD_WIDTH*2,	MAP_FOLD_HEIGHT*2 },
+	{ MAPFOUR,   MAP_FOLD_WIDTH*3,	MAP_FOLD_HEIGHT*3 },
+	{ MAPFIVE,   MAP_FOLD_WIDTH*4,	MAP_FOLD_HEIGHT*4 },
 };
 
 
 /**-------------------------------------------------
- * 
+ * フィールドマップのデータ構造確保
+ * -------------------------------------------------
+ * arg1: フィールドマップの名前
+ * arg2: 使用するフレームバッファのID
+ * arg3: マップ情報が格納されているbinファイルの相対パス
  * -------------------------------------------------*/
 typedef struct {
 	uint8_t mapname;
@@ -454,8 +498,8 @@ typedef struct {
 } t_buildinfo;
 
 static const t_buildinfo buildinfo[] = {
-	{ WORLD_MAP,  MAP320, "worldmap.bin" },
-	{ HIROMA,  	  MAP40,  "hiroma.bin"   },
+	{ WORLD_MAP,  MAPFIVE, "worldmap.bin" },
+	{ HIROMA,  	  MAPSAME, "hiroma.bin"   },
 };
 
 
