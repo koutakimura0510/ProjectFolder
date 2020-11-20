@@ -595,6 +595,8 @@ static bool load_texture(const char *path, SDL_Texture **p, SDL_Renderer *render
 		fprintf(stderr, "Res Load Error!: %s\n", IMG_GetError());
 		return false;
 	}
+
+	SDL_SetColorKey(image, SDL_TRUE, SDL_MapRGB(image->format, 0, 0, 0));
 	*p = SDL_CreateTextureFromSurface(renderer, image);
 	SDL_FreeSurface(image);
 
@@ -823,6 +825,7 @@ static bool map_direct(SDL_Renderer *renderer, const t_mapinfo *map, t_posinfo *
 		return false;
 	}
 
+	
 	SDL_Rect chip_draw = (SDL_Rect){xchip*map->xpixel, ychip*map->ypixel, GRID_SIZE, GRID_SIZE};
 	SDL_Rect draw = (SDL_Rect){uxpos << MAP_SIZE_SHIFT, uypos << MAP_SIZE_SHIFT, GRID_SIZE, GRID_SIZE};
 	SDL_RenderCopy(renderer, mapchip, &chip_draw, &draw);

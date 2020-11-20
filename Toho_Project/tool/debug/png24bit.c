@@ -181,30 +181,33 @@
 
 #define FIELD_WIDTH		144
 #define FIELD_HEIGHT	136
-#define WIDTH  150
-#define HEIGHT 150
+#define WIDTH  250
+#define HEIGHT 250
 uint32_t array[WIDTH*HEIGHT];
 
-static const uint32_t res[9][2] = {
-	{140, UMI4},
-	{ 90, YAMA_STONE1},
-	{ 33, STANDERD_MAP9},
-	{156, YAMA_MOUNTAIN1},
-	{107, STANDERD_MAP0},
-	{198, SABAKU4},
-	{ 74, TUTI4},
-	{148, STANDERD_MAP56},
-	{ 82, MITI4},
+static const uint32_t res[][4] = {
+	{0, 16, 173, UMI4},
+	{132, 132, 115, YAMA_STONE1},
+	{0, 107, 0, STANDERD_MAP9},
+	{148, 115, 33, YAMA_MOUNTAIN1},
+	{0, 255, 24, STANDERD_MAP0},
+	{222, 198, 107, SABAKU4},
+	{0, 57, 0, TUTI4},
+	{0, 189, 255, UMI4},
+	//{148, STANDERD_MAP56},
+	//{ 82, MITI4},
 };
 
-uint32_t get_array(uint8_t r);
 
-
-uint32_t get_array(uint8_t r)
+uint32_t get_array(uint8_t r, uint8_t g, uint8_t b)
 {
-	for (uint8_t i = 0; i < 9; i++) {
+	for (uint8_t i = 0; i < 10; i++) {
 		if (r == res[i][0]) {
-			return res[i][1];
+			if (g == res[i][1]) {
+				if (b == res[i][2]) {
+					return res[i][3];
+				}
+			}
 		}
 	}
 
@@ -269,9 +272,9 @@ int main(int argc, char **argv)
 
 			pixel = p[pixel_at+2];
 			r = (uint8_t)pixel;
-			array[(i*image->h)+j] = get_array(r);
+			array[(i*image->h)+j] = get_array(r, g, b);
 
-			//fprintf(stderr, "%3d, %3d = (%3d, %3d, %3d)\n", i, j, r, g, b);
+			fprintf(stderr, "%3d, %3d = (%3d, %3d, %3d)\n", i, j, r, g, b);
 		}
 	}
 

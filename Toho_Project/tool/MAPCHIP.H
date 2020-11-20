@@ -26,8 +26,8 @@
  * MAPCHIP_SIZE	 :	選択用マップチップの大きさ
  * MSG_FLAME_SIZE:	msgwindowの白枠のサイズ
  * -------------------------------------------------*/
-#define SCREEN_WIDTH	1280
-#define SCREEN_HEIGHT	960	
+#define SCREEN_WIDTH	640
+#define SCREEN_HEIGHT	480	
 #define GRID_SIZE		32
 #define MAP_SIZE_SHIFT	5
 #define MAP_DRAW_WIDTH	(SCREEN_WIDTH >> MAP_SIZE_SHIFT)
