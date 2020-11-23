@@ -43,6 +43,7 @@ static uint32_t mapsize_twofold[MAP_FOLD_WIDTH * MAP_FOLD_HEIGHT] = {0};
 static uint32_t mapsize_threefold[(MAP_FOLD_WIDTH*2) * (MAP_FOLD_HEIGHT*2)] = {0};
 static uint32_t mapsize_fourfold[(MAP_FOLD_WIDTH*3) * (MAP_FOLD_HEIGHT*3)] = {0};
 static uint32_t mapsize_fivefold[(MAP_FOLD_WIDTH*4) * (MAP_FOLD_HEIGHT*4)] = {0};
+static uint32_t mapsize_sixfold[(MAP_FOLD_WIDTH*5) * (MAP_FOLD_HEIGHT*5)] = {0};
 
 
 
@@ -243,6 +244,10 @@ static uint32_t *get_framebuffer_address(uint8_t id)
 
 		case MAPFIVE:
 			return &mapsize_fivefold[0];
+
+		case MAPSIX:
+			return &mapsize_sixfold[0];
+
 
 		default:
 			return &mapsize_window_same[0];
@@ -1108,10 +1113,13 @@ int main(void)
 			SDL_RenderPresent(renderer);	//フレームの情報を全て描画する
 		}
 	}
+
 //マップチップサイズおかしい
-//右と下の当たり判定がおかしい
-//マップチップ置く箇所がおかしい
 //メッセージウィンドウがおかしい
+//デバッグ用printfがすごく分かりづらい
+//マップチップnextがおかしいコアダンプするIDの値確認
+//次のマップ作成エラー
+
 	sdl_finish(&window, &renderer, &font);
 
 	return 0;
