@@ -388,7 +388,7 @@ static void next_mapchip(const t_mapinfo *p, t_chipinfo *chip)
 	p = map_address_advance(p, chip->nowid);
 	id = p->endid+1;		//次のマップチップIDに進める
 
-	if (id > END_CHIPID) {	//0~最終IDをループ
+	if (id > (END_CHIPID-1)) {	//0~最終IDをループ
 		id = 0;
 	}
 
@@ -659,7 +659,7 @@ static bool load_texture(const char *path, SDL_Texture **p, SDL_Renderer *render
 		return false;
 	}
 
-	SDL_SetColorKey(image, SDL_TRUE, SDL_MapRGB(image->format, 0, 0, 0));
+	//SDL_SetColorKey(image, SDL_TRUE, SDL_MapRGB(image->format, 255, 255, 255));
 	*p = SDL_CreateTextureFromSurface(renderer, image);
 	SDL_FreeSurface(image);
 

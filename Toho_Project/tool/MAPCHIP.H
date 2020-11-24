@@ -35,7 +35,7 @@
 #define MAP_DRAW_HEIGHT	(SCREEN_HEIGHT >> MAP_SIZE_SHIFT)
 #define UNIT_WIDTH		24
 #define UNIT_HEIGHT		32
-#define FONT_SIZE		40
+#define FONT_SIZE		12
 #define MAPCHIP_SIZE	32
 #define MSG_FLAME_SIZE	10
 
@@ -519,7 +519,7 @@ typedef struct {
 } t_buildinfo;
 
 static const t_buildinfo buildinfo[] = {
-	{ WORLD_MAP,  MAPSIX,  "worldmap.bin" },
+	{ WORLD_MAP,  MAPSIX,  "worldmap5.bin" },
 	{ HIROMA,  	  MAPSAME, "hiroma.bin"   },
 };
 
