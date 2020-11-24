@@ -1,15 +1,20 @@
-/**---------------------------------------------
- * DRAW_H
- * ---------------------------------------------*/
-
-#ifndef DRAW_H_
-#define DRAW_H_
+#ifndef TERMINAL_H_
+#define TERMINAL_H_
 
 
 /**-------------------------------------------------
  * 外部関数
  * -------------------------------------------------*/
-void clear_screen(void);
+void terminal_str(char *s, char *path);
+void terminal_info(
+	int32_t xpos,
+	int32_t ypos,
+	int32_t fieldx,
+	int32_t fieldy,
+	int32_t mapwidth,
+	int32_t mapheight,
+	uint32_t mapid
+);
 
 
 /**-------------------------------------------------
@@ -26,8 +31,7 @@ void clear_screen(void);
 #define TERMINAL_RESET();	printf("\033[0m");			//指定リセット
 
 
-/**-----------------------------------------------------------
- *
+/**----------------------------------------------------------
  * 描画色デバイスコード
  * ----------------------------------------------------------*/
 typedef enum
@@ -63,22 +67,6 @@ typedef enum
 } ACTION;
 
 
-
-/**-------------------------------------------------
- * フィールド描画位置指定
- * -------------------------------------------------*/
-#define TITLE_XPOS			2	//now fieldname draw
-#define TITLE_YPOS			1
-#define NOW_XPOS			2	//xpos draw
-#define NOW_YPOS			2	//ypos draw
-#define FIELD_DRAW_XPOS		5	//field xpos
-#define FIELD_DRAW_YPOS		7	//field ypos
-#define MSG_XPOS			2	//character msg
-#define MSG_YPOS			41
-#define STATUS_XPOS			70	//character profile
-#define STATUS_YPOS			7
-#define ANIMATION_MSG_XPOS	2	//info draw
-#define ANIMATION_MSG_YPOS	40
 
 
 

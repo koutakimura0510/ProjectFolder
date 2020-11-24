@@ -6,11 +6,12 @@
 #define MAPCHIP_H_
 
 
-#define NUM(ary) 	(sizeof(ary)/sizeof(ary[0]))
-#define CHIP_SIZE	((sizeof (mapid)) / (sizeof (t_mapid)))
-#define CHIP_INFO	((sizeof (mapinfo)) / (sizeof (t_mapinfo)))
+#define NUM(ary) 	  (sizeof(ary)/sizeof(ary[0]))
+#define CHIP_SIZE	  ((sizeof (mapid)) / (sizeof (t_mapid)))
+#define CHIP_INFO	  ((sizeof (mapinfo)) / (sizeof (t_mapinfo)))
 #define FIELDMAP_SIZE ((sizeof (fieldmap)) / (sizeof (t_fieldmap)))
 #define BUILD_SIZE    ((sizeof (buildinfo)) / (sizeof (t_buildinfo)))
+#define MSGBOX_SIZE      ((sizeof (msgbox)) / (sizeof (t_msgbox)))
 
 
 /**-------------------------------------------------
@@ -20,8 +21,8 @@
  * SCREEN_HEIGHTY:	windowの高さを指定
  * GRID_SIZE	 :	mapdraw dataのpixel幅と高さを指定
  * MAP_SIZE_SHIFT:	GRID_SIZE計算用
- * MAP_DRAW_WIDTH:	幅のループ回数
- * MAP_DRAW_HEIGH:	高さのループ回数
+ * MAP_DRAW_WIDTH:	幅のループ回数、マップの基本幅
+ * MAP_DRAW_HEIGH:	高さのループ回数、マップの基本高さ
  * FONT_SIZE	 :	フォントの大きさ
  * MAPCHIP_SIZE	 :	選択用マップチップの大きさ
  * MSG_FLAME_SIZE:	msgwindowの白枠のサイズ
@@ -244,6 +245,16 @@ typedef enum {
 } FIELD_NAME;
 
 
+/**-------------------------------------------------
+ * メッセージIDを定義
+ * -------------------------------------------------*/
+typedef enum {
+	NULLWRITE,
+	DATAWRITE,
+	DATAREAD,
+	MAXMSG,
+} MSG;
+
 
 /**-------------------------------------------------
  * マップチップの相対パスを確保
@@ -273,6 +284,14 @@ static const char *moveobj[] = {
 	"../res/img/item/obj/tobira2.png"
 	"../res/img/item/obj/tobira3.png"
 };
+
+static const char *foresttown[] = {
+	"../res/img/map/build/tree32/BrightForest.png"
+	"../res/img/map/build/tree32/TownBF.png"
+	"../res/img/map/build/tree32/TownBF2.png"
+	"../res/img/map/build/tree32/TownForest.png"
+};
+
 
 static const char *tohoitem[] = {
 	"../res/img/item/toho/itemicon.png"
@@ -500,8 +519,42 @@ typedef struct {
 } t_buildinfo;
 
 static const t_buildinfo buildinfo[] = {
-	{ WORLD_MAP,  MAPFIVE, "worldmap.bin" },
+	{ WORLD_MAP,  MAPSIX,  "worldmap.bin" },
 	{ HIROMA,  	  MAPSAME, "hiroma.bin"   },
+};
+
+
+/**-------------------------------------------------
+ * メッセージウィンドウに描画する文字列の構造体確保
+ * -------------------------------------------------
+ * arg1:メッセージID
+ * arg2:メッセージデータを格納
+ * -------------------------------------------------*/
+typedef struct {
+	uint32_t id;
+	char *msg;
+} t_msgbox;
+
+static const t_msgbox msgbox[] = {
+	{ NULLWRITE, "\0",												},
+	{ DATAWRITE, "データを書き込みますか はい:yキー いいえ:nキー",	},
+	{ DATAREAD,  "データを読み込みますか はい:yキー いいえ:nキー",	},
+};
+
+
+/**-------------------------------------------------
+ * const構造体を管理する構造体
+ * -------------------------------------------------*/
+typedef struct {
+	const t_mapid		*map;
+	const t_mapinfo		*imap;
+	const t_fieldmap	*fmap;
+	const t_buildinfo	*build;
+	const t_msgbox		*msg;
+} t_const_struct;
+
+static const t_const_struct const_struct[] = {
+	{mapid, mapinfo, fieldmap, buildinfo, msgbox},
 };
 
 

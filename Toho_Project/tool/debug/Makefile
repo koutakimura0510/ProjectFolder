@@ -1,6 +1,6 @@
 CC = gcc
 CFLAG = -std=c11 -Wall
-SRC = mapchip.c
+SRC = id.c
 PNG24BIT = png24bit.c
 PNG32BIT = png32bit.c
 LIBS = `sdl2-config --cflags --libs`

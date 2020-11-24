@@ -1,0 +1,388 @@
+#define	TOWNBF_S (BRIGHT_E+1)
+#define	TOWNBF0 (TOWNBF_S+0)
+#define	TOWNBF1 (TOWNBF_S+1)
+#define	TOWNBF2 (TOWNBF_S+2)
+#define	TOWNBF3 (TOWNBF_S+3)
+#define	TOWNBF4 (TOWNBF_S+4)
+#define	TOWNBF5 (TOWNBF_S+5)
+#define	TOWNBF6 (TOWNBF_S+6)
+#define	TOWNBF7 (TOWNBF_S+7)
+#define	TOWNBF8 (TOWNBF_S+8)
+#define	TOWNBF9 (TOWNBF_S+9)
+#define	TOWNBF10 (TOWNBF_S+10)
+#define	TOWNBF11 (TOWNBF_S+11)
+#define	TOWNBF12 (TOWNBF_S+12)
+#define	TOWNBF13 (TOWNBF_S+13)
+#define	TOWNBF14 (TOWNBF_S+14)
+#define	TOWNBF15 (TOWNBF_S+15)
+#define	TOWNBF16 (TOWNBF_S+16)
+#define	TOWNBF17 (TOWNBF_S+17)
+#define	TOWNBF18 (TOWNBF_S+18)
+#define	TOWNBF19 (TOWNBF_S+19)
+#define	TOWNBF20 (TOWNBF_S+20)
+#define	TOWNBF21 (TOWNBF_S+21)
+#define	TOWNBF22 (TOWNBF_S+22)
+#define	TOWNBF23 (TOWNBF_S+23)
+#define	TOWNBF24 (TOWNBF_S+24)
+#define	TOWNBF25 (TOWNBF_S+25)
+#define	TOWNBF26 (TOWNBF_S+26)
+#define	TOWNBF27 (TOWNBF_S+27)
+#define	TOWNBF28 (TOWNBF_S+28)
+#define	TOWNBF29 (TOWNBF_S+29)
+#define	TOWNBF30 (TOWNBF_S+30)
+#define	TOWNBF31 (TOWNBF_S+31)
+#define	TOWNBF32 (TOWNBF_S+32)
+#define	TOWNBF33 (TOWNBF_S+33)
+#define	TOWNBF34 (TOWNBF_S+34)
+#define	TOWNBF35 (TOWNBF_S+35)
+#define	TOWNBF36 (TOWNBF_S+36)
+#define	TOWNBF37 (TOWNBF_S+37)
+#define	TOWNBF38 (TOWNBF_S+38)
+#define	TOWNBF39 (TOWNBF_S+39)
+#define	TOWNBF40 (TOWNBF_S+40)
+#define	TOWNBF41 (TOWNBF_S+41)
+#define	TOWNBF42 (TOWNBF_S+42)
+#define	TOWNBF43 (TOWNBF_S+43)
+#define	TOWNBF44 (TOWNBF_S+44)
+#define	TOWNBF45 (TOWNBF_S+45)
+#define	TOWNBF46 (TOWNBF_S+46)
+#define	TOWNBF47 (TOWNBF_S+47)
+#define	TOWNBF48 (TOWNBF_S+48)
+#define	TOWNBF49 (TOWNBF_S+49)
+#define	TOWNBF50 (TOWNBF_S+50)
+#define	TOWNBF51 (TOWNBF_S+51)
+#define	TOWNBF52 (TOWNBF_S+52)
+#define	TOWNBF53 (TOWNBF_S+53)
+#define	TOWNBF54 (TOWNBF_S+54)
+#define	TOWNBF55 (TOWNBF_S+55)
+#define	TOWNBF56 (TOWNBF_S+56)
+#define	TOWNBF57 (TOWNBF_S+57)
+#define	TOWNBF58 (TOWNBF_S+58)
+#define	TOWNBF59 (TOWNBF_S+59)
+#define	TOWNBF60 (TOWNBF_S+60)
+#define	TOWNBF61 (TOWNBF_S+61)
+#define	TOWNBF62 (TOWNBF_S+62)
+#define	TOWNBF63 (TOWNBF_S+63)
+#define	TOWNBF64 (TOWNBF_S+64)
+#define	TOWNBF65 (TOWNBF_S+65)
+#define	TOWNBF66 (TOWNBF_S+66)
+#define	TOWNBF67 (TOWNBF_S+67)
+#define	TOWNBF68 (TOWNBF_S+68)
+#define	TOWNBF69 (TOWNBF_S+69)
+#define	TOWNBF70 (TOWNBF_S+70)
+#define	TOWNBF71 (TOWNBF_S+71)
+#define	TOWNBF72 (TOWNBF_S+72)
+#define	TOWNBF73 (TOWNBF_S+73)
+#define	TOWNBF74 (TOWNBF_S+74)
+#define	TOWNBF75 (TOWNBF_S+75)
+#define	TOWNBF76 (TOWNBF_S+76)
+#define	TOWNBF77 (TOWNBF_S+77)
+#define	TOWNBF78 (TOWNBF_S+78)
+#define	TOWNBF79 (TOWNBF_S+79)
+#define	TOWNBF80 (TOWNBF_S+80)
+#define	TOWNBF81 (TOWNBF_S+81)
+#define	TOWNBF82 (TOWNBF_S+82)
+#define	TOWNBF83 (TOWNBF_S+83)
+#define	TOWNBF84 (TOWNBF_S+84)
+#define	TOWNBF85 (TOWNBF_S+85)
+#define	TOWNBF86 (TOWNBF_S+86)
+#define	TOWNBF87 (TOWNBF_S+87)
+#define	TOWNBF88 (TOWNBF_S+88)
+#define	TOWNBF89 (TOWNBF_S+89)
+#define	TOWNBF90 (TOWNBF_S+90)
+#define	TOWNBF91 (TOWNBF_S+91)
+#define	TOWNBF92 (TOWNBF_S+92)
+#define	TOWNBF93 (TOWNBF_S+93)
+#define	TOWNBF94 (TOWNBF_S+94)
+#define	TOWNBF95 (TOWNBF_S+95)
+#define	TOWNBF96 (TOWNBF_S+96)
+#define	TOWNBF97 (TOWNBF_S+97)
+#define	TOWNBF98 (TOWNBF_S+98)
+#define	TOWNBF99 (TOWNBF_S+99)
+#define	TOWNBF100 (TOWNBF_S+100)
+#define	TOWNBF101 (TOWNBF_S+101)
+#define	TOWNBF102 (TOWNBF_S+102)
+#define	TOWNBF103 (TOWNBF_S+103)
+#define	TOWNBF104 (TOWNBF_S+104)
+#define	TOWNBF105 (TOWNBF_S+105)
+#define	TOWNBF106 (TOWNBF_S+106)
+#define	TOWNBF107 (TOWNBF_S+107)
+#define	TOWNBF108 (TOWNBF_S+108)
+#define	TOWNBF109 (TOWNBF_S+109)
+#define	TOWNBF110 (TOWNBF_S+110)
+#define	TOWNBF111 (TOWNBF_S+111)
+#define	TOWNBF112 (TOWNBF_S+112)
+#define	TOWNBF113 (TOWNBF_S+113)
+#define	TOWNBF114 (TOWNBF_S+114)
+#define	TOWNBF115 (TOWNBF_S+115)
+#define	TOWNBF116 (TOWNBF_S+116)
+#define	TOWNBF117 (TOWNBF_S+117)
+#define	TOWNBF118 (TOWNBF_S+118)
+#define	TOWNBF119 (TOWNBF_S+119)
+#define	TOWNBF120 (TOWNBF_S+120)
+#define	TOWNBF121 (TOWNBF_S+121)
+#define	TOWNBF122 (TOWNBF_S+122)
+#define	TOWNBF123 (TOWNBF_S+123)
+#define	TOWNBF124 (TOWNBF_S+124)
+#define	TOWNBF125 (TOWNBF_S+125)
+#define	TOWNBF126 (TOWNBF_S+126)
+#define	TOWNBF127 (TOWNBF_S+127)
+#define	TOWNBF128 (TOWNBF_S+128)
+#define	TOWNBF129 (TOWNBF_S+129)
+#define	TOWNBF130 (TOWNBF_S+130)
+#define	TOWNBF131 (TOWNBF_S+131)
+#define	TOWNBF132 (TOWNBF_S+132)
+#define	TOWNBF133 (TOWNBF_S+133)
+#define	TOWNBF134 (TOWNBF_S+134)
+#define	TOWNBF135 (TOWNBF_S+135)
+#define	TOWNBF136 (TOWNBF_S+136)
+#define	TOWNBF137 (TOWNBF_S+137)
+#define	TOWNBF138 (TOWNBF_S+138)
+#define	TOWNBF139 (TOWNBF_S+139)
+#define	TOWNBF140 (TOWNBF_S+140)
+#define	TOWNBF141 (TOWNBF_S+141)
+#define	TOWNBF142 (TOWNBF_S+142)
+#define	TOWNBF143 (TOWNBF_S+143)
+#define	TOWNBF144 (TOWNBF_S+144)
+#define	TOWNBF145 (TOWNBF_S+145)
+#define	TOWNBF146 (TOWNBF_S+146)
+#define	TOWNBF147 (TOWNBF_S+147)
+#define	TOWNBF148 (TOWNBF_S+148)
+#define	TOWNBF149 (TOWNBF_S+149)
+#define	TOWNBF150 (TOWNBF_S+150)
+#define	TOWNBF151 (TOWNBF_S+151)
+#define	TOWNBF152 (TOWNBF_S+152)
+#define	TOWNBF153 (TOWNBF_S+153)
+#define	TOWNBF154 (TOWNBF_S+154)
+#define	TOWNBF155 (TOWNBF_S+155)
+#define	TOWNBF156 (TOWNBF_S+156)
+#define	TOWNBF157 (TOWNBF_S+157)
+#define	TOWNBF158 (TOWNBF_S+158)
+#define	TOWNBF159 (TOWNBF_S+159)
+#define	TOWNBF160 (TOWNBF_S+160)
+#define	TOWNBF161 (TOWNBF_S+161)
+#define	TOWNBF162 (TOWNBF_S+162)
+#define	TOWNBF163 (TOWNBF_S+163)
+#define	TOWNBF164 (TOWNBF_S+164)
+#define	TOWNBF165 (TOWNBF_S+165)
+#define	TOWNBF166 (TOWNBF_S+166)
+#define	TOWNBF167 (TOWNBF_S+167)
+#define	TOWNBF168 (TOWNBF_S+168)
+#define	TOWNBF169 (TOWNBF_S+169)
+#define	TOWNBF170 (TOWNBF_S+170)
+#define	TOWNBF171 (TOWNBF_S+171)
+#define	TOWNBF172 (TOWNBF_S+172)
+#define	TOWNBF173 (TOWNBF_S+173)
+#define	TOWNBF174 (TOWNBF_S+174)
+#define	TOWNBF175 (TOWNBF_S+175)
+#define	TOWNBF176 (TOWNBF_S+176)
+#define	TOWNBF177 (TOWNBF_S+177)
+#define	TOWNBF178 (TOWNBF_S+178)
+#define	TOWNBF179 (TOWNBF_S+179)
+#define	TOWNBF180 (TOWNBF_S+180)
+#define	TOWNBF181 (TOWNBF_S+181)
+#define	TOWNBF182 (TOWNBF_S+182)
+#define	TOWNBF183 (TOWNBF_S+183)
+#define	TOWNBF184 (TOWNBF_S+184)
+#define	TOWNBF185 (TOWNBF_S+185)
+#define	TOWNBF186 (TOWNBF_S+186)
+#define	TOWNBF187 (TOWNBF_S+187)
+#define	TOWNBF188 (TOWNBF_S+188)
+#define	TOWNBF189 (TOWNBF_S+189)
+#define	TOWNBF190 (TOWNBF_S+190)
+#define	TOWNBF191 (TOWNBF_S+191)
+#define	TOWNBF_E (TOWNBF191)
+
+{	TOWNBF0,    0,    0,  0  },
+{	TOWNBF1,   32,    0,  0  },
+{	TOWNBF2,   64,    0,  0  },
+{	TOWNBF3,   96,    0,  0  },
+{	TOWNBF4,  128,    0,  0  },
+{	TOWNBF5,  160,    0,  0  },
+{	TOWNBF6,  192,    0,  0  },
+{	TOWNBF7,  224,    0,  0  },
+{	TOWNBF8,  256,    0,  0  },
+{	TOWNBF9,  288,    0,  0  },
+{	TOWNBF10,  320,    0,  0  },
+{	TOWNBF11,  352,    0,  0  },
+{	TOWNBF12,  384,    0,  0  },
+{	TOWNBF13,  416,    0,  0  },
+{	TOWNBF14,  448,    0,  0  },
+{	TOWNBF15,  480,    0,  0  },
+{	TOWNBF16,    0,   32,  0  },
+{	TOWNBF17,   32,   32,  0  },
+{	TOWNBF18,   64,   32,  0  },
+{	TOWNBF19,   96,   32,  0  },
+{	TOWNBF20,  128,   32,  0  },
+{	TOWNBF21,  160,   32,  0  },
+{	TOWNBF22,  192,   32,  0  },
+{	TOWNBF23,  224,   32,  0  },
+{	TOWNBF24,  256,   32,  0  },
+{	TOWNBF25,  288,   32,  0  },
+{	TOWNBF26,  320,   32,  0  },
+{	TOWNBF27,  352,   32,  0  },
+{	TOWNBF28,  384,   32,  0  },
+{	TOWNBF29,  416,   32,  0  },
+{	TOWNBF30,  448,   32,  0  },
+{	TOWNBF31,  480,   32,  0  },
+{	TOWNBF32,    0,   64,  0  },
+{	TOWNBF33,   32,   64,  0  },
+{	TOWNBF34,   64,   64,  0  },
+{	TOWNBF35,   96,   64,  0  },
+{	TOWNBF36,  128,   64,  0  },
+{	TOWNBF37,  160,   64,  0  },
+{	TOWNBF38,  192,   64,  0  },
+{	TOWNBF39,  224,   64,  0  },
+{	TOWNBF40,  256,   64,  0  },
+{	TOWNBF41,  288,   64,  0  },
+{	TOWNBF42,  320,   64,  0  },
+{	TOWNBF43,  352,   64,  0  },
+{	TOWNBF44,  384,   64,  0  },
+{	TOWNBF45,  416,   64,  0  },
+{	TOWNBF46,  448,   64,  0  },
+{	TOWNBF47,  480,   64,  0  },
+{	TOWNBF48,    0,   96,  0  },
+{	TOWNBF49,   32,   96,  0  },
+{	TOWNBF50,   64,   96,  0  },
+{	TOWNBF51,   96,   96,  0  },
+{	TOWNBF52,  128,   96,  0  },
+{	TOWNBF53,  160,   96,  0  },
+{	TOWNBF54,  192,   96,  0  },
+{	TOWNBF55,  224,   96,  0  },
+{	TOWNBF56,  256,   96,  0  },
+{	TOWNBF57,  288,   96,  0  },
+{	TOWNBF58,  320,   96,  0  },
+{	TOWNBF59,  352,   96,  0  },
+{	TOWNBF60,  384,   96,  0  },
+{	TOWNBF61,  416,   96,  0  },
+{	TOWNBF62,  448,   96,  0  },
+{	TOWNBF63,  480,   96,  0  },
+{	TOWNBF64,    0,  128,  0  },
+{	TOWNBF65,   32,  128,  0  },
+{	TOWNBF66,   64,  128,  0  },
+{	TOWNBF67,   96,  128,  0  },
+{	TOWNBF68,  128,  128,  0  },
+{	TOWNBF69,  160,  128,  0  },
+{	TOWNBF70,  192,  128,  0  },
+{	TOWNBF71,  224,  128,  0  },
+{	TOWNBF72,  256,  128,  0  },
+{	TOWNBF73,  288,  128,  0  },
+{	TOWNBF74,  320,  128,  0  },
+{	TOWNBF75,  352,  128,  0  },
+{	TOWNBF76,  384,  128,  0  },
+{	TOWNBF77,  416,  128,  0  },
+{	TOWNBF78,  448,  128,  0  },
+{	TOWNBF79,  480,  128,  0  },
+{	TOWNBF80,    0,  160,  0  },
+{	TOWNBF81,   32,  160,  0  },
+{	TOWNBF82,   64,  160,  0  },
+{	TOWNBF83,   96,  160,  0  },
+{	TOWNBF84,  128,  160,  0  },
+{	TOWNBF85,  160,  160,  0  },
+{	TOWNBF86,  192,  160,  0  },
+{	TOWNBF87,  224,  160,  0  },
+{	TOWNBF88,  256,  160,  0  },
+{	TOWNBF89,  288,  160,  0  },
+{	TOWNBF90,  320,  160,  0  },
+{	TOWNBF91,  352,  160,  0  },
+{	TOWNBF92,  384,  160,  0  },
+{	TOWNBF93,  416,  160,  0  },
+{	TOWNBF94,  448,  160,  0  },
+{	TOWNBF95,  480,  160,  0  },
+{	TOWNBF96,    0,  192,  0  },
+{	TOWNBF97,   32,  192,  0  },
+{	TOWNBF98,   64,  192,  0  },
+{	TOWNBF99,   96,  192,  0  },
+{	TOWNBF100,  128,  192,  0  },
+{	TOWNBF101,  160,  192,  0  },
+{	TOWNBF102,  192,  192,  0  },
+{	TOWNBF103,  224,  192,  0  },
+{	TOWNBF104,  256,  192,  0  },
+{	TOWNBF105,  288,  192,  0  },
+{	TOWNBF106,  320,  192,  0  },
+{	TOWNBF107,  352,  192,  0  },
+{	TOWNBF108,  384,  192,  0  },
+{	TOWNBF109,  416,  192,  0  },
+{	TOWNBF110,  448,  192,  0  },
+{	TOWNBF111,  480,  192,  0  },
+{	TOWNBF112,    0,  224,  0  },
+{	TOWNBF113,   32,  224,  0  },
+{	TOWNBF114,   64,  224,  0  },
+{	TOWNBF115,   96,  224,  0  },
+{	TOWNBF116,  128,  224,  0  },
+{	TOWNBF117,  160,  224,  0  },
+{	TOWNBF118,  192,  224,  0  },
+{	TOWNBF119,  224,  224,  0  },
+{	TOWNBF120,  256,  224,  0  },
+{	TOWNBF121,  288,  224,  0  },
+{	TOWNBF122,  320,  224,  0  },
+{	TOWNBF123,  352,  224,  0  },
+{	TOWNBF124,  384,  224,  0  },
+{	TOWNBF125,  416,  224,  0  },
+{	TOWNBF126,  448,  224,  0  },
+{	TOWNBF127,  480,  224,  0  },
+{	TOWNBF128,    0,  256,  0  },
+{	TOWNBF129,   32,  256,  0  },
+{	TOWNBF130,   64,  256,  0  },
+{	TOWNBF131,   96,  256,  0  },
+{	TOWNBF132,  128,  256,  0  },
+{	TOWNBF133,  160,  256,  0  },
+{	TOWNBF134,  192,  256,  0  },
+{	TOWNBF135,  224,  256,  0  },
+{	TOWNBF136,  256,  256,  0  },
+{	TOWNBF137,  288,  256,  0  },
+{	TOWNBF138,  320,  256,  0  },
+{	TOWNBF139,  352,  256,  0  },
+{	TOWNBF140,  384,  256,  0  },
+{	TOWNBF141,  416,  256,  0  },
+{	TOWNBF142,  448,  256,  0  },
+{	TOWNBF143,  480,  256,  0  },
+{	TOWNBF144,    0,  288,  0  },
+{	TOWNBF145,   32,  288,  0  },
+{	TOWNBF146,   64,  288,  0  },
+{	TOWNBF147,   96,  288,  0  },
+{	TOWNBF148,  128,  288,  0  },
+{	TOWNBF149,  160,  288,  0  },
+{	TOWNBF150,  192,  288,  0  },
+{	TOWNBF151,  224,  288,  0  },
+{	TOWNBF152,  256,  288,  0  },
+{	TOWNBF153,  288,  288,  0  },
+{	TOWNBF154,  320,  288,  0  },
+{	TOWNBF155,  352,  288,  0  },
+{	TOWNBF156,  384,  288,  0  },
+{	TOWNBF157,  416,  288,  0  },
+{	TOWNBF158,  448,  288,  0  },
+{	TOWNBF159,  480,  288,  0  },
+{	TOWNBF160,    0,  320,  0  },
+{	TOWNBF161,   32,  320,  0  },
+{	TOWNBF162,   64,  320,  0  },
+{	TOWNBF163,   96,  320,  0  },
+{	TOWNBF164,  128,  320,  0  },
+{	TOWNBF165,  160,  320,  0  },
+{	TOWNBF166,  192,  320,  0  },
+{	TOWNBF167,  224,  320,  0  },
+{	TOWNBF168,  256,  320,  0  },
+{	TOWNBF169,  288,  320,  0  },
+{	TOWNBF170,  320,  320,  0  },
+{	TOWNBF171,  352,  320,  0  },
+{	TOWNBF172,  384,  320,  0  },
+{	TOWNBF173,  416,  320,  0  },
+{	TOWNBF174,  448,  320,  0  },
+{	TOWNBF175,  480,  320,  0  },
+{	TOWNBF176,    0,  352,  0  },
+{	TOWNBF177,   32,  352,  0  },
+{	TOWNBF178,   64,  352,  0  },
+{	TOWNBF179,   96,  352,  0  },
+{	TOWNBF180,  128,  352,  0  },
+{	TOWNBF181,  160,  352,  0  },
+{	TOWNBF182,  192,  352,  0  },
+{	TOWNBF183,  224,  352,  0  },
+{	TOWNBF184,  256,  352,  0  },
+{	TOWNBF185,  288,  352,  0  },
+{	TOWNBF186,  320,  352,  0  },
+{	TOWNBF187,  352,  352,  0  },
+{	TOWNBF188,  384,  352,  0  },
+{	TOWNBF189,  416,  352,  0  },
+{	TOWNBF190,  448,  352,  0  },
+{	TOWNBF191,  480,  352,  0  },
+{	TOWNBF_S,  TOWNBF_E,  1,  (char **)foresttown,   32,   32,  512,  384  },

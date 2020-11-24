@@ -1,0 +1,388 @@
+#define	BRIGHT_S (YAMA_STONE_E+1)
+#define	BRIGHT0 (BRIGHT_S+0)
+#define	BRIGHT1 (BRIGHT_S+1)
+#define	BRIGHT2 (BRIGHT_S+2)
+#define	BRIGHT3 (BRIGHT_S+3)
+#define	BRIGHT4 (BRIGHT_S+4)
+#define	BRIGHT5 (BRIGHT_S+5)
+#define	BRIGHT6 (BRIGHT_S+6)
+#define	BRIGHT7 (BRIGHT_S+7)
+#define	BRIGHT8 (BRIGHT_S+8)
+#define	BRIGHT9 (BRIGHT_S+9)
+#define	BRIGHT10 (BRIGHT_S+10)
+#define	BRIGHT11 (BRIGHT_S+11)
+#define	BRIGHT12 (BRIGHT_S+12)
+#define	BRIGHT13 (BRIGHT_S+13)
+#define	BRIGHT14 (BRIGHT_S+14)
+#define	BRIGHT15 (BRIGHT_S+15)
+#define	BRIGHT16 (BRIGHT_S+16)
+#define	BRIGHT17 (BRIGHT_S+17)
+#define	BRIGHT18 (BRIGHT_S+18)
+#define	BRIGHT19 (BRIGHT_S+19)
+#define	BRIGHT20 (BRIGHT_S+20)
+#define	BRIGHT21 (BRIGHT_S+21)
+#define	BRIGHT22 (BRIGHT_S+22)
+#define	BRIGHT23 (BRIGHT_S+23)
+#define	BRIGHT24 (BRIGHT_S+24)
+#define	BRIGHT25 (BRIGHT_S+25)
+#define	BRIGHT26 (BRIGHT_S+26)
+#define	BRIGHT27 (BRIGHT_S+27)
+#define	BRIGHT28 (BRIGHT_S+28)
+#define	BRIGHT29 (BRIGHT_S+29)
+#define	BRIGHT30 (BRIGHT_S+30)
+#define	BRIGHT31 (BRIGHT_S+31)
+#define	BRIGHT32 (BRIGHT_S+32)
+#define	BRIGHT33 (BRIGHT_S+33)
+#define	BRIGHT34 (BRIGHT_S+34)
+#define	BRIGHT35 (BRIGHT_S+35)
+#define	BRIGHT36 (BRIGHT_S+36)
+#define	BRIGHT37 (BRIGHT_S+37)
+#define	BRIGHT38 (BRIGHT_S+38)
+#define	BRIGHT39 (BRIGHT_S+39)
+#define	BRIGHT40 (BRIGHT_S+40)
+#define	BRIGHT41 (BRIGHT_S+41)
+#define	BRIGHT42 (BRIGHT_S+42)
+#define	BRIGHT43 (BRIGHT_S+43)
+#define	BRIGHT44 (BRIGHT_S+44)
+#define	BRIGHT45 (BRIGHT_S+45)
+#define	BRIGHT46 (BRIGHT_S+46)
+#define	BRIGHT47 (BRIGHT_S+47)
+#define	BRIGHT48 (BRIGHT_S+48)
+#define	BRIGHT49 (BRIGHT_S+49)
+#define	BRIGHT50 (BRIGHT_S+50)
+#define	BRIGHT51 (BRIGHT_S+51)
+#define	BRIGHT52 (BRIGHT_S+52)
+#define	BRIGHT53 (BRIGHT_S+53)
+#define	BRIGHT54 (BRIGHT_S+54)
+#define	BRIGHT55 (BRIGHT_S+55)
+#define	BRIGHT56 (BRIGHT_S+56)
+#define	BRIGHT57 (BRIGHT_S+57)
+#define	BRIGHT58 (BRIGHT_S+58)
+#define	BRIGHT59 (BRIGHT_S+59)
+#define	BRIGHT60 (BRIGHT_S+60)
+#define	BRIGHT61 (BRIGHT_S+61)
+#define	BRIGHT62 (BRIGHT_S+62)
+#define	BRIGHT63 (BRIGHT_S+63)
+#define	BRIGHT64 (BRIGHT_S+64)
+#define	BRIGHT65 (BRIGHT_S+65)
+#define	BRIGHT66 (BRIGHT_S+66)
+#define	BRIGHT67 (BRIGHT_S+67)
+#define	BRIGHT68 (BRIGHT_S+68)
+#define	BRIGHT69 (BRIGHT_S+69)
+#define	BRIGHT70 (BRIGHT_S+70)
+#define	BRIGHT71 (BRIGHT_S+71)
+#define	BRIGHT72 (BRIGHT_S+72)
+#define	BRIGHT73 (BRIGHT_S+73)
+#define	BRIGHT74 (BRIGHT_S+74)
+#define	BRIGHT75 (BRIGHT_S+75)
+#define	BRIGHT76 (BRIGHT_S+76)
+#define	BRIGHT77 (BRIGHT_S+77)
+#define	BRIGHT78 (BRIGHT_S+78)
+#define	BRIGHT79 (BRIGHT_S+79)
+#define	BRIGHT80 (BRIGHT_S+80)
+#define	BRIGHT81 (BRIGHT_S+81)
+#define	BRIGHT82 (BRIGHT_S+82)
+#define	BRIGHT83 (BRIGHT_S+83)
+#define	BRIGHT84 (BRIGHT_S+84)
+#define	BRIGHT85 (BRIGHT_S+85)
+#define	BRIGHT86 (BRIGHT_S+86)
+#define	BRIGHT87 (BRIGHT_S+87)
+#define	BRIGHT88 (BRIGHT_S+88)
+#define	BRIGHT89 (BRIGHT_S+89)
+#define	BRIGHT90 (BRIGHT_S+90)
+#define	BRIGHT91 (BRIGHT_S+91)
+#define	BRIGHT92 (BRIGHT_S+92)
+#define	BRIGHT93 (BRIGHT_S+93)
+#define	BRIGHT94 (BRIGHT_S+94)
+#define	BRIGHT95 (BRIGHT_S+95)
+#define	BRIGHT96 (BRIGHT_S+96)
+#define	BRIGHT97 (BRIGHT_S+97)
+#define	BRIGHT98 (BRIGHT_S+98)
+#define	BRIGHT99 (BRIGHT_S+99)
+#define	BRIGHT100 (BRIGHT_S+100)
+#define	BRIGHT101 (BRIGHT_S+101)
+#define	BRIGHT102 (BRIGHT_S+102)
+#define	BRIGHT103 (BRIGHT_S+103)
+#define	BRIGHT104 (BRIGHT_S+104)
+#define	BRIGHT105 (BRIGHT_S+105)
+#define	BRIGHT106 (BRIGHT_S+106)
+#define	BRIGHT107 (BRIGHT_S+107)
+#define	BRIGHT108 (BRIGHT_S+108)
+#define	BRIGHT109 (BRIGHT_S+109)
+#define	BRIGHT110 (BRIGHT_S+110)
+#define	BRIGHT111 (BRIGHT_S+111)
+#define	BRIGHT112 (BRIGHT_S+112)
+#define	BRIGHT113 (BRIGHT_S+113)
+#define	BRIGHT114 (BRIGHT_S+114)
+#define	BRIGHT115 (BRIGHT_S+115)
+#define	BRIGHT116 (BRIGHT_S+116)
+#define	BRIGHT117 (BRIGHT_S+117)
+#define	BRIGHT118 (BRIGHT_S+118)
+#define	BRIGHT119 (BRIGHT_S+119)
+#define	BRIGHT120 (BRIGHT_S+120)
+#define	BRIGHT121 (BRIGHT_S+121)
+#define	BRIGHT122 (BRIGHT_S+122)
+#define	BRIGHT123 (BRIGHT_S+123)
+#define	BRIGHT124 (BRIGHT_S+124)
+#define	BRIGHT125 (BRIGHT_S+125)
+#define	BRIGHT126 (BRIGHT_S+126)
+#define	BRIGHT127 (BRIGHT_S+127)
+#define	BRIGHT128 (BRIGHT_S+128)
+#define	BRIGHT129 (BRIGHT_S+129)
+#define	BRIGHT130 (BRIGHT_S+130)
+#define	BRIGHT131 (BRIGHT_S+131)
+#define	BRIGHT132 (BRIGHT_S+132)
+#define	BRIGHT133 (BRIGHT_S+133)
+#define	BRIGHT134 (BRIGHT_S+134)
+#define	BRIGHT135 (BRIGHT_S+135)
+#define	BRIGHT136 (BRIGHT_S+136)
+#define	BRIGHT137 (BRIGHT_S+137)
+#define	BRIGHT138 (BRIGHT_S+138)
+#define	BRIGHT139 (BRIGHT_S+139)
+#define	BRIGHT140 (BRIGHT_S+140)
+#define	BRIGHT141 (BRIGHT_S+141)
+#define	BRIGHT142 (BRIGHT_S+142)
+#define	BRIGHT143 (BRIGHT_S+143)
+#define	BRIGHT144 (BRIGHT_S+144)
+#define	BRIGHT145 (BRIGHT_S+145)
+#define	BRIGHT146 (BRIGHT_S+146)
+#define	BRIGHT147 (BRIGHT_S+147)
+#define	BRIGHT148 (BRIGHT_S+148)
+#define	BRIGHT149 (BRIGHT_S+149)
+#define	BRIGHT150 (BRIGHT_S+150)
+#define	BRIGHT151 (BRIGHT_S+151)
+#define	BRIGHT152 (BRIGHT_S+152)
+#define	BRIGHT153 (BRIGHT_S+153)
+#define	BRIGHT154 (BRIGHT_S+154)
+#define	BRIGHT155 (BRIGHT_S+155)
+#define	BRIGHT156 (BRIGHT_S+156)
+#define	BRIGHT157 (BRIGHT_S+157)
+#define	BRIGHT158 (BRIGHT_S+158)
+#define	BRIGHT159 (BRIGHT_S+159)
+#define	BRIGHT160 (BRIGHT_S+160)
+#define	BRIGHT161 (BRIGHT_S+161)
+#define	BRIGHT162 (BRIGHT_S+162)
+#define	BRIGHT163 (BRIGHT_S+163)
+#define	BRIGHT164 (BRIGHT_S+164)
+#define	BRIGHT165 (BRIGHT_S+165)
+#define	BRIGHT166 (BRIGHT_S+166)
+#define	BRIGHT167 (BRIGHT_S+167)
+#define	BRIGHT168 (BRIGHT_S+168)
+#define	BRIGHT169 (BRIGHT_S+169)
+#define	BRIGHT170 (BRIGHT_S+170)
+#define	BRIGHT171 (BRIGHT_S+171)
+#define	BRIGHT172 (BRIGHT_S+172)
+#define	BRIGHT173 (BRIGHT_S+173)
+#define	BRIGHT174 (BRIGHT_S+174)
+#define	BRIGHT175 (BRIGHT_S+175)
+#define	BRIGHT176 (BRIGHT_S+176)
+#define	BRIGHT177 (BRIGHT_S+177)
+#define	BRIGHT178 (BRIGHT_S+178)
+#define	BRIGHT179 (BRIGHT_S+179)
+#define	BRIGHT180 (BRIGHT_S+180)
+#define	BRIGHT181 (BRIGHT_S+181)
+#define	BRIGHT182 (BRIGHT_S+182)
+#define	BRIGHT183 (BRIGHT_S+183)
+#define	BRIGHT184 (BRIGHT_S+184)
+#define	BRIGHT185 (BRIGHT_S+185)
+#define	BRIGHT186 (BRIGHT_S+186)
+#define	BRIGHT187 (BRIGHT_S+187)
+#define	BRIGHT188 (BRIGHT_S+188)
+#define	BRIGHT189 (BRIGHT_S+189)
+#define	BRIGHT190 (BRIGHT_S+190)
+#define	BRIGHT191 (BRIGHT_S+191)
+#define	BRIGHT_E (BRIGHT191)
+
+{	BRIGHT0,    0,    0,  0  },
+{	BRIGHT1,   32,    0,  0  },
+{	BRIGHT2,   64,    0,  0  },
+{	BRIGHT3,   96,    0,  0  },
+{	BRIGHT4,  128,    0,  0  },
+{	BRIGHT5,  160,    0,  0  },
+{	BRIGHT6,  192,    0,  0  },
+{	BRIGHT7,  224,    0,  0  },
+{	BRIGHT8,  256,    0,  0  },
+{	BRIGHT9,  288,    0,  0  },
+{	BRIGHT10,  320,    0,  0  },
+{	BRIGHT11,  352,    0,  0  },
+{	BRIGHT12,  384,    0,  0  },
+{	BRIGHT13,  416,    0,  0  },
+{	BRIGHT14,  448,    0,  0  },
+{	BRIGHT15,  480,    0,  0  },
+{	BRIGHT16,    0,   32,  0  },
+{	BRIGHT17,   32,   32,  0  },
+{	BRIGHT18,   64,   32,  0  },
+{	BRIGHT19,   96,   32,  0  },
+{	BRIGHT20,  128,   32,  0  },
+{	BRIGHT21,  160,   32,  0  },
+{	BRIGHT22,  192,   32,  0  },
+{	BRIGHT23,  224,   32,  0  },
+{	BRIGHT24,  256,   32,  0  },
+{	BRIGHT25,  288,   32,  0  },
+{	BRIGHT26,  320,   32,  0  },
+{	BRIGHT27,  352,   32,  0  },
+{	BRIGHT28,  384,   32,  0  },
+{	BRIGHT29,  416,   32,  0  },
+{	BRIGHT30,  448,   32,  0  },
+{	BRIGHT31,  480,   32,  0  },
+{	BRIGHT32,    0,   64,  0  },
+{	BRIGHT33,   32,   64,  0  },
+{	BRIGHT34,   64,   64,  0  },
+{	BRIGHT35,   96,   64,  0  },
+{	BRIGHT36,  128,   64,  0  },
+{	BRIGHT37,  160,   64,  0  },
+{	BRIGHT38,  192,   64,  0  },
+{	BRIGHT39,  224,   64,  0  },
+{	BRIGHT40,  256,   64,  0  },
+{	BRIGHT41,  288,   64,  0  },
+{	BRIGHT42,  320,   64,  0  },
+{	BRIGHT43,  352,   64,  0  },
+{	BRIGHT44,  384,   64,  0  },
+{	BRIGHT45,  416,   64,  0  },
+{	BRIGHT46,  448,   64,  0  },
+{	BRIGHT47,  480,   64,  0  },
+{	BRIGHT48,    0,   96,  0  },
+{	BRIGHT49,   32,   96,  0  },
+{	BRIGHT50,   64,   96,  0  },
+{	BRIGHT51,   96,   96,  0  },
+{	BRIGHT52,  128,   96,  0  },
+{	BRIGHT53,  160,   96,  0  },
+{	BRIGHT54,  192,   96,  0  },
+{	BRIGHT55,  224,   96,  0  },
+{	BRIGHT56,  256,   96,  0  },
+{	BRIGHT57,  288,   96,  0  },
+{	BRIGHT58,  320,   96,  0  },
+{	BRIGHT59,  352,   96,  0  },
+{	BRIGHT60,  384,   96,  0  },
+{	BRIGHT61,  416,   96,  0  },
+{	BRIGHT62,  448,   96,  0  },
+{	BRIGHT63,  480,   96,  0  },
+{	BRIGHT64,    0,  128,  0  },
+{	BRIGHT65,   32,  128,  0  },
+{	BRIGHT66,   64,  128,  0  },
+{	BRIGHT67,   96,  128,  0  },
+{	BRIGHT68,  128,  128,  0  },
+{	BRIGHT69,  160,  128,  0  },
+{	BRIGHT70,  192,  128,  0  },
+{	BRIGHT71,  224,  128,  0  },
+{	BRIGHT72,  256,  128,  0  },
+{	BRIGHT73,  288,  128,  0  },
+{	BRIGHT74,  320,  128,  0  },
+{	BRIGHT75,  352,  128,  0  },
+{	BRIGHT76,  384,  128,  0  },
+{	BRIGHT77,  416,  128,  0  },
+{	BRIGHT78,  448,  128,  0  },
+{	BRIGHT79,  480,  128,  0  },
+{	BRIGHT80,    0,  160,  0  },
+{	BRIGHT81,   32,  160,  0  },
+{	BRIGHT82,   64,  160,  0  },
+{	BRIGHT83,   96,  160,  0  },
+{	BRIGHT84,  128,  160,  0  },
+{	BRIGHT85,  160,  160,  0  },
+{	BRIGHT86,  192,  160,  0  },
+{	BRIGHT87,  224,  160,  0  },
+{	BRIGHT88,  256,  160,  0  },
+{	BRIGHT89,  288,  160,  0  },
+{	BRIGHT90,  320,  160,  0  },
+{	BRIGHT91,  352,  160,  0  },
+{	BRIGHT92,  384,  160,  0  },
+{	BRIGHT93,  416,  160,  0  },
+{	BRIGHT94,  448,  160,  0  },
+{	BRIGHT95,  480,  160,  0  },
+{	BRIGHT96,    0,  192,  0  },
+{	BRIGHT97,   32,  192,  0  },
+{	BRIGHT98,   64,  192,  0  },
+{	BRIGHT99,   96,  192,  0  },
+{	BRIGHT100,  128,  192,  0  },
+{	BRIGHT101,  160,  192,  0  },
+{	BRIGHT102,  192,  192,  0  },
+{	BRIGHT103,  224,  192,  0  },
+{	BRIGHT104,  256,  192,  0  },
+{	BRIGHT105,  288,  192,  0  },
+{	BRIGHT106,  320,  192,  0  },
+{	BRIGHT107,  352,  192,  0  },
+{	BRIGHT108,  384,  192,  0  },
+{	BRIGHT109,  416,  192,  0  },
+{	BRIGHT110,  448,  192,  0  },
+{	BRIGHT111,  480,  192,  0  },
+{	BRIGHT112,    0,  224,  0  },
+{	BRIGHT113,   32,  224,  0  },
+{	BRIGHT114,   64,  224,  0  },
+{	BRIGHT115,   96,  224,  0  },
+{	BRIGHT116,  128,  224,  0  },
+{	BRIGHT117,  160,  224,  0  },
+{	BRIGHT118,  192,  224,  0  },
+{	BRIGHT119,  224,  224,  0  },
+{	BRIGHT120,  256,  224,  0  },
+{	BRIGHT121,  288,  224,  0  },
+{	BRIGHT122,  320,  224,  0  },
+{	BRIGHT123,  352,  224,  0  },
+{	BRIGHT124,  384,  224,  0  },
+{	BRIGHT125,  416,  224,  0  },
+{	BRIGHT126,  448,  224,  0  },
+{	BRIGHT127,  480,  224,  0  },
+{	BRIGHT128,    0,  256,  0  },
+{	BRIGHT129,   32,  256,  0  },
+{	BRIGHT130,   64,  256,  0  },
+{	BRIGHT131,   96,  256,  0  },
+{	BRIGHT132,  128,  256,  0  },
+{	BRIGHT133,  160,  256,  0  },
+{	BRIGHT134,  192,  256,  0  },
+{	BRIGHT135,  224,  256,  0  },
+{	BRIGHT136,  256,  256,  0  },
+{	BRIGHT137,  288,  256,  0  },
+{	BRIGHT138,  320,  256,  0  },
+{	BRIGHT139,  352,  256,  0  },
+{	BRIGHT140,  384,  256,  0  },
+{	BRIGHT141,  416,  256,  0  },
+{	BRIGHT142,  448,  256,  0  },
+{	BRIGHT143,  480,  256,  0  },
+{	BRIGHT144,    0,  288,  0  },
+{	BRIGHT145,   32,  288,  0  },
+{	BRIGHT146,   64,  288,  0  },
+{	BRIGHT147,   96,  288,  0  },
+{	BRIGHT148,  128,  288,  0  },
+{	BRIGHT149,  160,  288,  0  },
+{	BRIGHT150,  192,  288,  0  },
+{	BRIGHT151,  224,  288,  0  },
+{	BRIGHT152,  256,  288,  0  },
+{	BRIGHT153,  288,  288,  0  },
+{	BRIGHT154,  320,  288,  0  },
+{	BRIGHT155,  352,  288,  0  },
+{	BRIGHT156,  384,  288,  0  },
+{	BRIGHT157,  416,  288,  0  },
+{	BRIGHT158,  448,  288,  0  },
+{	BRIGHT159,  480,  288,  0  },
+{	BRIGHT160,    0,  320,  0  },
+{	BRIGHT161,   32,  320,  0  },
+{	BRIGHT162,   64,  320,  0  },
+{	BRIGHT163,   96,  320,  0  },
+{	BRIGHT164,  128,  320,  0  },
+{	BRIGHT165,  160,  320,  0  },
+{	BRIGHT166,  192,  320,  0  },
+{	BRIGHT167,  224,  320,  0  },
+{	BRIGHT168,  256,  320,  0  },
+{	BRIGHT169,  288,  320,  0  },
+{	BRIGHT170,  320,  320,  0  },
+{	BRIGHT171,  352,  320,  0  },
+{	BRIGHT172,  384,  320,  0  },
+{	BRIGHT173,  416,  320,  0  },
+{	BRIGHT174,  448,  320,  0  },
+{	BRIGHT175,  480,  320,  0  },
+{	BRIGHT176,    0,  352,  0  },
+{	BRIGHT177,   32,  352,  0  },
+{	BRIGHT178,   64,  352,  0  },
+{	BRIGHT179,   96,  352,  0  },
+{	BRIGHT180,  128,  352,  0  },
+{	BRIGHT181,  160,  352,  0  },
+{	BRIGHT182,  192,  352,  0  },
+{	BRIGHT183,  224,  352,  0  },
+{	BRIGHT184,  256,  352,  0  },
+{	BRIGHT185,  288,  352,  0  },
+{	BRIGHT186,  320,  352,  0  },
+{	BRIGHT187,  352,  352,  0  },
+{	BRIGHT188,  384,  352,  0  },
+{	BRIGHT189,  416,  352,  0  },
+{	BRIGHT190,  448,  352,  0  },
+{	BRIGHT191,  480,  352,  0  },
+{	BRIGHT_S,  BRIGHT_E,  0,  (char **)foresttown,   32,   32,  512,  384  },
