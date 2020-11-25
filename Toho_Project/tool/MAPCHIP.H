@@ -15,32 +15,56 @@
 
 
 /**-------------------------------------------------
- * windowデータ定義
+ * 可変可能define定義
+ * -------------------------------------------------*/
+
+/**-------------------------------------------------
+ * プレイ画面の大きさを指定
  * -------------------------------------------------
- * SCREEN_WIDTH	 :	windowの幅
- * SCREEN_HEIGHTY:	windowの高さを指定
- * GRID_SIZE	 :	mapdraw dataのpixel幅と高さを指定
- * MAP_SIZE_SHIFT:	GRID_SIZE計算用
- * MAP_DRAW_WIDTH:	幅のループ回数、マップの基本幅
- * MAP_DRAW_HEIGH:	高さのループ回数、マップの基本高さ
- * FONT_SIZE	 :	フォントの大きさ
- * MAPCHIP_SIZE	 :	選択用マップチップの大きさ
- * MSG_FLAME_SIZE:	msgwindowの白枠のサイズ
+ * SCREEN_WIDTH	  :	windowの幅
+ * SCREEN_HEIGHTY :	windowの高さを指定
  * -------------------------------------------------*/
 #define SCREEN_WIDTH	640
 #define SCREEN_HEIGHT	480	
+
+
+/**-------------------------------------------------
+ * 縦横1マスに使用する描画pixel数を指定
+ * -------------------------------------------------*/
 #define GRID_SIZE		32
-#define MAP_SIZE_SHIFT	5
-#define MAP_DRAW_WIDTH	(SCREEN_WIDTH >> MAP_SIZE_SHIFT)
-#define MAP_DRAW_HEIGHT	(SCREEN_HEIGHT >> MAP_SIZE_SHIFT)
+#define MAP_SIZE_SHIFT	5	//5bitシフトすれば32
+
+
+/**-------------------------------------------------
+ * メッセージウィンドウの大きさ指定
+ * -------------------------------------------------
+ * MSG_FLAME_SIZE :	msgwindowの白枠のサイズ
+ * MSG_WINDOW_SIZE: メッセージウィンドウの大きさ
+ * -------------------------------------------------*/
+#define MSG_FLAME_SIZE	10
+#define MSG_WINDOW_SIZE 140
+
+
+/**-------------------------------------------------
+ * マップチップの1マス分の大きさを指定
+ * -------------------------------------------------*/
+#define MAPCHIP_SIZE	32
+
+
+/**-------------------------------------------------
+ * プレイヤー情報
+ * -------------------------------------------------
+ * UNIT_WIDTH :	使用素材の1マス分の幅を指定
+ * UNIT_HEIGHT:	使用素材の1マス分の高さを指定
+ * -------------------------------------------------*/
 #define UNIT_WIDTH		24
 #define UNIT_HEIGHT		32
-#define FONT_SIZE		12
-#define MAPCHIP_SIZE	32
-#define MSG_FLAME_SIZE	10
 
-#define MAP_FOLD_WIDTH	50
-#define MAP_FOLD_HEIGHT	50
+
+/**-------------------------------------------------
+ * フォントサイズ
+ * -------------------------------------------------*/
+#define FONT_SIZE		12
 
 
 /**-------------------------------------------------
@@ -56,11 +80,109 @@
 #define FPS_INTERVAL	(GRID_SIZE/ANIMATION_FPS)
 
 
+/**-------------------------------------------------
+ * フレームバッファのサイズ指定
+ * -------------------------------------------------*/
+#define MAP_FOLD_WIDTH	50
+#define MAP_FOLD_HEIGHT	50
+
+
+/**-------------------------------------------------
+ * フィールド開始ID
+ * -------------------------------------------------*/
+#define START_MAP		0
+
+
+/**-------------------------------------------------
+ * ワールドマップ名
+ * -------------------------------------------------*/
+#define WORLD_MAP_START (START_MAP)
+#define WORLD_MAP_FRONT (WORLD_MAP_START + 0)
+#define WORLD_MAP_BACK	(WORLD_MAP_START + 1)
+#define WORLD_MAP_END	(WORLD_MAP_BACK)
+
+
+/**-------------------------------------------------
+ * 町名
+ * -------------------------------------------------*/
+#define BUILD_START		(WORLD_MAP_END + 1)
+#define BUILD_FOREST	(BUILD_START)
+#define BUILD_FOREST2	(BUILD_START + 1)
+#define BUILD_END		(BUILD_FOREST2)
+
+
+/**-------------------------------------------------
+ * フィールド終了ID
+ * -------------------------------------------------*/
+#define END_MAP			(BUILD_END)
+
+
+/**-------------------------------------------------
+ * マップ作成用define定義
+ * startとendに指定したマップを作成する
+ * -------------------------------------------------
+ * MAP_BUILD_START:上記の_STARTを指定
+ * MAP_BUILD_END  :上記の_ENDを指定
+ * -------------------------------------------------*/
+#define	MAP_BUILD_START	(START_MAP)
+#define MAP_BUILD_END	(END_MAP)
+
+
+/**-------------------------------------------------
+ * フレームバッファID定義
+ * -------------------------------------------------*/
+typedef enum {
+	MAPSAME,
+	MAPTWO,
+	MAPTHREE,
+	MAPFOUR,
+	MAPFIVE,
+	MAPSIX,
+} T_FRAMEBUFFER_ID;
+
+
+/**-------------------------------------------------
+ * 移動番号定義
+ * -------------------------------------------------*/
+typedef enum {
+	RIGHT,
+	UP,
+	DOWN,
+	LEFT,
+	NON,
+} MOVE_ID;
+
+
+/**-------------------------------------------------
+ * メッセージIDを定義
+ * -------------------------------------------------*/
+typedef enum {
+	NULLWRITE,
+	DATAWRITE,
+	DATAREAD,
+	MAXMSG,
+} MSG;
+
+
+/**-------------------------------------------------
+ * 可変不可
+ * -------------------------------------------------*/
+
+/**-------------------------------------------------
+ * プレイ画面に対して、1マスを幾つ配置可能か計算
+ * -------------------------------------------------
+ * MAP_DRAW_WIDTH :	幅のループ回数、マップの基本幅
+ * MAP_DRAW_HEIGH :	高さのループ回数、マップの基本高さ
+ * -------------------------------------------------*/
+#define MAP_DRAW_WIDTH	(SCREEN_WIDTH >> MAP_SIZE_SHIFT)
+#define MAP_DRAW_HEIGHT	(SCREEN_HEIGHT >> MAP_SIZE_SHIFT)
+
 
 /**-------------------------------------------------
  * Map Chip ID
  * -------------------------------------------------*/
-#define	STANDERD_S		0
+#define START_CHIPID   0
+#define	STANDERD_S	   (START_CHIPID)
 #define	STANDERD_MAP0  (STANDERD_S+0)
 #define	STANDERD_MAP1  (STANDERD_S+1)
 #define	STANDERD_MAP2  (STANDERD_S+2)
@@ -206,54 +328,920 @@
 #define	YAMA_STONE3 (YAMA_STONE_S+3)
 #define	YAMA_STONE4 (YAMA_STONE_S+4)
 #define	YAMA_STONE_E (YAMA_STONE4)
+#define	BRIGHT_S (YAMA_STONE_E+1)
+#define	BRIGHT0 (BRIGHT_S+0)
+#define	BRIGHT1 (BRIGHT_S+1)
+#define	BRIGHT2 (BRIGHT_S+2)
+#define	BRIGHT3 (BRIGHT_S+3)
+#define	BRIGHT4 (BRIGHT_S+4)
+#define	BRIGHT5 (BRIGHT_S+5)
+#define	BRIGHT6 (BRIGHT_S+6)
+#define	BRIGHT7 (BRIGHT_S+7)
+#define	BRIGHT8 (BRIGHT_S+8)
+#define	BRIGHT9 (BRIGHT_S+9)
+#define	BRIGHT10 (BRIGHT_S+10)
+#define	BRIGHT11 (BRIGHT_S+11)
+#define	BRIGHT12 (BRIGHT_S+12)
+#define	BRIGHT13 (BRIGHT_S+13)
+#define	BRIGHT14 (BRIGHT_S+14)
+#define	BRIGHT15 (BRIGHT_S+15)
+#define	BRIGHT16 (BRIGHT_S+16)
+#define	BRIGHT17 (BRIGHT_S+17)
+#define	BRIGHT18 (BRIGHT_S+18)
+#define	BRIGHT19 (BRIGHT_S+19)
+#define	BRIGHT20 (BRIGHT_S+20)
+#define	BRIGHT21 (BRIGHT_S+21)
+#define	BRIGHT22 (BRIGHT_S+22)
+#define	BRIGHT23 (BRIGHT_S+23)
+#define	BRIGHT24 (BRIGHT_S+24)
+#define	BRIGHT25 (BRIGHT_S+25)
+#define	BRIGHT26 (BRIGHT_S+26)
+#define	BRIGHT27 (BRIGHT_S+27)
+#define	BRIGHT28 (BRIGHT_S+28)
+#define	BRIGHT29 (BRIGHT_S+29)
+#define	BRIGHT30 (BRIGHT_S+30)
+#define	BRIGHT31 (BRIGHT_S+31)
+#define	BRIGHT32 (BRIGHT_S+32)
+#define	BRIGHT33 (BRIGHT_S+33)
+#define	BRIGHT34 (BRIGHT_S+34)
+#define	BRIGHT35 (BRIGHT_S+35)
+#define	BRIGHT36 (BRIGHT_S+36)
+#define	BRIGHT37 (BRIGHT_S+37)
+#define	BRIGHT38 (BRIGHT_S+38)
+#define	BRIGHT39 (BRIGHT_S+39)
+#define	BRIGHT40 (BRIGHT_S+40)
+#define	BRIGHT41 (BRIGHT_S+41)
+#define	BRIGHT42 (BRIGHT_S+42)
+#define	BRIGHT43 (BRIGHT_S+43)
+#define	BRIGHT44 (BRIGHT_S+44)
+#define	BRIGHT45 (BRIGHT_S+45)
+#define	BRIGHT46 (BRIGHT_S+46)
+#define	BRIGHT47 (BRIGHT_S+47)
+#define	BRIGHT48 (BRIGHT_S+48)
+#define	BRIGHT49 (BRIGHT_S+49)
+#define	BRIGHT50 (BRIGHT_S+50)
+#define	BRIGHT51 (BRIGHT_S+51)
+#define	BRIGHT52 (BRIGHT_S+52)
+#define	BRIGHT53 (BRIGHT_S+53)
+#define	BRIGHT54 (BRIGHT_S+54)
+#define	BRIGHT55 (BRIGHT_S+55)
+#define	BRIGHT56 (BRIGHT_S+56)
+#define	BRIGHT57 (BRIGHT_S+57)
+#define	BRIGHT58 (BRIGHT_S+58)
+#define	BRIGHT59 (BRIGHT_S+59)
+#define	BRIGHT60 (BRIGHT_S+60)
+#define	BRIGHT61 (BRIGHT_S+61)
+#define	BRIGHT62 (BRIGHT_S+62)
+#define	BRIGHT63 (BRIGHT_S+63)
+#define	BRIGHT64 (BRIGHT_S+64)
+#define	BRIGHT65 (BRIGHT_S+65)
+#define	BRIGHT66 (BRIGHT_S+66)
+#define	BRIGHT67 (BRIGHT_S+67)
+#define	BRIGHT68 (BRIGHT_S+68)
+#define	BRIGHT69 (BRIGHT_S+69)
+#define	BRIGHT70 (BRIGHT_S+70)
+#define	BRIGHT71 (BRIGHT_S+71)
+#define	BRIGHT72 (BRIGHT_S+72)
+#define	BRIGHT73 (BRIGHT_S+73)
+#define	BRIGHT74 (BRIGHT_S+74)
+#define	BRIGHT75 (BRIGHT_S+75)
+#define	BRIGHT76 (BRIGHT_S+76)
+#define	BRIGHT77 (BRIGHT_S+77)
+#define	BRIGHT78 (BRIGHT_S+78)
+#define	BRIGHT79 (BRIGHT_S+79)
+#define	BRIGHT80 (BRIGHT_S+80)
+#define	BRIGHT81 (BRIGHT_S+81)
+#define	BRIGHT82 (BRIGHT_S+82)
+#define	BRIGHT83 (BRIGHT_S+83)
+#define	BRIGHT84 (BRIGHT_S+84)
+#define	BRIGHT85 (BRIGHT_S+85)
+#define	BRIGHT86 (BRIGHT_S+86)
+#define	BRIGHT87 (BRIGHT_S+87)
+#define	BRIGHT88 (BRIGHT_S+88)
+#define	BRIGHT89 (BRIGHT_S+89)
+#define	BRIGHT90 (BRIGHT_S+90)
+#define	BRIGHT91 (BRIGHT_S+91)
+#define	BRIGHT92 (BRIGHT_S+92)
+#define	BRIGHT93 (BRIGHT_S+93)
+#define	BRIGHT94 (BRIGHT_S+94)
+#define	BRIGHT95 (BRIGHT_S+95)
+#define	BRIGHT96 (BRIGHT_S+96)
+#define	BRIGHT97 (BRIGHT_S+97)
+#define	BRIGHT98 (BRIGHT_S+98)
+#define	BRIGHT99 (BRIGHT_S+99)
+#define	BRIGHT100 (BRIGHT_S+100)
+#define	BRIGHT101 (BRIGHT_S+101)
+#define	BRIGHT102 (BRIGHT_S+102)
+#define	BRIGHT103 (BRIGHT_S+103)
+#define	BRIGHT104 (BRIGHT_S+104)
+#define	BRIGHT105 (BRIGHT_S+105)
+#define	BRIGHT106 (BRIGHT_S+106)
+#define	BRIGHT107 (BRIGHT_S+107)
+#define	BRIGHT108 (BRIGHT_S+108)
+#define	BRIGHT109 (BRIGHT_S+109)
+#define	BRIGHT110 (BRIGHT_S+110)
+#define	BRIGHT111 (BRIGHT_S+111)
+#define	BRIGHT112 (BRIGHT_S+112)
+#define	BRIGHT113 (BRIGHT_S+113)
+#define	BRIGHT114 (BRIGHT_S+114)
+#define	BRIGHT115 (BRIGHT_S+115)
+#define	BRIGHT116 (BRIGHT_S+116)
+#define	BRIGHT117 (BRIGHT_S+117)
+#define	BRIGHT118 (BRIGHT_S+118)
+#define	BRIGHT119 (BRIGHT_S+119)
+#define	BRIGHT120 (BRIGHT_S+120)
+#define	BRIGHT121 (BRIGHT_S+121)
+#define	BRIGHT122 (BRIGHT_S+122)
+#define	BRIGHT123 (BRIGHT_S+123)
+#define	BRIGHT124 (BRIGHT_S+124)
+#define	BRIGHT125 (BRIGHT_S+125)
+#define	BRIGHT126 (BRIGHT_S+126)
+#define	BRIGHT127 (BRIGHT_S+127)
+#define	BRIGHT128 (BRIGHT_S+128)
+#define	BRIGHT129 (BRIGHT_S+129)
+#define	BRIGHT130 (BRIGHT_S+130)
+#define	BRIGHT131 (BRIGHT_S+131)
+#define	BRIGHT132 (BRIGHT_S+132)
+#define	BRIGHT133 (BRIGHT_S+133)
+#define	BRIGHT134 (BRIGHT_S+134)
+#define	BRIGHT135 (BRIGHT_S+135)
+#define	BRIGHT136 (BRIGHT_S+136)
+#define	BRIGHT137 (BRIGHT_S+137)
+#define	BRIGHT138 (BRIGHT_S+138)
+#define	BRIGHT139 (BRIGHT_S+139)
+#define	BRIGHT140 (BRIGHT_S+140)
+#define	BRIGHT141 (BRIGHT_S+141)
+#define	BRIGHT142 (BRIGHT_S+142)
+#define	BRIGHT143 (BRIGHT_S+143)
+#define	BRIGHT144 (BRIGHT_S+144)
+#define	BRIGHT145 (BRIGHT_S+145)
+#define	BRIGHT146 (BRIGHT_S+146)
+#define	BRIGHT147 (BRIGHT_S+147)
+#define	BRIGHT148 (BRIGHT_S+148)
+#define	BRIGHT149 (BRIGHT_S+149)
+#define	BRIGHT150 (BRIGHT_S+150)
+#define	BRIGHT151 (BRIGHT_S+151)
+#define	BRIGHT152 (BRIGHT_S+152)
+#define	BRIGHT153 (BRIGHT_S+153)
+#define	BRIGHT154 (BRIGHT_S+154)
+#define	BRIGHT155 (BRIGHT_S+155)
+#define	BRIGHT156 (BRIGHT_S+156)
+#define	BRIGHT157 (BRIGHT_S+157)
+#define	BRIGHT158 (BRIGHT_S+158)
+#define	BRIGHT159 (BRIGHT_S+159)
+#define	BRIGHT160 (BRIGHT_S+160)
+#define	BRIGHT161 (BRIGHT_S+161)
+#define	BRIGHT162 (BRIGHT_S+162)
+#define	BRIGHT163 (BRIGHT_S+163)
+#define	BRIGHT164 (BRIGHT_S+164)
+#define	BRIGHT165 (BRIGHT_S+165)
+#define	BRIGHT166 (BRIGHT_S+166)
+#define	BRIGHT167 (BRIGHT_S+167)
+#define	BRIGHT168 (BRIGHT_S+168)
+#define	BRIGHT169 (BRIGHT_S+169)
+#define	BRIGHT170 (BRIGHT_S+170)
+#define	BRIGHT171 (BRIGHT_S+171)
+#define	BRIGHT172 (BRIGHT_S+172)
+#define	BRIGHT173 (BRIGHT_S+173)
+#define	BRIGHT174 (BRIGHT_S+174)
+#define	BRIGHT175 (BRIGHT_S+175)
+#define	BRIGHT176 (BRIGHT_S+176)
+#define	BRIGHT177 (BRIGHT_S+177)
+#define	BRIGHT178 (BRIGHT_S+178)
+#define	BRIGHT179 (BRIGHT_S+179)
+#define	BRIGHT180 (BRIGHT_S+180)
+#define	BRIGHT181 (BRIGHT_S+181)
+#define	BRIGHT182 (BRIGHT_S+182)
+#define	BRIGHT183 (BRIGHT_S+183)
+#define	BRIGHT184 (BRIGHT_S+184)
+#define	BRIGHT185 (BRIGHT_S+185)
+#define	BRIGHT186 (BRIGHT_S+186)
+#define	BRIGHT187 (BRIGHT_S+187)
+#define	BRIGHT188 (BRIGHT_S+188)
+#define	BRIGHT189 (BRIGHT_S+189)
+#define	BRIGHT190 (BRIGHT_S+190)
+#define	BRIGHT191 (BRIGHT_S+191)
+#define	BRIGHT_E (BRIGHT191)
+#define	TOWNBF_S (BRIGHT_E+1)
+#define	TOWNBF0 (TOWNBF_S+0)
+#define	TOWNBF1 (TOWNBF_S+1)
+#define	TOWNBF2 (TOWNBF_S+2)
+#define	TOWNBF3 (TOWNBF_S+3)
+#define	TOWNBF4 (TOWNBF_S+4)
+#define	TOWNBF5 (TOWNBF_S+5)
+#define	TOWNBF6 (TOWNBF_S+6)
+#define	TOWNBF7 (TOWNBF_S+7)
+#define	TOWNBF8 (TOWNBF_S+8)
+#define	TOWNBF9 (TOWNBF_S+9)
+#define	TOWNBF10 (TOWNBF_S+10)
+#define	TOWNBF11 (TOWNBF_S+11)
+#define	TOWNBF12 (TOWNBF_S+12)
+#define	TOWNBF13 (TOWNBF_S+13)
+#define	TOWNBF14 (TOWNBF_S+14)
+#define	TOWNBF15 (TOWNBF_S+15)
+#define	TOWNBF16 (TOWNBF_S+16)
+#define	TOWNBF17 (TOWNBF_S+17)
+#define	TOWNBF18 (TOWNBF_S+18)
+#define	TOWNBF19 (TOWNBF_S+19)
+#define	TOWNBF20 (TOWNBF_S+20)
+#define	TOWNBF21 (TOWNBF_S+21)
+#define	TOWNBF22 (TOWNBF_S+22)
+#define	TOWNBF23 (TOWNBF_S+23)
+#define	TOWNBF24 (TOWNBF_S+24)
+#define	TOWNBF25 (TOWNBF_S+25)
+#define	TOWNBF26 (TOWNBF_S+26)
+#define	TOWNBF27 (TOWNBF_S+27)
+#define	TOWNBF28 (TOWNBF_S+28)
+#define	TOWNBF29 (TOWNBF_S+29)
+#define	TOWNBF30 (TOWNBF_S+30)
+#define	TOWNBF31 (TOWNBF_S+31)
+#define	TOWNBF32 (TOWNBF_S+32)
+#define	TOWNBF33 (TOWNBF_S+33)
+#define	TOWNBF34 (TOWNBF_S+34)
+#define	TOWNBF35 (TOWNBF_S+35)
+#define	TOWNBF36 (TOWNBF_S+36)
+#define	TOWNBF37 (TOWNBF_S+37)
+#define	TOWNBF38 (TOWNBF_S+38)
+#define	TOWNBF39 (TOWNBF_S+39)
+#define	TOWNBF40 (TOWNBF_S+40)
+#define	TOWNBF41 (TOWNBF_S+41)
+#define	TOWNBF42 (TOWNBF_S+42)
+#define	TOWNBF43 (TOWNBF_S+43)
+#define	TOWNBF44 (TOWNBF_S+44)
+#define	TOWNBF45 (TOWNBF_S+45)
+#define	TOWNBF46 (TOWNBF_S+46)
+#define	TOWNBF47 (TOWNBF_S+47)
+#define	TOWNBF48 (TOWNBF_S+48)
+#define	TOWNBF49 (TOWNBF_S+49)
+#define	TOWNBF50 (TOWNBF_S+50)
+#define	TOWNBF51 (TOWNBF_S+51)
+#define	TOWNBF52 (TOWNBF_S+52)
+#define	TOWNBF53 (TOWNBF_S+53)
+#define	TOWNBF54 (TOWNBF_S+54)
+#define	TOWNBF55 (TOWNBF_S+55)
+#define	TOWNBF56 (TOWNBF_S+56)
+#define	TOWNBF57 (TOWNBF_S+57)
+#define	TOWNBF58 (TOWNBF_S+58)
+#define	TOWNBF59 (TOWNBF_S+59)
+#define	TOWNBF60 (TOWNBF_S+60)
+#define	TOWNBF61 (TOWNBF_S+61)
+#define	TOWNBF62 (TOWNBF_S+62)
+#define	TOWNBF63 (TOWNBF_S+63)
+#define	TOWNBF64 (TOWNBF_S+64)
+#define	TOWNBF65 (TOWNBF_S+65)
+#define	TOWNBF66 (TOWNBF_S+66)
+#define	TOWNBF67 (TOWNBF_S+67)
+#define	TOWNBF68 (TOWNBF_S+68)
+#define	TOWNBF69 (TOWNBF_S+69)
+#define	TOWNBF70 (TOWNBF_S+70)
+#define	TOWNBF71 (TOWNBF_S+71)
+#define	TOWNBF72 (TOWNBF_S+72)
+#define	TOWNBF73 (TOWNBF_S+73)
+#define	TOWNBF74 (TOWNBF_S+74)
+#define	TOWNBF75 (TOWNBF_S+75)
+#define	TOWNBF76 (TOWNBF_S+76)
+#define	TOWNBF77 (TOWNBF_S+77)
+#define	TOWNBF78 (TOWNBF_S+78)
+#define	TOWNBF79 (TOWNBF_S+79)
+#define	TOWNBF80 (TOWNBF_S+80)
+#define	TOWNBF81 (TOWNBF_S+81)
+#define	TOWNBF82 (TOWNBF_S+82)
+#define	TOWNBF83 (TOWNBF_S+83)
+#define	TOWNBF84 (TOWNBF_S+84)
+#define	TOWNBF85 (TOWNBF_S+85)
+#define	TOWNBF86 (TOWNBF_S+86)
+#define	TOWNBF87 (TOWNBF_S+87)
+#define	TOWNBF88 (TOWNBF_S+88)
+#define	TOWNBF89 (TOWNBF_S+89)
+#define	TOWNBF90 (TOWNBF_S+90)
+#define	TOWNBF91 (TOWNBF_S+91)
+#define	TOWNBF92 (TOWNBF_S+92)
+#define	TOWNBF93 (TOWNBF_S+93)
+#define	TOWNBF94 (TOWNBF_S+94)
+#define	TOWNBF95 (TOWNBF_S+95)
+#define	TOWNBF96 (TOWNBF_S+96)
+#define	TOWNBF97 (TOWNBF_S+97)
+#define	TOWNBF98 (TOWNBF_S+98)
+#define	TOWNBF99 (TOWNBF_S+99)
+#define	TOWNBF100 (TOWNBF_S+100)
+#define	TOWNBF101 (TOWNBF_S+101)
+#define	TOWNBF102 (TOWNBF_S+102)
+#define	TOWNBF103 (TOWNBF_S+103)
+#define	TOWNBF104 (TOWNBF_S+104)
+#define	TOWNBF105 (TOWNBF_S+105)
+#define	TOWNBF106 (TOWNBF_S+106)
+#define	TOWNBF107 (TOWNBF_S+107)
+#define	TOWNBF108 (TOWNBF_S+108)
+#define	TOWNBF109 (TOWNBF_S+109)
+#define	TOWNBF110 (TOWNBF_S+110)
+#define	TOWNBF111 (TOWNBF_S+111)
+#define	TOWNBF112 (TOWNBF_S+112)
+#define	TOWNBF113 (TOWNBF_S+113)
+#define	TOWNBF114 (TOWNBF_S+114)
+#define	TOWNBF115 (TOWNBF_S+115)
+#define	TOWNBF116 (TOWNBF_S+116)
+#define	TOWNBF117 (TOWNBF_S+117)
+#define	TOWNBF118 (TOWNBF_S+118)
+#define	TOWNBF119 (TOWNBF_S+119)
+#define	TOWNBF120 (TOWNBF_S+120)
+#define	TOWNBF121 (TOWNBF_S+121)
+#define	TOWNBF122 (TOWNBF_S+122)
+#define	TOWNBF123 (TOWNBF_S+123)
+#define	TOWNBF124 (TOWNBF_S+124)
+#define	TOWNBF125 (TOWNBF_S+125)
+#define	TOWNBF126 (TOWNBF_S+126)
+#define	TOWNBF127 (TOWNBF_S+127)
+#define	TOWNBF128 (TOWNBF_S+128)
+#define	TOWNBF129 (TOWNBF_S+129)
+#define	TOWNBF130 (TOWNBF_S+130)
+#define	TOWNBF131 (TOWNBF_S+131)
+#define	TOWNBF132 (TOWNBF_S+132)
+#define	TOWNBF133 (TOWNBF_S+133)
+#define	TOWNBF134 (TOWNBF_S+134)
+#define	TOWNBF135 (TOWNBF_S+135)
+#define	TOWNBF136 (TOWNBF_S+136)
+#define	TOWNBF137 (TOWNBF_S+137)
+#define	TOWNBF138 (TOWNBF_S+138)
+#define	TOWNBF139 (TOWNBF_S+139)
+#define	TOWNBF140 (TOWNBF_S+140)
+#define	TOWNBF141 (TOWNBF_S+141)
+#define	TOWNBF142 (TOWNBF_S+142)
+#define	TOWNBF143 (TOWNBF_S+143)
+#define	TOWNBF144 (TOWNBF_S+144)
+#define	TOWNBF145 (TOWNBF_S+145)
+#define	TOWNBF146 (TOWNBF_S+146)
+#define	TOWNBF147 (TOWNBF_S+147)
+#define	TOWNBF148 (TOWNBF_S+148)
+#define	TOWNBF149 (TOWNBF_S+149)
+#define	TOWNBF150 (TOWNBF_S+150)
+#define	TOWNBF151 (TOWNBF_S+151)
+#define	TOWNBF152 (TOWNBF_S+152)
+#define	TOWNBF153 (TOWNBF_S+153)
+#define	TOWNBF154 (TOWNBF_S+154)
+#define	TOWNBF155 (TOWNBF_S+155)
+#define	TOWNBF156 (TOWNBF_S+156)
+#define	TOWNBF157 (TOWNBF_S+157)
+#define	TOWNBF158 (TOWNBF_S+158)
+#define	TOWNBF159 (TOWNBF_S+159)
+#define	TOWNBF160 (TOWNBF_S+160)
+#define	TOWNBF161 (TOWNBF_S+161)
+#define	TOWNBF162 (TOWNBF_S+162)
+#define	TOWNBF163 (TOWNBF_S+163)
+#define	TOWNBF164 (TOWNBF_S+164)
+#define	TOWNBF165 (TOWNBF_S+165)
+#define	TOWNBF166 (TOWNBF_S+166)
+#define	TOWNBF167 (TOWNBF_S+167)
+#define	TOWNBF168 (TOWNBF_S+168)
+#define	TOWNBF169 (TOWNBF_S+169)
+#define	TOWNBF170 (TOWNBF_S+170)
+#define	TOWNBF171 (TOWNBF_S+171)
+#define	TOWNBF172 (TOWNBF_S+172)
+#define	TOWNBF173 (TOWNBF_S+173)
+#define	TOWNBF174 (TOWNBF_S+174)
+#define	TOWNBF175 (TOWNBF_S+175)
+#define	TOWNBF176 (TOWNBF_S+176)
+#define	TOWNBF177 (TOWNBF_S+177)
+#define	TOWNBF178 (TOWNBF_S+178)
+#define	TOWNBF179 (TOWNBF_S+179)
+#define	TOWNBF180 (TOWNBF_S+180)
+#define	TOWNBF181 (TOWNBF_S+181)
+#define	TOWNBF182 (TOWNBF_S+182)
+#define	TOWNBF183 (TOWNBF_S+183)
+#define	TOWNBF184 (TOWNBF_S+184)
+#define	TOWNBF185 (TOWNBF_S+185)
+#define	TOWNBF186 (TOWNBF_S+186)
+#define	TOWNBF187 (TOWNBF_S+187)
+#define	TOWNBF188 (TOWNBF_S+188)
+#define	TOWNBF189 (TOWNBF_S+189)
+#define	TOWNBF190 (TOWNBF_S+190)
+#define	TOWNBF191 (TOWNBF_S+191)
+#define	TOWNBF_E (TOWNBF191)
+#define	TOWN_ITEM_S (TOWNBF_E+1)
+#define	TOWN_ITEM0 (TOWN_ITEM_S+0)
+#define	TOWN_ITEM1 (TOWN_ITEM_S+1)
+#define	TOWN_ITEM2 (TOWN_ITEM_S+2)
+#define	TOWN_ITEM3 (TOWN_ITEM_S+3)
+#define	TOWN_ITEM4 (TOWN_ITEM_S+4)
+#define	TOWN_ITEM5 (TOWN_ITEM_S+5)
+#define	TOWN_ITEM6 (TOWN_ITEM_S+6)
+#define	TOWN_ITEM7 (TOWN_ITEM_S+7)
+#define	TOWN_ITEM8 (TOWN_ITEM_S+8)
+#define	TOWN_ITEM9 (TOWN_ITEM_S+9)
+#define	TOWN_ITEM10 (TOWN_ITEM_S+10)
+#define	TOWN_ITEM11 (TOWN_ITEM_S+11)
+#define	TOWN_ITEM12 (TOWN_ITEM_S+12)
+#define	TOWN_ITEM13 (TOWN_ITEM_S+13)
+#define	TOWN_ITEM14 (TOWN_ITEM_S+14)
+#define	TOWN_ITEM15 (TOWN_ITEM_S+15)
+#define	TOWN_ITEM16 (TOWN_ITEM_S+16)
+#define	TOWN_ITEM17 (TOWN_ITEM_S+17)
+#define	TOWN_ITEM18 (TOWN_ITEM_S+18)
+#define	TOWN_ITEM19 (TOWN_ITEM_S+19)
+#define	TOWN_ITEM20 (TOWN_ITEM_S+20)
+#define	TOWN_ITEM21 (TOWN_ITEM_S+21)
+#define	TOWN_ITEM22 (TOWN_ITEM_S+22)
+#define	TOWN_ITEM23 (TOWN_ITEM_S+23)
+#define	TOWN_ITEM24 (TOWN_ITEM_S+24)
+#define	TOWN_ITEM25 (TOWN_ITEM_S+25)
+#define	TOWN_ITEM26 (TOWN_ITEM_S+26)
+#define	TOWN_ITEM27 (TOWN_ITEM_S+27)
+#define	TOWN_ITEM28 (TOWN_ITEM_S+28)
+#define	TOWN_ITEM29 (TOWN_ITEM_S+29)
+#define	TOWN_ITEM30 (TOWN_ITEM_S+30)
+#define	TOWN_ITEM31 (TOWN_ITEM_S+31)
+#define	TOWN_ITEM32 (TOWN_ITEM_S+32)
+#define	TOWN_ITEM33 (TOWN_ITEM_S+33)
+#define	TOWN_ITEM34 (TOWN_ITEM_S+34)
+#define	TOWN_ITEM35 (TOWN_ITEM_S+35)
+#define	TOWN_ITEM36 (TOWN_ITEM_S+36)
+#define	TOWN_ITEM37 (TOWN_ITEM_S+37)
+#define	TOWN_ITEM38 (TOWN_ITEM_S+38)
+#define	TOWN_ITEM39 (TOWN_ITEM_S+39)
+#define	TOWN_ITEM40 (TOWN_ITEM_S+40)
+#define	TOWN_ITEM41 (TOWN_ITEM_S+41)
+#define	TOWN_ITEM42 (TOWN_ITEM_S+42)
+#define	TOWN_ITEM43 (TOWN_ITEM_S+43)
+#define	TOWN_ITEM44 (TOWN_ITEM_S+44)
+#define	TOWN_ITEM45 (TOWN_ITEM_S+45)
+#define	TOWN_ITEM46 (TOWN_ITEM_S+46)
+#define	TOWN_ITEM47 (TOWN_ITEM_S+47)
+#define	TOWN_ITEM48 (TOWN_ITEM_S+48)
+#define	TOWN_ITEM49 (TOWN_ITEM_S+49)
+#define	TOWN_ITEM50 (TOWN_ITEM_S+50)
+#define	TOWN_ITEM51 (TOWN_ITEM_S+51)
+#define	TOWN_ITEM52 (TOWN_ITEM_S+52)
+#define	TOWN_ITEM53 (TOWN_ITEM_S+53)
+#define	TOWN_ITEM54 (TOWN_ITEM_S+54)
+#define	TOWN_ITEM55 (TOWN_ITEM_S+55)
+#define	TOWN_ITEM56 (TOWN_ITEM_S+56)
+#define	TOWN_ITEM57 (TOWN_ITEM_S+57)
+#define	TOWN_ITEM58 (TOWN_ITEM_S+58)
+#define	TOWN_ITEM59 (TOWN_ITEM_S+59)
+#define	TOWN_ITEM60 (TOWN_ITEM_S+60)
+#define	TOWN_ITEM61 (TOWN_ITEM_S+61)
+#define	TOWN_ITEM62 (TOWN_ITEM_S+62)
+#define	TOWN_ITEM63 (TOWN_ITEM_S+63)
+#define	TOWN_ITEM64 (TOWN_ITEM_S+64)
+#define	TOWN_ITEM65 (TOWN_ITEM_S+65)
+#define	TOWN_ITEM66 (TOWN_ITEM_S+66)
+#define	TOWN_ITEM67 (TOWN_ITEM_S+67)
+#define	TOWN_ITEM68 (TOWN_ITEM_S+68)
+#define	TOWN_ITEM69 (TOWN_ITEM_S+69)
+#define	TOWN_ITEM70 (TOWN_ITEM_S+70)
+#define	TOWN_ITEM71 (TOWN_ITEM_S+71)
+#define	TOWN_ITEM72 (TOWN_ITEM_S+72)
+#define	TOWN_ITEM73 (TOWN_ITEM_S+73)
+#define	TOWN_ITEM74 (TOWN_ITEM_S+74)
+#define	TOWN_ITEM75 (TOWN_ITEM_S+75)
+#define	TOWN_ITEM76 (TOWN_ITEM_S+76)
+#define	TOWN_ITEM77 (TOWN_ITEM_S+77)
+#define	TOWN_ITEM78 (TOWN_ITEM_S+78)
+#define	TOWN_ITEM79 (TOWN_ITEM_S+79)
+#define	TOWN_ITEM80 (TOWN_ITEM_S+80)
+#define	TOWN_ITEM81 (TOWN_ITEM_S+81)
+#define	TOWN_ITEM82 (TOWN_ITEM_S+82)
+#define	TOWN_ITEM83 (TOWN_ITEM_S+83)
+#define	TOWN_ITEM84 (TOWN_ITEM_S+84)
+#define	TOWN_ITEM85 (TOWN_ITEM_S+85)
+#define	TOWN_ITEM86 (TOWN_ITEM_S+86)
+#define	TOWN_ITEM87 (TOWN_ITEM_S+87)
+#define	TOWN_ITEM88 (TOWN_ITEM_S+88)
+#define	TOWN_ITEM89 (TOWN_ITEM_S+89)
+#define	TOWN_ITEM90 (TOWN_ITEM_S+90)
+#define	TOWN_ITEM91 (TOWN_ITEM_S+91)
+#define	TOWN_ITEM92 (TOWN_ITEM_S+92)
+#define	TOWN_ITEM93 (TOWN_ITEM_S+93)
+#define	TOWN_ITEM94 (TOWN_ITEM_S+94)
+#define	TOWN_ITEM95 (TOWN_ITEM_S+95)
+#define	TOWN_ITEM96 (TOWN_ITEM_S+96)
+#define	TOWN_ITEM97 (TOWN_ITEM_S+97)
+#define	TOWN_ITEM98 (TOWN_ITEM_S+98)
+#define	TOWN_ITEM99 (TOWN_ITEM_S+99)
+#define	TOWN_ITEM100 (TOWN_ITEM_S+100)
+#define	TOWN_ITEM101 (TOWN_ITEM_S+101)
+#define	TOWN_ITEM102 (TOWN_ITEM_S+102)
+#define	TOWN_ITEM103 (TOWN_ITEM_S+103)
+#define	TOWN_ITEM104 (TOWN_ITEM_S+104)
+#define	TOWN_ITEM105 (TOWN_ITEM_S+105)
+#define	TOWN_ITEM106 (TOWN_ITEM_S+106)
+#define	TOWN_ITEM107 (TOWN_ITEM_S+107)
+#define	TOWN_ITEM108 (TOWN_ITEM_S+108)
+#define	TOWN_ITEM109 (TOWN_ITEM_S+109)
+#define	TOWN_ITEM110 (TOWN_ITEM_S+110)
+#define	TOWN_ITEM111 (TOWN_ITEM_S+111)
+#define	TOWN_ITEM112 (TOWN_ITEM_S+112)
+#define	TOWN_ITEM113 (TOWN_ITEM_S+113)
+#define	TOWN_ITEM114 (TOWN_ITEM_S+114)
+#define	TOWN_ITEM115 (TOWN_ITEM_S+115)
+#define	TOWN_ITEM116 (TOWN_ITEM_S+116)
+#define	TOWN_ITEM117 (TOWN_ITEM_S+117)
+#define	TOWN_ITEM118 (TOWN_ITEM_S+118)
+#define	TOWN_ITEM119 (TOWN_ITEM_S+119)
+#define	TOWN_ITEM120 (TOWN_ITEM_S+120)
+#define	TOWN_ITEM121 (TOWN_ITEM_S+121)
+#define	TOWN_ITEM122 (TOWN_ITEM_S+122)
+#define	TOWN_ITEM123 (TOWN_ITEM_S+123)
+#define	TOWN_ITEM124 (TOWN_ITEM_S+124)
+#define	TOWN_ITEM125 (TOWN_ITEM_S+125)
+#define	TOWN_ITEM126 (TOWN_ITEM_S+126)
+#define	TOWN_ITEM127 (TOWN_ITEM_S+127)
+#define	TOWN_ITEM128 (TOWN_ITEM_S+128)
+#define	TOWN_ITEM129 (TOWN_ITEM_S+129)
+#define	TOWN_ITEM130 (TOWN_ITEM_S+130)
+#define	TOWN_ITEM131 (TOWN_ITEM_S+131)
+#define	TOWN_ITEM132 (TOWN_ITEM_S+132)
+#define	TOWN_ITEM133 (TOWN_ITEM_S+133)
+#define	TOWN_ITEM134 (TOWN_ITEM_S+134)
+#define	TOWN_ITEM135 (TOWN_ITEM_S+135)
+#define	TOWN_ITEM136 (TOWN_ITEM_S+136)
+#define	TOWN_ITEM137 (TOWN_ITEM_S+137)
+#define	TOWN_ITEM138 (TOWN_ITEM_S+138)
+#define	TOWN_ITEM139 (TOWN_ITEM_S+139)
+#define	TOWN_ITEM140 (TOWN_ITEM_S+140)
+#define	TOWN_ITEM141 (TOWN_ITEM_S+141)
+#define	TOWN_ITEM142 (TOWN_ITEM_S+142)
+#define	TOWN_ITEM143 (TOWN_ITEM_S+143)
+#define	TOWN_ITEM144 (TOWN_ITEM_S+144)
+#define	TOWN_ITEM145 (TOWN_ITEM_S+145)
+#define	TOWN_ITEM146 (TOWN_ITEM_S+146)
+#define	TOWN_ITEM147 (TOWN_ITEM_S+147)
+#define	TOWN_ITEM148 (TOWN_ITEM_S+148)
+#define	TOWN_ITEM149 (TOWN_ITEM_S+149)
+#define	TOWN_ITEM150 (TOWN_ITEM_S+150)
+#define	TOWN_ITEM151 (TOWN_ITEM_S+151)
+#define	TOWN_ITEM152 (TOWN_ITEM_S+152)
+#define	TOWN_ITEM153 (TOWN_ITEM_S+153)
+#define	TOWN_ITEM154 (TOWN_ITEM_S+154)
+#define	TOWN_ITEM155 (TOWN_ITEM_S+155)
+#define	TOWN_ITEM156 (TOWN_ITEM_S+156)
+#define	TOWN_ITEM157 (TOWN_ITEM_S+157)
+#define	TOWN_ITEM158 (TOWN_ITEM_S+158)
+#define	TOWN_ITEM159 (TOWN_ITEM_S+159)
+#define	TOWN_ITEM160 (TOWN_ITEM_S+160)
+#define	TOWN_ITEM161 (TOWN_ITEM_S+161)
+#define	TOWN_ITEM162 (TOWN_ITEM_S+162)
+#define	TOWN_ITEM163 (TOWN_ITEM_S+163)
+#define	TOWN_ITEM164 (TOWN_ITEM_S+164)
+#define	TOWN_ITEM165 (TOWN_ITEM_S+165)
+#define	TOWN_ITEM166 (TOWN_ITEM_S+166)
+#define	TOWN_ITEM167 (TOWN_ITEM_S+167)
+#define	TOWN_ITEM168 (TOWN_ITEM_S+168)
+#define	TOWN_ITEM169 (TOWN_ITEM_S+169)
+#define	TOWN_ITEM170 (TOWN_ITEM_S+170)
+#define	TOWN_ITEM171 (TOWN_ITEM_S+171)
+#define	TOWN_ITEM172 (TOWN_ITEM_S+172)
+#define	TOWN_ITEM173 (TOWN_ITEM_S+173)
+#define	TOWN_ITEM174 (TOWN_ITEM_S+174)
+#define	TOWN_ITEM175 (TOWN_ITEM_S+175)
+#define	TOWN_ITEM176 (TOWN_ITEM_S+176)
+#define	TOWN_ITEM177 (TOWN_ITEM_S+177)
+#define	TOWN_ITEM178 (TOWN_ITEM_S+178)
+#define	TOWN_ITEM179 (TOWN_ITEM_S+179)
+#define	TOWN_ITEM180 (TOWN_ITEM_S+180)
+#define	TOWN_ITEM181 (TOWN_ITEM_S+181)
+#define	TOWN_ITEM182 (TOWN_ITEM_S+182)
+#define	TOWN_ITEM183 (TOWN_ITEM_S+183)
+#define	TOWN_ITEM184 (TOWN_ITEM_S+184)
+#define	TOWN_ITEM185 (TOWN_ITEM_S+185)
+#define	TOWN_ITEM186 (TOWN_ITEM_S+186)
+#define	TOWN_ITEM187 (TOWN_ITEM_S+187)
+#define	TOWN_ITEM188 (TOWN_ITEM_S+188)
+#define	TOWN_ITEM189 (TOWN_ITEM_S+189)
+#define	TOWN_ITEM190 (TOWN_ITEM_S+190)
+#define	TOWN_ITEM191 (TOWN_ITEM_S+191)
+#define	TOWN_ITEM192 (TOWN_ITEM_S+192)
+#define	TOWN_ITEM193 (TOWN_ITEM_S+193)
+#define	TOWN_ITEM194 (TOWN_ITEM_S+194)
+#define	TOWN_ITEM195 (TOWN_ITEM_S+195)
+#define	TOWN_ITEM196 (TOWN_ITEM_S+196)
+#define	TOWN_ITEM197 (TOWN_ITEM_S+197)
+#define	TOWN_ITEM198 (TOWN_ITEM_S+198)
+#define	TOWN_ITEM199 (TOWN_ITEM_S+199)
+#define	TOWN_ITEM200 (TOWN_ITEM_S+200)
+#define	TOWN_ITEM201 (TOWN_ITEM_S+201)
+#define	TOWN_ITEM202 (TOWN_ITEM_S+202)
+#define	TOWN_ITEM203 (TOWN_ITEM_S+203)
+#define	TOWN_ITEM204 (TOWN_ITEM_S+204)
+#define	TOWN_ITEM205 (TOWN_ITEM_S+205)
+#define	TOWN_ITEM206 (TOWN_ITEM_S+206)
+#define	TOWN_ITEM207 (TOWN_ITEM_S+207)
+#define	TOWN_ITEM208 (TOWN_ITEM_S+208)
+#define	TOWN_ITEM209 (TOWN_ITEM_S+209)
+#define	TOWN_ITEM210 (TOWN_ITEM_S+210)
+#define	TOWN_ITEM211 (TOWN_ITEM_S+211)
+#define	TOWN_ITEM212 (TOWN_ITEM_S+212)
+#define	TOWN_ITEM213 (TOWN_ITEM_S+213)
+#define	TOWN_ITEM214 (TOWN_ITEM_S+214)
+#define	TOWN_ITEM215 (TOWN_ITEM_S+215)
+#define	TOWN_ITEM216 (TOWN_ITEM_S+216)
+#define	TOWN_ITEM217 (TOWN_ITEM_S+217)
+#define	TOWN_ITEM218 (TOWN_ITEM_S+218)
+#define	TOWN_ITEM219 (TOWN_ITEM_S+219)
+#define	TOWN_ITEM220 (TOWN_ITEM_S+220)
+#define	TOWN_ITEM221 (TOWN_ITEM_S+221)
+#define	TOWN_ITEM222 (TOWN_ITEM_S+222)
+#define	TOWN_ITEM223 (TOWN_ITEM_S+223)
+#define	TOWN_ITEM224 (TOWN_ITEM_S+224)
+#define	TOWN_ITEM225 (TOWN_ITEM_S+225)
+#define	TOWN_ITEM226 (TOWN_ITEM_S+226)
+#define	TOWN_ITEM227 (TOWN_ITEM_S+227)
+#define	TOWN_ITEM228 (TOWN_ITEM_S+228)
+#define	TOWN_ITEM229 (TOWN_ITEM_S+229)
+#define	TOWN_ITEM230 (TOWN_ITEM_S+230)
+#define	TOWN_ITEM231 (TOWN_ITEM_S+231)
+#define	TOWN_ITEM232 (TOWN_ITEM_S+232)
+#define	TOWN_ITEM233 (TOWN_ITEM_S+233)
+#define	TOWN_ITEM234 (TOWN_ITEM_S+234)
+#define	TOWN_ITEM235 (TOWN_ITEM_S+235)
+#define	TOWN_ITEM236 (TOWN_ITEM_S+236)
+#define	TOWN_ITEM237 (TOWN_ITEM_S+237)
+#define	TOWN_ITEM238 (TOWN_ITEM_S+238)
+#define	TOWN_ITEM239 (TOWN_ITEM_S+239)
+#define	TOWN_ITEM240 (TOWN_ITEM_S+240)
+#define	TOWN_ITEM241 (TOWN_ITEM_S+241)
+#define	TOWN_ITEM242 (TOWN_ITEM_S+242)
+#define	TOWN_ITEM243 (TOWN_ITEM_S+243)
+#define	TOWN_ITEM244 (TOWN_ITEM_S+244)
+#define	TOWN_ITEM245 (TOWN_ITEM_S+245)
+#define	TOWN_ITEM246 (TOWN_ITEM_S+246)
+#define	TOWN_ITEM247 (TOWN_ITEM_S+247)
+#define	TOWN_ITEM248 (TOWN_ITEM_S+248)
+#define	TOWN_ITEM249 (TOWN_ITEM_S+249)
+#define	TOWN_ITEM250 (TOWN_ITEM_S+250)
+#define	TOWN_ITEM251 (TOWN_ITEM_S+251)
+#define	TOWN_ITEM252 (TOWN_ITEM_S+252)
+#define	TOWN_ITEM253 (TOWN_ITEM_S+253)
+#define	TOWN_ITEM254 (TOWN_ITEM_S+254)
+#define	TOWN_ITEM255 (TOWN_ITEM_S+255)
+#define	TOWN_ITEM_E (TOWN_ITEM255)
+#define	FOREST_S (TOWN_ITEM_E+1)
+#define	FOREST0 (FOREST_S+0)
+#define	FOREST1 (FOREST_S+1)
+#define	FOREST2 (FOREST_S+2)
+#define	FOREST3 (FOREST_S+3)
+#define	FOREST4 (FOREST_S+4)
+#define	FOREST5 (FOREST_S+5)
+#define	FOREST6 (FOREST_S+6)
+#define	FOREST7 (FOREST_S+7)
+#define	FOREST8 (FOREST_S+8)
+#define	FOREST9 (FOREST_S+9)
+#define	FOREST10 (FOREST_S+10)
+#define	FOREST11 (FOREST_S+11)
+#define	FOREST12 (FOREST_S+12)
+#define	FOREST13 (FOREST_S+13)
+#define	FOREST14 (FOREST_S+14)
+#define	FOREST15 (FOREST_S+15)
+#define	FOREST16 (FOREST_S+16)
+#define	FOREST17 (FOREST_S+17)
+#define	FOREST18 (FOREST_S+18)
+#define	FOREST19 (FOREST_S+19)
+#define	FOREST20 (FOREST_S+20)
+#define	FOREST21 (FOREST_S+21)
+#define	FOREST22 (FOREST_S+22)
+#define	FOREST23 (FOREST_S+23)
+#define	FOREST24 (FOREST_S+24)
+#define	FOREST25 (FOREST_S+25)
+#define	FOREST26 (FOREST_S+26)
+#define	FOREST27 (FOREST_S+27)
+#define	FOREST28 (FOREST_S+28)
+#define	FOREST29 (FOREST_S+29)
+#define	FOREST30 (FOREST_S+30)
+#define	FOREST31 (FOREST_S+31)
+#define	FOREST32 (FOREST_S+32)
+#define	FOREST33 (FOREST_S+33)
+#define	FOREST34 (FOREST_S+34)
+#define	FOREST35 (FOREST_S+35)
+#define	FOREST36 (FOREST_S+36)
+#define	FOREST37 (FOREST_S+37)
+#define	FOREST38 (FOREST_S+38)
+#define	FOREST39 (FOREST_S+39)
+#define	FOREST40 (FOREST_S+40)
+#define	FOREST41 (FOREST_S+41)
+#define	FOREST42 (FOREST_S+42)
+#define	FOREST43 (FOREST_S+43)
+#define	FOREST44 (FOREST_S+44)
+#define	FOREST45 (FOREST_S+45)
+#define	FOREST46 (FOREST_S+46)
+#define	FOREST47 (FOREST_S+47)
+#define	FOREST48 (FOREST_S+48)
+#define	FOREST49 (FOREST_S+49)
+#define	FOREST50 (FOREST_S+50)
+#define	FOREST51 (FOREST_S+51)
+#define	FOREST52 (FOREST_S+52)
+#define	FOREST53 (FOREST_S+53)
+#define	FOREST54 (FOREST_S+54)
+#define	FOREST55 (FOREST_S+55)
+#define	FOREST56 (FOREST_S+56)
+#define	FOREST57 (FOREST_S+57)
+#define	FOREST58 (FOREST_S+58)
+#define	FOREST59 (FOREST_S+59)
+#define	FOREST60 (FOREST_S+60)
+#define	FOREST61 (FOREST_S+61)
+#define	FOREST62 (FOREST_S+62)
+#define	FOREST63 (FOREST_S+63)
+#define	FOREST64 (FOREST_S+64)
+#define	FOREST65 (FOREST_S+65)
+#define	FOREST66 (FOREST_S+66)
+#define	FOREST67 (FOREST_S+67)
+#define	FOREST68 (FOREST_S+68)
+#define	FOREST69 (FOREST_S+69)
+#define	FOREST70 (FOREST_S+70)
+#define	FOREST71 (FOREST_S+71)
+#define	FOREST72 (FOREST_S+72)
+#define	FOREST73 (FOREST_S+73)
+#define	FOREST74 (FOREST_S+74)
+#define	FOREST75 (FOREST_S+75)
+#define	FOREST76 (FOREST_S+76)
+#define	FOREST77 (FOREST_S+77)
+#define	FOREST78 (FOREST_S+78)
+#define	FOREST79 (FOREST_S+79)
+#define	FOREST80 (FOREST_S+80)
+#define	FOREST81 (FOREST_S+81)
+#define	FOREST82 (FOREST_S+82)
+#define	FOREST83 (FOREST_S+83)
+#define	FOREST84 (FOREST_S+84)
+#define	FOREST85 (FOREST_S+85)
+#define	FOREST86 (FOREST_S+86)
+#define	FOREST87 (FOREST_S+87)
+#define	FOREST88 (FOREST_S+88)
+#define	FOREST89 (FOREST_S+89)
+#define	FOREST90 (FOREST_S+90)
+#define	FOREST91 (FOREST_S+91)
+#define	FOREST92 (FOREST_S+92)
+#define	FOREST93 (FOREST_S+93)
+#define	FOREST94 (FOREST_S+94)
+#define	FOREST95 (FOREST_S+95)
+#define	FOREST96 (FOREST_S+96)
+#define	FOREST97 (FOREST_S+97)
+#define	FOREST98 (FOREST_S+98)
+#define	FOREST99 (FOREST_S+99)
+#define	FOREST100 (FOREST_S+100)
+#define	FOREST101 (FOREST_S+101)
+#define	FOREST102 (FOREST_S+102)
+#define	FOREST103 (FOREST_S+103)
+#define	FOREST104 (FOREST_S+104)
+#define	FOREST105 (FOREST_S+105)
+#define	FOREST106 (FOREST_S+106)
+#define	FOREST107 (FOREST_S+107)
+#define	FOREST108 (FOREST_S+108)
+#define	FOREST109 (FOREST_S+109)
+#define	FOREST110 (FOREST_S+110)
+#define	FOREST111 (FOREST_S+111)
+#define	FOREST112 (FOREST_S+112)
+#define	FOREST113 (FOREST_S+113)
+#define	FOREST114 (FOREST_S+114)
+#define	FOREST115 (FOREST_S+115)
+#define	FOREST116 (FOREST_S+116)
+#define	FOREST117 (FOREST_S+117)
+#define	FOREST118 (FOREST_S+118)
+#define	FOREST119 (FOREST_S+119)
+#define	FOREST120 (FOREST_S+120)
+#define	FOREST121 (FOREST_S+121)
+#define	FOREST122 (FOREST_S+122)
+#define	FOREST123 (FOREST_S+123)
+#define	FOREST124 (FOREST_S+124)
+#define	FOREST125 (FOREST_S+125)
+#define	FOREST126 (FOREST_S+126)
+#define	FOREST127 (FOREST_S+127)
+#define	FOREST128 (FOREST_S+128)
+#define	FOREST129 (FOREST_S+129)
+#define	FOREST130 (FOREST_S+130)
+#define	FOREST131 (FOREST_S+131)
+#define	FOREST132 (FOREST_S+132)
+#define	FOREST133 (FOREST_S+133)
+#define	FOREST134 (FOREST_S+134)
+#define	FOREST135 (FOREST_S+135)
+#define	FOREST136 (FOREST_S+136)
+#define	FOREST137 (FOREST_S+137)
+#define	FOREST138 (FOREST_S+138)
+#define	FOREST139 (FOREST_S+139)
+#define	FOREST140 (FOREST_S+140)
+#define	FOREST141 (FOREST_S+141)
+#define	FOREST142 (FOREST_S+142)
+#define	FOREST143 (FOREST_S+143)
+#define	FOREST144 (FOREST_S+144)
+#define	FOREST145 (FOREST_S+145)
+#define	FOREST146 (FOREST_S+146)
+#define	FOREST147 (FOREST_S+147)
+#define	FOREST148 (FOREST_S+148)
+#define	FOREST149 (FOREST_S+149)
+#define	FOREST150 (FOREST_S+150)
+#define	FOREST151 (FOREST_S+151)
+#define	FOREST152 (FOREST_S+152)
+#define	FOREST153 (FOREST_S+153)
+#define	FOREST154 (FOREST_S+154)
+#define	FOREST155 (FOREST_S+155)
+#define	FOREST156 (FOREST_S+156)
+#define	FOREST157 (FOREST_S+157)
+#define	FOREST158 (FOREST_S+158)
+#define	FOREST159 (FOREST_S+159)
+#define	FOREST160 (FOREST_S+160)
+#define	FOREST161 (FOREST_S+161)
+#define	FOREST162 (FOREST_S+162)
+#define	FOREST163 (FOREST_S+163)
+#define	FOREST164 (FOREST_S+164)
+#define	FOREST165 (FOREST_S+165)
+#define	FOREST166 (FOREST_S+166)
+#define	FOREST167 (FOREST_S+167)
+#define	FOREST168 (FOREST_S+168)
+#define	FOREST169 (FOREST_S+169)
+#define	FOREST170 (FOREST_S+170)
+#define	FOREST171 (FOREST_S+171)
+#define	FOREST172 (FOREST_S+172)
+#define	FOREST173 (FOREST_S+173)
+#define	FOREST174 (FOREST_S+174)
+#define	FOREST175 (FOREST_S+175)
+#define	FOREST176 (FOREST_S+176)
+#define	FOREST177 (FOREST_S+177)
+#define	FOREST178 (FOREST_S+178)
+#define	FOREST179 (FOREST_S+179)
+#define	FOREST180 (FOREST_S+180)
+#define	FOREST181 (FOREST_S+181)
+#define	FOREST182 (FOREST_S+182)
+#define	FOREST183 (FOREST_S+183)
+#define	FOREST184 (FOREST_S+184)
+#define	FOREST185 (FOREST_S+185)
+#define	FOREST186 (FOREST_S+186)
+#define	FOREST187 (FOREST_S+187)
+#define	FOREST188 (FOREST_S+188)
+#define	FOREST189 (FOREST_S+189)
+#define	FOREST190 (FOREST_S+190)
+#define	FOREST191 (FOREST_S+191)
+#define	FOREST192 (FOREST_S+192)
+#define	FOREST193 (FOREST_S+193)
+#define	FOREST194 (FOREST_S+194)
+#define	FOREST195 (FOREST_S+195)
+#define	FOREST196 (FOREST_S+196)
+#define	FOREST197 (FOREST_S+197)
+#define	FOREST198 (FOREST_S+198)
+#define	FOREST199 (FOREST_S+199)
+#define	FOREST200 (FOREST_S+200)
+#define	FOREST201 (FOREST_S+201)
+#define	FOREST202 (FOREST_S+202)
+#define	FOREST203 (FOREST_S+203)
+#define	FOREST204 (FOREST_S+204)
+#define	FOREST205 (FOREST_S+205)
+#define	FOREST206 (FOREST_S+206)
+#define	FOREST207 (FOREST_S+207)
+#define	FOREST208 (FOREST_S+208)
+#define	FOREST209 (FOREST_S+209)
+#define	FOREST210 (FOREST_S+210)
+#define	FOREST211 (FOREST_S+211)
+#define	FOREST212 (FOREST_S+212)
+#define	FOREST213 (FOREST_S+213)
+#define	FOREST214 (FOREST_S+214)
+#define	FOREST215 (FOREST_S+215)
+#define	FOREST216 (FOREST_S+216)
+#define	FOREST217 (FOREST_S+217)
+#define	FOREST218 (FOREST_S+218)
+#define	FOREST219 (FOREST_S+219)
+#define	FOREST220 (FOREST_S+220)
+#define	FOREST221 (FOREST_S+221)
+#define	FOREST222 (FOREST_S+222)
+#define	FOREST223 (FOREST_S+223)
+#define	FOREST224 (FOREST_S+224)
+#define	FOREST225 (FOREST_S+225)
+#define	FOREST226 (FOREST_S+226)
+#define	FOREST227 (FOREST_S+227)
+#define	FOREST228 (FOREST_S+228)
+#define	FOREST229 (FOREST_S+229)
+#define	FOREST230 (FOREST_S+230)
+#define	FOREST231 (FOREST_S+231)
+#define	FOREST232 (FOREST_S+232)
+#define	FOREST233 (FOREST_S+233)
+#define	FOREST234 (FOREST_S+234)
+#define	FOREST235 (FOREST_S+235)
+#define	FOREST236 (FOREST_S+236)
+#define	FOREST237 (FOREST_S+237)
+#define	FOREST238 (FOREST_S+238)
+#define	FOREST239 (FOREST_S+239)
+#define	FOREST240 (FOREST_S+240)
+#define	FOREST241 (FOREST_S+241)
+#define	FOREST242 (FOREST_S+242)
+#define	FOREST243 (FOREST_S+243)
+#define	FOREST244 (FOREST_S+244)
+#define	FOREST245 (FOREST_S+245)
+#define	FOREST246 (FOREST_S+246)
+#define	FOREST247 (FOREST_S+247)
+#define	FOREST248 (FOREST_S+248)
+#define	FOREST249 (FOREST_S+249)
+#define	FOREST250 (FOREST_S+250)
+#define	FOREST251 (FOREST_S+251)
+#define	FOREST252 (FOREST_S+252)
+#define	FOREST253 (FOREST_S+253)
+#define	FOREST254 (FOREST_S+254)
+#define	FOREST255 (FOREST_S+255)
+#define	FOREST_E (FOREST255)
 
-#define END_CHIPID	(YAMA_STONE_E + 1)
+
+#define END_CHIPID	(FOREST_E)
 
 
 /**-------------------------------------------------
- * フレームバッファID定義
+ * マップチップ選択
  * -------------------------------------------------*/
-typedef enum {
-	MAPSAME,
-	MAPTWO,
-	MAPTHREE,
-	MAPFOUR,
-	MAPFIVE,
-	MAPSIX,
-} T_FRAMEBUFFER_ID;
-
-
-/**-------------------------------------------------
- * 移動番号定義
- * -------------------------------------------------*/
-typedef enum {
-	RIGHT,
-	UP,
-	DOWN,
-	LEFT,
-	NON,
-} MOVE_ID;
-
-
-/**-------------------------------------------------
- * フィールド名定義
- * -------------------------------------------------*/
-typedef enum {
-    WORLD_MAP,	//世界地図
-	HIROMA,		//外観
-	TOTAL_FIERL,
-} FIELD_NAME;
-
-
-/**-------------------------------------------------
- * メッセージIDを定義
- * -------------------------------------------------*/
-typedef enum {
-	NULLWRITE,
-	DATAWRITE,
-	DATAREAD,
-	MAXMSG,
-} MSG;
+#define MAPCHIP_START	(START_CHIPID)
+#define MAPCHIP_END		(END_CHIPID)
 
 
 /**-------------------------------------------------
@@ -442,7 +1430,902 @@ static const t_mapid mapid[] = {
 	{	YAMA_STONE2,       0,   64,  1  },	//岩
 	{	YAMA_STONE3,       0,   96,  1  },	//岩
 	{	YAMA_STONE4,       0,  128,  1  },	//岩々
-
+	{	BRIGHT0,    0,    0,  1  },
+	{	BRIGHT1,   32,    0,  1  },
+	{	BRIGHT2,   64,    0,  1  },
+	{	BRIGHT3,   96,    0,  1  },
+	{	BRIGHT4,  128,    0,  1  },
+	{	BRIGHT5,  160,    0,  1  },
+	{	BRIGHT6,  192,    0,  0  },
+	{	BRIGHT7,  224,    0,  0  },
+	{	BRIGHT8,  256,    0,  1  },
+	{	BRIGHT9,  288,    0,  1  },
+	{	BRIGHT10,  320,    0,  1  },
+	{	BRIGHT11,  352,    0,  1  },
+	{	BRIGHT12,  384,    0,  1  },
+	{	BRIGHT13,  416,    0,  1  },
+	{	BRIGHT14,  448,    0,  1  },
+	{	BRIGHT15,  480,    0,  1  },
+	{	BRIGHT16,    0,   32,  1  },
+	{	BRIGHT17,   32,   32,  1  },
+	{	BRIGHT18,   64,   32,  1  },
+	{	BRIGHT19,   96,   32,  1  },
+	{	BRIGHT20,  128,   32,  1  },
+	{	BRIGHT21,  160,   32,  1  },
+	{	BRIGHT22,  192,   32,  0  },
+	{	BRIGHT23,  224,   32,  0  },
+	{	BRIGHT24,  256,   32,  1  },
+	{	BRIGHT25,  288,   32,  1  },
+	{	BRIGHT26,  320,   32,  1  },
+	{	BRIGHT27,  352,   32,  1  },
+	{	BRIGHT28,  384,   32,  1  },
+	{	BRIGHT29,  416,   32,  1  },
+	{	BRIGHT30,  448,   32,  1  },
+	{	BRIGHT31,  480,   32,  1  },
+	{	BRIGHT32,    0,   64,  0  },
+	{	BRIGHT33,   32,   64,  0  },
+	{	BRIGHT34,   64,   64,  0  },
+	{	BRIGHT35,   96,   64,  0  },
+	{	BRIGHT36,  128,   64,  0  },
+	{	BRIGHT37,  160,   64,  0  },
+	{	BRIGHT38,  192,   64,  0  },
+	{	BRIGHT39,  224,   64,  0  },
+	{	BRIGHT40,  256,   64,  1  },
+	{	BRIGHT41,  288,   64,  1  },
+	{	BRIGHT42,  320,   64,  1  },
+	{	BRIGHT43,  352,   64,  1  },
+	{	BRIGHT44,  384,   64,  1  },
+	{	BRIGHT45,  416,   64,  1  },
+	{	BRIGHT46,  448,   64,  1  },
+	{	BRIGHT47,  480,   64,  1  },
+	{	BRIGHT48,    0,   96,  0  },
+	{	BRIGHT49,   32,   96,  0  },
+	{	BRIGHT50,   64,   96,  0  },
+	{	BRIGHT51,   96,   96,  0  },
+	{	BRIGHT52,  128,   96,  0  },
+	{	BRIGHT53,  160,   96,  0  },
+	{	BRIGHT54,  192,   96,  1  },
+	{	BRIGHT55,  224,   96,  1  },
+	{	BRIGHT56,  256,   96,  1  },
+	{	BRIGHT57,  288,   96,  1  },
+	{	BRIGHT58,  320,   96,  1  },
+	{	BRIGHT59,  352,   96,  1  },
+	{	BRIGHT60,  384,   96,  1  },
+	{	BRIGHT61,  416,   96,  1  },
+	{	BRIGHT62,  448,   96,  1  },
+	{	BRIGHT63,  480,   96,  1  },
+	{	BRIGHT64,    0,  128,  0  },
+	{	BRIGHT65,   32,  128,  0  },
+	{	BRIGHT66,   64,  128,  0  },
+	{	BRIGHT67,   96,  128,  0  },
+	{	BRIGHT68,  128,  128,  0  },
+	{	BRIGHT69,  160,  128,  0  },
+	{	BRIGHT70,  192,  128,  1  },
+	{	BRIGHT71,  224,  128,  1  },
+	{	BRIGHT72,  256,  128,  1  },
+	{	BRIGHT73,  288,  128,  1  },
+	{	BRIGHT74,  320,  128,  1  },
+	{	BRIGHT75,  352,  128,  1  },
+	{	BRIGHT76,  384,  128,  1  },
+	{	BRIGHT77,  416,  128,  1  },
+	{	BRIGHT78,  448,  128,  1  },
+	{	BRIGHT79,  480,  128,  1  },
+	{	BRIGHT80,    0,  160,  1  },
+	{	BRIGHT81,   32,  160,  1  },
+	{	BRIGHT82,   64,  160,  1  },
+	{	BRIGHT83,   96,  160,  1  },
+	{	BRIGHT84,  128,  160,  1  },
+	{	BRIGHT85,  160,  160,  1  },
+	{	BRIGHT86,  192,  160,  1  },
+	{	BRIGHT87,  224,  160,  1  },
+	{	BRIGHT88,  256,  160,  1  },
+	{	BRIGHT89,  288,  160,  1  },
+	{	BRIGHT90,  320,  160,  1  },
+	{	BRIGHT91,  352,  160,  1  },
+	{	BRIGHT92,  384,  160,  1  },
+	{	BRIGHT93,  416,  160,  1  },
+	{	BRIGHT94,  448,  160,  1  },
+	{	BRIGHT95,  480,  160,  1  },
+	{	BRIGHT96,    0,  192,  1  },
+	{	BRIGHT97,   32,  192,  1  },
+	{	BRIGHT98,   64,  192,  1  },
+	{	BRIGHT99,   96,  192,  1  },
+	{	BRIGHT100,  128,  192,  1  },
+	{	BRIGHT101,  160,  192,  1  },
+	{	BRIGHT102,  192,  192,  1  },
+	{	BRIGHT103,  224,  192,  1  },
+	{	BRIGHT104,  256,  192,  1  },
+	{	BRIGHT105,  288,  192,  1  },
+	{	BRIGHT106,  320,  192,  1  },
+	{	BRIGHT107,  352,  192,  1  },
+	{	BRIGHT108,  384,  192,  1  },
+	{	BRIGHT109,  416,  192,  1  },
+	{	BRIGHT110,  448,  192,  1  },
+	{	BRIGHT111,  480,  192,  1  },
+	{	BRIGHT112,    0,  224,  1  },
+	{	BRIGHT113,   32,  224,  1  },
+	{	BRIGHT114,   64,  224,  1  },
+	{	BRIGHT115,   96,  224,  1  },
+	{	BRIGHT116,  128,  224,  1  },
+	{	BRIGHT117,  160,  224,  1  },
+	{	BRIGHT118,  192,  224,  1  },
+	{	BRIGHT119,  224,  224,  1  },
+	{	BRIGHT120,  256,  224,  1  },
+	{	BRIGHT121,  288,  224,  1  },
+	{	BRIGHT122,  320,  224,  1  },
+	{	BRIGHT123,  352,  224,  1  },
+	{	BRIGHT124,  384,  224,  1  },
+	{	BRIGHT125,  416,  224,  1  },
+	{	BRIGHT126,  448,  224,  1  },
+	{	BRIGHT127,  480,  224,  1  },
+	{	BRIGHT128,    0,  256,  1  },
+	{	BRIGHT129,   32,  256,  1  },
+	{	BRIGHT130,   64,  256,  1  },
+	{	BRIGHT131,   96,  256,  1  },
+	{	BRIGHT132,  128,  256,  1  },
+	{	BRIGHT133,  160,  256,  1  },
+	{	BRIGHT134,  192,  256,  1  },
+	{	BRIGHT135,  224,  256,  1  },
+	{	BRIGHT136,  256,  256,  1  },
+	{	BRIGHT137,  288,  256,  1  },
+	{	BRIGHT138,  320,  256,  1  },
+	{	BRIGHT139,  352,  256,  1  },
+	{	BRIGHT140,  384,  256,  1  },
+	{	BRIGHT141,  416,  256,  1  },
+	{	BRIGHT142,  448,  256,  1  },
+	{	BRIGHT143,  480,  256,  1  },
+	{	BRIGHT144,    0,  288,  1  },
+	{	BRIGHT145,   32,  288,  1  },
+	{	BRIGHT146,   64,  288,  1  },
+	{	BRIGHT147,   96,  288,  1  },
+	{	BRIGHT148,  128,  288,  1  },
+	{	BRIGHT149,  160,  288,  1  },
+	{	BRIGHT150,  192,  288,  1  },
+	{	BRIGHT151,  224,  288,  1  },
+	{	BRIGHT152,  256,  288,  1  },
+	{	BRIGHT153,  288,  288,  1  },
+	{	BRIGHT154,  320,  288,  1  },
+	{	BRIGHT155,  352,  288,  1  },
+	{	BRIGHT156,  384,  288,  1  },
+	{	BRIGHT157,  416,  288,  1  },
+	{	BRIGHT158,  448,  288,  1  },
+	{	BRIGHT159,  480,  288,  1  },
+	{	BRIGHT160,    0,  320,  1  },
+	{	BRIGHT161,   32,  320,  1  },
+	{	BRIGHT162,   64,  320,  1  },
+	{	BRIGHT163,   96,  320,  1  },
+	{	BRIGHT164,  128,  320,  1  },
+	{	BRIGHT165,  160,  320,  1  },
+	{	BRIGHT166,  192,  320,  1  },
+	{	BRIGHT167,  224,  320,  1  },
+	{	BRIGHT168,  256,  320,  1  },
+	{	BRIGHT169,  288,  320,  1  },
+	{	BRIGHT170,  320,  320,  1  },
+	{	BRIGHT171,  352,  320,  1  },
+	{	BRIGHT172,  384,  320,  1  },
+	{	BRIGHT173,  416,  320,  1  },
+	{	BRIGHT174,  448,  320,  1  },
+	{	BRIGHT175,  480,  320,  1  },
+	{	BRIGHT176,    0,  352,  1  },
+	{	BRIGHT177,   32,  352,  1  },
+	{	BRIGHT178,   64,  352,  1  },
+	{	BRIGHT179,   96,  352,  1  },
+	{	BRIGHT180,  128,  352,  1  },
+	{	BRIGHT181,  160,  352,  1  },
+	{	BRIGHT182,  192,  352,  1  },
+	{	BRIGHT183,  224,  352,  1  },
+	{	BRIGHT184,  256,  352,  1  },
+	{	BRIGHT185,  288,  352,  1  },
+	{	BRIGHT186,  320,  352,  1  },
+	{	BRIGHT187,  352,  352,  1  },
+	{	BRIGHT188,  384,  352,  1  },
+	{	BRIGHT189,  416,  352,  1  },
+	{	BRIGHT190,  448,  352,  1  },
+	{	BRIGHT191,  480,  352,  1  },
+	{	TOWNBF0,    0,    0,  0  },
+	{	TOWNBF1,   32,    0,  0  },
+	{	TOWNBF2,   64,    0,  0  },
+	{	TOWNBF3,   96,    0,  0  },
+	{	TOWNBF4,  128,    0,  0  },
+	{	TOWNBF5,  160,    0,  0  },
+	{	TOWNBF6,  192,    0,  0  },
+	{	TOWNBF7,  224,    0,  0  },
+	{	TOWNBF8,  256,    0,  0  },
+	{	TOWNBF9,  288,    0,  0  },
+	{	TOWNBF10,  320,    0,  0  },
+	{	TOWNBF11,  352,    0,  0  },
+	{	TOWNBF12,  384,    0,  0  },
+	{	TOWNBF13,  416,    0,  0  },
+	{	TOWNBF14,  448,    0,  0  },
+	{	TOWNBF15,  480,    0,  0  },
+	{	TOWNBF16,    0,   32,  0  },
+	{	TOWNBF17,   32,   32,  0  },
+	{	TOWNBF18,   64,   32,  0  },
+	{	TOWNBF19,   96,   32,  0  },
+	{	TOWNBF20,  128,   32,  0  },
+	{	TOWNBF21,  160,   32,  0  },
+	{	TOWNBF22,  192,   32,  0  },
+	{	TOWNBF23,  224,   32,  0  },
+	{	TOWNBF24,  256,   32,  0  },
+	{	TOWNBF25,  288,   32,  0  },
+	{	TOWNBF26,  320,   32,  0  },
+	{	TOWNBF27,  352,   32,  0  },
+	{	TOWNBF28,  384,   32,  0  },
+	{	TOWNBF29,  416,   32,  0  },
+	{	TOWNBF30,  448,   32,  0  },
+	{	TOWNBF31,  480,   32,  0  },
+	{	TOWNBF32,    0,   64,  0  },
+	{	TOWNBF33,   32,   64,  0  },
+	{	TOWNBF34,   64,   64,  0  },
+	{	TOWNBF35,   96,   64,  0  },
+	{	TOWNBF36,  128,   64,  0  },
+	{	TOWNBF37,  160,   64,  0  },
+	{	TOWNBF38,  192,   64,  0  },
+	{	TOWNBF39,  224,   64,  0  },
+	{	TOWNBF40,  256,   64,  0  },
+	{	TOWNBF41,  288,   64,  0  },
+	{	TOWNBF42,  320,   64,  0  },
+	{	TOWNBF43,  352,   64,  0  },
+	{	TOWNBF44,  384,   64,  0  },
+	{	TOWNBF45,  416,   64,  0  },
+	{	TOWNBF46,  448,   64,  0  },
+	{	TOWNBF47,  480,   64,  0  },
+	{	TOWNBF48,    0,   96,  0  },
+	{	TOWNBF49,   32,   96,  0  },
+	{	TOWNBF50,   64,   96,  0  },
+	{	TOWNBF51,   96,   96,  0  },
+	{	TOWNBF52,  128,   96,  0  },
+	{	TOWNBF53,  160,   96,  0  },
+	{	TOWNBF54,  192,   96,  0  },
+	{	TOWNBF55,  224,   96,  0  },
+	{	TOWNBF56,  256,   96,  0  },
+	{	TOWNBF57,  288,   96,  0  },
+	{	TOWNBF58,  320,   96,  0  },
+	{	TOWNBF59,  352,   96,  0  },
+	{	TOWNBF60,  384,   96,  1  },	//白い柵一本
+	{	TOWNBF61,  416,   96,  1  },	//白い柵連結
+	{	TOWNBF62,  448,   96,  1  },	//木の柵一本
+	{	TOWNBF63,  480,   96,  1  },	//木の柵連結
+	{	TOWNBF64,    0,  128,  0  },
+	{	TOWNBF65,   32,  128,  0  },
+	{	TOWNBF66,   64,  128,  0  },
+	{	TOWNBF67,   96,  128,  0  },
+	{	TOWNBF68,  128,  128,  0  },
+	{	TOWNBF69,  160,  128,  0  },
+	{	TOWNBF70,  192,  128,  0  },
+	{	TOWNBF71,  224,  128,  0  },
+	{	TOWNBF72,  256,  128,  0  },
+	{	TOWNBF73,  288,  128,  0  },
+	{	TOWNBF74,  320,  128,  0  },
+	{	TOWNBF75,  352,  128,  0  },
+	{	TOWNBF76,  384,  128,  1  },	//白い柵複合1
+	{	TOWNBF77,  416,  128,  1  },	//白い柵複合2
+	{	TOWNBF78,  448,  128,  1  },	//木の柵複合1
+	{	TOWNBF79,  480,  128,  1  },	//木の柵複合2
+	{	TOWNBF80,    0,  160,  0  },
+	{	TOWNBF81,   32,  160,  0  },
+	{	TOWNBF82,   64,  160,  0  },
+	{	TOWNBF83,   96,  160,  0  },
+	{	TOWNBF84,  128,  160,  0  },
+	{	TOWNBF85,  160,  160,  0  },
+	{	TOWNBF86,  192,  160,  0  },
+	{	TOWNBF87,  224,  160,  0  },
+	{	TOWNBF88,  256,  160,  0  },
+	{	TOWNBF89,  288,  160,  0  },
+	{	TOWNBF90,  320,  160,  0  },
+	{	TOWNBF91,  352,  160,  0  },
+	{	TOWNBF92,  384,  160,  1  },	//白い柵複合3
+	{	TOWNBF93,  416,  160,  1  },	//白い柵複合4
+	{	TOWNBF94,  448,  160,  1  },	//木の柵複合3
+	{	TOWNBF95,  480,  160,  1  },	//木の柵複合4
+	{	TOWNBF96,    0,  192,  1  },	//花壇1
+	{	TOWNBF97,   32,  192,  1  },	//花壇2
+	{	TOWNBF98,   64,  192,  0  },
+	{	TOWNBF99,   96,  192,  0  },
+	{	TOWNBF100,  128,  192,  0  },
+	{	TOWNBF101,  160,  192,  0  },
+	{	TOWNBF102,  192,  192,  0  },
+	{	TOWNBF103,  224,  192,  0  },
+	{	TOWNBF104,  256,  192,  0  },
+	{	TOWNBF105,  288,  192,  0  },
+	{	TOWNBF106,  320,  192,  0  },
+	{	TOWNBF107,  352,  192,  0  },
+	{	TOWNBF108,  384,  192,  0  },
+	{	TOWNBF109,  416,  192,  0  },
+	{	TOWNBF110,  448,  192,  0  },
+	{	TOWNBF111,  480,  192,  0  },
+	{	TOWNBF112,    0,  224,  1  },	//花壇3
+	{	TOWNBF113,   32,  224,  1  },	//花壇4
+	{	TOWNBF114,   64,  224,  0  },
+	{	TOWNBF115,   96,  224,  0  },
+	{	TOWNBF116,  128,  224,  0  },
+	{	TOWNBF117,  160,  224,  0  },
+	{	TOWNBF118,  192,  224,  0  },
+	{	TOWNBF119,  224,  224,  0  },
+	{	TOWNBF120,  256,  224,  0  },
+	{	TOWNBF121,  288,  224,  0  },
+	{	TOWNBF122,  320,  224,  0  },
+	{	TOWNBF123,  352,  224,  0  },
+	{	TOWNBF124,  384,  224,  0  },
+	{	TOWNBF125,  416,  224,  0  },
+	{	TOWNBF126,  448,  224,  0  },
+	{	TOWNBF127,  480,  224,  0  },
+	{	TOWNBF128,    0,  256,  1  },	//花壇5
+	{	TOWNBF129,   32,  256,  1  },	//花壇6
+	{	TOWNBF130,   64,  256,  0  },
+	{	TOWNBF131,   96,  256,  0  },
+	{	TOWNBF132,  128,  256,  0  },
+	{	TOWNBF133,  160,  256,  0  },
+	{	TOWNBF134,  192,  256,  0  },
+	{	TOWNBF135,  224,  256,  0  },
+	{	TOWNBF136,  256,  256,  0  },
+	{	TOWNBF137,  288,  256,  0  },
+	{	TOWNBF138,  320,  256,  0  },
+	{	TOWNBF139,  352,  256,  0  },
+	{	TOWNBF140,  384,  256,  0  },
+	{	TOWNBF141,  416,  256,  0  },
+	{	TOWNBF142,  448,  256,  0  },
+	{	TOWNBF143,  480,  256,  0  },
+	{	TOWNBF144,    0,  288,  0  },
+	{	TOWNBF145,   32,  288,  0  },
+	{	TOWNBF146,   64,  288,  0  },
+	{	TOWNBF147,   96,  288,  0  },
+	{	TOWNBF148,  128,  288,  0  },
+	{	TOWNBF149,  160,  288,  0  },
+	{	TOWNBF150,  192,  288,  0  },
+	{	TOWNBF151,  224,  288,  0  },
+	{	TOWNBF152,  256,  288,  1  },	//花束1
+	{	TOWNBF153,  288,  288,  1  },	//花束2
+	{	TOWNBF154,  320,  288,  1  },	//花束3
+	{	TOWNBF155,  352,  288,  1  },	//花束4
+	{	TOWNBF156,  384,  288,  0  },
+	{	TOWNBF157,  416,  288,  0  },
+	{	TOWNBF158,  448,  288,  0  },
+	{	TOWNBF159,  480,  288,  0  },
+	{	TOWNBF160,    0,  320,  0  },
+	{	TOWNBF161,   32,  320,  0  },
+	{	TOWNBF162,   64,  320,  0  },
+	{	TOWNBF163,   96,  320,  0  },
+	{	TOWNBF164,  128,  320,  0  },
+	{	TOWNBF165,  160,  320,  0  },
+	{	TOWNBF166,  192,  320,  0  },
+	{	TOWNBF167,  224,  320,  0  },
+	{	TOWNBF168,  256,  320,  1  },	//花束5
+	{	TOWNBF169,  288,  320,  1  },	//花束6
+	{	TOWNBF170,  320,  320,  1  },	//花束7
+	{	TOWNBF171,  352,  320,  1  },	//花束8
+	{	TOWNBF172,  384,  320,  0  },
+	{	TOWNBF173,  416,  320,  0  },
+	{	TOWNBF174,  448,  320,  0  },
+	{	TOWNBF175,  480,  320,  0  },
+	{	TOWNBF176,    0,  352,  0  },
+	{	TOWNBF177,   32,  352,  0  },
+	{	TOWNBF178,   64,  352,  0  },
+	{	TOWNBF179,   96,  352,  0  },
+	{	TOWNBF180,  128,  352,  0  },
+	{	TOWNBF181,  160,  352,  0  },
+	{	TOWNBF182,  192,  352,  0  },
+	{	TOWNBF183,  224,  352,  0  },
+	{	TOWNBF184,  256,  352,  1  },	//花束9
+	{	TOWNBF185,  288,  352,  1  },	//花束10
+	{	TOWNBF186,  320,  352,  1  },	//花束11
+	{	TOWNBF187,  352,  352,  1  },	//花束12
+	{	TOWNBF188,  384,  352,  0  },
+	{	TOWNBF189,  416,  352,  0  },
+	{	TOWNBF190,  448,  352,  0  },
+	{	TOWNBF191,  480,  352,  0  },
+	{	TOWN_ITEM0,    0,    0,  0  },
+	{	TOWN_ITEM1,   32,    0,  0  },
+	{	TOWN_ITEM2,   64,    0,  0  },
+	{	TOWN_ITEM3,   96,    0,  0  },
+	{	TOWN_ITEM4,  128,    0,  0  },
+	{	TOWN_ITEM5,  160,    0,  1  },
+	{	TOWN_ITEM6,  192,    0,  1  },
+	{	TOWN_ITEM7,  224,    0,  1  },
+	{	TOWN_ITEM8,  256,    0,  1  },
+	{	TOWN_ITEM9,  288,    0,  1  },
+	{	TOWN_ITEM10,  320,    0,  1  },
+	{	TOWN_ITEM11,  352,    0,  1  },
+	{	TOWN_ITEM12,  384,    0,  1  },
+	{	TOWN_ITEM13,  416,    0,  1  },
+	{	TOWN_ITEM14,  448,    0,  1  },
+	{	TOWN_ITEM15,  480,    0,  1  },
+	{	TOWN_ITEM16,    0,   32,  1  },
+	{	TOWN_ITEM17,   32,   32,  1  },
+	{	TOWN_ITEM18,   64,   32,  0  },
+	{	TOWN_ITEM19,   96,   32,  0  },
+	{	TOWN_ITEM20,  128,   32,  0  },
+	{	TOWN_ITEM21,  160,   32,  1  },
+	{	TOWN_ITEM22,  192,   32,  1  },
+	{	TOWN_ITEM23,  224,   32,  1  },
+	{	TOWN_ITEM24,  256,   32,  1  },
+	{	TOWN_ITEM25,  288,   32,  1  },
+	{	TOWN_ITEM26,  320,   32,  1  },
+	{	TOWN_ITEM27,  352,   32,  1  },
+	{	TOWN_ITEM28,  384,   32,  1  },
+	{	TOWN_ITEM29,  416,   32,  1  },
+	{	TOWN_ITEM30,  448,   32,  1  },
+	{	TOWN_ITEM31,  480,   32,  1  },
+	{	TOWN_ITEM32,    0,   64,  0  },
+	{	TOWN_ITEM33,   32,   64,  0  },
+	{	TOWN_ITEM34,   64,   64,  0  },
+	{	TOWN_ITEM35,   96,   64,  0  },
+	{	TOWN_ITEM36,  128,   64,  0  },
+	{	TOWN_ITEM37,  160,   64,  0  },
+	{	TOWN_ITEM38,  192,   64,  0  },
+	{	TOWN_ITEM39,  224,   64,  0  },
+	{	TOWN_ITEM40,  256,   64,  1  },
+	{	TOWN_ITEM41,  288,   64,  1  },
+	{	TOWN_ITEM42,  320,   64,  1  },
+	{	TOWN_ITEM43,  352,   64,  1  },
+	{	TOWN_ITEM44,  384,   64,  1  },
+	{	TOWN_ITEM45,  416,   64,  0  },
+	{	TOWN_ITEM46,  448,   64,  0  },
+	{	TOWN_ITEM47,  480,   64,  0  },
+	{	TOWN_ITEM48,    0,   96,  0  },
+	{	TOWN_ITEM49,   32,   96,  0  },
+	{	TOWN_ITEM50,   64,   96,  0  },
+	{	TOWN_ITEM51,   96,   96,  0  },
+	{	TOWN_ITEM52,  128,   96,  0  },
+	{	TOWN_ITEM53,  160,   96,  0  },
+	{	TOWN_ITEM54,  192,   96,  0  },
+	{	TOWN_ITEM55,  224,   96,  0  },
+	{	TOWN_ITEM56,  256,   96,  1  },
+	{	TOWN_ITEM57,  288,   96,  1  },
+	{	TOWN_ITEM58,  320,   96,  1  },
+	{	TOWN_ITEM59,  352,   96,  1  },
+	{	TOWN_ITEM60,  384,   96,  1  },
+	{	TOWN_ITEM61,  416,   96,  1  },
+	{	TOWN_ITEM62,  448,   96,  1  },
+	{	TOWN_ITEM63,  480,   96,  1  },
+	{	TOWN_ITEM64,    0,  128,  0  },
+	{	TOWN_ITEM65,   32,  128,  0  },
+	{	TOWN_ITEM66,   64,  128,  0  },
+	{	TOWN_ITEM67,   96,  128,  0  },
+	{	TOWN_ITEM68,  128,  128,  0  },
+	{	TOWN_ITEM69,  160,  128,  0  },
+	{	TOWN_ITEM70,  192,  128,  0  },
+	{	TOWN_ITEM71,  224,  128,  0  },
+	{	TOWN_ITEM72,  256,  128,  1  },
+	{	TOWN_ITEM73,  288,  128,  1  },
+	{	TOWN_ITEM74,  320,  128,  1  },
+	{	TOWN_ITEM75,  352,  128,  0  },
+	{	TOWN_ITEM76,  384,  128,  0  },
+	{	TOWN_ITEM77,  416,  128,  0  },
+	{	TOWN_ITEM78,  448,  128,  0  },
+	{	TOWN_ITEM79,  480,  128,  0  },
+	{	TOWN_ITEM80,    0,  160,  0  },
+	{	TOWN_ITEM81,   32,  160,  0  },
+	{	TOWN_ITEM82,   64,  160,  0  },
+	{	TOWN_ITEM83,   96,  160,  0  },
+	{	TOWN_ITEM84,  128,  160,  0  },
+	{	TOWN_ITEM85,  160,  160,  0  },
+	{	TOWN_ITEM86,  192,  160,  0  },
+	{	TOWN_ITEM87,  224,  160,  0  },
+	{	TOWN_ITEM88,  256,  160,  1  },
+	{	TOWN_ITEM89,  288,  160,  1  },
+	{	TOWN_ITEM90,  320,  160,  0  },
+	{	TOWN_ITEM91,  352,  160,  0  },
+	{	TOWN_ITEM92,  384,  160,  0  },
+	{	TOWN_ITEM93,  416,  160,  1  },
+	{	TOWN_ITEM94,  448,  160,  1  },
+	{	TOWN_ITEM95,  480,  160,  1  },
+	{	TOWN_ITEM96,    0,  192,  1  },
+	{	TOWN_ITEM97,   32,  192,  1  },
+	{	TOWN_ITEM98,   64,  192,  1  },
+	{	TOWN_ITEM99,   96,  192,  1  },
+	{	TOWN_ITEM100,  128,  192,  1  },
+	{	TOWN_ITEM101,  160,  192,  1  },
+	{	TOWN_ITEM102,  192,  192,  1  },
+	{	TOWN_ITEM103,  224,  192,  1  },
+	{	TOWN_ITEM104,  256,  192,  0  },
+	{	TOWN_ITEM105,  288,  192,  0  },
+	{	TOWN_ITEM106,  320,  192,  0  },
+	{	TOWN_ITEM107,  352,  192,  0  },
+	{	TOWN_ITEM108,  384,  192,  0  },
+	{	TOWN_ITEM109,  416,  192,  0  },
+	{	TOWN_ITEM110,  448,  192,  0  },
+	{	TOWN_ITEM111,  480,  192,  1  },
+	{	TOWN_ITEM112,    0,  224,  1  },
+	{	TOWN_ITEM113,   32,  224,  1  },
+	{	TOWN_ITEM114,   64,  224,  1  },
+	{	TOWN_ITEM115,   96,  224,  1  },
+	{	TOWN_ITEM116,  128,  224,  0  },
+	{	TOWN_ITEM117,  160,  224,  0  },
+	{	TOWN_ITEM118,  192,  224,  0  },
+	{	TOWN_ITEM119,  224,  224,  1  },
+	{	TOWN_ITEM120,  256,  224,  1  },
+	{	TOWN_ITEM121,  288,  224,  1  },
+	{	TOWN_ITEM122,  320,  224,  1  },
+	{	TOWN_ITEM123,  352,  224,  1  },
+	{	TOWN_ITEM124,  384,  224,  0  },
+	{	TOWN_ITEM125,  416,  224,  1  },
+	{	TOWN_ITEM126,  448,  224,  1  },
+	{	TOWN_ITEM127,  480,  224,  1  },
+	{	TOWN_ITEM128,    0,  256,  1  },
+	{	TOWN_ITEM129,   32,  256,  0  },
+	{	TOWN_ITEM130,   64,  256,  0  },
+	{	TOWN_ITEM131,   96,  256,  0  },
+	{	TOWN_ITEM132,  128,  256,  0  },
+	{	TOWN_ITEM133,  160,  256,  0  },
+	{	TOWN_ITEM134,  192,  256,  1  },
+	{	TOWN_ITEM135,  224,  256,  1  },
+	{	TOWN_ITEM136,  256,  256,  1  },
+	{	TOWN_ITEM137,  288,  256,  1  },
+	{	TOWN_ITEM138,  320,  256,  1  },
+	{	TOWN_ITEM139,  352,  256,  1  },
+	{	TOWN_ITEM140,  384,  256,  0  },
+	{	TOWN_ITEM141,  416,  256,  1  },
+	{	TOWN_ITEM142,  448,  256,  1  },
+	{	TOWN_ITEM143,  480,  256,  1  },
+	{	TOWN_ITEM144,    0,  288,  1  },
+	{	TOWN_ITEM145,   32,  288,  1  },
+	{	TOWN_ITEM146,   64,  288,  0  },
+	{	TOWN_ITEM147,   96,  288,  0  },
+	{	TOWN_ITEM148,  128,  288,  0  },
+	{	TOWN_ITEM149,  160,  288,  1  },
+	{	TOWN_ITEM150,  192,  288,  1  },
+	{	TOWN_ITEM151,  224,  288,  1  },
+	{	TOWN_ITEM152,  256,  288,  1  },
+	{	TOWN_ITEM153,  288,  288,  1  },
+	{	TOWN_ITEM154,  320,  288,  1  },
+	{	TOWN_ITEM155,  352,  288,  0  },
+	{	TOWN_ITEM156,  384,  288,  0  },
+	{	TOWN_ITEM157,  416,  288,  0  },
+	{	TOWN_ITEM158,  448,  288,  0  },
+	{	TOWN_ITEM159,  480,  288,  1  },
+	{	TOWN_ITEM160,    0,  320,  0  },
+	{	TOWN_ITEM161,   32,  320,  0  },
+	{	TOWN_ITEM162,   64,  320,  0  },
+	{	TOWN_ITEM163,   96,  320,  0  },
+	{	TOWN_ITEM164,  128,  320,  0  },
+	{	TOWN_ITEM165,  160,  320,  1  },
+	{	TOWN_ITEM166,  192,  320,  0  },
+	{	TOWN_ITEM167,  224,  320,  0  },
+	{	TOWN_ITEM168,  256,  320,  1  },
+	{	TOWN_ITEM169,  288,  320,  1  },
+	{	TOWN_ITEM170,  320,  320,  1  },
+	{	TOWN_ITEM171,  352,  320,  1  },
+	{	TOWN_ITEM172,  384,  320,  1  },
+	{	TOWN_ITEM173,  416,  320,  1  },
+	{	TOWN_ITEM174,  448,  320,  1  },
+	{	TOWN_ITEM175,  480,  320,  1  },
+	{	TOWN_ITEM176,    0,  352,  1  },
+	{	TOWN_ITEM177,   32,  352,  1  },
+	{	TOWN_ITEM178,   64,  352,  1  },
+	{	TOWN_ITEM179,   96,  352,  1  },
+	{	TOWN_ITEM180,  128,  352,  1  },
+	{	TOWN_ITEM181,  160,  352,  1  },
+	{	TOWN_ITEM182,  192,  352,  0  },
+	{	TOWN_ITEM183,  224,  352,  0  },
+	{	TOWN_ITEM184,  256,  352,  1  },
+	{	TOWN_ITEM185,  288,  352,  1  },
+	{	TOWN_ITEM186,  320,  352,  1  },
+	{	TOWN_ITEM187,  352,  352,  1  },
+	{	TOWN_ITEM188,  384,  352,  1  },
+	{	TOWN_ITEM189,  416,  352,  1  },
+	{	TOWN_ITEM190,  448,  352,  1  },
+	{	TOWN_ITEM191,  480,  352,  1  },
+	{	TOWN_ITEM192,    0,  384,  1  },
+	{	TOWN_ITEM193,   32,  384,  1  },
+	{	TOWN_ITEM194,   64,  384,  1  },
+	{	TOWN_ITEM195,   96,  384,  1  },
+	{	TOWN_ITEM196,  128,  384,  1  },
+	{	TOWN_ITEM197,  160,  384,  1  },
+	{	TOWN_ITEM198,  192,  384,  1  },
+	{	TOWN_ITEM199,  224,  384,  1  },
+	{	TOWN_ITEM200,  256,  384,  1  },
+	{	TOWN_ITEM201,  288,  384,  1  },
+	{	TOWN_ITEM202,  320,  384,  1  },
+	{	TOWN_ITEM203,  352,  384,  1  },
+	{	TOWN_ITEM204,  384,  384,  1  },
+	{	TOWN_ITEM205,  416,  384,  1  },
+	{	TOWN_ITEM206,  448,  384,  1  },
+	{	TOWN_ITEM207,  480,  384,  1  },
+	{	TOWN_ITEM208,    0,  416,  0  },
+	{	TOWN_ITEM209,   32,  416,  0  },
+	{	TOWN_ITEM210,   64,  416,  0  },
+	{	TOWN_ITEM211,   96,  416,  0  },
+	{	TOWN_ITEM212,  128,  416,  0  },
+	{	TOWN_ITEM213,  160,  416,  0  },
+	{	TOWN_ITEM214,  192,  416,  1  },
+	{	TOWN_ITEM215,  224,  416,  1  },
+	{	TOWN_ITEM216,  256,  416,  1  },
+	{	TOWN_ITEM217,  288,  416,  1  },
+	{	TOWN_ITEM218,  320,  416,  1  },
+	{	TOWN_ITEM219,  352,  416,  1  },
+	{	TOWN_ITEM220,  384,  416,  1  },
+	{	TOWN_ITEM221,  416,  416,  1  },
+	{	TOWN_ITEM222,  448,  416,  1  },
+	{	TOWN_ITEM223,  480,  416,  1  },
+	{	TOWN_ITEM224,    0,  448,  0  },
+	{	TOWN_ITEM225,   32,  448,  0  },
+	{	TOWN_ITEM226,   64,  448,  0  },
+	{	TOWN_ITEM227,   96,  448,  0  },
+	{	TOWN_ITEM228,  128,  448,  0  },
+	{	TOWN_ITEM229,  160,  448,  1  },
+	{	TOWN_ITEM230,  192,  448,  1  },
+	{	TOWN_ITEM231,  224,  448,  1  },
+	{	TOWN_ITEM232,  256,  448,  1  },
+	{	TOWN_ITEM233,  288,  448,  1  },
+	{	TOWN_ITEM234,  320,  448,  1  },
+	{	TOWN_ITEM235,  352,  448,  1  },
+	{	TOWN_ITEM236,  384,  448,  1  },
+	{	TOWN_ITEM237,  416,  448,  1  },
+	{	TOWN_ITEM238,  448,  448,  1  },
+	{	TOWN_ITEM239,  480,  448,  1  },
+	{	TOWN_ITEM240,    0,  480,  0  },
+	{	TOWN_ITEM241,   32,  480,  0  },
+	{	TOWN_ITEM242,   64,  480,  0  },
+	{	TOWN_ITEM243,   96,  480,  0  },
+	{	TOWN_ITEM244,  128,  480,  0  },
+	{	TOWN_ITEM245,  160,  480,  1  },
+	{	TOWN_ITEM246,  192,  480,  1  },
+	{	TOWN_ITEM247,  224,  480,  1  },
+	{	TOWN_ITEM248,  256,  480,  0  },
+	{	TOWN_ITEM249,  288,  480,  0  },
+	{	TOWN_ITEM250,  320,  480,  0  },
+	{	TOWN_ITEM251,  352,  480,  0  },
+	{	TOWN_ITEM252,  384,  480,  0  },
+	{	TOWN_ITEM253,  416,  480,  0  },
+	{	TOWN_ITEM254,  448,  480,  0  },
+	{	TOWN_ITEM255,  480,  480,  0  },
+	{	FOREST0,    0,    0,  0  },
+	{	FOREST1,   32,    0,  0  },
+	{	FOREST2,   64,    0,  0  },
+	{	FOREST3,   96,    0,  0  },
+	{	FOREST4,  128,    0,  0  },
+	{	FOREST5,  160,    0,  0  },
+	{	FOREST6,  192,    0,  0  },
+	{	FOREST7,  224,    0,  0  },
+	{	FOREST8,  256,    0,  0  },
+	{	FOREST9,  288,    0,  0  },
+	{	FOREST10,  320,    0,  0  },
+	{	FOREST11,  352,    0,  0  },
+	{	FOREST12,  384,    0,  0  },
+	{	FOREST13,  416,    0,  0  },
+	{	FOREST14,  448,    0,  0  },
+	{	FOREST15,  480,    0,  0  },
+	{	FOREST16,    0,   32,  0  },
+	{	FOREST17,   32,   32,  0  },
+	{	FOREST18,   64,   32,  0  },
+	{	FOREST19,   96,   32,  0  },
+	{	FOREST20,  128,   32,  0  },
+	{	FOREST21,  160,   32,  0  },
+	{	FOREST22,  192,   32,  0  },
+	{	FOREST23,  224,   32,  0  },
+	{	FOREST24,  256,   32,  0  },
+	{	FOREST25,  288,   32,  0  },
+	{	FOREST26,  320,   32,  0  },
+	{	FOREST27,  352,   32,  0  },
+	{	FOREST28,  384,   32,  0  },
+	{	FOREST29,  416,   32,  0  },
+	{	FOREST30,  448,   32,  0  },
+	{	FOREST31,  480,   32,  0  },
+	{	FOREST32,    0,   64,  0  },
+	{	FOREST33,   32,   64,  0  },
+	{	FOREST34,   64,   64,  0  },
+	{	FOREST35,   96,   64,  0  },
+	{	FOREST36,  128,   64,  0  },
+	{	FOREST37,  160,   64,  0  },
+	{	FOREST38,  192,   64,  0  },
+	{	FOREST39,  224,   64,  0  },
+	{	FOREST40,  256,   64,  0  },
+	{	FOREST41,  288,   64,  0  },
+	{	FOREST42,  320,   64,  0  },
+	{	FOREST43,  352,   64,  0  },
+	{	FOREST44,  384,   64,  0  },
+	{	FOREST45,  416,   64,  0  },
+	{	FOREST46,  448,   64,  0  },
+	{	FOREST47,  480,   64,  0  },
+	{	FOREST48,    0,   96,  0  },
+	{	FOREST49,   32,   96,  0  },
+	{	FOREST50,   64,   96,  0  },
+	{	FOREST51,   96,   96,  0  },
+	{	FOREST52,  128,   96,  0  },
+	{	FOREST53,  160,   96,  0  },
+	{	FOREST54,  192,   96,  0  },
+	{	FOREST55,  224,   96,  0  },
+	{	FOREST56,  256,   96,  0  },
+	{	FOREST57,  288,   96,  0  },
+	{	FOREST58,  320,   96,  0  },
+	{	FOREST59,  352,   96,  0  },
+	{	FOREST60,  384,   96,  0  },
+	{	FOREST61,  416,   96,  0  },
+	{	FOREST62,  448,   96,  0  },
+	{	FOREST63,  480,   96,  0  },
+	{	FOREST64,    0,  128,  0  },
+	{	FOREST65,   32,  128,  0  },
+	{	FOREST66,   64,  128,  0  },
+	{	FOREST67,   96,  128,  0  },
+	{	FOREST68,  128,  128,  0  },
+	{	FOREST69,  160,  128,  0  },
+	{	FOREST70,  192,  128,  0  },
+	{	FOREST71,  224,  128,  0  },
+	{	FOREST72,  256,  128,  0  },
+	{	FOREST73,  288,  128,  0  },
+	{	FOREST74,  320,  128,  0  },
+	{	FOREST75,  352,  128,  0  },
+	{	FOREST76,  384,  128,  0  },
+	{	FOREST77,  416,  128,  0  },
+	{	FOREST78,  448,  128,  0  },
+	{	FOREST79,  480,  128,  0  },
+	{	FOREST80,    0,  160,  0  },
+	{	FOREST81,   32,  160,  0  },
+	{	FOREST82,   64,  160,  0  },
+	{	FOREST83,   96,  160,  0  },
+	{	FOREST84,  128,  160,  0  },
+	{	FOREST85,  160,  160,  0  },
+	{	FOREST86,  192,  160,  0  },
+	{	FOREST87,  224,  160,  0  },
+	{	FOREST88,  256,  160,  0  },
+	{	FOREST89,  288,  160,  0  },
+	{	FOREST90,  320,  160,  0  },
+	{	FOREST91,  352,  160,  0  },
+	{	FOREST92,  384,  160,  0  },
+	{	FOREST93,  416,  160,  0  },
+	{	FOREST94,  448,  160,  0  },
+	{	FOREST95,  480,  160,  0  },
+	{	FOREST96,    0,  192,  0  },
+	{	FOREST97,   32,  192,  0  },
+	{	FOREST98,   64,  192,  0  },
+	{	FOREST99,   96,  192,  0  },
+	{	FOREST100,  128,  192,  0  },
+	{	FOREST101,  160,  192,  0  },
+	{	FOREST102,  192,  192,  0  },
+	{	FOREST103,  224,  192,  0  },
+	{	FOREST104,  256,  192,  0  },
+	{	FOREST105,  288,  192,  0  },
+	{	FOREST106,  320,  192,  0  },
+	{	FOREST107,  352,  192,  0  },
+	{	FOREST108,  384,  192,  0  },
+	{	FOREST109,  416,  192,  0  },
+	{	FOREST110,  448,  192,  0  },
+	{	FOREST111,  480,  192,  0  },
+	{	FOREST112,    0,  224,  0  },
+	{	FOREST113,   32,  224,  0  },
+	{	FOREST114,   64,  224,  0  },
+	{	FOREST115,   96,  224,  0  },
+	{	FOREST116,  128,  224,  0  },
+	{	FOREST117,  160,  224,  0  },
+	{	FOREST118,  192,  224,  0  },
+	{	FOREST119,  224,  224,  0  },
+	{	FOREST120,  256,  224,  0  },
+	{	FOREST121,  288,  224,  0  },
+	{	FOREST122,  320,  224,  0  },
+	{	FOREST123,  352,  224,  0  },
+	{	FOREST124,  384,  224,  0  },
+	{	FOREST125,  416,  224,  0  },
+	{	FOREST126,  448,  224,  0  },
+	{	FOREST127,  480,  224,  0  },
+	{	FOREST128,    0,  256,  0  },
+	{	FOREST129,   32,  256,  0  },
+	{	FOREST130,   64,  256,  0  },
+	{	FOREST131,   96,  256,  0  },
+	{	FOREST132,  128,  256,  0  },
+	{	FOREST133,  160,  256,  0  },
+	{	FOREST134,  192,  256,  0  },
+	{	FOREST135,  224,  256,  0  },
+	{	FOREST136,  256,  256,  0  },
+	{	FOREST137,  288,  256,  0  },
+	{	FOREST138,  320,  256,  0  },
+	{	FOREST139,  352,  256,  0  },
+	{	FOREST140,  384,  256,  0  },
+	{	FOREST141,  416,  256,  0  },
+	{	FOREST142,  448,  256,  0  },
+	{	FOREST143,  480,  256,  0  },
+	{	FOREST144,    0,  288,  0  },
+	{	FOREST145,   32,  288,  0  },
+	{	FOREST146,   64,  288,  0  },
+	{	FOREST147,   96,  288,  0  },
+	{	FOREST148,  128,  288,  0  },
+	{	FOREST149,  160,  288,  0  },
+	{	FOREST150,  192,  288,  0  },
+	{	FOREST151,  224,  288,  0  },
+	{	FOREST152,  256,  288,  0  },
+	{	FOREST153,  288,  288,  0  },
+	{	FOREST154,  320,  288,  0  },
+	{	FOREST155,  352,  288,  0  },
+	{	FOREST156,  384,  288,  0  },
+	{	FOREST157,  416,  288,  0  },
+	{	FOREST158,  448,  288,  0  },
+	{	FOREST159,  480,  288,  0  },
+	{	FOREST160,    0,  320,  0  },
+	{	FOREST161,   32,  320,  0  },
+	{	FOREST162,   64,  320,  0  },
+	{	FOREST163,   96,  320,  0  },
+	{	FOREST164,  128,  320,  0  },
+	{	FOREST165,  160,  320,  0  },
+	{	FOREST166,  192,  320,  0  },
+	{	FOREST167,  224,  320,  0  },
+	{	FOREST168,  256,  320,  0  },
+	{	FOREST169,  288,  320,  0  },
+	{	FOREST170,  320,  320,  0  },
+	{	FOREST171,  352,  320,  0  },
+	{	FOREST172,  384,  320,  0  },
+	{	FOREST173,  416,  320,  0  },
+	{	FOREST174,  448,  320,  0  },
+	{	FOREST175,  480,  320,  0  },
+	{	FOREST176,    0,  352,  0  },
+	{	FOREST177,   32,  352,  0  },
+	{	FOREST178,   64,  352,  0  },
+	{	FOREST179,   96,  352,  0  },
+	{	FOREST180,  128,  352,  0  },
+	{	FOREST181,  160,  352,  0  },
+	{	FOREST182,  192,  352,  0  },
+	{	FOREST183,  224,  352,  0  },
+	{	FOREST184,  256,  352,  0  },
+	{	FOREST185,  288,  352,  0  },
+	{	FOREST186,  320,  352,  0  },
+	{	FOREST187,  352,  352,  0  },
+	{	FOREST188,  384,  352,  0  },
+	{	FOREST189,  416,  352,  0  },
+	{	FOREST190,  448,  352,  0  },
+	{	FOREST191,  480,  352,  0  },
+	{	FOREST192,    0,  384,  0  },
+	{	FOREST193,   32,  384,  0  },
+	{	FOREST194,   64,  384,  0  },
+	{	FOREST195,   96,  384,  0  },
+	{	FOREST196,  128,  384,  0  },
+	{	FOREST197,  160,  384,  0  },
+	{	FOREST198,  192,  384,  0  },
+	{	FOREST199,  224,  384,  0  },
+	{	FOREST200,  256,  384,  0  },
+	{	FOREST201,  288,  384,  0  },
+	{	FOREST202,  320,  384,  0  },
+	{	FOREST203,  352,  384,  0  },
+	{	FOREST204,  384,  384,  0  },
+	{	FOREST205,  416,  384,  0  },
+	{	FOREST206,  448,  384,  0  },
+	{	FOREST207,  480,  384,  0  },
+	{	FOREST208,    0,  416,  0  },
+	{	FOREST209,   32,  416,  0  },
+	{	FOREST210,   64,  416,  0  },
+	{	FOREST211,   96,  416,  0  },
+	{	FOREST212,  128,  416,  0  },
+	{	FOREST213,  160,  416,  0  },
+	{	FOREST214,  192,  416,  0  },
+	{	FOREST215,  224,  416,  0  },
+	{	FOREST216,  256,  416,  0  },
+	{	FOREST217,  288,  416,  0  },
+	{	FOREST218,  320,  416,  0  },
+	{	FOREST219,  352,  416,  0  },
+	{	FOREST220,  384,  416,  0  },
+	{	FOREST221,  416,  416,  0  },
+	{	FOREST222,  448,  416,  0  },
+	{	FOREST223,  480,  416,  0  },
+	{	FOREST224,    0,  448,  0  },
+	{	FOREST225,   32,  448,  0  },
+	{	FOREST226,   64,  448,  0  },
+	{	FOREST227,   96,  448,  0  },
+	{	FOREST228,  128,  448,  0  },
+	{	FOREST229,  160,  448,  0  },
+	{	FOREST230,  192,  448,  0  },
+	{	FOREST231,  224,  448,  0  },
+	{	FOREST232,  256,  448,  0  },
+	{	FOREST233,  288,  448,  0  },
+	{	FOREST234,  320,  448,  0  },
+	{	FOREST235,  352,  448,  0  },
+	{	FOREST236,  384,  448,  0  },
+	{	FOREST237,  416,  448,  0  },
+	{	FOREST238,  448,  448,  0  },
+	{	FOREST239,  480,  448,  0  },
+	{	FOREST240,    0,  480,  0  },
+	{	FOREST241,   32,  480,  0  },
+	{	FOREST242,   64,  480,  0  },
+	{	FOREST243,   96,  480,  0  },
+	{	FOREST244,  128,  480,  0  },
+	{	FOREST245,  160,  480,  0  },
+	{	FOREST246,  192,  480,  0  },
+	{	FOREST247,  224,  480,  0  },
+	{	FOREST248,  256,  480,  0  },
+	{	FOREST249,  288,  480,  0  },
+	{	FOREST250,  320,  480,  0  },
+	{	FOREST251,  352,  480,  0  },
+	{	FOREST252,  384,  480,  0  },
+	{	FOREST253,  416,  480,  0  },
+	{	FOREST254,  448,  480,  0  },
+	{	FOREST255,  480,  480,  0  },
 };
 
 
@@ -470,15 +2353,19 @@ typedef struct {
 } t_mapinfo;
 
 static const t_mapinfo mapinfo[] = {
-	{	STANDERD_S,  	 	STANDERD_E,		 0,  (char **)mappath,   32,   32,  256,  352  },
-	{	MITI_S,  		 	MITI_E,  		 1,  (char **)mappath,   32,   32,   32,  160  },
-	{	MORI_S,  		 	MORI_E,  		 2,  (char **)mappath,   32,   32,   32,  160  },
-	{	SABAKU_S,	   	   	SABAKU_E,  		 3,  (char **)mappath,   32,   32,   32,  160  },
-	{	TUTI_S,  		 	TUTI_E,  		 4,  (char **)mappath,   32,   32,   32,  160  },
-	{	UMI_S,  		  	UMI_E,  		 5,  (char **)mappath,   32,   32,   32,  160  },
-	{	YAMA_GRASS_S,  		YAMA_GRASS_E,  	 6,  (char **)mappath,   32,   32,   32,  160  },
-	{	YAMA_MOUNTAIN_S,  	YAMA_MOUNTAIN_E, 7,  (char **)mappath,   32,   32,   32,  160  },
-	{	YAMA_STONE_S,  		YAMA_STONE_E,  	 8,  (char **)mappath,   32,   32,   32,  160  },
+	{	STANDERD_S,  	 	STANDERD_E,		 0,  (char **)mappath,    32,   32,  256,  352  },
+	{	MITI_S,  		 	MITI_E,  		 1,  (char **)mappath,    32,   32,   32,  160  },
+	{	MORI_S,  		 	MORI_E,  		 2,  (char **)mappath,    32,   32,   32,  160  },
+	{	SABAKU_S,	   	   	SABAKU_E,  		 3,  (char **)mappath,    32,   32,   32,  160  },
+	{	TUTI_S,  		 	TUTI_E,  		 4,  (char **)mappath,    32,   32,   32,  160  },
+	{	UMI_S,  		  	UMI_E,  		 5,  (char **)mappath,    32,   32,   32,  160  },
+	{	YAMA_GRASS_S,  		YAMA_GRASS_E,  	 6,  (char **)mappath,    32,   32,   32,  160  },
+	{	YAMA_MOUNTAIN_S,  	YAMA_MOUNTAIN_E, 7,  (char **)mappath,    32,   32,   32,  160  },
+	{	YAMA_STONE_S,  		YAMA_STONE_E,  	 8,  (char **)mappath,    32,   32,   32,  160  },
+	{	BRIGHT_S,  			BRIGHT_E,		 0,  (char **)foresttown, 32,   32,  512,  384  },
+	{	TOWNBF_S,  			TOWNBF_E,		 1,  (char **)foresttown, 32,   32,  512,  384  },
+	{	TOWN_ITEM_S,  		TOWN_ITEM_E,  	 2,  (char **)foresttown, 32,   32,  512,  512  },
+	{	FOREST_S,			FOREST_E,		 3,  (char **)foresttown, 32,   32,  512,  512  },
 };
 
 
@@ -519,8 +2406,10 @@ typedef struct {
 } t_buildinfo;
 
 static const t_buildinfo buildinfo[] = {
-	{ WORLD_MAP,  MAPSIX,  "worldmap5.bin" },
-	{ HIROMA,  	  MAPSAME, "hiroma.bin"   },
+	{ WORLD_MAP_FRONT,  MAPSIX,  "worldmap5.bin" },
+	{ WORLD_MAP_BACK,	MAPFOUR, "worldmap.bin"  },
+	{ BUILD_FOREST,		MAPSAME, "Aki_Mori.bin"  },
+	{ BUILD_FOREST2,	MAPTWO,  "Aki_Mori2.bin" },
 };
 
 

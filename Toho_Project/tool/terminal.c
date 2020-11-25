@@ -6,7 +6,6 @@
 #include <stdint.h>
 #include "./TERMINAL.H"
 
-
 /**-------------------------------------------------
  * デバッグ用プレイヤー座標出力
  * -------------------------------------------------*/
@@ -23,10 +22,15 @@ void terminal_info(
 	CLEAR_SCREEN();
 	SET_TYPE(NORMAL);
 	SET_PLACE(0, 0);
-	fprintf(stderr, "プレイヤーのX,Y座標	= (x:%3d y:%3d)\n", xpos, ypos);
+	printf("プレイヤーのX,Y座標	= (x:%3d y:%3d)\n", xpos, ypos);
+	printf("フィールドのX,Y座標	= (x:%3d y:%3d)\n", fieldx, fieldy);
+	printf("      合計のX,Y座標	= (x:%3d y:%3d)\n", fieldx+xpos, fieldy+ypos);
+	printf("現在のフィールドの広さ 横:%3d 縦:%3d\n", mapwidth, mapheight);
+	printf("選択中のマップチップID	= %3d\n", mapid);
+	/*fprintf(stderr, "プレイヤーのX,Y座標	= (x:%3d y:%3d)\n", xpos, ypos);
 	fprintf(stderr, "フィールドのX,Y座標	= (x:%3d y:%3d)\n", fieldx, fieldy);
 	fprintf(stderr, "現在のフィールドの広さ 横:%3d 縦:%3d\n", mapwidth, mapheight);
-	fprintf(stderr, "選択中のマップチップID	= %3d\n", mapid);
+	fprintf(stderr, "選択中のマップチップID	= %3d\n", mapid);*/
 }
 
 
@@ -35,8 +39,7 @@ void terminal_info(
  * -------------------------------------------------*/
 void terminal_str(char *s, char *path)
 {
-	CLEAR_SCREEN();
 	SET_TYPE(NORMAL);
-	SET_PLACE(0, 0);
-	fprintf(stderr, "%s	= %s\n", s, path);
+	SET_PLACE(0, 6);
+	printf("%s	= %s\n", s, path);
 }
