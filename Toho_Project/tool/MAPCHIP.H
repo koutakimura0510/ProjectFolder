@@ -14,14 +14,9 @@
  * -------------------------------------------------*/
 static const char *mappath[] = {
 	"../res/img/map/field/width32/map001.png",
-	"../res/img/map/field/width32/miti.png",
-	"../res/img/map/field/width32/mori.png",
 	"../res/img/map/field/width32/sabaku.png",
 	"../res/img/map/field/width32/tuti.png",
 	"../res/img/map/field/width32/umi.png",
-	"../res/img/map/field/width32/yama1.png",
-	"../res/img/map/field/width32/yama2.png",
-	"../res/img/map/field/width32/yama3.png",
 };
 
 static const char *moveobj[] = {
@@ -326,16 +321,6 @@ static const t_mapid mapid[] = {
 	{	STANDERD_MAP85,  160,  320,  0  },
 	{	STANDERD_MAP86,  192,  320,  0  },
 	{	STANDERD_MAP87,  224,  320,  0  },
-	{	MITI0,			   0,    0,  0  },
-	{	MITI1,    		   0,   32,  0  },
-	{	MITI2,    		   0,   64,  0  },
-	{	MITI3,    		   0,   96,  0  },
-	{	MITI4,    		   0,  128,  0  },
-	{	MORI0,    		   0,    0,  0  },
-	{	MORI1,    		   0,   32,  0  },
-	{	MORI2,    		   0,   64,  0  },
-	{	MORI3,    		   0,   96,  0  },
-	{	MORI4,    		   0,  128,  0  },
 	{	SABAKU0,    	   0,    0,  0  },
 	{	SABAKU1,    	   0,   32,  0  },
 	{	SABAKU2,    	   0,   64,  0  },
@@ -351,21 +336,6 @@ static const t_mapid mapid[] = {
 	{	UMI2,    		   0,   64,  1  },	//川横
 	{	UMI3,    		   0,   96,  1  },	//海道
 	{	UMI4,    		   0,  128,  1  },	//海
-	{	YAMA_GRASS0,       0,    0,  0  },
-	{	YAMA_GRASS1,       0,   32,  0  },
-	{	YAMA_GRASS2,       0,   64,  0  },
-	{	YAMA_GRASS3,       0,   96,  0  },
-	{	YAMA_GRASS4,       0,  128,  0  },
-	{	YAMA_MOUNTAIN0,    0,    0,  0  },
-	{	YAMA_MOUNTAIN1,    0,   32,  0  },
-	{	YAMA_MOUNTAIN2,    0,   64,  0  },
-	{	YAMA_MOUNTAIN3,    0,   96,  0  },
-	{	YAMA_MOUNTAIN4,    0,  128,  1  },	//山々
-	{	YAMA_STONE0,       0,    0,  1  },	//岩
-	{	YAMA_STONE1,       0,   32,  1  },	//岩
-	{	YAMA_STONE2,       0,   64,  1  },	//岩
-	{	YAMA_STONE3,       0,   96,  1  },	//岩
-	{	YAMA_STONE4,       0,  128,  1  },	//岩々
 	{	BRIGHT0,    0,    0,  1  },
 	{	BRIGHT1,   32,    0,  1  },
 	{	BRIGHT2,   64,    0,  1  },
@@ -1290,14 +1260,9 @@ typedef struct {
 
 static const t_mapinfo mapinfo[] = {
 	{	STANDERD_S,  	 	STANDERD_E,		 0,  (char **)mappath,    32,   32,  256,  352  },
-	{	MITI_S,  		 	MITI_E,  		 1,  (char **)mappath,    32,   32,   32,  160  },
-	{	MORI_S,  		 	MORI_E,  		 2,  (char **)mappath,    32,   32,   32,  160  },
-	{	SABAKU_S,	   	   	SABAKU_E,  		 3,  (char **)mappath,    32,   32,   32,  160  },
-	{	TUTI_S,  		 	TUTI_E,  		 4,  (char **)mappath,    32,   32,   32,  160  },
-	{	UMI_S,  		  	UMI_E,  		 5,  (char **)mappath,    32,   32,   32,  160  },
-	{	YAMA_GRASS_S,  		YAMA_GRASS_E,  	 6,  (char **)mappath,    32,   32,   32,  160  },
-	{	YAMA_MOUNTAIN_S,  	YAMA_MOUNTAIN_E, 7,  (char **)mappath,    32,   32,   32,  160  },
-	{	YAMA_STONE_S,  		YAMA_STONE_E,  	 8,  (char **)mappath,    32,   32,   32,  160  },
+	{	SABAKU_S,	   	   	SABAKU_E,  		 1,  (char **)mappath,    32,   32,   32,  160  },
+	{	TUTI_S,  		 	TUTI_E,  		 2,  (char **)mappath,    32,   32,   32,  160  },
+	{	UMI_S,  		  	UMI_E,  		 3,  (char **)mappath,    32,   32,   32,  160  },
 	{	BRIGHT_S,  			BRIGHT_E,		 0,  (char **)foresttown, 32,   32,  512,  384  },
 	{	TOWNBF_S,  			TOWNBF_E,		 1,  (char **)foresttown, 32,   32,  512,  384  },
 	{	TOWN_ITEM_S,  		TOWN_ITEM_E,  	 2,  (char **)foresttown, 32,   32,  512,  512  },
