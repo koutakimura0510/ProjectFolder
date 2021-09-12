@@ -1,0 +1,21 @@
+{
+	"files.associations": {
+		"event_msg.h": "c",
+		"item_db.h": "c",
+		"item_type.h": "c",
+		"mylib.h": "c",
+		"encount_db.h": "c",
+		"animation.h": "c",
+		"status_db.h": "c",
+		"enemy_db.h": "c",
+		"level_db.h": "c",
+		"effect_db.h": "c",
+		"minigame_db.h": "c",
+		"event_db.h": "c",
+		"system_db.h": "c",
+		"effect_msg_macro.h": "c",
+		"enemy_macro.h": "c",
+		"game_wrapper.h": "c",
+		"rom_db_struct.h": "c"
+	}
+}

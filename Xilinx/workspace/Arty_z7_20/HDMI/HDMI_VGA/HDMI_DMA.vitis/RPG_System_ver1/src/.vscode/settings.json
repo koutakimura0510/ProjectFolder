@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "draw_struct.h": "c",
+        "local_share.h": "c",
+        "/system/wrapper/game_wrapper.h": "c",
+        "game_wrapper.h": "c",
+        "cmd_standerd.h": "c"
+    }
+}

@@ -1,0 +1,3553 @@
+# Header ========================
+header_chunk_type : MThd
+header_chunk_size : 6
+smf_format : 0
+tracks     : 1
+DIV480 
+# Track[01] =====================
+track_chunks[0].type : MTrk
+track_chunks[0].size : 14310
+track_chunks[0].data
+DELTA0 Meta Ivent : Title = 勝利のファンファーレ
+DELTA0 Meta Ivent : Rhythm = 4/8
+ClockPerBeat=24
+32NotePer4Note=8
+DELTA0 Meta Ivent : Temp300000 
+DELTA0 F0 Exclusive Message :  Length / 5[7e][7f][09][01][f7]
+DELTA0 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 120
+DELTA0 Control Change [01ch] : InvariableEffect( Celeste) / 20
+DELTA0 Control Change [01ch] : InvariableEffect( Chorus) / 40
+DELTA0 Control Change [01ch] : VariableEffect( BankSelect[MSB] ) / 0
+DELTA0 Control Change [01ch] : VariableEffect( BankSelect[LSB] ) / 0
+DELTA0 Program Change [01ch] : ToneNo / 56 
+DELTA0 Control Change [01ch] : VariableEffect( Panpot[MSB] ) / 64
+DELTA0 Control Change [01ch] : InvariableEffect( ExternalEffect) / 96
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 110
+DELTA0 Control Change [02ch] : InvariableEffect( Celeste) / 20
+DELTA0 Control Change [02ch] : InvariableEffect( Chorus) / 30
+DELTA0 Control Change [02ch] : VariableEffect( BankSelect[MSB] ) / 0
+DELTA0 Control Change [02ch] : VariableEffect( BankSelect[LSB] ) / 0
+DELTA0 Program Change [02ch] : ToneNo / 56 
+DELTA0 Control Change [02ch] : InvariableEffect( ExternalEffect) / 96
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 120
+DELTA0 Control Change [03ch] : InvariableEffect( Celeste) / 20
+DELTA0 Control Change [03ch] : InvariableEffect( Chorus) / 40
+DELTA0 Control Change [03ch] : VariableEffect( BankSelect[MSB] ) / 0
+DELTA0 Control Change [03ch] : VariableEffect( BankSelect[LSB] ) / 0
+DELTA0 Program Change [03ch] : ToneNo / 57 
+DELTA0 Control Change [03ch] : VariableEffect( Panpot[MSB] ) / 64
+DELTA0 Control Change [03ch] : InvariableEffect( ExternalEffect) / 96
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 120
+DELTA0 Control Change [04ch] : InvariableEffect( Celeste) / 10
+DELTA0 Control Change [04ch] : InvariableEffect( Chorus) / 30
+DELTA0 Control Change [04ch] : VariableEffect( BankSelect[MSB] ) / 0
+DELTA0 Control Change [04ch] : VariableEffect( BankSelect[LSB] ) / 0
+DELTA0 Program Change [04ch] : ToneNo / 33 
+DELTA0 Control Change [04ch] : InvariableEffect( ExternalEffect) / 96
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 100
+DELTA0 Control Change [05ch] : InvariableEffect( Celeste) / 10
+DELTA0 Control Change [05ch] : InvariableEffect( Chorus) / 30
+DELTA0 Control Change [05ch] : VariableEffect( BankSelect[MSB] ) / 0
+DELTA0 Control Change [05ch] : VariableEffect( BankSelect[LSB] ) / 0
+DELTA0 Program Change [05ch] : ToneNo / 32 
+DELTA0 Control Change [05ch] : VariableEffect( Panpot[MSB] ) / 59
+DELTA0 Control Change [05ch] : InvariableEffect( ExternalEffect) / 96
+DELTA0 Control Change [09ch] : InvariableEffect( ExternalEffect) / 64
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA6 Control Change [04ch] : VariableEffect( Panpot[MSB] ) / 69
+DELTA474 F0 Exclusive Message :  Length / 7[7f][7f][04][01][00][64][f7]
+DELTA960 Meta Ivent : Temp600000 
+DELTA0 Control Change [01ch] : InvariableEffect( Celeste) / 20
+DELTA0 Control Change [01ch] : VariableEffect( Panpot[MSB] ) / 64
+DELTA0 1 48 100 
+DELTA0 2 52 120 
+DELTA0 Control Change [03ch] : VariableEffect( Panpot[MSB] ) / 64
+DELTA0 3 43 120 
+DELTA30 Meta Ivent : Temp606060 
+DELTA24 1 48 0 
+DELTA0 2 52 0 
+DELTA0 3 43 0 
+DELTA6 Meta Ivent : Temp612244 
+DELTA0 1 52 100 
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [01ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [01ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [01ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [01ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [01ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [01ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 2 55 120 
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [02ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [02ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [02ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [02ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [02ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [02ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 3 48 120 
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [03ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [03ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [03ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [03ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [03ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [03ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA30 Meta Ivent : Temp618556 
+DELTA24 1 52 0 
+DELTA0 2 55 0 
+DELTA0 3 48 0 
+DELTA6 Meta Ivent : Temp631578 
+DELTA0 1 55 100 
+DELTA0 2 60 120 
+DELTA0 3 52 120 
+DELTA30 Meta Ivent : Temp638297 
+DELTA24 1 55 0 
+DELTA0 2 60 0 
+DELTA0 3 52 0 
+DELTA6 Meta Ivent : Temp645161 
+DELTA0 1 60 100 
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [01ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [01ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [01ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [01ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [01ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [01ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 2 64 120 
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [02ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [02ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [02ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [02ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [02ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [02ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 3 55 120 
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [03ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [03ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [03ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [03ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [03ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [03ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA30 Meta Ivent : Temp652173 
+DELTA24 1 60 0 
+DELTA0 2 64 0 
+DELTA0 3 55 0 
+DELTA6 Meta Ivent : Temp666666 
+DELTA0 1 64 100 
+DELTA0 2 67 120 
+DELTA0 3 60 120 
+DELTA30 Meta Ivent : Temp674157 
+DELTA24 1 64 0 
+DELTA0 2 67 0 
+DELTA0 3 60 0 
+DELTA6 Meta Ivent : Temp681818 
+DELTA0 1 67 100 
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [01ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [01ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [01ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [01ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [01ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [01ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 2 72 120 
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [02ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [02ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [02ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [02ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [02ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [02ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 3 64 120 
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [03ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [03ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [03ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [03ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [03ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [03ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA30 Meta Ivent : Temp689655 
+DELTA24 1 67 0 
+DELTA0 2 72 0 
+DELTA0 3 64 0 
+DELTA6 Meta Ivent : Temp705882 
+DELTA0 1 72 100 
+DELTA0 2 76 120 
+DELTA0 3 67 120 
+DELTA30 Meta Ivent : Temp714285 
+DELTA24 1 72 0 
+DELTA0 2 76 0 
+DELTA0 3 67 0 
+DELTA6 Meta Ivent : Temp722891 
+DELTA0 1 76 100 
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [01ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [01ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [01ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [01ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [01ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [01ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 2 79 120 
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [02ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [02ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [02ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [02ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [02ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [02ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 3 72 120 
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [03ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [03ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [03ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [03ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [03ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [03ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA30 Meta Ivent : Temp731707 
+DELTA24 1 76 0 
+DELTA0 2 79 0 
+DELTA0 3 72 0 
+DELTA6 Meta Ivent : Temp428571 
+DELTA0 Control Change [01ch] : VariableEffect( Panpot[MSB] ) / 80
+DELTA0 1 72 110 
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [01ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [01ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [01ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 2 65 120 
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [02ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [02ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [02ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 Control Change [03ch] : VariableEffect( Panpot[MSB] ) / 35
+DELTA0 3 55 120 
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [03ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [03ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [03ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA112 1 72 0 
+DELTA0 2 65 0 
+DELTA0 3 55 0 
+DELTA0 4 36 0 
+DELTA0 5 36 0 
+DELTA32 9 38 0 
+DELTA16 1 72 110 
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [01ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [01ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [01ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 2 65 120 
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [02ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [02ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [02ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 3 57 120 
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [03ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [03ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [03ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA112 1 72 0 
+DELTA0 2 65 0 
+DELTA0 3 57 0 
+DELTA0 4 36 0 
+DELTA0 5 36 0 
+DELTA32 9 38 0 
+DELTA16 1 72 110 
+DELTA0 2 65 120 
+DELTA0 3 59 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA40 Control Change [01ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [01ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [01ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [01ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [02ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [02ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [02ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [02ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [03ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [03ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [03ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA72 1 72 0 
+DELTA0 2 65 0 
+DELTA0 3 59 0 
+DELTA0 4 36 0 
+DELTA0 5 36 0 
+DELTA32 9 38 0 
+DELTA16 1 72 110 
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [01ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [01ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [01ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [01ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 2 64 120 
+DELTA0 3 60 120 
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[MSB] ) / 1
+DELTA0 Control Change [03ch] : SpecialPurpose( NRPN[LSB] ) / 33
+DELTA0 Control Change [03ch] : VariableEffect( DataEntry[MSB] ) / 85
+DELTA0 Pitch Bend Change [03ch] : Bend / 0 (LSB:0, MSB:64)
+DELTA0 Control Change [03ch] : VariableEffect( ModulationDepth[MSB] ) / 0
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA460 1 72 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA0 4 36 0 
+DELTA0 5 36 0 
+DELTA10 1 68 110 
+DELTA0 2 63 120 
+DELTA0 3 56 120 
+DELTA0 4 32 120 
+DELTA0 5 32 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA134 3 56 0 
+DELTA16 3 55 120 
+DELTA144 3 55 0 
+DELTA16 3 54 120 
+DELTA144 3 54 0 
+DELTA6 1 68 0 
+DELTA0 2 63 0 
+DELTA0 4 32 0 
+DELTA0 5 32 0 
+DELTA10 1 70 110 
+DELTA0 2 62 120 
+DELTA0 3 53 120 
+DELTA0 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA460 1 70 0 
+DELTA0 2 62 0 
+DELTA0 3 53 0 
+DELTA0 4 34 0 
+DELTA0 5 34 0 
+DELTA10 1 72 110 
+DELTA0 2 64 120 
+DELTA0 3 55 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA112 1 72 0 
+DELTA0 2 64 0 
+DELTA0 3 55 0 
+DELTA0 4 36 0 
+DELTA0 5 36 0 
+DELTA32 9 38 0 
+DELTA176 1 70 110 
+DELTA0 2 62 120 
+DELTA0 3 53 120 
+DELTA0 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 38 120 
+DELTA112 1 70 0 
+DELTA0 2 62 0 
+DELTA0 3 53 0 
+DELTA0 4 34 0 
+DELTA0 5 34 0 
+DELTA32 9 38 0 
+DELTA16 1 72 110 
+DELTA0 2 64 120 
+DELTA0 3 55 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA54 9 38 0 
+DELTA6 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA30 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA24 9 38 0 
+DELTA6 9 38 120 
+DELTA54 9 38 0 
+DELTA6 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA30 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA24 9 38 0 
+DELTA6 9 38 120 
+DELTA54 9 38 0 
+DELTA6 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA30 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA24 9 38 0 
+DELTA6 9 38 120 
+DELTA54 9 38 0 
+DELTA6 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 110
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 109
+DELTA30 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 108
+DELTA24 9 38 0 
+DELTA6 9 38 120 
+DELTA54 9 38 0 
+DELTA6 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 106
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 105
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 104
+DELTA30 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 103
+DELTA24 9 38 0 
+DELTA6 9 38 120 
+DELTA54 9 38 0 
+DELTA6 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 101
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 100
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 99
+DELTA30 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 97
+DELTA24 9 38 0 
+DELTA6 9 38 120 
+DELTA54 9 38 0 
+DELTA6 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 96
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 95
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 93
+DELTA30 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 92
+DELTA24 9 38 0 
+DELTA6 9 38 120 
+DELTA54 9 38 0 
+DELTA6 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 91
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 89
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 88
+DELTA30 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 87
+DELTA24 9 38 0 
+DELTA6 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 9 38 120 
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA24 9 38 0 
+DELTA6 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA0 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 85
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 84
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 83
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 82
+DELTA24 9 38 0 
+DELTA6 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 9 38 120 
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA24 9 38 0 
+DELTA6 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA0 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 80
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 79
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 78
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 76
+DELTA24 9 38 0 
+DELTA6 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 9 38 120 
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA24 9 38 0 
+DELTA6 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA0 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 75
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 74
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 72
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 71
+DELTA24 9 38 0 
+DELTA6 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 9 38 120 
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA24 9 38 0 
+DELTA6 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA0 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 70
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 68
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 67
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 66
+DELTA24 9 38 0 
+DELTA6 1 72 0 
+DELTA0 2 64 0 
+DELTA0 3 55 0 
+DELTA0 4 36 0 
+DELTA0 5 36 0 
+DELTA0 1 67 110 
+DELTA0 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 2 64 120 
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 3 60 120 
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA24 1 65 110 
+DELTA0 2 62 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 65 0 
+DELTA0 2 62 0 
+DELTA0 3 60 0 
+DELTA24 1 67 110 
+DELTA0 2 64 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA24 1 65 110 
+DELTA0 2 62 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA110 1 65 0 
+DELTA0 2 62 0 
+DELTA0 3 60 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA105 4 36 0 
+DELTA0 5 36 0 
+DELTA5 1 70 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA206 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA19 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 70 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA0 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 69 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA225 4 34 0 
+DELTA0 5 34 0 
+DELTA5 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA10 1 70 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA110 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA115 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 69 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA110 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA5 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 69 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA0 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 67 110 
+DELTA0 2 64 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA10 1 65 110 
+DELTA0 2 60 120 
+DELTA0 3 57 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 65 0 
+DELTA0 2 60 0 
+DELTA0 3 57 0 
+DELTA10 1 64 110 
+DELTA0 2 60 120 
+DELTA0 3 55 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 64 0 
+DELTA0 2 60 0 
+DELTA0 3 55 0 
+DELTA10 1 65 110 
+DELTA0 2 60 120 
+DELTA0 3 57 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA110 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 65 0 
+DELTA0 2 60 0 
+DELTA0 3 57 0 
+DELTA19 4 36 0 
+DELTA0 5 36 0 
+DELTA5 1 62 110 
+DELTA0 2 58 120 
+DELTA0 3 53 120 
+DELTA0 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA225 4 34 0 
+DELTA0 5 34 0 
+DELTA5 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA225 4 34 0 
+DELTA0 5 34 0 
+DELTA5 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA225 4 34 0 
+DELTA0 5 34 0 
+DELTA5 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA25 4 34 0 
+DELTA0 5 34 0 
+DELTA5 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA30 4 41 0 
+DELTA0 5 41 0 
+DELTA0 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA22 1 62 0 
+DELTA0 2 58 0 
+DELTA0 3 53 0 
+DELTA8 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA30 1 67 110 
+DELTA0 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 2 64 120 
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 3 60 120 
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA24 1 65 110 
+DELTA0 2 62 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 65 0 
+DELTA0 2 62 0 
+DELTA0 3 60 0 
+DELTA24 1 67 110 
+DELTA0 2 64 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA24 1 65 110 
+DELTA0 2 62 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA110 1 65 0 
+DELTA0 2 62 0 
+DELTA0 3 60 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA105 4 36 0 
+DELTA0 5 36 0 
+DELTA5 1 70 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA206 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA19 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 70 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA0 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 69 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA225 4 34 0 
+DELTA0 5 34 0 
+DELTA5 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA10 1 70 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA110 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA115 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 69 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA110 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA5 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 69 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA0 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 67 110 
+DELTA0 2 64 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA10 1 65 110 
+DELTA0 2 62 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 65 0 
+DELTA0 2 62 0 
+DELTA0 3 60 0 
+DELTA10 1 67 110 
+DELTA0 2 64 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA10 1 70 110 
+DELTA0 2 67 120 
+DELTA0 3 62 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA110 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 70 0 
+DELTA0 2 67 0 
+DELTA0 3 62 0 
+DELTA19 4 36 0 
+DELTA0 5 36 0 
+DELTA5 1 72 110 
+DELTA0 2 68 120 
+DELTA0 3 63 120 
+DELTA0 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 32 120 
+DELTA0 5 32 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA225 4 32 0 
+DELTA0 5 32 0 
+DELTA5 4 39 120 
+DELTA0 5 39 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 39 0 
+DELTA0 5 39 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 32 120 
+DELTA0 5 32 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA225 4 32 0 
+DELTA0 5 32 0 
+DELTA5 4 39 120 
+DELTA0 5 39 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 39 0 
+DELTA0 5 39 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 32 120 
+DELTA0 5 32 120 
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA225 4 32 0 
+DELTA0 5 32 0 
+DELTA5 4 39 120 
+DELTA0 5 39 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 39 0 
+DELTA0 5 39 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 4 32 120 
+DELTA0 5 32 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA25 4 32 0 
+DELTA0 5 32 0 
+DELTA5 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 4 39 120 
+DELTA0 5 39 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA30 4 39 0 
+DELTA0 5 39 0 
+DELTA0 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA22 1 72 0 
+DELTA0 2 68 0 
+DELTA0 3 63 0 
+DELTA8 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA30 1 67 110 
+DELTA0 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 2 64 120 
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 3 60 120 
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA24 1 65 110 
+DELTA0 2 62 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 65 0 
+DELTA0 2 62 0 
+DELTA0 3 60 0 
+DELTA24 1 67 110 
+DELTA0 2 64 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA24 1 65 110 
+DELTA0 2 62 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA110 1 65 0 
+DELTA0 2 62 0 
+DELTA0 3 60 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA105 4 36 0 
+DELTA0 5 36 0 
+DELTA5 1 70 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA206 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA19 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 70 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA0 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 69 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA225 4 34 0 
+DELTA0 5 34 0 
+DELTA5 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA10 1 70 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA110 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA115 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 69 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA110 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA5 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 69 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA0 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 67 110 
+DELTA0 2 64 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA10 1 65 110 
+DELTA0 2 60 120 
+DELTA0 3 57 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 65 0 
+DELTA0 2 60 0 
+DELTA0 3 57 0 
+DELTA10 1 64 110 
+DELTA0 2 60 120 
+DELTA0 3 55 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 64 0 
+DELTA0 2 60 0 
+DELTA0 3 55 0 
+DELTA10 1 65 110 
+DELTA0 2 60 120 
+DELTA0 3 57 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA110 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 65 0 
+DELTA0 2 60 0 
+DELTA0 3 57 0 
+DELTA19 4 36 0 
+DELTA0 5 36 0 
+DELTA5 1 62 110 
+DELTA0 2 58 120 
+DELTA0 3 53 120 
+DELTA0 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA225 4 34 0 
+DELTA0 5 34 0 
+DELTA5 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA225 4 34 0 
+DELTA0 5 34 0 
+DELTA5 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA225 4 34 0 
+DELTA0 5 34 0 
+DELTA5 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA25 4 34 0 
+DELTA0 5 34 0 
+DELTA5 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA30 4 41 0 
+DELTA0 5 41 0 
+DELTA0 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA22 1 62 0 
+DELTA0 2 58 0 
+DELTA0 3 53 0 
+DELTA8 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA30 1 67 110 
+DELTA0 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 2 64 120 
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 3 60 120 
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA24 1 65 110 
+DELTA0 2 62 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 65 0 
+DELTA0 2 62 0 
+DELTA0 3 60 0 
+DELTA24 1 67 110 
+DELTA0 2 64 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA24 1 65 110 
+DELTA0 2 62 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA110 1 65 0 
+DELTA0 2 62 0 
+DELTA0 3 60 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA105 4 36 0 
+DELTA0 5 36 0 
+DELTA5 1 70 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA206 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA19 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 70 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA0 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 69 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA225 4 34 0 
+DELTA0 5 34 0 
+DELTA5 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA10 1 70 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA110 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA115 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 69 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA110 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA5 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 69 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA0 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 67 110 
+DELTA0 2 64 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA10 1 65 110 
+DELTA0 2 62 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 65 0 
+DELTA0 2 62 0 
+DELTA0 3 60 0 
+DELTA10 1 67 110 
+DELTA0 2 64 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA10 1 70 110 
+DELTA0 2 67 120 
+DELTA0 3 62 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA110 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 70 0 
+DELTA0 2 67 0 
+DELTA0 3 62 0 
+DELTA19 4 36 0 
+DELTA0 5 36 0 
+DELTA5 1 72 110 
+DELTA0 2 68 120 
+DELTA0 3 63 120 
+DELTA0 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 32 120 
+DELTA0 5 32 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA225 4 32 0 
+DELTA0 5 32 0 
+DELTA5 4 39 120 
+DELTA0 5 39 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 39 0 
+DELTA0 5 39 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 32 120 
+DELTA0 5 32 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA225 4 32 0 
+DELTA0 5 32 0 
+DELTA5 4 39 120 
+DELTA0 5 39 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 39 0 
+DELTA0 5 39 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 32 120 
+DELTA0 5 32 120 
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA225 4 32 0 
+DELTA0 5 32 0 
+DELTA5 4 39 120 
+DELTA0 5 39 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 39 0 
+DELTA0 5 39 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 4 32 120 
+DELTA0 5 32 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA25 4 32 0 
+DELTA0 5 32 0 
+DELTA5 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 4 39 120 
+DELTA0 5 39 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA30 4 39 0 
+DELTA0 5 39 0 
+DELTA0 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA22 1 72 0 
+DELTA0 2 68 0 
+DELTA0 3 63 0 
+DELTA8 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 41
+DELTA30 1 67 110 
+DELTA0 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 2 64 120 
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 3 60 120 
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA24 1 65 110 
+DELTA0 2 62 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 65 0 
+DELTA0 2 62 0 
+DELTA0 3 60 0 
+DELTA24 1 67 110 
+DELTA0 2 64 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA24 1 65 110 
+DELTA0 2 62 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA110 1 65 0 
+DELTA0 2 62 0 
+DELTA0 3 60 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA105 4 36 0 
+DELTA0 5 36 0 
+DELTA5 1 70 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA206 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA19 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 70 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA0 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 69 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA225 4 34 0 
+DELTA0 5 34 0 
+DELTA5 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA10 1 70 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA110 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA115 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 69 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA110 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA5 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 69 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA0 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 1 67 110 
+DELTA0 2 64 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA10 1 65 110 
+DELTA0 2 60 120 
+DELTA0 3 57 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 65 0 
+DELTA0 2 60 0 
+DELTA0 3 57 0 
+DELTA10 1 64 110 
+DELTA0 2 60 120 
+DELTA0 3 55 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA225 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA100 1 64 0 
+DELTA0 2 60 0 
+DELTA0 3 55 0 
+DELTA10 1 65 110 
+DELTA0 2 60 120 
+DELTA0 3 57 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA110 9 38 120 
+DELTA10 9 38 0 
+DELTA86 1 65 0 
+DELTA0 2 60 0 
+DELTA0 3 57 0 
+DELTA19 4 36 0 
+DELTA0 5 36 0 
+DELTA5 1 62 110 
+DELTA0 2 58 120 
+DELTA0 3 53 120 
+DELTA0 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 43 0 
+DELTA0 5 43 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA225 4 34 0 
+DELTA0 5 34 0 
+DELTA5 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA225 4 34 0 
+DELTA0 5 34 0 
+DELTA5 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA225 4 34 0 
+DELTA0 5 34 0 
+DELTA5 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA110 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 126
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 125
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 124
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 123
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 122
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 121
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 120
+DELTA25 4 34 0 
+DELTA0 5 34 0 
+DELTA5 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 119
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 118
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 117
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 116
+DELTA30 4 41 0 
+DELTA0 5 41 0 
+DELTA0 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 115
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 114
+DELTA30 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 113
+DELTA22 1 62 0 
+DELTA0 2 58 0 
+DELTA0 3 53 0 
+DELTA8 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 112
+DELTA30 1 67 110 
+DELTA0 Control Change [01ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 120
+DELTA0 2 64 120 
+DELTA0 Control Change [02ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 110
+DELTA0 3 60 120 
+DELTA0 Control Change [03ch] : VariableEffect( Expression[MSB] ) / 127
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 120
+DELTA0 4 36 120 
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 120
+DELTA0 5 36 120 
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 100
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA80 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 119
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 109
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 119
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 119
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 99
+DELTA30 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 79
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 118
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 108
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 118
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 118
+DELTA30 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 98
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 117
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 107
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 117
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 117
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 78
+DELTA25 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 97
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 116
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 116
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 116
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 106
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 77
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 115
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 115
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 115
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 96
+DELTA30 4 43 0 
+DELTA0 5 43 0 
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 105
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 114
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 114
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 114
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 95
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 76
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 104
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 113
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 113
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 113
+DELTA6 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA24 1 65 110 
+DELTA0 2 62 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 94
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 75
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA20 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 103
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 112
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 112
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 112
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 93
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 102
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 111
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 111
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 111
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 74
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 101
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 92
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 110
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 110
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 110
+DELTA30 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 73
+DELTA25 4 36 0 
+DELTA0 5 36 0 
+DELTA5 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 109
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 100
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 109
+DELTA0 4 43 120 
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 109
+DELTA0 5 43 120 
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 91
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA50 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 108
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 99
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 108
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 108
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 90
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 72
+DELTA60 4 43 0 
+DELTA0 5 43 0 
+DELTA0 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 107
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 98
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 107
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 107
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 89
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 71
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 106
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 106
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 106
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 97
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 88
+DELTA6 1 65 0 
+DELTA0 2 62 0 
+DELTA0 3 60 0 
+DELTA24 1 67 110 
+DELTA0 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 105
+DELTA0 2 64 120 
+DELTA0 3 60 120 
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 105
+DELTA0 4 36 120 
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 105
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 70
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA20 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 96
+DELTA30 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 87
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 104
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 95
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 104
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 104
+DELTA30 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 86
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 69
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 103
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 103
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 103
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 94
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 102
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 102
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 102
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 85
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 68
+DELTA25 4 36 0 
+DELTA0 5 36 0 
+DELTA5 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 93
+DELTA0 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 101
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 101
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 101
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 84
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 92
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 67
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 100
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 100
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 100
+DELTA30 4 43 0 
+DELTA0 5 43 0 
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 83
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 99
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 91
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 99
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 99
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 66
+DELTA60 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 98
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 90
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 98
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 98
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 82
+DELTA6 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA24 1 65 110 
+DELTA0 2 62 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 65
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA20 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 89
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 81
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 97
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 97
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 97
+DELTA60 1 65 0 
+DELTA0 2 62 0 
+DELTA0 3 60 0 
+DELTA0 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 96
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 88
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 96
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 96
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 64
+DELTA10 9 38 0 
+DELTA50 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 95
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 87
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 95
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 95
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 79
+DELTA30 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 63
+DELTA25 4 36 0 
+DELTA0 5 36 0 
+DELTA5 1 70 110 
+DELTA0 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 94
+DELTA0 2 65 120 
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 86
+DELTA0 3 60 120 
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 94
+DELTA0 4 43 120 
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 94
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 78
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 93
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 93
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 93
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 62
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 85
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 77
+DELTA30 4 43 0 
+DELTA0 5 43 0 
+DELTA0 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 92
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 92
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 92
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 84
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 61
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 91
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 91
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 91
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 76
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 83
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 90
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 90
+DELTA0 4 34 120 
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 90
+DELTA0 5 34 120 
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 75
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 60
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA50 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 82
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 89
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 89
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 89
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 74
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 81
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 59
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 88
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 88
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 88
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 73
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 87
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 87
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 87
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 58
+DELTA6 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA19 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 70 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 72
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 86
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 79
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 86
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 86
+DELTA30 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 57
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 85
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 78
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 85
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 85
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 71
+DELTA30 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA0 4 41 0 
+DELTA0 5 41 0 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 84
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 77
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 84
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 84
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 70
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 56
+DELTA60 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 83
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 83
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 83
+DELTA30 1 69 110 
+DELTA0 2 65 120 
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 76
+DELTA0 3 60 120 
+DELTA0 4 34 120 
+DELTA0 5 34 120 
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 69
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 55
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA50 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 82
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 75
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 82
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 82
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 68
+DELTA60 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 81
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 74
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 81
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 81
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 54
+DELTA30 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 67
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 80
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 73
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 53
+DELTA25 4 34 0 
+DELTA0 5 34 0 
+DELTA5 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 79
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 79
+DELTA0 4 41 120 
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 79
+DELTA0 5 41 120 
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 66
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 72
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 78
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 78
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 78
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 65
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 52
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 71
+DELTA30 4 41 0 
+DELTA0 5 41 0 
+DELTA0 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 77
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 77
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 77
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 64
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 51
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 76
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 70
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 76
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 76
+DELTA30 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 63
+DELTA20 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA10 1 70 110 
+DELTA0 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 75
+DELTA0 2 65 120 
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 69
+DELTA0 3 60 120 
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 75
+DELTA0 4 34 120 
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 75
+DELTA0 5 34 120 
+DELTA0 9 6 120 
+DELTA0 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 50
+DELTA10 9 6 0 
+DELTA0 9 38 0 
+DELTA50 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 68
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 62
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 74
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 74
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 74
+DELTA30 1 70 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 61
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 49
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 73
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 67
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 73
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 73
+DELTA60 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 72
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 66
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 72
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 72
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 60
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 48
+DELTA25 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 69 110 
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 4 41 120 
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 71
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 65
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 71
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 71
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 59
+DELTA30 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 47
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 70
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 70
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 70
+DELTA30 4 41 0 
+DELTA0 5 41 0 
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 64
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 58
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 69
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 69
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 69
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 46
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 63
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 68
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 68
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 68
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 57
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 62
+DELTA0 4 34 120 
+DELTA0 5 34 120 
+DELTA0 9 2 120 
+DELTA0 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 45
+DELTA10 9 2 0 
+DELTA0 9 38 0 
+DELTA20 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 56
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 67
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 67
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 67
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 61
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 66
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 66
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 66
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 55
+DELTA0 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 44
+DELTA10 9 38 0 
+DELTA20 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 60
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 65
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 65
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 65
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 54
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 59
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 43
+DELTA20 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA5 4 34 0 
+DELTA0 5 34 0 
+DELTA5 1 69 110 
+DELTA0 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 64
+DELTA0 2 65 120 
+DELTA0 3 60 120 
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 64
+DELTA0 4 41 120 
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 64
+DELTA0 5 41 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 53
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 63
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 58
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 63
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 63
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 42
+DELTA30 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 52
+DELTA30 1 69 0 
+DELTA0 2 65 0 
+DELTA0 3 60 0 
+DELTA0 4 41 0 
+DELTA0 5 41 0 
+DELTA0 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 62
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 57
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 62
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 62
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 41
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 61
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 56
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 61
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 61
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 51
+DELTA60 1 67 110 
+DELTA0 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 60
+DELTA0 2 64 120 
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 55
+DELTA0 3 60 120 
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 60
+DELTA0 4 36 120 
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 60
+DELTA0 5 36 120 
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 50
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 40
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA80 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 59
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 54
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 59
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 59
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 49
+DELTA30 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 39
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 58
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 53
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 58
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 58
+DELTA30 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 48
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 57
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 52
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 57
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 57
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 38
+DELTA25 4 36 0 
+DELTA0 5 36 0 
+DELTA5 4 43 120 
+DELTA0 5 43 120 
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 47
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 56
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 56
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 56
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 51
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 37
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 55
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 55
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 55
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 46
+DELTA30 4 43 0 
+DELTA0 5 43 0 
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 50
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 54
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 54
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 54
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 45
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 36
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 49
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 53
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 53
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 53
+DELTA20 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA10 1 65 110 
+DELTA0 2 62 120 
+DELTA0 3 60 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 44
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 35
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA20 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 48
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 52
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 52
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 52
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 43
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 47
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 51
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 51
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 51
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 34
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 46
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 42
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 50
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 50
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 50
+DELTA30 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 33
+DELTA25 4 36 0 
+DELTA0 5 36 0 
+DELTA5 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 49
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 45
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 49
+DELTA0 4 43 120 
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 49
+DELTA0 5 43 120 
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 41
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA50 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 48
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 44
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 48
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 48
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 40
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 32
+DELTA60 4 43 0 
+DELTA0 5 43 0 
+DELTA0 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 47
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 43
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 47
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 47
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 39
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 31
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 46
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 46
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 46
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 42
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 38
+DELTA20 1 65 0 
+DELTA0 2 62 0 
+DELTA0 3 60 0 
+DELTA10 1 67 110 
+DELTA0 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 45
+DELTA0 2 64 120 
+DELTA0 3 60 120 
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 45
+DELTA0 4 36 120 
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 45
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 6 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 30
+DELTA10 9 38 0 
+DELTA0 9 6 0 
+DELTA20 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 41
+DELTA30 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 37
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 44
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 40
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 44
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 44
+DELTA30 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 36
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 29
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 43
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 43
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 43
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 39
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 42
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 42
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 42
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 35
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 28
+DELTA25 4 36 0 
+DELTA0 5 36 0 
+DELTA5 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 38
+DELTA0 4 43 120 
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 41
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 41
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 41
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 34
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 37
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 27
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 40
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 40
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 40
+DELTA30 4 43 0 
+DELTA0 5 43 0 
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 33
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 39
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 36
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 39
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 39
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 26
+DELTA60 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 38
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 35
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 38
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 38
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 32
+DELTA20 1 67 0 
+DELTA0 2 64 0 
+DELTA0 3 60 0 
+DELTA10 1 70 110 
+DELTA0 2 67 120 
+DELTA0 3 62 120 
+DELTA0 4 36 120 
+DELTA0 5 36 120 
+DELTA0 9 38 120 
+DELTA0 9 2 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 25
+DELTA10 9 38 0 
+DELTA0 9 2 0 
+DELTA20 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 34
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 31
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 37
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 37
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 37
+DELTA60 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 36
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 33
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 36
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 36
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 30
+DELTA0 9 38 120 
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 24
+DELTA10 9 38 0 
+DELTA50 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 35
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 32
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 35
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 35
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 29
+DELTA30 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 23
+DELTA6 1 70 0 
+DELTA0 2 67 0 
+DELTA0 3 62 0 
+DELTA19 4 36 0 
+DELTA0 5 36 0 
+DELTA5 1 72 110 
+DELTA0 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 34
+DELTA0 2 68 120 
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 31
+DELTA0 3 63 120 
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 34
+DELTA0 4 43 120 
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 34
+DELTA0 5 43 120 
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 28
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 33
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 33
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 33
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 22
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 30
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 27
+DELTA30 4 43 0 
+DELTA0 5 43 0 
+DELTA0 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 32
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 32
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 32
+DELTA0 9 38 120 
+DELTA10 9 38 0 
+DELTA20 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 29
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 21
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 31
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 31
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 31
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 26
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 28
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 30
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 30
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 30
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 25
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 20
+DELTA60 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 27
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 29
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 29
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 29
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 24
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 26
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 19
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 28
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 28
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 28
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 25
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 23
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 27
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 27
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 27
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 18
+DELTA30 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 22
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 26
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 24
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 26
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 26
+DELTA30 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 17
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 25
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 23
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 25
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 25
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 21
+DELTA60 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 24
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 22
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 24
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 24
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 20
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 16
+DELTA60 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 23
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 23
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 23
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 21
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 19
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 15
+DELTA60 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 22
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 20
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 22
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 22
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 18
+DELTA60 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 21
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 19
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 21
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 21
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 14
+DELTA30 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 17
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 20
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 20
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 20
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 18
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 13
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 19
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 19
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 19
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 16
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 17
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 18
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 18
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 18
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 15
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 12
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 16
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 17
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 17
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 17
+DELTA30 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 14
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 11
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 16
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 15
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 16
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 16
+DELTA30 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 13
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 15
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 14
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 15
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 15
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 10
+DELTA60 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 13
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 12
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 14
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 14
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 14
+DELTA30 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 11
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 9
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 13
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 12
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 13
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 13
+DELTA60 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 12
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 11
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 12
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 12
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 10
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 8
+DELTA60 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 11
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 10
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 11
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 11
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 9
+DELTA30 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 7
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 10
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 10
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 10
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 9
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 8
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 9
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 9
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 9
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 6
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 8
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 8
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 8
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 8
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 7
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 7
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 5
+DELTA30 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 6
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 7
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 7
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 7
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 6
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 6
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 6
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 6
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 5
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 4
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 5
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 5
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 5
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 5
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 4
+DELTA30 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 4
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 3
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 4
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 4
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 4
+DELTA1 1 72 0 
+DELTA0 2 68 0 
+DELTA0 3 63 0 
+DELTA29 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 3
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 3
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 3
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 3
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 3
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 2
+DELTA30 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 2
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 2
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 2
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 2
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 2
+DELTA30 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 1
+DELTA30 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 1
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 1
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 1
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 1
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 1
+DELTA60 Control Change [01ch] : VariableEffect( MainVolume[MSB] ) / 0
+DELTA0 Control Change [02ch] : VariableEffect( MainVolume[MSB] ) / 0
+DELTA0 Control Change [03ch] : VariableEffect( MainVolume[MSB] ) / 0
+DELTA0 Control Change [04ch] : VariableEffect( MainVolume[MSB] ) / 0
+DELTA0 Control Change [05ch] : VariableEffect( MainVolume[MSB] ) / 0
+DELTA0 Control Change [09ch] : VariableEffect( MainVolume[MSB] ) / 0
+DELTA0 Meta Ivent : End of Track

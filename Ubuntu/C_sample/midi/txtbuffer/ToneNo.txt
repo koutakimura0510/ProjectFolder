@@ -1,0 +1,3 @@
+static const uint8_t bokurano_musical[] = {
+    Sax, Sax, Sax, Sax, Strings, Piano, Brass, Guitar, Guitar, Bass, Organ, Strings, Organ, Guitar, SyntheSax, SyntheSax, 
+};

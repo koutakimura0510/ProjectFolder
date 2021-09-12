@@ -1,0 +1,196 @@
+/*
+ * Create 2021/07/13
+ * Author koutakimura
+ * Editor VSCode ver1.57.1
+ * -
+ * アイテムと装備に関する説明文を管理するヘッダーファイル
+ */
+
+#ifndef item_msg_macro_h   /* prevent circular inclusions */
+#define item_msg_macro_h   /* by using protection macros */
+
+
+/*
+ * ver1. 2021/07/13
+ * バトル用アイテムのメッセージデータを管理
+ */
+#define ITEM_MSG0    ("「固定体力小回復」\n椛がよく注文するあんこが入ったお団子\nほのかな甘さで仕事の疲れも吹き飛ぶぞ")
+#define ITEM_MSG1    ("「固定体力中回復」\n小町がよく注文する笹が練りこまれた団子\n仕事をさぼった日に買っていくらしい\n映姫に渡すと機嫌がいいだとか")
+#define ITEM_MSG2    ("「固定体力大回復」\n女苑がよく注文する金粉が散りばめられた団子\n腹を空かした姉のために買っていくらしい")
+#define ITEM_MSG3    ("「固定体力超回復」\nあまりの旨さに食べたら死んでしまうらしい\n幽々子が好んで食べている")
+#define ITEM_MSG4    ("「割合体力小回復」\nアリスの焼き加減を失敗したクッキー\nもはやクッキーと呼べる代物ではないが\n私は試されているのか・・・？")
+#define ITEM_MSG5    ("「割合体力中回復」\nアリスに振られてしまった現実に打ちのめ\nされながらも、手作りクッキーが食べれるなら\n良いかと思う今日この頃")
+#define ITEM_MSG6    ("「割合体力大回復」\nバレンタインデーにアリスからクッキーを貰った\n貰う時に何時もと様子が違っていた\n手紙付きだったので帰ってから読んでみよう")
+#define ITEM_MSG7    ("「状態異常回復」\n魔法の森で取れたキノコ\n魔理沙「毒を以て毒を制す、だぜ」")
+#define ITEM_MSG8    ("「蘇生」\n永琳お手製の活力剤\n倒れてもこれを飲めば元気もりもり")
+#define ITEM_MSG9    ("「全体蘇生」\n蓬莱の薬によく似たドリンク\n似ているだけで飲んでも平気なはず")
+#define ITEM_MSG10   ("「ＳＰ小回復」\n今日はずっとお腹が痛いわ\n昨日飲んだアレのせいかしら\n早く人並みの生活がしたいわね\n")
+#define ITEM_MSG11   ("「ＳＰ中回復」\n居候に頼んで井戸を作ってもらったわ\nこれでお腹を壊さずに済むと思ったけれど\nそうそう上手くはいかないわね")
+#define ITEM_MSG12   ("「ＳＰ大回復」\n居候の案で井戸にろ過装置？とかいうのを付けたわ\n透き通った流水が作れるのよ\n人生で一番感動したかもしれないわね")
+#define ITEM_MSG13   ("「ＳＰ超回復」\n居候の瓢箪に天然水を入れてお神酒を作ったの\n素敵な居候との出会いに感謝しなくちゃね")
+#define ITEM_MSG14   ("「防御力上昇」\n河童の化学は世界一！\n攻撃なんて痛くないよ！")
+#define ITEM_MSG15   ("「魔防力上昇」\n河童の化学は世界一！\n魔法なんて怖くないよ！")
+#define ITEM_MSG16   ("「絶対防御」\nこれを購入されたということは入信される\nということですね！\nでしたらまずは朝７時に本殿に\n来ていただいて、それからそれから～・・・")
+#define ITEM_MSG17   ("「必ず逃走」\nＢＧＮ・ロマンチック逃避行")
+#define ITEM_MSG18   ("「攻撃力上昇」\nその破壊力\n正に鬼神の如し")
+#define ITEM_MSG19   ("「バーサク」\nあたしゃ別に酔ってないよ？\nこの状態が正常って訳さ！")
+#define ITEM_FOUND   ("まだ見ぬ道具が世界のどこかにあるはずだ")
+
+
+/*
+ * ver1. 2021/07/13
+ * 武器のアイテムメッセージデータを管理
+ */
+#define WEAPON_MSG0		("よくある鉄でできた剣\nこれといった特徴がない")
+#define WEAPON_MSG1		("凄く曲がっているだけで鉄の剣とあまり変わらない")
+#define WEAPON_MSG2		("長い剣だ\n物干しざおに使えそう")
+#define WEAPON_MSG3		("強そうな剣\n城の騎士が好んで使う")
+#define WEAPON_MSG4		("火の力を宿す剣\nなんかかっこいい")
+#define WEAPON_MSG5		("必ず弱点を突くことができる\nとんでもねぇ業物")
+#define WEAPON_MSG6		("竜の鱗を引き裂く魔界の剣\n魔界ってどこにあるん？")
+#define WEAPON_MSG7		("名刀のうちの一本\n圧倒的攻撃力で敵を蹴散らす")
+#define WEAPON_MSG8		("名刀のうちの一本\n圧倒的攻撃力で敵を蹴散らす")
+#define WEAPON_MSG9		("この世のすべての名刀・業物を超越した\nネーミングセンス以外は究極の刀\nわちき頑張ったよ！")
+#define WEAPON_MSG10	("持ち主が正しい心をもったため\n真の力を引き出すことに成功した\nその力は天候を操り、大地を切り裂く")
+#define WEAPON_MSG11	("食料の解体によく使われるナイフ\n戦いには向いてない")
+#define WEAPON_MSG12	("バターが付着したナイフ\nいい匂いがする")
+#define WEAPON_MSG13	("名前がポイズンだけど相手を毒にすることができない\n名前負けしてるナイフ")
+#define WEAPON_MSG14	("暗殺者が好んで使うダガー\n闇夜に舞い散る、鮮血の一閃")
+#define WEAPON_MSG15	("埋め合わせで適当に作った武器の一つ\nだからこれといった特徴はない")
+#define WEAPON_MSG16	("氷の力を宿すナイフ、夏場は重宝しそう")
+#define WEAPON_MSG17	("火の力を宿す短剣\n灼熱の力で相手を焼き尽くす")
+#define WEAPON_MSG18	("竜の鱗を引き裂く魔界の短剣\nドラゴンってどこにいるん？")
+#define WEAPON_MSG19	("どっかの神が使用していたもの\n遠慮なく使わせてもらおう")
+#define WEAPON_MSG20	("時間を超越しそうな短剣\n素早い動きで敵を翻弄する")
+#define WEAPON_MSG21	("一振りすれば木々が芽吹き\n二振りすれば黄金色の世界が広がる\n秋を宿す刀")
+#define WEAPON_MSG22	("夜のスピアが火を噴くぜ")
+#define WEAPON_MSG23	("強そうな槍\n城の騎士が好んで使う")
+#define WEAPON_MSG24	("刺した獲物をにがさない")
+#define WEAPON_MSG25	("雷の力を宿す槍\n触るとビリビリする")
+#define WEAPON_MSG26	("炎の力を宿す槍\nお嬢ちゃん、俺に触ると火傷しちまうぜ")
+#define WEAPON_MSG27	("魔界からやってきた武器の一つ\nおぞましい力を感じる")
+#define WEAPON_MSG28	("トライデントと役割が被ってる\n名前は偉そうだけどこれといった特徴はない")
+#define WEAPON_MSG29	("三槍のうちの一つ\nとんでもない力を秘めている")
+#define WEAPON_MSG30	("三槍のうちの一つ\n神をも恐れぬ力を秘めている")
+#define WEAPON_MSG31	("三槍のうちの一つ\n全てを滅さんとする力を秘めている")
+#define WEAPON_MSG32	("とんでもねぇものができちまった・・・\nこいつは世界を滅ぼす力を持っていやがるが、\n嬢ちゃんなら世のために使ってくれるだろうよ")
+#define WEAPON_MSG33	("きこりがよく使うハンマー\n日曜大工はなんでもござれ")
+#define WEAPON_MSG34	("森で拾ったハンマー\n結構頑丈")
+#define WEAPON_MSG35	("大地の力を宿すハンマー\n自然のいい香りがする")
+#define WEAPON_MSG36	("こいつで叩くとお金の音がする\nチャリンチャリンうるさい")
+#define WEAPON_MSG37	("氷の力を宿すハンマー\nひんやりしてて気持ちがいい")
+#define WEAPON_MSG38	("火の力を宿すハンマー\n燃え盛る魂を相手にぶつけていけ")
+#define WEAPON_MSG39	("名前が物騒\n神に対する特攻は凄まじい")
+#define WEAPON_MSG40	("雷の化身の力を宿したハンマー")
+#define WEAPON_MSG41	("とうもころしに感情が宿ってできた\nオリハルコンよりも硬い材質だ")
+#define WEAPON_MSG42	("裁判官がカンカンするやつ\n名前がわからないから勝手につけてみた")
+#define WEAPON_MSG43	("超巨大ハンマー\n圧倒的攻撃力で敵をねじ伏せろ！")
+#define WEAPON_MSG44	("一度たたけば実りの大地になり\n二度たたけば豊穣になる\n大地に幸福をもたらすこづち")
+#define WEAPON_MSG45	("八百万の神々の力が宿った御柱\n彼女の名は未来栄光語り継がれるだろう")
+#define WEAPON_MSG46	("幽香が普段使っている日傘\n花の香りがする")
+#define WEAPON_MSG47	("砂浜にささってるやつ\n海はカップルの巣窟だぞ")
+#define WEAPON_MSG48	("貴女の肩\n傘の中棒\n心の距離")
+#define WEAPON_MSG49	("紅色に染まった傘\nお嬢が好みそうだ")
+#define WEAPON_MSG50	("これといった特徴がない！\n無駄にＲＯＭ容量をとる傘")
+#define WEAPON_MSG51	("ヒスイ色の傘\n高く売れそうだぞ")
+#define WEAPON_MSG52	("銀色に輝く傘\nとても頑丈で壊れにくい")
+#define WEAPON_MSG53	("ハートマークが描かれた傘\nラブラブな雰囲気がする")
+#define WEAPON_MSG54	("血塗られた傘という異名を持つ\n")
+#define WEAPON_MSG55	("伝説のオリハルコンでできた傘\n超頑丈！")
+#define WEAPON_MSG56	("付喪神と使い手の心が一つになった証\n見てるこっちが赤くなる")
+#define WEAPON_MSG57	("何の変哲もない杖")
+#define WEAPON_MSG58	("森の素材を使用して作られた杖")
+#define WEAPON_MSG59	("魔法使いが好んで使う杖だ\n頭が良くなった気がする")
+#define WEAPON_MSG60	("ぺろぺろキャンディみたいな杖\n甘い香りがする")
+#define WEAPON_MSG61	("火の力を宿す杖\n紅蓮の業火に焼かれてしまえ！")
+#define WEAPON_MSG62	("魔女が禁句を犯した\n禁術は世界の理に反する")
+#define WEAPON_MSG63	("死神が好んでしようしていたそうな\n手荷物と呪われた気分になるぞ")
+#define WEAPON_MSG64	("かつて世界に深淵に挑もうとした精霊が使用した杖")
+#define WEAPON_MSG65	("万物の知識を有する賢者が使用していた杖の模倣品\n")
+#define WEAPON_MSG66	("かつて聖女が使用していた杖\n魔王との戦いに敗れた彼女の魂が宿る")
+#define WEAPON_MSG67	("その杖の輝きは銀河系にも届くといわれる")
+#define WEAPON_MSG68	("彼女の思考の深さは神をも凌駕し\nこの世の理さえも悟るだろう\nさとりの黒歴史～第１５章より～")
+#define WEAPON_FOUND	("まだ見ぬ武器が世界のどこかにあるはずだ")
+
+
+
+/*
+ * ver1. 2021/07/14
+ * 防具のアイテムメッセージを管理
+ */
+#define ARMOR_MSG0		("木でできた村娘がよくつけるヘアピンだ")
+#define ARMOR_MSG1		("森を感じられる帽子")
+#define ARMOR_MSG2		("大地の力を宿す帽子")
+#define ARMOR_MSG3		("水色の可愛らしいリボン\nリボンっていいよね")
+#define ARMOR_MSG4		("フルーティな香りがする")
+#define ARMOR_MSG5		("大人の雰囲気を出すのに最適だ")
+#define ARMOR_MSG6		("氷の力を宿す帽子だ\nひんやりしてて気持ちがいい")
+#define ARMOR_MSG7		("火の力を宿す帽子だ\n凄いあったかい")
+#define ARMOR_MSG8		("全員頭巾が似合いそうだね\n")
+#define ARMOR_MSG9		("凄く豪華な髪飾りだ")
+#define ARMOR_MSG10		("天子が普段被ってる帽子だ\n桃のいい香りがする！")
+#define ARMOR_MSG11		("月人が良くつけてるウサ耳\nウサ耳っていいよね")
+#define ARMOR_MSG12		("クマクマクマ\nクマックマ、クマクマー！")
+#define ARMOR_MSG13		("顔を隠す頭巾\n暗殺行動に優れる")
+#define ARMOR_MSG14		("自分の一押しに付けてあげよう")
+#define ARMOR_MSG15		("可愛らしいリボンだ")
+#define ARMOR_MSG16		("可愛らしい帽子だ")
+#define ARMOR_MSG17		("大人につければ色気が出る\n子供に付ければ無邪気さが増すぞ")
+#define ARMOR_MSG18		("高価なルビーが施された冠\n何か特殊な力を秘めていそう")
+#define ARMOR_MSG19		("知性が上がるリボンだ")
+#define ARMOR_MSG20		("知性が上がる帽子だ")
+#define ARMOR_MSG21		("白黒の魔法使いがよく被る帽子\n何か特殊な力を秘めていそう")
+#define ARMOR_MSG22		("紅白巫女のリボン\n何か特殊な力を秘めていそう")
+#define ARMOR_MSG23		("ごうかけんらんなお姫様のティアラ\n何か特殊な力を秘めていそう")
+#define ARMOR_MSG24		("黄金でできたゴージャスなティアラ\n何か特殊な力を秘めていそう")
+#define ARMOR_MSG25		("お姉ちゃんが編んでくれた帽子\nお姉ちゃんは恥ずかしがり屋だけど、\n気持ちはちゃんと伝わってるよ！")
+#define ARMOR_MSG26		("穣子が縫ってくれたリボン\n普段は照れくさくて言えないけれど\nいつもありがとうね")
+#define ARMOR_MSG27		("戦いの神に贈られる鉢巻\n歴代の魂が刻まれている")
+#define ARMOR_MSG28		("幽香の麦わら帽子\n太陽の力が備わっている\n思いの強さで輝きが増す")
+#define ARMOR_MSG29		("小傘が作った花冠\n何時までも枯れることはない\n思いの強さで色が変わる")
+#define ARMOR_MSG30		("とんでもねぇものができちまった・・・\nこいつはお嬢の可愛さを２倍、いや３倍にしちまう\nカリスマを上げてくれと頼まれたが、\nそいつぁ無理な相談だったぜ")
+#define ARMOR_MSG31		("万年より封印されし力が解放されようとしている\n今こそ集い、そして道を切り開かん\nさとりの黒歴史～第１２章より～")
+#define ARMOR_MSG32		("王女のティアラを天子好みに改良したもの\n所々に桃がちりばめられている")
+#define ARMOR_FOUND	    ("まだ見ぬ帽子が世界のどこかにあるはずだ")
+
+
+/*
+ * ver1. 2021/07/14
+ * アクセサリのアイテムメッセージを管理
+ */
+#define AMULET_MSG1		("炎属性に耐性ができる\n")
+#define AMULET_MSG2		("氷属性に耐性ができる\n")
+#define AMULET_MSG3		("雷属性に耐性ができる\n")
+#define AMULET_MSG4		("土属性に耐性ができる\n")
+#define AMULET_MSG5		("神属性に耐性ができる\n")
+#define AMULET_MSG6		("霊属性に耐性ができる\n")
+#define AMULET_MSG7		("ちからが上がる\n")
+#define AMULET_MSG8		("みのまもりが上がる\n")
+#define AMULET_MSG9		("まほう力が上がる\n")
+#define AMULET_MSG10	("すばやさが上がる\n")
+#define AMULET_MSG11	("まぼう力が上がる\n")
+#define AMULET_MSG12	("混乱に耐性ができる\n")
+#define AMULET_MSG13	("毒に耐性ができる\n")
+#define AMULET_MSG14	("バーサクに耐性ができる\n")
+#define AMULET_MSG15	("石化に耐性ができる\n")
+#define AMULET_MSG16	("まひに耐性ができる\n")
+#define AMULET_MSG17	("全ての能力値が上がる\n")
+#define AMULET_MSG18	("ちからが大幅に上がる\n")
+#define AMULET_MSG19	("みのまもりが大幅に上がる\n")
+#define AMULET_MSG20	("まほう力が大幅に上がる\n")
+#define AMULET_MSG21	("すばやさが大幅に上がる\n")
+#define AMULET_MSG22	("まぼう力が大幅に上がる\n")
+#define AMULET_MSG23	("わざのＳＰが少なくなる\n")
+#define AMULET_MSG24	("みのまもり・まぼう力が上がる\n")
+#define AMULET_MSG25	("ちから・まほう力・すばやさが上がる\n")
+#define AMULET_MSG26	("全ての能力値があがる\n")
+#define AMULET_MSG27	("ちからとまほう力が上がる\n")
+#define AMULET_MSG28	("みのまもりとすばやさが上がる\n")
+#define AMULET_MSG29	("戦闘開始時にリジェネになる\n")
+#define AMULET_MSG30	("全ての物理攻撃に耐性ができる\n")
+#define AMULET_MSG31	("全ての状態異常に耐性ができる\n")
+#define AMULET_MSG32	("全ての属性に耐性ができる\n")
+#define AMULET_FOUND    ("まだ見ぬ宝飾が世界のどこかにあるはずだ")
+
+
+#endif
