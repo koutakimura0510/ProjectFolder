@@ -125,6 +125,7 @@ void put_mapchip(GameWrapper *const game)
 
 	/* マップチップの開始pixelを設定 */
 	XMapchip_Set_xstart_pos(&ChipInstance, game->mapchip.xstart_pos);
+	XMapchip_Set_ystart_pos(&ChipInstance, game->mapchip.ystart_pos);
 
 	/* 透過データを設定 */
 	XMapchip_Set_alpha(&ChipInstance, game->mapchip.alpha);
