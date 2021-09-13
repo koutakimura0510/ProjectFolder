@@ -116,16 +116,18 @@ void put_mapchip(GameWrapper *const game)
 	XMapchip_Set_dstin(&ChipInstance, game->mapchip.dstin);
 	XMapchip_Set_dstout(&ChipInstance, game->mapchip.dstout);
 
-	/* 描画サイズの設定 */
+	/* マップチップの描画サイズの設定 */
 	XMapchip_Set_mapchip_maxwidth(&ChipInstance, game->mapchip.maxwidth);
 	XMapchip_Set_mapchip_maxheight(&ChipInstance, game->mapchip.maxheight);
 	XMapchip_Set_mapchip_draw_xsize(&ChipInstance, game->mapchip.draw_xsize);
 	XMapchip_Set_mapchip_draw_ysize(&ChipInstance, game->mapchip.draw_ysize);
-	XMapchip_Set_frame_size(&ChipInstance, game->mapchip.frame_size);
 
 	/* マップチップの開始pixelを設定 */
 	XMapchip_Set_xstart_pos(&ChipInstance, game->mapchip.xstart_pos);
 	XMapchip_Set_ystart_pos(&ChipInstance, game->mapchip.ystart_pos);
+
+	/* 画面フレームの大きさ設定 */
+	XMapchip_Set_frame_size(&ChipInstance, game->mapchip.frame_size);
 
 	/* 透過データを設定 */
 	XMapchip_Set_alpha(&ChipInstance, game->mapchip.alpha);
@@ -230,6 +232,17 @@ void color_mapchip(GameWrapper *const game)
 
 /*
  * 指定アドレスの領域をフレームバッファ領域にコピー
+ * ddr_copyの領域をddr_updateにコピーする
+ */
+/**
+ * @brief  指定アドレスの領域を指定アドレスの領域にコピーする
+ * @note   
+ * @param  ddr_copy: コピー元のDRAMのアドレス
+ * @param  ddr_update: コピー先のDRAMのアドレス
+ * @param  width: コピーのxサイズ
+ * @param  height: コピーのyサイズ
+ * @param  video_width: 画面の横サイズ
+ * @retval None
  */
 void framebuffer_copy(int ddr_copy, int ddr_update, int width, int height, int video_width)
 {

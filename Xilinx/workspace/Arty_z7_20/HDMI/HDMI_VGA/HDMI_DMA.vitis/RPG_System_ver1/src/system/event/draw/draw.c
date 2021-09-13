@@ -71,7 +71,7 @@ void workarea_update(GameWrapper *const game, uint32_t draw_pos)
 /**
  * @brief  背景の描画を行う
  * @note   
- * @param  srcin: 背景の描画に使用する画像データのアドレス 
+ * @param  srcin: DDRメモリの書き込み開始アドレスを指定
  * @retval None
  */
 void background_draw(GameWrapper *const game, uint32_t srcin)

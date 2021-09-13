@@ -174,13 +174,15 @@ static void barrage_minigame_title(GameWrapper *const game)
 }
 
 
-/*
- * ver2. 2021/06/25
- * 選択データを構造体に変更、minigame_struct.hに定義
- * 特定のキー入力が行われた場合に、キーとIDを参照し一致した行のデータを取得
+/**
+ * @brief  キャラクターの選択を行い、選択後に次の状態の設定を行う
  * 
- * ver1
- * キャラクター選択モードの管理
+ * @note   現在のフレームバッファ領域にミニゲームの画面の描画を行った後に、バックアップ領域に描画データをコピーしておく
+ *         ミニゲーム中はマップやバックグラウンドの画像データの変更は行わないため、バックアップ領域のデータをコピーだけすればよく
+ *         処理速度の改善を行うことができる
+ * 
+ * @param  game: 
+ * @retval None
  */
 static void barrage_player_select(GameWrapper *const game)
 {
@@ -189,15 +191,17 @@ static void barrage_player_select(GameWrapper *const game)
 
 	if (SW_A == cmd_key(game))
 	{
-		barrage_character_update(game, game->cmd.cursol.y);
-
 		/* 初期化処理 */
+		barrage_character_update(game, game->cmd.cursol.y);
 		file_sound_load(fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, game->cmd.cursol.y, MINIGAME_SUB_MEMBER_SOUND_ID));
 		bgm_update(game, fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, game->cmd.cursol.y, MINIGAME_SUB_MEMBER_BGM_ID), SOUND_CH_BGM_WORK);
 		barrage_unit_reset(game);
 		animation_reset();
 		barrage_object_reset(game);
 		shooting_reset();
+		background_draw(game, DRAM_BACKGROUND_ADDR_BASE);
+		standerd_game(game);
+		framebuffer_copy(game->conf.work.adr, DRAM_BACKUP_FBUF_ADDR_BASE, VIDEO_WIDTH, VIDEO_HEIGHT, VIDEO_WIDTH);
 		game->conf.display.uncommon_window = 0;
 		game->conf.display.sub_state = MINIGAME_PLAYING_ID;
 	}
@@ -220,12 +224,11 @@ static void barrage_game_play(GameWrapper *const game)
 		barrage_bomb_use(game, sw);
 	}
 
-	background_draw(game, DRAM_BACKGROUND_ADDR_BASE);
-	standerd_game(game);
+	framebuffer_copy(DRAM_BACKUP_FBUF_ADDR_BASE, game->conf.work.adr, VIDEO_WIDTH, VIDEO_HEIGHT, VIDEO_WIDTH);
 	player_draw(game);
+	barrage_score_draw(game, DRAW_SCORE_ID);
 	barrage_bomb_draw(game);
 	barrage_time_draw(game);
-	barrage_score_draw(game, DRAW_SCORE_ID);
 	bullet_draw(game);
 	realtime_effect_draw(game, EFFECT_STEP_ON_ID);
 	realtime_effect_draw(game, EFFECT_BOMB_ID);
@@ -246,8 +249,7 @@ static void barrage_game_play(GameWrapper *const game)
  */
 static void barrage_result(GameWrapper *const game)
 {
-	background_draw(game, DRAM_BACKGROUND_ADDR_BASE);
-	standerd_game(game);
+	framebuffer_copy(DRAM_BACKUP_FBUF_ADDR_BASE, game->conf.work.adr, VIDEO_WIDTH, VIDEO_HEIGHT, VIDEO_WIDTH);
 	player_draw(game);
 	barrage_score_draw(game, DRAW_RESULT_ID);
 
@@ -424,8 +426,8 @@ static void barrage_time_draw(GameWrapper *const game)
     game->mapchip.xstart_pos = 0;
     game->mapchip.ystart_pos = 0;
     game->mapchip.frame_size = VIDEO_WIDTH;
-    game->mapchip.alpha		 = COLOR_ALPHA_MAX;
-	game->mapchip.cut_color  = COLOR_WHITE;
+    game->mapchip.alpha		 = 255;
+    game->mapchip.cut_color  = COLOR_WHITE;
 
     for (uint8_t j = 0; j < 2; j++)
     {
@@ -436,13 +438,13 @@ static void barrage_time_draw(GameWrapper *const game)
             game->mapchip.dstout     = adr + game->conf.work.adr;
             game->mapchip.id = time % 10;
             time /= 10;
-			put_mapchip(game);
+            put_mapchip(game);
         }
     }
     game->mapchip.dstin  = TIME_PERIOD_DRAW_POS + DRAM_BACKUP_FBUF_ADDR_BASE;
     game->mapchip.dstout = TIME_PERIOD_DRAW_POS + game->conf.work.adr;
     game->mapchip.id = MAPCCHIP_PERIOD;
-	put_mapchip(game);
+    put_mapchip(game);
 }
 
 
@@ -489,7 +491,7 @@ static void barrage_score_draw(GameWrapper *const game, uint8_t mode)
         game->mapchip.id = score % 10;
         score /= 10;
         game->mapchip.dstin  = adr + DRAM_BACKUP_FBUF_ADDR_BASE;
-        game->mapchip.dstout = adr + game->conf.work.adr;
+		game->mapchip.dstout = adr + game->conf.work.adr;
 		put_mapchip(game);
     }
 }
