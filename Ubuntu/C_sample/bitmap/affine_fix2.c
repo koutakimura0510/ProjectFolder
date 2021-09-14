@@ -137,30 +137,34 @@ static void affine_reverse(AffineConfig *const affine)
 		affine->n--;
 	}
 
+    int32_t result_ab = (affine->m * affine->ia) - (affine->n * affine->ib);
+    int32_t result_cd = (affine->m * affine->ic) - (affine->n * affine->id);
+    int32_t result_width  = (BITMAP_WIDTH  >> 1);
+    int32_t result_height = (BITMAP_HEIGHT >> 1);
+    int32_t result_width_fix  = ((result_width  << FIX_POS_12) + NEAREST_FIX) - result_ab;
+    int32_t result_height_fix = ((result_height << FIX_POS_12) + NEAREST_FIX) - result_cd;
+
 	for (int32_t y = 0; y < BITMAP_HEIGHT; y++)
 	{
-		int affine_y = y - (BITMAP_HEIGHT >> 1);
+	    int32_t result_yb = ((y - result_height) * affine->ib) + result_width_fix;
+        int32_t result_yd = ((y - result_height) * affine->id) + result_height_fix;
 		
 		for (int32_t x = 0; x < BITMAP_WIDTH; x++)
 		{
-			int32_t affine_x = x - (BITMAP_WIDTH >> 1);
-			int32_t rx = (affine_x * affine->ia) + (affine_y * affine->ib) - (affine->m * affine->ia) - (affine->n * affine->ib) + ((BITMAP_WIDTH >> 1) << FIX_POS_12);
-			int32_t ix = (rx + NEAREST_FIX) >> FIX_POS_12;
+			int32_t rx  = (((x - result_width) * affine->ia) + result_yb) >> FIX_POS_12;
+			int32_t ry  = (((x - result_width) * affine->ic) + result_yd) >> FIX_POS_12;
 
-			if ((ix < 0) || (BITMAP_WIDTH <= ix))	/* x軸のインデックスをオーバーしていたら書き込みを行わない */
+			if ((rx < 0) || (BITMAP_WIDTH <= rx))	/* x軸のインデックスをオーバーしていたら書き込みを行わない */
 			{
 				continue;
 			}
 
-			int32_t ry = (affine_x * affine->ic) + (affine_y * affine->id) - (affine->m * affine->ic) - (affine->n * affine->id) + ((BITMAP_HEIGHT >> 1) << FIX_POS_12);
-			int32_t iy = (ry + NEAREST_FIX) >> FIX_POS_12;
-
-			if ((iy < 0) || (BITMAP_HEIGHT <= iy))	/* y軸のインデックスをオーバーしていたら書き込みを行わない */
+			if ((ry < 0) || (BITMAP_HEIGHT <= ry))	/* y軸のインデックスをオーバーしていたら書き込みを行わない */
 			{
 				continue;
 			}
 
-			change[y][x] = bitmap[iy][ix];
+			change[y][x] = bitmap[ry][rx];
 		}
 	}
 
