@@ -4,6 +4,7 @@
 
 #include "../wrapper/game_wrapper.h"
 #include "minigame.h"
+#include "minigame_macro"
 #include "minigame_struct.h"
 
 #ifdef MYDEBUG
@@ -157,6 +158,7 @@ static void barrage_minigame_title(GameWrapper *const game)
 	{
 	case SW_A:
 		game->conf.display.sub_state = MINIGAME_UNIT_SELECT_ID;
+		game->conf.display.drawtype  = DISPLAY_FIELD_CENTER_DRAW;
 		bgm_update(game, SOUND_ID_CMD_BUTTON, SOUND_CH_KEY_WORK);
 		break;
 
@@ -188,6 +190,7 @@ static void barrage_player_select(GameWrapper *const game)
 {
 	patblt(game->conf.work.adr, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT, COLOR_DARK_BLUE);
 	barrage_unitselect_draw(game);
+	cursol_draw(game, MINIGAME_CONFIG_CURSOL_POS, SIZE_UNIT_HEIGHT, CURSOL_TYPE_DEFAULT_DRAW);
 
 	if (SW_A == cmd_key(game))
 	{
@@ -202,8 +205,8 @@ static void barrage_player_select(GameWrapper *const game)
 		background_draw(game, DRAM_BACKGROUND_ADDR_BASE);
 		standerd_game(game);
 		framebuffer_copy(game->conf.work.adr, DRAM_BACKUP_FBUF_ADDR_BASE, VIDEO_WIDTH, VIDEO_HEIGHT, VIDEO_WIDTH);
-		game->conf.display.uncommon_window = 0;
 		game->conf.display.sub_state = MINIGAME_PLAYING_ID;
+		game->conf.display.uncommon_window = 0;
 	}
 }
 
@@ -235,12 +238,13 @@ static void barrage_game_play(GameWrapper *const game)
 
 	if (false == realtime_effect_draw(game, EFFECT_PITYUN_ID))
 	{
-		game->conf.display.sub_state = MINIGAME_RESULT_DRAW_ID;
-		barrage_unit_reset(game);
 		bgm_stop();
 		bgm_update(game, SOUND_ID_ENDING, SOUND_CH_BGM_WORK);
+		barrage_unit_reset(game);
+		game->conf.display.sub_state = MINIGAME_RESULT_DRAW_ID;
 	}
 }
+
 
 /**
  * @brief  リザルトモードの描画処理
@@ -282,8 +286,6 @@ static void barrage_unit_reset(GameWrapper *const game)
 {
 	game->conf.map.back				= DRAM_MAPDATA_ADDR_START;
 	game->conf.map.obj				= DRAM_MAPDATA_ADDR_START;
-    game->conf.display.system       = SYSTEM_MINIGAME_WINDOW;
-    game->conf.display.drawtype		= DISPLAY_FIELD_CENTER_DRAW;
     game->unit.pos.fieldy      		= 0;
     game->unit.pos.fieldx      		= 0;
     game->unit.pos.unitx       		= VIDEO_WIDTH >> 1;
@@ -344,10 +346,10 @@ static void barrage_unitselect_draw(GameWrapper *const game)
 		game->mapchip.frame_size = VIDEO_WIDTH;
 		game->mapchip.alpha		 = 255;
 		game->mapchip.id 	 	 = chip[i];
-		game->mapchip.dstin  	 = MINIGAME_UNIT_XPOS + (MAPCHIP_WIDTH * (MAX_V_WIDTH * i)) + game->conf.work.adr;
+		game->mapchip.dstin  	 = MINIGAME_CONFIG_UNIT_XPOS + (MINIGAME_CONFIG_UNIT_YPOS * i) + game->conf.work.adr;
 		game->mapchip.dstout 	 = game->mapchip.dstin;
         png_mapchip(game);
-		font_dram_draw(game, MINIGAME_MSG_XPOS, MINIGAME_MSG_YPOS + (i << MAPCHIP_SHIFT), MEMORY_MINIGAME_MSG_ID, i, MINIGAME_SUB_MEMBER_MSG, COLOR_WHITE);
+		font_dram_draw(game, MINIGAME_CONFIG_MSG_XPOS, MINIGAME_CONFIG_MSG_YPOS + (i << MAPCHIP_SHIFT), MEMORY_MINIGAME_MSG_ID, i, MINIGAME_SUB_MEMBER_MSG, COLOR_WHITE);
     }
 }
 
