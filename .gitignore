@@ -17,36 +17,27 @@
 *.jpg
 *.bmp
 
-# 
 # TohoProjectのworkspaceのみgitに反映させる
-# 
 Xilinx/*
 !Xilinx/workspace/
-
 Xilinx/workspace/*
 !Xilinx/workspace/Arty_z7_20/
-
 Xilinx/workspace/Arty_z7_20/*
 !Xilinx/workspace/Arty_z7_20/HDMI/
-
 Xilinx/workspace/Arty_z7_20/HDMI/*
 !Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/
-
 Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/*
 !Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/
-
 Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/*
 !Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RPG_System_ver1/
 
+# Vitis_HLSの画像処理回路は反映させる
 !Xilinx/workspace/Arty_z7_20/Vitis_HLS/
-
 Xilinx/workspace/Arty_z7_20/Vitis_HLS/*
 !Xilinx/workspace/Arty_z7_20/Vitis_HLS/Graphic/
 
 
-# 
 # Ubuntuディレクトリは全てのファイルを反映させる
-# 
 # Ubuntu/
 Excel/
 Videos/
