@@ -8,13 +8,10 @@
 
 
 /*
- * メッセージの表示箇所
+ * タイトルの選択メッセージの表示箇所
  */
 #define TITLE_MSG_XPOS      (160)
 #define TITLE_MSG_YPOS      (((VIDEO_HEIGHT >> 1) - SIZE_FONT_SJIS_HEIGHT) * MAX_V_WIDTH)
-#define MINIGAME_UNIT_XPOS	((MINIGAME_MSG_XPOS - MAPCHIP_WIDTH) << RGB_BYTE_SHIFT)
-#define MINIGAME_MSG_XPOS   (220)
-#define MINIGAME_MSG_YPOS   (8)
 
 
 /*
