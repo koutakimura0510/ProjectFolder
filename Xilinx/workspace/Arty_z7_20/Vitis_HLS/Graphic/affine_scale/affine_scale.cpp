@@ -21,44 +21,13 @@
  * @retval None
  */
 #define FIX_POS_12   (12)
-#define NEAREST_FIX  ((5 << 12) / 10)
+#define NEAREST_FIX  (2048) // (5 << 12) / 10
 
 
 /* 型の定義 */
 typedef ap_uint<8>   u8;
 typedef ap_uint<32>  u32;
 typedef ap_int<32>   i32;
-
-
-/**
- * @brief  アフィン変換の座標取得処理
- * @note   
- * @param  x: ループのxの値
- * @param  mapchip_width: 画像データの横サイズ
- * @param  mapchip_height: 画像データ縦サイズ
- * @param  ia: 
- * @param  ic: 
- * @param  result_yb: 
- * @param  result_yd: 
- * @retval 
- */
-void get_affine_xy(
-    i32 *buff,
-    i32 x,
-    i32 mapchip_width,
-    i32 mapchip_height,
-    i32 ixa,
-    i32 ixc,
-    i32 result_yb,
-    i32 result_yd
-)
-{
-    i32 affine_x = x - (mapchip_width >> 1);
-    i32 rx  = (affine_x * ixa) + result_yb + ((mapchip_width >> 1) << FIX_POS_12);
-    i32 ry  = (affine_x * ixc) + result_yd + ((mapchip_height >> 1) << FIX_POS_12);
-    buff[0]  = (rx + NEAREST_FIX) >> FIX_POS_12;
-    buff[1]  = (ry + NEAREST_FIX) >> FIX_POS_12;
-}
 
 /**
  * @brief  スケール変換の座標データを計算し色データを取得
@@ -106,7 +75,7 @@ void affine_scale(
     u32 mapchip_draw_ysize, /* マップチップの書き込みpixel数 */
 	u32 xstart_pos,	        /* マップチップのx開始位置 */
     u32 ystart_pos,	        /* マップチップのy開始位置 */
-    u32 frame_size,         /* 書き込みを行うフレームバッファの横幅 */
+    i32 frame_size,         /* 書き込みを行うフレームバッファの横幅 */
     u8 alpha,               /* 合成色の透過値、255で透過を行わない */
     u32 id,                 /* マップチップのID */
     i32 a,                  /* 線形変換a */
@@ -140,42 +109,34 @@ void affine_scale(
 		n--;
 	}
 
-    i32 result_ab = (m * ixa) - (n * ixb);
-    i32 result_cd = (m * ixc) - (n * ixd);
-    i32 src_xy[2];
-    i32 dst_xy[2];
+    i32 result_width  = (mapchip_width >> 1);
+    i32 result_height = (mapchip_height >> 1);
+    i32 result_width_fix  = ((result_width  << FIX_POS_12) + NEAREST_FIX) - ((m * ixa) - (n * ixb));
+    i32 result_height_fix = ((result_height << FIX_POS_12) + NEAREST_FIX) - ((m * ixc) - (n * ixd));
 
     height_loop:for (i32 y = 0; y < mapchip_draw_ysize; y++)
     {
-        i32 affine_y  = y - (mapchip_maxheight >> 1);
-        i32 result_yb = (affine_y * ixb) - result_ab;
-        i32 result_yd = (affine_y * ixd) - result_cd;
+        i32 result_yb = ((y - result_height) * ixb) + result_width_fix;
+        i32 result_yd = ((y - result_height) * ixd) + result_height_fix;
+
         src_loop:for (i32 x = 0; x < mapchip_draw_xsize; x++)
         {
-            get_affine_xy(src_xy, x, mapchip_width, mapchip_height, ixa, ixc, result_yb, result_yd);
+            i32 rx  = (((x - result_width) * ixa) + result_yb) >> FIX_POS_12;
+            i32 ry  = (((x - result_width) * ixc) + result_yd) >> FIX_POS_12;
 
-            if ((src_xy[0] < 0) || (mapchip_width <= src_xy[0]) || (src_xy[1] < 0) || (mapchip_height <= src_xy[1]))
+            if ((rx < 0) || (mapchip_width <= rx) || (ry < 0) || (mapchip_height <= ry))
             {
                 src[x] = 0x00000000;
             }
             else
             {
-                src[x] = srcin[chip + src_xy[0] + src_xy[1] * mapchip_width];
+                src[x] = srcin[chip + rx + ry * mapchip_width];
             }
         }
 
         dstin_loop:for (i32 x = 0; x < mapchip_draw_xsize; x++)
         {
-            get_affine_xy(dst_xy, x, mapchip_width, mapchip_height, ixa, ixc, result_yb, result_yd);
-
-            if ((dst_xy[0] < 0) || (mapchip_width <= dst_xy[0]) || (dst_xy[1] < 0) || (mapchip_height <= dst_xy[1]))
-            {
-                dst[x] = dstin[x + y * frame_size];
-            }
-            else
-            {
-                dst[x] = dstin[dst_xy[0] + dst_xy[1] * mapchip_width];
-            }
+            dst[x] = dstin[x + y * frame_size];
         }
 
         dstout_loop:for (i32 x = 0; x < mapchip_draw_xsize; x++)
