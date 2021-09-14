@@ -1,0 +1,10 @@
+<VitisHLS:BurstInfo>
+    <burst group="BURST_VERBOSE_MISSED" fe_name="AccessInCondBranchMissed" src_info="/tools/Xilinx/Vitis_HLS/2020.2/common/technology/autopilot/ap_int.h:324:19" msg_id="214-232" msg_severity="INFO" msg_body="Access load is in the conditional branch" resolution="214-232" ID="bb4.load.17" BundleName="copy" VarName="ddr_copy"/>
+    <burst group="BURST_VERBOSE_MISSED" fe_name="UnknownUnderlyingObjectMissed" src_info="/tools/Xilinx/Vitis_HLS/2020.2/common/technology/autopilot/ap_int.h:324:13" msg_id="214-117" msg_severity="INFO" msg_body="Cannot find or modify the underlying object pointed by getelementptr" ID="bb4.store.19" VarName="copy"/>
+    <burst group="BURST_VERBOSE_MISSED" fe_name="UnknownUnderlyingObjectMissed" src_info="/tools/Xilinx/Vitis_HLS/2020.2/common/technology/autopilot/ap_int.h:329:108" msg_id="214-117" msg_severity="INFO" msg_body="Cannot find or modify the underlying object pointed by getelementptr" ID="bb7.load.17" VarName="copy"/>
+    <burst group="BURST_VERBOSE_MISSED" fe_name="AccessInCondBranchMissed" src_info="/tools/Xilinx/Vitis_HLS/2020.2/common/technology/autopilot/ap_int.h:329:102" msg_id="214-232" msg_severity="INFO" msg_body="Access store is in the conditional branch" resolution="214-232" ID="bb7.store.19" BundleName="update" VarName="ddr_update"/>
+    <burst group="BURST_VERBOSE_MISSED" fe_name="CouldNotAnalyzeBoundsPatternMissed" src_info="" msg_id="214-252" msg_severity="INFO" msg_body="Cannot analyze the loop bounds of 'anonymous'" resolution="214-252"/>
+    <burst group="BURST_VERBOSE_MISSED" fe_name="CouldNotAnalyzeBoundsPatternMissed" src_info="" msg_id="214-252" msg_severity="INFO" msg_body="Cannot analyze the loop bounds of 'anonymous'" resolution="214-252"/>
+    <burst group="BURST_VERBOSE_MISSED" fe_name="CouldNotAnalyzeBoundsPatternMissed" src_info="" msg_id="214-252" msg_severity="INFO" msg_body="Cannot analyze the loop bounds of 'anonymous'" resolution="214-252"/>
+</VitisHLS:BurstInfo>
+

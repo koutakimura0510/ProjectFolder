@@ -1,0 +1,224 @@
+
+
+================================================================
+== Vitis HLS Report for 'Block_entry_proc_proc'
+================================================================
+* Date:           Tue Jun  1 15:08:03 2021
+
+* Version:        2020.2 (Build 3064766 on Wed Nov 18 09:12:47 MST 2020)
+* Project:        background_loop
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: zynq
+* Target device:  xc7z020-clg400-1
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  10.00 ns|  7.300 ns|     2.70 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |       11|       11|  0.110 us|  0.110 us|   11|   11|     none|
+    +---------+---------+----------+----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        N/A
+
+        * Loop: 
+        N/A
+
+============================================================
++ Verbose Summary: Synthesis Manager
+============================================================
+InlineROM: 1
+ExposeGlobal: 0
+============================================================
++ Verbose Summary: CDFG Model
+============================================================
+IsTopModel: 0
+ResetActiveHigh: 1
+IsCombinational: 2
+IsDatapathOnly: 0
+HasWiredReturn: 1
+HasMFsm: 0
+HasVarLatency: 1
+IsPipeline: 0
+IsRtlPipelined: 0
+IsInstanceOverlapped: 0
+IsDontTouch: 0
+HasImplIP: 0
+IsGatedGlobalClock: 0
+
+
+============================================================
++ Verbose Summary: Schedule
+============================================================
+* Number of FSM states : 12
+* Pipeline : 0
+* Dataflow Pipeline: 0
+
+* FSM state transitions: 
+1 --> 2 
+2 --> 3 
+3 --> 4 
+4 --> 5 
+5 --> 6 
+6 --> 7 
+7 --> 8 
+8 --> 9 
+9 --> 10 
+10 --> 11 
+11 --> 12 
+12 --> 
+
+* FSM state operations: 
+
+State 1 <SV = 0> <Delay = 6.91>
+ST_1 : Operation 13 [1/1] (0.00ns)   --->   "%frame_size_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %frame_size"   --->   Operation 13 'read' 'frame_size_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 14 [1/1] (0.00ns)   --->   "%trunc_ln1345_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %trunc_ln1345"   --->   Operation 14 'read' 'trunc_ln1345_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 15 [1/1] (0.00ns)   --->   "%zext_ln1345 = zext i32 %trunc_ln1345_read"   --->   Operation 15 'zext' 'zext_ln1345' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 16 [1/1] (0.00ns)   --->   "%zext_ln534 = zext i32 %frame_size_read"   --->   Operation 16 'zext' 'zext_ln534' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 17 [2/2] (6.91ns)   --->   "%mul_ln534 = mul i62 %zext_ln1345, i62 %zext_ln534"   --->   Operation 17 'mul' 'mul_ln534' <Predicate = true> <Delay = 6.91> <CoreInst = "Multiplier">   --->   Core 3 'Multiplier' <Latency = 1> <II = 1> <Delay = 6.91> <FuncUnit> <Opcode : 'mul'> <InPorts = 2> <OutPorts = 1>
+
+State 2 <SV = 1> <Delay = 6.91>
+ST_2 : Operation 18 [1/1] (0.00ns)   --->   "%width_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %width"   --->   Operation 18 'read' 'width_read' <Predicate = true> <Delay = 0.00>
+ST_2 : Operation 19 [1/2] (6.91ns)   --->   "%mul_ln534 = mul i62 %zext_ln1345, i62 %zext_ln534"   --->   Operation 19 'mul' 'mul_ln534' <Predicate = true> <Delay = 6.91> <CoreInst = "Multiplier">   --->   Core 3 'Multiplier' <Latency = 1> <II = 1> <Delay = 6.91> <FuncUnit> <Opcode : 'mul'> <InPorts = 2> <OutPorts = 1>
+ST_2 : Operation 20 [1/1] (2.55ns)   --->   "%add_ln213 = add i32 %width_read, i32 4294967295"   --->   Operation 20 'add' 'add_ln213' <Predicate = true> <Delay = 2.55> <CoreInst = "Adder">   --->   Core 1 'Adder' <Latency = 0> <II = 1> <Delay = 3.52> <FuncUnit> <Opcode : 'add' 'sub'> <InPorts = 2> <OutPorts = 1>
+
+State 3 <SV = 2> <Delay = 6.98>
+ST_3 : Operation 21 [1/1] (0.00ns)   --->   "%ddr_copy_read = read i64 @_ssdm_op_Read.ap_auto.i64, i64 %ddr_copy"   --->   Operation 21 'read' 'ddr_copy_read' <Predicate = true> <Delay = 0.00>
+ST_3 : Operation 22 [1/1] (0.00ns)   --->   "%zext_ln534_1 = zext i32 %add_ln213"   --->   Operation 22 'zext' 'zext_ln534_1' <Predicate = true> <Delay = 0.00>
+ST_3 : Operation 23 [1/1] (3.46ns)   --->   "%add_ln324_1 = add i62 %mul_ln534, i62 %zext_ln534_1"   --->   Operation 23 'add' 'add_ln324_1' <Predicate = true> <Delay = 3.46> <CoreInst = "Adder">   --->   Core 1 'Adder' <Latency = 0> <II = 1> <Delay = 3.52> <FuncUnit> <Opcode : 'add' 'sub'> <InPorts = 2> <OutPorts = 1>
+ST_3 : Operation 24 [1/1] (0.00ns)   --->   "%shl_ln = bitconcatenate i64 @_ssdm_op_BitConcatenate.i64.i62.i2, i62 %add_ln324_1, i2 0"   --->   Operation 24 'bitconcatenate' 'shl_ln' <Predicate = true> <Delay = 0.00>
+ST_3 : Operation 25 [1/1] (3.52ns)   --->   "%add_ln324 = add i64 %shl_ln, i64 %ddr_copy_read"   --->   Operation 25 'add' 'add_ln324' <Predicate = true> <Delay = 3.52> <CoreInst = "Adder">   --->   Core 1 'Adder' <Latency = 0> <II = 1> <Delay = 3.52> <FuncUnit> <Opcode : 'add' 'sub'> <InPorts = 2> <OutPorts = 1>
+ST_3 : Operation 26 [1/1] (0.00ns)   --->   "%trunc_ln = partselect i62 @_ssdm_op_PartSelect.i62.i64.i32.i32, i64 %add_ln324, i32 2, i32 63"   --->   Operation 26 'partselect' 'trunc_ln' <Predicate = true> <Delay = 0.00>
+ST_3 : Operation 27 [1/1] (0.00ns)   --->   "%sext_ln324 = sext i62 %trunc_ln"   --->   Operation 27 'sext' 'sext_ln324' <Predicate = true> <Delay = 0.00>
+ST_3 : Operation 28 [1/1] (0.00ns)   --->   "%copy_addr = getelementptr i32 %copy, i64 %sext_ln324"   --->   Operation 28 'getelementptr' 'copy_addr' <Predicate = true> <Delay = 0.00>
+
+State 4 <SV = 3> <Delay = 7.30>
+ST_4 : Operation 29 [7/7] (7.30ns)   --->   "%copy_load_req = readreq i1 @_ssdm_op_ReadReq.m_axi.i32P1A, i32 %copy_addr, i32 1"   --->   Operation 29 'readreq' 'copy_load_req' <Predicate = true> <Delay = 7.30> <CoreInst = "m_axi">   --->   Core 113 'm_axi' <Latency = 6> <II = 1> <Delay = 1.00> <Adapter> <Opcode : 'read' 'write' 'readreq' 'writereq' 'writeresp'>
+
+State 5 <SV = 4> <Delay = 7.30>
+ST_5 : Operation 30 [6/7] (7.30ns)   --->   "%copy_load_req = readreq i1 @_ssdm_op_ReadReq.m_axi.i32P1A, i32 %copy_addr, i32 1"   --->   Operation 30 'readreq' 'copy_load_req' <Predicate = true> <Delay = 7.30> <CoreInst = "m_axi">   --->   Core 113 'm_axi' <Latency = 6> <II = 1> <Delay = 1.00> <Adapter> <Opcode : 'read' 'write' 'readreq' 'writereq' 'writeresp'>
+
+State 6 <SV = 5> <Delay = 7.30>
+ST_6 : Operation 31 [5/7] (7.30ns)   --->   "%copy_load_req = readreq i1 @_ssdm_op_ReadReq.m_axi.i32P1A, i32 %copy_addr, i32 1"   --->   Operation 31 'readreq' 'copy_load_req' <Predicate = true> <Delay = 7.30> <CoreInst = "m_axi">   --->   Core 113 'm_axi' <Latency = 6> <II = 1> <Delay = 1.00> <Adapter> <Opcode : 'read' 'write' 'readreq' 'writereq' 'writeresp'>
+
+State 7 <SV = 6> <Delay = 7.30>
+ST_7 : Operation 32 [4/7] (7.30ns)   --->   "%copy_load_req = readreq i1 @_ssdm_op_ReadReq.m_axi.i32P1A, i32 %copy_addr, i32 1"   --->   Operation 32 'readreq' 'copy_load_req' <Predicate = true> <Delay = 7.30> <CoreInst = "m_axi">   --->   Core 113 'm_axi' <Latency = 6> <II = 1> <Delay = 1.00> <Adapter> <Opcode : 'read' 'write' 'readreq' 'writereq' 'writeresp'>
+
+State 8 <SV = 7> <Delay = 7.30>
+ST_8 : Operation 33 [3/7] (7.30ns)   --->   "%copy_load_req = readreq i1 @_ssdm_op_ReadReq.m_axi.i32P1A, i32 %copy_addr, i32 1"   --->   Operation 33 'readreq' 'copy_load_req' <Predicate = true> <Delay = 7.30> <CoreInst = "m_axi">   --->   Core 113 'm_axi' <Latency = 6> <II = 1> <Delay = 1.00> <Adapter> <Opcode : 'read' 'write' 'readreq' 'writereq' 'writeresp'>
+
+State 9 <SV = 8> <Delay = 7.30>
+ST_9 : Operation 34 [2/7] (7.30ns)   --->   "%copy_load_req = readreq i1 @_ssdm_op_ReadReq.m_axi.i32P1A, i32 %copy_addr, i32 1"   --->   Operation 34 'readreq' 'copy_load_req' <Predicate = true> <Delay = 7.30> <CoreInst = "m_axi">   --->   Core 113 'm_axi' <Latency = 6> <II = 1> <Delay = 1.00> <Adapter> <Opcode : 'read' 'write' 'readreq' 'writereq' 'writeresp'>
+
+State 10 <SV = 9> <Delay = 7.30>
+ST_10 : Operation 35 [1/7] (7.30ns)   --->   "%copy_load_req = readreq i1 @_ssdm_op_ReadReq.m_axi.i32P1A, i32 %copy_addr, i32 1"   --->   Operation 35 'readreq' 'copy_load_req' <Predicate = true> <Delay = 7.30> <CoreInst = "m_axi">   --->   Core 113 'm_axi' <Latency = 6> <II = 1> <Delay = 1.00> <Adapter> <Opcode : 'read' 'write' 'readreq' 'writereq' 'writeresp'>
+
+State 11 <SV = 10> <Delay = 7.30>
+ST_11 : Operation 36 [1/1] (7.30ns)   --->   "%copy_addr_read = read i32 @_ssdm_op_Read.m_axi.i32P1A, i32 %copy_addr"   --->   Operation 36 'read' 'copy_addr_read' <Predicate = true> <Delay = 7.30> <CoreInst = "m_axi">   --->   Core 113 'm_axi' <Latency = 6> <II = 1> <Delay = 1.00> <Adapter> <Opcode : 'read' 'write' 'readreq' 'writereq' 'writeresp'>
+
+State 12 <SV = 11> <Delay = 3.25>
+ST_12 : Operation 37 [1/1] (0.00ns)   --->   "%specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %copy, void @empty_12, i32 0, i32 0, void @empty_8, i32 0, i32 307200, void @empty_14, void @empty_7, void @empty_8, i32 16, i32 16, i32 32, i32 16, void @empty_8, void @empty_8"   --->   Operation 37 'specinterface' 'specinterface_ln0' <Predicate = true> <Delay = 0.00>
+ST_12 : Operation 38 [1/1] (0.00ns)   --->   "%zext_ln29 = zext i32 %trunc_ln1345_read" [background_loop.cpp:29]   --->   Operation 38 'zext' 'zext_ln29' <Predicate = true> <Delay = 0.00>
+ST_12 : Operation 39 [1/1] (0.00ns)   --->   "%ycopy_V_addr = getelementptr i32 %ycopy_V, i64 0, i64 %zext_ln29"   --->   Operation 39 'getelementptr' 'ycopy_V_addr' <Predicate = true> <Delay = 0.00>
+ST_12 : Operation 40 [1/1] (3.25ns)   --->   "%store_ln324 = store i32 %copy_addr_read, i10 %ycopy_V_addr"   --->   Operation 40 'store' 'store_ln324' <Predicate = true> <Delay = 3.25> <CoreInst = "RAM">   --->   Core 82 'RAM' <Latency = 1> <II = 1> <Delay = 3.25> <Storage> <Opcode : 'load' 'store'> <Ports = 2> <Width = 32> <Depth = 640> <RAM>
+ST_12 : Operation 41 [1/1] (0.00ns)   --->   "%ret_ln324 = ret"   --->   Operation 41 'ret' 'ret_ln324' <Predicate = true> <Delay = 0.00>
+
+
+============================================================
++ Verbose Summary: Timing violations
+============================================================
+Target clock period: 10ns, clock uncertainty: 2.7ns.
+
+ <State 1>: 6.91ns
+The critical path consists of the following:
+	wire read on port 'frame_size' [10]  (0 ns)
+	'mul' operation ('mul_ln534') [14]  (6.91 ns)
+
+ <State 2>: 6.91ns
+The critical path consists of the following:
+	'mul' operation ('mul_ln534') [14]  (6.91 ns)
+
+ <State 3>: 6.99ns
+The critical path consists of the following:
+	'add' operation ('add_ln324_1') [17]  (3.47 ns)
+	'add' operation ('add_ln324') [19]  (3.52 ns)
+
+ <State 4>: 7.3ns
+The critical path consists of the following:
+	bus request on port 'copy' [23]  (7.3 ns)
+
+ <State 5>: 7.3ns
+The critical path consists of the following:
+	bus request on port 'copy' [23]  (7.3 ns)
+
+ <State 6>: 7.3ns
+The critical path consists of the following:
+	bus request on port 'copy' [23]  (7.3 ns)
+
+ <State 7>: 7.3ns
+The critical path consists of the following:
+	bus request on port 'copy' [23]  (7.3 ns)
+
+ <State 8>: 7.3ns
+The critical path consists of the following:
+	bus request on port 'copy' [23]  (7.3 ns)
+
+ <State 9>: 7.3ns
+The critical path consists of the following:
+	bus request on port 'copy' [23]  (7.3 ns)
+
+ <State 10>: 7.3ns
+The critical path consists of the following:
+	bus request on port 'copy' [23]  (7.3 ns)
+
+ <State 11>: 7.3ns
+The critical path consists of the following:
+	bus read on port 'copy' [24]  (7.3 ns)
+
+ <State 12>: 3.25ns
+The critical path consists of the following:
+	'getelementptr' operation ('ycopy_V_addr') [26]  (0 ns)
+	'store' operation ('store_ln324') of variable 'copy_addr_read' on array 'ycopy_V' [27]  (3.25 ns)
+
+
+============================================================
++ Verbose Summary: Binding
+============================================================
+N/A
+* FSMD analyzer results:
+  - Output states:
+ - Input state : 
+  - Chain level:
+	State 1
+	State 2
+	State 3
+	State 4
+	State 5
+	State 6
+	State 7
+	State 8
+	State 9
+	State 10
+	State 11
+	State 12
+
+
+============================================================
++ Verbose Summary: Datapath Resource usage 
+============================================================
+N/A

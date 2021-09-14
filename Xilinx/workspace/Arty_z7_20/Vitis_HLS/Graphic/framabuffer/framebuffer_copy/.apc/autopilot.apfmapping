@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autopilotfilemapping:AutoPilotFileMapping xmlns:autopilotfilemapping="www.autoesl.com/autopilotfilemapping">
+  <source>
+    <originFiles name="framebuffer_copy.cpp" path="/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/Graphic/framabuffer/framebuffer_copy.cpp"/>
+  </source>
+  <testbench>
+    <originFiles name="framebuffer_copy_tb.cpp" path="/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/Graphic/framabuffer/framebuffer_copy_tb.cpp"/>
+  </testbench>
+</autopilotfilemapping:AutoPilotFileMapping>

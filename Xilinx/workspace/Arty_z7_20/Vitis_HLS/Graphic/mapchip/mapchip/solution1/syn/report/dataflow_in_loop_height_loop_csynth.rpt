@@ -1,0 +1,298 @@
+
+
+================================================================
+== Vitis HLS Report for 'dataflow_in_loop_height_loop'
+================================================================
+* Date:           Sat Jul 10 10:01:57 2021
+
+* Version:        2020.2 (Build 3064766 on Wed Nov 18 09:12:47 MST 2020)
+* Project:        mapchip
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: zynq
+* Target device:  xc7z020-clg400-1
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  10.00 ns|  7.300 ns|     2.70 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+-----------+-----+-----+----------+
+    |  Latency (cycles) |  Latency (absolute)  |  Interval | Pipeline |
+    |   min   |   max   |    min   |    max    | min | max |   Type   |
+    +---------+---------+----------+-----------+-----+-----+----------+
+    |       38|     1316|  0.380 us|  13.160 us|   19|  658|  dataflow|
+    +---------+---------+----------+-----------+-----+-----+----------+
+
+    + Detail: 
+        * Instance: 
+        +----------------------------------------+-------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+        |                                        |                                     |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+        |                Instance                |                Module               |   min   |   max   |    min   |    max   | min | max |   Type  |
+        +----------------------------------------+-------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+        |src_loop_proc_U0                        |src_loop_proc                        |       18|      657|  0.180 us|  6.570 us|   18|  657|     none|
+        |dstout_loop_proc_U0                     |dstout_loop_proc                     |       18|      657|  0.180 us|  6.570 us|   18|  657|     none|
+        |dstin_loop_proc_U0                      |dstin_loop_proc                      |       14|      653|  0.140 us|  6.530 us|   14|  653|     none|
+        |dataflow_in_loop_height_loop_entry6_U0  |dataflow_in_loop_height_loop_entry6  |        0|        0|      0 ns|      0 ns|    0|    0|     none|
+        +----------------------------------------+-------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+
+        * Loop: 
+        N/A
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+-----+--------+-------+-----+
+|       Name      | BRAM_18K| DSP |   FF   |  LUT  | URAM|
++-----------------+---------+-----+--------+-------+-----+
+|DSP              |        -|    -|       -|      -|    -|
+|Expression       |        -|    -|       0|     18|    -|
+|FIFO             |        -|    -|    1782|   1224|    -|
+|Instance         |        -|    6|    2820|   1802|    -|
+|Memory           |        7|    -|       0|      0|    -|
+|Multiplexer      |        -|    -|       -|     27|    -|
+|Register         |        -|    -|       3|      -|    -|
++-----------------+---------+-----+--------+-------+-----+
+|Total            |        7|    6|    4605|   3071|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Available        |      280|  220|  106400|  53200|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Utilization (%)  |        2|    2|       4|      5|    0|
++-----------------+---------+-----+--------+-------+-----+
+
++ Detail: 
+    * Instance: 
+    +----------------------------------------+-------------------------------------+---------+----+------+-----+-----+
+    |                Instance                |                Module               | BRAM_18K| DSP|  FF  | LUT | URAM|
+    +----------------------------------------+-------------------------------------+---------+----+------+-----+-----+
+    |dataflow_in_loop_height_loop_entry6_U0  |dataflow_in_loop_height_loop_entry6  |        0|   0|     2|  155|    0|
+    |dstin_loop_proc_U0                      |dstin_loop_proc                      |        0|   0|   598|  352|    0|
+    |dstout_loop_proc_U0                     |dstout_loop_proc                     |        0|   6|  1010|  620|    0|
+    |src_loop_proc_U0                        |src_loop_proc                        |        0|   0|  1210|  675|    0|
+    +----------------------------------------+-------------------------------------+---------+----+------+-----+-----+
+    |Total                                   |                                     |        0|   6|  2820| 1802|    0|
+    +----------------------------------------+-------------------------------------+---------+----+------+-----+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    +---------+------------------------------------+---------+---+----+-----+------+-----+------+-------------+
+    |  Memory |               Module               | BRAM_18K| FF| LUT| URAM| Words| Bits| Banks| W*Bits*Banks|
+    +---------+------------------------------------+---------+---+----+-----+------+-----+------+-------------+
+    |dst_V_U  |dataflow_in_loop_height_loop_dst_V  |        4|  0|   0|    0|   640|   32|     1|        20480|
+    |src_V_U  |dataflow_in_loop_height_loop_src_V  |        3|  0|   0|    0|   640|   24|     1|        15360|
+    +---------+------------------------------------+---------+---+----+-----+------+-----+------+-------------+
+    |Total    |                                    |        7|  0|   0|    0|  1280|   56|     2|        35840|
+    +---------+------------------------------------+---------+---+----+-----+------+-----+------+-------------+
+
+    * FIFO: 
+    +-------------------------+---------+----+----+-----+------+-----+---------+
+    |           Name          | BRAM_18K| FF | LUT| URAM| Depth| Bits| Size:D*B|
+    +-------------------------+---------+----+----+-----+------+-----+---------+
+    |alpha_c_U                |        0|  99|   0|    -|     3|    8|       24|
+    |crip_c_U                 |        0|  99|   0|    -|     3|   24|       72|
+    |dstin_c_U                |        0|  99|   0|    -|     2|   64|      128|
+    |dstout_c_U               |        0|  99|   0|    -|     3|   64|      192|
+    |frame_size_c3_U          |        0|  99|   0|    -|     3|   32|       96|
+    |frame_size_c_U           |        0|  99|   0|    -|     2|   32|       64|
+    |id_c_U                   |        0|  99|   0|    -|     2|   32|       64|
+    |mapchip_draw_xsize_c1_U  |        0|  99|   0|    -|     2|   32|       64|
+    |mapchip_draw_xsize_c4_U  |        0|  99|   0|    -|     2|   32|       64|
+    |mapchip_draw_xsize_c_U   |        0|  99|   0|    -|     2|   32|       64|
+    |mapchip_maxheight_c_U    |        0|  99|   0|    -|     2|   32|       64|
+    |mapchip_maxwidth_c_U     |        0|  99|   0|    -|     2|   32|       64|
+    |srcin_c_U                |        0|  99|   0|    -|     2|   64|      128|
+    |xstart_pos_c_U           |        0|  99|   0|    -|     2|   32|       64|
+    |y_c2_U                   |        0|  99|   0|    -|     2|   32|       64|
+    |y_c5_U                   |        0|  99|   0|    -|     2|   32|       64|
+    |y_c_U                    |        0|  99|   0|    -|     2|   32|       64|
+    |ystart_pos_c_U           |        0|  99|   0|    -|     2|   32|       64|
+    +-------------------------+---------+----+----+-----+------+-----+---------+
+    |Total                    |        0|1782|   0|    0|    40|  640|     1408|
+    +-------------------------+---------+----+----+-----+------+-----+---------+
+
+    * Expression: 
+    +---------------------------------------------------------+----------+----+---+----+------------+------------+
+    |                      Variable Name                      | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +---------------------------------------------------------+----------+----+---+----+------------+------------+
+    |ap_idle                                                  |       and|   0|  0|   2|           1|           1|
+    |ap_sync_ready                                            |       and|   0|  0|   2|           1|           1|
+    |dataflow_in_loop_height_loop_entry6_U0_ap_start          |       and|   0|  0|   2|           1|           1|
+    |dstin_loop_proc_U0_ap_start                              |       and|   0|  0|   2|           1|           1|
+    |dstout_loop_proc_U0_ap_start                             |       and|   0|  0|   2|           1|           1|
+    |src_loop_proc_U0_ap_start                                |       and|   0|  0|   2|           1|           1|
+    |ap_sync_dataflow_in_loop_height_loop_entry6_U0_ap_ready  |        or|   0|  0|   2|           1|           1|
+    |ap_sync_dstin_loop_proc_U0_ap_ready                      |        or|   0|  0|   2|           1|           1|
+    |ap_sync_src_loop_proc_U0_ap_ready                        |        or|   0|  0|   2|           1|           1|
+    +---------------------------------------------------------+----------+----+---+----+------------+------------+
+    |Total                                                    |          |   0|  0|  18|           9|           9|
+    +---------------------------------------------------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    +-------------------------------------------------------------+----+-----------+-----+-----------+
+    |                             Name                            | LUT| Input Size| Bits| Total Bits|
+    +-------------------------------------------------------------+----+-----------+-----+-----------+
+    |ap_sync_reg_dataflow_in_loop_height_loop_entry6_U0_ap_ready  |   9|          2|    1|          2|
+    |ap_sync_reg_dstin_loop_proc_U0_ap_ready                      |   9|          2|    1|          2|
+    |ap_sync_reg_src_loop_proc_U0_ap_ready                        |   9|          2|    1|          2|
+    +-------------------------------------------------------------+----+-----------+-----+-----------+
+    |Total                                                        |  27|          6|    3|          6|
+    +-------------------------------------------------------------+----+-----------+-----+-----------+
+
+    * Register: 
+    +-------------------------------------------------------------+---+----+-----+-----------+
+    |                             Name                            | FF| LUT| Bits| Const Bits|
+    +-------------------------------------------------------------+---+----+-----+-----------+
+    |ap_sync_reg_dataflow_in_loop_height_loop_entry6_U0_ap_ready  |  1|   0|    1|          0|
+    |ap_sync_reg_dstin_loop_proc_U0_ap_ready                      |  1|   0|    1|          0|
+    |ap_sync_reg_src_loop_proc_U0_ap_ready                        |  1|   0|    1|          0|
+    +-------------------------------------------------------------+---+----+-----+-----------+
+    |Total                                                        |  3|   0|    3|          0|
+    +-------------------------------------------------------------+---+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++---------------------------+-----+-----+------------+------------------------------+--------------+
+|         RTL Ports         | Dir | Bits|  Protocol  |         Source Object        |    C Type    |
++---------------------------+-----+-----+------------+------------------------------+--------------+
+|ap_clk                     |   in|    1|  ap_ctrl_hs|  dataflow_in_loop_height_loop|  return value|
+|ap_rst                     |   in|    1|  ap_ctrl_hs|  dataflow_in_loop_height_loop|  return value|
+|ap_start                   |   in|    1|  ap_ctrl_hs|  dataflow_in_loop_height_loop|  return value|
+|ap_done                    |  out|    1|  ap_ctrl_hs|  dataflow_in_loop_height_loop|  return value|
+|ap_ready                   |  out|    1|  ap_ctrl_hs|  dataflow_in_loop_height_loop|  return value|
+|ap_idle                    |  out|    1|  ap_ctrl_hs|  dataflow_in_loop_height_loop|  return value|
+|ap_continue                |   in|    1|  ap_ctrl_hs|  dataflow_in_loop_height_loop|  return value|
+|mapchip_draw_xsize         |   in|   32|     ap_none|            mapchip_draw_xsize|        scalar|
+|mapchip_draw_xsize_ap_vld  |   in|    1|     ap_none|            mapchip_draw_xsize|        scalar|
+|id                         |   in|   32|     ap_none|                            id|        scalar|
+|id_ap_vld                  |   in|    1|     ap_none|                            id|        scalar|
+|mapchip_maxheight          |   in|   32|     ap_none|             mapchip_maxheight|        scalar|
+|mapchip_maxheight_ap_vld   |   in|    1|     ap_none|             mapchip_maxheight|        scalar|
+|ystart_pos                 |   in|   32|     ap_none|                    ystart_pos|        scalar|
+|ystart_pos_ap_vld          |   in|    1|     ap_none|                    ystart_pos|        scalar|
+|mapchip_maxwidth           |   in|   32|     ap_none|              mapchip_maxwidth|        scalar|
+|mapchip_maxwidth_ap_vld    |   in|    1|     ap_none|              mapchip_maxwidth|        scalar|
+|xstart_pos                 |   in|   32|     ap_none|                    xstart_pos|        scalar|
+|xstart_pos_ap_vld          |   in|    1|     ap_none|                    xstart_pos|        scalar|
+|y                          |   in|   32|     ap_none|                             y|        scalar|
+|y_ap_vld                   |   in|    1|     ap_none|                             y|        scalar|
+|srcin                      |   in|   64|     ap_none|                         srcin|        scalar|
+|srcin_ap_vld               |   in|    1|     ap_none|                         srcin|        scalar|
+|m_axi_src_AWVALID          |  out|    1|       m_axi|                           src|       pointer|
+|m_axi_src_AWREADY          |   in|    1|       m_axi|                           src|       pointer|
+|m_axi_src_AWADDR           |  out|   64|       m_axi|                           src|       pointer|
+|m_axi_src_AWID             |  out|    1|       m_axi|                           src|       pointer|
+|m_axi_src_AWLEN            |  out|   32|       m_axi|                           src|       pointer|
+|m_axi_src_AWSIZE           |  out|    3|       m_axi|                           src|       pointer|
+|m_axi_src_AWBURST          |  out|    2|       m_axi|                           src|       pointer|
+|m_axi_src_AWLOCK           |  out|    2|       m_axi|                           src|       pointer|
+|m_axi_src_AWCACHE          |  out|    4|       m_axi|                           src|       pointer|
+|m_axi_src_AWPROT           |  out|    3|       m_axi|                           src|       pointer|
+|m_axi_src_AWQOS            |  out|    4|       m_axi|                           src|       pointer|
+|m_axi_src_AWREGION         |  out|    4|       m_axi|                           src|       pointer|
+|m_axi_src_AWUSER           |  out|    1|       m_axi|                           src|       pointer|
+|m_axi_src_WVALID           |  out|    1|       m_axi|                           src|       pointer|
+|m_axi_src_WREADY           |   in|    1|       m_axi|                           src|       pointer|
+|m_axi_src_WDATA            |  out|   32|       m_axi|                           src|       pointer|
+|m_axi_src_WSTRB            |  out|    4|       m_axi|                           src|       pointer|
+|m_axi_src_WLAST            |  out|    1|       m_axi|                           src|       pointer|
+|m_axi_src_WID              |  out|    1|       m_axi|                           src|       pointer|
+|m_axi_src_WUSER            |  out|    1|       m_axi|                           src|       pointer|
+|m_axi_src_ARVALID          |  out|    1|       m_axi|                           src|       pointer|
+|m_axi_src_ARREADY          |   in|    1|       m_axi|                           src|       pointer|
+|m_axi_src_ARADDR           |  out|   64|       m_axi|                           src|       pointer|
+|m_axi_src_ARID             |  out|    1|       m_axi|                           src|       pointer|
+|m_axi_src_ARLEN            |  out|   32|       m_axi|                           src|       pointer|
+|m_axi_src_ARSIZE           |  out|    3|       m_axi|                           src|       pointer|
+|m_axi_src_ARBURST          |  out|    2|       m_axi|                           src|       pointer|
+|m_axi_src_ARLOCK           |  out|    2|       m_axi|                           src|       pointer|
+|m_axi_src_ARCACHE          |  out|    4|       m_axi|                           src|       pointer|
+|m_axi_src_ARPROT           |  out|    3|       m_axi|                           src|       pointer|
+|m_axi_src_ARQOS            |  out|    4|       m_axi|                           src|       pointer|
+|m_axi_src_ARREGION         |  out|    4|       m_axi|                           src|       pointer|
+|m_axi_src_ARUSER           |  out|    1|       m_axi|                           src|       pointer|
+|m_axi_src_RVALID           |   in|    1|       m_axi|                           src|       pointer|
+|m_axi_src_RREADY           |  out|    1|       m_axi|                           src|       pointer|
+|m_axi_src_RDATA            |   in|   32|       m_axi|                           src|       pointer|
+|m_axi_src_RLAST            |   in|    1|       m_axi|                           src|       pointer|
+|m_axi_src_RID              |   in|    1|       m_axi|                           src|       pointer|
+|m_axi_src_RUSER            |   in|    1|       m_axi|                           src|       pointer|
+|m_axi_src_RRESP            |   in|    2|       m_axi|                           src|       pointer|
+|m_axi_src_BVALID           |   in|    1|       m_axi|                           src|       pointer|
+|m_axi_src_BREADY           |  out|    1|       m_axi|                           src|       pointer|
+|m_axi_src_BRESP            |   in|    2|       m_axi|                           src|       pointer|
+|m_axi_src_BID              |   in|    1|       m_axi|                           src|       pointer|
+|m_axi_src_BUSER            |   in|    1|       m_axi|                           src|       pointer|
+|frame_size                 |   in|   32|     ap_none|                    frame_size|        scalar|
+|frame_size_ap_vld          |   in|    1|     ap_none|                    frame_size|        scalar|
+|dstin                      |   in|   64|     ap_none|                         dstin|        scalar|
+|dstin_ap_vld               |   in|    1|     ap_none|                         dstin|        scalar|
+|m_axi_dst_AWVALID          |  out|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_AWREADY          |   in|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_AWADDR           |  out|   64|       m_axi|                           dst|       pointer|
+|m_axi_dst_AWID             |  out|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_AWLEN            |  out|   32|       m_axi|                           dst|       pointer|
+|m_axi_dst_AWSIZE           |  out|    3|       m_axi|                           dst|       pointer|
+|m_axi_dst_AWBURST          |  out|    2|       m_axi|                           dst|       pointer|
+|m_axi_dst_AWLOCK           |  out|    2|       m_axi|                           dst|       pointer|
+|m_axi_dst_AWCACHE          |  out|    4|       m_axi|                           dst|       pointer|
+|m_axi_dst_AWPROT           |  out|    3|       m_axi|                           dst|       pointer|
+|m_axi_dst_AWQOS            |  out|    4|       m_axi|                           dst|       pointer|
+|m_axi_dst_AWREGION         |  out|    4|       m_axi|                           dst|       pointer|
+|m_axi_dst_AWUSER           |  out|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_WVALID           |  out|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_WREADY           |   in|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_WDATA            |  out|   32|       m_axi|                           dst|       pointer|
+|m_axi_dst_WSTRB            |  out|    4|       m_axi|                           dst|       pointer|
+|m_axi_dst_WLAST            |  out|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_WID              |  out|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_WUSER            |  out|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_ARVALID          |  out|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_ARREADY          |   in|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_ARADDR           |  out|   64|       m_axi|                           dst|       pointer|
+|m_axi_dst_ARID             |  out|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_ARLEN            |  out|   32|       m_axi|                           dst|       pointer|
+|m_axi_dst_ARSIZE           |  out|    3|       m_axi|                           dst|       pointer|
+|m_axi_dst_ARBURST          |  out|    2|       m_axi|                           dst|       pointer|
+|m_axi_dst_ARLOCK           |  out|    2|       m_axi|                           dst|       pointer|
+|m_axi_dst_ARCACHE          |  out|    4|       m_axi|                           dst|       pointer|
+|m_axi_dst_ARPROT           |  out|    3|       m_axi|                           dst|       pointer|
+|m_axi_dst_ARQOS            |  out|    4|       m_axi|                           dst|       pointer|
+|m_axi_dst_ARREGION         |  out|    4|       m_axi|                           dst|       pointer|
+|m_axi_dst_ARUSER           |  out|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_RVALID           |   in|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_RREADY           |  out|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_RDATA            |   in|   32|       m_axi|                           dst|       pointer|
+|m_axi_dst_RLAST            |   in|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_RID              |   in|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_RUSER            |   in|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_RRESP            |   in|    2|       m_axi|                           dst|       pointer|
+|m_axi_dst_BVALID           |   in|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_BREADY           |  out|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_BRESP            |   in|    2|       m_axi|                           dst|       pointer|
+|m_axi_dst_BID              |   in|    1|       m_axi|                           dst|       pointer|
+|m_axi_dst_BUSER            |   in|    1|       m_axi|                           dst|       pointer|
+|dstout                     |   in|   64|     ap_none|                        dstout|        scalar|
+|dstout_ap_vld              |   in|    1|     ap_none|                        dstout|        scalar|
+|crip                       |   in|   24|     ap_none|                          crip|        scalar|
+|crip_ap_vld                |   in|    1|     ap_none|                          crip|        scalar|
+|alpha                      |   in|    8|     ap_none|                         alpha|        scalar|
+|alpha_ap_vld               |   in|    1|     ap_none|                         alpha|        scalar|
++---------------------------+-----+-----+------------+------------------------------+--------------+
+

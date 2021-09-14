@@ -1,0 +1,1604 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="affine_scale.wdb" id="1">
+         <top_modules>
+            <top_module name="apa_affine_scale_top" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0ns"></ZoomStartTime>
+      <ZoomEndTime time="2000ns"></ZoomEndTime>
+      <Cursor1Time time="0ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="257"></NameColumnWidth>
+      <ValueColumnWidth column_width="84"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="2" />
+   <wvobject type="group" fp_name="HLS Process Summary Group">
+      <obj_property name="label">HLS Process Summary</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="group" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale//AESL_inst_affine_scale_activity">
+         <obj_property name="label">AESL_inst_affine_scale_activity</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="UseFullPath">true</obj_property>
+         <obj_property name="ElementShortName">AESL_inst_affine_scale_activity</obj_property>
+         <obj_property name="ObjectShortName">AESL_inst_affine_scale_activity</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="WaveformStyle">STYLE_ENUM_TRANSACTION</obj_property>
+         <obj_property name="EnumTransactionColorTable">0=blank ffff=blank 0bad=#FF0000</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="CustomSignalColor">turquoise</obj_property>
+         <obj_property name="EnumTransactionValueTable">65535=blank</obj_property>
+         <obj_property name="Render_Data">/apatb_affine_scale_top/AESL_inst_affine_scale//AESL_inst_affine_scale_activity.dataflowTxWaveData.Cycles</obj_property>
+         <obj_property name="Value_Data">/apatb_affine_scale_top/AESL_inst_affine_scale//AESL_inst_affine_scale_activity.dataflowTxWaveData.OutStanding</obj_property>
+         <obj_property name="Detail_Data">/apatb_affine_scale_top/AESL_inst_affine_scale//AESL_inst_affine_scale_activity.dataflowTxTooltipData</obj_property>
+         <wvobject type="group" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_U0_activity">
+            <obj_property name="label">dataflow_in_loop_height_loop_U0_activity</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="UseFullPath">true</obj_property>
+            <obj_property name="ElementShortName">dataflow_in_loop_height_loop_U0_activity</obj_property>
+            <obj_property name="ObjectShortName">dataflow_in_loop_height_loop_U0_activity</obj_property>
+            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+            <obj_property name="WaveformStyle">STYLE_ENUM_TRANSACTION</obj_property>
+            <obj_property name="EnumTransactionColorTable">0=blank ffff=blank 0bad=#FF0000</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+            <obj_property name="CustomSignalColor">turquoise</obj_property>
+            <obj_property name="EnumTransactionValueTable">65535=blank</obj_property>
+            <obj_property name="Render_Data">/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_U0_activity.dataflowTxWaveData.Cycles</obj_property>
+            <obj_property name="Value_Data">/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_U0_activity.dataflowTxWaveData.OutStanding</obj_property>
+            <obj_property name="Detail_Data">/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_U0_activity.dataflowTxTooltipData</obj_property>
+            <wvobject type="group" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/dataflow_in_loop_height_loop_entry6_U0_activity">
+               <obj_property name="label">dataflow_in_loop_height_loop_entry6_U0_activity</obj_property>
+               <obj_property name="DisplayName">label</obj_property>
+               <obj_property name="UseFullPath">true</obj_property>
+               <obj_property name="ElementShortName">dataflow_in_loop_height_loop_entry6_U0_activity</obj_property>
+               <obj_property name="ObjectShortName">dataflow_in_loop_height_loop_entry6_U0_activity</obj_property>
+               <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+               <obj_property name="WaveformStyle">STYLE_ENUM_TRANSACTION</obj_property>
+               <obj_property name="EnumTransactionColorTable">0=blank ffff=blank 0bad=#FF0000</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+               <obj_property name="CustomSignalColor">turquoise</obj_property>
+               <obj_property name="EnumTransactionValueTable">65535=blank</obj_property>
+               <obj_property name="Render_Data">/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/dataflow_in_loop_height_loop_entry6_U0_activity.dataflowTxWaveData.Cycles</obj_property>
+               <obj_property name="Value_Data">/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/dataflow_in_loop_height_loop_entry6_U0_activity.dataflowTxWaveData.OutStanding</obj_property>
+               <obj_property name="Detail_Data">/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/dataflow_in_loop_height_loop_entry6_U0_activity.dataflowTxTooltipData</obj_property>
+            </wvobject>
+            <wvobject type="group" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/src_loop_proc_U0_activity">
+               <obj_property name="label">src_loop_proc_U0_activity</obj_property>
+               <obj_property name="DisplayName">label</obj_property>
+               <obj_property name="UseFullPath">true</obj_property>
+               <obj_property name="ElementShortName">src_loop_proc_U0_activity</obj_property>
+               <obj_property name="ObjectShortName">src_loop_proc_U0_activity</obj_property>
+               <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+               <obj_property name="WaveformStyle">STYLE_ENUM_TRANSACTION</obj_property>
+               <obj_property name="EnumTransactionColorTable">0=blank ffff=blank 0bad=#FF0000</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+               <obj_property name="CustomSignalColor">turquoise</obj_property>
+               <obj_property name="EnumTransactionValueTable">65535=blank</obj_property>
+               <obj_property name="Render_Data">/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/src_loop_proc_U0_activity.dataflowTxWaveData.Cycles</obj_property>
+               <obj_property name="Value_Data">/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/src_loop_proc_U0_activity.dataflowTxWaveData.OutStanding</obj_property>
+               <obj_property name="Detail_Data">/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/src_loop_proc_U0_activity.dataflowTxTooltipData</obj_property>
+            </wvobject>
+            <wvobject type="group" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/dstin_loop_proc_U0_activity">
+               <obj_property name="label">dstin_loop_proc_U0_activity</obj_property>
+               <obj_property name="DisplayName">label</obj_property>
+               <obj_property name="UseFullPath">true</obj_property>
+               <obj_property name="ElementShortName">dstin_loop_proc_U0_activity</obj_property>
+               <obj_property name="ObjectShortName">dstin_loop_proc_U0_activity</obj_property>
+               <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+               <obj_property name="WaveformStyle">STYLE_ENUM_TRANSACTION</obj_property>
+               <obj_property name="EnumTransactionColorTable">0=blank ffff=blank 0bad=#FF0000</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+               <obj_property name="CustomSignalColor">turquoise</obj_property>
+               <obj_property name="EnumTransactionValueTable">65535=blank</obj_property>
+               <obj_property name="Render_Data">/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/dstin_loop_proc_U0_activity.dataflowTxWaveData.Cycles</obj_property>
+               <obj_property name="Value_Data">/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/dstin_loop_proc_U0_activity.dataflowTxWaveData.OutStanding</obj_property>
+               <obj_property name="Detail_Data">/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/dstin_loop_proc_U0_activity.dataflowTxTooltipData</obj_property>
+            </wvobject>
+            <wvobject type="group" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/dstout_loop_proc_U0_activity">
+               <obj_property name="label">dstout_loop_proc_U0_activity</obj_property>
+               <obj_property name="DisplayName">label</obj_property>
+               <obj_property name="UseFullPath">true</obj_property>
+               <obj_property name="ElementShortName">dstout_loop_proc_U0_activity</obj_property>
+               <obj_property name="ObjectShortName">dstout_loop_proc_U0_activity</obj_property>
+               <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+               <obj_property name="WaveformStyle">STYLE_ENUM_TRANSACTION</obj_property>
+               <obj_property name="EnumTransactionColorTable">0=blank ffff=blank 0bad=#FF0000</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+               <obj_property name="CustomSignalColor">turquoise</obj_property>
+               <obj_property name="EnumTransactionValueTable">65535=blank</obj_property>
+               <obj_property name="Render_Data">/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/dstout_loop_proc_U0_activity.dataflowTxWaveData.Cycles</obj_property>
+               <obj_property name="Value_Data">/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/dstout_loop_proc_U0_activity.dataflowTxWaveData.OutStanding</obj_property>
+               <obj_property name="Detail_Data">/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/dstout_loop_proc_U0_activity.dataflowTxTooltipData</obj_property>
+            </wvobject>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject type="protoinst" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale//AESL_inst_affine_scale_activity">
+      <obj_property name="ElementShortName">AESL_inst_affine_scale_activity</obj_property>
+      <obj_property name="ObjectShortName">AESL_inst_affine_scale_activity</obj_property>
+   </wvobject>
+   <wvobject type="group" fp_name="AESL_inst_affine_scale_group">
+      <obj_property name="label">AESL_inst_affine_scale</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/loop_dataflow_input_count">
+         <obj_property name="ElementShortName">loop_dataflow_input_count</obj_property>
+         <obj_property name="ObjectShortName">loop_dataflow_input_count</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/loop_dataflow_output_count">
+         <obj_property name="ElementShortName">loop_dataflow_output_count</obj_property>
+         <obj_property name="ObjectShortName">loop_dataflow_output_count</obj_property>
+      </wvobject>
+      <wvobject type="protoinst" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_U0_activity">
+         <obj_property name="ElementShortName">dataflow_in_loop_height_loop_U0_activity</obj_property>
+         <obj_property name="ObjectShortName">dataflow_in_loop_height_loop_U0_activity</obj_property>
+      </wvobject>
+      <wvobject type="group" fp_name="AESL_inst_affine_scale_Handshake_group">
+         <obj_property name="label">Block-level handshake</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/ap_start">
+            <obj_property name="ElementShortName">ap_start</obj_property>
+            <obj_property name="ObjectShortName">ap_start</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/ap_ready">
+            <obj_property name="ElementShortName">ap_ready</obj_property>
+            <obj_property name="ObjectShortName">ap_ready</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/ap_done">
+            <obj_property name="ElementShortName">ap_done</obj_property>
+            <obj_property name="ObjectShortName">ap_done</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="group" fp_name="dataflow_in_loop_height_loop_U0_group">
+         <obj_property name="label">dataflow_in_loop_height_loop_U0</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject type="protoinst" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/dataflow_in_loop_height_loop_entry6_U0_activity">
+            <obj_property name="ElementShortName">dataflow_in_loop_height_loop_entry6_U0_activity</obj_property>
+            <obj_property name="ObjectShortName">dataflow_in_loop_height_loop_entry6_U0_activity</obj_property>
+         </wvobject>
+         <wvobject type="protoinst" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/src_loop_proc_U0_activity">
+            <obj_property name="ElementShortName">src_loop_proc_U0_activity</obj_property>
+            <obj_property name="ObjectShortName">src_loop_proc_U0_activity</obj_property>
+         </wvobject>
+         <wvobject type="protoinst" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/dstin_loop_proc_U0_activity">
+            <obj_property name="ElementShortName">dstin_loop_proc_U0_activity</obj_property>
+            <obj_property name="ObjectShortName">dstin_loop_proc_U0_activity</obj_property>
+         </wvobject>
+         <wvobject type="protoinst" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/dstout_loop_proc_U0_activity">
+            <obj_property name="ElementShortName">dstout_loop_proc_U0_activity</obj_property>
+            <obj_property name="ObjectShortName">dstout_loop_proc_U0_activity</obj_property>
+         </wvobject>
+         <wvobject type="group" fp_name="dataflow_in_loop_height_loop_U0_Input_group">
+            <obj_property name="label">Input Channels</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+         </wvobject>
+         <wvobject type="group" fp_name="dataflow_in_loop_height_loop_U0_Handshake_group">
+            <obj_property name="label">Block-level handshake</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/ap_start">
+               <obj_property name="ElementShortName">ap_start</obj_property>
+               <obj_property name="ObjectShortName">ap_start</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/ap_ready">
+               <obj_property name="ElementShortName">ap_ready</obj_property>
+               <obj_property name="ObjectShortName">ap_ready</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/ap_done">
+               <obj_property name="ElementShortName">ap_done</obj_property>
+               <obj_property name="ObjectShortName">ap_done</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/ap_continue">
+               <obj_property name="ElementShortName">ap_continue</obj_property>
+               <obj_property name="ObjectShortName">ap_continue</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject type="group" fp_name="dataflow_in_loop_height_loop_U0_Output_group">
+            <obj_property name="label">Output Channels</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+         </wvobject>
+         <wvobject type="group" fp_name="dataflow_in_loop_height_loop_entry6_U0_group">
+            <obj_property name="label">dataflow_in_loop_height_loop_entry6_U0</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject type="group" fp_name="dataflow_in_loop_height_loop_entry6_U0_Input_group">
+               <obj_property name="label">Input Channels</obj_property>
+               <obj_property name="DisplayName">label</obj_property>
+            </wvobject>
+            <wvobject type="group" fp_name="dataflow_in_loop_height_loop_entry6_U0_Handshake_group">
+               <obj_property name="label">Block-level handshake</obj_property>
+               <obj_property name="DisplayName">label</obj_property>
+               <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/ap_start">
+                  <obj_property name="ElementShortName">ap_start</obj_property>
+                  <obj_property name="ObjectShortName">ap_start</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/ap_ready">
+                  <obj_property name="ElementShortName">ap_ready</obj_property>
+                  <obj_property name="ObjectShortName">ap_ready</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/ap_done">
+                  <obj_property name="ElementShortName">ap_done</obj_property>
+                  <obj_property name="ObjectShortName">ap_done</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/ap_continue">
+                  <obj_property name="ElementShortName">ap_continue</obj_property>
+                  <obj_property name="ObjectShortName">ap_continue</obj_property>
+               </wvobject>
+            </wvobject>
+            <wvobject type="group" fp_name="dataflow_in_loop_height_loop_entry6_U0_Output_group">
+               <obj_property name="label">Output Channels</obj_property>
+               <obj_property name="DisplayName">label</obj_property>
+               <wvobject type="group" fp_name="mapchip_draw_xsize_out_group">
+                  <obj_property name="label">mapchip_draw_xsize_out(mapchip_draw_xsize_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_draw_xsize_out_blk_n">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_draw_xsize_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_draw_xsize_out_full_n">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_draw_xsize_out_write">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_out_write</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="mapchip_draw_xsize_out1_group">
+                  <obj_property name="label">mapchip_draw_xsize_out1(mapchip_draw_xsize_c1_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_draw_xsize_out1_blk_n">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_out1_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_out1_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_draw_xsize_out1_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_draw_xsize_out1_full_n">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_out1_full_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_out1_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_draw_xsize_out1_write">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_out1_write</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_out1_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="mapchip_maxwidth_out_group">
+                  <obj_property name="label">mapchip_maxwidth_out(mapchip_maxwidth_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_maxwidth_out_blk_n">
+                     <obj_property name="ElementShortName">mapchip_maxwidth_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxwidth_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_maxwidth_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_maxwidth_out_full_n">
+                     <obj_property name="ElementShortName">mapchip_maxwidth_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxwidth_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_maxwidth_out_write">
+                     <obj_property name="ElementShortName">mapchip_maxwidth_out_write</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxwidth_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="mapchip_maxwidth_out2_group">
+                  <obj_property name="label">mapchip_maxwidth_out2(mapchip_maxwidth_c2_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_maxwidth_out2_blk_n">
+                     <obj_property name="ElementShortName">mapchip_maxwidth_out2_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxwidth_out2_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_maxwidth_out2_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_maxwidth_out2_full_n">
+                     <obj_property name="ElementShortName">mapchip_maxwidth_out2_full_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxwidth_out2_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_maxwidth_out2_write">
+                     <obj_property name="ElementShortName">mapchip_maxwidth_out2_write</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxwidth_out2_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="d_out_group">
+                  <obj_property name="label">d_out(d_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/d_out_blk_n">
+                     <obj_property name="ElementShortName">d_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">d_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/d_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/d_out_full_n">
+                     <obj_property name="ElementShortName">d_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">d_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/d_out_write">
+                     <obj_property name="ElementShortName">d_out_write</obj_property>
+                     <obj_property name="ObjectShortName">d_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="d_out3_group">
+                  <obj_property name="label">d_out3(d_c3_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/d_out3_blk_n">
+                     <obj_property name="ElementShortName">d_out3_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">d_out3_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/d_out3_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/d_out3_full_n">
+                     <obj_property name="ElementShortName">d_out3_full_n</obj_property>
+                     <obj_property name="ObjectShortName">d_out3_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/d_out3_write">
+                     <obj_property name="ElementShortName">d_out3_write</obj_property>
+                     <obj_property name="ObjectShortName">d_out3_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="a_out_group">
+                  <obj_property name="label">a_out(a_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/a_out_blk_n">
+                     <obj_property name="ElementShortName">a_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">a_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/a_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/a_out_full_n">
+                     <obj_property name="ElementShortName">a_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">a_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/a_out_write">
+                     <obj_property name="ElementShortName">a_out_write</obj_property>
+                     <obj_property name="ObjectShortName">a_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="a_out4_group">
+                  <obj_property name="label">a_out4(a_c4_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/a_out4_blk_n">
+                     <obj_property name="ElementShortName">a_out4_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">a_out4_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/a_out4_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/a_out4_full_n">
+                     <obj_property name="ElementShortName">a_out4_full_n</obj_property>
+                     <obj_property name="ObjectShortName">a_out4_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/a_out4_write">
+                     <obj_property name="ElementShortName">a_out4_write</obj_property>
+                     <obj_property name="ObjectShortName">a_out4_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="c_out_group">
+                  <obj_property name="label">c_out(c_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/c_out_blk_n">
+                     <obj_property name="ElementShortName">c_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">c_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/c_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/c_out_full_n">
+                     <obj_property name="ElementShortName">c_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">c_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/c_out_write">
+                     <obj_property name="ElementShortName">c_out_write</obj_property>
+                     <obj_property name="ObjectShortName">c_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="c_out5_group">
+                  <obj_property name="label">c_out5(c_c5_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/c_out5_blk_n">
+                     <obj_property name="ElementShortName">c_out5_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">c_out5_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/c_out5_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/c_out5_full_n">
+                     <obj_property name="ElementShortName">c_out5_full_n</obj_property>
+                     <obj_property name="ObjectShortName">c_out5_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/c_out5_write">
+                     <obj_property name="ElementShortName">c_out5_write</obj_property>
+                     <obj_property name="ObjectShortName">c_out5_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="b_out_group">
+                  <obj_property name="label">b_out(b_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/b_out_blk_n">
+                     <obj_property name="ElementShortName">b_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">b_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/b_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/b_out_full_n">
+                     <obj_property name="ElementShortName">b_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">b_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/b_out_write">
+                     <obj_property name="ElementShortName">b_out_write</obj_property>
+                     <obj_property name="ObjectShortName">b_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="b_out6_group">
+                  <obj_property name="label">b_out6(b_c6_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/b_out6_blk_n">
+                     <obj_property name="ElementShortName">b_out6_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">b_out6_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/b_out6_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/b_out6_full_n">
+                     <obj_property name="ElementShortName">b_out6_full_n</obj_property>
+                     <obj_property name="ObjectShortName">b_out6_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/b_out6_write">
+                     <obj_property name="ElementShortName">b_out6_write</obj_property>
+                     <obj_property name="ObjectShortName">b_out6_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="m_out_group">
+                  <obj_property name="label">m_out(m_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/m_out_blk_n">
+                     <obj_property name="ElementShortName">m_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">m_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/m_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/m_out_full_n">
+                     <obj_property name="ElementShortName">m_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">m_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/m_out_write">
+                     <obj_property name="ElementShortName">m_out_write</obj_property>
+                     <obj_property name="ObjectShortName">m_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="m_out7_group">
+                  <obj_property name="label">m_out7(m_c7_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/m_out7_blk_n">
+                     <obj_property name="ElementShortName">m_out7_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">m_out7_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/m_out7_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/m_out7_full_n">
+                     <obj_property name="ElementShortName">m_out7_full_n</obj_property>
+                     <obj_property name="ObjectShortName">m_out7_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/m_out7_write">
+                     <obj_property name="ElementShortName">m_out7_write</obj_property>
+                     <obj_property name="ObjectShortName">m_out7_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="trunc_ln69_out_group">
+                  <obj_property name="label">trunc_ln69_out(trunc_ln69_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/trunc_ln69_out_blk_n">
+                     <obj_property name="ElementShortName">trunc_ln69_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/trunc_ln69_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/trunc_ln69_out_full_n">
+                     <obj_property name="ElementShortName">trunc_ln69_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/trunc_ln69_out_write">
+                     <obj_property name="ElementShortName">trunc_ln69_out_write</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="trunc_ln69_out8_group">
+                  <obj_property name="label">trunc_ln69_out8(trunc_ln69_c8_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/trunc_ln69_out8_blk_n">
+                     <obj_property name="ElementShortName">trunc_ln69_out8_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_out8_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/trunc_ln69_out8_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/trunc_ln69_out8_full_n">
+                     <obj_property name="ElementShortName">trunc_ln69_out8_full_n</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_out8_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/trunc_ln69_out8_write">
+                     <obj_property name="ElementShortName">trunc_ln69_out8_write</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_out8_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="mapchip_maxheight_out_group">
+                  <obj_property name="label">mapchip_maxheight_out(mapchip_maxheight_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_maxheight_out_blk_n">
+                     <obj_property name="ElementShortName">mapchip_maxheight_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxheight_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_maxheight_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_maxheight_out_full_n">
+                     <obj_property name="ElementShortName">mapchip_maxheight_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxheight_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_maxheight_out_write">
+                     <obj_property name="ElementShortName">mapchip_maxheight_out_write</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxheight_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="mapchip_maxheight_out9_group">
+                  <obj_property name="label">mapchip_maxheight_out9(mapchip_maxheight_c9_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_maxheight_out9_blk_n">
+                     <obj_property name="ElementShortName">mapchip_maxheight_out9_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxheight_out9_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_maxheight_out9_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_maxheight_out9_full_n">
+                     <obj_property name="ElementShortName">mapchip_maxheight_out9_full_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxheight_out9_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/mapchip_maxheight_out9_write">
+                     <obj_property name="ElementShortName">mapchip_maxheight_out9_write</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxheight_out9_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="n_out_group">
+                  <obj_property name="label">n_out(n_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/n_out_blk_n">
+                     <obj_property name="ElementShortName">n_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">n_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/n_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/n_out_full_n">
+                     <obj_property name="ElementShortName">n_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">n_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/n_out_write">
+                     <obj_property name="ElementShortName">n_out_write</obj_property>
+                     <obj_property name="ObjectShortName">n_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="n_out10_group">
+                  <obj_property name="label">n_out10(n_c10_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/n_out10_blk_n">
+                     <obj_property name="ElementShortName">n_out10_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">n_out10_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/n_out10_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/n_out10_full_n">
+                     <obj_property name="ElementShortName">n_out10_full_n</obj_property>
+                     <obj_property name="ObjectShortName">n_out10_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/n_out10_write">
+                     <obj_property name="ElementShortName">n_out10_write</obj_property>
+                     <obj_property name="ObjectShortName">n_out10_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="id_out_group">
+                  <obj_property name="label">id_out(id_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/id_out_blk_n">
+                     <obj_property name="ElementShortName">id_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">id_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/id_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/id_out_full_n">
+                     <obj_property name="ElementShortName">id_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">id_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/id_out_write">
+                     <obj_property name="ElementShortName">id_out_write</obj_property>
+                     <obj_property name="ObjectShortName">id_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="ystart_pos_out_group">
+                  <obj_property name="label">ystart_pos_out(ystart_pos_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/ystart_pos_out_blk_n">
+                     <obj_property name="ElementShortName">ystart_pos_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">ystart_pos_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/ystart_pos_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/ystart_pos_out_full_n">
+                     <obj_property name="ElementShortName">ystart_pos_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">ystart_pos_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/ystart_pos_out_write">
+                     <obj_property name="ElementShortName">ystart_pos_out_write</obj_property>
+                     <obj_property name="ObjectShortName">ystart_pos_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="xstart_pos_out_group">
+                  <obj_property name="label">xstart_pos_out(xstart_pos_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/xstart_pos_out_blk_n">
+                     <obj_property name="ElementShortName">xstart_pos_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">xstart_pos_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/xstart_pos_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/xstart_pos_out_full_n">
+                     <obj_property name="ElementShortName">xstart_pos_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">xstart_pos_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/xstart_pos_out_write">
+                     <obj_property name="ElementShortName">xstart_pos_out_write</obj_property>
+                     <obj_property name="ObjectShortName">xstart_pos_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="srcin_out_group">
+                  <obj_property name="label">srcin_out(srcin_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/srcin_out_blk_n">
+                     <obj_property name="ElementShortName">srcin_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">srcin_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/srcin_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/srcin_out_full_n">
+                     <obj_property name="ElementShortName">srcin_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">srcin_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/srcin_out_write">
+                     <obj_property name="ElementShortName">srcin_out_write</obj_property>
+                     <obj_property name="ObjectShortName">srcin_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="frame_size_out_group">
+                  <obj_property name="label">frame_size_out(frame_size_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/frame_size_out_blk_n">
+                     <obj_property name="ElementShortName">frame_size_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">frame_size_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/frame_size_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/frame_size_out_full_n">
+                     <obj_property name="ElementShortName">frame_size_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">frame_size_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/frame_size_out_write">
+                     <obj_property name="ElementShortName">frame_size_out_write</obj_property>
+                     <obj_property name="ObjectShortName">frame_size_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="frame_size_out11_group">
+                  <obj_property name="label">frame_size_out11(frame_size_c11_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/frame_size_out11_blk_n">
+                     <obj_property name="ElementShortName">frame_size_out11_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">frame_size_out11_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/frame_size_out11_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/frame_size_out11_full_n">
+                     <obj_property name="ElementShortName">frame_size_out11_full_n</obj_property>
+                     <obj_property name="ObjectShortName">frame_size_out11_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/frame_size_out11_write">
+                     <obj_property name="ElementShortName">frame_size_out11_write</obj_property>
+                     <obj_property name="ObjectShortName">frame_size_out11_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="dstin_out_group">
+                  <obj_property name="label">dstin_out(dstin_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/dstin_out_blk_n">
+                     <obj_property name="ElementShortName">dstin_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">dstin_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/dstin_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/dstin_out_full_n">
+                     <obj_property name="ElementShortName">dstin_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">dstin_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/dstin_out_write">
+                     <obj_property name="ElementShortName">dstin_out_write</obj_property>
+                     <obj_property name="ObjectShortName">dstin_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="alpha_out_group">
+                  <obj_property name="label">alpha_out(alpha_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/alpha_out_blk_n">
+                     <obj_property name="ElementShortName">alpha_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">alpha_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/alpha_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/alpha_out_full_n">
+                     <obj_property name="ElementShortName">alpha_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">alpha_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/alpha_out_write">
+                     <obj_property name="ElementShortName">alpha_out_write</obj_property>
+                     <obj_property name="ObjectShortName">alpha_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="dstout_out_group">
+                  <obj_property name="label">dstout_out(dstout_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/dstout_out_blk_n">
+                     <obj_property name="ElementShortName">dstout_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">dstout_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/dstout_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/dstout_out_full_n">
+                     <obj_property name="ElementShortName">dstout_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">dstout_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dataflow_in_loop_height_loop_entry6_U0/dstout_out_write">
+                     <obj_property name="ElementShortName">dstout_out_write</obj_property>
+                     <obj_property name="ObjectShortName">dstout_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+            </wvobject>
+         </wvobject>
+         <wvobject type="group" fp_name="src_loop_proc_U0_group">
+            <obj_property name="label">src_loop_proc_U0</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject type="group" fp_name="src_loop_proc_U0_Input_group">
+               <obj_property name="label">Input Channels</obj_property>
+               <obj_property name="DisplayName">label</obj_property>
+               <wvobject type="group" fp_name="mapchip_draw_xsize_group">
+                  <obj_property name="label">mapchip_draw_xsize(mapchip_draw_xsize_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/mapchip_draw_xsize_blk_n">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/mapchip_draw_xsize_dout">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/mapchip_draw_xsize_empty_n">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/mapchip_draw_xsize_read">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_read</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="mapchip_maxwidth_group">
+                  <obj_property name="label">mapchip_maxwidth(mapchip_maxwidth_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/mapchip_maxwidth_blk_n">
+                     <obj_property name="ElementShortName">mapchip_maxwidth_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxwidth_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/mapchip_maxwidth_dout">
+                     <obj_property name="ElementShortName">mapchip_maxwidth_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxwidth_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/mapchip_maxwidth_empty_n">
+                     <obj_property name="ElementShortName">mapchip_maxwidth_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxwidth_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/mapchip_maxwidth_read">
+                     <obj_property name="ElementShortName">mapchip_maxwidth_read</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxwidth_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="d_group">
+                  <obj_property name="label">d(d_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/d_blk_n">
+                     <obj_property name="ElementShortName">d_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">d_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/d_dout">
+                     <obj_property name="ElementShortName">d_dout[19:0]</obj_property>
+                     <obj_property name="ObjectShortName">d_dout[19:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/d_empty_n">
+                     <obj_property name="ElementShortName">d_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">d_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/d_read">
+                     <obj_property name="ElementShortName">d_read</obj_property>
+                     <obj_property name="ObjectShortName">d_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="a_group">
+                  <obj_property name="label">a(a_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/a_blk_n">
+                     <obj_property name="ElementShortName">a_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">a_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/a_dout">
+                     <obj_property name="ElementShortName">a_dout[19:0]</obj_property>
+                     <obj_property name="ObjectShortName">a_dout[19:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/a_empty_n">
+                     <obj_property name="ElementShortName">a_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">a_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/a_read">
+                     <obj_property name="ElementShortName">a_read</obj_property>
+                     <obj_property name="ObjectShortName">a_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="c_group">
+                  <obj_property name="label">c(c_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/c_blk_n">
+                     <obj_property name="ElementShortName">c_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">c_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/c_dout">
+                     <obj_property name="ElementShortName">c_dout[19:0]</obj_property>
+                     <obj_property name="ObjectShortName">c_dout[19:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/c_empty_n">
+                     <obj_property name="ElementShortName">c_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">c_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/c_read">
+                     <obj_property name="ElementShortName">c_read</obj_property>
+                     <obj_property name="ObjectShortName">c_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="b_group">
+                  <obj_property name="label">b(b_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/b_blk_n">
+                     <obj_property name="ElementShortName">b_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">b_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/b_dout">
+                     <obj_property name="ElementShortName">b_dout[19:0]</obj_property>
+                     <obj_property name="ObjectShortName">b_dout[19:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/b_empty_n">
+                     <obj_property name="ElementShortName">b_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">b_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/b_read">
+                     <obj_property name="ElementShortName">b_read</obj_property>
+                     <obj_property name="ObjectShortName">b_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="m_group">
+                  <obj_property name="label">m(m_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/m_blk_n">
+                     <obj_property name="ElementShortName">m_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">m_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/m_dout">
+                     <obj_property name="ElementShortName">m_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">m_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/m_empty_n">
+                     <obj_property name="ElementShortName">m_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">m_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/m_read">
+                     <obj_property name="ElementShortName">m_read</obj_property>
+                     <obj_property name="ObjectShortName">m_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="trunc_ln69_group">
+                  <obj_property name="label">trunc_ln69(trunc_ln69_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/trunc_ln69_blk_n">
+                     <obj_property name="ElementShortName">trunc_ln69_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/trunc_ln69_dout">
+                     <obj_property name="ElementShortName">trunc_ln69_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/trunc_ln69_empty_n">
+                     <obj_property name="ElementShortName">trunc_ln69_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/trunc_ln69_read">
+                     <obj_property name="ElementShortName">trunc_ln69_read</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="mapchip_maxheight_group">
+                  <obj_property name="label">mapchip_maxheight(mapchip_maxheight_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/mapchip_maxheight_blk_n">
+                     <obj_property name="ElementShortName">mapchip_maxheight_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxheight_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/mapchip_maxheight_dout">
+                     <obj_property name="ElementShortName">mapchip_maxheight_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxheight_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/mapchip_maxheight_empty_n">
+                     <obj_property name="ElementShortName">mapchip_maxheight_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxheight_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/mapchip_maxheight_read">
+                     <obj_property name="ElementShortName">mapchip_maxheight_read</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxheight_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="n_group">
+                  <obj_property name="label">n(n_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/n_blk_n">
+                     <obj_property name="ElementShortName">n_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">n_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/n_dout">
+                     <obj_property name="ElementShortName">n_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">n_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/n_empty_n">
+                     <obj_property name="ElementShortName">n_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">n_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/n_read">
+                     <obj_property name="ElementShortName">n_read</obj_property>
+                     <obj_property name="ObjectShortName">n_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="id_group">
+                  <obj_property name="label">id(id_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/id_blk_n">
+                     <obj_property name="ElementShortName">id_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">id_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/id_dout">
+                     <obj_property name="ElementShortName">id_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">id_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/id_empty_n">
+                     <obj_property name="ElementShortName">id_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">id_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/id_read">
+                     <obj_property name="ElementShortName">id_read</obj_property>
+                     <obj_property name="ObjectShortName">id_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="ystart_pos_group">
+                  <obj_property name="label">ystart_pos(ystart_pos_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/ystart_pos_blk_n">
+                     <obj_property name="ElementShortName">ystart_pos_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">ystart_pos_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/ystart_pos_dout">
+                     <obj_property name="ElementShortName">ystart_pos_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">ystart_pos_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/ystart_pos_empty_n">
+                     <obj_property name="ElementShortName">ystart_pos_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">ystart_pos_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/ystart_pos_read">
+                     <obj_property name="ElementShortName">ystart_pos_read</obj_property>
+                     <obj_property name="ObjectShortName">ystart_pos_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="xstart_pos_group">
+                  <obj_property name="label">xstart_pos(xstart_pos_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/xstart_pos_blk_n">
+                     <obj_property name="ElementShortName">xstart_pos_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">xstart_pos_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/xstart_pos_dout">
+                     <obj_property name="ElementShortName">xstart_pos_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">xstart_pos_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/xstart_pos_empty_n">
+                     <obj_property name="ElementShortName">xstart_pos_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">xstart_pos_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/xstart_pos_read">
+                     <obj_property name="ElementShortName">xstart_pos_read</obj_property>
+                     <obj_property name="ObjectShortName">xstart_pos_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="srcin_group">
+                  <obj_property name="label">srcin(srcin_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/srcin_blk_n">
+                     <obj_property name="ElementShortName">srcin_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">srcin_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/srcin_dout">
+                     <obj_property name="ElementShortName">srcin_dout[63:0]</obj_property>
+                     <obj_property name="ObjectShortName">srcin_dout[63:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/srcin_empty_n">
+                     <obj_property name="ElementShortName">srcin_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">srcin_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/srcin_read">
+                     <obj_property name="ElementShortName">srcin_read</obj_property>
+                     <obj_property name="ObjectShortName">srcin_read</obj_property>
+                  </wvobject>
+               </wvobject>
+            </wvobject>
+            <wvobject type="group" fp_name="src_loop_proc_U0_Handshake_group">
+               <obj_property name="label">Block-level handshake</obj_property>
+               <obj_property name="DisplayName">label</obj_property>
+               <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/ap_start">
+                  <obj_property name="ElementShortName">ap_start</obj_property>
+                  <obj_property name="ObjectShortName">ap_start</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/ap_ready">
+                  <obj_property name="ElementShortName">ap_ready</obj_property>
+                  <obj_property name="ObjectShortName">ap_ready</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/ap_done">
+                  <obj_property name="ElementShortName">ap_done</obj_property>
+                  <obj_property name="ObjectShortName">ap_done</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/ap_continue">
+                  <obj_property name="ElementShortName">ap_continue</obj_property>
+                  <obj_property name="ObjectShortName">ap_continue</obj_property>
+               </wvobject>
+            </wvobject>
+            <wvobject type="group" fp_name="src_loop_proc_U0_Output_group">
+               <obj_property name="label">Output Channels</obj_property>
+               <obj_property name="DisplayName">label</obj_property>
+               <wvobject type="group" fp_name="src_V1_group">
+                  <obj_property name="label">src_V1(src_V_U, PIPO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/src_V1_address0">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/src_V1_d0">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/src_V1_ce0">
+                     <obj_property name="ElementShortName">src_V1_ce0</obj_property>
+                     <obj_property name="ObjectShortName">src_V1_ce0</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/src_V1_we0">
+                     <obj_property name="ElementShortName">src_V1_we0</obj_property>
+                     <obj_property name="ObjectShortName">src_V1_we0</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/ap_done">
+                     <obj_property name="ElementShortName">ap_done</obj_property>
+                     <obj_property name="ObjectShortName">ap_done</obj_property>
+                     <obj_property name="label">ap_done(i_write)</obj_property>
+                     <obj_property name="DisplayName">label</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/ap_continue">
+                     <obj_property name="ElementShortName">ap_continue</obj_property>
+                     <obj_property name="ObjectShortName">ap_continue</obj_property>
+                     <obj_property name="label">ap_continue(i_full_n)</obj_property>
+                     <obj_property name="DisplayName">label</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="mapchip_draw_xsize_out_group">
+                  <obj_property name="label">mapchip_draw_xsize_out(mapchip_draw_xsize_c12_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/mapchip_draw_xsize_out_blk_n">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/mapchip_draw_xsize_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/mapchip_draw_xsize_out_full_n">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/mapchip_draw_xsize_out_write">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_out_write</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="trunc_ln69_out_group">
+                  <obj_property name="label">trunc_ln69_out(trunc_ln69_c13_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/trunc_ln69_out_blk_n">
+                     <obj_property name="ElementShortName">trunc_ln69_out_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_out_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/trunc_ln69_out_din">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/trunc_ln69_out_full_n">
+                     <obj_property name="ElementShortName">trunc_ln69_out_full_n</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_out_full_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/src_loop_proc_U0/trunc_ln69_out_write">
+                     <obj_property name="ElementShortName">trunc_ln69_out_write</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_out_write</obj_property>
+                  </wvobject>
+               </wvobject>
+            </wvobject>
+         </wvobject>
+         <wvobject type="group" fp_name="dstin_loop_proc_U0_group">
+            <obj_property name="label">dstin_loop_proc_U0</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject type="group" fp_name="dstin_loop_proc_U0_Input_group">
+               <obj_property name="label">Input Channels</obj_property>
+               <obj_property name="DisplayName">label</obj_property>
+               <wvobject type="group" fp_name="mapchip_draw_xsize_group">
+                  <obj_property name="label">mapchip_draw_xsize(mapchip_draw_xsize_c1_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/mapchip_draw_xsize_blk_n">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/mapchip_draw_xsize_dout">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/mapchip_draw_xsize_empty_n">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/mapchip_draw_xsize_read">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_read</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="trunc_ln69_group">
+                  <obj_property name="label">trunc_ln69(trunc_ln69_c8_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/trunc_ln69_blk_n">
+                     <obj_property name="ElementShortName">trunc_ln69_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/trunc_ln69_dout">
+                     <obj_property name="ElementShortName">trunc_ln69_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/trunc_ln69_empty_n">
+                     <obj_property name="ElementShortName">trunc_ln69_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/trunc_ln69_read">
+                     <obj_property name="ElementShortName">trunc_ln69_read</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="frame_size_group">
+                  <obj_property name="label">frame_size(frame_size_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/frame_size_blk_n">
+                     <obj_property name="ElementShortName">frame_size_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">frame_size_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/frame_size_dout">
+                     <obj_property name="ElementShortName">frame_size_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">frame_size_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/frame_size_empty_n">
+                     <obj_property name="ElementShortName">frame_size_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">frame_size_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/frame_size_read">
+                     <obj_property name="ElementShortName">frame_size_read</obj_property>
+                     <obj_property name="ObjectShortName">frame_size_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="dstin_group">
+                  <obj_property name="label">dstin(dstin_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/dstin_blk_n">
+                     <obj_property name="ElementShortName">dstin_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">dstin_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/dstin_dout">
+                     <obj_property name="ElementShortName">dstin_dout[63:0]</obj_property>
+                     <obj_property name="ObjectShortName">dstin_dout[63:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/dstin_empty_n">
+                     <obj_property name="ElementShortName">dstin_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">dstin_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/dstin_read">
+                     <obj_property name="ElementShortName">dstin_read</obj_property>
+                     <obj_property name="ObjectShortName">dstin_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="mapchip_maxwidth_group">
+                  <obj_property name="label">mapchip_maxwidth(mapchip_maxwidth_c2_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/mapchip_maxwidth_blk_n">
+                     <obj_property name="ElementShortName">mapchip_maxwidth_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxwidth_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/mapchip_maxwidth_dout">
+                     <obj_property name="ElementShortName">mapchip_maxwidth_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxwidth_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/mapchip_maxwidth_empty_n">
+                     <obj_property name="ElementShortName">mapchip_maxwidth_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxwidth_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/mapchip_maxwidth_read">
+                     <obj_property name="ElementShortName">mapchip_maxwidth_read</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxwidth_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="d_group">
+                  <obj_property name="label">d(d_c3_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/d_blk_n">
+                     <obj_property name="ElementShortName">d_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">d_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/d_dout">
+                     <obj_property name="ElementShortName">d_dout[19:0]</obj_property>
+                     <obj_property name="ObjectShortName">d_dout[19:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/d_empty_n">
+                     <obj_property name="ElementShortName">d_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">d_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/d_read">
+                     <obj_property name="ElementShortName">d_read</obj_property>
+                     <obj_property name="ObjectShortName">d_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="a_group">
+                  <obj_property name="label">a(a_c4_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/a_blk_n">
+                     <obj_property name="ElementShortName">a_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">a_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/a_dout">
+                     <obj_property name="ElementShortName">a_dout[19:0]</obj_property>
+                     <obj_property name="ObjectShortName">a_dout[19:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/a_empty_n">
+                     <obj_property name="ElementShortName">a_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">a_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/a_read">
+                     <obj_property name="ElementShortName">a_read</obj_property>
+                     <obj_property name="ObjectShortName">a_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="c_group">
+                  <obj_property name="label">c(c_c5_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/c_blk_n">
+                     <obj_property name="ElementShortName">c_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">c_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/c_dout">
+                     <obj_property name="ElementShortName">c_dout[19:0]</obj_property>
+                     <obj_property name="ObjectShortName">c_dout[19:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/c_empty_n">
+                     <obj_property name="ElementShortName">c_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">c_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/c_read">
+                     <obj_property name="ElementShortName">c_read</obj_property>
+                     <obj_property name="ObjectShortName">c_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="b_group">
+                  <obj_property name="label">b(b_c6_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/b_blk_n">
+                     <obj_property name="ElementShortName">b_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">b_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/b_dout">
+                     <obj_property name="ElementShortName">b_dout[19:0]</obj_property>
+                     <obj_property name="ObjectShortName">b_dout[19:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/b_empty_n">
+                     <obj_property name="ElementShortName">b_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">b_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/b_read">
+                     <obj_property name="ElementShortName">b_read</obj_property>
+                     <obj_property name="ObjectShortName">b_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="m_group">
+                  <obj_property name="label">m(m_c7_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/m_blk_n">
+                     <obj_property name="ElementShortName">m_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">m_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/m_dout">
+                     <obj_property name="ElementShortName">m_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">m_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/m_empty_n">
+                     <obj_property name="ElementShortName">m_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">m_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/m_read">
+                     <obj_property name="ElementShortName">m_read</obj_property>
+                     <obj_property name="ObjectShortName">m_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="mapchip_maxheight_group">
+                  <obj_property name="label">mapchip_maxheight(mapchip_maxheight_c9_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/mapchip_maxheight_blk_n">
+                     <obj_property name="ElementShortName">mapchip_maxheight_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxheight_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/mapchip_maxheight_dout">
+                     <obj_property name="ElementShortName">mapchip_maxheight_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxheight_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/mapchip_maxheight_empty_n">
+                     <obj_property name="ElementShortName">mapchip_maxheight_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxheight_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/mapchip_maxheight_read">
+                     <obj_property name="ElementShortName">mapchip_maxheight_read</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_maxheight_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="n_group">
+                  <obj_property name="label">n(n_c10_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/n_blk_n">
+                     <obj_property name="ElementShortName">n_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">n_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/n_dout">
+                     <obj_property name="ElementShortName">n_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">n_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/n_empty_n">
+                     <obj_property name="ElementShortName">n_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">n_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/n_read">
+                     <obj_property name="ElementShortName">n_read</obj_property>
+                     <obj_property name="ObjectShortName">n_read</obj_property>
+                  </wvobject>
+               </wvobject>
+            </wvobject>
+            <wvobject type="group" fp_name="dstin_loop_proc_U0_Handshake_group">
+               <obj_property name="label">Block-level handshake</obj_property>
+               <obj_property name="DisplayName">label</obj_property>
+               <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/ap_start">
+                  <obj_property name="ElementShortName">ap_start</obj_property>
+                  <obj_property name="ObjectShortName">ap_start</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/ap_ready">
+                  <obj_property name="ElementShortName">ap_ready</obj_property>
+                  <obj_property name="ObjectShortName">ap_ready</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/ap_done">
+                  <obj_property name="ElementShortName">ap_done</obj_property>
+                  <obj_property name="ObjectShortName">ap_done</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/ap_continue">
+                  <obj_property name="ElementShortName">ap_continue</obj_property>
+                  <obj_property name="ObjectShortName">ap_continue</obj_property>
+               </wvobject>
+            </wvobject>
+            <wvobject type="group" fp_name="dstin_loop_proc_U0_Output_group">
+               <obj_property name="label">Output Channels</obj_property>
+               <obj_property name="DisplayName">label</obj_property>
+               <wvobject type="group" fp_name="dst_V2_group">
+                  <obj_property name="label">dst_V2(dst_V_U, PIPO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/dst_V2_address0">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/dst_V2_d0">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/dst_V2_ce0">
+                     <obj_property name="ElementShortName">dst_V2_ce0</obj_property>
+                     <obj_property name="ObjectShortName">dst_V2_ce0</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/dst_V2_we0">
+                     <obj_property name="ElementShortName">dst_V2_we0</obj_property>
+                     <obj_property name="ObjectShortName">dst_V2_we0</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/ap_done">
+                     <obj_property name="ElementShortName">ap_done</obj_property>
+                     <obj_property name="ObjectShortName">ap_done</obj_property>
+                     <obj_property name="label">ap_done(i_write)</obj_property>
+                     <obj_property name="DisplayName">label</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstin_loop_proc_U0/ap_continue">
+                     <obj_property name="ElementShortName">ap_continue</obj_property>
+                     <obj_property name="ObjectShortName">ap_continue</obj_property>
+                     <obj_property name="label">ap_continue(i_full_n)</obj_property>
+                     <obj_property name="DisplayName">label</obj_property>
+                  </wvobject>
+               </wvobject>
+            </wvobject>
+         </wvobject>
+         <wvobject type="group" fp_name="dstout_loop_proc_U0_group">
+            <obj_property name="label">dstout_loop_proc_U0</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject type="group" fp_name="dstout_loop_proc_U0_Input_group">
+               <obj_property name="label">Input Channels</obj_property>
+               <obj_property name="DisplayName">label</obj_property>
+               <wvobject type="group" fp_name="mapchip_draw_xsize_group">
+                  <obj_property name="label">mapchip_draw_xsize(mapchip_draw_xsize_c12_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/mapchip_draw_xsize_blk_n">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/mapchip_draw_xsize_dout">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/mapchip_draw_xsize_empty_n">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/mapchip_draw_xsize_read">
+                     <obj_property name="ElementShortName">mapchip_draw_xsize_read</obj_property>
+                     <obj_property name="ObjectShortName">mapchip_draw_xsize_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="src_V1_group">
+                  <obj_property name="label">src_V1(src_V_U, PIPO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/src_V1_address0">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/src_V1_q0">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/src_V1_ce0">
+                     <obj_property name="ElementShortName">src_V1_ce0</obj_property>
+                     <obj_property name="ObjectShortName">src_V1_ce0</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/ap_ready">
+                     <obj_property name="ElementShortName">ap_ready</obj_property>
+                     <obj_property name="ObjectShortName">ap_ready</obj_property>
+                     <obj_property name="label">ap_ready(t_read)</obj_property>
+                     <obj_property name="DisplayName">label</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="dst_V2_group">
+                  <obj_property name="label">dst_V2(dst_V_U, PIPO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/dst_V2_address0">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/dst_V2_q0">
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/dst_V2_ce0">
+                     <obj_property name="ElementShortName">dst_V2_ce0</obj_property>
+                     <obj_property name="ObjectShortName">dst_V2_ce0</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/ap_ready">
+                     <obj_property name="ElementShortName">ap_ready</obj_property>
+                     <obj_property name="ObjectShortName">ap_ready</obj_property>
+                     <obj_property name="label">ap_ready(t_read)</obj_property>
+                     <obj_property name="DisplayName">label</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="alpha_group">
+                  <obj_property name="label">alpha(alpha_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/alpha_blk_n">
+                     <obj_property name="ElementShortName">alpha_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">alpha_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/alpha_dout">
+                     <obj_property name="ElementShortName">alpha_dout[7:0]</obj_property>
+                     <obj_property name="ObjectShortName">alpha_dout[7:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/alpha_empty_n">
+                     <obj_property name="ElementShortName">alpha_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">alpha_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/alpha_read">
+                     <obj_property name="ElementShortName">alpha_read</obj_property>
+                     <obj_property name="ObjectShortName">alpha_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="trunc_ln69_group">
+                  <obj_property name="label">trunc_ln69(trunc_ln69_c13_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/trunc_ln69_blk_n">
+                     <obj_property name="ElementShortName">trunc_ln69_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/trunc_ln69_dout">
+                     <obj_property name="ElementShortName">trunc_ln69_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/trunc_ln69_empty_n">
+                     <obj_property name="ElementShortName">trunc_ln69_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/trunc_ln69_read">
+                     <obj_property name="ElementShortName">trunc_ln69_read</obj_property>
+                     <obj_property name="ObjectShortName">trunc_ln69_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="frame_size_group">
+                  <obj_property name="label">frame_size(frame_size_c11_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/frame_size_blk_n">
+                     <obj_property name="ElementShortName">frame_size_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">frame_size_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/frame_size_dout">
+                     <obj_property name="ElementShortName">frame_size_dout[31:0]</obj_property>
+                     <obj_property name="ObjectShortName">frame_size_dout[31:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/frame_size_empty_n">
+                     <obj_property name="ElementShortName">frame_size_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">frame_size_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/frame_size_read">
+                     <obj_property name="ElementShortName">frame_size_read</obj_property>
+                     <obj_property name="ObjectShortName">frame_size_read</obj_property>
+                  </wvobject>
+               </wvobject>
+               <wvobject type="group" fp_name="dstout_group">
+                  <obj_property name="label">dstout(dstout_c_U, FIFO)</obj_property>
+                  <obj_property name="DisplayName">label</obj_property>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/dstout_blk_n">
+                     <obj_property name="ElementShortName">dstout_blk_n</obj_property>
+                     <obj_property name="ObjectShortName">dstout_blk_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/dstout_dout">
+                     <obj_property name="ElementShortName">dstout_dout[63:0]</obj_property>
+                     <obj_property name="ObjectShortName">dstout_dout[63:0]</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/dstout_empty_n">
+                     <obj_property name="ElementShortName">dstout_empty_n</obj_property>
+                     <obj_property name="ObjectShortName">dstout_empty_n</obj_property>
+                  </wvobject>
+                  <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/dstout_read">
+                     <obj_property name="ElementShortName">dstout_read</obj_property>
+                     <obj_property name="ObjectShortName">dstout_read</obj_property>
+                  </wvobject>
+               </wvobject>
+            </wvobject>
+            <wvobject type="group" fp_name="dstout_loop_proc_U0_Handshake_group">
+               <obj_property name="label">Block-level handshake</obj_property>
+               <obj_property name="DisplayName">label</obj_property>
+               <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/ap_start">
+                  <obj_property name="ElementShortName">ap_start</obj_property>
+                  <obj_property name="ObjectShortName">ap_start</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/ap_ready">
+                  <obj_property name="ElementShortName">ap_ready</obj_property>
+                  <obj_property name="ObjectShortName">ap_ready</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/ap_done">
+                  <obj_property name="ElementShortName">ap_done</obj_property>
+                  <obj_property name="ObjectShortName">ap_done</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/apatb_affine_scale_top/AESL_inst_affine_scale/dataflow_in_loop_height_loop_U0/dstout_loop_proc_U0/ap_continue">
+                  <obj_property name="ElementShortName">ap_continue</obj_property>
+                  <obj_property name="ObjectShortName">ap_continue</obj_property>
+               </wvobject>
+            </wvobject>
+            <wvobject type="group" fp_name="dstout_loop_proc_U0_Output_group">
+               <obj_property name="label">Output Channels</obj_property>
+               <obj_property name="DisplayName">label</obj_property>
+            </wvobject>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+</wave_config>

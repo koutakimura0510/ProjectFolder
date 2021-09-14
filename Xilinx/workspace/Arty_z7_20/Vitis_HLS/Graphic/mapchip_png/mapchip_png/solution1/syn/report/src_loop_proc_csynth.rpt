@@ -1,0 +1,266 @@
+
+
+================================================================
+== Vitis HLS Report for 'src_loop_proc'
+================================================================
+* Date:           Tue Jul 27 21:17:53 2021
+
+* Version:        2020.2 (Build 3064766 on Wed Nov 18 09:12:47 MST 2020)
+* Project:        mapchip_png
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: zynq
+* Target device:  xc7z020-clg400-1
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  10.00 ns|  7.300 ns|     2.70 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |       18|      657|  0.180 us|  6.570 us|   18|  657|     none|
+    +---------+---------+----------+----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        N/A
+
+        * Loop: 
+        +------------+---------+---------+----------+-----------+-----------+---------+----------+
+        |            |  Latency (cycles) | Iteration|  Initiation Interval  |   Trip  |          |
+        |  Loop Name |   min   |   max   |  Latency |  achieved |   target  |  Count  | Pipelined|
+        +------------+---------+---------+----------+-----------+-----------+---------+----------+
+        |- src_loop  |        2|      641|         3|          1|          1|  1 ~ 640|       yes|
+        +------------+---------+---------+----------+-----------+-----------+---------+----------+
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+-----+--------+-------+-----+
+|       Name      | BRAM_18K| DSP |   FF   |  LUT  | URAM|
++-----------------+---------+-----+--------+-------+-----+
+|DSP              |        -|    -|       -|      -|    -|
+|Expression       |        -|    -|       0|    285|    -|
+|FIFO             |        -|    -|       -|      -|    -|
+|Instance         |        -|    0|     495|    150|    -|
+|Memory           |        -|    -|       -|      -|    -|
+|Multiplexer      |        -|    -|       -|    240|    -|
+|Register         |        -|    -|     723|      -|    -|
++-----------------+---------+-----+--------+-------+-----+
+|Total            |        0|    0|    1218|    675|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Available        |      280|  220|  106400|  53200|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Utilization (%)  |        0|    0|       1|      1|    0|
++-----------------+---------+-----+--------+-------+-----+
+
++ Detail: 
+    * Instance: 
+    +--------------------------+----------------------+---------+----+-----+----+-----+
+    |         Instance         |        Module        | BRAM_18K| DSP|  FF | LUT| URAM|
+    +--------------------------+----------------------+---------+----+-----+----+-----+
+    |mul_32ns_32ns_62_2_1_U30  |mul_32ns_32ns_62_2_1  |        0|   0|  165|  50|    0|
+    |mul_32s_32s_32_2_1_U28    |mul_32s_32s_32_2_1    |        0|   0|  165|  50|    0|
+    |mul_32s_32s_32_2_1_U29    |mul_32s_32s_32_2_1    |        0|   0|  165|  50|    0|
+    +--------------------------+----------------------+---------+----+-----+----+-----+
+    |Total                     |                      |        0|   0|  495| 150|    0|
+    +--------------------------+----------------------+---------+----+-----+----+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +-----------------------------------+----------+----+---+----+------------+------------+
+    |           Variable Name           | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +-----------------------------------+----------+----+---+----+------------+------------+
+    |add_ln208_fu_212_p2                |         +|   0|  0|  39|          32|          32|
+    |add_ln324_1_fu_232_p2              |         +|   0|  0|  71|          64|          64|
+    |add_ln324_fu_220_p2                |         +|   0|  0|  69|          62|          62|
+    |add_ln65_fu_257_p2                 |         +|   0|  0|  39|          32|           1|
+    |tmp_i_fu_192_p2                    |         +|   0|  0|  39|          32|          32|
+    |ap_block_pp0_stage0_11001          |       and|   0|  0|   2|           1|           1|
+    |ap_block_state17_pp0_stage0_iter1  |       and|   0|  0|   2|           1|           1|
+    |icmp_ln878_fu_263_p2               |      icmp|   0|  0|  18|          32|          32|
+    |ap_block_state1                    |        or|   0|  0|   2|           1|           1|
+    |ap_enable_pp0                      |       xor|   0|  0|   2|           1|           2|
+    |ap_enable_reg_pp0_iter1            |       xor|   0|  0|   2|           2|           1|
+    +-----------------------------------+----------+----+---+----+------------+------------+
+    |Total                              |          |   0|  0| 285|         260|         229|
+    +-----------------------------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    +------------------------------+----+-----------+-----+-----------+
+    |             Name             | LUT| Input Size| Bits| Total Bits|
+    +------------------------------+----+-----------+-----+-----------+
+    |ap_NS_fsm                     |  87|         18|    1|         18|
+    |ap_done                       |   9|          2|    1|          2|
+    |ap_enable_reg_pp0_iter1       |   9|          2|    1|          2|
+    |ap_enable_reg_pp0_iter2       |   9|          2|    1|          2|
+    |ap_phi_mux_x_phi_fu_180_p4    |   9|          2|   32|         64|
+    |id_blk_n                      |   9|          2|    1|          2|
+    |mapchip_draw_xsize_blk_n      |   9|          2|    1|          2|
+    |mapchip_draw_xsize_out_blk_n  |   9|          2|    1|          2|
+    |mapchip_maxheight_blk_n       |   9|          2|    1|          2|
+    |mapchip_maxwidth_blk_n        |   9|          2|    1|          2|
+    |src_blk_n_AR                  |   9|          2|    1|          2|
+    |src_blk_n_R                   |   9|          2|    1|          2|
+    |srcin_blk_n                   |   9|          2|    1|          2|
+    |x_reg_176                     |   9|          2|   32|         64|
+    |xstart_pos_blk_n              |   9|          2|    1|          2|
+    |y_blk_n                       |   9|          2|    1|          2|
+    |y_out_blk_n                   |   9|          2|    1|          2|
+    |ystart_pos_blk_n              |   9|          2|    1|          2|
+    +------------------------------+----+-----------+-----+-----------+
+    |Total                         | 240|         52|   80|        176|
+    +------------------------------+----+-----------+-----+-----------+
+
+    * Register: 
+    +----------------------------------+----+----+-----+-----------+
+    |               Name               | FF | LUT| Bits| Const Bits|
+    +----------------------------------+----+----+-----+-----------+
+    |add_ln324_reg_345                 |  62|   0|   62|          0|
+    |add_ln65_reg_356                  |  32|   0|   32|          0|
+    |ap_CS_fsm                         |  17|   0|   17|          0|
+    |ap_done_reg                       |   1|   0|    1|          0|
+    |ap_enable_reg_pp0_iter0           |   1|   0|    1|          0|
+    |ap_enable_reg_pp0_iter1           |   1|   0|    1|          0|
+    |ap_enable_reg_pp0_iter2           |   1|   0|    1|          0|
+    |icmp_ln878_reg_361                |   1|   0|    1|          0|
+    |icmp_ln878_reg_361_pp0_iter1_reg  |   1|   0|    1|          0|
+    |id_read_reg_279                   |  32|   0|   32|          0|
+    |mapchip_draw_xsize_read_reg_273   |  32|   0|   32|          0|
+    |mapchip_maxheight_read_reg_284    |  32|   0|   32|          0|
+    |mapchip_maxwidth_read_reg_294     |  32|   0|   32|          0|
+    |mul_ln208_reg_315                 |  32|   0|   32|          0|
+    |mul_ln534_reg_340                 |  62|   0|   62|          0|
+    |src_addr_read_reg_365             |  32|   0|   32|          0|
+    |src_addr_reg_350                  |  64|   0|   64|          0|
+    |srcin_read_reg_310                |  64|   0|   64|          0|
+    |tmp6_i_reg_335                    |  32|   0|   32|          0|
+    |tmp_i_reg_320                     |  32|   0|   32|          0|
+    |x_reg_176                         |  32|   0|   32|          0|
+    |x_reg_176_pp0_iter1_reg           |  32|   0|   32|          0|
+    |xstart_pos_read_reg_300           |  32|   0|   32|          0|
+    |y_read_reg_305                    |  32|   0|   32|          0|
+    |ystart_pos_read_reg_289           |  32|   0|   32|          0|
+    +----------------------------------+----+----+-----+-----------+
+    |Total                             | 723|   0|  723|          0|
+    +----------------------------------+----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++-------------------------------+-----+-----+------------+------------------------+--------------+
+|           RTL Ports           | Dir | Bits|  Protocol  |      Source Object     |    C Type    |
++-------------------------------+-----+-----+------------+------------------------+--------------+
+|ap_clk                         |   in|    1|  ap_ctrl_hs|           src_loop_proc|  return value|
+|ap_rst                         |   in|    1|  ap_ctrl_hs|           src_loop_proc|  return value|
+|ap_start                       |   in|    1|  ap_ctrl_hs|           src_loop_proc|  return value|
+|ap_done                        |  out|    1|  ap_ctrl_hs|           src_loop_proc|  return value|
+|ap_continue                    |   in|    1|  ap_ctrl_hs|           src_loop_proc|  return value|
+|ap_idle                        |  out|    1|  ap_ctrl_hs|           src_loop_proc|  return value|
+|ap_ready                       |  out|    1|  ap_ctrl_hs|           src_loop_proc|  return value|
+|mapchip_draw_xsize_dout        |   in|   32|     ap_fifo|      mapchip_draw_xsize|       pointer|
+|mapchip_draw_xsize_empty_n     |   in|    1|     ap_fifo|      mapchip_draw_xsize|       pointer|
+|mapchip_draw_xsize_read        |  out|    1|     ap_fifo|      mapchip_draw_xsize|       pointer|
+|id_dout                        |   in|   32|     ap_fifo|                      id|       pointer|
+|id_empty_n                     |   in|    1|     ap_fifo|                      id|       pointer|
+|id_read                        |  out|    1|     ap_fifo|                      id|       pointer|
+|mapchip_maxheight_dout         |   in|   32|     ap_fifo|       mapchip_maxheight|       pointer|
+|mapchip_maxheight_empty_n      |   in|    1|     ap_fifo|       mapchip_maxheight|       pointer|
+|mapchip_maxheight_read         |  out|    1|     ap_fifo|       mapchip_maxheight|       pointer|
+|ystart_pos_dout                |   in|   32|     ap_fifo|              ystart_pos|       pointer|
+|ystart_pos_empty_n             |   in|    1|     ap_fifo|              ystart_pos|       pointer|
+|ystart_pos_read                |  out|    1|     ap_fifo|              ystart_pos|       pointer|
+|mapchip_maxwidth_dout          |   in|   32|     ap_fifo|        mapchip_maxwidth|       pointer|
+|mapchip_maxwidth_empty_n       |   in|    1|     ap_fifo|        mapchip_maxwidth|       pointer|
+|mapchip_maxwidth_read          |  out|    1|     ap_fifo|        mapchip_maxwidth|       pointer|
+|xstart_pos_dout                |   in|   32|     ap_fifo|              xstart_pos|       pointer|
+|xstart_pos_empty_n             |   in|    1|     ap_fifo|              xstart_pos|       pointer|
+|xstart_pos_read                |  out|    1|     ap_fifo|              xstart_pos|       pointer|
+|y_dout                         |   in|   32|     ap_fifo|                       y|       pointer|
+|y_empty_n                      |   in|    1|     ap_fifo|                       y|       pointer|
+|y_read                         |  out|    1|     ap_fifo|                       y|       pointer|
+|srcin_dout                     |   in|   64|     ap_fifo|                   srcin|       pointer|
+|srcin_empty_n                  |   in|    1|     ap_fifo|                   srcin|       pointer|
+|srcin_read                     |  out|    1|     ap_fifo|                   srcin|       pointer|
+|m_axi_src_AWVALID              |  out|    1|       m_axi|                     src|       pointer|
+|m_axi_src_AWREADY              |   in|    1|       m_axi|                     src|       pointer|
+|m_axi_src_AWADDR               |  out|   64|       m_axi|                     src|       pointer|
+|m_axi_src_AWID                 |  out|    1|       m_axi|                     src|       pointer|
+|m_axi_src_AWLEN                |  out|   32|       m_axi|                     src|       pointer|
+|m_axi_src_AWSIZE               |  out|    3|       m_axi|                     src|       pointer|
+|m_axi_src_AWBURST              |  out|    2|       m_axi|                     src|       pointer|
+|m_axi_src_AWLOCK               |  out|    2|       m_axi|                     src|       pointer|
+|m_axi_src_AWCACHE              |  out|    4|       m_axi|                     src|       pointer|
+|m_axi_src_AWPROT               |  out|    3|       m_axi|                     src|       pointer|
+|m_axi_src_AWQOS                |  out|    4|       m_axi|                     src|       pointer|
+|m_axi_src_AWREGION             |  out|    4|       m_axi|                     src|       pointer|
+|m_axi_src_AWUSER               |  out|    1|       m_axi|                     src|       pointer|
+|m_axi_src_WVALID               |  out|    1|       m_axi|                     src|       pointer|
+|m_axi_src_WREADY               |   in|    1|       m_axi|                     src|       pointer|
+|m_axi_src_WDATA                |  out|   32|       m_axi|                     src|       pointer|
+|m_axi_src_WSTRB                |  out|    4|       m_axi|                     src|       pointer|
+|m_axi_src_WLAST                |  out|    1|       m_axi|                     src|       pointer|
+|m_axi_src_WID                  |  out|    1|       m_axi|                     src|       pointer|
+|m_axi_src_WUSER                |  out|    1|       m_axi|                     src|       pointer|
+|m_axi_src_ARVALID              |  out|    1|       m_axi|                     src|       pointer|
+|m_axi_src_ARREADY              |   in|    1|       m_axi|                     src|       pointer|
+|m_axi_src_ARADDR               |  out|   64|       m_axi|                     src|       pointer|
+|m_axi_src_ARID                 |  out|    1|       m_axi|                     src|       pointer|
+|m_axi_src_ARLEN                |  out|   32|       m_axi|                     src|       pointer|
+|m_axi_src_ARSIZE               |  out|    3|       m_axi|                     src|       pointer|
+|m_axi_src_ARBURST              |  out|    2|       m_axi|                     src|       pointer|
+|m_axi_src_ARLOCK               |  out|    2|       m_axi|                     src|       pointer|
+|m_axi_src_ARCACHE              |  out|    4|       m_axi|                     src|       pointer|
+|m_axi_src_ARPROT               |  out|    3|       m_axi|                     src|       pointer|
+|m_axi_src_ARQOS                |  out|    4|       m_axi|                     src|       pointer|
+|m_axi_src_ARREGION             |  out|    4|       m_axi|                     src|       pointer|
+|m_axi_src_ARUSER               |  out|    1|       m_axi|                     src|       pointer|
+|m_axi_src_RVALID               |   in|    1|       m_axi|                     src|       pointer|
+|m_axi_src_RREADY               |  out|    1|       m_axi|                     src|       pointer|
+|m_axi_src_RDATA                |   in|   32|       m_axi|                     src|       pointer|
+|m_axi_src_RLAST                |   in|    1|       m_axi|                     src|       pointer|
+|m_axi_src_RID                  |   in|    1|       m_axi|                     src|       pointer|
+|m_axi_src_RUSER                |   in|    1|       m_axi|                     src|       pointer|
+|m_axi_src_RRESP                |   in|    2|       m_axi|                     src|       pointer|
+|m_axi_src_BVALID               |   in|    1|       m_axi|                     src|       pointer|
+|m_axi_src_BREADY               |  out|    1|       m_axi|                     src|       pointer|
+|m_axi_src_BRESP                |   in|    2|       m_axi|                     src|       pointer|
+|m_axi_src_BID                  |   in|    1|       m_axi|                     src|       pointer|
+|m_axi_src_BUSER                |   in|    1|       m_axi|                     src|       pointer|
+|src_V1_address0                |  out|   10|   ap_memory|                  src_V1|         array|
+|src_V1_ce0                     |  out|    1|   ap_memory|                  src_V1|         array|
+|src_V1_we0                     |  out|    1|   ap_memory|                  src_V1|         array|
+|src_V1_d0                      |  out|   32|   ap_memory|                  src_V1|         array|
+|mapchip_draw_xsize_out_din     |  out|   32|     ap_fifo|  mapchip_draw_xsize_out|       pointer|
+|mapchip_draw_xsize_out_full_n  |   in|    1|     ap_fifo|  mapchip_draw_xsize_out|       pointer|
+|mapchip_draw_xsize_out_write   |  out|    1|     ap_fifo|  mapchip_draw_xsize_out|       pointer|
+|y_out_din                      |  out|   32|     ap_fifo|                   y_out|       pointer|
+|y_out_full_n                   |   in|    1|     ap_fifo|                   y_out|       pointer|
+|y_out_write                    |  out|    1|     ap_fifo|                   y_out|       pointer|
++-------------------------------+-----+-----+------------+------------------------+--------------+
+

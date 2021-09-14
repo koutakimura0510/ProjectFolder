@@ -1,0 +1,10 @@
+<VitisHLS:BurstInfo>
+    <burst group="BURST_VERBOSE_PASSED" fe_name="BurstInferredPassed" src_info="patbit/patbit.cpp:15:21" msg_id="214-116" msg_severity="INFO" msg_body="Sequential write of variable length has been inferred over loop 'width_loop'" OldID="bb4.store.19" ID="scevgep73.seq" BundleName="gmem" VarName="dstout"/>
+    <burst group="BURST_VERBOSE_MISSED" fe_name="AccessInCondBranchMissed" src_info="patbit/patbit.cpp:15:21" msg_id="214-232" msg_severity="INFO" msg_body="Access call is in the conditional branch" resolution="214-232" ID="scevgep73.seq" BundleName="gmem" VarName="dstout"/>
+    <burst group="BURST_VERBOSE_MISSED" fe_name="CouldNotAnalyzeBoundsPatternMissed" src_info="" msg_id="214-252" msg_severity="INFO" msg_body="Cannot analyze the loop bounds of 'anonymous'" resolution="214-252"/>
+    <burst group="BURST_VERBOSE_MISSED" fe_name="CouldNotAnalyzeBoundsPatternMissed" src_info="" msg_id="214-252" msg_severity="INFO" msg_body="Cannot analyze the loop bounds of 'anonymous'" resolution="214-252"/>
+    <burst group="BURST_VERBOSE_MISSED" fe_name="CouldNotAnalyzeBoundsPatternMissed" src_info="" msg_id="214-252" msg_severity="INFO" msg_body="Cannot analyze the loop bounds of 'anonymous'" resolution="214-252"/>
+    <burst group="BURST_VERBOSE_MISSED" fe_name="GreaterOrEqualAlignmentMissed" src_info="patbit/patbit.cpp:15:21" msg_id="214-120" msg_severity="INFO" msg_body="Could not widen since Type i32 size is greater than or equal to alignment 0(bytes)" ID="scevgep73.seq" BundleName="gmem" VarName="dstout"/>
+    <burst group="BURST_SUMMARY" fe_name="BurstInferredSummaryPassed" src_info="patbit/patbit.cpp:15:21" msg_id="214-115" msg_severity="INFO" msg_body="Multiple burst writes of variable length and bit width 32 in loop 'width_loop' has been inferred on port 'gmem'"/>
+</VitisHLS:BurstInfo>
+

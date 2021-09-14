@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cdfg:DBCdfg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cdfg="http://www.autoesl.com/DBCdfg" timeStamp="1626694622728">
+  <ports id="1" name="mapchip_draw_xsize" type="PortType" coreId="4294967295" bitwidth="32">
+    <dataOutputObjs>read</dataOutputObjs>
+  </ports>
+  <ports id="2" name="id" type="PortType" coreId="106" bitwidth="32">
+    <dataOutputObjs>read</dataOutputObjs>
+  </ports>
+  <ports id="3" name="mapchip_maxheight" type="PortType" coreId="0" bitwidth="32">
+    <dataOutputObjs>read</dataOutputObjs>
+  </ports>
+  <ports id="4" name="ystart_pos" type="PortType" coreId="106" bitwidth="32">
+    <dataOutputObjs>read</dataOutputObjs>
+  </ports>
+  <ports id="5" name="mapchip_maxwidth" type="PortType" coreId="4294967295" bitwidth="32">
+    <dataOutputObjs>read</dataOutputObjs>
+  </ports>
+  <ports id="6" name="xstart_pos" type="PortType" coreId="4294967294" bitwidth="32">
+    <dataOutputObjs>read</dataOutputObjs>
+  </ports>
+  <ports id="7" name="y" type="PortType" coreId="3592658072" bitwidth="32">
+    <dataOutputObjs>read</dataOutputObjs>
+  </ports>
+  <ports id="8" name="srcin" type="PortType" coreId="129" bitwidth="64">
+    <dataOutputObjs>read</dataOutputObjs>
+  </ports>
+  <ports id="9" name="frame_size" type="PortType" coreId="49" bitwidth="32">
+    <dataOutputObjs>read</dataOutputObjs>
+  </ports>
+  <ports id="10" name="dstin" type="PortType" coreId="49" bitwidth="64">
+    <dataOutputObjs>read</dataOutputObjs>
+  </ports>
+  <ports id="11" name="dstout" type="PortType" coreId="132" bitwidth="64">
+    <dataOutputObjs>read</dataOutputObjs>
+  </ports>
+  <ports id="12" name="crip" type="PortType" coreId="132" bitwidth="24">
+    <dataOutputObjs>read</dataOutputObjs>
+  </ports>
+  <ports id="13" name="alpha" type="PortType" coreId="49" bitwidth="8">
+    <dataOutputObjs>read</dataOutputObjs>
+  </ports>
+  <ports id="14" name="mapchip_draw_xsize_out" type="PortType" coreName="FIFO_SRL" coreId="929" bitwidth="32" direction="DirOut" iftype="IfTypeRom">
+    <dataInputObjs>write</dataInputObjs>
+  </ports>
+  <ports id="15" name="mapchip_draw_xsize_out1" type="PortType" coreName="FIFO_SRL" coreId="49" bitwidth="32" direction="DirOut" iftype="IfTypeRom">
+    <dataInputObjs>write</dataInputObjs>
+  </ports>
+  <ports id="16" name="id_out" type="PortType" coreName="FIFO_SRL" coreId="49" bitwidth="32" direction="DirOut" iftype="IfTypeRom">
+    <dataInputObjs>write</dataInputObjs>
+  </ports>
+  <ports id="17" name="mapchip_maxheight_out" type="PortType" coreName="FIFO_SRL" coreId="132" bitwidth="32" direction="DirOut" iftype="IfTypeRom">
+    <dataInputObjs>write</dataInputObjs>
+  </ports>
+  <ports id="18" name="ystart_pos_out" type="PortType" coreName="FIFO_SRL" coreId="132" bitwidth="32" direction="DirOut" iftype="IfTypeRom">
+    <dataInputObjs>write</dataInputObjs>
+  </ports>
+  <ports id="19" name="mapchip_maxwidth_out" type="PortType" coreName="FIFO_SRL" coreId="25" bitwidth="32" direction="DirOut" iftype="IfTypeRom">
+    <dataInputObjs>write</dataInputObjs>
+  </ports>
+  <ports id="20" name="xstart_pos_out" type="PortType" coreName="FIFO_SRL" coreId="0" bitwidth="32" direction="DirOut" iftype="IfTypeRom">
+    <dataInputObjs>write</dataInputObjs>
+  </ports>
+  <ports id="21" name="y_out" type="PortType" coreName="FIFO_SRL" coreId="0" bitwidth="32" direction="DirOut" iftype="IfTypeRom">
+    <dataInputObjs>write</dataInputObjs>
+  </ports>
+  <ports id="22" name="y_out2" type="PortType" coreName="FIFO_SRL" coreId="0" bitwidth="32" direction="DirOut" iftype="IfTypeRom">
+    <dataInputObjs>write</dataInputObjs>
+  </ports>
+  <ports id="23" name="srcin_out" type="PortType" coreName="FIFO_SRL" coreId="0" bitwidth="64" direction="DirOut" iftype="IfTypeRom">
+    <dataInputObjs>write</dataInputObjs>
+  </ports>
+  <ports id="24" name="frame_size_out" type="PortType" coreName="FIFO_SRL" coreId="49" bitwidth="32" direction="DirOut" iftype="IfTypeRom">
+    <dataInputObjs>write</dataInputObjs>
+  </ports>
+  <ports id="25" name="frame_size_out3" type="PortType" coreName="FIFO_SRL" coreId="132" bitwidth="32" direction="DirOut" iftype="IfTypeRom">
+    <dataInputObjs>write</dataInputObjs>
+  </ports>
+  <ports id="26" name="dstin_out" type="PortType" coreName="FIFO_SRL" coreId="132" bitwidth="64" direction="DirOut" iftype="IfTypeRom">
+    <dataInputObjs>write</dataInputObjs>
+  </ports>
+  <ports id="27" name="dstout_out" type="PortType" coreName="FIFO_SRL" coreId="0" bitwidth="64" direction="DirOut" iftype="IfTypeRom">
+    <dataInputObjs>write</dataInputObjs>
+  </ports>
+  <ports id="28" name="crip_out" type="PortType" coreName="FIFO_SRL" coreId="0" bitwidth="24" direction="DirOut" iftype="IfTypeRom">
+    <dataInputObjs>write</dataInputObjs>
+  </ports>
+  <ports id="29" name="alpha_out" type="PortType" coreName="FIFO_SRL" coreId="2305" bitwidth="8" direction="DirOut" iftype="IfTypeRom">
+    <dataInputObjs>write</dataInputObjs>
+  </ports>
+  <edges id="79" source_obj="//@ports.12" sink_obj="//@blocks.0/@node_objs.0"/>
+  <edges id="82" source_obj="//@ports.11" sink_obj="//@blocks.0/@node_objs.1"/>
+  <edges id="85" source_obj="//@ports.10" sink_obj="//@blocks.0/@node_objs.2"/>
+  <edges id="87" source_obj="//@ports.9" sink_obj="//@blocks.0/@node_objs.3"/>
+  <edges id="90" source_obj="//@ports.8" sink_obj="//@blocks.0/@node_objs.4"/>
+  <edges id="92" source_obj="//@ports.7" sink_obj="//@blocks.0/@node_objs.5"/>
+  <edges id="94" source_obj="//@ports.6" sink_obj="//@blocks.0/@node_objs.6"/>
+  <edges id="96" source_obj="//@ports.5" sink_obj="//@blocks.0/@node_objs.7"/>
+  <edges id="98" source_obj="//@ports.4" sink_obj="//@blocks.0/@node_objs.8"/>
+  <edges id="100" source_obj="//@ports.3" sink_obj="//@blocks.0/@node_objs.9"/>
+  <edges id="102" source_obj="//@ports.2" sink_obj="//@blocks.0/@node_objs.10"/>
+  <edges id="104" source_obj="//@ports.1" sink_obj="//@blocks.0/@node_objs.11"/>
+  <edges id="106" source_obj="//@ports.0" sink_obj="//@blocks.0/@node_objs.12"/>
+  <edges id="109" source_obj="//@blocks.0/@node_objs.13" sink_obj="//@ports.13"/>
+  <edges id="110" source_obj="//@blocks.0/@node_objs.12" sink_obj="//@blocks.0/@node_objs.13"/>
+  <edges id="112" source_obj="//@blocks.0/@node_objs.14" sink_obj="//@ports.14"/>
+  <edges id="113" source_obj="//@blocks.0/@node_objs.12" sink_obj="//@blocks.0/@node_objs.14"/>
+  <edges id="115" source_obj="//@blocks.0/@node_objs.15" sink_obj="//@ports.15"/>
+  <edges id="116" source_obj="//@blocks.0/@node_objs.11" sink_obj="//@blocks.0/@node_objs.15"/>
+  <edges id="118" source_obj="//@blocks.0/@node_objs.16" sink_obj="//@ports.16"/>
+  <edges id="119" source_obj="//@blocks.0/@node_objs.10" sink_obj="//@blocks.0/@node_objs.16"/>
+  <edges id="121" source_obj="//@blocks.0/@node_objs.17" sink_obj="//@ports.17"/>
+  <edges id="122" source_obj="//@blocks.0/@node_objs.9" sink_obj="//@blocks.0/@node_objs.17"/>
+  <edges id="124" source_obj="//@blocks.0/@node_objs.18" sink_obj="//@ports.18"/>
+  <edges id="125" source_obj="//@blocks.0/@node_objs.8" sink_obj="//@blocks.0/@node_objs.18"/>
+  <edges id="127" source_obj="//@blocks.0/@node_objs.19" sink_obj="//@ports.19"/>
+  <edges id="128" source_obj="//@blocks.0/@node_objs.7" sink_obj="//@blocks.0/@node_objs.19"/>
+  <edges id="130" source_obj="//@blocks.0/@node_objs.20" sink_obj="//@ports.20"/>
+  <edges id="131" source_obj="//@blocks.0/@node_objs.6" sink_obj="//@blocks.0/@node_objs.20"/>
+  <edges id="133" source_obj="//@blocks.0/@node_objs.21" sink_obj="//@ports.21"/>
+  <edges id="134" source_obj="//@blocks.0/@node_objs.6" sink_obj="//@blocks.0/@node_objs.21"/>
+  <edges id="137" source_obj="//@blocks.0/@node_objs.22" sink_obj="//@ports.22"/>
+  <edges id="138" source_obj="//@blocks.0/@node_objs.5" sink_obj="//@blocks.0/@node_objs.22"/>
+  <edges id="140" source_obj="//@blocks.0/@node_objs.23" sink_obj="//@ports.23"/>
+  <edges id="141" source_obj="//@blocks.0/@node_objs.4" sink_obj="//@blocks.0/@node_objs.23"/>
+  <edges id="143" source_obj="//@blocks.0/@node_objs.24" sink_obj="//@ports.24"/>
+  <edges id="144" source_obj="//@blocks.0/@node_objs.4" sink_obj="//@blocks.0/@node_objs.24"/>
+  <edges id="146" source_obj="//@blocks.0/@node_objs.25" sink_obj="//@ports.25"/>
+  <edges id="147" source_obj="//@blocks.0/@node_objs.3" sink_obj="//@blocks.0/@node_objs.25"/>
+  <edges id="149" source_obj="//@blocks.0/@node_objs.26" sink_obj="//@ports.26"/>
+  <edges id="150" source_obj="//@blocks.0/@node_objs.2" sink_obj="//@blocks.0/@node_objs.26"/>
+  <edges id="153" source_obj="//@blocks.0/@node_objs.27" sink_obj="//@ports.27"/>
+  <edges id="154" source_obj="//@blocks.0/@node_objs.1" sink_obj="//@blocks.0/@node_objs.27"/>
+  <edges id="157" source_obj="//@blocks.0/@node_objs.28" sink_obj="//@ports.28"/>
+  <edges id="158" source_obj="//@blocks.0/@node_objs.0" sink_obj="//@blocks.0/@node_objs.28"/>
+  <blocks id="76" name="dataflow_in_loop_height_loop.entry6" type="BlockType">
+    <node_objs xsi:type="cdfg:CdfgNode" id="31" name="alpha_read" coreId="27" bitwidth="8" opcode="read" m_display="0" m_topoIndex="1" m_clusterGroupNumber="-1">
+      <dataInputObjs>alpha</dataInputObjs>
+      <dataOutputObjs>write</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="32" name="crip_read" coreId="0" bitwidth="24" opcode="read" m_display="0" m_topoIndex="2" m_clusterGroupNumber="-1">
+      <dataInputObjs>crip</dataInputObjs>
+      <dataOutputObjs>write</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="33" name="dstout_read" coreId="3527501344" bitwidth="64" opcode="read" m_display="0" m_topoIndex="3" m_clusterGroupNumber="-1">
+      <dataInputObjs>dstout</dataInputObjs>
+      <dataOutputObjs>write</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="34" name="dstin_read" coreId="4294967292" bitwidth="64" opcode="read" m_display="0" m_topoIndex="4" m_clusterGroupNumber="-1">
+      <dataInputObjs>dstin</dataInputObjs>
+      <dataOutputObjs>write</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="35" name="frame_size_read" coreId="3514185152" bitwidth="32" opcode="read" m_display="0" m_topoIndex="5" m_clusterGroupNumber="-1">
+      <dataInputObjs>frame_size</dataInputObjs>
+      <dataOutputObjs>write</dataOutputObjs>
+      <dataOutputObjs>write</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="36" name="srcin_read" coreId="3515175120" bitwidth="64" opcode="read" m_display="0" m_topoIndex="6" m_clusterGroupNumber="-1">
+      <dataInputObjs>srcin</dataInputObjs>
+      <dataOutputObjs>write</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="37" name="y_read" coreId="3521547040" bitwidth="32" opcode="read" m_display="0" m_topoIndex="7" m_clusterGroupNumber="-1">
+      <dataInputObjs>y</dataInputObjs>
+      <dataOutputObjs>write</dataOutputObjs>
+      <dataOutputObjs>write</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="38" name="xstart_pos_read" coreId="0" bitwidth="32" opcode="read" m_display="0" m_topoIndex="8" m_clusterGroupNumber="-1">
+      <dataInputObjs>xstart_pos</dataInputObjs>
+      <dataOutputObjs>write</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="39" name="mapchip_maxwidth_read" coreId="1031027506" bitwidth="32" opcode="read" m_display="0" m_topoIndex="9" m_clusterGroupNumber="-1">
+      <dataInputObjs>mapchip_maxwidth</dataInputObjs>
+      <dataOutputObjs>write</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="40" name="ystart_pos_read" coreId="6" bitwidth="32" opcode="read" m_display="0" m_topoIndex="10" m_clusterGroupNumber="-1">
+      <dataInputObjs>ystart_pos</dataInputObjs>
+      <dataOutputObjs>write</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="41" name="mapchip_maxheight_read" coreId="543843360" bitwidth="32" opcode="read" m_display="0" m_topoIndex="11" m_clusterGroupNumber="-1">
+      <dataInputObjs>mapchip_maxheight</dataInputObjs>
+      <dataOutputObjs>write</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="42" name="id_read" coreId="0" bitwidth="32" opcode="read" m_display="0" m_topoIndex="12" m_clusterGroupNumber="-1">
+      <dataInputObjs>id</dataInputObjs>
+      <dataOutputObjs>write</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="43" name="mapchip_draw_xsize_read" coreId="805306496" bitwidth="32" opcode="read" m_display="0" m_topoIndex="13" m_clusterGroupNumber="-1">
+      <dataInputObjs>mapchip_draw_xsize</dataInputObjs>
+      <dataOutputObjs>write</dataOutputObjs>
+      <dataOutputObjs>write</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="44" name="mapchip_draw_xsize_out_write_ln0" coreName="FIFO_SRL" implIndex="srl" control="auto" opType="fifo" coreId="81" opcode="write" m_display="0" m_delay="3.63" m_topoIndex="14" m_clusterGroupNumber="-1">
+      <dataInputObjs>read</dataInputObjs>
+      <dataOutputObjs>mapchip_draw_xsize_out</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="46" name="mapchip_draw_xsize_out1_write_ln0" coreName="FIFO_SRL" implIndex="srl" control="auto" opType="fifo" coreId="81" opcode="write" m_display="0" m_delay="3.63" m_topoIndex="15" m_clusterGroupNumber="-1">
+      <dataInputObjs>read</dataInputObjs>
+      <dataOutputObjs>mapchip_draw_xsize_out1</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="48" name="id_out_write_ln0" coreName="FIFO_SRL" implIndex="srl" control="auto" opType="fifo" coreId="81" opcode="write" m_display="0" m_delay="3.63" m_topoIndex="16" m_clusterGroupNumber="-1">
+      <dataInputObjs>read</dataInputObjs>
+      <dataOutputObjs>id_out</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="50" name="mapchip_maxheight_out_write_ln0" coreName="FIFO_SRL" implIndex="srl" control="auto" opType="fifo" coreId="81" opcode="write" m_display="0" m_delay="3.63" m_topoIndex="17" m_clusterGroupNumber="-1">
+      <dataInputObjs>read</dataInputObjs>
+      <dataOutputObjs>mapchip_maxheight_out</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="52" name="ystart_pos_out_write_ln0" coreName="FIFO_SRL" implIndex="srl" control="auto" opType="fifo" coreId="81" opcode="write" m_display="0" m_delay="3.63" m_topoIndex="18" m_clusterGroupNumber="-1">
+      <dataInputObjs>read</dataInputObjs>
+      <dataOutputObjs>ystart_pos_out</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="54" name="mapchip_maxwidth_out_write_ln0" coreName="FIFO_SRL" implIndex="srl" control="auto" opType="fifo" coreId="81" opcode="write" m_display="0" m_delay="3.63" m_topoIndex="19" m_clusterGroupNumber="-1">
+      <dataInputObjs>read</dataInputObjs>
+      <dataOutputObjs>mapchip_maxwidth_out</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="56" name="xstart_pos_out_write_ln0" coreName="FIFO_SRL" implIndex="srl" control="auto" opType="fifo" coreId="81" opcode="write" m_display="0" m_delay="3.63" m_topoIndex="20" m_clusterGroupNumber="-1">
+      <dataInputObjs>read</dataInputObjs>
+      <dataOutputObjs>xstart_pos_out</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="58" name="y_out_write_ln0" coreName="FIFO_SRL" implIndex="srl" control="auto" opType="fifo" coreId="81" opcode="write" m_display="0" m_delay="3.63" m_topoIndex="21" m_clusterGroupNumber="-1">
+      <dataInputObjs>read</dataInputObjs>
+      <dataOutputObjs>y_out</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="60" name="y_out2_write_ln0" coreName="FIFO_SRL" implIndex="srl" control="auto" opType="fifo" coreId="81" opcode="write" m_display="0" m_delay="3.63" m_topoIndex="22" m_clusterGroupNumber="-1">
+      <dataInputObjs>read</dataInputObjs>
+      <dataOutputObjs>y_out2</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="62" name="srcin_out_write_ln0" coreName="FIFO_SRL" implIndex="srl" control="auto" opType="fifo" coreId="81" opcode="write" m_display="0" m_delay="3.63" m_topoIndex="23" m_clusterGroupNumber="-1">
+      <dataInputObjs>read</dataInputObjs>
+      <dataOutputObjs>srcin_out</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="64" name="frame_size_out_write_ln0" coreName="FIFO_SRL" implIndex="srl" control="auto" opType="fifo" coreId="81" opcode="write" m_display="0" m_delay="3.63" m_topoIndex="24" m_clusterGroupNumber="-1">
+      <dataInputObjs>read</dataInputObjs>
+      <dataOutputObjs>frame_size_out</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="66" name="frame_size_out3_write_ln0" coreName="FIFO_SRL" implIndex="srl" control="auto" opType="fifo" coreId="81" opcode="write" m_display="0" m_delay="3.63" m_topoIndex="25" m_clusterGroupNumber="-1">
+      <dataInputObjs>read</dataInputObjs>
+      <dataOutputObjs>frame_size_out3</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="68" name="dstin_out_write_ln0" coreName="FIFO_SRL" implIndex="srl" control="auto" opType="fifo" coreId="81" opcode="write" m_display="0" m_delay="3.63" m_topoIndex="26" m_clusterGroupNumber="-1">
+      <dataInputObjs>read</dataInputObjs>
+      <dataOutputObjs>dstin_out</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="70" name="dstout_out_write_ln0" coreName="FIFO_SRL" implIndex="srl" control="auto" opType="fifo" coreId="81" opcode="write" m_display="0" m_delay="3.63" m_topoIndex="27" m_clusterGroupNumber="-1">
+      <dataInputObjs>read</dataInputObjs>
+      <dataOutputObjs>dstout_out</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="72" name="crip_out_write_ln0" coreName="FIFO_SRL" implIndex="srl" control="auto" opType="fifo" coreId="81" opcode="write" m_display="0" m_delay="3.63" m_topoIndex="28" m_clusterGroupNumber="-1">
+      <dataInputObjs>read</dataInputObjs>
+      <dataOutputObjs>crip_out</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="74" name="alpha_out_write_ln0" coreName="FIFO_SRL" implIndex="srl" control="auto" opType="fifo" coreId="81" opcode="write" m_display="0" m_delay="3.63" m_topoIndex="29" m_clusterGroupNumber="-1">
+      <dataInputObjs>read</dataInputObjs>
+      <dataOutputObjs>alpha_out</dataOutputObjs>
+    </node_objs>
+    <node_objs xsi:type="cdfg:CdfgNode" id="75" name="_ln0" coreId="805306496" opcode="ret" m_display="0" m_topoIndex="30" m_clusterGroupNumber="-1"/>
+  </blocks>
+  <ScheduleInfo time="0"/>
+  <ioNodes realName="dstin_read_read_fu_106">
+    <nodeIds>34</nodeIds>
+  </ioNodes>
+  <ioNodes realName="write_ln0_write_fu_206">
+    <nodeIds>54</nodeIds>
+  </ioNodes>
+  <ioNodes realName="crip_read_read_fu_94">
+    <nodeIds>32</nodeIds>
+  </ioNodes>
+  <ioNodes realName="id_read_read_fu_154">
+    <nodeIds>42</nodeIds>
+  </ioNodes>
+  <ioNodes realName="write_ln0_write_fu_286">
+    <nodeIds>74</nodeIds>
+  </ioNodes>
+  <ioNodes realName="write_ln0_write_fu_222">
+    <nodeIds>58</nodeIds>
+  </ioNodes>
+  <ioNodes realName="write_ln0_write_fu_166">
+    <nodeIds>44</nodeIds>
+  </ioNodes>
+  <ioNodes realName="write_ln0_write_fu_246">
+    <nodeIds>64</nodeIds>
+  </ioNodes>
+  <ioNodes realName="mapchip_maxheight_read_read_fu_148">
+    <nodeIds>41</nodeIds>
+  </ioNodes>
+  <ioNodes realName="write_ln0_write_fu_182">
+    <nodeIds>48</nodeIds>
+  </ioNodes>
+  <ioNodes realName="write_ln0_write_fu_262">
+    <nodeIds>68</nodeIds>
+  </ioNodes>
+  <ioNodes realName="mapchip_draw_xsize_read_read_fu_160">
+    <nodeIds>43</nodeIds>
+  </ioNodes>
+  <ioNodes realName="dstout_read_read_fu_100">
+    <nodeIds>33</nodeIds>
+  </ioNodes>
+  <ioNodes realName="y_read_read_fu_124">
+    <nodeIds>37</nodeIds>
+  </ioNodes>
+  <ioNodes realName="write_ln0_write_fu_238">
+    <nodeIds>62</nodeIds>
+  </ioNodes>
+  <ioNodes realName="alpha_read_read_fu_88">
+    <nodeIds>31</nodeIds>
+  </ioNodes>
+  <ioNodes realName="srcin_read_read_fu_118">
+    <nodeIds>36</nodeIds>
+  </ioNodes>
+  <ioNodes realName="write_ln0_write_fu_198">
+    <nodeIds>52</nodeIds>
+  </ioNodes>
+  <ioNodes realName="write_ln0_write_fu_230">
+    <nodeIds>60</nodeIds>
+  </ioNodes>
+  <ioNodes realName="write_ln0_write_fu_254">
+    <nodeIds>66</nodeIds>
+  </ioNodes>
+  <ioNodes realName="write_ln0_write_fu_278">
+    <nodeIds>72</nodeIds>
+  </ioNodes>
+  <ioNodes realName="write_ln0_write_fu_214">
+    <nodeIds>56</nodeIds>
+  </ioNodes>
+  <ioNodes realName="write_ln0_write_fu_190">
+    <nodeIds>50</nodeIds>
+  </ioNodes>
+  <ioNodes realName="write_ln0_write_fu_270">
+    <nodeIds>70</nodeIds>
+  </ioNodes>
+  <ioNodes realName="write_ln0_write_fu_174">
+    <nodeIds>46</nodeIds>
+  </ioNodes>
+  <ioNodes realName="ystart_pos_read_read_fu_142">
+    <nodeIds>40</nodeIds>
+  </ioNodes>
+  <ioNodes realName="xstart_pos_read_read_fu_130">
+    <nodeIds>38</nodeIds>
+  </ioNodes>
+  <ioNodes realName="frame_size_read_read_fu_112">
+    <nodeIds>35</nodeIds>
+  </ioNodes>
+  <ioNodes realName="mapchip_maxwidth_read_read_fu_136">
+    <nodeIds>39</nodeIds>
+  </ioNodes>
+  <ioPorts name="alpha">
+    <contents name="read">
+      <nodeIds>31</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="alpha_out">
+    <contents name="write">
+      <nodeIds>74</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="crip">
+    <contents name="read">
+      <nodeIds>32</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="crip_out">
+    <contents name="write">
+      <nodeIds>72</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="dstin">
+    <contents name="read">
+      <nodeIds>34</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="dstin_out">
+    <contents name="write">
+      <nodeIds>68</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="dstout">
+    <contents name="read">
+      <nodeIds>33</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="dstout_out">
+    <contents name="write">
+      <nodeIds>70</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="frame_size">
+    <contents name="read">
+      <nodeIds>35</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="frame_size_out">
+    <contents name="write">
+      <nodeIds>64</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="frame_size_out3">
+    <contents name="write">
+      <nodeIds>66</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="id">
+    <contents name="read">
+      <nodeIds>42</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="id_out">
+    <contents name="write">
+      <nodeIds>48</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="mapchip_draw_xsize">
+    <contents name="read">
+      <nodeIds>43</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="mapchip_draw_xsize_out">
+    <contents name="write">
+      <nodeIds>44</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="mapchip_draw_xsize_out1">
+    <contents name="write">
+      <nodeIds>46</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="mapchip_maxheight">
+    <contents name="read">
+      <nodeIds>41</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="mapchip_maxheight_out">
+    <contents name="write">
+      <nodeIds>50</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="mapchip_maxwidth">
+    <contents name="read">
+      <nodeIds>39</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="mapchip_maxwidth_out">
+    <contents name="write">
+      <nodeIds>54</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="srcin">
+    <contents name="read">
+      <nodeIds>36</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="srcin_out">
+    <contents name="write">
+      <nodeIds>62</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="xstart_pos">
+    <contents name="read">
+      <nodeIds>38</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="xstart_pos_out">
+    <contents name="write">
+      <nodeIds>56</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="y">
+    <contents name="read">
+      <nodeIds>37</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="y_out">
+    <contents name="write">
+      <nodeIds>58</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="y_out2">
+    <contents name="write">
+      <nodeIds>60</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="ystart_pos">
+    <contents name="read">
+      <nodeIds>40</nodeIds>
+    </contents>
+  </ioPorts>
+  <ioPorts name="ystart_pos_out">
+    <contents name="write">
+      <nodeIds>52</nodeIds>
+    </contents>
+  </ioPorts>
+  <fsm>
+    <states id="1">
+      <operations id="30" stage="1" latency="1"/>
+      <operations id="31" stage="1" latency="1"/>
+      <operations id="32" stage="1" latency="1"/>
+      <operations id="33" stage="1" latency="1"/>
+      <operations id="34" stage="1" latency="1"/>
+      <operations id="35" stage="1" latency="1"/>
+      <operations id="36" stage="1" latency="1"/>
+      <operations id="37" stage="1" latency="1"/>
+      <operations id="38" stage="1" latency="1"/>
+      <operations id="39" stage="1" latency="1"/>
+      <operations id="40" stage="1" latency="1"/>
+      <operations id="41" stage="1" latency="1"/>
+      <operations id="42" stage="1" latency="1"/>
+      <operations id="43" stage="1" latency="1"/>
+      <operations id="44" stage="1" latency="1"/>
+      <operations id="45" stage="1" latency="1"/>
+      <operations id="46" stage="1" latency="1"/>
+      <operations id="47" stage="1" latency="1"/>
+      <operations id="48" stage="1" latency="1"/>
+      <operations id="49" stage="1" latency="1"/>
+      <operations id="50" stage="1" latency="1"/>
+      <operations id="51" stage="1" latency="1"/>
+      <operations id="52" stage="1" latency="1"/>
+      <operations id="53" stage="1" latency="1"/>
+      <operations id="54" stage="1" latency="1"/>
+      <operations id="55" stage="1" latency="1"/>
+      <operations id="56" stage="1" latency="1"/>
+      <operations id="57" stage="1" latency="1"/>
+      <operations id="58" stage="1" latency="1"/>
+      <operations id="59" stage="1" latency="1"/>
+      <operations id="60" stage="1" latency="1"/>
+      <operations id="61" stage="1" latency="1"/>
+      <operations id="62" stage="1" latency="1"/>
+      <operations id="63" stage="1" latency="1"/>
+      <operations id="64" stage="1" latency="1"/>
+      <operations id="65" stage="1" latency="1"/>
+      <operations id="66" stage="1" latency="1"/>
+      <operations id="67" stage="1" latency="1"/>
+      <operations id="68" stage="1" latency="1"/>
+      <operations id="69" stage="1" latency="1"/>
+      <operations id="70" stage="1" latency="1"/>
+      <operations id="71" stage="1" latency="1"/>
+      <operations id="72" stage="1" latency="1"/>
+      <operations id="73" stage="1" latency="1"/>
+      <operations id="74" stage="1" latency="1"/>
+      <operations id="75" stage="1" latency="1"/>
+    </states>
+  </fsm>
+  <CFGRegionsRoot>
+    <cfgRegions mId="1" mTag="dataflow_in_loop_height_loop_entry6" mII="-1" mDepth="-1" mMinTripCount="-1" mMaxTripCount="-1">
+      <basicBlocks>76</basicBlocks>
+      <mDfPipe/>
+    </cfgRegions>
+  </CFGRegionsRoot>
+</cdfg:DBCdfg>

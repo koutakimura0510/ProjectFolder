@@ -1,0 +1,205 @@
+
+
+================================================================
+== Vitis HLS Report for 'dataflow_parent_loop_proc'
+================================================================
+* Date:           Tue Jun  1 15:08:04 2021
+
+* Version:        2020.2 (Build 3064766 on Wed Nov 18 09:12:47 MST 2020)
+* Project:        background_loop
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: zynq
+* Target device:  xc7z020-clg400-1
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  10.00 ns|  7.300 ns|     2.70 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+-----------+-----+------+---------+
+    |  Latency (cycles) |  Latency (absolute)  |  Interval  | Pipeline|
+    |   min   |   max   |    min   |    max    | min |  max |   Type  |
+    +---------+---------+----------+-----------+-----+------+---------+
+    |       14|     5762|  0.140 us|  57.620 us|   14|  5762|     none|
+    +---------+---------+----------+-----------+-----+------+---------+
+
+    + Detail: 
+        * Instance: 
+        +--------------------------+-----------------------+---------+---------+----------+----------+-----+-----+----------+
+        |                          |                       |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline |
+        |         Instance         |         Module        |   min   |   max   |    min   |    max   | min | max |   Type   |
+        +--------------------------+-----------------------+---------+---------+----------+----------+-----+-----+----------+
+        |dataflow_in_loop_copy_U0  |dataflow_in_loop_copy  |       11|       11|  0.110 us|  0.110 us|   12|   12|  dataflow|
+        +--------------------------+-----------------------+---------+---------+----------+----------+-----+-----+----------+
+
+        * Loop: 
+        +----------+---------+---------+----------+-----------+-----------+---------+----------+
+        |          |  Latency (cycles) | Iteration|  Initiation Interval  |   Trip  |          |
+        | Loop Name|   min   |   max   |  Latency |  achieved |   target  |  Count  | Pipelined|
+        +----------+---------+---------+----------+-----------+-----------+---------+----------+
+        |- copy    |       13|     5761|        14|          -|          -|  1 ~ 480|        no|
+        +----------+---------+---------+----------+-----------+-----------+---------+----------+
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+-----+--------+-------+-----+
+|       Name      | BRAM_18K| DSP |   FF   |  LUT  | URAM|
++-----------------+---------+-----+--------+-------+-----+
+|DSP              |        -|    -|       -|      -|    -|
+|Expression       |        -|    -|     444|    108|    -|
+|FIFO             |        -|    -|       -|      -|    -|
+|Instance         |        -|    0|     368|    323|    -|
+|Memory           |        -|    -|       -|      -|    -|
+|Multiplexer      |        -|    -|       -|     18|    -|
+|Register         |        -|    -|      64|      -|    -|
++-----------------+---------+-----+--------+-------+-----+
+|Total            |        0|    0|     876|    449|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Available        |      280|  220|  106400|  53200|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Utilization (%)  |        0|    0|      ~0|     ~0|    0|
++-----------------+---------+-----+--------+-------+-----+
+
++ Detail: 
+    * Instance: 
+    +--------------------------+-----------------------+---------+----+-----+-----+-----+
+    |         Instance         |         Module        | BRAM_18K| DSP|  FF | LUT | URAM|
+    +--------------------------+-----------------------+---------+----+-----+-----+-----+
+    |dataflow_in_loop_copy_U0  |dataflow_in_loop_copy  |        0|   0|  368|  323|    0|
+    +--------------------------+-----------------------+---------+----+-----+-----+-----+
+    |Total                     |                       |        0|   0|  368|  323|    0|
+    +--------------------------+-----------------------+---------+----+-----+-----+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +----------------------------+----------+----+-----+----+------------+------------+
+    |        Variable Name       | Operation| DSP|  FF | LUT| Bitwidth P0| Bitwidth P1|
+    +----------------------------+----------+----+-----+----+------------+------------+
+    |loop_dataflow_input_count   |         +|   0|  148|  36|          32|           1|
+    |loop_dataflow_output_count  |         +|   0|  148|  36|          32|           1|
+    |bound_minus_1               |         -|   0|  148|  36|          32|           1|
+    +----------------------------+----------+----+-----+----+------------+------------+
+    |Total                       |          |   0|  444| 108|          96|           3|
+    +----------------------------+----------+----+-----+----+------------+------------+
+
+    * Multiplexer: 
+    +----------------------------+----+-----------+-----+-----------+
+    |            Name            | LUT| Input Size| Bits| Total Bits|
+    +----------------------------+----+-----------+-----+-----------+
+    |loop_dataflow_input_count   |   9|          2|   32|         64|
+    |loop_dataflow_output_count  |   9|          2|   32|         64|
+    +----------------------------+----+-----------+-----+-----------+
+    |Total                       |  18|          4|   64|        128|
+    +----------------------------+----+-----------+-----+-----------+
+
+    * Register: 
+    +----------------------------+----+----+-----+-----------+
+    |            Name            | FF | LUT| Bits| Const Bits|
+    +----------------------------+----+----+-----+-----------+
+    |loop_dataflow_input_count   |  32|   0|   32|          0|
+    |loop_dataflow_output_count  |  32|   0|   32|          0|
+    +----------------------------+----+----+-----+-----------+
+    |Total                       |  64|   0|   64|          0|
+    +----------------------------+----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++---------------------+-----+-----+------------+---------------------------+--------------+
+|      RTL Ports      | Dir | Bits|  Protocol  |       Source Object       |    C Type    |
++---------------------+-----+-----+------------+---------------------------+--------------+
+|height               |   in|   32|     ap_none|                     height|        scalar|
+|m_axi_copy_AWVALID   |  out|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_AWREADY   |   in|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_AWADDR    |  out|   64|       m_axi|                       copy|       pointer|
+|m_axi_copy_AWID      |  out|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_AWLEN     |  out|   32|       m_axi|                       copy|       pointer|
+|m_axi_copy_AWSIZE    |  out|    3|       m_axi|                       copy|       pointer|
+|m_axi_copy_AWBURST   |  out|    2|       m_axi|                       copy|       pointer|
+|m_axi_copy_AWLOCK    |  out|    2|       m_axi|                       copy|       pointer|
+|m_axi_copy_AWCACHE   |  out|    4|       m_axi|                       copy|       pointer|
+|m_axi_copy_AWPROT    |  out|    3|       m_axi|                       copy|       pointer|
+|m_axi_copy_AWQOS     |  out|    4|       m_axi|                       copy|       pointer|
+|m_axi_copy_AWREGION  |  out|    4|       m_axi|                       copy|       pointer|
+|m_axi_copy_AWUSER    |  out|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_WVALID    |  out|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_WREADY    |   in|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_WDATA     |  out|   32|       m_axi|                       copy|       pointer|
+|m_axi_copy_WSTRB     |  out|    4|       m_axi|                       copy|       pointer|
+|m_axi_copy_WLAST     |  out|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_WID       |  out|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_WUSER     |  out|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_ARVALID   |  out|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_ARREADY   |   in|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_ARADDR    |  out|   64|       m_axi|                       copy|       pointer|
+|m_axi_copy_ARID      |  out|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_ARLEN     |  out|   32|       m_axi|                       copy|       pointer|
+|m_axi_copy_ARSIZE    |  out|    3|       m_axi|                       copy|       pointer|
+|m_axi_copy_ARBURST   |  out|    2|       m_axi|                       copy|       pointer|
+|m_axi_copy_ARLOCK    |  out|    2|       m_axi|                       copy|       pointer|
+|m_axi_copy_ARCACHE   |  out|    4|       m_axi|                       copy|       pointer|
+|m_axi_copy_ARPROT    |  out|    3|       m_axi|                       copy|       pointer|
+|m_axi_copy_ARQOS     |  out|    4|       m_axi|                       copy|       pointer|
+|m_axi_copy_ARREGION  |  out|    4|       m_axi|                       copy|       pointer|
+|m_axi_copy_ARUSER    |  out|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_RVALID    |   in|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_RREADY    |  out|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_RDATA     |   in|   32|       m_axi|                       copy|       pointer|
+|m_axi_copy_RLAST     |   in|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_RID       |   in|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_RUSER     |   in|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_RRESP     |   in|    2|       m_axi|                       copy|       pointer|
+|m_axi_copy_BVALID    |   in|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_BREADY    |  out|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_BRESP     |   in|    2|       m_axi|                       copy|       pointer|
+|m_axi_copy_BID       |   in|    1|       m_axi|                       copy|       pointer|
+|m_axi_copy_BUSER     |   in|    1|       m_axi|                       copy|       pointer|
+|frame_size           |   in|   32|     ap_none|                 frame_size|        scalar|
+|frame_size_ap_vld    |   in|    1|     ap_none|                 frame_size|        scalar|
+|width                |   in|   32|     ap_none|                      width|        scalar|
+|width_ap_vld         |   in|    1|     ap_none|                      width|        scalar|
+|ddr_copy             |   in|   64|     ap_none|                   ddr_copy|        scalar|
+|ddr_copy_ap_vld      |   in|    1|     ap_none|                   ddr_copy|        scalar|
+|ycopy_V_address0     |  out|   10|   ap_memory|                    ycopy_V|         array|
+|ycopy_V_ce0          |  out|    1|   ap_memory|                    ycopy_V|         array|
+|ycopy_V_d0           |  out|   32|   ap_memory|                    ycopy_V|         array|
+|ycopy_V_q0           |   in|   32|   ap_memory|                    ycopy_V|         array|
+|ycopy_V_we0          |  out|    1|   ap_memory|                    ycopy_V|         array|
+|ycopy_V_address1     |  out|   10|   ap_memory|                    ycopy_V|         array|
+|ycopy_V_ce1          |  out|    1|   ap_memory|                    ycopy_V|         array|
+|ycopy_V_d1           |  out|   32|   ap_memory|                    ycopy_V|         array|
+|ycopy_V_q1           |   in|   32|   ap_memory|                    ycopy_V|         array|
+|ycopy_V_we1          |  out|    1|   ap_memory|                    ycopy_V|         array|
+|ap_clk               |   in|    1|  ap_ctrl_hs|  dataflow_parent_loop_proc|  return value|
+|ap_rst               |   in|    1|  ap_ctrl_hs|  dataflow_parent_loop_proc|  return value|
+|ap_start             |   in|    1|  ap_ctrl_hs|  dataflow_parent_loop_proc|  return value|
+|ap_done              |  out|    1|  ap_ctrl_hs|  dataflow_parent_loop_proc|  return value|
+|ap_ready             |  out|    1|  ap_ctrl_hs|  dataflow_parent_loop_proc|  return value|
+|ap_idle              |  out|    1|  ap_ctrl_hs|  dataflow_parent_loop_proc|  return value|
+|ap_continue          |   in|    1|  ap_ctrl_hs|  dataflow_parent_loop_proc|  return value|
++---------------------+-----+-----+------------+---------------------------+--------------+
+

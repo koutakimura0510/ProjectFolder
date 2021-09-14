@@ -1,0 +1,184 @@
+<AutoPilot:ProjectResources xmlns:AutoPilot="com.autoesl.autopilot.ui.directiveView">
+    <sourceFile name="">
+        <directive functionName="affine_scale.cpp" label="" functionLabel="">
+            <pragma name="TOP">
+                <option name="name" value="affine_scale.cpp"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="TOP">
+                <option name="name" value="affine_scale"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="return" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="m_axi" value="" positionalBoolean="mode"/>
+                <option name="depth" value="307200"/>
+                <option name="port" value="srcin" positionalBoolean="4"/>
+                <option name="offset" value="slave"/>
+                <option name="bundle" value="src"/>
+                <option name="num_read_outstanding" value="16"/>
+                <option name="max_read_burst_length" value="32"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="m_axi" value="" positionalBoolean="mode"/>
+                <option name="depth" value="307200"/>
+                <option name="port" value="dstin" positionalBoolean="4"/>
+                <option name="offset" value="slave"/>
+                <option name="bundle" value="dst"/>
+                <option name="num_read_outstanding" value="16"/>
+                <option name="max_read_burst_length" value="32"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="m_axi" value="" positionalBoolean="mode"/>
+                <option name="depth" value="307200"/>
+                <option name="port" value="dstout" positionalBoolean="4"/>
+                <option name="offset" value="slave"/>
+                <option name="bundle" value="dst"/>
+                <option name="num_write_outstanding" value="16"/>
+                <option name="max_write_burst_length" value="32"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="mapchip_maxwidth" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="mapchip_maxheight" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="mapchip_draw_xsize" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="mapchip_draw_ysize" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="xstart_pos" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="ystart_pos" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="frame_size" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="alpha" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="id" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="a" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="b" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="c" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="d" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="m" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="n" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="height_loop" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1"/>
+                <option name="max" value="480"/>
+                <option name="avg" value="240"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="height_loop" functionLabel="">
+            <pragma name="DATAFLOW"/>
+        </directive>
+        <directive functionName="affine_scale" label="src_loop" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="affine_scale" label="src_loop" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1"/>
+                <option name="max" value="640"/>
+                <option name="avg" value="240"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="dstin_loop" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="affine_scale" label="dstin_loop" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1"/>
+                <option name="max" value="640"/>
+                <option name="avg" value="240"/>
+            </pragma>
+        </directive>
+        <directive functionName="affine_scale" label="dstout_loop" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="affine_scale" label="dstout_loop" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1"/>
+                <option name="max" value="640"/>
+                <option name="avg" value="240"/>
+            </pragma>
+        </directive>
+    </sourceFile>
+</AutoPilot:ProjectResources>
+

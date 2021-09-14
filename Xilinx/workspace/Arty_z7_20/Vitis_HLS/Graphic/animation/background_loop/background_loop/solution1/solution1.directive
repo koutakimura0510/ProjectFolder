@@ -1,0 +1,122 @@
+<AutoPilot:ProjectResources xmlns:AutoPilot="com.autoesl.autopilot.ui.directiveView">
+    <sourceFile name="">
+        <directive functionName="background_loop" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="m_axi" value="" positionalBoolean="mode"/>
+                <option name="depth" value="307200"/>
+                <option name="port" value="ddr_copy" positionalBoolean="4"/>
+                <option name="offset" value="slave"/>
+                <option name="bundle" value="copy"/>
+                <option name="num_read_outstanding" value="16"/>
+                <option name="max_read_burst_length" value="32"/>
+            </pragma>
+        </directive>
+        <directive functionName="background_loop" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="m_axi" value="" positionalBoolean="mode"/>
+                <option name="depth" value="307200"/>
+                <option name="port" value="ddr_update" positionalBoolean="4"/>
+                <option name="offset" value="slave"/>
+                <option name="bundle" value="update"/>
+                <option name="num_write_outstanding" value="16"/>
+                <option name="max_write_burst_length" value="32"/>
+            </pragma>
+        </directive>
+        <directive functionName="background_loop" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="width" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="background_loop" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="height" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="background_loop" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="frame_size" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="background_loop" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="direction" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="background_loop" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="return" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="background_loop" label="" functionLabel="">
+            <pragma name="TOP">
+                <option name="name" value="background_loop"/>
+            </pragma>
+        </directive>
+        <directive functionName="background_loop" label="right_y_loop" functionLabel="">
+            <pragma name="DATAFLOW"/>
+        </directive>
+        <directive functionName="background_loop" label="right_y_loop" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1"/>
+                <option name="max" value="480"/>
+                <option name="avg" value="480"/>
+            </pragma>
+        </directive>
+        <directive functionName="background_loop" label="right_height_loop" functionLabel="">
+            <pragma name="DATAFLOW"/>
+        </directive>
+        <directive functionName="background_loop" label="right_height_loop" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1"/>
+                <option name="max" value="480"/>
+                <option name="avg" value="480"/>
+            </pragma>
+        </directive>
+        <directive functionName="background_loop" label="right_width_loop" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="background_loop" label="right_width_loop" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1"/>
+                <option name="max" value="640"/>
+                <option name="avg" value="640"/>
+            </pragma>
+        </directive>
+        <directive functionName="background_loop" label="right_copy_loop" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="background_loop" label="right_copy_loop" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1"/>
+                <option name="max" value="640"/>
+                <option name="avg" value="640"/>
+            </pragma>
+        </directive>
+        <directive functionName="background_loop" label="copy" functionLabel="">
+            <pragma name="DATAFLOW"/>
+        </directive>
+        <directive functionName="background_loop" label="copy" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1"/>
+                <option name="max" value="480"/>
+                <option name="avg" value="480"/>
+            </pragma>
+        </directive>
+        <directive functionName="background_loop" label="copy2" functionLabel="">
+            <pragma name="DATAFLOW"/>
+        </directive>
+        <directive functionName="background_loop" label="copy2" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1"/>
+                <option name="max" value="480"/>
+                <option name="avg" value="480"/>
+            </pragma>
+        </directive>
+    </sourceFile>
+</AutoPilot:ProjectResources>
+

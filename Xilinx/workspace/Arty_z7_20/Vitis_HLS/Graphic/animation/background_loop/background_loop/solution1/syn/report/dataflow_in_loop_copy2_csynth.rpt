@@ -1,0 +1,177 @@
+
+
+================================================================
+== Vitis HLS Report for 'dataflow_in_loop_copy2'
+================================================================
+* Date:           Tue Jun  1 15:08:04 2021
+
+* Version:        2020.2 (Build 3064766 on Wed Nov 18 09:12:47 MST 2020)
+* Project:        background_loop
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: zynq
+* Target device:  xc7z020-clg400-1
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  10.00 ns|  7.300 ns|     2.70 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+-----------+-----------+-----+-----+----------+
+    |  Latency (cycles) |   Latency (absolute)  |  Interval | Pipeline |
+    |   min   |   max   |    min    |    max    | min | max |   Type   |
+    +---------+---------+-----------+-----------+-----+-----+----------+
+    |        9|        9|  90.000 ns|  90.000 ns|   10|   10|  dataflow|
+    +---------+---------+-----------+-----------+-----+-----+----------+
+
+    + Detail: 
+        * Instance: 
+        +---------------------------+------------------------+---------+---------+-----------+-----------+-----+-----+---------+
+        |                           |                        |  Latency (cycles) |   Latency (absolute)  |  Interval | Pipeline|
+        |          Instance         |         Module         |   min   |   max   |    min    |    max    | min | max |   Type  |
+        +---------------------------+------------------------+---------+---------+-----------+-----------+-----+-----+---------+
+        |Block_entry_proc_proc7_U0  |Block_entry_proc_proc7  |        9|        9|  90.000 ns|  90.000 ns|    9|    9|     none|
+        +---------------------------+------------------------+---------+---------+-----------+-----------+-----+-----+---------+
+
+        * Loop: 
+        N/A
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+-----+--------+-------+-----+
+|       Name      | BRAM_18K| DSP |   FF   |  LUT  | URAM|
++-----------------+---------+-----+--------+-------+-----+
+|DSP              |        -|    -|       -|      -|    -|
+|Expression       |        -|    -|       -|      -|    -|
+|FIFO             |        -|    -|       -|      -|    -|
+|Instance         |        -|    0|     334|    218|    -|
+|Memory           |        -|    -|       -|      -|    -|
+|Multiplexer      |        -|    -|       -|      -|    -|
+|Register         |        -|    -|       -|      -|    -|
++-----------------+---------+-----+--------+-------+-----+
+|Total            |        0|    0|     334|    218|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Available        |      280|  220|  106400|  53200|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Utilization (%)  |        0|    0|      ~0|     ~0|    0|
++-----------------+---------+-----+--------+-------+-----+
+
++ Detail: 
+    * Instance: 
+    +---------------------------+------------------------+---------+----+-----+-----+-----+
+    |          Instance         |         Module         | BRAM_18K| DSP|  FF | LUT | URAM|
+    +---------------------------+------------------------+---------+----+-----+-----+-----+
+    |Block_entry_proc_proc7_U0  |Block_entry_proc_proc7  |        0|   0|  334|  218|    0|
+    +---------------------------+------------------------+---------+----+-----+-----+-----+
+    |Total                      |                        |        0|   0|  334|  218|    0|
+    +---------------------------+------------------------+---------+----+-----+-----+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    N/A
+
+    * Multiplexer: 
+    N/A
+
+    * Register: 
+    N/A
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++-----------------------+-----+-----+------------+------------------------+--------------+
+|       RTL Ports       | Dir | Bits|  Protocol  |      Source Object     |    C Type    |
++-----------------------+-----+-----+------------+------------------------+--------------+
+|ycopy_V_address0       |  out|   10|   ap_memory|                 ycopy_V|         array|
+|ycopy_V_ce0            |  out|    1|   ap_memory|                 ycopy_V|         array|
+|ycopy_V_d0             |  out|   32|   ap_memory|                 ycopy_V|         array|
+|ycopy_V_q0             |   in|   32|   ap_memory|                 ycopy_V|         array|
+|ycopy_V_we0            |  out|    1|   ap_memory|                 ycopy_V|         array|
+|ycopy_V_address1       |  out|   10|   ap_memory|                 ycopy_V|         array|
+|ycopy_V_ce1            |  out|    1|   ap_memory|                 ycopy_V|         array|
+|ycopy_V_d1             |  out|   32|   ap_memory|                 ycopy_V|         array|
+|ycopy_V_q1             |   in|   32|   ap_memory|                 ycopy_V|         array|
+|ycopy_V_we1            |  out|    1|   ap_memory|                 ycopy_V|         array|
+|trunc_ln329            |   in|   32|     ap_none|             trunc_ln329|        scalar|
+|trunc_ln329_ap_vld     |   in|    1|     ap_none|             trunc_ln329|        scalar|
+|m_axi_update_AWVALID   |  out|    1|       m_axi|                  update|       pointer|
+|m_axi_update_AWREADY   |   in|    1|       m_axi|                  update|       pointer|
+|m_axi_update_AWADDR    |  out|   64|       m_axi|                  update|       pointer|
+|m_axi_update_AWID      |  out|    1|       m_axi|                  update|       pointer|
+|m_axi_update_AWLEN     |  out|   32|       m_axi|                  update|       pointer|
+|m_axi_update_AWSIZE    |  out|    3|       m_axi|                  update|       pointer|
+|m_axi_update_AWBURST   |  out|    2|       m_axi|                  update|       pointer|
+|m_axi_update_AWLOCK    |  out|    2|       m_axi|                  update|       pointer|
+|m_axi_update_AWCACHE   |  out|    4|       m_axi|                  update|       pointer|
+|m_axi_update_AWPROT    |  out|    3|       m_axi|                  update|       pointer|
+|m_axi_update_AWQOS     |  out|    4|       m_axi|                  update|       pointer|
+|m_axi_update_AWREGION  |  out|    4|       m_axi|                  update|       pointer|
+|m_axi_update_AWUSER    |  out|    1|       m_axi|                  update|       pointer|
+|m_axi_update_WVALID    |  out|    1|       m_axi|                  update|       pointer|
+|m_axi_update_WREADY    |   in|    1|       m_axi|                  update|       pointer|
+|m_axi_update_WDATA     |  out|   32|       m_axi|                  update|       pointer|
+|m_axi_update_WSTRB     |  out|    4|       m_axi|                  update|       pointer|
+|m_axi_update_WLAST     |  out|    1|       m_axi|                  update|       pointer|
+|m_axi_update_WID       |  out|    1|       m_axi|                  update|       pointer|
+|m_axi_update_WUSER     |  out|    1|       m_axi|                  update|       pointer|
+|m_axi_update_ARVALID   |  out|    1|       m_axi|                  update|       pointer|
+|m_axi_update_ARREADY   |   in|    1|       m_axi|                  update|       pointer|
+|m_axi_update_ARADDR    |  out|   64|       m_axi|                  update|       pointer|
+|m_axi_update_ARID      |  out|    1|       m_axi|                  update|       pointer|
+|m_axi_update_ARLEN     |  out|   32|       m_axi|                  update|       pointer|
+|m_axi_update_ARSIZE    |  out|    3|       m_axi|                  update|       pointer|
+|m_axi_update_ARBURST   |  out|    2|       m_axi|                  update|       pointer|
+|m_axi_update_ARLOCK    |  out|    2|       m_axi|                  update|       pointer|
+|m_axi_update_ARCACHE   |  out|    4|       m_axi|                  update|       pointer|
+|m_axi_update_ARPROT    |  out|    3|       m_axi|                  update|       pointer|
+|m_axi_update_ARQOS     |  out|    4|       m_axi|                  update|       pointer|
+|m_axi_update_ARREGION  |  out|    4|       m_axi|                  update|       pointer|
+|m_axi_update_ARUSER    |  out|    1|       m_axi|                  update|       pointer|
+|m_axi_update_RVALID    |   in|    1|       m_axi|                  update|       pointer|
+|m_axi_update_RREADY    |  out|    1|       m_axi|                  update|       pointer|
+|m_axi_update_RDATA     |   in|   32|       m_axi|                  update|       pointer|
+|m_axi_update_RLAST     |   in|    1|       m_axi|                  update|       pointer|
+|m_axi_update_RID       |   in|    1|       m_axi|                  update|       pointer|
+|m_axi_update_RUSER     |   in|    1|       m_axi|                  update|       pointer|
+|m_axi_update_RRESP     |   in|    2|       m_axi|                  update|       pointer|
+|m_axi_update_BVALID    |   in|    1|       m_axi|                  update|       pointer|
+|m_axi_update_BREADY    |  out|    1|       m_axi|                  update|       pointer|
+|m_axi_update_BRESP     |   in|    2|       m_axi|                  update|       pointer|
+|m_axi_update_BID       |   in|    1|       m_axi|                  update|       pointer|
+|m_axi_update_BUSER     |   in|    1|       m_axi|                  update|       pointer|
+|frame_size             |   in|   32|     ap_none|              frame_size|        scalar|
+|frame_size_ap_vld      |   in|    1|     ap_none|              frame_size|        scalar|
+|ddr_update             |   in|   64|     ap_none|              ddr_update|        scalar|
+|ddr_update_ap_vld      |   in|    1|     ap_none|              ddr_update|        scalar|
+|ap_clk                 |   in|    1|  ap_ctrl_hs|  dataflow_in_loop_copy2|  return value|
+|ap_rst                 |   in|    1|  ap_ctrl_hs|  dataflow_in_loop_copy2|  return value|
+|ap_start               |   in|    1|  ap_ctrl_hs|  dataflow_in_loop_copy2|  return value|
+|ap_done                |  out|    1|  ap_ctrl_hs|  dataflow_in_loop_copy2|  return value|
+|ap_ready               |  out|    1|  ap_ctrl_hs|  dataflow_in_loop_copy2|  return value|
+|ap_idle                |  out|    1|  ap_ctrl_hs|  dataflow_in_loop_copy2|  return value|
+|ap_continue            |   in|    1|  ap_ctrl_hs|  dataflow_in_loop_copy2|  return value|
++-----------------------+-----+-----+------------+------------------------+--------------+
+

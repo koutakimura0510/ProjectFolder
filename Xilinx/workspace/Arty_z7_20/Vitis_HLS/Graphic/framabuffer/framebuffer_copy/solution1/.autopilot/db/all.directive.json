@@ -1,0 +1,261 @@
+{"sourceFile": [{
+      "name": "",
+      "directive": [
+        {
+          "functionName": "framebuffer_copy",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "TOP",
+            "option": [{
+                "name": "name",
+                "value": "framebuffer_copy"
+              }]
+          }
+        },
+        {
+          "functionName": "framebuffer_copy",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "s_axilite",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "return"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "framebuffer_copy",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "m_axi",
+                "value": ""
+              },
+              {
+                "name": "depth",
+                "value": "399360"
+              },
+              {
+                "name": "port",
+                "value": "copy"
+              },
+              {
+                "name": "offset",
+                "value": "slave"
+              },
+              {
+                "name": "bundle",
+                "value": "cp"
+              },
+              {
+                "name": "num_read_outstanding",
+                "value": "16"
+              },
+              {
+                "name": "max_read_burst_length",
+                "value": "32"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "framebuffer_copy",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "m_axi",
+                "value": ""
+              },
+              {
+                "name": "depth",
+                "value": "399360"
+              },
+              {
+                "name": "port",
+                "value": "update"
+              },
+              {
+                "name": "offset",
+                "value": "slave"
+              },
+              {
+                "name": "bundle",
+                "value": "up"
+              },
+              {
+                "name": "num_write_outstanding",
+                "value": "16"
+              },
+              {
+                "name": "max_write_burst_length",
+                "value": "32"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "framebuffer_copy",
+          "label": "height_loop",
+          "functionLabel": "",
+          "pragma": {"name": "DATAFLOW"}
+        },
+        {
+          "functionName": "framebuffer_copy",
+          "label": "height_loop",
+          "functionLabel": "",
+          "pragma": {
+            "name": "LOOP_TRIPCOUNT",
+            "option": [
+              {
+                "name": "min",
+                "value": "1"
+              },
+              {
+                "name": "max",
+                "value": "480"
+              },
+              {
+                "name": "avg",
+                "value": "480"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "framebuffer_copy",
+          "label": "width_loop",
+          "functionLabel": "",
+          "pragma": {"name": "PIPELINE"}
+        },
+        {
+          "functionName": "framebuffer_copy",
+          "label": "width_loop",
+          "functionLabel": "",
+          "pragma": {
+            "name": "LOOP_TRIPCOUNT",
+            "option": [
+              {
+                "name": "min",
+                "value": "1"
+              },
+              {
+                "name": "max",
+                "value": "640"
+              },
+              {
+                "name": "avg",
+                "value": "128"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "framebuffer_copy",
+          "label": "copy_loop",
+          "functionLabel": "",
+          "pragma": {"name": "PIPELINE"}
+        },
+        {
+          "functionName": "framebuffer_copy",
+          "label": "copy_loop",
+          "functionLabel": "",
+          "pragma": {
+            "name": "LOOP_TRIPCOUNT",
+            "option": [
+              {
+                "name": "min",
+                "value": "1"
+              },
+              {
+                "name": "max",
+                "value": "640"
+              },
+              {
+                "name": "avg",
+                "value": "128"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "framebuffer_copy",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "s_axilite",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "width"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "framebuffer_copy",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "s_axilite",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "height"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "framebuffer_copy",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "s_axilite",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "display_xsize"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "framebuffer_copy",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "TOP",
+            "option": [{
+                "name": "name",
+                "value": "framebuffer_copy"
+              }]
+          }
+        }
+      ]
+    }]}

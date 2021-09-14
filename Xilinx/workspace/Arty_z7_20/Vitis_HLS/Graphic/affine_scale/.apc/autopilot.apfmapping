@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autopilotfilemapping:AutoPilotFileMapping xmlns:autopilotfilemapping="www.autoesl.com/autopilotfilemapping">
+  <source>
+    <originFiles name="affine_scale.cpp" path="/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/Graphic/affine_scale/affine_scale.cpp"/>
+  </source>
+  <testbench>
+    <originFiles name="affine_scale_tb.cpp" path="/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/Graphic/affine_scale/affine_scale_tb.cpp"/>
+  </testbench>
+</autopilotfilemapping:AutoPilotFileMapping>

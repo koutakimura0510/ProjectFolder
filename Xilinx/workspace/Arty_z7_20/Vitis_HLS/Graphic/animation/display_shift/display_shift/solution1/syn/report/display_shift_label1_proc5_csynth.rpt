@@ -1,0 +1,245 @@
+
+
+================================================================
+== Vitis HLS Report for 'display_shift_label1_proc5'
+================================================================
+* Date:           Thu Jun  3 14:10:48 2021
+
+* Version:        2020.2 (Build 3064766 on Wed Nov 18 09:12:47 MST 2020)
+* Project:        display_shift
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: zynq
+* Target device:  xc7z020-clg484-1
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  10.00 ns|  7.300 ns|     2.70 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |       14|      653|  0.140 us|  6.530 us|   14|  653|     none|
+    +---------+---------+----------+----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        N/A
+
+        * Loop: 
+        +------------------------+---------+---------+----------+-----------+-----------+---------+----------+
+        |                        |  Latency (cycles) | Iteration|  Initiation Interval  |   Trip  |          |
+        |        Loop Name       |   min   |   max   |  Latency |  achieved |   target  |  Count  | Pipelined|
+        +------------------------+---------+---------+----------+-----------+-----------+---------+----------+
+        |- display_shift_label1  |        2|      641|         3|          1|          1|  1 ~ 640|       yes|
+        +------------------------+---------+---------+----------+-----------+-----------+---------+----------+
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+-----+--------+-------+-----+
+|       Name      | BRAM_18K| DSP |   FF   |  LUT  | URAM|
++-----------------+---------+-----+--------+-------+-----+
+|DSP              |        -|    -|       -|      -|    -|
+|Expression       |        -|    -|       0|    248|    -|
+|FIFO             |        -|    -|       -|      -|    -|
+|Instance         |        -|    0|     173|     54|    -|
+|Memory           |        -|    -|       -|      -|    -|
+|Multiplexer      |        -|    -|       -|    182|    -|
+|Register         |        -|    -|     307|      -|    -|
++-----------------+---------+-----+--------+-------+-----+
+|Total            |        0|    0|     480|    484|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Available        |      280|  220|  106400|  53200|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Utilization (%)  |        0|    0|      ~0|     ~0|    0|
++-----------------+---------+-----+--------+-------+-----+
+
++ Detail: 
+    * Instance: 
+    +------------------------+---------------------+---------+----+-----+----+-----+
+    |        Instance        |        Module       | BRAM_18K| DSP|  FF | LUT| URAM|
+    +------------------------+---------------------+---------+----+-----+----+-----+
+    |mul_34s_32ns_62_2_1_U1  |mul_34s_32ns_62_2_1  |        0|   0|  173|  54|    0|
+    +------------------------+---------------------+---------+----+-----+----+-----+
+    |Total                   |                     |        0|   0|  173|  54|    0|
+    +------------------------+---------------------+---------+----+-----+----+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +-----------------------------------+----------+----+---+----+------------+------------+
+    |           Variable Name           | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +-----------------------------------+----------+----+---+----+------------+------------+
+    |add_ln324_1_fu_279_p2              |         +|   0|  0|  71|          64|          64|
+    |add_ln324_fu_266_p2                |         +|   0|  0|  69|          62|          62|
+    |add_ln37_fu_305_p2                 |         +|   0|  0|  39|          32|           1|
+    |ret_1_i_i_fu_244_p2                |         +|   0|  0|  41|          34|          34|
+    |ap_block_pp0_stage0_11001          |       and|   0|  0|   2|           1|           1|
+    |ap_block_state13_pp0_stage0_iter1  |       and|   0|  0|   2|           1|           1|
+    |icmp_ln878_fu_311_p2               |      icmp|   0|  0|  18|          32|          32|
+    |ap_block_state1                    |        or|   0|  0|   2|           1|           1|
+    |ap_enable_pp0                      |       xor|   0|  0|   2|           1|           2|
+    |ap_enable_reg_pp0_iter1            |       xor|   0|  0|   2|           2|           1|
+    +-----------------------------------+----------+----+---+----+------------+------------+
+    |Total                              |          |   0|  0| 248|         230|         199|
+    +-----------------------------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    +----------------------------+----+-----------+-----+-----------+
+    |            Name            | LUT| Input Size| Bits| Total Bits|
+    +----------------------------+----+-----------+-----+-----------+
+    |ap_NS_fsm                   |  65|         14|    1|         14|
+    |ap_done                     |   9|          2|    1|          2|
+    |ap_enable_reg_pp0_iter1     |   9|          2|    1|          2|
+    |ap_enable_reg_pp0_iter2     |   9|          2|    1|          2|
+    |ap_phi_mux_x_phi_fu_228_p4  |   9|          2|   32|         64|
+    |copy_blk_n_AR               |   9|          2|    1|          2|
+    |copy_blk_n_R                |   9|          2|    1|          2|
+    |ddr_update_out_blk_n        |   9|          2|    1|          2|
+    |frame_size_out_blk_n        |   9|          2|    1|          2|
+    |width_out_blk_n             |   9|          2|    1|          2|
+    |x_reg_224                   |   9|          2|   32|         64|
+    |xend_out_blk_n              |   9|          2|    1|          2|
+    |y_2_out_blk_n               |   9|          2|    1|          2|
+    |yend_out_blk_n              |   9|          2|    1|          2|
+    +----------------------------+----+-----------+-----+-----------+
+    |Total                       | 182|         40|   76|        164|
+    +----------------------------+----+-----------+-----+-----------+
+
+    * Register: 
+    +----------------------------------+----+----+-----+-----------+
+    |               Name               | FF | LUT| Bits| Const Bits|
+    +----------------------------------+----+----+-----+-----------+
+    |add_ln37_reg_358                  |  32|   0|   32|          0|
+    |ap_CS_fsm                         |  13|   0|   13|          0|
+    |ap_done_reg                       |   1|   0|    1|          0|
+    |ap_enable_reg_pp0_iter0           |   1|   0|    1|          0|
+    |ap_enable_reg_pp0_iter1           |   1|   0|    1|          0|
+    |ap_enable_reg_pp0_iter2           |   1|   0|    1|          0|
+    |copy_addr_read_reg_367            |  32|   0|   32|          0|
+    |copy_addr_reg_352                 |  64|   0|   64|          0|
+    |icmp_ln878_reg_363                |   1|   0|    1|          0|
+    |icmp_ln878_reg_363_pp0_iter1_reg  |   1|   0|    1|          0|
+    |mul_ln534_reg_347                 |  62|   0|   62|          0|
+    |ret_1_i_i_reg_332                 |  34|   0|   34|          0|
+    |x_reg_224                         |  32|   0|   32|          0|
+    |x_reg_224_pp0_iter1_reg           |  32|   0|   32|          0|
+    +----------------------------------+----+----+-----+-----------+
+    |Total                             | 307|   0|  307|          0|
+    +----------------------------------+----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++-----------------------+-----+-----+------------+----------------------------+--------------+
+|       RTL Ports       | Dir | Bits|  Protocol  |        Source Object       |    C Type    |
++-----------------------+-----+-----+------------+----------------------------+--------------+
+|ap_clk                 |   in|    1|  ap_ctrl_hs|  display_shift_label1_proc5|  return value|
+|ap_rst                 |   in|    1|  ap_ctrl_hs|  display_shift_label1_proc5|  return value|
+|ap_start               |   in|    1|  ap_ctrl_hs|  display_shift_label1_proc5|  return value|
+|ap_done                |  out|    1|  ap_ctrl_hs|  display_shift_label1_proc5|  return value|
+|ap_continue            |   in|    1|  ap_ctrl_hs|  display_shift_label1_proc5|  return value|
+|ap_idle                |  out|    1|  ap_ctrl_hs|  display_shift_label1_proc5|  return value|
+|ap_ready               |  out|    1|  ap_ctrl_hs|  display_shift_label1_proc5|  return value|
+|width                  |   in|   32|     ap_none|                       width|        scalar|
+|xstart                 |   in|   32|     ap_none|                      xstart|        scalar|
+|y_2                    |   in|   32|     ap_none|                         y_2|        scalar|
+|ystart                 |   in|   32|     ap_none|                      ystart|        scalar|
+|frame_size             |   in|   32|     ap_none|                  frame_size|        scalar|
+|ddr_copy               |   in|   64|     ap_none|                    ddr_copy|        scalar|
+|m_axi_copy_AWVALID     |  out|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_AWREADY     |   in|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_AWADDR      |  out|   64|       m_axi|                        copy|       pointer|
+|m_axi_copy_AWID        |  out|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_AWLEN       |  out|   32|       m_axi|                        copy|       pointer|
+|m_axi_copy_AWSIZE      |  out|    3|       m_axi|                        copy|       pointer|
+|m_axi_copy_AWBURST     |  out|    2|       m_axi|                        copy|       pointer|
+|m_axi_copy_AWLOCK      |  out|    2|       m_axi|                        copy|       pointer|
+|m_axi_copy_AWCACHE     |  out|    4|       m_axi|                        copy|       pointer|
+|m_axi_copy_AWPROT      |  out|    3|       m_axi|                        copy|       pointer|
+|m_axi_copy_AWQOS       |  out|    4|       m_axi|                        copy|       pointer|
+|m_axi_copy_AWREGION    |  out|    4|       m_axi|                        copy|       pointer|
+|m_axi_copy_AWUSER      |  out|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_WVALID      |  out|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_WREADY      |   in|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_WDATA       |  out|   32|       m_axi|                        copy|       pointer|
+|m_axi_copy_WSTRB       |  out|    4|       m_axi|                        copy|       pointer|
+|m_axi_copy_WLAST       |  out|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_WID         |  out|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_WUSER       |  out|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_ARVALID     |  out|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_ARREADY     |   in|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_ARADDR      |  out|   64|       m_axi|                        copy|       pointer|
+|m_axi_copy_ARID        |  out|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_ARLEN       |  out|   32|       m_axi|                        copy|       pointer|
+|m_axi_copy_ARSIZE      |  out|    3|       m_axi|                        copy|       pointer|
+|m_axi_copy_ARBURST     |  out|    2|       m_axi|                        copy|       pointer|
+|m_axi_copy_ARLOCK      |  out|    2|       m_axi|                        copy|       pointer|
+|m_axi_copy_ARCACHE     |  out|    4|       m_axi|                        copy|       pointer|
+|m_axi_copy_ARPROT      |  out|    3|       m_axi|                        copy|       pointer|
+|m_axi_copy_ARQOS       |  out|    4|       m_axi|                        copy|       pointer|
+|m_axi_copy_ARREGION    |  out|    4|       m_axi|                        copy|       pointer|
+|m_axi_copy_ARUSER      |  out|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_RVALID      |   in|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_RREADY      |  out|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_RDATA       |   in|   32|       m_axi|                        copy|       pointer|
+|m_axi_copy_RLAST       |   in|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_RID         |   in|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_RUSER       |   in|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_RRESP       |   in|    2|       m_axi|                        copy|       pointer|
+|m_axi_copy_BVALID      |   in|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_BREADY      |  out|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_BRESP       |   in|    2|       m_axi|                        copy|       pointer|
+|m_axi_copy_BID         |   in|    1|       m_axi|                        copy|       pointer|
+|m_axi_copy_BUSER       |   in|    1|       m_axi|                        copy|       pointer|
+|copy_V1_address0       |  out|   10|   ap_memory|                     copy_V1|         array|
+|copy_V1_ce0            |  out|    1|   ap_memory|                     copy_V1|         array|
+|copy_V1_we0            |  out|    1|   ap_memory|                     copy_V1|         array|
+|copy_V1_d0             |  out|   32|   ap_memory|                     copy_V1|         array|
+|xend                   |   in|   32|     ap_none|                        xend|        scalar|
+|yend                   |   in|   32|     ap_none|                        yend|        scalar|
+|ddr_update             |   in|   64|     ap_none|                  ddr_update|        scalar|
+|width_out_din          |  out|   32|     ap_fifo|                   width_out|       pointer|
+|width_out_full_n       |   in|    1|     ap_fifo|                   width_out|       pointer|
+|width_out_write        |  out|    1|     ap_fifo|                   width_out|       pointer|
+|y_2_out_din            |  out|   32|     ap_fifo|                     y_2_out|       pointer|
+|y_2_out_full_n         |   in|    1|     ap_fifo|                     y_2_out|       pointer|
+|y_2_out_write          |  out|    1|     ap_fifo|                     y_2_out|       pointer|
+|frame_size_out_din     |  out|   32|     ap_fifo|              frame_size_out|       pointer|
+|frame_size_out_full_n  |   in|    1|     ap_fifo|              frame_size_out|       pointer|
+|frame_size_out_write   |  out|    1|     ap_fifo|              frame_size_out|       pointer|
+|xend_out_din           |  out|   32|     ap_fifo|                    xend_out|       pointer|
+|xend_out_full_n        |   in|    1|     ap_fifo|                    xend_out|       pointer|
+|xend_out_write         |  out|    1|     ap_fifo|                    xend_out|       pointer|
+|yend_out_din           |  out|   32|     ap_fifo|                    yend_out|       pointer|
+|yend_out_full_n        |   in|    1|     ap_fifo|                    yend_out|       pointer|
+|yend_out_write         |  out|    1|     ap_fifo|                    yend_out|       pointer|
+|ddr_update_out_din     |  out|   64|     ap_fifo|              ddr_update_out|       pointer|
+|ddr_update_out_full_n  |   in|    1|     ap_fifo|              ddr_update_out|       pointer|
+|ddr_update_out_write   |  out|    1|     ap_fifo|              ddr_update_out|       pointer|
++-----------------------+-----+-----+------------+----------------------------+--------------+
+
