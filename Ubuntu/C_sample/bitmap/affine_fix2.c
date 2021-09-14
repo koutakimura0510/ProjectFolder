@@ -16,8 +16,8 @@
 #include "terminal.h"
 
 /* bitmapのサイズ */
-#define BITMAP_WIDTH	(20)
-#define BITMAP_HEIGHT	(20)
+#define BITMAP_WIDTH	(40)
+#define BITMAP_HEIGHT	(40)
 
 /* 固定少数 */
 #define FIX_12			(4096)
