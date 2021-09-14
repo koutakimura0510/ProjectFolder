@@ -465,10 +465,6 @@ static void unit_mapchippos_update(GameWrapper *const game)
  */
 static void adjust_unit_action(GameWrapper *const game)
 {
-    uint32_t *bg = DRAM_MAPDATA_ADDR_START;
-    uint32_t dir_up;
-    uint32_t dir_do;
-
     if (game->unit.pos.unity < 0)
     {
         game->unit.pos.unity++;
@@ -478,23 +474,18 @@ static void adjust_unit_action(GameWrapper *const game)
     {
         set_jump_motion(JUMP_OFF);
     }
+    
     switch (game->unit.pos.unitdir)
     {
     case DIR_RIGHT:
-        dir_up = bg[((game->unit.pos.unitx + RIGHT_MOD) >> SIZE_UNIT_SHIFT_POS) + ((game->unit.pos.unity >> SIZE_UNIT_SHIFT_POS) * get_mapsize('w'))];
-        dir_do = bg[((game->unit.pos.unitx + RIGHT_MOD) >> SIZE_UNIT_SHIFT_POS) + (((game->unit.pos.unity + SIZE_UNIT_HEIGHT - 1) >> SIZE_UNIT_SHIFT_POS) * get_mapsize('w'))];
-
-        if ((SIZE_UNIT_MAX_XDRAW < game->unit.pos.unitx) || (dir_up != 87) || (dir_do != 87))
+        if (SIZE_UNIT_MAX_XDRAW < game->unit.pos.unitx)
         {
             game->unit.pos.unitx--;
         }
         break;
 
     case DIR_LEFT:
-        dir_up = bg[((game->unit.pos.unitx + LEFT_MOD)  >> SIZE_UNIT_SHIFT_POS) + ((game->unit.pos.unity >> SIZE_UNIT_SHIFT_POS) * get_mapsize('w'))];
-        dir_do = bg[((game->unit.pos.unitx + LEFT_MOD)  >> SIZE_UNIT_SHIFT_POS) + (((game->unit.pos.unity + SIZE_UNIT_HEIGHT - 1) >> SIZE_UNIT_SHIFT_POS) * get_mapsize('w'))];
-
-        if ((game->unit.pos.unitx < 0) || (dir_up != 87) || (dir_do != 87))
+        if (game->unit.pos.unitx < 0)
         {
             game->unit.pos.unitx++;
         }

@@ -416,8 +416,7 @@ void affine_scale(GameWrapper *const game)
 				continue;
 			}
 
-			uint32_t ddr_index = DISPLAY_POS(ix, iy, game->mapchip.maxwidth);
-			dstout[x + ypos] = color_generate(srcin[chip + ddr_index], dstin[ddr_index], game->mapchip.alpha);
+			dstout[x + ypos] = color_generate(srcin[chip + DISPLAY_POS(ix, iy, game->mapchip.maxwidth)], dstin[x + ypos], game->mapchip.alpha);
 			// dstout[x + (y * VIDEO_WIDTH)] = ddr_read[ix + (iy * game->mapchip.maxwidth)];
 		}
 	}
@@ -499,8 +498,7 @@ void affine_roulette(GameWrapper *const game)
 				continue;
 			}
 
-			uint32_t ddr_index = DISPLAY_POS(m0, n0, game->mapchip.maxwidth);
-			dstout[x + ypos] = color_generate(srcin[chip + ddr_index], dstin[ddr_index], game->mapchip.alpha);
+			dstout[x + ypos] = color_generate(srcin[chip + DISPLAY_POS(m0, n0, game->mapchip.maxwidth)], dstin[x + ypos], game->mapchip.alpha);
 		}
 	}
 
