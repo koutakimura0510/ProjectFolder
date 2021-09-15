@@ -89,8 +89,8 @@ typedef struct event
  * 
  * sub_state        メニュー表示などのサブディスプレイを操作する時に使用するメンバ。状態変数の保存などに使う
  * drawtype         暗転表示や通常表示などの表示モードのIDを保存
- * uncommon_window  特定の条件下でウィンドウを表示させるときに使用
- *                  例、バトル中のわざめい表示など
+ * uncommon_window  特定の条件下でウィンドウを表示させるときや、window描画のデータ処理に使用
+ *                  例、バトル中のわざめい表示、ゲージの管理など
  */
 typedef struct display
 {
@@ -167,7 +167,7 @@ typedef struct old_access
  * アニメーションの座標処理メンバを管理
  * 
  * vel      移動量の重みを指定
- * acc      移動量指定
+ * acc      移動量やアニメーションの最大値を指定
  * y        移動後のy座標計算用に使用
  * -
  * 下記のメンバは必要な時に使用する
@@ -181,7 +181,7 @@ typedef struct
     int32_t acc;
     int32_t y;
     uint8_t state;
-    uint8_t count;
+    uint32_t count;
 } AnimationConf;
 
 

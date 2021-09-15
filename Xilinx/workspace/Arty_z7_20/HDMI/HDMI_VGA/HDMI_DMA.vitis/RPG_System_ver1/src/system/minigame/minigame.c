@@ -8,7 +8,8 @@
 #include "minigame_struct.h"
 
 #ifdef MYDEBUG
-#include "xil_io.h"
+	// #include "xil_io.h"
+	#include "xil_printf.h"
 #endif
 
 #define MINIGAME_FUNC_DB_SIZE ((sizeof (minigame_state))/(sizeof (MinigameState)))

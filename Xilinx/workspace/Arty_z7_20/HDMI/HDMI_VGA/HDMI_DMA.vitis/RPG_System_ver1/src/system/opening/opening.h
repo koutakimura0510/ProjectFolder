@@ -24,6 +24,7 @@
  */
 typedef enum
 {
+	OPENING_DEMO_WINDOW,
 	OPENING_BITMAP_LOAD,
 	OPENING_MUSIC_LOAD,
 	OPENING_DB_LOAD,
@@ -36,6 +37,7 @@ typedef enum
 /*
  * オープニングファイル内関数
  */
+static void opening_demo_window(GameWrapper *const game);
 static void opening_bitmap_load(GameWrapper *const game);
 static void opening_music_load(GameWrapper *const game);
 static void opening_db_load(GameWrapper *const game);
@@ -56,6 +58,7 @@ typedef struct
 
 static const OpeningState opening_state[] =
 {
+	{OPENING_DEMO_WINDOW,	opening_demo_window		},
 	{OPENING_BITMAP_LOAD,	opening_bitmap_load		},
 	{OPENING_MUSIC_LOAD,	opening_music_load		},
 	{OPENING_DB_LOAD, 		opening_db_load,		},
