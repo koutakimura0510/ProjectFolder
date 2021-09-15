@@ -504,3 +504,29 @@ void affine_roulette(GameWrapper *const game)
 
 	Xil_DCacheFlushRange(game->mapchip.dstout, DISPLAY_FLASH_RANGE(game->mapchip.maxheight, MAX_V_WIDTH));
 }
+
+
+/**
+ * @brief  アフィン変換の回転処理の角度を保存する処理
+ * @note   
+ * @param  rad: 360度で割り切れる角度を指定
+ * @param  timer: 回転速度を指定
+ * @retval 1回転したらtrue
+ */
+bool affine_rad_save(GameWrapper *const game, uint32_t rad, uint32_t timer)
+{
+	if (true == tmr_constant(&game->conf.animation.count, timer))
+	{
+		game->conf.animation.count = get_time();
+		game->mapchip.rad += rad;
+
+		if (AFFINE_RAD_1 < game->mapchip.rad)
+		{
+			game->mapchip.rad = 0;
+
+			return true;
+		}
+	}
+
+	return false;
+}

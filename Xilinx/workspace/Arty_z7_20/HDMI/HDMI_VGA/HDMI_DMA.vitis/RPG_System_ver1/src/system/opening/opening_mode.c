@@ -112,18 +112,7 @@ static void opening_demo_window(GameWrapper *const game)
 	game->mapchip.alpha      = COLOR_ALPHA_MAX;
 	game->mapchip.id         = 0;
 	affine_roulette(game);
-
-	if (true == tmr_constant(&game->conf.animation.count, TM_100MS_COUNT))
-	{
-		game->mapchip.rad += 15;
-
-		if (359 < game->mapchip.rad)
-		{
-			game->mapchip.rad = 0;
-		}
-
-		game->conf.animation.count = get_time();
-	}
+	affine_rad_save(game, 15, TM_100MS_COUNT);
 
 	for (uint32_t i = 0; i < COLOR_NUMBER_RBG; i++)
 	{

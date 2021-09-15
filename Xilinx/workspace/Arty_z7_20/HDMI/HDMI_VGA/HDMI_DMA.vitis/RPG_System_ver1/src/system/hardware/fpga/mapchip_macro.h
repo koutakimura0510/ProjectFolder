@@ -11,14 +11,7 @@
 /* 最近傍補間の値 0.5 * 固定少数 * 10 */
 #define NEAREST_FIX_16	((5 << FIX_POS_16) / 10)	/* 回転用 */
 
-
-/*
- * ミニゲームに使用するマップチップID
- */
-#define MAPFILE_ACCESS_CHIP_MINIGAME_NULL    (0)
-#define MAPFILE_ACCESS_CHIP_MINIGAME_GRASS   (1)
-#define MAPFILE_ACCESS_CHIP_MINIGAME_BOMB1   (2)
-#define MAPFILE_ACCESS_CHIP_MINIGAME_BOMB2   (3)
-
+/* アフィン変換の回転時の1回転を判定する定数 */
+#define AFFINE_RAD_1	(359)
 
 #endif

@@ -164,8 +164,6 @@ typedef struct
  *
  * ver1. 2021/07/04
  * バトルモードのコンフィグを管理
- * -
- * sp バトル突入時の初期spを保存し、戦闘中のspを管理
  */
 typedef struct
 {
@@ -175,9 +173,7 @@ typedef struct
     HeroAnimation  hero;
     EnemyAnimation enemy;
     AtbTrun trun;
-    int8_t sp;
-    int8_t max_sp;
-    uint8_t motion_update[HERO_NUMBER];
+    uint8_t motion_update[HERO_NUMBER]; /* 戦闘時の仲間のモーション更新に使用 */
 } BattleConf;
 
 #endif

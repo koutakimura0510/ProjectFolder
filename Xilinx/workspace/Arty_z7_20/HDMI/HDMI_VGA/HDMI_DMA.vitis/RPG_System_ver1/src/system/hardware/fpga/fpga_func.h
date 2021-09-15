@@ -21,7 +21,7 @@ void framebuffer_copy(int ddr_copy, int ddr_update, int width, int height, int v
 void patblt(int dstout, int xpos, int ypos, int width, int height, int color);
 void affine_scale(GameWrapper *const game);
 void affine_roulette(GameWrapper *const game);
-
+bool affine_rad_save(GameWrapper *const game, uint32_t rad, uint32_t timer);
 
 /*
  * vdma.c
