@@ -173,46 +173,46 @@ static void opening_title_draw(GameWrapper *const game)
 	game->mapchip.srcin      = DRAM_TITLE_1_ADDR_BASE;
 	game->mapchip.dstin      = DRAM_TITLE_1_ADDR_BASE;
 	game->mapchip.dstout     = game->conf.work.adr;
-	game->mapchip.alpha		 = 0;
+	game->mapchip.alpha		 = COLOR_ALPHA_MAX;
 	game->mapchip.cut_color	 = COLOR_WHITE;
 	put_mapchip(game);
 	cursol_draw(game, OPENING_CURSOL_DEFAULT_POS, OPENING_CURSOL_INTERVAL_YPOS, CURSOL_TYPE_DEFAULT_DRAW);
 
-	if (SW_A & cmd_key(game))
-	{
-		bgm_update(game, SOUND_ID_CMD_BUTTON2, SOUND_CH_KEY_WORK);
-		game->conf.display.sub_state = OPENING_SAVE_LOAD;
-	}
+	// if (SW_A & cmd_key(game))
+	// {
+	// 	bgm_update(game, SOUND_ID_CMD_BUTTON2, SOUND_CH_KEY_WORK);
+	// 	game->conf.display.sub_state = OPENING_SAVE_LOAD;
+	// }
 
 	static SDL_Rect rect = (SDL_Rect){0, 0, 0, 0,};
 	static SDL_Timer timer = {0};
 
-	// game->mapchip.maxwidth   = SIZE_UNIT_WIDTH;
-	// game->mapchip.maxheight  = SIZE_UNIT_HEIGHT;
-	// game->mapchip.draw_xsize = VIDEO_WIDTH;
-	// game->mapchip.draw_ysize = VIDEO_HEIGHT;
-	// game->mapchip.xstart_pos = 0;
-	// game->mapchip.ystart_pos = 0;
-	// game->mapchip.frame_size = VIDEO_WIDTH;
-	// game->mapchip.srcin      = DRAM_UNIT_ADDR_BASE;
-	// game->mapchip.dstin      = game->conf.work.adr;
-	// game->mapchip.dstout     = game->conf.work.adr;
-	// game->mapchip.alpha      = COLOR_ALPHA_MAX;
-	// game->mapchip.a          = 100 + rect.w;
-	// game->mapchip.b          = 0;
-	// game->mapchip.c          = 0;
-	// game->mapchip.d          = 100 + rect.h;
-	// game->mapchip.m          = rect.x;
-	// game->mapchip.n          = rect.y;
-	// game->mapchip.id         = 0;
-	// affine_scale(game);	
+	game->mapchip.maxwidth   = SIZE_UNIT_WIDTH;
+	game->mapchip.maxheight  = SIZE_UNIT_HEIGHT;
+	game->mapchip.draw_xsize = VIDEO_WIDTH;
+	game->mapchip.draw_ysize = VIDEO_HEIGHT;
+	game->mapchip.xstart_pos = 0;
+	game->mapchip.ystart_pos = 0;
+	game->mapchip.frame_size = VIDEO_WIDTH;
+	game->mapchip.srcin      = DRAM_UNIT_ADDR_BASE;
+	game->mapchip.dstin      = game->conf.work.adr;
+	game->mapchip.dstout     = game->conf.work.adr;
+	game->mapchip.alpha      = COLOR_ALPHA_MAX;
+	game->mapchip.a          = 100 + rect.w;
+	game->mapchip.b          = 0;
+	game->mapchip.c          = 0;
+	game->mapchip.d          = 100 + rect.h;
+	game->mapchip.m          = rect.x;
+	game->mapchip.n          = rect.y;
+	game->mapchip.id         = 0;
+	affine_scale(game);
 
-	// game->mapchip.draw_xsize = SIZE_UNIT_WIDTH;
-	// game->mapchip.draw_ysize = SIZE_UNIT_HEIGHT;
-	// game->mapchip.srcin      = DRAM_UNIT_ADDR_BASE;
-	// game->mapchip.dstin      = game->conf.work.adr;
-	// game->mapchip.id         = 0;
-	// affine_roulette(game);
+	game->mapchip.draw_xsize = SIZE_UNIT_WIDTH;
+	game->mapchip.draw_ysize = SIZE_UNIT_HEIGHT;
+	game->mapchip.srcin      = DRAM_UNIT_ADDR_BASE;
+	game->mapchip.dstin      = game->conf.work.adr;
+	game->mapchip.id         = 0;
+	affine_roulette(game);
 
 	if (true == tmr_constant(&timer.count, TM_100MS_COUNT))
 	{
