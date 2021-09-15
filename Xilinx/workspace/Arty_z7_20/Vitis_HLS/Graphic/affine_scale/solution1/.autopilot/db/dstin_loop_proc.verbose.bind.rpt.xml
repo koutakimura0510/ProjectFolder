@@ -1,7 +1,7 @@
 <profile>
 
 <section name = "Vitis HLS Report for 'dstin_loop_proc'" level="0">
-<item name = "Date">Mon Sep  6 21:22:10 2021
+<item name = "Date">Wed Sep 15 21:04:40 2021
 </item>
 <item name = "Version">2020.2 (Build 3064766 on Wed Nov 18 09:12:47 MST 2020)</item>
 <item name = "Project">affine_scale</item>
@@ -24,7 +24,7 @@
 <section name = "" level="1">
 <item name = "Summary"><table name="" hasTotal="0">
 <keys size="8">, min, max, min, max, min, max, Type</keys>
-<column name="">63, 702, 0.630 us, 7.020 us, 63, 702, none</column>
+<column name="">14, 653, 0.140 us, 6.530 us, 14, 653, none</column>
 </table>
 </item>
 <item name = "Detail">
@@ -35,7 +35,7 @@
 </item>
 <item name = "Loop"><table name="" hasTotal="0">
 <keys size="8">Loop Name, min, max, Latency, achieved, target, Count, Pipelined</keys>
-<column name="- dstin_loop">15, 654, 16, 1, 1, 1 ~ 640, yes</column>
+<column name="- dstin_loop">2, 641, 3, 1, 1, 1 ~ 640, yes</column>
 </table>
 </item>
 </section>

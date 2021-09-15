@@ -59,9 +59,9 @@
 
 <AreaEstimates>
 <Resources>
-<DSP>1</DSP>
-<FF>6983</FF>
-<LUT>4147</LUT>
+<DSP>0</DSP>
+<FF>7129</FF>
+<LUT>4180</LUT>
 <BRAM_18K>0</BRAM_18K>
 <URAM>0</URAM>
 </Resources>
@@ -384,8 +384,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>trunc_ln69_dout</name>
-<Object>trunc_ln69</Object>
+<name>trunc_ln1345_dout</name>
+<Object>trunc_ln1345</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -395,8 +395,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>trunc_ln69_empty_n</name>
-<Object>trunc_ln69</Object>
+<name>trunc_ln1345_empty_n</name>
+<Object>trunc_ln1345</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -406,8 +406,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>trunc_ln69_read</name>
-<Object>trunc_ln69</Object>
+<name>trunc_ln1345_read</name>
+<Object>trunc_ln1345</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -1187,8 +1187,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>trunc_ln69_out_din</name>
-<Object>trunc_ln69_out</Object>
+<name>trunc_ln1345_out_din</name>
+<Object>trunc_ln1345_out</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -1198,8 +1198,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>trunc_ln69_out_full_n</name>
-<Object>trunc_ln69_out</Object>
+<name>trunc_ln1345_out_full_n</name>
+<Object>trunc_ln1345_out</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -1209,8 +1209,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>trunc_ln69_out_write</name>
-<Object>trunc_ln69_out</Object>
+<name>trunc_ln1345_out_write</name>
+<Object>trunc_ln1345_out</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>

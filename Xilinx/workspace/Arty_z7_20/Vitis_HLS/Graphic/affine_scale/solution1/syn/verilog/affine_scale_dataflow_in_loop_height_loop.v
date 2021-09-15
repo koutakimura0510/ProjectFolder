@@ -17,7 +17,7 @@ module affine_scale_dataflow_in_loop_height_loop (
         c,
         b,
         m,
-        trunc_ln69,
+        trunc_ln1345,
         mapchip_maxheight,
         n,
         id,
@@ -125,7 +125,7 @@ module affine_scale_dataflow_in_loop_height_loop (
         c_ap_vld,
         b_ap_vld,
         m_ap_vld,
-        trunc_ln69_ap_vld,
+        trunc_ln1345_ap_vld,
         mapchip_maxheight_ap_vld,
         n_ap_vld,
         id_ap_vld,
@@ -153,7 +153,7 @@ input  [19:0] a;
 input  [19:0] c;
 input  [19:0] b;
 input  [31:0] m;
-input  [31:0] trunc_ln69;
+input  [31:0] trunc_ln1345;
 input  [31:0] mapchip_maxheight;
 input  [31:0] n;
 input  [31:0] id;
@@ -261,7 +261,7 @@ input   a_ap_vld;
 input   c_ap_vld;
 input   b_ap_vld;
 input   m_ap_vld;
-input   trunc_ln69_ap_vld;
+input   trunc_ln1345_ap_vld;
 input   mapchip_maxheight_ap_vld;
 input   n_ap_vld;
 input   id_ap_vld;
@@ -293,40 +293,24 @@ wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_mapchip_draw_xsize_out1_din
 wire    dataflow_in_loop_height_loop_entry6_U0_mapchip_draw_xsize_out1_write;
 wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out_din;
 wire    dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out_write;
-wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out2_din;
-wire    dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out2_write;
 wire   [19:0] dataflow_in_loop_height_loop_entry6_U0_d_out_din;
 wire    dataflow_in_loop_height_loop_entry6_U0_d_out_write;
-wire   [19:0] dataflow_in_loop_height_loop_entry6_U0_d_out3_din;
-wire    dataflow_in_loop_height_loop_entry6_U0_d_out3_write;
 wire   [19:0] dataflow_in_loop_height_loop_entry6_U0_a_out_din;
 wire    dataflow_in_loop_height_loop_entry6_U0_a_out_write;
-wire   [19:0] dataflow_in_loop_height_loop_entry6_U0_a_out4_din;
-wire    dataflow_in_loop_height_loop_entry6_U0_a_out4_write;
 wire   [19:0] dataflow_in_loop_height_loop_entry6_U0_c_out_din;
 wire    dataflow_in_loop_height_loop_entry6_U0_c_out_write;
-wire   [19:0] dataflow_in_loop_height_loop_entry6_U0_c_out5_din;
-wire    dataflow_in_loop_height_loop_entry6_U0_c_out5_write;
 wire   [19:0] dataflow_in_loop_height_loop_entry6_U0_b_out_din;
 wire    dataflow_in_loop_height_loop_entry6_U0_b_out_write;
-wire   [19:0] dataflow_in_loop_height_loop_entry6_U0_b_out6_din;
-wire    dataflow_in_loop_height_loop_entry6_U0_b_out6_write;
 wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_m_out_din;
 wire    dataflow_in_loop_height_loop_entry6_U0_m_out_write;
-wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_m_out7_din;
-wire    dataflow_in_loop_height_loop_entry6_U0_m_out7_write;
-wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out_din;
-wire    dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out_write;
-wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out8_din;
-wire    dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out8_write;
+wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out_din;
+wire    dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out_write;
+wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out2_din;
+wire    dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out2_write;
 wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out_din;
 wire    dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out_write;
-wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out9_din;
-wire    dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out9_write;
 wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_n_out_din;
 wire    dataflow_in_loop_height_loop_entry6_U0_n_out_write;
-wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_n_out10_din;
-wire    dataflow_in_loop_height_loop_entry6_U0_n_out10_write;
 wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_id_out_din;
 wire    dataflow_in_loop_height_loop_entry6_U0_id_out_write;
 wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_ystart_pos_out_din;
@@ -337,8 +321,8 @@ wire   [63:0] dataflow_in_loop_height_loop_entry6_U0_srcin_out_din;
 wire    dataflow_in_loop_height_loop_entry6_U0_srcin_out_write;
 wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_frame_size_out_din;
 wire    dataflow_in_loop_height_loop_entry6_U0_frame_size_out_write;
-wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_frame_size_out11_din;
-wire    dataflow_in_loop_height_loop_entry6_U0_frame_size_out11_write;
+wire   [31:0] dataflow_in_loop_height_loop_entry6_U0_frame_size_out3_din;
+wire    dataflow_in_loop_height_loop_entry6_U0_frame_size_out3_write;
 wire   [63:0] dataflow_in_loop_height_loop_entry6_U0_dstin_out_din;
 wire    dataflow_in_loop_height_loop_entry6_U0_dstin_out_write;
 wire   [7:0] dataflow_in_loop_height_loop_entry6_U0_alpha_out_din;
@@ -357,7 +341,7 @@ wire    src_loop_proc_U0_a_read;
 wire    src_loop_proc_U0_c_read;
 wire    src_loop_proc_U0_b_read;
 wire    src_loop_proc_U0_m_read;
-wire    src_loop_proc_U0_trunc_ln69_read;
+wire    src_loop_proc_U0_trunc_ln1345_read;
 wire    src_loop_proc_U0_mapchip_maxheight_read;
 wire    src_loop_proc_U0_n_read;
 wire   [9:0] src_loop_proc_U0_src_V1_address0;
@@ -402,8 +386,8 @@ wire    src_loop_proc_U0_m_axi_src_RREADY;
 wire    src_loop_proc_U0_m_axi_src_BREADY;
 wire   [31:0] src_loop_proc_U0_mapchip_draw_xsize_out_din;
 wire    src_loop_proc_U0_mapchip_draw_xsize_out_write;
-wire   [31:0] src_loop_proc_U0_trunc_ln69_out_din;
-wire    src_loop_proc_U0_trunc_ln69_out_write;
+wire   [31:0] src_loop_proc_U0_trunc_ln1345_out_din;
+wire    src_loop_proc_U0_trunc_ln1345_out_write;
 wire    ap_channel_done_src_V;
 wire    src_loop_proc_U0_src_V1_full_n;
 wire    dstin_loop_proc_U0_ap_start;
@@ -412,7 +396,7 @@ wire    dstin_loop_proc_U0_ap_continue;
 wire    dstin_loop_proc_U0_ap_idle;
 wire    dstin_loop_proc_U0_ap_ready;
 wire    dstin_loop_proc_U0_mapchip_draw_xsize_read;
-wire    dstin_loop_proc_U0_trunc_ln69_read;
+wire    dstin_loop_proc_U0_trunc_ln1345_read;
 wire    dstin_loop_proc_U0_frame_size_read;
 wire    dstin_loop_proc_U0_dstin_read;
 wire    dstin_loop_proc_U0_m_axi_dst_AWVALID;
@@ -447,14 +431,6 @@ wire   [3:0] dstin_loop_proc_U0_m_axi_dst_ARREGION;
 wire   [0:0] dstin_loop_proc_U0_m_axi_dst_ARUSER;
 wire    dstin_loop_proc_U0_m_axi_dst_RREADY;
 wire    dstin_loop_proc_U0_m_axi_dst_BREADY;
-wire    dstin_loop_proc_U0_mapchip_maxwidth_read;
-wire    dstin_loop_proc_U0_d_read;
-wire    dstin_loop_proc_U0_a_read;
-wire    dstin_loop_proc_U0_c_read;
-wire    dstin_loop_proc_U0_b_read;
-wire    dstin_loop_proc_U0_m_read;
-wire    dstin_loop_proc_U0_mapchip_maxheight_read;
-wire    dstin_loop_proc_U0_n_read;
 wire   [9:0] dstin_loop_proc_U0_dst_V2_address0;
 wire    dstin_loop_proc_U0_dst_V2_ce0;
 wire    dstin_loop_proc_U0_dst_V2_we0;
@@ -472,7 +448,7 @@ wire    dstout_loop_proc_U0_src_V1_ce0;
 wire   [9:0] dstout_loop_proc_U0_dst_V2_address0;
 wire    dstout_loop_proc_U0_dst_V2_ce0;
 wire    dstout_loop_proc_U0_alpha_read;
-wire    dstout_loop_proc_U0_trunc_ln69_read;
+wire    dstout_loop_proc_U0_trunc_ln1345_read;
 wire    dstout_loop_proc_U0_frame_size_read;
 wire    dstout_loop_proc_U0_dstout_read;
 wire    dstout_loop_proc_U0_m_axi_dst_AWVALID;
@@ -521,57 +497,33 @@ wire    mapchip_draw_xsize_c1_empty_n;
 wire    mapchip_maxwidth_c_full_n;
 wire   [31:0] mapchip_maxwidth_c_dout;
 wire    mapchip_maxwidth_c_empty_n;
-wire    mapchip_maxwidth_c2_full_n;
-wire   [31:0] mapchip_maxwidth_c2_dout;
-wire    mapchip_maxwidth_c2_empty_n;
 wire    d_c_full_n;
 wire   [19:0] d_c_dout;
 wire    d_c_empty_n;
-wire    d_c3_full_n;
-wire   [19:0] d_c3_dout;
-wire    d_c3_empty_n;
 wire    a_c_full_n;
 wire   [19:0] a_c_dout;
 wire    a_c_empty_n;
-wire    a_c4_full_n;
-wire   [19:0] a_c4_dout;
-wire    a_c4_empty_n;
 wire    c_c_full_n;
 wire   [19:0] c_c_dout;
 wire    c_c_empty_n;
-wire    c_c5_full_n;
-wire   [19:0] c_c5_dout;
-wire    c_c5_empty_n;
 wire    b_c_full_n;
 wire   [19:0] b_c_dout;
 wire    b_c_empty_n;
-wire    b_c6_full_n;
-wire   [19:0] b_c6_dout;
-wire    b_c6_empty_n;
 wire    m_c_full_n;
 wire   [31:0] m_c_dout;
 wire    m_c_empty_n;
-wire    m_c7_full_n;
-wire   [31:0] m_c7_dout;
-wire    m_c7_empty_n;
-wire    trunc_ln69_c_full_n;
-wire   [31:0] trunc_ln69_c_dout;
-wire    trunc_ln69_c_empty_n;
-wire    trunc_ln69_c8_full_n;
-wire   [31:0] trunc_ln69_c8_dout;
-wire    trunc_ln69_c8_empty_n;
+wire    trunc_ln1345_c_full_n;
+wire   [31:0] trunc_ln1345_c_dout;
+wire    trunc_ln1345_c_empty_n;
+wire    trunc_ln1345_c2_full_n;
+wire   [31:0] trunc_ln1345_c2_dout;
+wire    trunc_ln1345_c2_empty_n;
 wire    mapchip_maxheight_c_full_n;
 wire   [31:0] mapchip_maxheight_c_dout;
 wire    mapchip_maxheight_c_empty_n;
-wire    mapchip_maxheight_c9_full_n;
-wire   [31:0] mapchip_maxheight_c9_dout;
-wire    mapchip_maxheight_c9_empty_n;
 wire    n_c_full_n;
 wire   [31:0] n_c_dout;
 wire    n_c_empty_n;
-wire    n_c10_full_n;
-wire   [31:0] n_c10_dout;
-wire    n_c10_empty_n;
 wire    id_c_full_n;
 wire   [31:0] id_c_dout;
 wire    id_c_empty_n;
@@ -587,9 +539,9 @@ wire    srcin_c_empty_n;
 wire    frame_size_c_full_n;
 wire   [31:0] frame_size_c_dout;
 wire    frame_size_c_empty_n;
-wire    frame_size_c11_full_n;
-wire   [31:0] frame_size_c11_dout;
-wire    frame_size_c11_empty_n;
+wire    frame_size_c3_full_n;
+wire   [31:0] frame_size_c3_dout;
+wire    frame_size_c3_empty_n;
 wire    dstin_c_full_n;
 wire   [63:0] dstin_c_dout;
 wire    dstin_c_empty_n;
@@ -599,12 +551,12 @@ wire    alpha_c_empty_n;
 wire    dstout_c_full_n;
 wire   [63:0] dstout_c_dout;
 wire    dstout_c_empty_n;
-wire    mapchip_draw_xsize_c12_full_n;
-wire   [31:0] mapchip_draw_xsize_c12_dout;
-wire    mapchip_draw_xsize_c12_empty_n;
-wire    trunc_ln69_c13_full_n;
-wire   [31:0] trunc_ln69_c13_dout;
-wire    trunc_ln69_c13_empty_n;
+wire    mapchip_draw_xsize_c4_full_n;
+wire   [31:0] mapchip_draw_xsize_c4_dout;
+wire    mapchip_draw_xsize_c4_empty_n;
+wire    trunc_ln1345_c5_full_n;
+wire   [31:0] trunc_ln1345_c5_dout;
+wire    trunc_ln1345_c5_empty_n;
 wire    ap_sync_done;
 wire    ap_sync_ready;
 reg    ap_sync_reg_dataflow_in_loop_height_loop_entry6_U0_ap_ready;
@@ -695,7 +647,7 @@ affine_scale_dataflow_in_loop_height_loop_entry6 dataflow_in_loop_height_loop_en
     .c(c),
     .b(b),
     .m(m),
-    .trunc_ln69(trunc_ln69),
+    .trunc_ln1345(trunc_ln1345),
     .mapchip_maxheight(mapchip_maxheight),
     .n(n),
     .id(id),
@@ -715,57 +667,33 @@ affine_scale_dataflow_in_loop_height_loop_entry6 dataflow_in_loop_height_loop_en
     .mapchip_maxwidth_out_din(dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out_din),
     .mapchip_maxwidth_out_full_n(mapchip_maxwidth_c_full_n),
     .mapchip_maxwidth_out_write(dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out_write),
-    .mapchip_maxwidth_out2_din(dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out2_din),
-    .mapchip_maxwidth_out2_full_n(mapchip_maxwidth_c2_full_n),
-    .mapchip_maxwidth_out2_write(dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out2_write),
     .d_out_din(dataflow_in_loop_height_loop_entry6_U0_d_out_din),
     .d_out_full_n(d_c_full_n),
     .d_out_write(dataflow_in_loop_height_loop_entry6_U0_d_out_write),
-    .d_out3_din(dataflow_in_loop_height_loop_entry6_U0_d_out3_din),
-    .d_out3_full_n(d_c3_full_n),
-    .d_out3_write(dataflow_in_loop_height_loop_entry6_U0_d_out3_write),
     .a_out_din(dataflow_in_loop_height_loop_entry6_U0_a_out_din),
     .a_out_full_n(a_c_full_n),
     .a_out_write(dataflow_in_loop_height_loop_entry6_U0_a_out_write),
-    .a_out4_din(dataflow_in_loop_height_loop_entry6_U0_a_out4_din),
-    .a_out4_full_n(a_c4_full_n),
-    .a_out4_write(dataflow_in_loop_height_loop_entry6_U0_a_out4_write),
     .c_out_din(dataflow_in_loop_height_loop_entry6_U0_c_out_din),
     .c_out_full_n(c_c_full_n),
     .c_out_write(dataflow_in_loop_height_loop_entry6_U0_c_out_write),
-    .c_out5_din(dataflow_in_loop_height_loop_entry6_U0_c_out5_din),
-    .c_out5_full_n(c_c5_full_n),
-    .c_out5_write(dataflow_in_loop_height_loop_entry6_U0_c_out5_write),
     .b_out_din(dataflow_in_loop_height_loop_entry6_U0_b_out_din),
     .b_out_full_n(b_c_full_n),
     .b_out_write(dataflow_in_loop_height_loop_entry6_U0_b_out_write),
-    .b_out6_din(dataflow_in_loop_height_loop_entry6_U0_b_out6_din),
-    .b_out6_full_n(b_c6_full_n),
-    .b_out6_write(dataflow_in_loop_height_loop_entry6_U0_b_out6_write),
     .m_out_din(dataflow_in_loop_height_loop_entry6_U0_m_out_din),
     .m_out_full_n(m_c_full_n),
     .m_out_write(dataflow_in_loop_height_loop_entry6_U0_m_out_write),
-    .m_out7_din(dataflow_in_loop_height_loop_entry6_U0_m_out7_din),
-    .m_out7_full_n(m_c7_full_n),
-    .m_out7_write(dataflow_in_loop_height_loop_entry6_U0_m_out7_write),
-    .trunc_ln69_out_din(dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out_din),
-    .trunc_ln69_out_full_n(trunc_ln69_c_full_n),
-    .trunc_ln69_out_write(dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out_write),
-    .trunc_ln69_out8_din(dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out8_din),
-    .trunc_ln69_out8_full_n(trunc_ln69_c8_full_n),
-    .trunc_ln69_out8_write(dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out8_write),
+    .trunc_ln1345_out_din(dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out_din),
+    .trunc_ln1345_out_full_n(trunc_ln1345_c_full_n),
+    .trunc_ln1345_out_write(dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out_write),
+    .trunc_ln1345_out2_din(dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out2_din),
+    .trunc_ln1345_out2_full_n(trunc_ln1345_c2_full_n),
+    .trunc_ln1345_out2_write(dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out2_write),
     .mapchip_maxheight_out_din(dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out_din),
     .mapchip_maxheight_out_full_n(mapchip_maxheight_c_full_n),
     .mapchip_maxheight_out_write(dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out_write),
-    .mapchip_maxheight_out9_din(dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out9_din),
-    .mapchip_maxheight_out9_full_n(mapchip_maxheight_c9_full_n),
-    .mapchip_maxheight_out9_write(dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out9_write),
     .n_out_din(dataflow_in_loop_height_loop_entry6_U0_n_out_din),
     .n_out_full_n(n_c_full_n),
     .n_out_write(dataflow_in_loop_height_loop_entry6_U0_n_out_write),
-    .n_out10_din(dataflow_in_loop_height_loop_entry6_U0_n_out10_din),
-    .n_out10_full_n(n_c10_full_n),
-    .n_out10_write(dataflow_in_loop_height_loop_entry6_U0_n_out10_write),
     .id_out_din(dataflow_in_loop_height_loop_entry6_U0_id_out_din),
     .id_out_full_n(id_c_full_n),
     .id_out_write(dataflow_in_loop_height_loop_entry6_U0_id_out_write),
@@ -781,9 +709,9 @@ affine_scale_dataflow_in_loop_height_loop_entry6 dataflow_in_loop_height_loop_en
     .frame_size_out_din(dataflow_in_loop_height_loop_entry6_U0_frame_size_out_din),
     .frame_size_out_full_n(frame_size_c_full_n),
     .frame_size_out_write(dataflow_in_loop_height_loop_entry6_U0_frame_size_out_write),
-    .frame_size_out11_din(dataflow_in_loop_height_loop_entry6_U0_frame_size_out11_din),
-    .frame_size_out11_full_n(frame_size_c11_full_n),
-    .frame_size_out11_write(dataflow_in_loop_height_loop_entry6_U0_frame_size_out11_write),
+    .frame_size_out3_din(dataflow_in_loop_height_loop_entry6_U0_frame_size_out3_din),
+    .frame_size_out3_full_n(frame_size_c3_full_n),
+    .frame_size_out3_write(dataflow_in_loop_height_loop_entry6_U0_frame_size_out3_write),
     .dstin_out_din(dataflow_in_loop_height_loop_entry6_U0_dstin_out_din),
     .dstin_out_full_n(dstin_c_full_n),
     .dstin_out_write(dataflow_in_loop_height_loop_entry6_U0_dstin_out_write),
@@ -824,9 +752,9 @@ affine_scale_src_loop_proc src_loop_proc_U0(
     .m_dout(m_c_dout),
     .m_empty_n(m_c_empty_n),
     .m_read(src_loop_proc_U0_m_read),
-    .trunc_ln69_dout(trunc_ln69_c_dout),
-    .trunc_ln69_empty_n(trunc_ln69_c_empty_n),
-    .trunc_ln69_read(src_loop_proc_U0_trunc_ln69_read),
+    .trunc_ln1345_dout(trunc_ln1345_c_dout),
+    .trunc_ln1345_empty_n(trunc_ln1345_c_empty_n),
+    .trunc_ln1345_read(src_loop_proc_U0_trunc_ln1345_read),
     .mapchip_maxheight_dout(mapchip_maxheight_c_dout),
     .mapchip_maxheight_empty_n(mapchip_maxheight_c_empty_n),
     .mapchip_maxheight_read(src_loop_proc_U0_mapchip_maxheight_read),
@@ -895,11 +823,11 @@ affine_scale_src_loop_proc src_loop_proc_U0(
     .m_axi_src_BID(1'd0),
     .m_axi_src_BUSER(1'd0),
     .mapchip_draw_xsize_out_din(src_loop_proc_U0_mapchip_draw_xsize_out_din),
-    .mapchip_draw_xsize_out_full_n(mapchip_draw_xsize_c12_full_n),
+    .mapchip_draw_xsize_out_full_n(mapchip_draw_xsize_c4_full_n),
     .mapchip_draw_xsize_out_write(src_loop_proc_U0_mapchip_draw_xsize_out_write),
-    .trunc_ln69_out_din(src_loop_proc_U0_trunc_ln69_out_din),
-    .trunc_ln69_out_full_n(trunc_ln69_c13_full_n),
-    .trunc_ln69_out_write(src_loop_proc_U0_trunc_ln69_out_write)
+    .trunc_ln1345_out_din(src_loop_proc_U0_trunc_ln1345_out_din),
+    .trunc_ln1345_out_full_n(trunc_ln1345_c5_full_n),
+    .trunc_ln1345_out_write(src_loop_proc_U0_trunc_ln1345_out_write)
 );
 
 affine_scale_dstin_loop_proc dstin_loop_proc_U0(
@@ -913,9 +841,9 @@ affine_scale_dstin_loop_proc dstin_loop_proc_U0(
     .mapchip_draw_xsize_dout(mapchip_draw_xsize_c1_dout),
     .mapchip_draw_xsize_empty_n(mapchip_draw_xsize_c1_empty_n),
     .mapchip_draw_xsize_read(dstin_loop_proc_U0_mapchip_draw_xsize_read),
-    .trunc_ln69_dout(trunc_ln69_c8_dout),
-    .trunc_ln69_empty_n(trunc_ln69_c8_empty_n),
-    .trunc_ln69_read(dstin_loop_proc_U0_trunc_ln69_read),
+    .trunc_ln1345_dout(trunc_ln1345_c2_dout),
+    .trunc_ln1345_empty_n(trunc_ln1345_c2_empty_n),
+    .trunc_ln1345_read(dstin_loop_proc_U0_trunc_ln1345_read),
     .frame_size_dout(frame_size_c_dout),
     .frame_size_empty_n(frame_size_c_empty_n),
     .frame_size_read(dstin_loop_proc_U0_frame_size_read),
@@ -967,30 +895,6 @@ affine_scale_dstin_loop_proc dstin_loop_proc_U0(
     .m_axi_dst_BRESP(2'd0),
     .m_axi_dst_BID(1'd0),
     .m_axi_dst_BUSER(1'd0),
-    .mapchip_maxwidth_dout(mapchip_maxwidth_c2_dout),
-    .mapchip_maxwidth_empty_n(mapchip_maxwidth_c2_empty_n),
-    .mapchip_maxwidth_read(dstin_loop_proc_U0_mapchip_maxwidth_read),
-    .d_dout(d_c3_dout),
-    .d_empty_n(d_c3_empty_n),
-    .d_read(dstin_loop_proc_U0_d_read),
-    .a_dout(a_c4_dout),
-    .a_empty_n(a_c4_empty_n),
-    .a_read(dstin_loop_proc_U0_a_read),
-    .c_dout(c_c5_dout),
-    .c_empty_n(c_c5_empty_n),
-    .c_read(dstin_loop_proc_U0_c_read),
-    .b_dout(b_c6_dout),
-    .b_empty_n(b_c6_empty_n),
-    .b_read(dstin_loop_proc_U0_b_read),
-    .m_dout(m_c7_dout),
-    .m_empty_n(m_c7_empty_n),
-    .m_read(dstin_loop_proc_U0_m_read),
-    .mapchip_maxheight_dout(mapchip_maxheight_c9_dout),
-    .mapchip_maxheight_empty_n(mapchip_maxheight_c9_empty_n),
-    .mapchip_maxheight_read(dstin_loop_proc_U0_mapchip_maxheight_read),
-    .n_dout(n_c10_dout),
-    .n_empty_n(n_c10_empty_n),
-    .n_read(dstin_loop_proc_U0_n_read),
     .dst_V2_address0(dstin_loop_proc_U0_dst_V2_address0),
     .dst_V2_ce0(dstin_loop_proc_U0_dst_V2_ce0),
     .dst_V2_we0(dstin_loop_proc_U0_dst_V2_we0),
@@ -1005,8 +909,8 @@ affine_scale_dstout_loop_proc dstout_loop_proc_U0(
     .ap_continue(dstout_loop_proc_U0_ap_continue),
     .ap_idle(dstout_loop_proc_U0_ap_idle),
     .ap_ready(dstout_loop_proc_U0_ap_ready),
-    .mapchip_draw_xsize_dout(mapchip_draw_xsize_c12_dout),
-    .mapchip_draw_xsize_empty_n(mapchip_draw_xsize_c12_empty_n),
+    .mapchip_draw_xsize_dout(mapchip_draw_xsize_c4_dout),
+    .mapchip_draw_xsize_empty_n(mapchip_draw_xsize_c4_empty_n),
     .mapchip_draw_xsize_read(dstout_loop_proc_U0_mapchip_draw_xsize_read),
     .src_V1_address0(dstout_loop_proc_U0_src_V1_address0),
     .src_V1_ce0(dstout_loop_proc_U0_src_V1_ce0),
@@ -1017,11 +921,11 @@ affine_scale_dstout_loop_proc dstout_loop_proc_U0(
     .alpha_dout(alpha_c_dout),
     .alpha_empty_n(alpha_c_empty_n),
     .alpha_read(dstout_loop_proc_U0_alpha_read),
-    .trunc_ln69_dout(trunc_ln69_c13_dout),
-    .trunc_ln69_empty_n(trunc_ln69_c13_empty_n),
-    .trunc_ln69_read(dstout_loop_proc_U0_trunc_ln69_read),
-    .frame_size_dout(frame_size_c11_dout),
-    .frame_size_empty_n(frame_size_c11_empty_n),
+    .trunc_ln1345_dout(trunc_ln1345_c5_dout),
+    .trunc_ln1345_empty_n(trunc_ln1345_c5_empty_n),
+    .trunc_ln1345_read(dstout_loop_proc_U0_trunc_ln1345_read),
+    .frame_size_dout(frame_size_c3_dout),
+    .frame_size_empty_n(frame_size_c3_empty_n),
     .frame_size_read(dstout_loop_proc_U0_frame_size_read),
     .dstout_dout(dstout_c_dout),
     .dstout_empty_n(dstout_c_empty_n),
@@ -1112,19 +1016,6 @@ affine_scale_fifo_w32_d2_S mapchip_maxwidth_c_U(
     .if_read(src_loop_proc_U0_mapchip_maxwidth_read)
 );
 
-affine_scale_fifo_w32_d2_S mapchip_maxwidth_c2_U(
-    .clk(ap_clk),
-    .reset(ap_rst),
-    .if_read_ce(1'b1),
-    .if_write_ce(1'b1),
-    .if_din(dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out2_din),
-    .if_full_n(mapchip_maxwidth_c2_full_n),
-    .if_write(dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out2_write),
-    .if_dout(mapchip_maxwidth_c2_dout),
-    .if_empty_n(mapchip_maxwidth_c2_empty_n),
-    .if_read(dstin_loop_proc_U0_mapchip_maxwidth_read)
-);
-
 affine_scale_fifo_w20_d2_S d_c_U(
     .clk(ap_clk),
     .reset(ap_rst),
@@ -1136,19 +1027,6 @@ affine_scale_fifo_w20_d2_S d_c_U(
     .if_dout(d_c_dout),
     .if_empty_n(d_c_empty_n),
     .if_read(src_loop_proc_U0_d_read)
-);
-
-affine_scale_fifo_w20_d2_S d_c3_U(
-    .clk(ap_clk),
-    .reset(ap_rst),
-    .if_read_ce(1'b1),
-    .if_write_ce(1'b1),
-    .if_din(dataflow_in_loop_height_loop_entry6_U0_d_out3_din),
-    .if_full_n(d_c3_full_n),
-    .if_write(dataflow_in_loop_height_loop_entry6_U0_d_out3_write),
-    .if_dout(d_c3_dout),
-    .if_empty_n(d_c3_empty_n),
-    .if_read(dstin_loop_proc_U0_d_read)
 );
 
 affine_scale_fifo_w20_d2_S a_c_U(
@@ -1164,19 +1042,6 @@ affine_scale_fifo_w20_d2_S a_c_U(
     .if_read(src_loop_proc_U0_a_read)
 );
 
-affine_scale_fifo_w20_d2_S a_c4_U(
-    .clk(ap_clk),
-    .reset(ap_rst),
-    .if_read_ce(1'b1),
-    .if_write_ce(1'b1),
-    .if_din(dataflow_in_loop_height_loop_entry6_U0_a_out4_din),
-    .if_full_n(a_c4_full_n),
-    .if_write(dataflow_in_loop_height_loop_entry6_U0_a_out4_write),
-    .if_dout(a_c4_dout),
-    .if_empty_n(a_c4_empty_n),
-    .if_read(dstin_loop_proc_U0_a_read)
-);
-
 affine_scale_fifo_w20_d2_S c_c_U(
     .clk(ap_clk),
     .reset(ap_rst),
@@ -1188,19 +1053,6 @@ affine_scale_fifo_w20_d2_S c_c_U(
     .if_dout(c_c_dout),
     .if_empty_n(c_c_empty_n),
     .if_read(src_loop_proc_U0_c_read)
-);
-
-affine_scale_fifo_w20_d2_S c_c5_U(
-    .clk(ap_clk),
-    .reset(ap_rst),
-    .if_read_ce(1'b1),
-    .if_write_ce(1'b1),
-    .if_din(dataflow_in_loop_height_loop_entry6_U0_c_out5_din),
-    .if_full_n(c_c5_full_n),
-    .if_write(dataflow_in_loop_height_loop_entry6_U0_c_out5_write),
-    .if_dout(c_c5_dout),
-    .if_empty_n(c_c5_empty_n),
-    .if_read(dstin_loop_proc_U0_c_read)
 );
 
 affine_scale_fifo_w20_d2_S b_c_U(
@@ -1216,19 +1068,6 @@ affine_scale_fifo_w20_d2_S b_c_U(
     .if_read(src_loop_proc_U0_b_read)
 );
 
-affine_scale_fifo_w20_d2_S b_c6_U(
-    .clk(ap_clk),
-    .reset(ap_rst),
-    .if_read_ce(1'b1),
-    .if_write_ce(1'b1),
-    .if_din(dataflow_in_loop_height_loop_entry6_U0_b_out6_din),
-    .if_full_n(b_c6_full_n),
-    .if_write(dataflow_in_loop_height_loop_entry6_U0_b_out6_write),
-    .if_dout(b_c6_dout),
-    .if_empty_n(b_c6_empty_n),
-    .if_read(dstin_loop_proc_U0_b_read)
-);
-
 affine_scale_fifo_w32_d2_S m_c_U(
     .clk(ap_clk),
     .reset(ap_rst),
@@ -1242,43 +1081,30 @@ affine_scale_fifo_w32_d2_S m_c_U(
     .if_read(src_loop_proc_U0_m_read)
 );
 
-affine_scale_fifo_w32_d2_S m_c7_U(
+affine_scale_fifo_w32_d2_S trunc_ln1345_c_U(
     .clk(ap_clk),
     .reset(ap_rst),
     .if_read_ce(1'b1),
     .if_write_ce(1'b1),
-    .if_din(dataflow_in_loop_height_loop_entry6_U0_m_out7_din),
-    .if_full_n(m_c7_full_n),
-    .if_write(dataflow_in_loop_height_loop_entry6_U0_m_out7_write),
-    .if_dout(m_c7_dout),
-    .if_empty_n(m_c7_empty_n),
-    .if_read(dstin_loop_proc_U0_m_read)
+    .if_din(dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out_din),
+    .if_full_n(trunc_ln1345_c_full_n),
+    .if_write(dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out_write),
+    .if_dout(trunc_ln1345_c_dout),
+    .if_empty_n(trunc_ln1345_c_empty_n),
+    .if_read(src_loop_proc_U0_trunc_ln1345_read)
 );
 
-affine_scale_fifo_w32_d2_S trunc_ln69_c_U(
+affine_scale_fifo_w32_d2_S trunc_ln1345_c2_U(
     .clk(ap_clk),
     .reset(ap_rst),
     .if_read_ce(1'b1),
     .if_write_ce(1'b1),
-    .if_din(dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out_din),
-    .if_full_n(trunc_ln69_c_full_n),
-    .if_write(dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out_write),
-    .if_dout(trunc_ln69_c_dout),
-    .if_empty_n(trunc_ln69_c_empty_n),
-    .if_read(src_loop_proc_U0_trunc_ln69_read)
-);
-
-affine_scale_fifo_w32_d2_S trunc_ln69_c8_U(
-    .clk(ap_clk),
-    .reset(ap_rst),
-    .if_read_ce(1'b1),
-    .if_write_ce(1'b1),
-    .if_din(dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out8_din),
-    .if_full_n(trunc_ln69_c8_full_n),
-    .if_write(dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out8_write),
-    .if_dout(trunc_ln69_c8_dout),
-    .if_empty_n(trunc_ln69_c8_empty_n),
-    .if_read(dstin_loop_proc_U0_trunc_ln69_read)
+    .if_din(dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out2_din),
+    .if_full_n(trunc_ln1345_c2_full_n),
+    .if_write(dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out2_write),
+    .if_dout(trunc_ln1345_c2_dout),
+    .if_empty_n(trunc_ln1345_c2_empty_n),
+    .if_read(dstin_loop_proc_U0_trunc_ln1345_read)
 );
 
 affine_scale_fifo_w32_d2_S mapchip_maxheight_c_U(
@@ -1294,19 +1120,6 @@ affine_scale_fifo_w32_d2_S mapchip_maxheight_c_U(
     .if_read(src_loop_proc_U0_mapchip_maxheight_read)
 );
 
-affine_scale_fifo_w32_d2_S mapchip_maxheight_c9_U(
-    .clk(ap_clk),
-    .reset(ap_rst),
-    .if_read_ce(1'b1),
-    .if_write_ce(1'b1),
-    .if_din(dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out9_din),
-    .if_full_n(mapchip_maxheight_c9_full_n),
-    .if_write(dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out9_write),
-    .if_dout(mapchip_maxheight_c9_dout),
-    .if_empty_n(mapchip_maxheight_c9_empty_n),
-    .if_read(dstin_loop_proc_U0_mapchip_maxheight_read)
-);
-
 affine_scale_fifo_w32_d2_S n_c_U(
     .clk(ap_clk),
     .reset(ap_rst),
@@ -1318,19 +1131,6 @@ affine_scale_fifo_w32_d2_S n_c_U(
     .if_dout(n_c_dout),
     .if_empty_n(n_c_empty_n),
     .if_read(src_loop_proc_U0_n_read)
-);
-
-affine_scale_fifo_w32_d2_S n_c10_U(
-    .clk(ap_clk),
-    .reset(ap_rst),
-    .if_read_ce(1'b1),
-    .if_write_ce(1'b1),
-    .if_din(dataflow_in_loop_height_loop_entry6_U0_n_out10_din),
-    .if_full_n(n_c10_full_n),
-    .if_write(dataflow_in_loop_height_loop_entry6_U0_n_out10_write),
-    .if_dout(n_c10_dout),
-    .if_empty_n(n_c10_empty_n),
-    .if_read(dstin_loop_proc_U0_n_read)
 );
 
 affine_scale_fifo_w32_d2_S id_c_U(
@@ -1398,16 +1198,16 @@ affine_scale_fifo_w32_d2_S frame_size_c_U(
     .if_read(dstin_loop_proc_U0_frame_size_read)
 );
 
-affine_scale_fifo_w32_d3_S frame_size_c11_U(
+affine_scale_fifo_w32_d3_S frame_size_c3_U(
     .clk(ap_clk),
     .reset(ap_rst),
     .if_read_ce(1'b1),
     .if_write_ce(1'b1),
-    .if_din(dataflow_in_loop_height_loop_entry6_U0_frame_size_out11_din),
-    .if_full_n(frame_size_c11_full_n),
-    .if_write(dataflow_in_loop_height_loop_entry6_U0_frame_size_out11_write),
-    .if_dout(frame_size_c11_dout),
-    .if_empty_n(frame_size_c11_empty_n),
+    .if_din(dataflow_in_loop_height_loop_entry6_U0_frame_size_out3_din),
+    .if_full_n(frame_size_c3_full_n),
+    .if_write(dataflow_in_loop_height_loop_entry6_U0_frame_size_out3_write),
+    .if_dout(frame_size_c3_dout),
+    .if_empty_n(frame_size_c3_empty_n),
     .if_read(dstout_loop_proc_U0_frame_size_read)
 );
 
@@ -1450,30 +1250,30 @@ affine_scale_fifo_w64_d3_S dstout_c_U(
     .if_read(dstout_loop_proc_U0_dstout_read)
 );
 
-affine_scale_fifo_w32_d2_S mapchip_draw_xsize_c12_U(
+affine_scale_fifo_w32_d2_S mapchip_draw_xsize_c4_U(
     .clk(ap_clk),
     .reset(ap_rst),
     .if_read_ce(1'b1),
     .if_write_ce(1'b1),
     .if_din(src_loop_proc_U0_mapchip_draw_xsize_out_din),
-    .if_full_n(mapchip_draw_xsize_c12_full_n),
+    .if_full_n(mapchip_draw_xsize_c4_full_n),
     .if_write(src_loop_proc_U0_mapchip_draw_xsize_out_write),
-    .if_dout(mapchip_draw_xsize_c12_dout),
-    .if_empty_n(mapchip_draw_xsize_c12_empty_n),
+    .if_dout(mapchip_draw_xsize_c4_dout),
+    .if_empty_n(mapchip_draw_xsize_c4_empty_n),
     .if_read(dstout_loop_proc_U0_mapchip_draw_xsize_read)
 );
 
-affine_scale_fifo_w32_d2_S trunc_ln69_c13_U(
+affine_scale_fifo_w32_d2_S trunc_ln1345_c5_U(
     .clk(ap_clk),
     .reset(ap_rst),
     .if_read_ce(1'b1),
     .if_write_ce(1'b1),
-    .if_din(src_loop_proc_U0_trunc_ln69_out_din),
-    .if_full_n(trunc_ln69_c13_full_n),
-    .if_write(src_loop_proc_U0_trunc_ln69_out_write),
-    .if_dout(trunc_ln69_c13_dout),
-    .if_empty_n(trunc_ln69_c13_empty_n),
-    .if_read(dstout_loop_proc_U0_trunc_ln69_read)
+    .if_din(src_loop_proc_U0_trunc_ln1345_out_din),
+    .if_full_n(trunc_ln1345_c5_full_n),
+    .if_write(src_loop_proc_U0_trunc_ln1345_out_write),
+    .if_dout(trunc_ln1345_c5_dout),
+    .if_empty_n(trunc_ln1345_c5_empty_n),
+    .if_read(dstout_loop_proc_U0_trunc_ln1345_read)
 );
 
 always @ (posedge ap_clk) begin

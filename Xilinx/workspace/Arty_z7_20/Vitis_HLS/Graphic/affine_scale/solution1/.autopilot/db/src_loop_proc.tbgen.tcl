@@ -19,7 +19,7 @@ set C_modelArgList {
 	{ c int 20 regular {fifo 0}  }
 	{ b int 20 regular {fifo 0}  }
 	{ m int 32 regular {fifo 0}  }
-	{ trunc_ln69 int 32 regular {fifo 0}  }
+	{ trunc_ln1345 int 32 regular {fifo 0}  }
 	{ mapchip_maxheight int 32 regular {fifo 0}  }
 	{ n int 32 regular {fifo 0}  }
 	{ src_V1 int 32 regular {array 640 { 0 3 } 0 1 }  }
@@ -29,7 +29,7 @@ set C_modelArgList {
 	{ srcin int 64 regular {fifo 0}  }
 	{ src int 32 regular {axi_master 0}  }
 	{ mapchip_draw_xsize_out int 32 regular {fifo 1}  }
-	{ trunc_ln69_out int 32 regular {fifo 1}  }
+	{ trunc_ln1345_out int 32 regular {fifo 1}  }
 }
 set C_modelArgMapList {[ 
 	{ "Name" : "mapchip_draw_xsize", "interface" : "fifo", "bitwidth" : 32, "direction" : "READONLY"} , 
@@ -39,7 +39,7 @@ set C_modelArgMapList {[
  	{ "Name" : "c", "interface" : "fifo", "bitwidth" : 20, "direction" : "READONLY"} , 
  	{ "Name" : "b", "interface" : "fifo", "bitwidth" : 20, "direction" : "READONLY"} , 
  	{ "Name" : "m", "interface" : "fifo", "bitwidth" : 32, "direction" : "READONLY"} , 
- 	{ "Name" : "trunc_ln69", "interface" : "fifo", "bitwidth" : 32, "direction" : "READONLY"} , 
+ 	{ "Name" : "trunc_ln1345", "interface" : "fifo", "bitwidth" : 32, "direction" : "READONLY"} , 
  	{ "Name" : "mapchip_maxheight", "interface" : "fifo", "bitwidth" : 32, "direction" : "READONLY"} , 
  	{ "Name" : "n", "interface" : "fifo", "bitwidth" : 32, "direction" : "READONLY"} , 
  	{ "Name" : "src_V1", "interface" : "memory", "bitwidth" : 32, "direction" : "WRITEONLY"} , 
@@ -49,7 +49,7 @@ set C_modelArgMapList {[
  	{ "Name" : "srcin", "interface" : "fifo", "bitwidth" : 64, "direction" : "READONLY"} , 
  	{ "Name" : "src", "interface" : "axi_master", "bitwidth" : 32, "direction" : "READONLY"} , 
  	{ "Name" : "mapchip_draw_xsize_out", "interface" : "fifo", "bitwidth" : 32, "direction" : "WRITEONLY"} , 
- 	{ "Name" : "trunc_ln69_out", "interface" : "fifo", "bitwidth" : 32, "direction" : "WRITEONLY"} ]}
+ 	{ "Name" : "trunc_ln1345_out", "interface" : "fifo", "bitwidth" : 32, "direction" : "WRITEONLY"} ]}
 # RTL Port declarations: 
 set portNum 104
 set portList { 
@@ -81,9 +81,9 @@ set portList {
 	{ m_dout sc_in sc_lv 32 signal 6 } 
 	{ m_empty_n sc_in sc_logic 1 signal 6 } 
 	{ m_read sc_out sc_logic 1 signal 6 } 
-	{ trunc_ln69_dout sc_in sc_lv 32 signal 7 } 
-	{ trunc_ln69_empty_n sc_in sc_logic 1 signal 7 } 
-	{ trunc_ln69_read sc_out sc_logic 1 signal 7 } 
+	{ trunc_ln1345_dout sc_in sc_lv 32 signal 7 } 
+	{ trunc_ln1345_empty_n sc_in sc_logic 1 signal 7 } 
+	{ trunc_ln1345_read sc_out sc_logic 1 signal 7 } 
 	{ mapchip_maxheight_dout sc_in sc_lv 32 signal 8 } 
 	{ mapchip_maxheight_empty_n sc_in sc_logic 1 signal 8 } 
 	{ mapchip_maxheight_read sc_out sc_logic 1 signal 8 } 
@@ -154,9 +154,9 @@ set portList {
 	{ mapchip_draw_xsize_out_din sc_out sc_lv 32 signal 16 } 
 	{ mapchip_draw_xsize_out_full_n sc_in sc_logic 1 signal 16 } 
 	{ mapchip_draw_xsize_out_write sc_out sc_logic 1 signal 16 } 
-	{ trunc_ln69_out_din sc_out sc_lv 32 signal 17 } 
-	{ trunc_ln69_out_full_n sc_in sc_logic 1 signal 17 } 
-	{ trunc_ln69_out_write sc_out sc_logic 1 signal 17 } 
+	{ trunc_ln1345_out_din sc_out sc_lv 32 signal 17 } 
+	{ trunc_ln1345_out_full_n sc_in sc_logic 1 signal 17 } 
+	{ trunc_ln1345_out_write sc_out sc_logic 1 signal 17 } 
 }
 set NewPortList {[ 
 	{ "name": "ap_clk", "direction": "in", "datatype": "sc_logic", "bitwidth":1, "type": "clock", "bundle":{"name": "ap_clk", "role": "default" }} , 
@@ -187,9 +187,9 @@ set NewPortList {[
  	{ "name": "m_dout", "direction": "in", "datatype": "sc_lv", "bitwidth":32, "type": "signal", "bundle":{"name": "m", "role": "dout" }} , 
  	{ "name": "m_empty_n", "direction": "in", "datatype": "sc_logic", "bitwidth":1, "type": "signal", "bundle":{"name": "m", "role": "empty_n" }} , 
  	{ "name": "m_read", "direction": "out", "datatype": "sc_logic", "bitwidth":1, "type": "signal", "bundle":{"name": "m", "role": "read" }} , 
- 	{ "name": "trunc_ln69_dout", "direction": "in", "datatype": "sc_lv", "bitwidth":32, "type": "signal", "bundle":{"name": "trunc_ln69", "role": "dout" }} , 
- 	{ "name": "trunc_ln69_empty_n", "direction": "in", "datatype": "sc_logic", "bitwidth":1, "type": "signal", "bundle":{"name": "trunc_ln69", "role": "empty_n" }} , 
- 	{ "name": "trunc_ln69_read", "direction": "out", "datatype": "sc_logic", "bitwidth":1, "type": "signal", "bundle":{"name": "trunc_ln69", "role": "read" }} , 
+ 	{ "name": "trunc_ln1345_dout", "direction": "in", "datatype": "sc_lv", "bitwidth":32, "type": "signal", "bundle":{"name": "trunc_ln1345", "role": "dout" }} , 
+ 	{ "name": "trunc_ln1345_empty_n", "direction": "in", "datatype": "sc_logic", "bitwidth":1, "type": "signal", "bundle":{"name": "trunc_ln1345", "role": "empty_n" }} , 
+ 	{ "name": "trunc_ln1345_read", "direction": "out", "datatype": "sc_logic", "bitwidth":1, "type": "signal", "bundle":{"name": "trunc_ln1345", "role": "read" }} , 
  	{ "name": "mapchip_maxheight_dout", "direction": "in", "datatype": "sc_lv", "bitwidth":32, "type": "signal", "bundle":{"name": "mapchip_maxheight", "role": "dout" }} , 
  	{ "name": "mapchip_maxheight_empty_n", "direction": "in", "datatype": "sc_logic", "bitwidth":1, "type": "signal", "bundle":{"name": "mapchip_maxheight", "role": "empty_n" }} , 
  	{ "name": "mapchip_maxheight_read", "direction": "out", "datatype": "sc_logic", "bitwidth":1, "type": "signal", "bundle":{"name": "mapchip_maxheight", "role": "read" }} , 
@@ -260,9 +260,9 @@ set NewPortList {[
  	{ "name": "mapchip_draw_xsize_out_din", "direction": "out", "datatype": "sc_lv", "bitwidth":32, "type": "signal", "bundle":{"name": "mapchip_draw_xsize_out", "role": "din" }} , 
  	{ "name": "mapchip_draw_xsize_out_full_n", "direction": "in", "datatype": "sc_logic", "bitwidth":1, "type": "signal", "bundle":{"name": "mapchip_draw_xsize_out", "role": "full_n" }} , 
  	{ "name": "mapchip_draw_xsize_out_write", "direction": "out", "datatype": "sc_logic", "bitwidth":1, "type": "signal", "bundle":{"name": "mapchip_draw_xsize_out", "role": "write" }} , 
- 	{ "name": "trunc_ln69_out_din", "direction": "out", "datatype": "sc_lv", "bitwidth":32, "type": "signal", "bundle":{"name": "trunc_ln69_out", "role": "din" }} , 
- 	{ "name": "trunc_ln69_out_full_n", "direction": "in", "datatype": "sc_logic", "bitwidth":1, "type": "signal", "bundle":{"name": "trunc_ln69_out", "role": "full_n" }} , 
- 	{ "name": "trunc_ln69_out_write", "direction": "out", "datatype": "sc_logic", "bitwidth":1, "type": "signal", "bundle":{"name": "trunc_ln69_out", "role": "write" }}  ]}
+ 	{ "name": "trunc_ln1345_out_din", "direction": "out", "datatype": "sc_lv", "bitwidth":32, "type": "signal", "bundle":{"name": "trunc_ln1345_out", "role": "din" }} , 
+ 	{ "name": "trunc_ln1345_out_full_n", "direction": "in", "datatype": "sc_logic", "bitwidth":1, "type": "signal", "bundle":{"name": "trunc_ln1345_out", "role": "full_n" }} , 
+ 	{ "name": "trunc_ln1345_out_write", "direction": "out", "datatype": "sc_logic", "bitwidth":1, "type": "signal", "bundle":{"name": "trunc_ln1345_out", "role": "write" }}  ]}
 
 set RtlHierarchyInfo {[
 	{"ID" : "0", "Level" : "0", "Path" : "`AUTOTB_DUT_INST", "Parent" : "", "Child" : ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19"],
@@ -300,9 +300,9 @@ set RtlHierarchyInfo {[
 			{"Name" : "m", "Type" : "Fifo", "Direction" : "I", "DependentProc" : "0", "DependentChan" : "0", "DependentChanDepth" : "2", "DependentChanType" : "2",
 				"BlockSignal" : [
 					{"Name" : "m_blk_n", "Type" : "RtlSignal"}]},
-			{"Name" : "trunc_ln69", "Type" : "Fifo", "Direction" : "I", "DependentProc" : "0", "DependentChan" : "0", "DependentChanDepth" : "2", "DependentChanType" : "2",
+			{"Name" : "trunc_ln1345", "Type" : "Fifo", "Direction" : "I", "DependentProc" : "0", "DependentChan" : "0", "DependentChanDepth" : "2", "DependentChanType" : "2",
 				"BlockSignal" : [
-					{"Name" : "trunc_ln69_blk_n", "Type" : "RtlSignal"}]},
+					{"Name" : "trunc_ln1345_blk_n", "Type" : "RtlSignal"}]},
 			{"Name" : "mapchip_maxheight", "Type" : "Fifo", "Direction" : "I", "DependentProc" : "0", "DependentChan" : "0", "DependentChanDepth" : "2", "DependentChanType" : "2",
 				"BlockSignal" : [
 					{"Name" : "mapchip_maxheight_blk_n", "Type" : "RtlSignal"}]},
@@ -329,28 +329,28 @@ set RtlHierarchyInfo {[
 			{"Name" : "mapchip_draw_xsize_out", "Type" : "Fifo", "Direction" : "O", "DependentProc" : "0", "DependentChan" : "0", "DependentChanDepth" : "2", "DependentChanType" : "2",
 				"BlockSignal" : [
 					{"Name" : "mapchip_draw_xsize_out_blk_n", "Type" : "RtlSignal"}]},
-			{"Name" : "trunc_ln69_out", "Type" : "Fifo", "Direction" : "O", "DependentProc" : "0", "DependentChan" : "0", "DependentChanDepth" : "2", "DependentChanType" : "2",
+			{"Name" : "trunc_ln1345_out", "Type" : "Fifo", "Direction" : "O", "DependentProc" : "0", "DependentChan" : "0", "DependentChanDepth" : "2", "DependentChanType" : "2",
 				"BlockSignal" : [
-					{"Name" : "trunc_ln69_out_blk_n", "Type" : "RtlSignal"}]}]},
-	{"ID" : "1", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_34ns_65_2_1_U48", "Parent" : "0"},
-	{"ID" : "2", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_34ns_65_2_1_U49", "Parent" : "0"},
-	{"ID" : "3", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_34ns_65_2_1_U50", "Parent" : "0"},
-	{"ID" : "4", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_34ns_65_2_1_U51", "Parent" : "0"},
-	{"ID" : "5", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_32s_32_2_1_U52", "Parent" : "0"},
-	{"ID" : "6", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_28s_28s_44_3_1_U53", "Parent" : "0"},
-	{"ID" : "7", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_28s_28s_44_3_1_U54", "Parent" : "0"},
-	{"ID" : "8", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_32s_32_2_1_U55", "Parent" : "0"},
-	{"ID" : "9", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.sdiv_32ns_32s_32_36_seq_1_U56", "Parent" : "0"},
-	{"ID" : "10", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.sdiv_33ns_32s_32_37_seq_1_U57", "Parent" : "0"},
-	{"ID" : "11", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.sdiv_33ns_32s_32_37_seq_1_U58", "Parent" : "0"},
-	{"ID" : "12", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.sdiv_32ns_32s_32_36_seq_1_U59", "Parent" : "0"},
-	{"ID" : "13", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_32s_32_2_1_U60", "Parent" : "0"},
-	{"ID" : "14", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_32s_32_2_1_U61", "Parent" : "0"},
-	{"ID" : "15", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_32s_32_2_1_U62", "Parent" : "0"},
-	{"ID" : "16", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_32s_32_2_1_U63", "Parent" : "0"},
-	{"ID" : "17", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_32s_32_2_1_U64", "Parent" : "0"},
-	{"ID" : "18", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_32s_32_2_1_U65", "Parent" : "0"},
-	{"ID" : "19", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32ns_21s_53_2_1_U66", "Parent" : "0"}]}
+					{"Name" : "trunc_ln1345_out_blk_n", "Type" : "RtlSignal"}]}]},
+	{"ID" : "1", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_34ns_65_2_1_U40", "Parent" : "0"},
+	{"ID" : "2", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_34ns_65_2_1_U41", "Parent" : "0"},
+	{"ID" : "3", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_34ns_65_2_1_U42", "Parent" : "0"},
+	{"ID" : "4", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_34ns_65_2_1_U43", "Parent" : "0"},
+	{"ID" : "5", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_32s_32_2_1_U44", "Parent" : "0"},
+	{"ID" : "6", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_28s_28s_44_3_1_U45", "Parent" : "0"},
+	{"ID" : "7", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_28s_28s_44_3_1_U46", "Parent" : "0"},
+	{"ID" : "8", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_32s_32_2_1_U47", "Parent" : "0"},
+	{"ID" : "9", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.sdiv_32ns_32s_32_36_seq_1_U48", "Parent" : "0"},
+	{"ID" : "10", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.sdiv_33ns_32s_32_37_seq_1_U49", "Parent" : "0"},
+	{"ID" : "11", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.sdiv_33ns_32s_32_37_seq_1_U50", "Parent" : "0"},
+	{"ID" : "12", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.sdiv_32ns_32s_32_36_seq_1_U51", "Parent" : "0"},
+	{"ID" : "13", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_32s_32_2_1_U52", "Parent" : "0"},
+	{"ID" : "14", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_32s_32_2_1_U53", "Parent" : "0"},
+	{"ID" : "15", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_32s_32_2_1_U54", "Parent" : "0"},
+	{"ID" : "16", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_32s_32_2_1_U55", "Parent" : "0"},
+	{"ID" : "17", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_33s_32s_44_2_1_U56", "Parent" : "0"},
+	{"ID" : "18", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_33s_32s_44_2_1_U57", "Parent" : "0"},
+	{"ID" : "19", "Level" : "1", "Path" : "`AUTOTB_DUT_INST.mul_32s_32ns_62_2_1_U58", "Parent" : "0"}]}
 
 
 set ArgLastReadFirstWriteLatency {
@@ -362,7 +362,7 @@ set ArgLastReadFirstWriteLatency {
 		c {Type I LastRead 0 FirstWrite -1}
 		b {Type I LastRead 0 FirstWrite -1}
 		m {Type I LastRead 0 FirstWrite -1}
-		trunc_ln69 {Type I LastRead 0 FirstWrite -1}
+		trunc_ln1345 {Type I LastRead 0 FirstWrite -1}
 		mapchip_maxheight {Type I LastRead 0 FirstWrite -1}
 		n {Type I LastRead 0 FirstWrite -1}
 		src_V1 {Type O LastRead -1 FirstWrite 62}
@@ -372,7 +372,7 @@ set ArgLastReadFirstWriteLatency {
 		srcin {Type I LastRead 0 FirstWrite -1}
 		src {Type I LastRead 61 FirstWrite -1}
 		mapchip_draw_xsize_out {Type O LastRead -1 FirstWrite 0}
-		trunc_ln69_out {Type O LastRead -1 FirstWrite 0}}}
+		trunc_ln1345_out {Type O LastRead -1 FirstWrite 0}}}
 
 set hasDtUnsupportedChannel 0
 
@@ -393,7 +393,7 @@ set Spec2ImplPortList {
 	c { ap_fifo {  { c_dout fifo_data 0 20 }  { c_empty_n fifo_status 0 1 }  { c_read fifo_update 1 1 } } }
 	b { ap_fifo {  { b_dout fifo_data 0 20 }  { b_empty_n fifo_status 0 1 }  { b_read fifo_update 1 1 } } }
 	m { ap_fifo {  { m_dout fifo_data 0 32 }  { m_empty_n fifo_status 0 1 }  { m_read fifo_update 1 1 } } }
-	trunc_ln69 { ap_fifo {  { trunc_ln69_dout fifo_data 0 32 }  { trunc_ln69_empty_n fifo_status 0 1 }  { trunc_ln69_read fifo_update 1 1 } } }
+	trunc_ln1345 { ap_fifo {  { trunc_ln1345_dout fifo_data 0 32 }  { trunc_ln1345_empty_n fifo_status 0 1 }  { trunc_ln1345_read fifo_update 1 1 } } }
 	mapchip_maxheight { ap_fifo {  { mapchip_maxheight_dout fifo_data 0 32 }  { mapchip_maxheight_empty_n fifo_status 0 1 }  { mapchip_maxheight_read fifo_update 1 1 } } }
 	n { ap_fifo {  { n_dout fifo_data 0 32 }  { n_empty_n fifo_status 0 1 }  { n_read fifo_update 1 1 } } }
 	src_V1 { ap_memory {  { src_V1_address0 mem_address 1 10 }  { src_V1_ce0 mem_ce 1 1 }  { src_V1_we0 mem_we 1 1 }  { src_V1_d0 mem_din 1 32 } } }
@@ -403,5 +403,5 @@ set Spec2ImplPortList {
 	srcin { ap_fifo {  { srcin_dout fifo_data 0 64 }  { srcin_empty_n fifo_status 0 1 }  { srcin_read fifo_update 1 1 } } }
 	src { m_axi {  { m_axi_src_AWVALID VALID 1 1 }  { m_axi_src_AWREADY READY 0 1 }  { m_axi_src_AWADDR ADDR 1 64 }  { m_axi_src_AWID ID 1 1 }  { m_axi_src_AWLEN LEN 1 32 }  { m_axi_src_AWSIZE SIZE 1 3 }  { m_axi_src_AWBURST BURST 1 2 }  { m_axi_src_AWLOCK LOCK 1 2 }  { m_axi_src_AWCACHE CACHE 1 4 }  { m_axi_src_AWPROT PROT 1 3 }  { m_axi_src_AWQOS QOS 1 4 }  { m_axi_src_AWREGION REGION 1 4 }  { m_axi_src_AWUSER USER 1 1 }  { m_axi_src_WVALID VALID 1 1 }  { m_axi_src_WREADY READY 0 1 }  { m_axi_src_WDATA DATA 1 32 }  { m_axi_src_WSTRB STRB 1 4 }  { m_axi_src_WLAST LAST 1 1 }  { m_axi_src_WID ID 1 1 }  { m_axi_src_WUSER USER 1 1 }  { m_axi_src_ARVALID VALID 1 1 }  { m_axi_src_ARREADY READY 0 1 }  { m_axi_src_ARADDR ADDR 1 64 }  { m_axi_src_ARID ID 1 1 }  { m_axi_src_ARLEN LEN 1 32 }  { m_axi_src_ARSIZE SIZE 1 3 }  { m_axi_src_ARBURST BURST 1 2 }  { m_axi_src_ARLOCK LOCK 1 2 }  { m_axi_src_ARCACHE CACHE 1 4 }  { m_axi_src_ARPROT PROT 1 3 }  { m_axi_src_ARQOS QOS 1 4 }  { m_axi_src_ARREGION REGION 1 4 }  { m_axi_src_ARUSER USER 1 1 }  { m_axi_src_RVALID VALID 0 1 }  { m_axi_src_RREADY READY 1 1 }  { m_axi_src_RDATA DATA 0 32 }  { m_axi_src_RLAST LAST 0 1 }  { m_axi_src_RID ID 0 1 }  { m_axi_src_RUSER USER 0 1 }  { m_axi_src_RRESP RESP 0 2 }  { m_axi_src_BVALID VALID 0 1 }  { m_axi_src_BREADY READY 1 1 }  { m_axi_src_BRESP RESP 0 2 }  { m_axi_src_BID ID 0 1 }  { m_axi_src_BUSER USER 0 1 } } }
 	mapchip_draw_xsize_out { ap_fifo {  { mapchip_draw_xsize_out_din fifo_data 1 32 }  { mapchip_draw_xsize_out_full_n fifo_status 0 1 }  { mapchip_draw_xsize_out_write fifo_update 1 1 } } }
-	trunc_ln69_out { ap_fifo {  { trunc_ln69_out_din fifo_data 1 32 }  { trunc_ln69_out_full_n fifo_status 0 1 }  { trunc_ln69_out_write fifo_update 1 1 } } }
+	trunc_ln1345_out { ap_fifo {  { trunc_ln1345_out_din fifo_data 1 32 }  { trunc_ln1345_out_full_n fifo_status 0 1 }  { trunc_ln1345_out_write fifo_update 1 1 } } }
 }

@@ -60,9 +60,9 @@
     <AreaEstimates>
         <Resources>
             <BRAM_18K>11</BRAM_18K>
-            <DSP>14</DSP>
-            <FF>19445</FF>
-            <LUT>13887</LUT>
+            <DSP>12</DSP>
+            <FF>13012</FF>
+            <LUT>9487</LUT>
             <URAM>0</URAM>
         </Resources>
         <AvailableResources>
@@ -1423,25 +1423,25 @@
                             <InstName>src_loop_proc_U0</InstName>
                             <ModuleName>src_loop_proc</ModuleName>
                             <IsCompInst>true</IsCompInst>
-                            <ID>396</ID>
-                        </Instance>
-                        <Instance>
-                            <InstName>dstin_loop_proc_U0</InstName>
-                            <ModuleName>dstin_loop_proc</ModuleName>
-                            <IsCompInst>true</IsCompInst>
-                            <ID>419</ID>
+                            <ID>348</ID>
                         </Instance>
                         <Instance>
                             <InstName>dstout_loop_proc_U0</InstName>
                             <ModuleName>dstout_loop_proc</ModuleName>
                             <IsCompInst>true</IsCompInst>
-                            <ID>438</ID>
+                            <ID>371</ID>
+                        </Instance>
+                        <Instance>
+                            <InstName>dstin_loop_proc_U0</InstName>
+                            <ModuleName>dstin_loop_proc</ModuleName>
+                            <IsCompInst>true</IsCompInst>
+                            <ID>384</ID>
                         </Instance>
                         <Instance>
                             <InstName>dataflow_in_loop_height_loop_entry6_U0</InstName>
                             <ModuleName>dataflow_in_loop_height_loop_entry6</ModuleName>
                             <IsCompInst>true</IsCompInst>
-                            <ID>451</ID>
+                            <ID>395</ID>
                         </Instance>
                     </InstancesList>
                 </Instance>
@@ -1473,7 +1473,7 @@
                     <FF>2</FF>
                     <AVAIL_FF>106400</AVAIL_FF>
                     <UTIL_FF>~0</UTIL_FF>
-                    <LUT>272</LUT>
+                    <LUT>200</LUT>
                     <AVAIL_LUT>53200</AVAIL_LUT>
                     <UTIL_LUT>~0</UTIL_LUT>
                     <BRAM_18K>0</BRAM_18K>
@@ -1643,8 +1643,8 @@
                     <Attribute>data</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69</name>
-                    <Object>trunc_ln69</Object>
+                    <name>trunc_ln1345</name>
+                    <Object>trunc_ln1345</Object>
                     <Type>scalar</Type>
                     <Scope/>
                     <IOProtocol>ap_none</IOProtocol>
@@ -1863,39 +1863,6 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>mapchip_maxwidth_out2_din</name>
-                    <Object>mapchip_maxwidth_out2</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>32</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>mapchip_maxwidth_out2_full_n</name>
-                    <Object>mapchip_maxwidth_out2</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>mapchip_maxwidth_out2_write</name>
-                    <Object>mapchip_maxwidth_out2</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
                     <name>d_out_din</name>
                     <Object>d_out</Object>
                     <Type>pointer</Type>
@@ -1920,39 +1887,6 @@
                 <RtlPorts>
                     <name>d_out_write</name>
                     <Object>d_out</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>d_out3_din</name>
-                    <Object>d_out3</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>20</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>d_out3_full_n</name>
-                    <Object>d_out3</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>d_out3_write</name>
-                    <Object>d_out3</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -1995,39 +1929,6 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>a_out4_din</name>
-                    <Object>a_out4</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>20</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>a_out4_full_n</name>
-                    <Object>a_out4</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>a_out4_write</name>
-                    <Object>a_out4</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
                     <name>c_out_din</name>
                     <Object>c_out</Object>
                     <Type>pointer</Type>
@@ -2052,39 +1953,6 @@
                 <RtlPorts>
                     <name>c_out_write</name>
                     <Object>c_out</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>c_out5_din</name>
-                    <Object>c_out5</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>20</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>c_out5_full_n</name>
-                    <Object>c_out5</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>c_out5_write</name>
-                    <Object>c_out5</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -2127,39 +1995,6 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>b_out6_din</name>
-                    <Object>b_out6</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>20</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>b_out6_full_n</name>
-                    <Object>b_out6</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>b_out6_write</name>
-                    <Object>b_out6</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
                     <name>m_out_din</name>
                     <Object>m_out</Object>
                     <Type>pointer</Type>
@@ -2193,8 +2028,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>m_out7_din</name>
-                    <Object>m_out7</Object>
+                    <name>trunc_ln1345_out_din</name>
+                    <Object>trunc_ln1345_out</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -2204,8 +2039,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>m_out7_full_n</name>
-                    <Object>m_out7</Object>
+                    <name>trunc_ln1345_out_full_n</name>
+                    <Object>trunc_ln1345_out</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -2215,8 +2050,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>m_out7_write</name>
-                    <Object>m_out7</Object>
+                    <name>trunc_ln1345_out_write</name>
+                    <Object>trunc_ln1345_out</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -2226,8 +2061,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69_out_din</name>
-                    <Object>trunc_ln69_out</Object>
+                    <name>trunc_ln1345_out2_din</name>
+                    <Object>trunc_ln1345_out2</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -2237,8 +2072,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69_out_full_n</name>
-                    <Object>trunc_ln69_out</Object>
+                    <name>trunc_ln1345_out2_full_n</name>
+                    <Object>trunc_ln1345_out2</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -2248,41 +2083,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69_out_write</name>
-                    <Object>trunc_ln69_out</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>trunc_ln69_out8_din</name>
-                    <Object>trunc_ln69_out8</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>32</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>trunc_ln69_out8_full_n</name>
-                    <Object>trunc_ln69_out8</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>trunc_ln69_out8_write</name>
-                    <Object>trunc_ln69_out8</Object>
+                    <name>trunc_ln1345_out2_write</name>
+                    <Object>trunc_ln1345_out2</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -2325,39 +2127,6 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>mapchip_maxheight_out9_din</name>
-                    <Object>mapchip_maxheight_out9</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>32</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>mapchip_maxheight_out9_full_n</name>
-                    <Object>mapchip_maxheight_out9</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>mapchip_maxheight_out9_write</name>
-                    <Object>mapchip_maxheight_out9</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
                     <name>n_out_din</name>
                     <Object>n_out</Object>
                     <Type>pointer</Type>
@@ -2382,39 +2151,6 @@
                 <RtlPorts>
                     <name>n_out_write</name>
                     <Object>n_out</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>n_out10_din</name>
-                    <Object>n_out10</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>32</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>n_out10_full_n</name>
-                    <Object>n_out10</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>n_out10_write</name>
-                    <Object>n_out10</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -2589,8 +2325,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>frame_size_out11_din</name>
-                    <Object>frame_size_out11</Object>
+                    <name>frame_size_out3_din</name>
+                    <Object>frame_size_out3</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -2600,8 +2336,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>frame_size_out11_full_n</name>
-                    <Object>frame_size_out11</Object>
+                    <name>frame_size_out3_full_n</name>
+                    <Object>frame_size_out3</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -2611,8 +2347,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>frame_size_out11_write</name>
-                    <Object>frame_size_out11</Object>
+                    <name>frame_size_out3_write</name>
+                    <Object>frame_size_out3</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -2758,13 +2494,13 @@
             </PerformanceEstimates>
             <AreaEstimates>
                 <Resources>
-                    <DSP>1</DSP>
+                    <DSP>0</DSP>
                     <AVAIL_DSP>220</AVAIL_DSP>
-                    <UTIL_DSP>~0</UTIL_DSP>
-                    <FF>6983</FF>
+                    <UTIL_DSP>0</UTIL_DSP>
+                    <FF>7129</FF>
                     <AVAIL_FF>106400</AVAIL_FF>
                     <UTIL_FF>6</UTIL_FF>
-                    <LUT>4147</LUT>
+                    <LUT>4180</LUT>
                     <AVAIL_LUT>53200</AVAIL_LUT>
                     <UTIL_LUT>7</UTIL_LUT>
                     <BRAM_18K>0</BRAM_18K>
@@ -3085,8 +2821,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69_dout</name>
-                    <Object>trunc_ln69</Object>
+                    <name>trunc_ln1345_dout</name>
+                    <Object>trunc_ln1345</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -3096,8 +2832,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69_empty_n</name>
-                    <Object>trunc_ln69</Object>
+                    <name>trunc_ln1345_empty_n</name>
+                    <Object>trunc_ln1345</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -3107,8 +2843,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69_read</name>
-                    <Object>trunc_ln69</Object>
+                    <name>trunc_ln1345_read</name>
+                    <Object>trunc_ln1345</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -3888,8 +3624,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69_out_din</name>
-                    <Object>trunc_ln69_out</Object>
+                    <name>trunc_ln1345_out_din</name>
+                    <Object>trunc_ln1345_out</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -3899,8 +3635,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69_out_full_n</name>
-                    <Object>trunc_ln69_out</Object>
+                    <name>trunc_ln1345_out_full_n</name>
+                    <Object>trunc_ln1345_out</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -3910,8 +3646,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69_out_write</name>
-                    <Object>trunc_ln69_out</Object>
+                    <name>trunc_ln1345_out_write</name>
+                    <Object>trunc_ln1345_out</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -3931,13 +3667,13 @@
                     <EstimatedClockPeriod>7.300</EstimatedClockPeriod>
                 </SummaryOfTimingAnalysis>
                 <SummaryOfOverallLatency>
-                    <Best-caseLatency>63</Best-caseLatency>
-                    <Average-caseLatency>302</Average-caseLatency>
-                    <Worst-caseLatency>702</Worst-caseLatency>
-                    <Best-caseRealTimeLatency>0.630 us</Best-caseRealTimeLatency>
-                    <Average-caseRealTimeLatency>3.020 us</Average-caseRealTimeLatency>
-                    <Worst-caseRealTimeLatency>7.020 us</Worst-caseRealTimeLatency>
-                    <PipelineInitiationInterval>63 ~ 702</PipelineInitiationInterval>
+                    <Best-caseLatency>14</Best-caseLatency>
+                    <Average-caseLatency>253</Average-caseLatency>
+                    <Worst-caseLatency>653</Worst-caseLatency>
+                    <Best-caseRealTimeLatency>0.140 us</Best-caseRealTimeLatency>
+                    <Average-caseRealTimeLatency>2.530 us</Average-caseRealTimeLatency>
+                    <Worst-caseRealTimeLatency>6.530 us</Worst-caseRealTimeLatency>
+                    <PipelineInitiationInterval>14 ~ 653</PipelineInitiationInterval>
                     <PipelineType>none</PipelineType>
                 </SummaryOfOverallLatency>
                 <SummaryOfLoopLatency>
@@ -3949,24 +3685,24 @@
                                 <max>640</max>
                             </range>
                         </TripCount>
-                        <Latency>15 ~ 654</Latency>
-                        <AbsoluteTimeLatency>0.150 us ~ 6.540 us</AbsoluteTimeLatency>
+                        <Latency>2 ~ 641</Latency>
+                        <AbsoluteTimeLatency>20.000 ns ~ 6.410 us</AbsoluteTimeLatency>
                         <PipelineII>1</PipelineII>
-                        <PipelineDepth>16</PipelineDepth>
+                        <PipelineDepth>3</PipelineDepth>
                     </dstin_loop>
                 </SummaryOfLoopLatency>
             </PerformanceEstimates>
             <AreaEstimates>
                 <Resources>
-                    <DSP>1</DSP>
+                    <DSP>0</DSP>
                     <AVAIL_DSP>220</AVAIL_DSP>
-                    <UTIL_DSP>~0</UTIL_DSP>
-                    <FF>6377</FF>
+                    <UTIL_DSP>0</UTIL_DSP>
+                    <FF>590</FF>
                     <AVAIL_FF>106400</AVAIL_FF>
-                    <UTIL_FF>5</UTIL_FF>
-                    <LUT>4169</LUT>
+                    <UTIL_FF>~0</UTIL_FF>
+                    <LUT>352</LUT>
                     <AVAIL_LUT>53200</AVAIL_LUT>
-                    <UTIL_LUT>7</UTIL_LUT>
+                    <UTIL_LUT>~0</UTIL_LUT>
                     <BRAM_18K>0</BRAM_18K>
                     <AVAIL_BRAM>280</AVAIL_BRAM>
                     <UTIL_BRAM>0</UTIL_BRAM>
@@ -4087,8 +3823,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69_dout</name>
-                    <Object>trunc_ln69</Object>
+                    <name>trunc_ln1345_dout</name>
+                    <Object>trunc_ln1345</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -4098,8 +3834,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69_empty_n</name>
-                    <Object>trunc_ln69</Object>
+                    <name>trunc_ln1345_empty_n</name>
+                    <Object>trunc_ln1345</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -4109,8 +3845,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69_read</name>
-                    <Object>trunc_ln69</Object>
+                    <name>trunc_ln1345_read</name>
+                    <Object>trunc_ln1345</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -4681,270 +4417,6 @@
                     <Attribute>unknown</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>mapchip_maxwidth_dout</name>
-                    <Object>mapchip_maxwidth</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>32</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>mapchip_maxwidth_empty_n</name>
-                    <Object>mapchip_maxwidth</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>mapchip_maxwidth_read</name>
-                    <Object>mapchip_maxwidth</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>d_dout</name>
-                    <Object>d</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>20</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>d_empty_n</name>
-                    <Object>d</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>d_read</name>
-                    <Object>d</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>a_dout</name>
-                    <Object>a</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>20</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>a_empty_n</name>
-                    <Object>a</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>a_read</name>
-                    <Object>a</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>c_dout</name>
-                    <Object>c</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>20</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>c_empty_n</name>
-                    <Object>c</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>c_read</name>
-                    <Object>c</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>b_dout</name>
-                    <Object>b</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>20</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>b_empty_n</name>
-                    <Object>b</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>b_read</name>
-                    <Object>b</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>m_dout</name>
-                    <Object>m</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>32</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>m_empty_n</name>
-                    <Object>m</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>m_read</name>
-                    <Object>m</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>mapchip_maxheight_dout</name>
-                    <Object>mapchip_maxheight</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>32</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>mapchip_maxheight_empty_n</name>
-                    <Object>mapchip_maxheight</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>mapchip_maxheight_read</name>
-                    <Object>mapchip_maxheight</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>n_dout</name>
-                    <Object>n</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>32</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>n_empty_n</name>
-                    <Object>n</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>in</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
-                    <name>n_read</name>
-                    <Object>n</Object>
-                    <Type>pointer</Type>
-                    <Scope/>
-                    <IOProtocol>ap_fifo</IOProtocol>
-                    <IOConfig/>
-                    <Dir>out</Dir>
-                    <Bits>1</Bits>
-                    <Attribute>control</Attribute>
-                </RtlPorts>
-                <RtlPorts>
                     <name>dst_V2_address0</name>
                     <Object>dst_V2</Object>
                     <Type>array</Type>
@@ -5254,8 +4726,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69_dout</name>
-                    <Object>trunc_ln69</Object>
+                    <name>trunc_ln1345_dout</name>
+                    <Object>trunc_ln1345</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -5265,8 +4737,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69_empty_n</name>
-                    <Object>trunc_ln69</Object>
+                    <name>trunc_ln1345_empty_n</name>
+                    <Object>trunc_ln1345</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -5276,8 +4748,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69_read</name>
-                    <Object>trunc_ln69</Object>
+                    <name>trunc_ln1345_read</name>
+                    <Object>trunc_ln1345</Object>
                     <Type>pointer</Type>
                     <Scope/>
                     <IOProtocol>ap_fifo</IOProtocol>
@@ -5879,15 +5351,15 @@
                     <BRAM_18K>7</BRAM_18K>
                     <AVAIL_BRAM>280</AVAIL_BRAM>
                     <UTIL_BRAM>2</UTIL_BRAM>
-                    <DSP>14</DSP>
+                    <DSP>12</DSP>
                     <AVAIL_DSP>220</AVAIL_DSP>
-                    <UTIL_DSP>6</UTIL_DSP>
-                    <FF>17121</FF>
+                    <UTIL_DSP>5</UTIL_DSP>
+                    <FF>10688</FF>
                     <AVAIL_FF>106400</AVAIL_FF>
-                    <UTIL_FF>16</UTIL_FF>
-                    <LUT>11265</LUT>
+                    <UTIL_FF>10</UTIL_FF>
+                    <LUT>6865</LUT>
                     <AVAIL_LUT>53200</AVAIL_LUT>
-                    <UTIL_LUT>21</UTIL_LUT>
+                    <UTIL_LUT>12</UTIL_LUT>
                     <URAM>0</URAM>
                     <AVAIL_URAM>0</AVAIL_URAM>
                     <UTIL_URAM>0</UTIL_URAM>
@@ -6126,8 +5598,8 @@
                     <Attribute>control</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69</name>
-                    <Object>trunc_ln69</Object>
+                    <name>trunc_ln1345</name>
+                    <Object>trunc_ln1345</Object>
                     <Type>scalar</Type>
                     <Scope/>
                     <IOProtocol>ap_none</IOProtocol>
@@ -6137,8 +5609,8 @@
                     <Attribute>data</Attribute>
                 </RtlPorts>
                 <RtlPorts>
-                    <name>trunc_ln69_ap_vld</name>
-                    <Object>trunc_ln69</Object>
+                    <name>trunc_ln1345_ap_vld</name>
+                    <Object>trunc_ln1345</Object>
                     <Type>scalar</Type>
                     <Scope/>
                     <IOProtocol>ap_none</IOProtocol>
@@ -7403,15 +6875,15 @@
                     <BRAM_18K>11</BRAM_18K>
                     <AVAIL_BRAM>280</AVAIL_BRAM>
                     <UTIL_BRAM>3</UTIL_BRAM>
-                    <DSP>14</DSP>
+                    <DSP>12</DSP>
                     <AVAIL_DSP>220</AVAIL_DSP>
-                    <UTIL_DSP>6</UTIL_DSP>
-                    <FF>19445</FF>
+                    <UTIL_DSP>5</UTIL_DSP>
+                    <FF>13012</FF>
                     <AVAIL_FF>106400</AVAIL_FF>
-                    <UTIL_FF>18</UTIL_FF>
-                    <LUT>13887</LUT>
+                    <UTIL_FF>12</UTIL_FF>
+                    <LUT>9487</LUT>
                     <AVAIL_LUT>53200</AVAIL_LUT>
-                    <UTIL_LUT>26</UTIL_LUT>
+                    <UTIL_LUT>17</UTIL_LUT>
                     <URAM>0</URAM>
                     <AVAIL_URAM>0</AVAIL_URAM>
                     <UTIL_URAM>0</UTIL_URAM>
@@ -8808,7 +8280,7 @@
                 <hwRef type="register" interface="s_axi_control" name="ystart_pos" usage="data" direction="in"/>
             </hwRefs>
         </Arg>
-        <Arg ArgName="frame_size" index="9" direction="in" srcType="ap_uint&lt;32&gt;" srcSize="32">
+        <Arg ArgName="frame_size" index="9" direction="in" srcType="ap_int&lt;32&gt;" srcSize="32">
             <hwRefs>
                 <hwRef type="register" interface="s_axi_control" name="frame_size" usage="data" direction="in"/>
             </hwRefs>
@@ -9221,7 +8693,7 @@
                     <column name="mapchip_draw_ysize">in, ap_uint&lt;32&gt;</column>
                     <column name="xstart_pos">in, ap_uint&lt;32&gt;</column>
                     <column name="ystart_pos">in, ap_uint&lt;32&gt;</column>
-                    <column name="frame_size">in, ap_uint&lt;32&gt;</column>
+                    <column name="frame_size">in, ap_int&lt;32&gt;</column>
                     <column name="alpha">in, ap_uint&lt;8&gt;</column>
                     <column name="id">in, ap_uint&lt;32&gt;</column>
                     <column name="a">in, ap_int&lt;32&gt;</column>

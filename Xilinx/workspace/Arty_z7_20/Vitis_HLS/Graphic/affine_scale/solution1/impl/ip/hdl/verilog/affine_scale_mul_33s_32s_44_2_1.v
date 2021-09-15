@@ -5,16 +5,16 @@
 
 `timescale 1 ns / 1 ps
 
-module affine_scale_mul_32ns_32ns_62_2_1_Multiplier_4(clk, ce, a, b, p);
+module affine_scale_mul_33s_32s_44_2_1_Multiplier_3(clk, ce, a, b, p);
 input clk;
 input ce;
-input [32 - 1 : 0] a;
-input [32 - 1 : 0] b;
-output[62 - 1 : 0] p;
-reg signed [62 - 1 : 0] p;
-wire [62 - 1 : 0] tmp_product;
+input signed [33 - 1 : 0] a;
+input signed [32 - 1 : 0] b;
+output[44 - 1 : 0] p;
+reg signed [44 - 1 : 0] p;
+wire signed [44 - 1 : 0] tmp_product;
 
-assign tmp_product = a * b;
+assign tmp_product = $signed(a) * $signed(b);
 always @ (posedge clk) begin
     if (ce) begin
         p <= tmp_product;
@@ -22,7 +22,7 @@ always @ (posedge clk) begin
 end
 endmodule
 `timescale 1 ns / 1 ps
-module affine_scale_mul_32ns_32ns_62_2_1(
+module affine_scale_mul_33s_32s_44_2_1(
     clk,
     reset,
     ce,
@@ -44,7 +44,7 @@ output[dout_WIDTH - 1:0] dout;
 
 
 
-affine_scale_mul_32ns_32ns_62_2_1_Multiplier_4 affine_scale_mul_32ns_32ns_62_2_1_Multiplier_4_U(
+affine_scale_mul_33s_32s_44_2_1_Multiplier_3 affine_scale_mul_33s_32s_44_2_1_Multiplier_3_U(
     .clk( clk ),
     .ce( ce ),
     .a( din0 ),

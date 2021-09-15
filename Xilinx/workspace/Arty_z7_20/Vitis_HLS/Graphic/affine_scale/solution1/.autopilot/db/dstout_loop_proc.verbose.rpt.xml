@@ -1,7 +1,7 @@
 <profile>
 
 <section name = "Vitis HLS Report for 'dstout_loop_proc'" level="0">
-<item name = "Date">Mon Sep  6 21:22:13 2021
+<item name = "Date">Wed Sep 15 21:04:42 2021
 </item>
 <item name = "Version">2020.2 (Build 3064766 on Wed Nov 18 09:12:47 MST 2020)</item>
 <item name = "Project">affine_scale</item>
@@ -62,26 +62,26 @@
 <section name = "" level="1">
 <item name = "Instance"><table name="" hasTotal="1">
 <keys size="7">Instance, Module, BRAM_18K, DSP, FF, LUT, URAM</keys>
-<column name="mul_32ns_32ns_62_2_1_U124">mul_32ns_32ns_62_2_1, 0, 0, 165, 50, 0</column>
-<column name="mul_8ns_8ns_16_1_1_U125">mul_8ns_8ns_16_1_1, 0, 0, 0, 41, 0</column>
-<column name="mul_8ns_8ns_16_1_1_U126">mul_8ns_8ns_16_1_1, 0, 0, 0, 41, 0</column>
-<column name="mul_8ns_8ns_16_1_1_U127">mul_8ns_8ns_16_1_1, 0, 0, 0, 41, 0</column>
+<column name="mul_32ns_32s_62_2_1_U92">mul_32ns_32s_62_2_1, 0, 0, 165, 50, 0</column>
+<column name="mul_8ns_8ns_16_1_1_U93">mul_8ns_8ns_16_1_1, 0, 0, 0, 41, 0</column>
+<column name="mul_8ns_8ns_16_1_1_U94">mul_8ns_8ns_16_1_1, 0, 0, 0, 41, 0</column>
+<column name="mul_8ns_8ns_16_1_1_U95">mul_8ns_8ns_16_1_1, 0, 0, 0, 41, 0</column>
 </table>
 </item>
 <item name = "DSP"><table name="" hasTotal="0">
 <keys size="3">Instance, Module, Expression</keys>
-<column name="mac_muladd_8ns_8ns_16ns_17_4_1_U128">mac_muladd_8ns_8ns_16ns_17_4_1, i0 + i1 * i2</column>
-<column name="mac_muladd_8ns_8ns_16ns_17_4_1_U129">mac_muladd_8ns_8ns_16ns_17_4_1, i0 + i1 * i2</column>
-<column name="mac_muladd_8ns_8ns_16ns_17_4_1_U130">mac_muladd_8ns_8ns_16ns_17_4_1, i0 + i1 * i2</column>
-<column name="mul_mul_10ns_8ns_17_4_1_U134">mul_mul_10ns_8ns_17_4_1, i0 * i1</column>
-<column name="mul_mul_10ns_8ns_17_4_1_U135">mul_mul_10ns_8ns_17_4_1, i0 * i1</column>
-<column name="mul_mul_10ns_8ns_17_4_1_U136">mul_mul_10ns_8ns_17_4_1, i0 * i1</column>
-<column name="mul_mul_17ns_19ns_35_4_1_U131">mul_mul_17ns_19ns_35_4_1, i0 * i1</column>
-<column name="mul_mul_17ns_19ns_35_4_1_U132">mul_mul_17ns_19ns_35_4_1, i0 * i1</column>
-<column name="mul_mul_17ns_19ns_35_4_1_U133">mul_mul_17ns_19ns_35_4_1, i0 * i1</column>
-<column name="mul_mul_17ns_19ns_35_4_1_U137">mul_mul_17ns_19ns_35_4_1, i0 * i1</column>
-<column name="mul_mul_17ns_19ns_35_4_1_U138">mul_mul_17ns_19ns_35_4_1, i0 * i1</column>
-<column name="mul_mul_17ns_19ns_35_4_1_U139">mul_mul_17ns_19ns_35_4_1, i0 * i1</column>
+<column name="mac_muladd_8ns_8ns_16ns_17_4_1_U96">mac_muladd_8ns_8ns_16ns_17_4_1, i0 + i1 * i2</column>
+<column name="mac_muladd_8ns_8ns_16ns_17_4_1_U97">mac_muladd_8ns_8ns_16ns_17_4_1, i0 + i1 * i2</column>
+<column name="mac_muladd_8ns_8ns_16ns_17_4_1_U98">mac_muladd_8ns_8ns_16ns_17_4_1, i0 + i1 * i2</column>
+<column name="mul_mul_10ns_8ns_17_4_1_U102">mul_mul_10ns_8ns_17_4_1, i0 * i1</column>
+<column name="mul_mul_10ns_8ns_17_4_1_U103">mul_mul_10ns_8ns_17_4_1, i0 * i1</column>
+<column name="mul_mul_10ns_8ns_17_4_1_U104">mul_mul_10ns_8ns_17_4_1, i0 * i1</column>
+<column name="mul_mul_17ns_19ns_35_4_1_U99">mul_mul_17ns_19ns_35_4_1, i0 * i1</column>
+<column name="mul_mul_17ns_19ns_35_4_1_U100">mul_mul_17ns_19ns_35_4_1, i0 * i1</column>
+<column name="mul_mul_17ns_19ns_35_4_1_U101">mul_mul_17ns_19ns_35_4_1, i0 * i1</column>
+<column name="mul_mul_17ns_19ns_35_4_1_U105">mul_mul_17ns_19ns_35_4_1, i0 * i1</column>
+<column name="mul_mul_17ns_19ns_35_4_1_U106">mul_mul_17ns_19ns_35_4_1, i0 * i1</column>
+<column name="mul_mul_17ns_19ns_35_4_1_U107">mul_mul_17ns_19ns_35_4_1, i0 * i1</column>
 </table>
 </item>
 <item name = "Memory"><table name="" hasTotal="1">
@@ -102,7 +102,7 @@
 <column name="ap_block_state1">or, 0, 0, 2, 1, 1</column>
 <column name="ap_enable_pp0">xor, 0, 0, 2, 1, 2</column>
 <column name="ap_enable_reg_pp0_iter1">xor, 0, 0, 2, 2, 1</column>
-<column name="ret_15_fu_340_p2">xor, 0, 0, 8, 8, 2</column>
+<column name="ret_21_fu_340_p2">xor, 0, 0, 8, 8, 2</column>
 </table>
 </item>
 <item name = "Multiplexer"><table name="" hasTotal="1">
@@ -118,7 +118,7 @@
 <column name="dstout_blk_n">9, 2, 1, 2</column>
 <column name="frame_size_blk_n">9, 2, 1, 2</column>
 <column name="mapchip_draw_xsize_blk_n">9, 2, 1, 2</column>
-<column name="trunc_ln69_blk_n">9, 2, 1, 2</column>
+<column name="trunc_ln1345_blk_n">9, 2, 1, 2</column>
 <column name="x_V_reg_183">9, 2, 32, 64</column>
 </table>
 </item>
@@ -152,14 +152,14 @@
 <column name="icmp_ln878_reg_621">1, 0, 1, 0</column>
 <column name="mapchip_draw_xsize_read_reg_562">32, 0, 32, 0</column>
 <column name="r_1_reg_677">8, 0, 8, 0</column>
-<column name="ret_13_reg_598">62, 0, 62, 0</column>
-<column name="trunc_ln1345_2_reg_672">8, 0, 8, 0</column>
-<column name="trunc_ln69_read_reg_573">32, 0, 32, 0</column>
-<column name="trunc_ln_reg_645">8, 0, 8, 0</column>
-<column name="trunc_ln_reg_645_pp0_iter2_reg">8, 0, 8, 0</column>
+<column name="ret_18_reg_598">62, 0, 62, 0</column>
+<column name="trunc_ln1345_1_reg_645">8, 0, 8, 0</column>
+<column name="trunc_ln1345_1_reg_645_pp0_iter2_reg">8, 0, 8, 0</column>
+<column name="trunc_ln1345_3_reg_672">8, 0, 8, 0</column>
+<column name="trunc_ln1345_read_reg_573">32, 0, 32, 0</column>
 <column name="x_V_reg_183">32, 0, 32, 0</column>
-<column name="zext_ln148_reg_609">8, 0, 17, 9</column>
-<column name="zext_ln181_reg_625">32, 0, 64, 32</column>
+<column name="zext_ln117_reg_609">8, 0, 17, 9</column>
+<column name="zext_ln142_reg_625">32, 0, 64, 32</column>
 <column name="icmp_ln878_reg_621">64, 32, 1, 0</column>
 </table>
 </item>
@@ -189,9 +189,9 @@
 <column name="alpha_dout">in, 8, ap_fifo, alpha, pointer</column>
 <column name="alpha_empty_n">in, 1, ap_fifo, alpha, pointer</column>
 <column name="alpha_read">out, 1, ap_fifo, alpha, pointer</column>
-<column name="trunc_ln69_dout">in, 32, ap_fifo, trunc_ln69, pointer</column>
-<column name="trunc_ln69_empty_n">in, 1, ap_fifo, trunc_ln69, pointer</column>
-<column name="trunc_ln69_read">out, 1, ap_fifo, trunc_ln69, pointer</column>
+<column name="trunc_ln1345_dout">in, 32, ap_fifo, trunc_ln1345, pointer</column>
+<column name="trunc_ln1345_empty_n">in, 1, ap_fifo, trunc_ln1345, pointer</column>
+<column name="trunc_ln1345_read">out, 1, ap_fifo, trunc_ln1345, pointer</column>
 <column name="frame_size_dout">in, 32, ap_fifo, frame_size, pointer</column>
 <column name="frame_size_empty_n">in, 1, ap_fifo, frame_size, pointer</column>
 <column name="frame_size_read">out, 1, ap_fifo, frame_size, pointer</column>

@@ -17,7 +17,7 @@
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="48" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="40" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
 entry:0 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %mapchip_draw_xsize_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
@@ -32,7 +32,7 @@ entry:0 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %ma
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="49" bw="64" op_0_bw="64" op_1_bw="64">
+<Node id="41" bw="64" op_0_bw="64" op_1_bw="64">
 <![CDATA[
 entry:1 %dstout_read = read i64 @_ssdm_op_Read.ap_auto.i64, i64 %dstout
 
@@ -47,7 +47,7 @@ entry:1 %dstout_read = read i64 @_ssdm_op_Read.ap_auto.i64, i64 %dstout
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="50" bw="8" op_0_bw="8" op_1_bw="8">
+<Node id="42" bw="8" op_0_bw="8" op_1_bw="8">
 <![CDATA[
 entry:2 %alpha_read = read i8 @_ssdm_op_Read.ap_auto.i8, i8 %alpha
 
@@ -62,7 +62,7 @@ entry:2 %alpha_read = read i8 @_ssdm_op_Read.ap_auto.i8, i8 %alpha
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="51" bw="64" op_0_bw="64" op_1_bw="64">
+<Node id="43" bw="64" op_0_bw="64" op_1_bw="64">
 <![CDATA[
 entry:3 %dstin_read = read i64 @_ssdm_op_Read.ap_auto.i64, i64 %dstin
 
@@ -77,7 +77,7 @@ entry:3 %dstin_read = read i64 @_ssdm_op_Read.ap_auto.i64, i64 %dstin
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="52" bw="32" op_0_bw="32" op_1_bw="32">
+<Node id="44" bw="32" op_0_bw="32" op_1_bw="32">
 <![CDATA[
 entry:4 %frame_size_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %frame_size
 
@@ -92,7 +92,7 @@ entry:4 %frame_size_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %frame_size
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="53" bw="64" op_0_bw="64" op_1_bw="64">
+<Node id="45" bw="64" op_0_bw="64" op_1_bw="64">
 <![CDATA[
 entry:5 %srcin_read = read i64 @_ssdm_op_Read.ap_auto.i64, i64 %srcin
 
@@ -107,7 +107,7 @@ entry:5 %srcin_read = read i64 @_ssdm_op_Read.ap_auto.i64, i64 %srcin
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="54" bw="32" op_0_bw="32" op_1_bw="32">
+<Node id="46" bw="32" op_0_bw="32" op_1_bw="32">
 <![CDATA[
 entry:6 %xstart_pos_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %xstart_pos
 
@@ -122,7 +122,7 @@ entry:6 %xstart_pos_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %xstart_pos
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="55" bw="32" op_0_bw="32" op_1_bw="32">
+<Node id="47" bw="32" op_0_bw="32" op_1_bw="32">
 <![CDATA[
 entry:7 %ystart_pos_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %ystart_pos
 
@@ -137,7 +137,7 @@ entry:7 %ystart_pos_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %ystart_pos
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="56" bw="32" op_0_bw="32" op_1_bw="32">
+<Node id="48" bw="32" op_0_bw="32" op_1_bw="32">
 <![CDATA[
 entry:8 %id_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %id
 
@@ -152,7 +152,7 @@ entry:8 %id_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %id
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="57" bw="32" op_0_bw="32" op_1_bw="32">
+<Node id="49" bw="32" op_0_bw="32" op_1_bw="32">
 <![CDATA[
 entry:9 %n_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %n
 
@@ -167,7 +167,7 @@ entry:9 %n_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %n
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="58" bw="32" op_0_bw="32" op_1_bw="32">
+<Node id="50" bw="32" op_0_bw="32" op_1_bw="32">
 <![CDATA[
 entry:10 %mapchip_maxheight_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %mapchip_maxheight
 
@@ -182,12 +182,12 @@ entry:10 %mapchip_maxheight_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %map
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="59" bw="32" op_0_bw="32" op_1_bw="32">
+<Node id="51" bw="32" op_0_bw="32" op_1_bw="32">
 <![CDATA[
-entry:11 %trunc_ln69_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %trunc_ln69
+entry:11 %trunc_ln1345_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %trunc_ln1345
 
 ]]></Node>
-<StgValue><ssdm name="trunc_ln69_read"/></StgValue>
+<StgValue><ssdm name="trunc_ln1345_read"/></StgValue>
 </operation>
 
 <operation id="14" st_id="1" stage="1" lat="1">
@@ -197,7 +197,7 @@ entry:11 %trunc_ln69_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %trunc_ln69
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="60" bw="32" op_0_bw="32" op_1_bw="32">
+<Node id="52" bw="32" op_0_bw="32" op_1_bw="32">
 <![CDATA[
 entry:12 %m_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %m
 
@@ -212,7 +212,7 @@ entry:12 %m_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %m
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="61" bw="20" op_0_bw="20" op_1_bw="20">
+<Node id="53" bw="20" op_0_bw="20" op_1_bw="20">
 <![CDATA[
 entry:13 %b_read = read i20 @_ssdm_op_Read.ap_auto.i20, i20 %b
 
@@ -227,7 +227,7 @@ entry:13 %b_read = read i20 @_ssdm_op_Read.ap_auto.i20, i20 %b
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="62" bw="20" op_0_bw="20" op_1_bw="20">
+<Node id="54" bw="20" op_0_bw="20" op_1_bw="20">
 <![CDATA[
 entry:14 %c_read = read i20 @_ssdm_op_Read.ap_auto.i20, i20 %c
 
@@ -242,7 +242,7 @@ entry:14 %c_read = read i20 @_ssdm_op_Read.ap_auto.i20, i20 %c
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="63" bw="20" op_0_bw="20" op_1_bw="20">
+<Node id="55" bw="20" op_0_bw="20" op_1_bw="20">
 <![CDATA[
 entry:15 %a_read = read i20 @_ssdm_op_Read.ap_auto.i20, i20 %a
 
@@ -257,7 +257,7 @@ entry:15 %a_read = read i20 @_ssdm_op_Read.ap_auto.i20, i20 %a
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="64" bw="20" op_0_bw="20" op_1_bw="20">
+<Node id="56" bw="20" op_0_bw="20" op_1_bw="20">
 <![CDATA[
 entry:16 %d_read = read i20 @_ssdm_op_Read.ap_auto.i20, i20 %d
 
@@ -272,7 +272,7 @@ entry:16 %d_read = read i20 @_ssdm_op_Read.ap_auto.i20, i20 %d
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="65" bw="32" op_0_bw="32" op_1_bw="32">
+<Node id="57" bw="32" op_0_bw="32" op_1_bw="32">
 <![CDATA[
 entry:17 %mapchip_maxwidth_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %mapchip_maxwidth
 
@@ -287,7 +287,7 @@ entry:17 %mapchip_maxwidth_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %mapc
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="66" bw="32" op_0_bw="32" op_1_bw="32">
+<Node id="58" bw="32" op_0_bw="32" op_1_bw="32">
 <![CDATA[
 entry:18 %mapchip_draw_xsize_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %mapchip_draw_xsize
 
@@ -302,7 +302,7 @@ entry:18 %mapchip_draw_xsize_read = read i32 @_ssdm_op_Read.ap_auto.i32, i32 %ma
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="67" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
+<Node id="59" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
 <![CDATA[
 entry:19 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %mapchip_draw_xsize_out, i32 %mapchip_draw_xsize_read
 
@@ -317,7 +317,7 @@ entry:19 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %mapchip_dr
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="68" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="60" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
 entry:20 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %mapchip_draw_xsize_out1, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
@@ -332,7 +332,7 @@ entry:20 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %m
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="69" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
+<Node id="61" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
 <![CDATA[
 entry:21 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %mapchip_draw_xsize_out1, i32 %mapchip_draw_xsize_read
 
@@ -347,7 +347,7 @@ entry:21 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %mapchip_dr
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="70" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="62" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
 entry:22 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %mapchip_maxwidth_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
@@ -362,7 +362,7 @@ entry:22 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %m
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="71" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
+<Node id="63" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
 <![CDATA[
 entry:23 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %mapchip_maxwidth_out, i32 %mapchip_maxwidth_read
 
@@ -377,9 +377,9 @@ entry:23 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %mapchip_ma
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="72" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="64" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:24 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %mapchip_maxwidth_out2, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:24 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %d_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -392,9 +392,9 @@ entry:24 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %m
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="73" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
+<Node id="65" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="20">
 <![CDATA[
-entry:25 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %mapchip_maxwidth_out2, i32 %mapchip_maxwidth_read
+entry:25 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %d_out, i20 %d_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -407,9 +407,9 @@ entry:25 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %mapchip_ma
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="74" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="66" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:26 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %d_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:26 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %a_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -422,9 +422,9 @@ entry:26 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %d
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="75" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="20">
+<Node id="67" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="20">
 <![CDATA[
-entry:27 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %d_out, i20 %d_read
+entry:27 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %a_out, i20 %a_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -437,9 +437,9 @@ entry:27 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %d_out, i20
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="76" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="68" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:28 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %d_out3, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:28 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %c_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -452,9 +452,9 @@ entry:28 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %d
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="77" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="20">
+<Node id="69" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="20">
 <![CDATA[
-entry:29 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %d_out3, i20 %d_read
+entry:29 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %c_out, i20 %c_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -467,9 +467,9 @@ entry:29 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %d_out3, i2
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="78" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="70" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:30 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %a_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:30 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %b_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -482,9 +482,9 @@ entry:30 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %a
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="79" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="20">
+<Node id="71" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="20">
 <![CDATA[
-entry:31 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %a_out, i20 %a_read
+entry:31 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %b_out, i20 %b_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -497,9 +497,9 @@ entry:31 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %a_out, i20
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="80" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="72" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:32 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %a_out4, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:32 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %m_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -512,9 +512,9 @@ entry:32 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %a
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="81" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="20">
+<Node id="73" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
 <![CDATA[
-entry:33 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %a_out4, i20 %a_read
+entry:33 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %m_out, i32 %m_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -527,9 +527,9 @@ entry:33 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %a_out4, i2
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="82" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="74" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:34 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %c_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:34 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %trunc_ln1345_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -542,9 +542,9 @@ entry:34 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %c
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="83" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="20">
+<Node id="75" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
 <![CDATA[
-entry:35 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %c_out, i20 %c_read
+entry:35 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %trunc_ln1345_out, i32 %trunc_ln1345_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -557,9 +557,9 @@ entry:35 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %c_out, i20
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="84" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="76" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:36 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %c_out5, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:36 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %trunc_ln1345_out2, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -572,9 +572,9 @@ entry:36 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %c
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="85" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="20">
+<Node id="77" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
 <![CDATA[
-entry:37 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %c_out5, i20 %c_read
+entry:37 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %trunc_ln1345_out2, i32 %trunc_ln1345_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -587,9 +587,9 @@ entry:37 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %c_out5, i2
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="86" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="78" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:38 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %b_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:38 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %mapchip_maxheight_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -602,9 +602,9 @@ entry:38 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %b
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="87" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="20">
+<Node id="79" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
 <![CDATA[
-entry:39 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %b_out, i20 %b_read
+entry:39 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %mapchip_maxheight_out, i32 %mapchip_maxheight_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -617,9 +617,9 @@ entry:39 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %b_out, i20
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="88" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="80" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:40 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %b_out6, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:40 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %n_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -632,9 +632,9 @@ entry:40 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i20 %b
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="89" bw="0" op_0_bw="0" op_1_bw="20" op_2_bw="20">
+<Node id="81" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
 <![CDATA[
-entry:41 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %b_out6, i20 %b_read
+entry:41 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %n_out, i32 %n_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -647,9 +647,9 @@ entry:41 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i20P0A, i20 %b_out6, i2
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="90" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="82" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:42 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %m_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:42 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %id_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -662,9 +662,9 @@ entry:42 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %m
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="91" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
+<Node id="83" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
 <![CDATA[
-entry:43 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %m_out, i32 %m_read
+entry:43 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %id_out, i32 %id_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -677,9 +677,9 @@ entry:43 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %m_out, i32
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="92" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="84" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:44 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %m_out7, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:44 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %ystart_pos_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -692,9 +692,9 @@ entry:44 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %m
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="93" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
+<Node id="85" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
 <![CDATA[
-entry:45 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %m_out7, i32 %m_read
+entry:45 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %ystart_pos_out, i32 %ystart_pos_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -707,9 +707,9 @@ entry:45 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %m_out7, i3
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="94" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="86" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:46 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %trunc_ln69_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:46 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %xstart_pos_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -722,9 +722,9 @@ entry:46 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %t
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="95" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
+<Node id="87" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
 <![CDATA[
-entry:47 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %trunc_ln69_out, i32 %trunc_ln69_read
+entry:47 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %xstart_pos_out, i32 %xstart_pos_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -737,9 +737,9 @@ entry:47 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %trunc_ln69
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="96" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="88" bw="0" op_0_bw="0" op_1_bw="64" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:48 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %trunc_ln69_out8, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:48 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i64 %srcin_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -752,9 +752,9 @@ entry:48 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %t
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="97" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
+<Node id="89" bw="0" op_0_bw="0" op_1_bw="64" op_2_bw="64">
 <![CDATA[
-entry:49 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %trunc_ln69_out8, i32 %trunc_ln69_read
+entry:49 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i64P0A, i64 %srcin_out, i64 %srcin_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -767,9 +767,9 @@ entry:49 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %trunc_ln69
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="98" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="90" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:50 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %mapchip_maxheight_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:50 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %frame_size_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -782,9 +782,9 @@ entry:50 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %m
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="99" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
+<Node id="91" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
 <![CDATA[
-entry:51 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %mapchip_maxheight_out, i32 %mapchip_maxheight_read
+entry:51 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %frame_size_out, i32 %frame_size_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -797,9 +797,9 @@ entry:51 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %mapchip_ma
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="100" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="92" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:52 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %mapchip_maxheight_out9, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:52 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %frame_size_out3, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -812,9 +812,9 @@ entry:52 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %m
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="101" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
+<Node id="93" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
 <![CDATA[
-entry:53 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %mapchip_maxheight_out9, i32 %mapchip_maxheight_read
+entry:53 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %frame_size_out3, i32 %frame_size_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -827,9 +827,9 @@ entry:53 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %mapchip_ma
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="102" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="94" bw="0" op_0_bw="0" op_1_bw="64" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:54 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %n_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:54 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i64 %dstin_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -842,9 +842,9 @@ entry:54 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %n
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="103" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
+<Node id="95" bw="0" op_0_bw="0" op_1_bw="64" op_2_bw="64">
 <![CDATA[
-entry:55 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %n_out, i32 %n_read
+entry:55 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i64P0A, i64 %dstin_out, i64 %dstin_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -857,9 +857,9 @@ entry:55 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %n_out, i32
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="104" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="96" bw="0" op_0_bw="0" op_1_bw="8" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:56 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %n_out10, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:56 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i8 %alpha_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -872,9 +872,9 @@ entry:56 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %n
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="105" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
+<Node id="97" bw="0" op_0_bw="0" op_1_bw="8" op_2_bw="8">
 <![CDATA[
-entry:57 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %n_out10, i32 %n_read
+entry:57 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i8P0A, i8 %alpha_out, i8 %alpha_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -887,9 +887,9 @@ entry:57 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %n_out10, i
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="106" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="98" bw="0" op_0_bw="0" op_1_bw="64" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
 <![CDATA[
-entry:58 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %id_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
+entry:58 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i64 %dstout_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
 
 ]]></Node>
 <StgValue><ssdm name="specinterface_ln0"/></StgValue>
@@ -902,9 +902,9 @@ entry:58 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %i
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="107" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
+<Node id="99" bw="0" op_0_bw="0" op_1_bw="64" op_2_bw="64">
 <![CDATA[
-entry:59 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %id_out, i32 %id_read
+entry:59 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i64P0A, i64 %dstout_out, i64 %dstout_read
 
 ]]></Node>
 <StgValue><ssdm name="write_ln0"/></StgValue>
@@ -917,249 +917,9 @@ entry:59 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %id_out, i3
 <or_exp><and_exp></and_exp></or_exp>
 </condition>
 
-<Node id="108" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
+<Node id="100" bw="0">
 <![CDATA[
-entry:60 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %ystart_pos_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
-
-]]></Node>
-<StgValue><ssdm name="specinterface_ln0"/></StgValue>
-</operation>
-
-<operation id="63" st_id="1" stage="1" lat="1">
-<core>FIFO_SRL</core>
-<MemPortIdVec></MemPortIdVec>
-<condition id="-1">
-<or_exp><and_exp></and_exp></or_exp>
-</condition>
-
-<Node id="109" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
-<![CDATA[
-entry:61 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %ystart_pos_out, i32 %ystart_pos_read
-
-]]></Node>
-<StgValue><ssdm name="write_ln0"/></StgValue>
-</operation>
-
-<operation id="64" st_id="1" stage="1" lat="1">
-<core>NULL</core>
-<MemPortIdVec></MemPortIdVec>
-<condition id="-1">
-<or_exp><and_exp></and_exp></or_exp>
-</condition>
-
-<Node id="110" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
-<![CDATA[
-entry:62 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %xstart_pos_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
-
-]]></Node>
-<StgValue><ssdm name="specinterface_ln0"/></StgValue>
-</operation>
-
-<operation id="65" st_id="1" stage="1" lat="1">
-<core>FIFO_SRL</core>
-<MemPortIdVec></MemPortIdVec>
-<condition id="-1">
-<or_exp><and_exp></and_exp></or_exp>
-</condition>
-
-<Node id="111" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
-<![CDATA[
-entry:63 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %xstart_pos_out, i32 %xstart_pos_read
-
-]]></Node>
-<StgValue><ssdm name="write_ln0"/></StgValue>
-</operation>
-
-<operation id="66" st_id="1" stage="1" lat="1">
-<core>NULL</core>
-<MemPortIdVec></MemPortIdVec>
-<condition id="-1">
-<or_exp><and_exp></and_exp></or_exp>
-</condition>
-
-<Node id="112" bw="0" op_0_bw="0" op_1_bw="64" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
-<![CDATA[
-entry:64 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i64 %srcin_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
-
-]]></Node>
-<StgValue><ssdm name="specinterface_ln0"/></StgValue>
-</operation>
-
-<operation id="67" st_id="1" stage="1" lat="1">
-<core>FIFO_SRL</core>
-<MemPortIdVec></MemPortIdVec>
-<condition id="-1">
-<or_exp><and_exp></and_exp></or_exp>
-</condition>
-
-<Node id="113" bw="0" op_0_bw="0" op_1_bw="64" op_2_bw="64">
-<![CDATA[
-entry:65 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i64P0A, i64 %srcin_out, i64 %srcin_read
-
-]]></Node>
-<StgValue><ssdm name="write_ln0"/></StgValue>
-</operation>
-
-<operation id="68" st_id="1" stage="1" lat="1">
-<core>NULL</core>
-<MemPortIdVec></MemPortIdVec>
-<condition id="-1">
-<or_exp><and_exp></and_exp></or_exp>
-</condition>
-
-<Node id="114" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
-<![CDATA[
-entry:66 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %frame_size_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
-
-]]></Node>
-<StgValue><ssdm name="specinterface_ln0"/></StgValue>
-</operation>
-
-<operation id="69" st_id="1" stage="1" lat="1">
-<core>FIFO_SRL</core>
-<MemPortIdVec></MemPortIdVec>
-<condition id="-1">
-<or_exp><and_exp></and_exp></or_exp>
-</condition>
-
-<Node id="115" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
-<![CDATA[
-entry:67 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %frame_size_out, i32 %frame_size_read
-
-]]></Node>
-<StgValue><ssdm name="write_ln0"/></StgValue>
-</operation>
-
-<operation id="70" st_id="1" stage="1" lat="1">
-<core>NULL</core>
-<MemPortIdVec></MemPortIdVec>
-<condition id="-1">
-<or_exp><and_exp></and_exp></or_exp>
-</condition>
-
-<Node id="116" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
-<![CDATA[
-entry:68 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i32 %frame_size_out11, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
-
-]]></Node>
-<StgValue><ssdm name="specinterface_ln0"/></StgValue>
-</operation>
-
-<operation id="71" st_id="1" stage="1" lat="1">
-<core>FIFO_SRL</core>
-<MemPortIdVec></MemPortIdVec>
-<condition id="-1">
-<or_exp><and_exp></and_exp></or_exp>
-</condition>
-
-<Node id="117" bw="0" op_0_bw="0" op_1_bw="32" op_2_bw="32">
-<![CDATA[
-entry:69 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i32P0A, i32 %frame_size_out11, i32 %frame_size_read
-
-]]></Node>
-<StgValue><ssdm name="write_ln0"/></StgValue>
-</operation>
-
-<operation id="72" st_id="1" stage="1" lat="1">
-<core>NULL</core>
-<MemPortIdVec></MemPortIdVec>
-<condition id="-1">
-<or_exp><and_exp></and_exp></or_exp>
-</condition>
-
-<Node id="118" bw="0" op_0_bw="0" op_1_bw="64" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
-<![CDATA[
-entry:70 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i64 %dstin_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
-
-]]></Node>
-<StgValue><ssdm name="specinterface_ln0"/></StgValue>
-</operation>
-
-<operation id="73" st_id="1" stage="1" lat="1">
-<core>FIFO_SRL</core>
-<MemPortIdVec></MemPortIdVec>
-<condition id="-1">
-<or_exp><and_exp></and_exp></or_exp>
-</condition>
-
-<Node id="119" bw="0" op_0_bw="0" op_1_bw="64" op_2_bw="64">
-<![CDATA[
-entry:71 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i64P0A, i64 %dstin_out, i64 %dstin_read
-
-]]></Node>
-<StgValue><ssdm name="write_ln0"/></StgValue>
-</operation>
-
-<operation id="74" st_id="1" stage="1" lat="1">
-<core>NULL</core>
-<MemPortIdVec></MemPortIdVec>
-<condition id="-1">
-<or_exp><and_exp></and_exp></or_exp>
-</condition>
-
-<Node id="120" bw="0" op_0_bw="0" op_1_bw="8" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
-<![CDATA[
-entry:72 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i8 %alpha_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
-
-]]></Node>
-<StgValue><ssdm name="specinterface_ln0"/></StgValue>
-</operation>
-
-<operation id="75" st_id="1" stage="1" lat="1">
-<core>FIFO_SRL</core>
-<MemPortIdVec></MemPortIdVec>
-<condition id="-1">
-<or_exp><and_exp></and_exp></or_exp>
-</condition>
-
-<Node id="121" bw="0" op_0_bw="0" op_1_bw="8" op_2_bw="8">
-<![CDATA[
-entry:73 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i8P0A, i8 %alpha_out, i8 %alpha_read
-
-]]></Node>
-<StgValue><ssdm name="write_ln0"/></StgValue>
-</operation>
-
-<operation id="76" st_id="1" stage="1" lat="1">
-<core>NULL</core>
-<MemPortIdVec></MemPortIdVec>
-<condition id="-1">
-<or_exp><and_exp></and_exp></or_exp>
-</condition>
-
-<Node id="122" bw="0" op_0_bw="0" op_1_bw="64" op_2_bw="0" op_3_bw="32" op_4_bw="32" op_5_bw="0" op_6_bw="32" op_7_bw="32" op_8_bw="0" op_9_bw="0" op_10_bw="0" op_11_bw="32" op_12_bw="32" op_13_bw="32" op_14_bw="32" op_15_bw="0" op_16_bw="0">
-<![CDATA[
-entry:74 %specinterface_ln0 = specinterface void @_ssdm_op_SpecInterface, i64 %dstout_out, void @ap_fifo_str, i32 0, i32 0, void @p_str, i32 0, i32 0, void @p_str, void @p_str, void @p_str, i32 2, i32 2, i32 16, i32 16, void @p_str, void @ScalarProp_str
-
-]]></Node>
-<StgValue><ssdm name="specinterface_ln0"/></StgValue>
-</operation>
-
-<operation id="77" st_id="1" stage="1" lat="1">
-<core>FIFO_SRL</core>
-<MemPortIdVec></MemPortIdVec>
-<condition id="-1">
-<or_exp><and_exp></and_exp></or_exp>
-</condition>
-
-<Node id="123" bw="0" op_0_bw="0" op_1_bw="64" op_2_bw="64">
-<![CDATA[
-entry:75 %write_ln0 = write void @_ssdm_op_Write.ap_fifo.i64P0A, i64 %dstout_out, i64 %dstout_read
-
-]]></Node>
-<StgValue><ssdm name="write_ln0"/></StgValue>
-</operation>
-
-<operation id="78" st_id="1" stage="1" lat="1">
-<core>NULL</core>
-<MemPortIdVec></MemPortIdVec>
-<condition id="-1">
-<or_exp><and_exp></and_exp></or_exp>
-</condition>
-
-<Node id="124" bw="0">
-<![CDATA[
-entry:76 %ret_ln0 = ret
+entry:60 %ret_ln0 = ret
 
 ]]></Node>
 <StgValue><ssdm name="ret_ln0"/></StgValue>

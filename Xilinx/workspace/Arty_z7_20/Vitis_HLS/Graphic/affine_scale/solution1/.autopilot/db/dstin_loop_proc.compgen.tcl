@@ -1,7 +1,7 @@
 # This script segment is generated automatically by AutoPilot
 
-set id 91
-set name affine_scale_mul_32ns_32ns_62_2_1
+set id 84
+set name affine_scale_mul_32ns_32s_62_2_1
 set corename simcore_mul
 set op mul
 set stage_num 2
@@ -14,7 +14,7 @@ set reset_signed 0
 set in0_width 32
 set in0_signed 0
 set in1_width 32
-set in1_signed 0
+set in1_signed 1
 set ce_width 1
 set ce_signed 0
 set out_width 62
@@ -96,7 +96,7 @@ if {${::AESL::PGuard_autoexp_gen}} {
 if {${::AESL::PGuard_autoexp_gen}} {
 if {[info proc ::AESL_LIB_XILADAPTER::xil_bram_gen] == "::AESL_LIB_XILADAPTER::xil_bram_gen"} {
 eval "::AESL_LIB_XILADAPTER::xil_bram_gen { \
-    id 123 \
+    id 91 \
     name dst_V2 \
     reset_level 1 \
     sync_rst true \
@@ -114,7 +114,7 @@ puts "@W \[IMPL-110\] Cannot find bus interface model in the library. Ignored ge
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 110 \
+    id 86 \
     name mapchip_draw_xsize \
     type fifo \
     dir I \
@@ -129,22 +129,22 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 111 \
-    name trunc_ln69 \
+    id 87 \
+    name trunc_ln1345 \
     type fifo \
     dir I \
     reset_level 1 \
     sync_rst true \
-    corename dc_trunc_ln69 \
+    corename dc_trunc_ln1345 \
     op interface \
-    ports { trunc_ln69_dout { I 32 vector } trunc_ln69_empty_n { I 1 bit } trunc_ln69_read { O 1 bit } } \
+    ports { trunc_ln1345_dout { I 32 vector } trunc_ln1345_empty_n { I 1 bit } trunc_ln1345_read { O 1 bit } } \
 } "
 }
 
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 112 \
+    id 88 \
     name frame_size \
     type fifo \
     dir I \
@@ -159,7 +159,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 113 \
+    id 89 \
     name dstin \
     type fifo \
     dir I \
@@ -174,7 +174,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 114 \
+    id 90 \
     name dst \
     type other \
     dir I \
@@ -183,126 +183,6 @@ eval "cg_default_interface_gen_dc { \
     corename dc_dst \
     op interface \
     ports { m_axi_dst_AWVALID { O 1 bit } m_axi_dst_AWREADY { I 1 bit } m_axi_dst_AWADDR { O 64 vector } m_axi_dst_AWID { O 1 vector } m_axi_dst_AWLEN { O 32 vector } m_axi_dst_AWSIZE { O 3 vector } m_axi_dst_AWBURST { O 2 vector } m_axi_dst_AWLOCK { O 2 vector } m_axi_dst_AWCACHE { O 4 vector } m_axi_dst_AWPROT { O 3 vector } m_axi_dst_AWQOS { O 4 vector } m_axi_dst_AWREGION { O 4 vector } m_axi_dst_AWUSER { O 1 vector } m_axi_dst_WVALID { O 1 bit } m_axi_dst_WREADY { I 1 bit } m_axi_dst_WDATA { O 32 vector } m_axi_dst_WSTRB { O 4 vector } m_axi_dst_WLAST { O 1 bit } m_axi_dst_WID { O 1 vector } m_axi_dst_WUSER { O 1 vector } m_axi_dst_ARVALID { O 1 bit } m_axi_dst_ARREADY { I 1 bit } m_axi_dst_ARADDR { O 64 vector } m_axi_dst_ARID { O 1 vector } m_axi_dst_ARLEN { O 32 vector } m_axi_dst_ARSIZE { O 3 vector } m_axi_dst_ARBURST { O 2 vector } m_axi_dst_ARLOCK { O 2 vector } m_axi_dst_ARCACHE { O 4 vector } m_axi_dst_ARPROT { O 3 vector } m_axi_dst_ARQOS { O 4 vector } m_axi_dst_ARREGION { O 4 vector } m_axi_dst_ARUSER { O 1 vector } m_axi_dst_RVALID { I 1 bit } m_axi_dst_RREADY { O 1 bit } m_axi_dst_RDATA { I 32 vector } m_axi_dst_RLAST { I 1 bit } m_axi_dst_RID { I 1 vector } m_axi_dst_RUSER { I 1 vector } m_axi_dst_RRESP { I 2 vector } m_axi_dst_BVALID { I 1 bit } m_axi_dst_BREADY { O 1 bit } m_axi_dst_BRESP { I 2 vector } m_axi_dst_BID { I 1 vector } m_axi_dst_BUSER { I 1 vector } } \
-} "
-}
-
-# Direct connection:
-if {${::AESL::PGuard_autoexp_gen}} {
-eval "cg_default_interface_gen_dc { \
-    id 115 \
-    name mapchip_maxwidth \
-    type fifo \
-    dir I \
-    reset_level 1 \
-    sync_rst true \
-    corename dc_mapchip_maxwidth \
-    op interface \
-    ports { mapchip_maxwidth_dout { I 32 vector } mapchip_maxwidth_empty_n { I 1 bit } mapchip_maxwidth_read { O 1 bit } } \
-} "
-}
-
-# Direct connection:
-if {${::AESL::PGuard_autoexp_gen}} {
-eval "cg_default_interface_gen_dc { \
-    id 116 \
-    name d \
-    type fifo \
-    dir I \
-    reset_level 1 \
-    sync_rst true \
-    corename dc_d \
-    op interface \
-    ports { d_dout { I 20 vector } d_empty_n { I 1 bit } d_read { O 1 bit } } \
-} "
-}
-
-# Direct connection:
-if {${::AESL::PGuard_autoexp_gen}} {
-eval "cg_default_interface_gen_dc { \
-    id 117 \
-    name a \
-    type fifo \
-    dir I \
-    reset_level 1 \
-    sync_rst true \
-    corename dc_a \
-    op interface \
-    ports { a_dout { I 20 vector } a_empty_n { I 1 bit } a_read { O 1 bit } } \
-} "
-}
-
-# Direct connection:
-if {${::AESL::PGuard_autoexp_gen}} {
-eval "cg_default_interface_gen_dc { \
-    id 118 \
-    name c \
-    type fifo \
-    dir I \
-    reset_level 1 \
-    sync_rst true \
-    corename dc_c \
-    op interface \
-    ports { c_dout { I 20 vector } c_empty_n { I 1 bit } c_read { O 1 bit } } \
-} "
-}
-
-# Direct connection:
-if {${::AESL::PGuard_autoexp_gen}} {
-eval "cg_default_interface_gen_dc { \
-    id 119 \
-    name b \
-    type fifo \
-    dir I \
-    reset_level 1 \
-    sync_rst true \
-    corename dc_b \
-    op interface \
-    ports { b_dout { I 20 vector } b_empty_n { I 1 bit } b_read { O 1 bit } } \
-} "
-}
-
-# Direct connection:
-if {${::AESL::PGuard_autoexp_gen}} {
-eval "cg_default_interface_gen_dc { \
-    id 120 \
-    name m \
-    type fifo \
-    dir I \
-    reset_level 1 \
-    sync_rst true \
-    corename dc_m \
-    op interface \
-    ports { m_dout { I 32 vector } m_empty_n { I 1 bit } m_read { O 1 bit } } \
-} "
-}
-
-# Direct connection:
-if {${::AESL::PGuard_autoexp_gen}} {
-eval "cg_default_interface_gen_dc { \
-    id 121 \
-    name mapchip_maxheight \
-    type fifo \
-    dir I \
-    reset_level 1 \
-    sync_rst true \
-    corename dc_mapchip_maxheight \
-    op interface \
-    ports { mapchip_maxheight_dout { I 32 vector } mapchip_maxheight_empty_n { I 1 bit } mapchip_maxheight_read { O 1 bit } } \
-} "
-}
-
-# Direct connection:
-if {${::AESL::PGuard_autoexp_gen}} {
-eval "cg_default_interface_gen_dc { \
-    id 122 \
-    name n \
-    type fifo \
-    dir I \
-    reset_level 1 \
-    sync_rst true \
-    corename dc_n \
-    op interface \
-    ports { n_dout { I 32 vector } n_empty_n { I 1 bit } n_read { O 1 bit } } \
 } "
 }
 

@@ -1,7 +1,7 @@
 <profile>
 
 <section name = "Vitis HLS Report for 'affine_scale'" level="0">
-<item name = "Date">Mon Sep  6 21:22:13 2021
+<item name = "Date">Wed Sep 15 21:04:42 2021
 </item>
 <item name = "Version">2020.2 (Build 3064766 on Wed Nov 18 09:12:47 MST 2020)</item>
 <item name = "Project">affine_scale</item>
@@ -51,12 +51,12 @@
 <column name="DSP">-, -, -, -, -</column>
 <column name="Expression">-, -, 444, 108, -</column>
 <column name="FIFO">-, -, -, -, -</column>
-<column name="Instance">11, 14, 18937, 13761, -</column>
+<column name="Instance">11, 12, 12504, 9361, -</column>
 <column name="Memory">-, -, -, -, -</column>
 <column name="Multiplexer">-, -, -, 18, -</column>
 <column name="Register">-, -, 64, -, -</column>
 <specialColumn name="Available">280, 220, 106400, 53200, 0</specialColumn>
-<specialColumn name="Utilization (%)">3, 6, 18, 26, 0</specialColumn>
+<specialColumn name="Utilization (%)">3, 5, 12, 17, 0</specialColumn>
 </table>
 </item>
 <item name = "Detail">
@@ -64,7 +64,7 @@
 <item name = "Instance"><table name="" hasTotal="1">
 <keys size="7">Instance, Module, BRAM_18K, DSP, FF, LUT, URAM</keys>
 <column name="control_s_axi_U">control_s_axi, 0, 0, 792, 1336, 0</column>
-<column name="dataflow_in_loop_height_loop_U0">dataflow_in_loop_height_loop, 7, 14, 17121, 11265, 0</column>
+<column name="dataflow_in_loop_height_loop_U0">dataflow_in_loop_height_loop, 7, 12, 10688, 6865, 0</column>
 <column name="dst_m_axi_U">dst_m_axi, 2, 0, 512, 580, 0</column>
 <column name="src_m_axi_U">src_m_axi, 2, 0, 512, 580, 0</column>
 </table>

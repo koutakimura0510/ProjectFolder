@@ -5582,25 +5582,7 @@ inline bool operator!=(
 typedef ap_uint<8> u8;
 typedef ap_uint<32> u32;
 typedef ap_int<32> i32;
-# 45 "affine_scale/affine_scale.cpp"
-void get_affine_xy(
-    i32 *buff,
-    i32 x,
-    i32 mapchip_width,
-    i32 mapchip_height,
-    i32 ixa,
-    i32 ixc,
-    i32 result_yb,
-    i32 result_yd
-)
-{
-    i32 affine_x = x - (mapchip_width >> 1);
-    i32 rx = (affine_x * ixa) + result_yb + ((mapchip_width >> 1) << (12));
-    i32 ry = (affine_x * ixc) + result_yd + ((mapchip_height >> 1) << (12));
-    buff[0] = (rx + ((5 << 12) / 10)) >> (12);
-    buff[1] = (ry + ((5 << 12) / 10)) >> (12);
-}
-# 71 "affine_scale/affine_scale.cpp"
+# 40 "affine_scale/affine_scale.cpp"
 u32 color_generate(u32 src, u32 dst, u8 alpha)
 {
     u32 src_a = (src >> 24) & 0xff;
@@ -5621,7 +5603,7 @@ u32 color_generate(u32 src, u32 dst, u8 alpha)
 
     return color;
 }
-# 99 "affine_scale/affine_scale.cpp"
+# 68 "affine_scale/affine_scale.cpp"
 __attribute__((sdx_kernel("affine_scale", 0))) void affine_scale(
     volatile u32 *srcin,
     volatile u32 *dstin,
@@ -5632,7 +5614,7 @@ __attribute__((sdx_kernel("affine_scale", 0))) void affine_scale(
     u32 mapchip_draw_ysize,
  u32 xstart_pos,
     u32 ystart_pos,
-    u32 frame_size,
+    i32 frame_size,
     u8 alpha,
     u32 id,
     i32 a,
@@ -5644,64 +5626,64 @@ __attribute__((sdx_kernel("affine_scale", 0))) void affine_scale(
 )
 {
 #pragma HLS INTERFACE m_axi depth=307200 port=dstin offset=slave bundle=dst num_read_outstanding=16 max_read_burst_length=32
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE m_axi depth=307200 port=dstout offset=slave bundle=dst num_write_outstanding=16 max_write_burst_length=32
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE m_axi depth=307200 port=srcin offset=slave bundle=src num_read_outstanding=16 max_read_burst_length=32
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE s_axilite port=a
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE s_axilite port=alpha
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE s_axilite port=b
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE s_axilite port=c
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE s_axilite port=d
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE s_axilite port=frame_size
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE s_axilite port=id
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE s_axilite port=m
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE s_axilite port=mapchip_draw_xsize
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE s_axilite port=mapchip_draw_ysize
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE s_axilite port=mapchip_maxheight
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE s_axilite port=mapchip_maxwidth
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE s_axilite port=n
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE s_axilite port=return
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE s_axilite port=xstart_pos
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS INTERFACE s_axilite port=ystart_pos
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
 #pragma HLS TOP name=affine_scale
-# 119 "affine_scale/affine_scale.cpp"
+# 88 "affine_scale/affine_scale.cpp"
 
     u32 src[(640)];
     u32 dst[(640)];
@@ -5716,79 +5698,71 @@ __attribute__((sdx_kernel("affine_scale", 0))) void affine_scale(
     i32 ixc = (-c << (12)) / det;
     i32 ixd = ( a << (12)) / det;
 
-    if (a < 0)
-    {
-        m--;
-    }
+ if (a < 0)
+ {
+  m--;
+ }
 
-    if (d < 0)
-    {
-        n--;
-    }
+ if (d < 0)
+ {
+  n--;
+ }
 
-    i32 result_ab = (m * ixa) - (n * ixb);
-    i32 result_cd = (m * ixc) - (n * ixd);
-    i32 src_xy[2];
-    i32 dst_xy[2];
+    i32 result_width = (mapchip_maxwidth >> 1);
+    i32 result_height = (mapchip_maxheight >> 1);
+    i32 result_width_fix = ((result_width << (12)) + (2048)) - ((m * ixa) - (n * ixb));
+    i32 result_height_fix = ((result_height << (12)) + (2048)) - ((m * ixc) - (n * ixd));
 
     height_loop:for (i32 y = 0; y < mapchip_draw_ysize; y++)
     {
 #pragma HLS DATAFLOW
-# 149 "affine_scale/affine_scale.cpp"
+# 118 "affine_scale/affine_scale.cpp"
 
 #pragma HLS LOOP_TRIPCOUNT min=1 max=480 avg=240
-# 149 "affine_scale/affine_scale.cpp"
+# 118 "affine_scale/affine_scale.cpp"
 
-        i32 affine_y = y - (mapchip_maxheight >> 1);
-        i32 result_yb = (affine_y * ixb) - result_ab;
-        i32 result_yd = (affine_y * ixd) - result_cd;
+        i32 result_yb = ((y - result_height) * ixb) + result_width_fix;
+        i32 result_yd = ((y - result_height) * ixd) + result_height_fix;
+
         src_loop:for (i32 x = 0; x < mapchip_draw_xsize; x++)
         {
 #pragma HLS LOOP_TRIPCOUNT min=1 max=640 avg=240
-# 154 "affine_scale/affine_scale.cpp"
+# 123 "affine_scale/affine_scale.cpp"
 
 #pragma HLS PIPELINE
-# 154 "affine_scale/affine_scale.cpp"
+# 123 "affine_scale/affine_scale.cpp"
 
-            get_affine_xy(src_xy, x, mapchip_maxwidth, mapchip_maxheight, ixa, ixc, result_yb, result_yd);
+            i32 rx = (((x - result_width) * ixa) + result_yb) >> (12);
+            i32 ry = (((x - result_width) * ixc) + result_yd) >> (12);
 
-            if ((src_xy[0] < 0) || (mapchip_maxwidth <= src_xy[0]) || (src_xy[1] < 0) || (mapchip_maxheight <= src_xy[1]))
+            if ((rx < 0) || (mapchip_maxwidth <= rx) || (ry < 0) || (mapchip_maxheight <= ry))
             {
                 src[x] = 0x00000000;
             }
             else
             {
-                src[x] = srcin[chip + src_xy[0] + src_xy[1] * mapchip_maxwidth];
+                src[x] = srcin[chip + rx + ry * mapchip_maxwidth];
             }
         }
 
         dstin_loop:for (i32 x = 0; x < mapchip_draw_xsize; x++)
         {
 #pragma HLS LOOP_TRIPCOUNT min=1 max=640 avg=240
-# 168 "affine_scale/affine_scale.cpp"
+# 138 "affine_scale/affine_scale.cpp"
 
 #pragma HLS PIPELINE
-# 168 "affine_scale/affine_scale.cpp"
+# 138 "affine_scale/affine_scale.cpp"
 
-            get_affine_xy(dst_xy, x, mapchip_maxwidth, mapchip_maxheight, ixa, ixc, result_yb, result_yd);
-
-            if ((dst_xy[0] < 0) || (mapchip_maxwidth <= dst_xy[0]) || (dst_xy[1] < 0) || (mapchip_maxheight <= dst_xy[1]))
-            {
-                dst[x] = dstin[x + y * frame_size];
-            }
-            else
-            {
-                dst[x] = dstin[dst_xy[0] + dst_xy[1] * mapchip_maxwidth];
-            }
+            dst[x] = dstin[x + y * frame_size];
         }
 
         dstout_loop:for (i32 x = 0; x < mapchip_draw_xsize; x++)
         {
 #pragma HLS LOOP_TRIPCOUNT min=1 max=640 avg=240
-# 182 "affine_scale/affine_scale.cpp"
+# 143 "affine_scale/affine_scale.cpp"
 
 #pragma HLS PIPELINE
-# 182 "affine_scale/affine_scale.cpp"
+# 143 "affine_scale/affine_scale.cpp"
 
          dstout[x + y * frame_size] = color_generate(src[x], dst[x], alpha);
         }

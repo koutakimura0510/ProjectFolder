@@ -18,9 +18,11 @@ set_directive_interface -mode s_axilite "affine_scale" ystart_pos
 set_directive_interface -mode s_axilite "affine_scale" frame_size
 set_directive_interface -mode s_axilite "affine_scale" alpha
 set_directive_interface -mode s_axilite "affine_scale" id
+set_directive_interface -mode s_axilite "affine_scale" a
 set_directive_interface -mode s_axilite "affine_scale" b
 set_directive_interface -mode s_axilite "affine_scale" c
 set_directive_interface -mode s_axilite "affine_scale" d
+set_directive_interface -mode s_axilite "affine_scale" m
 set_directive_interface -mode s_axilite "affine_scale" n
 set_directive_loop_tripcount -min 1 -max 480 -avg 240 "affine_scale/height_loop"
 set_directive_dataflow "affine_scale/height_loop"

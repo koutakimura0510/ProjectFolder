@@ -7,14 +7,14 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
 
-entity affine_scale_mul_8ns_8ns_16_1_1_Multiplier_5 is
+entity affine_scale_mul_8ns_8ns_16_1_1_Multiplier_6 is
 port (
     a: in std_logic_vector(8 - 1 downto 0);
     b: in std_logic_vector(8 - 1 downto 0);
     p: out std_logic_vector(16 - 1 downto 0));
 end entity;
 
-architecture behav of affine_scale_mul_8ns_8ns_16_1_1_Multiplier_5 is
+architecture behav of affine_scale_mul_8ns_8ns_16_1_1_Multiplier_6 is
     signal a_i : std_logic_vector(8 - 1 downto 0);
     signal b_i : std_logic_vector(8 - 1 downto 0);
 begin
@@ -39,7 +39,7 @@ entity affine_scale_mul_8ns_8ns_16_1_1 is
 end entity;
 
 architecture arch of affine_scale_mul_8ns_8ns_16_1_1 is
-    component affine_scale_mul_8ns_8ns_16_1_1_Multiplier_5 is
+    component affine_scale_mul_8ns_8ns_16_1_1_Multiplier_6 is
         port (
             a : IN STD_LOGIC_VECTOR;
             b : IN STD_LOGIC_VECTOR;
@@ -49,7 +49,7 @@ architecture arch of affine_scale_mul_8ns_8ns_16_1_1 is
 
 
 begin
-    affine_scale_mul_8ns_8ns_16_1_1_Multiplier_5_U :  component affine_scale_mul_8ns_8ns_16_1_1_Multiplier_5
+    affine_scale_mul_8ns_8ns_16_1_1_Multiplier_6_U :  component affine_scale_mul_8ns_8ns_16_1_1_Multiplier_6
     port map (
         a => din0,
         b => din1,

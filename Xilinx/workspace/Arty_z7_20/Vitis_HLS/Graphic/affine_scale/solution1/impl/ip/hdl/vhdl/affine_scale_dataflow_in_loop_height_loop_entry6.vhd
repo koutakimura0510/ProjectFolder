@@ -25,7 +25,7 @@ port (
     c : IN STD_LOGIC_VECTOR (19 downto 0);
     b : IN STD_LOGIC_VECTOR (19 downto 0);
     m : IN STD_LOGIC_VECTOR (31 downto 0);
-    trunc_ln69 : IN STD_LOGIC_VECTOR (31 downto 0);
+    trunc_ln1345 : IN STD_LOGIC_VECTOR (31 downto 0);
     mapchip_maxheight : IN STD_LOGIC_VECTOR (31 downto 0);
     n : IN STD_LOGIC_VECTOR (31 downto 0);
     id : IN STD_LOGIC_VECTOR (31 downto 0);
@@ -45,57 +45,33 @@ port (
     mapchip_maxwidth_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
     mapchip_maxwidth_out_full_n : IN STD_LOGIC;
     mapchip_maxwidth_out_write : OUT STD_LOGIC;
-    mapchip_maxwidth_out2_din : OUT STD_LOGIC_VECTOR (31 downto 0);
-    mapchip_maxwidth_out2_full_n : IN STD_LOGIC;
-    mapchip_maxwidth_out2_write : OUT STD_LOGIC;
     d_out_din : OUT STD_LOGIC_VECTOR (19 downto 0);
     d_out_full_n : IN STD_LOGIC;
     d_out_write : OUT STD_LOGIC;
-    d_out3_din : OUT STD_LOGIC_VECTOR (19 downto 0);
-    d_out3_full_n : IN STD_LOGIC;
-    d_out3_write : OUT STD_LOGIC;
     a_out_din : OUT STD_LOGIC_VECTOR (19 downto 0);
     a_out_full_n : IN STD_LOGIC;
     a_out_write : OUT STD_LOGIC;
-    a_out4_din : OUT STD_LOGIC_VECTOR (19 downto 0);
-    a_out4_full_n : IN STD_LOGIC;
-    a_out4_write : OUT STD_LOGIC;
     c_out_din : OUT STD_LOGIC_VECTOR (19 downto 0);
     c_out_full_n : IN STD_LOGIC;
     c_out_write : OUT STD_LOGIC;
-    c_out5_din : OUT STD_LOGIC_VECTOR (19 downto 0);
-    c_out5_full_n : IN STD_LOGIC;
-    c_out5_write : OUT STD_LOGIC;
     b_out_din : OUT STD_LOGIC_VECTOR (19 downto 0);
     b_out_full_n : IN STD_LOGIC;
     b_out_write : OUT STD_LOGIC;
-    b_out6_din : OUT STD_LOGIC_VECTOR (19 downto 0);
-    b_out6_full_n : IN STD_LOGIC;
-    b_out6_write : OUT STD_LOGIC;
     m_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
     m_out_full_n : IN STD_LOGIC;
     m_out_write : OUT STD_LOGIC;
-    m_out7_din : OUT STD_LOGIC_VECTOR (31 downto 0);
-    m_out7_full_n : IN STD_LOGIC;
-    m_out7_write : OUT STD_LOGIC;
-    trunc_ln69_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
-    trunc_ln69_out_full_n : IN STD_LOGIC;
-    trunc_ln69_out_write : OUT STD_LOGIC;
-    trunc_ln69_out8_din : OUT STD_LOGIC_VECTOR (31 downto 0);
-    trunc_ln69_out8_full_n : IN STD_LOGIC;
-    trunc_ln69_out8_write : OUT STD_LOGIC;
+    trunc_ln1345_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
+    trunc_ln1345_out_full_n : IN STD_LOGIC;
+    trunc_ln1345_out_write : OUT STD_LOGIC;
+    trunc_ln1345_out2_din : OUT STD_LOGIC_VECTOR (31 downto 0);
+    trunc_ln1345_out2_full_n : IN STD_LOGIC;
+    trunc_ln1345_out2_write : OUT STD_LOGIC;
     mapchip_maxheight_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
     mapchip_maxheight_out_full_n : IN STD_LOGIC;
     mapchip_maxheight_out_write : OUT STD_LOGIC;
-    mapchip_maxheight_out9_din : OUT STD_LOGIC_VECTOR (31 downto 0);
-    mapchip_maxheight_out9_full_n : IN STD_LOGIC;
-    mapchip_maxheight_out9_write : OUT STD_LOGIC;
     n_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
     n_out_full_n : IN STD_LOGIC;
     n_out_write : OUT STD_LOGIC;
-    n_out10_din : OUT STD_LOGIC_VECTOR (31 downto 0);
-    n_out10_full_n : IN STD_LOGIC;
-    n_out10_write : OUT STD_LOGIC;
     id_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
     id_out_full_n : IN STD_LOGIC;
     id_out_write : OUT STD_LOGIC;
@@ -111,9 +87,9 @@ port (
     frame_size_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
     frame_size_out_full_n : IN STD_LOGIC;
     frame_size_out_write : OUT STD_LOGIC;
-    frame_size_out11_din : OUT STD_LOGIC_VECTOR (31 downto 0);
-    frame_size_out11_full_n : IN STD_LOGIC;
-    frame_size_out11_write : OUT STD_LOGIC;
+    frame_size_out3_din : OUT STD_LOGIC_VECTOR (31 downto 0);
+    frame_size_out3_full_n : IN STD_LOGIC;
+    frame_size_out3_write : OUT STD_LOGIC;
     dstin_out_din : OUT STD_LOGIC_VECTOR (63 downto 0);
     dstin_out_full_n : IN STD_LOGIC;
     dstin_out_write : OUT STD_LOGIC;
@@ -143,29 +119,21 @@ attribute shreg_extract : string;
     signal mapchip_draw_xsize_out_blk_n : STD_LOGIC;
     signal mapchip_draw_xsize_out1_blk_n : STD_LOGIC;
     signal mapchip_maxwidth_out_blk_n : STD_LOGIC;
-    signal mapchip_maxwidth_out2_blk_n : STD_LOGIC;
     signal d_out_blk_n : STD_LOGIC;
-    signal d_out3_blk_n : STD_LOGIC;
     signal a_out_blk_n : STD_LOGIC;
-    signal a_out4_blk_n : STD_LOGIC;
     signal c_out_blk_n : STD_LOGIC;
-    signal c_out5_blk_n : STD_LOGIC;
     signal b_out_blk_n : STD_LOGIC;
-    signal b_out6_blk_n : STD_LOGIC;
     signal m_out_blk_n : STD_LOGIC;
-    signal m_out7_blk_n : STD_LOGIC;
-    signal trunc_ln69_out_blk_n : STD_LOGIC;
-    signal trunc_ln69_out8_blk_n : STD_LOGIC;
+    signal trunc_ln1345_out_blk_n : STD_LOGIC;
+    signal trunc_ln1345_out2_blk_n : STD_LOGIC;
     signal mapchip_maxheight_out_blk_n : STD_LOGIC;
-    signal mapchip_maxheight_out9_blk_n : STD_LOGIC;
     signal n_out_blk_n : STD_LOGIC;
-    signal n_out10_blk_n : STD_LOGIC;
     signal id_out_blk_n : STD_LOGIC;
     signal ystart_pos_out_blk_n : STD_LOGIC;
     signal xstart_pos_out_blk_n : STD_LOGIC;
     signal srcin_out_blk_n : STD_LOGIC;
     signal frame_size_out_blk_n : STD_LOGIC;
-    signal frame_size_out11_blk_n : STD_LOGIC;
+    signal frame_size_out3_blk_n : STD_LOGIC;
     signal dstin_out_blk_n : STD_LOGIC;
     signal alpha_out_blk_n : STD_LOGIC;
     signal dstout_out_blk_n : STD_LOGIC;
@@ -199,7 +167,7 @@ begin
             else
                 if ((ap_continue = ap_const_logic_1)) then 
                     ap_done_reg <= ap_const_logic_0;
-                elsif ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+                elsif ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
                     ap_done_reg <= ap_const_logic_1;
                 end if; 
             end if;
@@ -207,7 +175,7 @@ begin
     end process;
 
 
-    ap_NS_fsm_assign_proc : process (ap_start, ap_done_reg, ap_CS_fsm, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    ap_NS_fsm_assign_proc : process (ap_start, ap_done_reg, ap_CS_fsm, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
         case ap_CS_fsm is
             when ap_ST_fsm_state1 => 
@@ -216,27 +184,6 @@ begin
                 ap_NS_fsm <= "X";
         end case;
     end process;
-
-    a_out4_blk_n_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, a_out4_full_n)
-    begin
-        if ((not(((ap_start = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            a_out4_blk_n <= a_out4_full_n;
-        else 
-            a_out4_blk_n <= ap_const_logic_1;
-        end if; 
-    end process;
-
-    a_out4_din <= a;
-
-    a_out4_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
-    begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            a_out4_write <= ap_const_logic_1;
-        else 
-            a_out4_write <= ap_const_logic_0;
-        end if; 
-    end process;
-
 
     a_out_blk_n_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, a_out_full_n)
     begin
@@ -249,9 +196,9 @@ begin
 
     a_out_din <= a;
 
-    a_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    a_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             a_out_write <= ap_const_logic_1;
         else 
             a_out_write <= ap_const_logic_0;
@@ -270,9 +217,9 @@ begin
 
     alpha_out_din <= alpha;
 
-    alpha_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    alpha_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             alpha_out_write <= ap_const_logic_1;
         else 
             alpha_out_write <= ap_const_logic_0;
@@ -281,15 +228,15 @@ begin
 
     ap_CS_fsm_state1 <= ap_CS_fsm(0);
 
-    ap_block_state1_assign_proc : process(ap_start, ap_done_reg, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    ap_block_state1_assign_proc : process(ap_start, ap_done_reg, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-                ap_block_state1 <= ((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0));
+                ap_block_state1 <= ((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0));
     end process;
 
 
-    ap_done_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    ap_done_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             ap_done <= ap_const_logic_1;
         else 
             ap_done <= ap_done_reg;
@@ -307,33 +254,12 @@ begin
     end process;
 
 
-    ap_ready_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    ap_ready_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             ap_ready <= ap_const_logic_1;
         else 
             ap_ready <= ap_const_logic_0;
-        end if; 
-    end process;
-
-
-    b_out6_blk_n_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, b_out6_full_n)
-    begin
-        if ((not(((ap_start = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            b_out6_blk_n <= b_out6_full_n;
-        else 
-            b_out6_blk_n <= ap_const_logic_1;
-        end if; 
-    end process;
-
-    b_out6_din <= b;
-
-    b_out6_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
-    begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            b_out6_write <= ap_const_logic_1;
-        else 
-            b_out6_write <= ap_const_logic_0;
         end if; 
     end process;
 
@@ -349,33 +275,12 @@ begin
 
     b_out_din <= b;
 
-    b_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    b_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             b_out_write <= ap_const_logic_1;
         else 
             b_out_write <= ap_const_logic_0;
-        end if; 
-    end process;
-
-
-    c_out5_blk_n_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, c_out5_full_n)
-    begin
-        if ((not(((ap_start = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            c_out5_blk_n <= c_out5_full_n;
-        else 
-            c_out5_blk_n <= ap_const_logic_1;
-        end if; 
-    end process;
-
-    c_out5_din <= c;
-
-    c_out5_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
-    begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            c_out5_write <= ap_const_logic_1;
-        else 
-            c_out5_write <= ap_const_logic_0;
         end if; 
     end process;
 
@@ -391,33 +296,12 @@ begin
 
     c_out_din <= c;
 
-    c_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    c_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             c_out_write <= ap_const_logic_1;
         else 
             c_out_write <= ap_const_logic_0;
-        end if; 
-    end process;
-
-
-    d_out3_blk_n_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, d_out3_full_n)
-    begin
-        if ((not(((ap_start = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            d_out3_blk_n <= d_out3_full_n;
-        else 
-            d_out3_blk_n <= ap_const_logic_1;
-        end if; 
-    end process;
-
-    d_out3_din <= d;
-
-    d_out3_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
-    begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            d_out3_write <= ap_const_logic_1;
-        else 
-            d_out3_write <= ap_const_logic_0;
         end if; 
     end process;
 
@@ -433,9 +317,9 @@ begin
 
     d_out_din <= d;
 
-    d_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    d_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             d_out_write <= ap_const_logic_1;
         else 
             d_out_write <= ap_const_logic_0;
@@ -454,9 +338,9 @@ begin
 
     dstin_out_din <= dstin;
 
-    dstin_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    dstin_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             dstin_out_write <= ap_const_logic_1;
         else 
             dstin_out_write <= ap_const_logic_0;
@@ -475,9 +359,9 @@ begin
 
     dstout_out_din <= dstout;
 
-    dstout_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    dstout_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             dstout_out_write <= ap_const_logic_1;
         else 
             dstout_out_write <= ap_const_logic_0;
@@ -485,23 +369,23 @@ begin
     end process;
 
 
-    frame_size_out11_blk_n_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, frame_size_out11_full_n)
+    frame_size_out3_blk_n_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, frame_size_out3_full_n)
     begin
         if ((not(((ap_start = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            frame_size_out11_blk_n <= frame_size_out11_full_n;
+            frame_size_out3_blk_n <= frame_size_out3_full_n;
         else 
-            frame_size_out11_blk_n <= ap_const_logic_1;
+            frame_size_out3_blk_n <= ap_const_logic_1;
         end if; 
     end process;
 
-    frame_size_out11_din <= frame_size;
+    frame_size_out3_din <= frame_size;
 
-    frame_size_out11_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    frame_size_out3_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            frame_size_out11_write <= ap_const_logic_1;
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+            frame_size_out3_write <= ap_const_logic_1;
         else 
-            frame_size_out11_write <= ap_const_logic_0;
+            frame_size_out3_write <= ap_const_logic_0;
         end if; 
     end process;
 
@@ -517,9 +401,9 @@ begin
 
     frame_size_out_din <= frame_size;
 
-    frame_size_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    frame_size_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             frame_size_out_write <= ap_const_logic_1;
         else 
             frame_size_out_write <= ap_const_logic_0;
@@ -538,33 +422,12 @@ begin
 
     id_out_din <= id;
 
-    id_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    id_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             id_out_write <= ap_const_logic_1;
         else 
             id_out_write <= ap_const_logic_0;
-        end if; 
-    end process;
-
-
-    m_out7_blk_n_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, m_out7_full_n)
-    begin
-        if ((not(((ap_start = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            m_out7_blk_n <= m_out7_full_n;
-        else 
-            m_out7_blk_n <= ap_const_logic_1;
-        end if; 
-    end process;
-
-    m_out7_din <= m;
-
-    m_out7_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
-    begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            m_out7_write <= ap_const_logic_1;
-        else 
-            m_out7_write <= ap_const_logic_0;
         end if; 
     end process;
 
@@ -580,9 +443,9 @@ begin
 
     m_out_din <= m;
 
-    m_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    m_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             m_out_write <= ap_const_logic_1;
         else 
             m_out_write <= ap_const_logic_0;
@@ -601,9 +464,9 @@ begin
 
     mapchip_draw_xsize_out1_din <= mapchip_draw_xsize;
 
-    mapchip_draw_xsize_out1_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    mapchip_draw_xsize_out1_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             mapchip_draw_xsize_out1_write <= ap_const_logic_1;
         else 
             mapchip_draw_xsize_out1_write <= ap_const_logic_0;
@@ -622,33 +485,12 @@ begin
 
     mapchip_draw_xsize_out_din <= mapchip_draw_xsize;
 
-    mapchip_draw_xsize_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    mapchip_draw_xsize_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             mapchip_draw_xsize_out_write <= ap_const_logic_1;
         else 
             mapchip_draw_xsize_out_write <= ap_const_logic_0;
-        end if; 
-    end process;
-
-
-    mapchip_maxheight_out9_blk_n_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_maxheight_out9_full_n)
-    begin
-        if ((not(((ap_start = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            mapchip_maxheight_out9_blk_n <= mapchip_maxheight_out9_full_n;
-        else 
-            mapchip_maxheight_out9_blk_n <= ap_const_logic_1;
-        end if; 
-    end process;
-
-    mapchip_maxheight_out9_din <= mapchip_maxheight;
-
-    mapchip_maxheight_out9_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
-    begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            mapchip_maxheight_out9_write <= ap_const_logic_1;
-        else 
-            mapchip_maxheight_out9_write <= ap_const_logic_0;
         end if; 
     end process;
 
@@ -664,33 +506,12 @@ begin
 
     mapchip_maxheight_out_din <= mapchip_maxheight;
 
-    mapchip_maxheight_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    mapchip_maxheight_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             mapchip_maxheight_out_write <= ap_const_logic_1;
         else 
             mapchip_maxheight_out_write <= ap_const_logic_0;
-        end if; 
-    end process;
-
-
-    mapchip_maxwidth_out2_blk_n_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_maxwidth_out2_full_n)
-    begin
-        if ((not(((ap_start = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            mapchip_maxwidth_out2_blk_n <= mapchip_maxwidth_out2_full_n;
-        else 
-            mapchip_maxwidth_out2_blk_n <= ap_const_logic_1;
-        end if; 
-    end process;
-
-    mapchip_maxwidth_out2_din <= mapchip_maxwidth;
-
-    mapchip_maxwidth_out2_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
-    begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            mapchip_maxwidth_out2_write <= ap_const_logic_1;
-        else 
-            mapchip_maxwidth_out2_write <= ap_const_logic_0;
         end if; 
     end process;
 
@@ -706,33 +527,12 @@ begin
 
     mapchip_maxwidth_out_din <= mapchip_maxwidth;
 
-    mapchip_maxwidth_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    mapchip_maxwidth_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             mapchip_maxwidth_out_write <= ap_const_logic_1;
         else 
             mapchip_maxwidth_out_write <= ap_const_logic_0;
-        end if; 
-    end process;
-
-
-    n_out10_blk_n_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, n_out10_full_n)
-    begin
-        if ((not(((ap_start = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            n_out10_blk_n <= n_out10_full_n;
-        else 
-            n_out10_blk_n <= ap_const_logic_1;
-        end if; 
-    end process;
-
-    n_out10_din <= n;
-
-    n_out10_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
-    begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            n_out10_write <= ap_const_logic_1;
-        else 
-            n_out10_write <= ap_const_logic_0;
         end if; 
     end process;
 
@@ -748,9 +548,9 @@ begin
 
     n_out_din <= n;
 
-    n_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    n_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             n_out_write <= ap_const_logic_1;
         else 
             n_out_write <= ap_const_logic_0;
@@ -769,9 +569,9 @@ begin
 
     srcin_out_din <= srcin;
 
-    srcin_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    srcin_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             srcin_out_write <= ap_const_logic_1;
         else 
             srcin_out_write <= ap_const_logic_0;
@@ -779,44 +579,44 @@ begin
     end process;
 
 
-    trunc_ln69_out8_blk_n_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, trunc_ln69_out8_full_n)
+    trunc_ln1345_out2_blk_n_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, trunc_ln1345_out2_full_n)
     begin
         if ((not(((ap_start = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            trunc_ln69_out8_blk_n <= trunc_ln69_out8_full_n;
+            trunc_ln1345_out2_blk_n <= trunc_ln1345_out2_full_n;
         else 
-            trunc_ln69_out8_blk_n <= ap_const_logic_1;
+            trunc_ln1345_out2_blk_n <= ap_const_logic_1;
         end if; 
     end process;
 
-    trunc_ln69_out8_din <= trunc_ln69;
+    trunc_ln1345_out2_din <= trunc_ln1345;
 
-    trunc_ln69_out8_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    trunc_ln1345_out2_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            trunc_ln69_out8_write <= ap_const_logic_1;
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+            trunc_ln1345_out2_write <= ap_const_logic_1;
         else 
-            trunc_ln69_out8_write <= ap_const_logic_0;
+            trunc_ln1345_out2_write <= ap_const_logic_0;
         end if; 
     end process;
 
 
-    trunc_ln69_out_blk_n_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, trunc_ln69_out_full_n)
+    trunc_ln1345_out_blk_n_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, trunc_ln1345_out_full_n)
     begin
         if ((not(((ap_start = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            trunc_ln69_out_blk_n <= trunc_ln69_out_full_n;
+            trunc_ln1345_out_blk_n <= trunc_ln1345_out_full_n;
         else 
-            trunc_ln69_out_blk_n <= ap_const_logic_1;
+            trunc_ln1345_out_blk_n <= ap_const_logic_1;
         end if; 
     end process;
 
-    trunc_ln69_out_din <= trunc_ln69;
+    trunc_ln1345_out_din <= trunc_ln1345;
 
-    trunc_ln69_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    trunc_ln1345_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
-            trunc_ln69_out_write <= ap_const_logic_1;
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+            trunc_ln1345_out_write <= ap_const_logic_1;
         else 
-            trunc_ln69_out_write <= ap_const_logic_0;
+            trunc_ln1345_out_write <= ap_const_logic_0;
         end if; 
     end process;
 
@@ -832,9 +632,9 @@ begin
 
     xstart_pos_out_din <= xstart_pos;
 
-    xstart_pos_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    xstart_pos_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             xstart_pos_out_write <= ap_const_logic_1;
         else 
             xstart_pos_out_write <= ap_const_logic_0;
@@ -853,9 +653,9 @@ begin
 
     ystart_pos_out_din <= ystart_pos;
 
-    ystart_pos_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, mapchip_maxwidth_out2_full_n, d_out_full_n, d_out3_full_n, a_out_full_n, a_out4_full_n, c_out_full_n, c_out5_full_n, b_out_full_n, b_out6_full_n, m_out_full_n, m_out7_full_n, trunc_ln69_out_full_n, trunc_ln69_out8_full_n, mapchip_maxheight_out_full_n, mapchip_maxheight_out9_full_n, n_out_full_n, n_out10_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out11_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
+    ystart_pos_out_write_assign_proc : process(ap_start, ap_done_reg, ap_CS_fsm_state1, mapchip_draw_xsize_out_full_n, mapchip_draw_xsize_out1_full_n, mapchip_maxwidth_out_full_n, d_out_full_n, a_out_full_n, c_out_full_n, b_out_full_n, m_out_full_n, trunc_ln1345_out_full_n, trunc_ln1345_out2_full_n, mapchip_maxheight_out_full_n, n_out_full_n, id_out_full_n, ystart_pos_out_full_n, xstart_pos_out_full_n, srcin_out_full_n, frame_size_out_full_n, frame_size_out3_full_n, dstin_out_full_n, alpha_out_full_n, dstout_out_full_n)
     begin
-        if ((not(((trunc_ln69_out_full_n = ap_const_logic_0) or (m_out7_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (b_out6_full_n = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out5_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (d_out3_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out2_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out4_full_n) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out11_full_n = ap_const_logic_0) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0) or (xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out10_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out9_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln69_out8_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
+        if ((not(((xstart_pos_out_full_n = ap_const_logic_0) or (ystart_pos_out_full_n = ap_const_logic_0) or (id_out_full_n = ap_const_logic_0) or (n_out_full_n = ap_const_logic_0) or (mapchip_maxheight_out_full_n = ap_const_logic_0) or (trunc_ln1345_out2_full_n = ap_const_logic_0) or (trunc_ln1345_out_full_n = ap_const_logic_0) or (m_out_full_n = ap_const_logic_0) or (ap_start = ap_const_logic_0) or (b_out_full_n = ap_const_logic_0) or (c_out_full_n = ap_const_logic_0) or (d_out_full_n = ap_const_logic_0) or (mapchip_maxwidth_out_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out1_full_n = ap_const_logic_0) or (mapchip_draw_xsize_out_full_n = ap_const_logic_0) or (ap_const_logic_0 = a_out_full_n) or (ap_const_logic_0 = alpha_out_full_n) or (dstout_out_full_n = ap_const_logic_0) or (dstin_out_full_n = ap_const_logic_0) or (frame_size_out3_full_n = ap_const_logic_0) or (ap_done_reg = ap_const_logic_1) or (frame_size_out_full_n = ap_const_logic_0) or (srcin_out_full_n = ap_const_logic_0))) and (ap_const_logic_1 = ap_CS_fsm_state1))) then 
             ystart_pos_out_write <= ap_const_logic_1;
         else 
             ystart_pos_out_write <= ap_const_logic_0;

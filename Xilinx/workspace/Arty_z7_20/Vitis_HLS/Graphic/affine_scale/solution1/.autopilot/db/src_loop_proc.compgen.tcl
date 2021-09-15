@@ -1,6 +1,6 @@
 # This script segment is generated automatically by AutoPilot
 
-set id 48
+set id 40
 set name affine_scale_mul_32s_34ns_65_2_1
 set corename simcore_mul
 set op mul
@@ -85,7 +85,7 @@ puts "@W \[IMPL-101\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_multicycle_mul, che
 }
 
 
-set id 52
+set id 44
 set name affine_scale_mul_32s_32s_32_2_1
 set corename simcore_mul
 set op mul
@@ -170,7 +170,7 @@ puts "@W \[IMPL-101\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_multicycle_mul, che
 }
 
 
-set id 53
+set id 45
 set name affine_scale_mul_28s_28s_44_3_1
 set corename simcore_mul
 set op mul
@@ -255,7 +255,7 @@ puts "@W \[IMPL-101\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_multicycle_mul, che
 }
 
 
-set id 56
+set id 48
 set name affine_scale_sdiv_32ns_32s_32_36_seq_1
 set corename simcore_sdiv_seq
 set op sdiv
@@ -349,7 +349,7 @@ puts "@W \[IMPL-101\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_div, check your pla
 }
 
 
-set id 57
+set id 49
 set name affine_scale_sdiv_33ns_32s_32_37_seq_1
 set corename simcore_sdiv_seq
 set op sdiv
@@ -443,8 +443,93 @@ puts "@W \[IMPL-101\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_div, check your pla
 }
 
 
-set id 66
-set name affine_scale_mul_32ns_21s_53_2_1
+set id 56
+set name affine_scale_mul_33s_32s_44_2_1
+set corename simcore_mul
+set op mul
+set stage_num 2
+set max_latency -1
+set registered_input 1
+set clk_width 1
+set clk_signed 0
+set reset_width 1
+set reset_signed 0
+set in0_width 33
+set in0_signed 1
+set in1_width 32
+set in1_signed 1
+set ce_width 1
+set ce_signed 0
+set out_width 44
+if {${::AESL::PGuard_simmodel_gen}} {
+if {[info proc ap_gen_simcore_mul] == "ap_gen_simcore_mul"} {
+eval "ap_gen_simcore_mul { \
+    id ${id} \
+    name ${name} \
+    corename ${corename} \
+    op ${op} \
+    reset_level 1 \
+    sync_rst true \
+    stage_num ${stage_num} \
+    max_latency ${max_latency} \
+    registered_input ${registered_input} \
+    clk_width ${clk_width} \
+    clk_signed ${clk_signed} \
+    reset_width ${reset_width} \
+    reset_signed ${reset_signed} \
+    in0_width ${in0_width} \
+    in0_signed ${in0_signed} \
+    in1_width ${in1_width} \
+    in1_signed ${in1_signed} \
+    ce_width ${ce_width} \
+    ce_signed ${ce_signed} \
+    out_width ${out_width} \
+}"
+} else {
+puts "@W \[IMPL-100\] Cannot find ap_gen_simcore_mul, check your AutoPilot builtin lib"
+}
+}
+
+
+if {${::AESL::PGuard_rtl_comp_handler}} {
+	::AP::rtl_comp_handler ${name}
+}
+
+
+set op mul
+set corename Multiplier
+if {${::AESL::PGuard_autocg_gen} && ${::AESL::PGuard_autocg_ipmgen}} {
+if {[info proc ::AESL_LIB_VIRTEX::xil_gen_multicycle_mul] == "::AESL_LIB_VIRTEX::xil_gen_multicycle_mul"} {
+eval "::AESL_LIB_VIRTEX::xil_gen_multicycle_mul { \
+    id ${id} \
+    name ${name} \
+    corename ${corename} \
+    op ${op} \
+    reset_level 1 \
+    sync_rst true \
+    stage_num ${stage_num} \
+    max_latency ${max_latency} \
+    registered_input ${registered_input} \
+    clk_width ${clk_width} \
+    clk_signed ${clk_signed} \
+    reset_width ${reset_width} \
+    reset_signed ${reset_signed} \
+    in0_width ${in0_width} \
+    in0_signed ${in0_signed} \
+    in1_width ${in1_width} \
+    in1_signed ${in1_signed} \
+    ce_width ${ce_width} \
+    ce_signed ${ce_signed} \
+    out_width ${out_width} \
+}"
+} else {
+puts "@W \[IMPL-101\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_multicycle_mul, check your platform lib"
+}
+}
+
+
+set id 58
+set name affine_scale_mul_32s_32ns_62_2_1
 set corename simcore_mul
 set op mul
 set stage_num 2
@@ -455,12 +540,12 @@ set clk_signed 0
 set reset_width 1
 set reset_signed 0
 set in0_width 32
-set in0_signed 0
-set in1_width 21
-set in1_signed 1
+set in0_signed 1
+set in1_width 32
+set in1_signed 0
 set ce_width 1
 set ce_signed 0
-set out_width 53
+set out_width 62
 if {${::AESL::PGuard_simmodel_gen}} {
 if {[info proc ap_gen_simcore_mul] == "ap_gen_simcore_mul"} {
 eval "ap_gen_simcore_mul { \
@@ -539,7 +624,7 @@ if {${::AESL::PGuard_autoexp_gen}} {
 if {${::AESL::PGuard_autoexp_gen}} {
 if {[info proc ::AESL_LIB_XILADAPTER::xil_bram_gen] == "::AESL_LIB_XILADAPTER::xil_bram_gen"} {
 eval "::AESL_LIB_XILADAPTER::xil_bram_gen { \
-    id 83 \
+    id 76 \
     name src_V1 \
     reset_level 1 \
     sync_rst true \
@@ -557,7 +642,7 @@ puts "@W \[IMPL-110\] Cannot find bus interface model in the library. Ignored ge
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 73 \
+    id 66 \
     name mapchip_draw_xsize \
     type fifo \
     dir I \
@@ -572,7 +657,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 74 \
+    id 67 \
     name mapchip_maxwidth \
     type fifo \
     dir I \
@@ -587,7 +672,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 75 \
+    id 68 \
     name d \
     type fifo \
     dir I \
@@ -602,7 +687,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 76 \
+    id 69 \
     name a \
     type fifo \
     dir I \
@@ -617,7 +702,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 77 \
+    id 70 \
     name c \
     type fifo \
     dir I \
@@ -632,7 +717,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 78 \
+    id 71 \
     name b \
     type fifo \
     dir I \
@@ -647,7 +732,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 79 \
+    id 72 \
     name m \
     type fifo \
     dir I \
@@ -662,22 +747,22 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 80 \
-    name trunc_ln69 \
+    id 73 \
+    name trunc_ln1345 \
     type fifo \
     dir I \
     reset_level 1 \
     sync_rst true \
-    corename dc_trunc_ln69 \
+    corename dc_trunc_ln1345 \
     op interface \
-    ports { trunc_ln69_dout { I 32 vector } trunc_ln69_empty_n { I 1 bit } trunc_ln69_read { O 1 bit } } \
+    ports { trunc_ln1345_dout { I 32 vector } trunc_ln1345_empty_n { I 1 bit } trunc_ln1345_read { O 1 bit } } \
 } "
 }
 
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 81 \
+    id 74 \
     name mapchip_maxheight \
     type fifo \
     dir I \
@@ -692,7 +777,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 82 \
+    id 75 \
     name n \
     type fifo \
     dir I \
@@ -707,7 +792,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 84 \
+    id 77 \
     name id \
     type fifo \
     dir I \
@@ -722,7 +807,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 85 \
+    id 78 \
     name ystart_pos \
     type fifo \
     dir I \
@@ -737,7 +822,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 86 \
+    id 79 \
     name xstart_pos \
     type fifo \
     dir I \
@@ -752,7 +837,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 87 \
+    id 80 \
     name srcin \
     type fifo \
     dir I \
@@ -767,7 +852,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 88 \
+    id 81 \
     name src \
     type other \
     dir I \
@@ -782,7 +867,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 89 \
+    id 82 \
     name mapchip_draw_xsize_out \
     type fifo \
     dir O \
@@ -797,15 +882,15 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 90 \
-    name trunc_ln69_out \
+    id 83 \
+    name trunc_ln1345_out \
     type fifo \
     dir O \
     reset_level 1 \
     sync_rst true \
-    corename dc_trunc_ln69_out \
+    corename dc_trunc_ln1345_out \
     op interface \
-    ports { trunc_ln69_out_din { O 32 vector } trunc_ln69_out_full_n { I 1 bit } trunc_ln69_out_write { O 1 bit } } \
+    ports { trunc_ln1345_out_din { O 32 vector } trunc_ln1345_out_full_n { I 1 bit } trunc_ln1345_out_write { O 1 bit } } \
 } "
 }
 

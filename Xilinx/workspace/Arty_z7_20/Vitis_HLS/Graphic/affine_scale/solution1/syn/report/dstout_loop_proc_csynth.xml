@@ -285,8 +285,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>trunc_ln69_dout</name>
-<Object>trunc_ln69</Object>
+<name>trunc_ln1345_dout</name>
+<Object>trunc_ln1345</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -296,8 +296,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>trunc_ln69_empty_n</name>
-<Object>trunc_ln69</Object>
+<name>trunc_ln1345_empty_n</name>
+<Object>trunc_ln1345</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>
@@ -307,8 +307,8 @@
 <Attribute>control</Attribute>
 </RtlPorts>
 <RtlPorts>
-<name>trunc_ln69_read</name>
-<Object>trunc_ln69</Object>
+<name>trunc_ln1345_read</name>
+<Object>trunc_ln1345</Object>
 <Type>pointer</Type>
 <Scope></Scope>
 <IOProtocol>ap_fifo</IOProtocol>

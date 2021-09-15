@@ -20,7 +20,7 @@ port (
     c : IN STD_LOGIC_VECTOR (19 downto 0);
     b : IN STD_LOGIC_VECTOR (19 downto 0);
     m : IN STD_LOGIC_VECTOR (31 downto 0);
-    trunc_ln69 : IN STD_LOGIC_VECTOR (31 downto 0);
+    trunc_ln1345 : IN STD_LOGIC_VECTOR (31 downto 0);
     mapchip_maxheight : IN STD_LOGIC_VECTOR (31 downto 0);
     n : IN STD_LOGIC_VECTOR (31 downto 0);
     id : IN STD_LOGIC_VECTOR (31 downto 0);
@@ -128,7 +128,7 @@ port (
     c_ap_vld : IN STD_LOGIC;
     b_ap_vld : IN STD_LOGIC;
     m_ap_vld : IN STD_LOGIC;
-    trunc_ln69_ap_vld : IN STD_LOGIC;
+    trunc_ln1345_ap_vld : IN STD_LOGIC;
     mapchip_maxheight_ap_vld : IN STD_LOGIC;
     n_ap_vld : IN STD_LOGIC;
     id_ap_vld : IN STD_LOGIC;
@@ -181,40 +181,24 @@ attribute shreg_extract : string;
     signal dataflow_in_loop_height_loop_entry6_U0_mapchip_draw_xsize_out1_write : STD_LOGIC;
     signal dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out_din : STD_LOGIC_VECTOR (31 downto 0);
     signal dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out_write : STD_LOGIC;
-    signal dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out2_din : STD_LOGIC_VECTOR (31 downto 0);
-    signal dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out2_write : STD_LOGIC;
     signal dataflow_in_loop_height_loop_entry6_U0_d_out_din : STD_LOGIC_VECTOR (19 downto 0);
     signal dataflow_in_loop_height_loop_entry6_U0_d_out_write : STD_LOGIC;
-    signal dataflow_in_loop_height_loop_entry6_U0_d_out3_din : STD_LOGIC_VECTOR (19 downto 0);
-    signal dataflow_in_loop_height_loop_entry6_U0_d_out3_write : STD_LOGIC;
     signal dataflow_in_loop_height_loop_entry6_U0_a_out_din : STD_LOGIC_VECTOR (19 downto 0);
     signal dataflow_in_loop_height_loop_entry6_U0_a_out_write : STD_LOGIC;
-    signal dataflow_in_loop_height_loop_entry6_U0_a_out4_din : STD_LOGIC_VECTOR (19 downto 0);
-    signal dataflow_in_loop_height_loop_entry6_U0_a_out4_write : STD_LOGIC;
     signal dataflow_in_loop_height_loop_entry6_U0_c_out_din : STD_LOGIC_VECTOR (19 downto 0);
     signal dataflow_in_loop_height_loop_entry6_U0_c_out_write : STD_LOGIC;
-    signal dataflow_in_loop_height_loop_entry6_U0_c_out5_din : STD_LOGIC_VECTOR (19 downto 0);
-    signal dataflow_in_loop_height_loop_entry6_U0_c_out5_write : STD_LOGIC;
     signal dataflow_in_loop_height_loop_entry6_U0_b_out_din : STD_LOGIC_VECTOR (19 downto 0);
     signal dataflow_in_loop_height_loop_entry6_U0_b_out_write : STD_LOGIC;
-    signal dataflow_in_loop_height_loop_entry6_U0_b_out6_din : STD_LOGIC_VECTOR (19 downto 0);
-    signal dataflow_in_loop_height_loop_entry6_U0_b_out6_write : STD_LOGIC;
     signal dataflow_in_loop_height_loop_entry6_U0_m_out_din : STD_LOGIC_VECTOR (31 downto 0);
     signal dataflow_in_loop_height_loop_entry6_U0_m_out_write : STD_LOGIC;
-    signal dataflow_in_loop_height_loop_entry6_U0_m_out7_din : STD_LOGIC_VECTOR (31 downto 0);
-    signal dataflow_in_loop_height_loop_entry6_U0_m_out7_write : STD_LOGIC;
-    signal dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out_din : STD_LOGIC_VECTOR (31 downto 0);
-    signal dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out_write : STD_LOGIC;
-    signal dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out8_din : STD_LOGIC_VECTOR (31 downto 0);
-    signal dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out8_write : STD_LOGIC;
+    signal dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out_din : STD_LOGIC_VECTOR (31 downto 0);
+    signal dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out_write : STD_LOGIC;
+    signal dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out2_din : STD_LOGIC_VECTOR (31 downto 0);
+    signal dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out2_write : STD_LOGIC;
     signal dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out_din : STD_LOGIC_VECTOR (31 downto 0);
     signal dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out_write : STD_LOGIC;
-    signal dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out9_din : STD_LOGIC_VECTOR (31 downto 0);
-    signal dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out9_write : STD_LOGIC;
     signal dataflow_in_loop_height_loop_entry6_U0_n_out_din : STD_LOGIC_VECTOR (31 downto 0);
     signal dataflow_in_loop_height_loop_entry6_U0_n_out_write : STD_LOGIC;
-    signal dataflow_in_loop_height_loop_entry6_U0_n_out10_din : STD_LOGIC_VECTOR (31 downto 0);
-    signal dataflow_in_loop_height_loop_entry6_U0_n_out10_write : STD_LOGIC;
     signal dataflow_in_loop_height_loop_entry6_U0_id_out_din : STD_LOGIC_VECTOR (31 downto 0);
     signal dataflow_in_loop_height_loop_entry6_U0_id_out_write : STD_LOGIC;
     signal dataflow_in_loop_height_loop_entry6_U0_ystart_pos_out_din : STD_LOGIC_VECTOR (31 downto 0);
@@ -225,8 +209,8 @@ attribute shreg_extract : string;
     signal dataflow_in_loop_height_loop_entry6_U0_srcin_out_write : STD_LOGIC;
     signal dataflow_in_loop_height_loop_entry6_U0_frame_size_out_din : STD_LOGIC_VECTOR (31 downto 0);
     signal dataflow_in_loop_height_loop_entry6_U0_frame_size_out_write : STD_LOGIC;
-    signal dataflow_in_loop_height_loop_entry6_U0_frame_size_out11_din : STD_LOGIC_VECTOR (31 downto 0);
-    signal dataflow_in_loop_height_loop_entry6_U0_frame_size_out11_write : STD_LOGIC;
+    signal dataflow_in_loop_height_loop_entry6_U0_frame_size_out3_din : STD_LOGIC_VECTOR (31 downto 0);
+    signal dataflow_in_loop_height_loop_entry6_U0_frame_size_out3_write : STD_LOGIC;
     signal dataflow_in_loop_height_loop_entry6_U0_dstin_out_din : STD_LOGIC_VECTOR (63 downto 0);
     signal dataflow_in_loop_height_loop_entry6_U0_dstin_out_write : STD_LOGIC;
     signal dataflow_in_loop_height_loop_entry6_U0_alpha_out_din : STD_LOGIC_VECTOR (7 downto 0);
@@ -245,7 +229,7 @@ attribute shreg_extract : string;
     signal src_loop_proc_U0_c_read : STD_LOGIC;
     signal src_loop_proc_U0_b_read : STD_LOGIC;
     signal src_loop_proc_U0_m_read : STD_LOGIC;
-    signal src_loop_proc_U0_trunc_ln69_read : STD_LOGIC;
+    signal src_loop_proc_U0_trunc_ln1345_read : STD_LOGIC;
     signal src_loop_proc_U0_mapchip_maxheight_read : STD_LOGIC;
     signal src_loop_proc_U0_n_read : STD_LOGIC;
     signal src_loop_proc_U0_src_V1_address0 : STD_LOGIC_VECTOR (9 downto 0);
@@ -290,8 +274,8 @@ attribute shreg_extract : string;
     signal src_loop_proc_U0_m_axi_src_BREADY : STD_LOGIC;
     signal src_loop_proc_U0_mapchip_draw_xsize_out_din : STD_LOGIC_VECTOR (31 downto 0);
     signal src_loop_proc_U0_mapchip_draw_xsize_out_write : STD_LOGIC;
-    signal src_loop_proc_U0_trunc_ln69_out_din : STD_LOGIC_VECTOR (31 downto 0);
-    signal src_loop_proc_U0_trunc_ln69_out_write : STD_LOGIC;
+    signal src_loop_proc_U0_trunc_ln1345_out_din : STD_LOGIC_VECTOR (31 downto 0);
+    signal src_loop_proc_U0_trunc_ln1345_out_write : STD_LOGIC;
     signal ap_channel_done_src_V : STD_LOGIC;
     signal src_loop_proc_U0_src_V1_full_n : STD_LOGIC;
     signal dstin_loop_proc_U0_ap_start : STD_LOGIC;
@@ -300,7 +284,7 @@ attribute shreg_extract : string;
     signal dstin_loop_proc_U0_ap_idle : STD_LOGIC;
     signal dstin_loop_proc_U0_ap_ready : STD_LOGIC;
     signal dstin_loop_proc_U0_mapchip_draw_xsize_read : STD_LOGIC;
-    signal dstin_loop_proc_U0_trunc_ln69_read : STD_LOGIC;
+    signal dstin_loop_proc_U0_trunc_ln1345_read : STD_LOGIC;
     signal dstin_loop_proc_U0_frame_size_read : STD_LOGIC;
     signal dstin_loop_proc_U0_dstin_read : STD_LOGIC;
     signal dstin_loop_proc_U0_m_axi_dst_AWVALID : STD_LOGIC;
@@ -335,14 +319,6 @@ attribute shreg_extract : string;
     signal dstin_loop_proc_U0_m_axi_dst_ARUSER : STD_LOGIC_VECTOR (0 downto 0);
     signal dstin_loop_proc_U0_m_axi_dst_RREADY : STD_LOGIC;
     signal dstin_loop_proc_U0_m_axi_dst_BREADY : STD_LOGIC;
-    signal dstin_loop_proc_U0_mapchip_maxwidth_read : STD_LOGIC;
-    signal dstin_loop_proc_U0_d_read : STD_LOGIC;
-    signal dstin_loop_proc_U0_a_read : STD_LOGIC;
-    signal dstin_loop_proc_U0_c_read : STD_LOGIC;
-    signal dstin_loop_proc_U0_b_read : STD_LOGIC;
-    signal dstin_loop_proc_U0_m_read : STD_LOGIC;
-    signal dstin_loop_proc_U0_mapchip_maxheight_read : STD_LOGIC;
-    signal dstin_loop_proc_U0_n_read : STD_LOGIC;
     signal dstin_loop_proc_U0_dst_V2_address0 : STD_LOGIC_VECTOR (9 downto 0);
     signal dstin_loop_proc_U0_dst_V2_ce0 : STD_LOGIC;
     signal dstin_loop_proc_U0_dst_V2_we0 : STD_LOGIC;
@@ -360,7 +336,7 @@ attribute shreg_extract : string;
     signal dstout_loop_proc_U0_dst_V2_address0 : STD_LOGIC_VECTOR (9 downto 0);
     signal dstout_loop_proc_U0_dst_V2_ce0 : STD_LOGIC;
     signal dstout_loop_proc_U0_alpha_read : STD_LOGIC;
-    signal dstout_loop_proc_U0_trunc_ln69_read : STD_LOGIC;
+    signal dstout_loop_proc_U0_trunc_ln1345_read : STD_LOGIC;
     signal dstout_loop_proc_U0_frame_size_read : STD_LOGIC;
     signal dstout_loop_proc_U0_dstout_read : STD_LOGIC;
     signal dstout_loop_proc_U0_m_axi_dst_AWVALID : STD_LOGIC;
@@ -409,57 +385,33 @@ attribute shreg_extract : string;
     signal mapchip_maxwidth_c_full_n : STD_LOGIC;
     signal mapchip_maxwidth_c_dout : STD_LOGIC_VECTOR (31 downto 0);
     signal mapchip_maxwidth_c_empty_n : STD_LOGIC;
-    signal mapchip_maxwidth_c2_full_n : STD_LOGIC;
-    signal mapchip_maxwidth_c2_dout : STD_LOGIC_VECTOR (31 downto 0);
-    signal mapchip_maxwidth_c2_empty_n : STD_LOGIC;
     signal d_c_full_n : STD_LOGIC;
     signal d_c_dout : STD_LOGIC_VECTOR (19 downto 0);
     signal d_c_empty_n : STD_LOGIC;
-    signal d_c3_full_n : STD_LOGIC;
-    signal d_c3_dout : STD_LOGIC_VECTOR (19 downto 0);
-    signal d_c3_empty_n : STD_LOGIC;
     signal a_c_full_n : STD_LOGIC;
     signal a_c_dout : STD_LOGIC_VECTOR (19 downto 0);
     signal a_c_empty_n : STD_LOGIC;
-    signal a_c4_full_n : STD_LOGIC;
-    signal a_c4_dout : STD_LOGIC_VECTOR (19 downto 0);
-    signal a_c4_empty_n : STD_LOGIC;
     signal c_c_full_n : STD_LOGIC;
     signal c_c_dout : STD_LOGIC_VECTOR (19 downto 0);
     signal c_c_empty_n : STD_LOGIC;
-    signal c_c5_full_n : STD_LOGIC;
-    signal c_c5_dout : STD_LOGIC_VECTOR (19 downto 0);
-    signal c_c5_empty_n : STD_LOGIC;
     signal b_c_full_n : STD_LOGIC;
     signal b_c_dout : STD_LOGIC_VECTOR (19 downto 0);
     signal b_c_empty_n : STD_LOGIC;
-    signal b_c6_full_n : STD_LOGIC;
-    signal b_c6_dout : STD_LOGIC_VECTOR (19 downto 0);
-    signal b_c6_empty_n : STD_LOGIC;
     signal m_c_full_n : STD_LOGIC;
     signal m_c_dout : STD_LOGIC_VECTOR (31 downto 0);
     signal m_c_empty_n : STD_LOGIC;
-    signal m_c7_full_n : STD_LOGIC;
-    signal m_c7_dout : STD_LOGIC_VECTOR (31 downto 0);
-    signal m_c7_empty_n : STD_LOGIC;
-    signal trunc_ln69_c_full_n : STD_LOGIC;
-    signal trunc_ln69_c_dout : STD_LOGIC_VECTOR (31 downto 0);
-    signal trunc_ln69_c_empty_n : STD_LOGIC;
-    signal trunc_ln69_c8_full_n : STD_LOGIC;
-    signal trunc_ln69_c8_dout : STD_LOGIC_VECTOR (31 downto 0);
-    signal trunc_ln69_c8_empty_n : STD_LOGIC;
+    signal trunc_ln1345_c_full_n : STD_LOGIC;
+    signal trunc_ln1345_c_dout : STD_LOGIC_VECTOR (31 downto 0);
+    signal trunc_ln1345_c_empty_n : STD_LOGIC;
+    signal trunc_ln1345_c2_full_n : STD_LOGIC;
+    signal trunc_ln1345_c2_dout : STD_LOGIC_VECTOR (31 downto 0);
+    signal trunc_ln1345_c2_empty_n : STD_LOGIC;
     signal mapchip_maxheight_c_full_n : STD_LOGIC;
     signal mapchip_maxheight_c_dout : STD_LOGIC_VECTOR (31 downto 0);
     signal mapchip_maxheight_c_empty_n : STD_LOGIC;
-    signal mapchip_maxheight_c9_full_n : STD_LOGIC;
-    signal mapchip_maxheight_c9_dout : STD_LOGIC_VECTOR (31 downto 0);
-    signal mapchip_maxheight_c9_empty_n : STD_LOGIC;
     signal n_c_full_n : STD_LOGIC;
     signal n_c_dout : STD_LOGIC_VECTOR (31 downto 0);
     signal n_c_empty_n : STD_LOGIC;
-    signal n_c10_full_n : STD_LOGIC;
-    signal n_c10_dout : STD_LOGIC_VECTOR (31 downto 0);
-    signal n_c10_empty_n : STD_LOGIC;
     signal id_c_full_n : STD_LOGIC;
     signal id_c_dout : STD_LOGIC_VECTOR (31 downto 0);
     signal id_c_empty_n : STD_LOGIC;
@@ -475,9 +427,9 @@ attribute shreg_extract : string;
     signal frame_size_c_full_n : STD_LOGIC;
     signal frame_size_c_dout : STD_LOGIC_VECTOR (31 downto 0);
     signal frame_size_c_empty_n : STD_LOGIC;
-    signal frame_size_c11_full_n : STD_LOGIC;
-    signal frame_size_c11_dout : STD_LOGIC_VECTOR (31 downto 0);
-    signal frame_size_c11_empty_n : STD_LOGIC;
+    signal frame_size_c3_full_n : STD_LOGIC;
+    signal frame_size_c3_dout : STD_LOGIC_VECTOR (31 downto 0);
+    signal frame_size_c3_empty_n : STD_LOGIC;
     signal dstin_c_full_n : STD_LOGIC;
     signal dstin_c_dout : STD_LOGIC_VECTOR (63 downto 0);
     signal dstin_c_empty_n : STD_LOGIC;
@@ -487,12 +439,12 @@ attribute shreg_extract : string;
     signal dstout_c_full_n : STD_LOGIC;
     signal dstout_c_dout : STD_LOGIC_VECTOR (63 downto 0);
     signal dstout_c_empty_n : STD_LOGIC;
-    signal mapchip_draw_xsize_c12_full_n : STD_LOGIC;
-    signal mapchip_draw_xsize_c12_dout : STD_LOGIC_VECTOR (31 downto 0);
-    signal mapchip_draw_xsize_c12_empty_n : STD_LOGIC;
-    signal trunc_ln69_c13_full_n : STD_LOGIC;
-    signal trunc_ln69_c13_dout : STD_LOGIC_VECTOR (31 downto 0);
-    signal trunc_ln69_c13_empty_n : STD_LOGIC;
+    signal mapchip_draw_xsize_c4_full_n : STD_LOGIC;
+    signal mapchip_draw_xsize_c4_dout : STD_LOGIC_VECTOR (31 downto 0);
+    signal mapchip_draw_xsize_c4_empty_n : STD_LOGIC;
+    signal trunc_ln1345_c5_full_n : STD_LOGIC;
+    signal trunc_ln1345_c5_dout : STD_LOGIC_VECTOR (31 downto 0);
+    signal trunc_ln1345_c5_empty_n : STD_LOGIC;
     signal ap_sync_done : STD_LOGIC;
     signal ap_sync_ready : STD_LOGIC;
     signal ap_sync_reg_dataflow_in_loop_height_loop_entry6_U0_ap_ready : STD_LOGIC := '0';
@@ -527,7 +479,7 @@ attribute shreg_extract : string;
         c : IN STD_LOGIC_VECTOR (19 downto 0);
         b : IN STD_LOGIC_VECTOR (19 downto 0);
         m : IN STD_LOGIC_VECTOR (31 downto 0);
-        trunc_ln69 : IN STD_LOGIC_VECTOR (31 downto 0);
+        trunc_ln1345 : IN STD_LOGIC_VECTOR (31 downto 0);
         mapchip_maxheight : IN STD_LOGIC_VECTOR (31 downto 0);
         n : IN STD_LOGIC_VECTOR (31 downto 0);
         id : IN STD_LOGIC_VECTOR (31 downto 0);
@@ -547,57 +499,33 @@ attribute shreg_extract : string;
         mapchip_maxwidth_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
         mapchip_maxwidth_out_full_n : IN STD_LOGIC;
         mapchip_maxwidth_out_write : OUT STD_LOGIC;
-        mapchip_maxwidth_out2_din : OUT STD_LOGIC_VECTOR (31 downto 0);
-        mapchip_maxwidth_out2_full_n : IN STD_LOGIC;
-        mapchip_maxwidth_out2_write : OUT STD_LOGIC;
         d_out_din : OUT STD_LOGIC_VECTOR (19 downto 0);
         d_out_full_n : IN STD_LOGIC;
         d_out_write : OUT STD_LOGIC;
-        d_out3_din : OUT STD_LOGIC_VECTOR (19 downto 0);
-        d_out3_full_n : IN STD_LOGIC;
-        d_out3_write : OUT STD_LOGIC;
         a_out_din : OUT STD_LOGIC_VECTOR (19 downto 0);
         a_out_full_n : IN STD_LOGIC;
         a_out_write : OUT STD_LOGIC;
-        a_out4_din : OUT STD_LOGIC_VECTOR (19 downto 0);
-        a_out4_full_n : IN STD_LOGIC;
-        a_out4_write : OUT STD_LOGIC;
         c_out_din : OUT STD_LOGIC_VECTOR (19 downto 0);
         c_out_full_n : IN STD_LOGIC;
         c_out_write : OUT STD_LOGIC;
-        c_out5_din : OUT STD_LOGIC_VECTOR (19 downto 0);
-        c_out5_full_n : IN STD_LOGIC;
-        c_out5_write : OUT STD_LOGIC;
         b_out_din : OUT STD_LOGIC_VECTOR (19 downto 0);
         b_out_full_n : IN STD_LOGIC;
         b_out_write : OUT STD_LOGIC;
-        b_out6_din : OUT STD_LOGIC_VECTOR (19 downto 0);
-        b_out6_full_n : IN STD_LOGIC;
-        b_out6_write : OUT STD_LOGIC;
         m_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
         m_out_full_n : IN STD_LOGIC;
         m_out_write : OUT STD_LOGIC;
-        m_out7_din : OUT STD_LOGIC_VECTOR (31 downto 0);
-        m_out7_full_n : IN STD_LOGIC;
-        m_out7_write : OUT STD_LOGIC;
-        trunc_ln69_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
-        trunc_ln69_out_full_n : IN STD_LOGIC;
-        trunc_ln69_out_write : OUT STD_LOGIC;
-        trunc_ln69_out8_din : OUT STD_LOGIC_VECTOR (31 downto 0);
-        trunc_ln69_out8_full_n : IN STD_LOGIC;
-        trunc_ln69_out8_write : OUT STD_LOGIC;
+        trunc_ln1345_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
+        trunc_ln1345_out_full_n : IN STD_LOGIC;
+        trunc_ln1345_out_write : OUT STD_LOGIC;
+        trunc_ln1345_out2_din : OUT STD_LOGIC_VECTOR (31 downto 0);
+        trunc_ln1345_out2_full_n : IN STD_LOGIC;
+        trunc_ln1345_out2_write : OUT STD_LOGIC;
         mapchip_maxheight_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
         mapchip_maxheight_out_full_n : IN STD_LOGIC;
         mapchip_maxheight_out_write : OUT STD_LOGIC;
-        mapchip_maxheight_out9_din : OUT STD_LOGIC_VECTOR (31 downto 0);
-        mapchip_maxheight_out9_full_n : IN STD_LOGIC;
-        mapchip_maxheight_out9_write : OUT STD_LOGIC;
         n_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
         n_out_full_n : IN STD_LOGIC;
         n_out_write : OUT STD_LOGIC;
-        n_out10_din : OUT STD_LOGIC_VECTOR (31 downto 0);
-        n_out10_full_n : IN STD_LOGIC;
-        n_out10_write : OUT STD_LOGIC;
         id_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
         id_out_full_n : IN STD_LOGIC;
         id_out_write : OUT STD_LOGIC;
@@ -613,9 +541,9 @@ attribute shreg_extract : string;
         frame_size_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
         frame_size_out_full_n : IN STD_LOGIC;
         frame_size_out_write : OUT STD_LOGIC;
-        frame_size_out11_din : OUT STD_LOGIC_VECTOR (31 downto 0);
-        frame_size_out11_full_n : IN STD_LOGIC;
-        frame_size_out11_write : OUT STD_LOGIC;
+        frame_size_out3_din : OUT STD_LOGIC_VECTOR (31 downto 0);
+        frame_size_out3_full_n : IN STD_LOGIC;
+        frame_size_out3_write : OUT STD_LOGIC;
         dstin_out_din : OUT STD_LOGIC_VECTOR (63 downto 0);
         dstin_out_full_n : IN STD_LOGIC;
         dstin_out_write : OUT STD_LOGIC;
@@ -658,9 +586,9 @@ attribute shreg_extract : string;
         m_dout : IN STD_LOGIC_VECTOR (31 downto 0);
         m_empty_n : IN STD_LOGIC;
         m_read : OUT STD_LOGIC;
-        trunc_ln69_dout : IN STD_LOGIC_VECTOR (31 downto 0);
-        trunc_ln69_empty_n : IN STD_LOGIC;
-        trunc_ln69_read : OUT STD_LOGIC;
+        trunc_ln1345_dout : IN STD_LOGIC_VECTOR (31 downto 0);
+        trunc_ln1345_empty_n : IN STD_LOGIC;
+        trunc_ln1345_read : OUT STD_LOGIC;
         mapchip_maxheight_dout : IN STD_LOGIC_VECTOR (31 downto 0);
         mapchip_maxheight_empty_n : IN STD_LOGIC;
         mapchip_maxheight_read : OUT STD_LOGIC;
@@ -731,9 +659,9 @@ attribute shreg_extract : string;
         mapchip_draw_xsize_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
         mapchip_draw_xsize_out_full_n : IN STD_LOGIC;
         mapchip_draw_xsize_out_write : OUT STD_LOGIC;
-        trunc_ln69_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
-        trunc_ln69_out_full_n : IN STD_LOGIC;
-        trunc_ln69_out_write : OUT STD_LOGIC );
+        trunc_ln1345_out_din : OUT STD_LOGIC_VECTOR (31 downto 0);
+        trunc_ln1345_out_full_n : IN STD_LOGIC;
+        trunc_ln1345_out_write : OUT STD_LOGIC );
     end component;
 
 
@@ -749,9 +677,9 @@ attribute shreg_extract : string;
         mapchip_draw_xsize_dout : IN STD_LOGIC_VECTOR (31 downto 0);
         mapchip_draw_xsize_empty_n : IN STD_LOGIC;
         mapchip_draw_xsize_read : OUT STD_LOGIC;
-        trunc_ln69_dout : IN STD_LOGIC_VECTOR (31 downto 0);
-        trunc_ln69_empty_n : IN STD_LOGIC;
-        trunc_ln69_read : OUT STD_LOGIC;
+        trunc_ln1345_dout : IN STD_LOGIC_VECTOR (31 downto 0);
+        trunc_ln1345_empty_n : IN STD_LOGIC;
+        trunc_ln1345_read : OUT STD_LOGIC;
         frame_size_dout : IN STD_LOGIC_VECTOR (31 downto 0);
         frame_size_empty_n : IN STD_LOGIC;
         frame_size_read : OUT STD_LOGIC;
@@ -803,30 +731,6 @@ attribute shreg_extract : string;
         m_axi_dst_BRESP : IN STD_LOGIC_VECTOR (1 downto 0);
         m_axi_dst_BID : IN STD_LOGIC_VECTOR (0 downto 0);
         m_axi_dst_BUSER : IN STD_LOGIC_VECTOR (0 downto 0);
-        mapchip_maxwidth_dout : IN STD_LOGIC_VECTOR (31 downto 0);
-        mapchip_maxwidth_empty_n : IN STD_LOGIC;
-        mapchip_maxwidth_read : OUT STD_LOGIC;
-        d_dout : IN STD_LOGIC_VECTOR (19 downto 0);
-        d_empty_n : IN STD_LOGIC;
-        d_read : OUT STD_LOGIC;
-        a_dout : IN STD_LOGIC_VECTOR (19 downto 0);
-        a_empty_n : IN STD_LOGIC;
-        a_read : OUT STD_LOGIC;
-        c_dout : IN STD_LOGIC_VECTOR (19 downto 0);
-        c_empty_n : IN STD_LOGIC;
-        c_read : OUT STD_LOGIC;
-        b_dout : IN STD_LOGIC_VECTOR (19 downto 0);
-        b_empty_n : IN STD_LOGIC;
-        b_read : OUT STD_LOGIC;
-        m_dout : IN STD_LOGIC_VECTOR (31 downto 0);
-        m_empty_n : IN STD_LOGIC;
-        m_read : OUT STD_LOGIC;
-        mapchip_maxheight_dout : IN STD_LOGIC_VECTOR (31 downto 0);
-        mapchip_maxheight_empty_n : IN STD_LOGIC;
-        mapchip_maxheight_read : OUT STD_LOGIC;
-        n_dout : IN STD_LOGIC_VECTOR (31 downto 0);
-        n_empty_n : IN STD_LOGIC;
-        n_read : OUT STD_LOGIC;
         dst_V2_address0 : OUT STD_LOGIC_VECTOR (9 downto 0);
         dst_V2_ce0 : OUT STD_LOGIC;
         dst_V2_we0 : OUT STD_LOGIC;
@@ -855,9 +759,9 @@ attribute shreg_extract : string;
         alpha_dout : IN STD_LOGIC_VECTOR (7 downto 0);
         alpha_empty_n : IN STD_LOGIC;
         alpha_read : OUT STD_LOGIC;
-        trunc_ln69_dout : IN STD_LOGIC_VECTOR (31 downto 0);
-        trunc_ln69_empty_n : IN STD_LOGIC;
-        trunc_ln69_read : OUT STD_LOGIC;
+        trunc_ln1345_dout : IN STD_LOGIC_VECTOR (31 downto 0);
+        trunc_ln1345_empty_n : IN STD_LOGIC;
+        trunc_ln1345_read : OUT STD_LOGIC;
         frame_size_dout : IN STD_LOGIC_VECTOR (31 downto 0);
         frame_size_empty_n : IN STD_LOGIC;
         frame_size_read : OUT STD_LOGIC;
@@ -1124,7 +1028,7 @@ begin
         c => c,
         b => b,
         m => m,
-        trunc_ln69 => trunc_ln69,
+        trunc_ln1345 => trunc_ln1345,
         mapchip_maxheight => mapchip_maxheight,
         n => n,
         id => id,
@@ -1144,57 +1048,33 @@ begin
         mapchip_maxwidth_out_din => dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out_din,
         mapchip_maxwidth_out_full_n => mapchip_maxwidth_c_full_n,
         mapchip_maxwidth_out_write => dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out_write,
-        mapchip_maxwidth_out2_din => dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out2_din,
-        mapchip_maxwidth_out2_full_n => mapchip_maxwidth_c2_full_n,
-        mapchip_maxwidth_out2_write => dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out2_write,
         d_out_din => dataflow_in_loop_height_loop_entry6_U0_d_out_din,
         d_out_full_n => d_c_full_n,
         d_out_write => dataflow_in_loop_height_loop_entry6_U0_d_out_write,
-        d_out3_din => dataflow_in_loop_height_loop_entry6_U0_d_out3_din,
-        d_out3_full_n => d_c3_full_n,
-        d_out3_write => dataflow_in_loop_height_loop_entry6_U0_d_out3_write,
         a_out_din => dataflow_in_loop_height_loop_entry6_U0_a_out_din,
         a_out_full_n => a_c_full_n,
         a_out_write => dataflow_in_loop_height_loop_entry6_U0_a_out_write,
-        a_out4_din => dataflow_in_loop_height_loop_entry6_U0_a_out4_din,
-        a_out4_full_n => a_c4_full_n,
-        a_out4_write => dataflow_in_loop_height_loop_entry6_U0_a_out4_write,
         c_out_din => dataflow_in_loop_height_loop_entry6_U0_c_out_din,
         c_out_full_n => c_c_full_n,
         c_out_write => dataflow_in_loop_height_loop_entry6_U0_c_out_write,
-        c_out5_din => dataflow_in_loop_height_loop_entry6_U0_c_out5_din,
-        c_out5_full_n => c_c5_full_n,
-        c_out5_write => dataflow_in_loop_height_loop_entry6_U0_c_out5_write,
         b_out_din => dataflow_in_loop_height_loop_entry6_U0_b_out_din,
         b_out_full_n => b_c_full_n,
         b_out_write => dataflow_in_loop_height_loop_entry6_U0_b_out_write,
-        b_out6_din => dataflow_in_loop_height_loop_entry6_U0_b_out6_din,
-        b_out6_full_n => b_c6_full_n,
-        b_out6_write => dataflow_in_loop_height_loop_entry6_U0_b_out6_write,
         m_out_din => dataflow_in_loop_height_loop_entry6_U0_m_out_din,
         m_out_full_n => m_c_full_n,
         m_out_write => dataflow_in_loop_height_loop_entry6_U0_m_out_write,
-        m_out7_din => dataflow_in_loop_height_loop_entry6_U0_m_out7_din,
-        m_out7_full_n => m_c7_full_n,
-        m_out7_write => dataflow_in_loop_height_loop_entry6_U0_m_out7_write,
-        trunc_ln69_out_din => dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out_din,
-        trunc_ln69_out_full_n => trunc_ln69_c_full_n,
-        trunc_ln69_out_write => dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out_write,
-        trunc_ln69_out8_din => dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out8_din,
-        trunc_ln69_out8_full_n => trunc_ln69_c8_full_n,
-        trunc_ln69_out8_write => dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out8_write,
+        trunc_ln1345_out_din => dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out_din,
+        trunc_ln1345_out_full_n => trunc_ln1345_c_full_n,
+        trunc_ln1345_out_write => dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out_write,
+        trunc_ln1345_out2_din => dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out2_din,
+        trunc_ln1345_out2_full_n => trunc_ln1345_c2_full_n,
+        trunc_ln1345_out2_write => dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out2_write,
         mapchip_maxheight_out_din => dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out_din,
         mapchip_maxheight_out_full_n => mapchip_maxheight_c_full_n,
         mapchip_maxheight_out_write => dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out_write,
-        mapchip_maxheight_out9_din => dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out9_din,
-        mapchip_maxheight_out9_full_n => mapchip_maxheight_c9_full_n,
-        mapchip_maxheight_out9_write => dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out9_write,
         n_out_din => dataflow_in_loop_height_loop_entry6_U0_n_out_din,
         n_out_full_n => n_c_full_n,
         n_out_write => dataflow_in_loop_height_loop_entry6_U0_n_out_write,
-        n_out10_din => dataflow_in_loop_height_loop_entry6_U0_n_out10_din,
-        n_out10_full_n => n_c10_full_n,
-        n_out10_write => dataflow_in_loop_height_loop_entry6_U0_n_out10_write,
         id_out_din => dataflow_in_loop_height_loop_entry6_U0_id_out_din,
         id_out_full_n => id_c_full_n,
         id_out_write => dataflow_in_loop_height_loop_entry6_U0_id_out_write,
@@ -1210,9 +1090,9 @@ begin
         frame_size_out_din => dataflow_in_loop_height_loop_entry6_U0_frame_size_out_din,
         frame_size_out_full_n => frame_size_c_full_n,
         frame_size_out_write => dataflow_in_loop_height_loop_entry6_U0_frame_size_out_write,
-        frame_size_out11_din => dataflow_in_loop_height_loop_entry6_U0_frame_size_out11_din,
-        frame_size_out11_full_n => frame_size_c11_full_n,
-        frame_size_out11_write => dataflow_in_loop_height_loop_entry6_U0_frame_size_out11_write,
+        frame_size_out3_din => dataflow_in_loop_height_loop_entry6_U0_frame_size_out3_din,
+        frame_size_out3_full_n => frame_size_c3_full_n,
+        frame_size_out3_write => dataflow_in_loop_height_loop_entry6_U0_frame_size_out3_write,
         dstin_out_din => dataflow_in_loop_height_loop_entry6_U0_dstin_out_din,
         dstin_out_full_n => dstin_c_full_n,
         dstin_out_write => dataflow_in_loop_height_loop_entry6_U0_dstin_out_write,
@@ -1253,9 +1133,9 @@ begin
         m_dout => m_c_dout,
         m_empty_n => m_c_empty_n,
         m_read => src_loop_proc_U0_m_read,
-        trunc_ln69_dout => trunc_ln69_c_dout,
-        trunc_ln69_empty_n => trunc_ln69_c_empty_n,
-        trunc_ln69_read => src_loop_proc_U0_trunc_ln69_read,
+        trunc_ln1345_dout => trunc_ln1345_c_dout,
+        trunc_ln1345_empty_n => trunc_ln1345_c_empty_n,
+        trunc_ln1345_read => src_loop_proc_U0_trunc_ln1345_read,
         mapchip_maxheight_dout => mapchip_maxheight_c_dout,
         mapchip_maxheight_empty_n => mapchip_maxheight_c_empty_n,
         mapchip_maxheight_read => src_loop_proc_U0_mapchip_maxheight_read,
@@ -1324,11 +1204,11 @@ begin
         m_axi_src_BID => ap_const_lv1_0,
         m_axi_src_BUSER => ap_const_lv1_0,
         mapchip_draw_xsize_out_din => src_loop_proc_U0_mapchip_draw_xsize_out_din,
-        mapchip_draw_xsize_out_full_n => mapchip_draw_xsize_c12_full_n,
+        mapchip_draw_xsize_out_full_n => mapchip_draw_xsize_c4_full_n,
         mapchip_draw_xsize_out_write => src_loop_proc_U0_mapchip_draw_xsize_out_write,
-        trunc_ln69_out_din => src_loop_proc_U0_trunc_ln69_out_din,
-        trunc_ln69_out_full_n => trunc_ln69_c13_full_n,
-        trunc_ln69_out_write => src_loop_proc_U0_trunc_ln69_out_write);
+        trunc_ln1345_out_din => src_loop_proc_U0_trunc_ln1345_out_din,
+        trunc_ln1345_out_full_n => trunc_ln1345_c5_full_n,
+        trunc_ln1345_out_write => src_loop_proc_U0_trunc_ln1345_out_write);
 
     dstin_loop_proc_U0 : component affine_scale_dstin_loop_proc
     port map (
@@ -1342,9 +1222,9 @@ begin
         mapchip_draw_xsize_dout => mapchip_draw_xsize_c1_dout,
         mapchip_draw_xsize_empty_n => mapchip_draw_xsize_c1_empty_n,
         mapchip_draw_xsize_read => dstin_loop_proc_U0_mapchip_draw_xsize_read,
-        trunc_ln69_dout => trunc_ln69_c8_dout,
-        trunc_ln69_empty_n => trunc_ln69_c8_empty_n,
-        trunc_ln69_read => dstin_loop_proc_U0_trunc_ln69_read,
+        trunc_ln1345_dout => trunc_ln1345_c2_dout,
+        trunc_ln1345_empty_n => trunc_ln1345_c2_empty_n,
+        trunc_ln1345_read => dstin_loop_proc_U0_trunc_ln1345_read,
         frame_size_dout => frame_size_c_dout,
         frame_size_empty_n => frame_size_c_empty_n,
         frame_size_read => dstin_loop_proc_U0_frame_size_read,
@@ -1396,30 +1276,6 @@ begin
         m_axi_dst_BRESP => ap_const_lv2_0,
         m_axi_dst_BID => ap_const_lv1_0,
         m_axi_dst_BUSER => ap_const_lv1_0,
-        mapchip_maxwidth_dout => mapchip_maxwidth_c2_dout,
-        mapchip_maxwidth_empty_n => mapchip_maxwidth_c2_empty_n,
-        mapchip_maxwidth_read => dstin_loop_proc_U0_mapchip_maxwidth_read,
-        d_dout => d_c3_dout,
-        d_empty_n => d_c3_empty_n,
-        d_read => dstin_loop_proc_U0_d_read,
-        a_dout => a_c4_dout,
-        a_empty_n => a_c4_empty_n,
-        a_read => dstin_loop_proc_U0_a_read,
-        c_dout => c_c5_dout,
-        c_empty_n => c_c5_empty_n,
-        c_read => dstin_loop_proc_U0_c_read,
-        b_dout => b_c6_dout,
-        b_empty_n => b_c6_empty_n,
-        b_read => dstin_loop_proc_U0_b_read,
-        m_dout => m_c7_dout,
-        m_empty_n => m_c7_empty_n,
-        m_read => dstin_loop_proc_U0_m_read,
-        mapchip_maxheight_dout => mapchip_maxheight_c9_dout,
-        mapchip_maxheight_empty_n => mapchip_maxheight_c9_empty_n,
-        mapchip_maxheight_read => dstin_loop_proc_U0_mapchip_maxheight_read,
-        n_dout => n_c10_dout,
-        n_empty_n => n_c10_empty_n,
-        n_read => dstin_loop_proc_U0_n_read,
         dst_V2_address0 => dstin_loop_proc_U0_dst_V2_address0,
         dst_V2_ce0 => dstin_loop_proc_U0_dst_V2_ce0,
         dst_V2_we0 => dstin_loop_proc_U0_dst_V2_we0,
@@ -1434,8 +1290,8 @@ begin
         ap_continue => dstout_loop_proc_U0_ap_continue,
         ap_idle => dstout_loop_proc_U0_ap_idle,
         ap_ready => dstout_loop_proc_U0_ap_ready,
-        mapchip_draw_xsize_dout => mapchip_draw_xsize_c12_dout,
-        mapchip_draw_xsize_empty_n => mapchip_draw_xsize_c12_empty_n,
+        mapchip_draw_xsize_dout => mapchip_draw_xsize_c4_dout,
+        mapchip_draw_xsize_empty_n => mapchip_draw_xsize_c4_empty_n,
         mapchip_draw_xsize_read => dstout_loop_proc_U0_mapchip_draw_xsize_read,
         src_V1_address0 => dstout_loop_proc_U0_src_V1_address0,
         src_V1_ce0 => dstout_loop_proc_U0_src_V1_ce0,
@@ -1446,11 +1302,11 @@ begin
         alpha_dout => alpha_c_dout,
         alpha_empty_n => alpha_c_empty_n,
         alpha_read => dstout_loop_proc_U0_alpha_read,
-        trunc_ln69_dout => trunc_ln69_c13_dout,
-        trunc_ln69_empty_n => trunc_ln69_c13_empty_n,
-        trunc_ln69_read => dstout_loop_proc_U0_trunc_ln69_read,
-        frame_size_dout => frame_size_c11_dout,
-        frame_size_empty_n => frame_size_c11_empty_n,
+        trunc_ln1345_dout => trunc_ln1345_c5_dout,
+        trunc_ln1345_empty_n => trunc_ln1345_c5_empty_n,
+        trunc_ln1345_read => dstout_loop_proc_U0_trunc_ln1345_read,
+        frame_size_dout => frame_size_c3_dout,
+        frame_size_empty_n => frame_size_c3_empty_n,
         frame_size_read => dstout_loop_proc_U0_frame_size_read,
         dstout_dout => dstout_c_dout,
         dstout_empty_n => dstout_c_empty_n,
@@ -1540,19 +1396,6 @@ begin
         if_empty_n => mapchip_maxwidth_c_empty_n,
         if_read => src_loop_proc_U0_mapchip_maxwidth_read);
 
-    mapchip_maxwidth_c2_U : component affine_scale_fifo_w32_d2_S
-    port map (
-        clk => ap_clk,
-        reset => ap_rst,
-        if_read_ce => ap_const_logic_1,
-        if_write_ce => ap_const_logic_1,
-        if_din => dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out2_din,
-        if_full_n => mapchip_maxwidth_c2_full_n,
-        if_write => dataflow_in_loop_height_loop_entry6_U0_mapchip_maxwidth_out2_write,
-        if_dout => mapchip_maxwidth_c2_dout,
-        if_empty_n => mapchip_maxwidth_c2_empty_n,
-        if_read => dstin_loop_proc_U0_mapchip_maxwidth_read);
-
     d_c_U : component affine_scale_fifo_w20_d2_S
     port map (
         clk => ap_clk,
@@ -1565,19 +1408,6 @@ begin
         if_dout => d_c_dout,
         if_empty_n => d_c_empty_n,
         if_read => src_loop_proc_U0_d_read);
-
-    d_c3_U : component affine_scale_fifo_w20_d2_S
-    port map (
-        clk => ap_clk,
-        reset => ap_rst,
-        if_read_ce => ap_const_logic_1,
-        if_write_ce => ap_const_logic_1,
-        if_din => dataflow_in_loop_height_loop_entry6_U0_d_out3_din,
-        if_full_n => d_c3_full_n,
-        if_write => dataflow_in_loop_height_loop_entry6_U0_d_out3_write,
-        if_dout => d_c3_dout,
-        if_empty_n => d_c3_empty_n,
-        if_read => dstin_loop_proc_U0_d_read);
 
     a_c_U : component affine_scale_fifo_w20_d2_S
     port map (
@@ -1592,19 +1422,6 @@ begin
         if_empty_n => a_c_empty_n,
         if_read => src_loop_proc_U0_a_read);
 
-    a_c4_U : component affine_scale_fifo_w20_d2_S
-    port map (
-        clk => ap_clk,
-        reset => ap_rst,
-        if_read_ce => ap_const_logic_1,
-        if_write_ce => ap_const_logic_1,
-        if_din => dataflow_in_loop_height_loop_entry6_U0_a_out4_din,
-        if_full_n => a_c4_full_n,
-        if_write => dataflow_in_loop_height_loop_entry6_U0_a_out4_write,
-        if_dout => a_c4_dout,
-        if_empty_n => a_c4_empty_n,
-        if_read => dstin_loop_proc_U0_a_read);
-
     c_c_U : component affine_scale_fifo_w20_d2_S
     port map (
         clk => ap_clk,
@@ -1617,19 +1434,6 @@ begin
         if_dout => c_c_dout,
         if_empty_n => c_c_empty_n,
         if_read => src_loop_proc_U0_c_read);
-
-    c_c5_U : component affine_scale_fifo_w20_d2_S
-    port map (
-        clk => ap_clk,
-        reset => ap_rst,
-        if_read_ce => ap_const_logic_1,
-        if_write_ce => ap_const_logic_1,
-        if_din => dataflow_in_loop_height_loop_entry6_U0_c_out5_din,
-        if_full_n => c_c5_full_n,
-        if_write => dataflow_in_loop_height_loop_entry6_U0_c_out5_write,
-        if_dout => c_c5_dout,
-        if_empty_n => c_c5_empty_n,
-        if_read => dstin_loop_proc_U0_c_read);
 
     b_c_U : component affine_scale_fifo_w20_d2_S
     port map (
@@ -1644,19 +1448,6 @@ begin
         if_empty_n => b_c_empty_n,
         if_read => src_loop_proc_U0_b_read);
 
-    b_c6_U : component affine_scale_fifo_w20_d2_S
-    port map (
-        clk => ap_clk,
-        reset => ap_rst,
-        if_read_ce => ap_const_logic_1,
-        if_write_ce => ap_const_logic_1,
-        if_din => dataflow_in_loop_height_loop_entry6_U0_b_out6_din,
-        if_full_n => b_c6_full_n,
-        if_write => dataflow_in_loop_height_loop_entry6_U0_b_out6_write,
-        if_dout => b_c6_dout,
-        if_empty_n => b_c6_empty_n,
-        if_read => dstin_loop_proc_U0_b_read);
-
     m_c_U : component affine_scale_fifo_w32_d2_S
     port map (
         clk => ap_clk,
@@ -1670,44 +1461,31 @@ begin
         if_empty_n => m_c_empty_n,
         if_read => src_loop_proc_U0_m_read);
 
-    m_c7_U : component affine_scale_fifo_w32_d2_S
+    trunc_ln1345_c_U : component affine_scale_fifo_w32_d2_S
     port map (
         clk => ap_clk,
         reset => ap_rst,
         if_read_ce => ap_const_logic_1,
         if_write_ce => ap_const_logic_1,
-        if_din => dataflow_in_loop_height_loop_entry6_U0_m_out7_din,
-        if_full_n => m_c7_full_n,
-        if_write => dataflow_in_loop_height_loop_entry6_U0_m_out7_write,
-        if_dout => m_c7_dout,
-        if_empty_n => m_c7_empty_n,
-        if_read => dstin_loop_proc_U0_m_read);
+        if_din => dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out_din,
+        if_full_n => trunc_ln1345_c_full_n,
+        if_write => dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out_write,
+        if_dout => trunc_ln1345_c_dout,
+        if_empty_n => trunc_ln1345_c_empty_n,
+        if_read => src_loop_proc_U0_trunc_ln1345_read);
 
-    trunc_ln69_c_U : component affine_scale_fifo_w32_d2_S
+    trunc_ln1345_c2_U : component affine_scale_fifo_w32_d2_S
     port map (
         clk => ap_clk,
         reset => ap_rst,
         if_read_ce => ap_const_logic_1,
         if_write_ce => ap_const_logic_1,
-        if_din => dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out_din,
-        if_full_n => trunc_ln69_c_full_n,
-        if_write => dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out_write,
-        if_dout => trunc_ln69_c_dout,
-        if_empty_n => trunc_ln69_c_empty_n,
-        if_read => src_loop_proc_U0_trunc_ln69_read);
-
-    trunc_ln69_c8_U : component affine_scale_fifo_w32_d2_S
-    port map (
-        clk => ap_clk,
-        reset => ap_rst,
-        if_read_ce => ap_const_logic_1,
-        if_write_ce => ap_const_logic_1,
-        if_din => dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out8_din,
-        if_full_n => trunc_ln69_c8_full_n,
-        if_write => dataflow_in_loop_height_loop_entry6_U0_trunc_ln69_out8_write,
-        if_dout => trunc_ln69_c8_dout,
-        if_empty_n => trunc_ln69_c8_empty_n,
-        if_read => dstin_loop_proc_U0_trunc_ln69_read);
+        if_din => dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out2_din,
+        if_full_n => trunc_ln1345_c2_full_n,
+        if_write => dataflow_in_loop_height_loop_entry6_U0_trunc_ln1345_out2_write,
+        if_dout => trunc_ln1345_c2_dout,
+        if_empty_n => trunc_ln1345_c2_empty_n,
+        if_read => dstin_loop_proc_U0_trunc_ln1345_read);
 
     mapchip_maxheight_c_U : component affine_scale_fifo_w32_d2_S
     port map (
@@ -1722,19 +1500,6 @@ begin
         if_empty_n => mapchip_maxheight_c_empty_n,
         if_read => src_loop_proc_U0_mapchip_maxheight_read);
 
-    mapchip_maxheight_c9_U : component affine_scale_fifo_w32_d2_S
-    port map (
-        clk => ap_clk,
-        reset => ap_rst,
-        if_read_ce => ap_const_logic_1,
-        if_write_ce => ap_const_logic_1,
-        if_din => dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out9_din,
-        if_full_n => mapchip_maxheight_c9_full_n,
-        if_write => dataflow_in_loop_height_loop_entry6_U0_mapchip_maxheight_out9_write,
-        if_dout => mapchip_maxheight_c9_dout,
-        if_empty_n => mapchip_maxheight_c9_empty_n,
-        if_read => dstin_loop_proc_U0_mapchip_maxheight_read);
-
     n_c_U : component affine_scale_fifo_w32_d2_S
     port map (
         clk => ap_clk,
@@ -1747,19 +1512,6 @@ begin
         if_dout => n_c_dout,
         if_empty_n => n_c_empty_n,
         if_read => src_loop_proc_U0_n_read);
-
-    n_c10_U : component affine_scale_fifo_w32_d2_S
-    port map (
-        clk => ap_clk,
-        reset => ap_rst,
-        if_read_ce => ap_const_logic_1,
-        if_write_ce => ap_const_logic_1,
-        if_din => dataflow_in_loop_height_loop_entry6_U0_n_out10_din,
-        if_full_n => n_c10_full_n,
-        if_write => dataflow_in_loop_height_loop_entry6_U0_n_out10_write,
-        if_dout => n_c10_dout,
-        if_empty_n => n_c10_empty_n,
-        if_read => dstin_loop_proc_U0_n_read);
 
     id_c_U : component affine_scale_fifo_w32_d2_S
     port map (
@@ -1826,17 +1578,17 @@ begin
         if_empty_n => frame_size_c_empty_n,
         if_read => dstin_loop_proc_U0_frame_size_read);
 
-    frame_size_c11_U : component affine_scale_fifo_w32_d3_S
+    frame_size_c3_U : component affine_scale_fifo_w32_d3_S
     port map (
         clk => ap_clk,
         reset => ap_rst,
         if_read_ce => ap_const_logic_1,
         if_write_ce => ap_const_logic_1,
-        if_din => dataflow_in_loop_height_loop_entry6_U0_frame_size_out11_din,
-        if_full_n => frame_size_c11_full_n,
-        if_write => dataflow_in_loop_height_loop_entry6_U0_frame_size_out11_write,
-        if_dout => frame_size_c11_dout,
-        if_empty_n => frame_size_c11_empty_n,
+        if_din => dataflow_in_loop_height_loop_entry6_U0_frame_size_out3_din,
+        if_full_n => frame_size_c3_full_n,
+        if_write => dataflow_in_loop_height_loop_entry6_U0_frame_size_out3_write,
+        if_dout => frame_size_c3_dout,
+        if_empty_n => frame_size_c3_empty_n,
         if_read => dstout_loop_proc_U0_frame_size_read);
 
     dstin_c_U : component affine_scale_fifo_w64_d2_S
@@ -1878,31 +1630,31 @@ begin
         if_empty_n => dstout_c_empty_n,
         if_read => dstout_loop_proc_U0_dstout_read);
 
-    mapchip_draw_xsize_c12_U : component affine_scale_fifo_w32_d2_S
+    mapchip_draw_xsize_c4_U : component affine_scale_fifo_w32_d2_S
     port map (
         clk => ap_clk,
         reset => ap_rst,
         if_read_ce => ap_const_logic_1,
         if_write_ce => ap_const_logic_1,
         if_din => src_loop_proc_U0_mapchip_draw_xsize_out_din,
-        if_full_n => mapchip_draw_xsize_c12_full_n,
+        if_full_n => mapchip_draw_xsize_c4_full_n,
         if_write => src_loop_proc_U0_mapchip_draw_xsize_out_write,
-        if_dout => mapchip_draw_xsize_c12_dout,
-        if_empty_n => mapchip_draw_xsize_c12_empty_n,
+        if_dout => mapchip_draw_xsize_c4_dout,
+        if_empty_n => mapchip_draw_xsize_c4_empty_n,
         if_read => dstout_loop_proc_U0_mapchip_draw_xsize_read);
 
-    trunc_ln69_c13_U : component affine_scale_fifo_w32_d2_S
+    trunc_ln1345_c5_U : component affine_scale_fifo_w32_d2_S
     port map (
         clk => ap_clk,
         reset => ap_rst,
         if_read_ce => ap_const_logic_1,
         if_write_ce => ap_const_logic_1,
-        if_din => src_loop_proc_U0_trunc_ln69_out_din,
-        if_full_n => trunc_ln69_c13_full_n,
-        if_write => src_loop_proc_U0_trunc_ln69_out_write,
-        if_dout => trunc_ln69_c13_dout,
-        if_empty_n => trunc_ln69_c13_empty_n,
-        if_read => dstout_loop_proc_U0_trunc_ln69_read);
+        if_din => src_loop_proc_U0_trunc_ln1345_out_din,
+        if_full_n => trunc_ln1345_c5_full_n,
+        if_write => src_loop_proc_U0_trunc_ln1345_out_write,
+        if_dout => trunc_ln1345_c5_dout,
+        if_empty_n => trunc_ln1345_c5_empty_n,
+        if_read => dstout_loop_proc_U0_trunc_ln1345_read);
 
 
 

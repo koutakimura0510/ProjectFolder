@@ -152,7 +152,7 @@ end;
 architecture behav of affine_scale is 
     attribute CORE_GENERATION_INFO : STRING;
     attribute CORE_GENERATION_INFO of behav : architecture is
-    "affine_scale_affine_scale,hls_ip_2020_2,{HLS_INPUT_TYPE=cxx,HLS_INPUT_FLOAT=0,HLS_INPUT_FIXED=0,HLS_INPUT_PART=xc7z020-clg400-1,HLS_INPUT_CLOCK=10.000000,HLS_INPUT_ARCH=others,HLS_SYN_CLOCK=7.300000,HLS_SYN_LAT=72986,HLS_SYN_TPT=none,HLS_SYN_MEM=11,HLS_SYN_DSP=0,HLS_SYN_FF=19445,HLS_SYN_LUT=13887,HLS_VERSION=2020_2}";
+    "affine_scale_affine_scale,hls_ip_2020_2,{HLS_INPUT_TYPE=cxx,HLS_INPUT_FLOAT=0,HLS_INPUT_FIXED=0,HLS_INPUT_PART=xc7z020-clg400-1,HLS_INPUT_CLOCK=10.000000,HLS_INPUT_ARCH=others,HLS_SYN_CLOCK=7.300000,HLS_SYN_LAT=72986,HLS_SYN_TPT=none,HLS_SYN_MEM=11,HLS_SYN_DSP=0,HLS_SYN_FF=13012,HLS_SYN_LUT=9487,HLS_VERSION=2020_2}";
     constant C_S_AXI_DATA_WIDTH : INTEGER range 63 downto 0 := 20;
     constant C_S_AXI_WSTRB_WIDTH : INTEGER range 63 downto 0 := 4;
     constant C_S_AXI_ADDR_WIDTH : INTEGER range 63 downto 0 := 20;
@@ -325,7 +325,7 @@ architecture behav of affine_scale is
         c : IN STD_LOGIC_VECTOR (19 downto 0);
         b : IN STD_LOGIC_VECTOR (19 downto 0);
         m : IN STD_LOGIC_VECTOR (31 downto 0);
-        trunc_ln69 : IN STD_LOGIC_VECTOR (31 downto 0);
+        trunc_ln1345 : IN STD_LOGIC_VECTOR (31 downto 0);
         mapchip_maxheight : IN STD_LOGIC_VECTOR (31 downto 0);
         n : IN STD_LOGIC_VECTOR (31 downto 0);
         id : IN STD_LOGIC_VECTOR (31 downto 0);
@@ -433,7 +433,7 @@ architecture behav of affine_scale is
         c_ap_vld : IN STD_LOGIC;
         b_ap_vld : IN STD_LOGIC;
         m_ap_vld : IN STD_LOGIC;
-        trunc_ln69_ap_vld : IN STD_LOGIC;
+        trunc_ln1345_ap_vld : IN STD_LOGIC;
         mapchip_maxheight_ap_vld : IN STD_LOGIC;
         n_ap_vld : IN STD_LOGIC;
         id_ap_vld : IN STD_LOGIC;
@@ -1033,7 +1033,7 @@ begin
         c => dataflow_in_loop_height_loop_U0_c,
         b => dataflow_in_loop_height_loop_U0_b,
         m => m,
-        trunc_ln69 => loop_dataflow_input_count,
+        trunc_ln1345 => loop_dataflow_input_count,
         mapchip_maxheight => mapchip_maxheight,
         n => n,
         id => id,
@@ -1141,7 +1141,7 @@ begin
         c_ap_vld => ap_const_logic_1,
         b_ap_vld => ap_const_logic_1,
         m_ap_vld => ap_const_logic_1,
-        trunc_ln69_ap_vld => ap_const_logic_0,
+        trunc_ln1345_ap_vld => ap_const_logic_0,
         mapchip_maxheight_ap_vld => ap_const_logic_1,
         n_ap_vld => ap_const_logic_1,
         id_ap_vld => ap_const_logic_1,

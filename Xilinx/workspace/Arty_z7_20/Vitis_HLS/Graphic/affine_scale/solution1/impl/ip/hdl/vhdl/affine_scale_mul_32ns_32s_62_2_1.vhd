@@ -6,7 +6,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
-entity affine_scale_mul_32ns_32ns_62_2_1_Multiplier_4 is
+entity affine_scale_mul_32ns_32s_62_2_1_Multiplier_5 is
 port (
     clk: in std_logic;
     ce: in std_logic;
@@ -15,7 +15,7 @@ port (
     p: out std_logic_vector(62 - 1 downto 0));
 end entity;
 
-architecture behav of affine_scale_mul_32ns_32ns_62_2_1_Multiplier_4 is
+architecture behav of affine_scale_mul_32ns_32s_62_2_1_Multiplier_5 is
     signal tmp_product : std_logic_vector(62 - 1 downto 0);
     signal a_i : std_logic_vector(32 - 1 downto 0);
     signal b_i : std_logic_vector(32 - 1 downto 0);
@@ -26,7 +26,7 @@ begin
     b_i <= b;
     p <= p_tmp;
 
-    tmp_product <= std_logic_vector(resize(unsigned(a_i) * unsigned(b_i), 62));
+    tmp_product <= std_logic_vector(resize(unsigned(std_logic_vector(signed('0' & a_i) * signed(b_i))), 62));
 
     process(clk)
     begin
@@ -40,7 +40,7 @@ end architecture;
 Library IEEE;
 use IEEE.std_logic_1164.all;
 
-entity affine_scale_mul_32ns_32ns_62_2_1 is
+entity affine_scale_mul_32ns_32s_62_2_1 is
     generic (
         ID : INTEGER;
         NUM_STAGE : INTEGER;
@@ -56,8 +56,8 @@ entity affine_scale_mul_32ns_32ns_62_2_1 is
         dout : OUT STD_LOGIC_VECTOR(dout_WIDTH - 1 DOWNTO 0));
 end entity;
 
-architecture arch of affine_scale_mul_32ns_32ns_62_2_1 is
-    component affine_scale_mul_32ns_32ns_62_2_1_Multiplier_4 is
+architecture arch of affine_scale_mul_32ns_32s_62_2_1 is
+    component affine_scale_mul_32ns_32s_62_2_1_Multiplier_5 is
         port (
             clk : IN STD_LOGIC;
             ce : IN STD_LOGIC;
@@ -69,7 +69,7 @@ architecture arch of affine_scale_mul_32ns_32ns_62_2_1 is
 
 
 begin
-    affine_scale_mul_32ns_32ns_62_2_1_Multiplier_4_U :  component affine_scale_mul_32ns_32ns_62_2_1_Multiplier_4
+    affine_scale_mul_32ns_32s_62_2_1_Multiplier_5_U :  component affine_scale_mul_32ns_32s_62_2_1_Multiplier_5
     port map (
         clk => clk,
         ce => ce,

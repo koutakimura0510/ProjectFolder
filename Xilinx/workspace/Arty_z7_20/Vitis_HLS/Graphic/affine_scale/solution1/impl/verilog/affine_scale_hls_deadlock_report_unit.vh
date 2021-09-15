@@ -200,7 +200,7 @@
 
     // print one channel component in the cycle
     task print_cycle_chan_comp(input [PROC_NUM - 1:0] dl_vec1, input [PROC_NUM - 1:0] dl_vec2);
-        reg [696:0] chan_path;
+        reg [688:0] chan_path;
         integer index1;
         integer index2;
         begin
@@ -294,15 +294,15 @@
                                 $fdisplay(fp, "Dependence_Channel_status FULL");
                             end
                         end
-                        if (~dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0.trunc_ln69_out_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.trunc_ln69_c_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.src_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c_U");
+                        if (~dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0.trunc_ln1345_out_blk_n) begin
+                            if (~dataflow_in_loop_height_loop_U0.trunc_ln1345_c_U.if_empty_n) begin
+                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.src_loop_proc_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c_U");
                                 $fdisplay(fp, "Dependence_Channel_status EMPTY");
                             end
-                            else if (~dataflow_in_loop_height_loop_U0.trunc_ln69_c_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.src_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c_U");
+                            else if (~dataflow_in_loop_height_loop_U0.trunc_ln1345_c_U.if_full_n) begin
+                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.src_loop_proc_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c_U");
                                 $fdisplay(fp, "Dependence_Channel_status FULL");
                             end
                         end
@@ -395,111 +395,15 @@
                                 $fdisplay(fp, "Dependence_Channel_status FULL");
                             end
                         end
-                        if (~dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0.mapchip_maxwidth_out2_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.mapchip_maxwidth_c2_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_maxwidth_c2_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_maxwidth_c2_U");
+                        if (~dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0.trunc_ln1345_out2_blk_n) begin
+                            if (~dataflow_in_loop_height_loop_U0.trunc_ln1345_c2_U.if_empty_n) begin
+                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c2_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c2_U");
                                 $fdisplay(fp, "Dependence_Channel_status EMPTY");
                             end
-                            else if (~dataflow_in_loop_height_loop_U0.mapchip_maxwidth_c2_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_maxwidth_c2_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_maxwidth_c2_U");
-                                $fdisplay(fp, "Dependence_Channel_status FULL");
-                            end
-                        end
-                        if (~dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0.d_out3_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.d_c3_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.d_c3_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.d_c3_U");
-                                $fdisplay(fp, "Dependence_Channel_status EMPTY");
-                            end
-                            else if (~dataflow_in_loop_height_loop_U0.d_c3_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.d_c3_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.d_c3_U");
-                                $fdisplay(fp, "Dependence_Channel_status FULL");
-                            end
-                        end
-                        if (~dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0.a_out4_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.a_c4_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.a_c4_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.a_c4_U");
-                                $fdisplay(fp, "Dependence_Channel_status EMPTY");
-                            end
-                            else if (~dataflow_in_loop_height_loop_U0.a_c4_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.a_c4_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.a_c4_U");
-                                $fdisplay(fp, "Dependence_Channel_status FULL");
-                            end
-                        end
-                        if (~dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0.c_out5_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.c_c5_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.c_c5_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.c_c5_U");
-                                $fdisplay(fp, "Dependence_Channel_status EMPTY");
-                            end
-                            else if (~dataflow_in_loop_height_loop_U0.c_c5_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.c_c5_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.c_c5_U");
-                                $fdisplay(fp, "Dependence_Channel_status FULL");
-                            end
-                        end
-                        if (~dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0.b_out6_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.b_c6_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.b_c6_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.b_c6_U");
-                                $fdisplay(fp, "Dependence_Channel_status EMPTY");
-                            end
-                            else if (~dataflow_in_loop_height_loop_U0.b_c6_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.b_c6_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.b_c6_U");
-                                $fdisplay(fp, "Dependence_Channel_status FULL");
-                            end
-                        end
-                        if (~dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0.m_out7_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.m_c7_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.m_c7_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.m_c7_U");
-                                $fdisplay(fp, "Dependence_Channel_status EMPTY");
-                            end
-                            else if (~dataflow_in_loop_height_loop_U0.m_c7_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.m_c7_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.m_c7_U");
-                                $fdisplay(fp, "Dependence_Channel_status FULL");
-                            end
-                        end
-                        if (~dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0.trunc_ln69_out8_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.trunc_ln69_c8_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c8_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c8_U");
-                                $fdisplay(fp, "Dependence_Channel_status EMPTY");
-                            end
-                            else if (~dataflow_in_loop_height_loop_U0.trunc_ln69_c8_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c8_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c8_U");
-                                $fdisplay(fp, "Dependence_Channel_status FULL");
-                            end
-                        end
-                        if (~dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0.mapchip_maxheight_out9_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.mapchip_maxheight_c9_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_maxheight_c9_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_maxheight_c9_U");
-                                $fdisplay(fp, "Dependence_Channel_status EMPTY");
-                            end
-                            else if (~dataflow_in_loop_height_loop_U0.mapchip_maxheight_c9_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_maxheight_c9_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_maxheight_c9_U");
-                                $fdisplay(fp, "Dependence_Channel_status FULL");
-                            end
-                        end
-                        if (~dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0.n_out10_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.n_c10_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.n_c10_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.n_c10_U");
-                                $fdisplay(fp, "Dependence_Channel_status EMPTY");
-                            end
-                            else if (~dataflow_in_loop_height_loop_U0.n_c10_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.n_c10_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.n_c10_U");
+                            else if (~dataflow_in_loop_height_loop_U0.trunc_ln1345_c2_U.if_full_n) begin
+                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c2_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c2_U");
                                 $fdisplay(fp, "Dependence_Channel_status FULL");
                             end
                         end
@@ -532,15 +436,15 @@
                         end
                     end
                     3: begin
-                        if (~dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0.frame_size_out11_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.frame_size_c11_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.frame_size_c11_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstout_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.frame_size_c11_U");
+                        if (~dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0.frame_size_out3_blk_n) begin
+                            if (~dataflow_in_loop_height_loop_U0.frame_size_c3_U.if_empty_n) begin
+                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.frame_size_c3_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstout_loop_proc_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.frame_size_c3_U");
                                 $fdisplay(fp, "Dependence_Channel_status EMPTY");
                             end
-                            else if (~dataflow_in_loop_height_loop_U0.frame_size_c11_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.frame_size_c11_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstout_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.frame_size_c11_U");
+                            else if (~dataflow_in_loop_height_loop_U0.frame_size_c3_U.if_full_n) begin
+                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.frame_size_c3_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstout_loop_proc_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.frame_size_c3_U");
                                 $fdisplay(fp, "Dependence_Channel_status FULL");
                             end
                         end
@@ -658,15 +562,15 @@
                                 $fdisplay(fp, "Dependence_Channel_status FULL");
                             end
                         end
-                        if (~dataflow_in_loop_height_loop_U0.src_loop_proc_U0.trunc_ln69_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.trunc_ln69_c_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c_U");
+                        if (~dataflow_in_loop_height_loop_U0.src_loop_proc_U0.trunc_ln1345_blk_n) begin
+                            if (~dataflow_in_loop_height_loop_U0.trunc_ln1345_c_U.if_empty_n) begin
+                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c_U");
                                 $fdisplay(fp, "Dependence_Channel_status EMPTY");
                             end
-                            else if (~dataflow_in_loop_height_loop_U0.trunc_ln69_c_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c_U");
+                            else if (~dataflow_in_loop_height_loop_U0.trunc_ln1345_c_U.if_full_n) begin
+                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c_U");
                                 $fdisplay(fp, "Dependence_Channel_status FULL");
                             end
                         end
@@ -760,26 +664,26 @@
                             end
                         end
                         if (~dataflow_in_loop_height_loop_U0.src_loop_proc_U0.mapchip_draw_xsize_out_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c12_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c12_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstout_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c12_U");
+                            if (~dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c4_U.if_empty_n) begin
+                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c4_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstout_loop_proc_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c4_U");
                                 $fdisplay(fp, "Dependence_Channel_status EMPTY");
                             end
-                            else if (~dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c12_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c12_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstout_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c12_U");
+                            else if (~dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c4_U.if_full_n) begin
+                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c4_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstout_loop_proc_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c4_U");
                                 $fdisplay(fp, "Dependence_Channel_status FULL");
                             end
                         end
-                        if (~dataflow_in_loop_height_loop_U0.src_loop_proc_U0.trunc_ln69_out_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.trunc_ln69_c13_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c13_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstout_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c13_U");
+                        if (~dataflow_in_loop_height_loop_U0.src_loop_proc_U0.trunc_ln1345_out_blk_n) begin
+                            if (~dataflow_in_loop_height_loop_U0.trunc_ln1345_c5_U.if_empty_n) begin
+                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c5_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstout_loop_proc_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c5_U");
                                 $fdisplay(fp, "Dependence_Channel_status EMPTY");
                             end
-                            else if (~dataflow_in_loop_height_loop_U0.trunc_ln69_c13_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c13_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstout_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c13_U");
+                            else if (~dataflow_in_loop_height_loop_U0.trunc_ln1345_c5_U.if_full_n) begin
+                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c5_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstout_loop_proc_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c5_U");
                                 $fdisplay(fp, "Dependence_Channel_status FULL");
                             end
                         end
@@ -806,15 +710,15 @@
                                 $fdisplay(fp, "Dependence_Channel_status FULL");
                             end
                         end
-                        if (~dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0.trunc_ln69_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.trunc_ln69_c8_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c8_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c8_U");
+                        if (~dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0.trunc_ln1345_blk_n) begin
+                            if (~dataflow_in_loop_height_loop_U0.trunc_ln1345_c2_U.if_empty_n) begin
+                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c2_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c2_U");
                                 $fdisplay(fp, "Dependence_Channel_status EMPTY");
                             end
-                            else if (~dataflow_in_loop_height_loop_U0.trunc_ln69_c8_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c8_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c8_U");
+                            else if (~dataflow_in_loop_height_loop_U0.trunc_ln1345_c2_U.if_full_n) begin
+                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c2_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c2_U");
                                 $fdisplay(fp, "Dependence_Channel_status FULL");
                             end
                         end
@@ -839,102 +743,6 @@
                             else if (~dataflow_in_loop_height_loop_U0.dstin_c_U.if_full_n) begin
                                 $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_c_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
                                 $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dstin_c_U");
-                                $fdisplay(fp, "Dependence_Channel_status FULL");
-                            end
-                        end
-                        if (~dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0.mapchip_maxwidth_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.mapchip_maxwidth_c2_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_maxwidth_c2_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_maxwidth_c2_U");
-                                $fdisplay(fp, "Dependence_Channel_status EMPTY");
-                            end
-                            else if (~dataflow_in_loop_height_loop_U0.mapchip_maxwidth_c2_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_maxwidth_c2_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_maxwidth_c2_U");
-                                $fdisplay(fp, "Dependence_Channel_status FULL");
-                            end
-                        end
-                        if (~dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0.d_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.d_c3_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.d_c3_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.d_c3_U");
-                                $fdisplay(fp, "Dependence_Channel_status EMPTY");
-                            end
-                            else if (~dataflow_in_loop_height_loop_U0.d_c3_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.d_c3_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.d_c3_U");
-                                $fdisplay(fp, "Dependence_Channel_status FULL");
-                            end
-                        end
-                        if (~dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0.a_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.a_c4_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.a_c4_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.a_c4_U");
-                                $fdisplay(fp, "Dependence_Channel_status EMPTY");
-                            end
-                            else if (~dataflow_in_loop_height_loop_U0.a_c4_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.a_c4_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.a_c4_U");
-                                $fdisplay(fp, "Dependence_Channel_status FULL");
-                            end
-                        end
-                        if (~dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0.c_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.c_c5_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.c_c5_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.c_c5_U");
-                                $fdisplay(fp, "Dependence_Channel_status EMPTY");
-                            end
-                            else if (~dataflow_in_loop_height_loop_U0.c_c5_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.c_c5_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.c_c5_U");
-                                $fdisplay(fp, "Dependence_Channel_status FULL");
-                            end
-                        end
-                        if (~dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0.b_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.b_c6_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.b_c6_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.b_c6_U");
-                                $fdisplay(fp, "Dependence_Channel_status EMPTY");
-                            end
-                            else if (~dataflow_in_loop_height_loop_U0.b_c6_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.b_c6_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.b_c6_U");
-                                $fdisplay(fp, "Dependence_Channel_status FULL");
-                            end
-                        end
-                        if (~dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0.m_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.m_c7_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.m_c7_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.m_c7_U");
-                                $fdisplay(fp, "Dependence_Channel_status EMPTY");
-                            end
-                            else if (~dataflow_in_loop_height_loop_U0.m_c7_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.m_c7_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.m_c7_U");
-                                $fdisplay(fp, "Dependence_Channel_status FULL");
-                            end
-                        end
-                        if (~dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0.mapchip_maxheight_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.mapchip_maxheight_c9_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_maxheight_c9_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_maxheight_c9_U");
-                                $fdisplay(fp, "Dependence_Channel_status EMPTY");
-                            end
-                            else if (~dataflow_in_loop_height_loop_U0.mapchip_maxheight_c9_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_maxheight_c9_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_maxheight_c9_U");
-                                $fdisplay(fp, "Dependence_Channel_status FULL");
-                            end
-                        end
-                        if (~dataflow_in_loop_height_loop_U0.dstin_loop_proc_U0.n_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.n_c10_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.n_c10_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.n_c10_U");
-                                $fdisplay(fp, "Dependence_Channel_status EMPTY");
-                            end
-                            else if (~dataflow_in_loop_height_loop_U0.n_c10_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.n_c10_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.n_c10_U");
                                 $fdisplay(fp, "Dependence_Channel_status FULL");
                             end
                         end
@@ -967,14 +775,14 @@
                     case(index2)
                     1: begin
                         if (~dataflow_in_loop_height_loop_U0.dstout_loop_proc_U0.mapchip_draw_xsize_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c12_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c12_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.src_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c12_U");
+                            if (~dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c4_U.if_empty_n) begin
+                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c4_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.src_loop_proc_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c4_U");
                                 $fdisplay(fp, "Dependence_Channel_status EMPTY");
                             end
-                            else if (~dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c12_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c12_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.src_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c12_U");
+                            else if (~dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c4_U.if_full_n) begin
+                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c4_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.src_loop_proc_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.mapchip_draw_xsize_c4_U");
                                 $fdisplay(fp, "Dependence_Channel_status FULL");
                             end
                         end
@@ -990,15 +798,15 @@
                                 $fdisplay(fp, "Dependence_Channel_status FULL");
                             end
                         end
-                        if (~dataflow_in_loop_height_loop_U0.dstout_loop_proc_U0.trunc_ln69_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.trunc_ln69_c13_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c13_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.src_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c13_U");
+                        if (~dataflow_in_loop_height_loop_U0.dstout_loop_proc_U0.trunc_ln1345_blk_n) begin
+                            if (~dataflow_in_loop_height_loop_U0.trunc_ln1345_c5_U.if_empty_n) begin
+                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c5_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.src_loop_proc_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c5_U");
                                 $fdisplay(fp, "Dependence_Channel_status EMPTY");
                             end
-                            else if (~dataflow_in_loop_height_loop_U0.trunc_ln69_c13_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c13_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.src_loop_proc_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln69_c13_U");
+                            else if (~dataflow_in_loop_height_loop_U0.trunc_ln1345_c5_U.if_full_n) begin
+                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c5_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.src_loop_proc_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.trunc_ln1345_c5_U");
                                 $fdisplay(fp, "Dependence_Channel_status FULL");
                             end
                         end
@@ -1031,14 +839,14 @@
                             end
                         end
                         if (~dataflow_in_loop_height_loop_U0.dstout_loop_proc_U0.frame_size_blk_n) begin
-                            if (~dataflow_in_loop_height_loop_U0.frame_size_c11_U.if_empty_n) begin
-                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.frame_size_c11_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.frame_size_c11_U");
+                            if (~dataflow_in_loop_height_loop_U0.frame_size_c3_U.if_empty_n) begin
+                                $display("//      Blocked by empty input FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.frame_size_c3_U' written by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.frame_size_c3_U");
                                 $fdisplay(fp, "Dependence_Channel_status EMPTY");
                             end
-                            else if (~dataflow_in_loop_height_loop_U0.frame_size_c11_U.if_full_n) begin
-                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.frame_size_c11_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
-                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.frame_size_c11_U");
+                            else if (~dataflow_in_loop_height_loop_U0.frame_size_c3_U.if_full_n) begin
+                                $display("//      Blocked by full output FIFO 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.frame_size_c3_U' read by process 'affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.dataflow_in_loop_height_loop_entry6_U0'");
+                                $fdisplay(fp, "Dependence_Channel_path affine_scale_affine_scale.dataflow_in_loop_height_loop_U0.frame_size_c3_U");
                                 $fdisplay(fp, "Dependence_Channel_status FULL");
                             end
                         end

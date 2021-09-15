@@ -1,6 +1,6 @@
 # This script segment is generated automatically by AutoPilot
 
-set id 125
+set id 93
 set name affine_scale_mul_8ns_8ns_16_1_1
 set corename simcore_mul
 set op mul
@@ -67,7 +67,7 @@ puts "@W \[IMPL-101\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_multicycle_mul, che
 }
 
 
-set id 128
+set id 96
 set name affine_scale_mac_muladd_8ns_8ns_16ns_17_4_1
 set corename simcore_mac
 set op mac
@@ -167,7 +167,7 @@ puts "@W \[IMPL-101\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_dsp48, check your p
 }
 
 
-set id 131
+set id 99
 set name affine_scale_mul_mul_17ns_19ns_35_4_1
 set corename simcore_mul
 set op mul
@@ -261,7 +261,7 @@ puts "@W \[IMPL-101\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_dsp48, check your p
 }
 
 
-set id 134
+set id 102
 set name affine_scale_mul_mul_10ns_8ns_17_4_1
 set corename simcore_mul
 set op mul
@@ -366,7 +366,7 @@ if {${::AESL::PGuard_autoexp_gen}} {
 if {${::AESL::PGuard_autoexp_gen}} {
 if {[info proc ::AESL_LIB_XILADAPTER::xil_bram_gen] == "::AESL_LIB_XILADAPTER::xil_bram_gen"} {
 eval "::AESL_LIB_XILADAPTER::xil_bram_gen { \
-    id 145 \
+    id 113 \
     name src_V1 \
     reset_level 1 \
     sync_rst true \
@@ -385,7 +385,7 @@ puts "@W \[IMPL-110\] Cannot find bus interface model in the library. Ignored ge
 if {${::AESL::PGuard_autoexp_gen}} {
 if {[info proc ::AESL_LIB_XILADAPTER::xil_bram_gen] == "::AESL_LIB_XILADAPTER::xil_bram_gen"} {
 eval "::AESL_LIB_XILADAPTER::xil_bram_gen { \
-    id 146 \
+    id 114 \
     name dst_V2 \
     reset_level 1 \
     sync_rst true \
@@ -403,7 +403,7 @@ puts "@W \[IMPL-110\] Cannot find bus interface model in the library. Ignored ge
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 144 \
+    id 112 \
     name mapchip_draw_xsize \
     type fifo \
     dir I \
@@ -418,7 +418,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 147 \
+    id 115 \
     name alpha \
     type fifo \
     dir I \
@@ -433,22 +433,22 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 148 \
-    name trunc_ln69 \
+    id 116 \
+    name trunc_ln1345 \
     type fifo \
     dir I \
     reset_level 1 \
     sync_rst true \
-    corename dc_trunc_ln69 \
+    corename dc_trunc_ln1345 \
     op interface \
-    ports { trunc_ln69_dout { I 32 vector } trunc_ln69_empty_n { I 1 bit } trunc_ln69_read { O 1 bit } } \
+    ports { trunc_ln1345_dout { I 32 vector } trunc_ln1345_empty_n { I 1 bit } trunc_ln1345_read { O 1 bit } } \
 } "
 }
 
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 149 \
+    id 117 \
     name frame_size \
     type fifo \
     dir I \
@@ -463,7 +463,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 150 \
+    id 118 \
     name dstout \
     type fifo \
     dir I \
@@ -478,7 +478,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 151 \
+    id 119 \
     name dst \
     type other \
     dir O \

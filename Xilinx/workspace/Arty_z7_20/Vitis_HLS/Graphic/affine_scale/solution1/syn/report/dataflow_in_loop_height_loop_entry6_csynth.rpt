@@ -3,7 +3,7 @@
 ================================================================
 == Vitis HLS Report for 'dataflow_in_loop_height_loop_entry6'
 ================================================================
-* Date:           Mon Sep  6 21:22:11 2021
+* Date:           Wed Sep 15 21:04:41 2021
 
 * Version:        2020.2 (Build 3064766 on Wed Nov 18 09:12:47 MST 2020)
 * Project:        affine_scale
@@ -53,10 +53,10 @@
 |FIFO             |        -|    -|       -|      -|    -|
 |Instance         |        -|    -|       -|      -|    -|
 |Memory           |        -|    -|       -|      -|    -|
-|Multiplexer      |        -|    -|       -|    270|    -|
+|Multiplexer      |        -|    -|       -|    198|    -|
 |Register         |        -|    -|       2|      -|    -|
 +-----------------+---------+-----+--------+-------+-----+
-|Total            |        0|    0|       2|    272|    0|
+|Total            |        0|    0|       2|    200|    0|
 +-----------------+---------+-----+--------+-------+-----+
 |Available        |      280|  220|  106400|  53200|    0|
 +-----------------+---------+-----+--------+-------+-----+
@@ -89,38 +89,30 @@
     +-------------------------------+----+-----------+-----+-----------+
     |              Name             | LUT| Input Size| Bits| Total Bits|
     +-------------------------------+----+-----------+-----+-----------+
-    |a_out4_blk_n                   |   9|          2|    1|          2|
     |a_out_blk_n                    |   9|          2|    1|          2|
     |alpha_out_blk_n                |   9|          2|    1|          2|
     |ap_done                        |   9|          2|    1|          2|
-    |b_out6_blk_n                   |   9|          2|    1|          2|
     |b_out_blk_n                    |   9|          2|    1|          2|
-    |c_out5_blk_n                   |   9|          2|    1|          2|
     |c_out_blk_n                    |   9|          2|    1|          2|
-    |d_out3_blk_n                   |   9|          2|    1|          2|
     |d_out_blk_n                    |   9|          2|    1|          2|
     |dstin_out_blk_n                |   9|          2|    1|          2|
     |dstout_out_blk_n               |   9|          2|    1|          2|
-    |frame_size_out11_blk_n         |   9|          2|    1|          2|
+    |frame_size_out3_blk_n          |   9|          2|    1|          2|
     |frame_size_out_blk_n           |   9|          2|    1|          2|
     |id_out_blk_n                   |   9|          2|    1|          2|
-    |m_out7_blk_n                   |   9|          2|    1|          2|
     |m_out_blk_n                    |   9|          2|    1|          2|
     |mapchip_draw_xsize_out1_blk_n  |   9|          2|    1|          2|
     |mapchip_draw_xsize_out_blk_n   |   9|          2|    1|          2|
-    |mapchip_maxheight_out9_blk_n   |   9|          2|    1|          2|
     |mapchip_maxheight_out_blk_n    |   9|          2|    1|          2|
-    |mapchip_maxwidth_out2_blk_n    |   9|          2|    1|          2|
     |mapchip_maxwidth_out_blk_n     |   9|          2|    1|          2|
-    |n_out10_blk_n                  |   9|          2|    1|          2|
     |n_out_blk_n                    |   9|          2|    1|          2|
     |srcin_out_blk_n                |   9|          2|    1|          2|
-    |trunc_ln69_out8_blk_n          |   9|          2|    1|          2|
-    |trunc_ln69_out_blk_n           |   9|          2|    1|          2|
+    |trunc_ln1345_out2_blk_n        |   9|          2|    1|          2|
+    |trunc_ln1345_out_blk_n         |   9|          2|    1|          2|
     |xstart_pos_out_blk_n           |   9|          2|    1|          2|
     |ystart_pos_out_blk_n           |   9|          2|    1|          2|
     +-------------------------------+----+-----------+-----+-----------+
-    |Total                          | 270|         60|   30|         60|
+    |Total                          | 198|         44|   22|         44|
     +-------------------------------+----+-----------+-----+-----------+
 
     * Register: 
@@ -156,7 +148,7 @@
 |c                               |   in|   20|     ap_none|                                    c|        scalar|
 |b                               |   in|   20|     ap_none|                                    b|        scalar|
 |m                               |   in|   32|     ap_none|                                    m|        scalar|
-|trunc_ln69                      |   in|   32|     ap_none|                           trunc_ln69|        scalar|
+|trunc_ln1345                    |   in|   32|     ap_none|                         trunc_ln1345|        scalar|
 |mapchip_maxheight               |   in|   32|     ap_none|                    mapchip_maxheight|        scalar|
 |n                               |   in|   32|     ap_none|                                    n|        scalar|
 |id                              |   in|   32|     ap_none|                                   id|        scalar|
@@ -176,57 +168,33 @@
 |mapchip_maxwidth_out_din        |  out|   32|     ap_fifo|                 mapchip_maxwidth_out|       pointer|
 |mapchip_maxwidth_out_full_n     |   in|    1|     ap_fifo|                 mapchip_maxwidth_out|       pointer|
 |mapchip_maxwidth_out_write      |  out|    1|     ap_fifo|                 mapchip_maxwidth_out|       pointer|
-|mapchip_maxwidth_out2_din       |  out|   32|     ap_fifo|                mapchip_maxwidth_out2|       pointer|
-|mapchip_maxwidth_out2_full_n    |   in|    1|     ap_fifo|                mapchip_maxwidth_out2|       pointer|
-|mapchip_maxwidth_out2_write     |  out|    1|     ap_fifo|                mapchip_maxwidth_out2|       pointer|
 |d_out_din                       |  out|   20|     ap_fifo|                                d_out|       pointer|
 |d_out_full_n                    |   in|    1|     ap_fifo|                                d_out|       pointer|
 |d_out_write                     |  out|    1|     ap_fifo|                                d_out|       pointer|
-|d_out3_din                      |  out|   20|     ap_fifo|                               d_out3|       pointer|
-|d_out3_full_n                   |   in|    1|     ap_fifo|                               d_out3|       pointer|
-|d_out3_write                    |  out|    1|     ap_fifo|                               d_out3|       pointer|
 |a_out_din                       |  out|   20|     ap_fifo|                                a_out|       pointer|
 |a_out_full_n                    |   in|    1|     ap_fifo|                                a_out|       pointer|
 |a_out_write                     |  out|    1|     ap_fifo|                                a_out|       pointer|
-|a_out4_din                      |  out|   20|     ap_fifo|                               a_out4|       pointer|
-|a_out4_full_n                   |   in|    1|     ap_fifo|                               a_out4|       pointer|
-|a_out4_write                    |  out|    1|     ap_fifo|                               a_out4|       pointer|
 |c_out_din                       |  out|   20|     ap_fifo|                                c_out|       pointer|
 |c_out_full_n                    |   in|    1|     ap_fifo|                                c_out|       pointer|
 |c_out_write                     |  out|    1|     ap_fifo|                                c_out|       pointer|
-|c_out5_din                      |  out|   20|     ap_fifo|                               c_out5|       pointer|
-|c_out5_full_n                   |   in|    1|     ap_fifo|                               c_out5|       pointer|
-|c_out5_write                    |  out|    1|     ap_fifo|                               c_out5|       pointer|
 |b_out_din                       |  out|   20|     ap_fifo|                                b_out|       pointer|
 |b_out_full_n                    |   in|    1|     ap_fifo|                                b_out|       pointer|
 |b_out_write                     |  out|    1|     ap_fifo|                                b_out|       pointer|
-|b_out6_din                      |  out|   20|     ap_fifo|                               b_out6|       pointer|
-|b_out6_full_n                   |   in|    1|     ap_fifo|                               b_out6|       pointer|
-|b_out6_write                    |  out|    1|     ap_fifo|                               b_out6|       pointer|
 |m_out_din                       |  out|   32|     ap_fifo|                                m_out|       pointer|
 |m_out_full_n                    |   in|    1|     ap_fifo|                                m_out|       pointer|
 |m_out_write                     |  out|    1|     ap_fifo|                                m_out|       pointer|
-|m_out7_din                      |  out|   32|     ap_fifo|                               m_out7|       pointer|
-|m_out7_full_n                   |   in|    1|     ap_fifo|                               m_out7|       pointer|
-|m_out7_write                    |  out|    1|     ap_fifo|                               m_out7|       pointer|
-|trunc_ln69_out_din              |  out|   32|     ap_fifo|                       trunc_ln69_out|       pointer|
-|trunc_ln69_out_full_n           |   in|    1|     ap_fifo|                       trunc_ln69_out|       pointer|
-|trunc_ln69_out_write            |  out|    1|     ap_fifo|                       trunc_ln69_out|       pointer|
-|trunc_ln69_out8_din             |  out|   32|     ap_fifo|                      trunc_ln69_out8|       pointer|
-|trunc_ln69_out8_full_n          |   in|    1|     ap_fifo|                      trunc_ln69_out8|       pointer|
-|trunc_ln69_out8_write           |  out|    1|     ap_fifo|                      trunc_ln69_out8|       pointer|
+|trunc_ln1345_out_din            |  out|   32|     ap_fifo|                     trunc_ln1345_out|       pointer|
+|trunc_ln1345_out_full_n         |   in|    1|     ap_fifo|                     trunc_ln1345_out|       pointer|
+|trunc_ln1345_out_write          |  out|    1|     ap_fifo|                     trunc_ln1345_out|       pointer|
+|trunc_ln1345_out2_din           |  out|   32|     ap_fifo|                    trunc_ln1345_out2|       pointer|
+|trunc_ln1345_out2_full_n        |   in|    1|     ap_fifo|                    trunc_ln1345_out2|       pointer|
+|trunc_ln1345_out2_write         |  out|    1|     ap_fifo|                    trunc_ln1345_out2|       pointer|
 |mapchip_maxheight_out_din       |  out|   32|     ap_fifo|                mapchip_maxheight_out|       pointer|
 |mapchip_maxheight_out_full_n    |   in|    1|     ap_fifo|                mapchip_maxheight_out|       pointer|
 |mapchip_maxheight_out_write     |  out|    1|     ap_fifo|                mapchip_maxheight_out|       pointer|
-|mapchip_maxheight_out9_din      |  out|   32|     ap_fifo|               mapchip_maxheight_out9|       pointer|
-|mapchip_maxheight_out9_full_n   |   in|    1|     ap_fifo|               mapchip_maxheight_out9|       pointer|
-|mapchip_maxheight_out9_write    |  out|    1|     ap_fifo|               mapchip_maxheight_out9|       pointer|
 |n_out_din                       |  out|   32|     ap_fifo|                                n_out|       pointer|
 |n_out_full_n                    |   in|    1|     ap_fifo|                                n_out|       pointer|
 |n_out_write                     |  out|    1|     ap_fifo|                                n_out|       pointer|
-|n_out10_din                     |  out|   32|     ap_fifo|                              n_out10|       pointer|
-|n_out10_full_n                  |   in|    1|     ap_fifo|                              n_out10|       pointer|
-|n_out10_write                   |  out|    1|     ap_fifo|                              n_out10|       pointer|
 |id_out_din                      |  out|   32|     ap_fifo|                               id_out|       pointer|
 |id_out_full_n                   |   in|    1|     ap_fifo|                               id_out|       pointer|
 |id_out_write                    |  out|    1|     ap_fifo|                               id_out|       pointer|
@@ -242,9 +210,9 @@
 |frame_size_out_din              |  out|   32|     ap_fifo|                       frame_size_out|       pointer|
 |frame_size_out_full_n           |   in|    1|     ap_fifo|                       frame_size_out|       pointer|
 |frame_size_out_write            |  out|    1|     ap_fifo|                       frame_size_out|       pointer|
-|frame_size_out11_din            |  out|   32|     ap_fifo|                     frame_size_out11|       pointer|
-|frame_size_out11_full_n         |   in|    1|     ap_fifo|                     frame_size_out11|       pointer|
-|frame_size_out11_write          |  out|    1|     ap_fifo|                     frame_size_out11|       pointer|
+|frame_size_out3_din             |  out|   32|     ap_fifo|                      frame_size_out3|       pointer|
+|frame_size_out3_full_n          |   in|    1|     ap_fifo|                      frame_size_out3|       pointer|
+|frame_size_out3_write           |  out|    1|     ap_fifo|                      frame_size_out3|       pointer|
 |dstin_out_din                   |  out|   64|     ap_fifo|                            dstin_out|       pointer|
 |dstin_out_full_n                |   in|    1|     ap_fifo|                            dstin_out|       pointer|
 |dstin_out_write                 |  out|    1|     ap_fifo|                            dstin_out|       pointer|

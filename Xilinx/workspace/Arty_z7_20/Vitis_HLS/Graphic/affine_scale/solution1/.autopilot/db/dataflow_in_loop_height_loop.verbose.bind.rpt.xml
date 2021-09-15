@@ -1,7 +1,7 @@
 <profile>
 
 <section name = "Vitis HLS Report for 'dataflow_in_loop_height_loop'" level="0">
-<item name = "Date">Mon Sep  6 21:22:11 2021
+<item name = "Date">Wed Sep 15 21:04:40 2021
 </item>
 <item name = "Version">2020.2 (Build 3064766 on Wed Nov 18 09:12:47 MST 2020)</item>
 <item name = "Project">affine_scale</item>
@@ -31,10 +31,10 @@
 <section name = "" level="1">
 <item name = "Instance"><table name="" hasTotal="0">
 <keys size="9">Instance, Module, min, max, min, max, min, max, Type</keys>
-<column name="grp_src_loop_proc_fu_396">src_loop_proc, 63, 702, 0.630 us, 7.020 us, 63, 702, none</column>
-<column name="grp_dstin_loop_proc_fu_419">dstin_loop_proc, 63, 702, 0.630 us, 7.020 us, 63, 702, none</column>
-<column name="grp_dstout_loop_proc_fu_438">dstout_loop_proc, 24, 663, 0.240 us, 6.630 us, 24, 663, none</column>
-<column name="call_ln0_dataflow_in_loop_height_loop_entry6_fu_451">dataflow_in_loop_height_loop_entry6, 0, 0, 0 ns, 0 ns, 0, 0, none</column>
+<column name="grp_src_loop_proc_fu_348">src_loop_proc, 63, 702, 0.630 us, 7.020 us, 63, 702, none</column>
+<column name="grp_dstout_loop_proc_fu_371">dstout_loop_proc, 24, 663, 0.240 us, 6.630 us, 24, 663, none</column>
+<column name="grp_dstin_loop_proc_fu_384">dstin_loop_proc, 14, 653, 0.140 us, 6.530 us, 14, 653, none</column>
+<column name="call_ln0_dataflow_in_loop_height_loop_entry6_fu_395">dataflow_in_loop_height_loop_entry6, 0, 0, 0 ns, 0 ns, 0, 0, none</column>
 </table>
 </item>
 <item name = "Loop"><table name="" hasTotal="0">

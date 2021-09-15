@@ -1870,7 +1870,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>6c9c84cb</spirit:value>
+            <spirit:value>bfb7ce8a</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -1886,7 +1886,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>681a5434</spirit:value>
+            <spirit:value>830b8436</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -1902,7 +1902,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>bda341b1</spirit:value>
+            <spirit:value>a542a09a</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -1918,7 +1918,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>fcbb3b4e</spirit:value>
+            <spirit:value>a7b4f9b3</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -4168,11 +4168,11 @@
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/verilog/affine_scale_mul_32ns_21s_53_2_1.v</spirit:name>
+        <spirit:name>hdl/verilog/affine_scale_mul_32ns_32s_62_2_1.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/verilog/affine_scale_mul_32ns_32ns_62_2_1.v</spirit:name>
+        <spirit:name>hdl/verilog/affine_scale_mul_32s_32ns_62_2_1.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
@@ -4181,6 +4181,10 @@
       </spirit:file>
       <spirit:file>
         <spirit:name>hdl/verilog/affine_scale_mul_32s_34ns_65_2_1.v</spirit:name>
+        <spirit:fileType>verilogSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>hdl/verilog/affine_scale_mul_33s_32s_44_2_1.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
@@ -4325,12 +4329,12 @@
         <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/verilog/affine_scale_mul_32ns_21s_53_2_1.v</spirit:name>
+        <spirit:name>hdl/verilog/affine_scale_mul_32ns_32s_62_2_1.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
         <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/verilog/affine_scale_mul_32ns_32ns_62_2_1.v</spirit:name>
+        <spirit:name>hdl/verilog/affine_scale_mul_32s_32ns_62_2_1.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
         <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
@@ -4341,6 +4345,11 @@
       </spirit:file>
       <spirit:file>
         <spirit:name>hdl/verilog/affine_scale_mul_32s_34ns_65_2_1.v</spirit:name>
+        <spirit:fileType>verilogSource</spirit:fileType>
+        <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>hdl/verilog/affine_scale_mul_33s_32s_44_2_1.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
         <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
@@ -4464,11 +4473,11 @@
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/vhdl/affine_scale_mul_32ns_21s_53_2_1.vhd</spirit:name>
+        <spirit:name>hdl/vhdl/affine_scale_mul_32ns_32s_62_2_1.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/vhdl/affine_scale_mul_32ns_32ns_62_2_1.vhd</spirit:name>
+        <spirit:name>hdl/vhdl/affine_scale_mul_32s_32ns_62_2_1.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
@@ -4477,6 +4486,10 @@
       </spirit:file>
       <spirit:file>
         <spirit:name>hdl/vhdl/affine_scale_mul_32s_34ns_65_2_1.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>hdl/vhdl/affine_scale_mul_33s_32s_44_2_1.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
@@ -4506,7 +4519,7 @@
       <spirit:file>
         <spirit:name>hdl/vhdl/affine_scale.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_23f98643</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_73aba917</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -4607,12 +4620,12 @@
         <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/vhdl/affine_scale_mul_32ns_21s_53_2_1.vhd</spirit:name>
+        <spirit:name>hdl/vhdl/affine_scale_mul_32ns_32s_62_2_1.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
         <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>hdl/vhdl/affine_scale_mul_32ns_32ns_62_2_1.vhd</spirit:name>
+        <spirit:name>hdl/vhdl/affine_scale_mul_32s_32ns_62_2_1.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
         <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
@@ -4623,6 +4636,11 @@
       </spirit:file>
       <spirit:file>
         <spirit:name>hdl/vhdl/affine_scale_mul_32s_34ns_65_2_1.vhd</spirit:name>
+        <spirit:fileType>vhdlSource</spirit:fileType>
+        <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
+      </spirit:file>
+      <spirit:file>
+        <spirit:name>hdl/vhdl/affine_scale_mul_33s_32s_44_2_1.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
         <spirit:userFileType>USED_IN_ipstatic</spirit:userFileType>
       </spirit:file>
@@ -4984,8 +5002,8 @@
       </xilinx:taxonomies>
       <xilinx:displayName>Affine_scale</xilinx:displayName>
       <xilinx:definitionSource>HLS</xilinx:definitionSource>
-      <xilinx:coreRevision>2109062122</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2021-09-06T12:22:43Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>2109152105</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2021-09-15T12:05:18Z</xilinx:coreCreationDateTime>
       <xilinx:sdxKernelAttributes>
         <xilinx:sdx_kernel>true</xilinx:sdx_kernel>
         <xilinx:sdx_kernel_type>hls</xilinx:sdx_kernel_type>
@@ -4996,7 +5014,7 @@
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="b6a7e48b"/>
       <xilinx:checksum xilinx:scope="addressSpaces" xilinx:value="bc5a2df6"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="09a42aa0"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="40322253"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="384ef9ad"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="8951d41f"/>
       <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="7012fdde"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="027b4032"/>

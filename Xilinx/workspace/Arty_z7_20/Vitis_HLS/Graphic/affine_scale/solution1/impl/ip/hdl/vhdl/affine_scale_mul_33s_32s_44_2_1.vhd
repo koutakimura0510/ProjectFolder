@@ -6,27 +6,27 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
-entity affine_scale_mul_32ns_21s_53_2_1_Multiplier_3 is
+entity affine_scale_mul_33s_32s_44_2_1_Multiplier_3 is
 port (
     clk: in std_logic;
     ce: in std_logic;
-    a: in std_logic_vector(32 - 1 downto 0);
-    b: in std_logic_vector(21 - 1 downto 0);
-    p: out std_logic_vector(53 - 1 downto 0));
+    a: in std_logic_vector(33 - 1 downto 0);
+    b: in std_logic_vector(32 - 1 downto 0);
+    p: out std_logic_vector(44 - 1 downto 0));
 end entity;
 
-architecture behav of affine_scale_mul_32ns_21s_53_2_1_Multiplier_3 is
-    signal tmp_product : std_logic_vector(53 - 1 downto 0);
-    signal a_i : std_logic_vector(32 - 1 downto 0);
-    signal b_i : std_logic_vector(21 - 1 downto 0);
-    signal p_tmp : std_logic_vector(53 - 1 downto 0);
+architecture behav of affine_scale_mul_33s_32s_44_2_1_Multiplier_3 is
+    signal tmp_product : std_logic_vector(44 - 1 downto 0);
+    signal a_i : std_logic_vector(33 - 1 downto 0);
+    signal b_i : std_logic_vector(32 - 1 downto 0);
+    signal p_tmp : std_logic_vector(44 - 1 downto 0);
 
 begin
     a_i <= a;
     b_i <= b;
     p <= p_tmp;
 
-    tmp_product <= std_logic_vector(resize(unsigned(std_logic_vector(signed('0' & a_i) * signed(b_i))), 53));
+    tmp_product <= std_logic_vector(resize(unsigned(std_logic_vector(signed(a_i) * signed(b_i))), 44));
 
     process(clk)
     begin
@@ -40,7 +40,7 @@ end architecture;
 Library IEEE;
 use IEEE.std_logic_1164.all;
 
-entity affine_scale_mul_32ns_21s_53_2_1 is
+entity affine_scale_mul_33s_32s_44_2_1 is
     generic (
         ID : INTEGER;
         NUM_STAGE : INTEGER;
@@ -56,8 +56,8 @@ entity affine_scale_mul_32ns_21s_53_2_1 is
         dout : OUT STD_LOGIC_VECTOR(dout_WIDTH - 1 DOWNTO 0));
 end entity;
 
-architecture arch of affine_scale_mul_32ns_21s_53_2_1 is
-    component affine_scale_mul_32ns_21s_53_2_1_Multiplier_3 is
+architecture arch of affine_scale_mul_33s_32s_44_2_1 is
+    component affine_scale_mul_33s_32s_44_2_1_Multiplier_3 is
         port (
             clk : IN STD_LOGIC;
             ce : IN STD_LOGIC;
@@ -69,7 +69,7 @@ architecture arch of affine_scale_mul_32ns_21s_53_2_1 is
 
 
 begin
-    affine_scale_mul_32ns_21s_53_2_1_Multiplier_3_U :  component affine_scale_mul_32ns_21s_53_2_1_Multiplier_3
+    affine_scale_mul_33s_32s_44_2_1_Multiplier_3_U :  component affine_scale_mul_33s_32s_44_2_1_Multiplier_3
     port map (
         clk => clk,
         ce => ce,

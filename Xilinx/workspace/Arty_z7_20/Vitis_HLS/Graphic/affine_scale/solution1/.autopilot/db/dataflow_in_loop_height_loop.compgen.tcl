@@ -1,7 +1,7 @@
 # This script segment is generated automatically by AutoPilot
 
 # Memory (RAM/ROM)  definition:
-set ID 152
+set ID 120
 set hasByteEnable 0
 set MemName affine_scale_dataflow_in_loop_height_loop_src_V_memcore
 set CoreName ap_simcore_mem
@@ -86,7 +86,7 @@ puts "@W \[IMPL-105\] Cannot find ap_gen_simcore_mem_df_channel, check your plat
 
 
 # Memory (RAM/ROM)  definition:
-set ID 153
+set ID 121
 set hasByteEnable 0
 set MemName affine_scale_dataflow_in_loop_height_loop_dst_V_memcore
 set CoreName ap_simcore_mem
@@ -171,7 +171,7 @@ puts "@W \[IMPL-105\] Cannot find ap_gen_simcore_mem_df_channel, check your plat
 
 
 # FIFO definition:
-set ID 154
+set ID 122
 set FifoName affine_scale_fifo_w32_d2_S
 set InstName mapchip_draw_xsize_c_U
 set CoreName ap_simcore_fifo
@@ -246,7 +246,7 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 155
+set ID 123
 set FifoName affine_scale_fifo_w32_d2_S
 set InstName mapchip_draw_xsize_c1_U
 set CoreName ap_simcore_fifo
@@ -321,7 +321,7 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 156
+set ID 124
 set FifoName affine_scale_fifo_w32_d2_S
 set InstName mapchip_maxwidth_c_U
 set CoreName ap_simcore_fifo
@@ -396,82 +396,7 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 157
-set FifoName affine_scale_fifo_w32_d2_S
-set InstName mapchip_maxwidth_c2_U
-set CoreName ap_simcore_fifo
-set NumOfStage 2
-set RegisteredInput 0
-set DualClock 0
-set Depth 2
-set DataWd 32
-set AddrWd 1
-set FullThresh 0
-set FanoutToFrp 0
-set FanoutToFrpRdOutII 0
-set EmptyThresh 0
-set impl_style shiftReg
-if {${::AESL::PGuard_simmodel_gen}} {
-if {[info proc ap_gen_simcore_fifo] == "ap_gen_simcore_fifo"} {
-eval "ap_gen_simcore_fifo { \
-    id ${ID} \
-    name ${FifoName} \
-    instname ${InstName}    corename ${CoreName} \
-    op fifo \
-    stage_num ${NumOfStage} \
-    registered_input ${RegisteredInput} \
-    data_wd ${DataWd} \
-    addr_wd ${AddrWd} \
-    reset_level 1 \
-    sync_rst true \
-    dual_clk 0\
-    depth ${Depth} \
-    fanout_to_frp ${FanoutToFrp} \
-    with_num_data_valid ${FanoutToFrpRdOutII} \
-    empty_thresh ${EmptyThresh} \
-    full_thresh ${FullThresh} \
-}"
-} else {
-puts "@W \[IMPL-106\] Cannot find ap_gen_simcore_fifo, check your platform lib"
-}
-}
-
-
-if {${::AESL::PGuard_rtl_comp_handler}} {
-	::AP::rtl_comp_handler $FifoName
-}
-
-
-if {${::AESL::PGuard_autocg_gen} && ${::AESL::PGuard_autocg_ipmgen}} {
-if {[info proc ::AESL_LIB_VIRTEX::xil_gen_FIFO] == "::AESL_LIB_VIRTEX::xil_gen_FIFO"} {
-eval "::AESL_LIB_VIRTEX::xil_gen_FIFO { \
-    id ${ID} \
-    name ${FifoName} \
-    instname ${InstName}
-    corename FIFO_SRL \
-    op fifo \
-    stage_num ${NumOfStage} \
-    registered_input ${RegisteredInput} \
-    data_wd ${DataWd} \
-    addr_wd ${AddrWd} \
-    reset_level 1 \
-    sync_rst true \
-    dual_clk 0 \
-    depth ${Depth} \
-    fanout_to_frp ${FanoutToFrp} \
-    with_num_data_valid ${FanoutToFrpRdOutII} \
-    empty_thresh ${EmptyThresh} \
-    full_thresh ${FullThresh} \
-    style ${impl_style} \
-}"
-} else {
-puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your platform lib"
-}
-}
-
-
-# FIFO definition:
-set ID 158
+set ID 125
 set FifoName affine_scale_fifo_w20_d2_S
 set InstName d_c_U
 set CoreName ap_simcore_fifo
@@ -546,82 +471,7 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 159
-set FifoName affine_scale_fifo_w20_d2_S
-set InstName d_c3_U
-set CoreName ap_simcore_fifo
-set NumOfStage 2
-set RegisteredInput 0
-set DualClock 0
-set Depth 2
-set DataWd 20
-set AddrWd 1
-set FullThresh 0
-set FanoutToFrp 0
-set FanoutToFrpRdOutII 0
-set EmptyThresh 0
-set impl_style shiftReg
-if {${::AESL::PGuard_simmodel_gen}} {
-if {[info proc ap_gen_simcore_fifo] == "ap_gen_simcore_fifo"} {
-eval "ap_gen_simcore_fifo { \
-    id ${ID} \
-    name ${FifoName} \
-    instname ${InstName}    corename ${CoreName} \
-    op fifo \
-    stage_num ${NumOfStage} \
-    registered_input ${RegisteredInput} \
-    data_wd ${DataWd} \
-    addr_wd ${AddrWd} \
-    reset_level 1 \
-    sync_rst true \
-    dual_clk 0\
-    depth ${Depth} \
-    fanout_to_frp ${FanoutToFrp} \
-    with_num_data_valid ${FanoutToFrpRdOutII} \
-    empty_thresh ${EmptyThresh} \
-    full_thresh ${FullThresh} \
-}"
-} else {
-puts "@W \[IMPL-106\] Cannot find ap_gen_simcore_fifo, check your platform lib"
-}
-}
-
-
-if {${::AESL::PGuard_rtl_comp_handler}} {
-	::AP::rtl_comp_handler $FifoName
-}
-
-
-if {${::AESL::PGuard_autocg_gen} && ${::AESL::PGuard_autocg_ipmgen}} {
-if {[info proc ::AESL_LIB_VIRTEX::xil_gen_FIFO] == "::AESL_LIB_VIRTEX::xil_gen_FIFO"} {
-eval "::AESL_LIB_VIRTEX::xil_gen_FIFO { \
-    id ${ID} \
-    name ${FifoName} \
-    instname ${InstName}
-    corename FIFO_SRL \
-    op fifo \
-    stage_num ${NumOfStage} \
-    registered_input ${RegisteredInput} \
-    data_wd ${DataWd} \
-    addr_wd ${AddrWd} \
-    reset_level 1 \
-    sync_rst true \
-    dual_clk 0 \
-    depth ${Depth} \
-    fanout_to_frp ${FanoutToFrp} \
-    with_num_data_valid ${FanoutToFrpRdOutII} \
-    empty_thresh ${EmptyThresh} \
-    full_thresh ${FullThresh} \
-    style ${impl_style} \
-}"
-} else {
-puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your platform lib"
-}
-}
-
-
-# FIFO definition:
-set ID 160
+set ID 126
 set FifoName affine_scale_fifo_w20_d2_S
 set InstName a_c_U
 set CoreName ap_simcore_fifo
@@ -696,82 +546,7 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 161
-set FifoName affine_scale_fifo_w20_d2_S
-set InstName a_c4_U
-set CoreName ap_simcore_fifo
-set NumOfStage 2
-set RegisteredInput 0
-set DualClock 0
-set Depth 2
-set DataWd 20
-set AddrWd 1
-set FullThresh 0
-set FanoutToFrp 0
-set FanoutToFrpRdOutII 0
-set EmptyThresh 0
-set impl_style shiftReg
-if {${::AESL::PGuard_simmodel_gen}} {
-if {[info proc ap_gen_simcore_fifo] == "ap_gen_simcore_fifo"} {
-eval "ap_gen_simcore_fifo { \
-    id ${ID} \
-    name ${FifoName} \
-    instname ${InstName}    corename ${CoreName} \
-    op fifo \
-    stage_num ${NumOfStage} \
-    registered_input ${RegisteredInput} \
-    data_wd ${DataWd} \
-    addr_wd ${AddrWd} \
-    reset_level 1 \
-    sync_rst true \
-    dual_clk 0\
-    depth ${Depth} \
-    fanout_to_frp ${FanoutToFrp} \
-    with_num_data_valid ${FanoutToFrpRdOutII} \
-    empty_thresh ${EmptyThresh} \
-    full_thresh ${FullThresh} \
-}"
-} else {
-puts "@W \[IMPL-106\] Cannot find ap_gen_simcore_fifo, check your platform lib"
-}
-}
-
-
-if {${::AESL::PGuard_rtl_comp_handler}} {
-	::AP::rtl_comp_handler $FifoName
-}
-
-
-if {${::AESL::PGuard_autocg_gen} && ${::AESL::PGuard_autocg_ipmgen}} {
-if {[info proc ::AESL_LIB_VIRTEX::xil_gen_FIFO] == "::AESL_LIB_VIRTEX::xil_gen_FIFO"} {
-eval "::AESL_LIB_VIRTEX::xil_gen_FIFO { \
-    id ${ID} \
-    name ${FifoName} \
-    instname ${InstName}
-    corename FIFO_SRL \
-    op fifo \
-    stage_num ${NumOfStage} \
-    registered_input ${RegisteredInput} \
-    data_wd ${DataWd} \
-    addr_wd ${AddrWd} \
-    reset_level 1 \
-    sync_rst true \
-    dual_clk 0 \
-    depth ${Depth} \
-    fanout_to_frp ${FanoutToFrp} \
-    with_num_data_valid ${FanoutToFrpRdOutII} \
-    empty_thresh ${EmptyThresh} \
-    full_thresh ${FullThresh} \
-    style ${impl_style} \
-}"
-} else {
-puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your platform lib"
-}
-}
-
-
-# FIFO definition:
-set ID 162
+set ID 127
 set FifoName affine_scale_fifo_w20_d2_S
 set InstName c_c_U
 set CoreName ap_simcore_fifo
@@ -846,82 +621,7 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 163
-set FifoName affine_scale_fifo_w20_d2_S
-set InstName c_c5_U
-set CoreName ap_simcore_fifo
-set NumOfStage 2
-set RegisteredInput 0
-set DualClock 0
-set Depth 2
-set DataWd 20
-set AddrWd 1
-set FullThresh 0
-set FanoutToFrp 0
-set FanoutToFrpRdOutII 0
-set EmptyThresh 0
-set impl_style shiftReg
-if {${::AESL::PGuard_simmodel_gen}} {
-if {[info proc ap_gen_simcore_fifo] == "ap_gen_simcore_fifo"} {
-eval "ap_gen_simcore_fifo { \
-    id ${ID} \
-    name ${FifoName} \
-    instname ${InstName}    corename ${CoreName} \
-    op fifo \
-    stage_num ${NumOfStage} \
-    registered_input ${RegisteredInput} \
-    data_wd ${DataWd} \
-    addr_wd ${AddrWd} \
-    reset_level 1 \
-    sync_rst true \
-    dual_clk 0\
-    depth ${Depth} \
-    fanout_to_frp ${FanoutToFrp} \
-    with_num_data_valid ${FanoutToFrpRdOutII} \
-    empty_thresh ${EmptyThresh} \
-    full_thresh ${FullThresh} \
-}"
-} else {
-puts "@W \[IMPL-106\] Cannot find ap_gen_simcore_fifo, check your platform lib"
-}
-}
-
-
-if {${::AESL::PGuard_rtl_comp_handler}} {
-	::AP::rtl_comp_handler $FifoName
-}
-
-
-if {${::AESL::PGuard_autocg_gen} && ${::AESL::PGuard_autocg_ipmgen}} {
-if {[info proc ::AESL_LIB_VIRTEX::xil_gen_FIFO] == "::AESL_LIB_VIRTEX::xil_gen_FIFO"} {
-eval "::AESL_LIB_VIRTEX::xil_gen_FIFO { \
-    id ${ID} \
-    name ${FifoName} \
-    instname ${InstName}
-    corename FIFO_SRL \
-    op fifo \
-    stage_num ${NumOfStage} \
-    registered_input ${RegisteredInput} \
-    data_wd ${DataWd} \
-    addr_wd ${AddrWd} \
-    reset_level 1 \
-    sync_rst true \
-    dual_clk 0 \
-    depth ${Depth} \
-    fanout_to_frp ${FanoutToFrp} \
-    with_num_data_valid ${FanoutToFrpRdOutII} \
-    empty_thresh ${EmptyThresh} \
-    full_thresh ${FullThresh} \
-    style ${impl_style} \
-}"
-} else {
-puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your platform lib"
-}
-}
-
-
-# FIFO definition:
-set ID 164
+set ID 128
 set FifoName affine_scale_fifo_w20_d2_S
 set InstName b_c_U
 set CoreName ap_simcore_fifo
@@ -996,82 +696,7 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 165
-set FifoName affine_scale_fifo_w20_d2_S
-set InstName b_c6_U
-set CoreName ap_simcore_fifo
-set NumOfStage 2
-set RegisteredInput 0
-set DualClock 0
-set Depth 2
-set DataWd 20
-set AddrWd 1
-set FullThresh 0
-set FanoutToFrp 0
-set FanoutToFrpRdOutII 0
-set EmptyThresh 0
-set impl_style shiftReg
-if {${::AESL::PGuard_simmodel_gen}} {
-if {[info proc ap_gen_simcore_fifo] == "ap_gen_simcore_fifo"} {
-eval "ap_gen_simcore_fifo { \
-    id ${ID} \
-    name ${FifoName} \
-    instname ${InstName}    corename ${CoreName} \
-    op fifo \
-    stage_num ${NumOfStage} \
-    registered_input ${RegisteredInput} \
-    data_wd ${DataWd} \
-    addr_wd ${AddrWd} \
-    reset_level 1 \
-    sync_rst true \
-    dual_clk 0\
-    depth ${Depth} \
-    fanout_to_frp ${FanoutToFrp} \
-    with_num_data_valid ${FanoutToFrpRdOutII} \
-    empty_thresh ${EmptyThresh} \
-    full_thresh ${FullThresh} \
-}"
-} else {
-puts "@W \[IMPL-106\] Cannot find ap_gen_simcore_fifo, check your platform lib"
-}
-}
-
-
-if {${::AESL::PGuard_rtl_comp_handler}} {
-	::AP::rtl_comp_handler $FifoName
-}
-
-
-if {${::AESL::PGuard_autocg_gen} && ${::AESL::PGuard_autocg_ipmgen}} {
-if {[info proc ::AESL_LIB_VIRTEX::xil_gen_FIFO] == "::AESL_LIB_VIRTEX::xil_gen_FIFO"} {
-eval "::AESL_LIB_VIRTEX::xil_gen_FIFO { \
-    id ${ID} \
-    name ${FifoName} \
-    instname ${InstName}
-    corename FIFO_SRL \
-    op fifo \
-    stage_num ${NumOfStage} \
-    registered_input ${RegisteredInput} \
-    data_wd ${DataWd} \
-    addr_wd ${AddrWd} \
-    reset_level 1 \
-    sync_rst true \
-    dual_clk 0 \
-    depth ${Depth} \
-    fanout_to_frp ${FanoutToFrp} \
-    with_num_data_valid ${FanoutToFrpRdOutII} \
-    empty_thresh ${EmptyThresh} \
-    full_thresh ${FullThresh} \
-    style ${impl_style} \
-}"
-} else {
-puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your platform lib"
-}
-}
-
-
-# FIFO definition:
-set ID 166
+set ID 129
 set FifoName affine_scale_fifo_w32_d2_S
 set InstName m_c_U
 set CoreName ap_simcore_fifo
@@ -1146,9 +771,9 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 167
+set ID 130
 set FifoName affine_scale_fifo_w32_d2_S
-set InstName m_c7_U
+set InstName trunc_ln1345_c_U
 set CoreName ap_simcore_fifo
 set NumOfStage 2
 set RegisteredInput 0
@@ -1221,9 +846,9 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 168
+set ID 131
 set FifoName affine_scale_fifo_w32_d2_S
-set InstName trunc_ln69_c_U
+set InstName trunc_ln1345_c2_U
 set CoreName ap_simcore_fifo
 set NumOfStage 2
 set RegisteredInput 0
@@ -1296,82 +921,7 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 169
-set FifoName affine_scale_fifo_w32_d2_S
-set InstName trunc_ln69_c8_U
-set CoreName ap_simcore_fifo
-set NumOfStage 2
-set RegisteredInput 0
-set DualClock 0
-set Depth 2
-set DataWd 32
-set AddrWd 1
-set FullThresh 0
-set FanoutToFrp 0
-set FanoutToFrpRdOutII 0
-set EmptyThresh 0
-set impl_style shiftReg
-if {${::AESL::PGuard_simmodel_gen}} {
-if {[info proc ap_gen_simcore_fifo] == "ap_gen_simcore_fifo"} {
-eval "ap_gen_simcore_fifo { \
-    id ${ID} \
-    name ${FifoName} \
-    instname ${InstName}    corename ${CoreName} \
-    op fifo \
-    stage_num ${NumOfStage} \
-    registered_input ${RegisteredInput} \
-    data_wd ${DataWd} \
-    addr_wd ${AddrWd} \
-    reset_level 1 \
-    sync_rst true \
-    dual_clk 0\
-    depth ${Depth} \
-    fanout_to_frp ${FanoutToFrp} \
-    with_num_data_valid ${FanoutToFrpRdOutII} \
-    empty_thresh ${EmptyThresh} \
-    full_thresh ${FullThresh} \
-}"
-} else {
-puts "@W \[IMPL-106\] Cannot find ap_gen_simcore_fifo, check your platform lib"
-}
-}
-
-
-if {${::AESL::PGuard_rtl_comp_handler}} {
-	::AP::rtl_comp_handler $FifoName
-}
-
-
-if {${::AESL::PGuard_autocg_gen} && ${::AESL::PGuard_autocg_ipmgen}} {
-if {[info proc ::AESL_LIB_VIRTEX::xil_gen_FIFO] == "::AESL_LIB_VIRTEX::xil_gen_FIFO"} {
-eval "::AESL_LIB_VIRTEX::xil_gen_FIFO { \
-    id ${ID} \
-    name ${FifoName} \
-    instname ${InstName}
-    corename FIFO_SRL \
-    op fifo \
-    stage_num ${NumOfStage} \
-    registered_input ${RegisteredInput} \
-    data_wd ${DataWd} \
-    addr_wd ${AddrWd} \
-    reset_level 1 \
-    sync_rst true \
-    dual_clk 0 \
-    depth ${Depth} \
-    fanout_to_frp ${FanoutToFrp} \
-    with_num_data_valid ${FanoutToFrpRdOutII} \
-    empty_thresh ${EmptyThresh} \
-    full_thresh ${FullThresh} \
-    style ${impl_style} \
-}"
-} else {
-puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your platform lib"
-}
-}
-
-
-# FIFO definition:
-set ID 170
+set ID 132
 set FifoName affine_scale_fifo_w32_d2_S
 set InstName mapchip_maxheight_c_U
 set CoreName ap_simcore_fifo
@@ -1446,82 +996,7 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 171
-set FifoName affine_scale_fifo_w32_d2_S
-set InstName mapchip_maxheight_c9_U
-set CoreName ap_simcore_fifo
-set NumOfStage 2
-set RegisteredInput 0
-set DualClock 0
-set Depth 2
-set DataWd 32
-set AddrWd 1
-set FullThresh 0
-set FanoutToFrp 0
-set FanoutToFrpRdOutII 0
-set EmptyThresh 0
-set impl_style shiftReg
-if {${::AESL::PGuard_simmodel_gen}} {
-if {[info proc ap_gen_simcore_fifo] == "ap_gen_simcore_fifo"} {
-eval "ap_gen_simcore_fifo { \
-    id ${ID} \
-    name ${FifoName} \
-    instname ${InstName}    corename ${CoreName} \
-    op fifo \
-    stage_num ${NumOfStage} \
-    registered_input ${RegisteredInput} \
-    data_wd ${DataWd} \
-    addr_wd ${AddrWd} \
-    reset_level 1 \
-    sync_rst true \
-    dual_clk 0\
-    depth ${Depth} \
-    fanout_to_frp ${FanoutToFrp} \
-    with_num_data_valid ${FanoutToFrpRdOutII} \
-    empty_thresh ${EmptyThresh} \
-    full_thresh ${FullThresh} \
-}"
-} else {
-puts "@W \[IMPL-106\] Cannot find ap_gen_simcore_fifo, check your platform lib"
-}
-}
-
-
-if {${::AESL::PGuard_rtl_comp_handler}} {
-	::AP::rtl_comp_handler $FifoName
-}
-
-
-if {${::AESL::PGuard_autocg_gen} && ${::AESL::PGuard_autocg_ipmgen}} {
-if {[info proc ::AESL_LIB_VIRTEX::xil_gen_FIFO] == "::AESL_LIB_VIRTEX::xil_gen_FIFO"} {
-eval "::AESL_LIB_VIRTEX::xil_gen_FIFO { \
-    id ${ID} \
-    name ${FifoName} \
-    instname ${InstName}
-    corename FIFO_SRL \
-    op fifo \
-    stage_num ${NumOfStage} \
-    registered_input ${RegisteredInput} \
-    data_wd ${DataWd} \
-    addr_wd ${AddrWd} \
-    reset_level 1 \
-    sync_rst true \
-    dual_clk 0 \
-    depth ${Depth} \
-    fanout_to_frp ${FanoutToFrp} \
-    with_num_data_valid ${FanoutToFrpRdOutII} \
-    empty_thresh ${EmptyThresh} \
-    full_thresh ${FullThresh} \
-    style ${impl_style} \
-}"
-} else {
-puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your platform lib"
-}
-}
-
-
-# FIFO definition:
-set ID 172
+set ID 133
 set FifoName affine_scale_fifo_w32_d2_S
 set InstName n_c_U
 set CoreName ap_simcore_fifo
@@ -1596,82 +1071,7 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 173
-set FifoName affine_scale_fifo_w32_d2_S
-set InstName n_c10_U
-set CoreName ap_simcore_fifo
-set NumOfStage 2
-set RegisteredInput 0
-set DualClock 0
-set Depth 2
-set DataWd 32
-set AddrWd 1
-set FullThresh 0
-set FanoutToFrp 0
-set FanoutToFrpRdOutII 0
-set EmptyThresh 0
-set impl_style shiftReg
-if {${::AESL::PGuard_simmodel_gen}} {
-if {[info proc ap_gen_simcore_fifo] == "ap_gen_simcore_fifo"} {
-eval "ap_gen_simcore_fifo { \
-    id ${ID} \
-    name ${FifoName} \
-    instname ${InstName}    corename ${CoreName} \
-    op fifo \
-    stage_num ${NumOfStage} \
-    registered_input ${RegisteredInput} \
-    data_wd ${DataWd} \
-    addr_wd ${AddrWd} \
-    reset_level 1 \
-    sync_rst true \
-    dual_clk 0\
-    depth ${Depth} \
-    fanout_to_frp ${FanoutToFrp} \
-    with_num_data_valid ${FanoutToFrpRdOutII} \
-    empty_thresh ${EmptyThresh} \
-    full_thresh ${FullThresh} \
-}"
-} else {
-puts "@W \[IMPL-106\] Cannot find ap_gen_simcore_fifo, check your platform lib"
-}
-}
-
-
-if {${::AESL::PGuard_rtl_comp_handler}} {
-	::AP::rtl_comp_handler $FifoName
-}
-
-
-if {${::AESL::PGuard_autocg_gen} && ${::AESL::PGuard_autocg_ipmgen}} {
-if {[info proc ::AESL_LIB_VIRTEX::xil_gen_FIFO] == "::AESL_LIB_VIRTEX::xil_gen_FIFO"} {
-eval "::AESL_LIB_VIRTEX::xil_gen_FIFO { \
-    id ${ID} \
-    name ${FifoName} \
-    instname ${InstName}
-    corename FIFO_SRL \
-    op fifo \
-    stage_num ${NumOfStage} \
-    registered_input ${RegisteredInput} \
-    data_wd ${DataWd} \
-    addr_wd ${AddrWd} \
-    reset_level 1 \
-    sync_rst true \
-    dual_clk 0 \
-    depth ${Depth} \
-    fanout_to_frp ${FanoutToFrp} \
-    with_num_data_valid ${FanoutToFrpRdOutII} \
-    empty_thresh ${EmptyThresh} \
-    full_thresh ${FullThresh} \
-    style ${impl_style} \
-}"
-} else {
-puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your platform lib"
-}
-}
-
-
-# FIFO definition:
-set ID 174
+set ID 134
 set FifoName affine_scale_fifo_w32_d2_S
 set InstName id_c_U
 set CoreName ap_simcore_fifo
@@ -1746,7 +1146,7 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 175
+set ID 135
 set FifoName affine_scale_fifo_w32_d2_S
 set InstName ystart_pos_c_U
 set CoreName ap_simcore_fifo
@@ -1821,7 +1221,7 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 176
+set ID 136
 set FifoName affine_scale_fifo_w32_d2_S
 set InstName xstart_pos_c_U
 set CoreName ap_simcore_fifo
@@ -1896,7 +1296,7 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 177
+set ID 137
 set FifoName affine_scale_fifo_w64_d2_S
 set InstName srcin_c_U
 set CoreName ap_simcore_fifo
@@ -1971,7 +1371,7 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 178
+set ID 138
 set FifoName affine_scale_fifo_w32_d2_S
 set InstName frame_size_c_U
 set CoreName ap_simcore_fifo
@@ -2046,9 +1446,9 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 179
+set ID 139
 set FifoName affine_scale_fifo_w32_d3_S
-set InstName frame_size_c11_U
+set InstName frame_size_c3_U
 set CoreName ap_simcore_fifo
 set NumOfStage 2
 set RegisteredInput 0
@@ -2121,7 +1521,7 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 180
+set ID 140
 set FifoName affine_scale_fifo_w64_d2_S
 set InstName dstin_c_U
 set CoreName ap_simcore_fifo
@@ -2196,7 +1596,7 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 181
+set ID 141
 set FifoName affine_scale_fifo_w8_d3_S
 set InstName alpha_c_U
 set CoreName ap_simcore_fifo
@@ -2271,7 +1671,7 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 182
+set ID 142
 set FifoName affine_scale_fifo_w64_d3_S
 set InstName dstout_c_U
 set CoreName ap_simcore_fifo
@@ -2346,9 +1746,9 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 183
+set ID 143
 set FifoName affine_scale_fifo_w32_d2_S
-set InstName mapchip_draw_xsize_c12_U
+set InstName mapchip_draw_xsize_c4_U
 set CoreName ap_simcore_fifo
 set NumOfStage 2
 set RegisteredInput 0
@@ -2421,9 +1821,9 @@ puts "@W \[IMPL-107\] Cannot find ::AESL_LIB_VIRTEX::xil_gen_FIFO, check your pl
 
 
 # FIFO definition:
-set ID 184
+set ID 144
 set FifoName affine_scale_fifo_w32_d2_S
-set InstName trunc_ln69_c13_U
+set InstName trunc_ln1345_c5_U
 set CoreName ap_simcore_fifo
 set NumOfStage 2
 set RegisteredInput 0
@@ -2505,7 +1905,7 @@ if {${::AESL::PGuard_autoexp_gen}} {
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 185 \
+    id 145 \
     name mapchip_draw_xsize \
     type other \
     dir I \
@@ -2520,7 +1920,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 186 \
+    id 146 \
     name mapchip_maxwidth \
     type other \
     dir I \
@@ -2535,7 +1935,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 187 \
+    id 147 \
     name d \
     type other \
     dir I \
@@ -2550,7 +1950,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 188 \
+    id 148 \
     name a \
     type other \
     dir I \
@@ -2565,7 +1965,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 189 \
+    id 149 \
     name c \
     type other \
     dir I \
@@ -2580,7 +1980,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 190 \
+    id 150 \
     name b \
     type other \
     dir I \
@@ -2595,7 +1995,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 191 \
+    id 151 \
     name m \
     type other \
     dir I \
@@ -2610,22 +2010,22 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 192 \
-    name trunc_ln69 \
+    id 152 \
+    name trunc_ln1345 \
     type other \
     dir I \
     reset_level 1 \
     sync_rst true \
-    corename dc_trunc_ln69 \
+    corename dc_trunc_ln1345 \
     op interface \
-    ports { trunc_ln69 { I 32 vector } trunc_ln69_ap_vld { I 1 bit } } \
+    ports { trunc_ln1345 { I 32 vector } trunc_ln1345_ap_vld { I 1 bit } } \
 } "
 }
 
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 193 \
+    id 153 \
     name mapchip_maxheight \
     type other \
     dir I \
@@ -2640,7 +2040,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 194 \
+    id 154 \
     name n \
     type other \
     dir I \
@@ -2655,7 +2055,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 195 \
+    id 155 \
     name id \
     type other \
     dir I \
@@ -2670,7 +2070,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 196 \
+    id 156 \
     name ystart_pos \
     type other \
     dir I \
@@ -2685,7 +2085,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 197 \
+    id 157 \
     name xstart_pos \
     type other \
     dir I \
@@ -2700,7 +2100,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 198 \
+    id 158 \
     name srcin \
     type other \
     dir I \
@@ -2715,7 +2115,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 199 \
+    id 159 \
     name src \
     type other \
     dir I \
@@ -2730,7 +2130,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 200 \
+    id 160 \
     name frame_size \
     type other \
     dir I \
@@ -2745,7 +2145,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 201 \
+    id 161 \
     name dstin \
     type other \
     dir I \
@@ -2760,7 +2160,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 202 \
+    id 162 \
     name dst \
     type other \
     dir IO \
@@ -2775,7 +2175,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 203 \
+    id 163 \
     name alpha \
     type other \
     dir I \
@@ -2790,7 +2190,7 @@ eval "cg_default_interface_gen_dc { \
 # Direct connection:
 if {${::AESL::PGuard_autoexp_gen}} {
 eval "cg_default_interface_gen_dc { \
-    id 204 \
+    id 164 \
     name dstout \
     type other \
     dir I \

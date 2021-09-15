@@ -1,7 +1,7 @@
 <profile>
 
 <section name = "Vitis HLS Report for 'dataflow_in_loop_height_loop'" level="0">
-<item name = "Date">Mon Sep  6 21:22:13 2021
+<item name = "Date">Wed Sep 15 21:04:42 2021
 </item>
 <item name = "Version">2020.2 (Build 3064766 on Wed Nov 18 09:12:47 MST 2020)</item>
 <item name = "Project">affine_scale</item>
@@ -32,8 +32,8 @@
 <item name = "Instance"><table name="" hasTotal="0">
 <keys size="9">Instance, Module, min, max, min, max, min, max, Type</keys>
 <column name="src_loop_proc_U0">src_loop_proc, 63, 702, 0.630 us, 7.020 us, 63, 702, none</column>
-<column name="dstin_loop_proc_U0">dstin_loop_proc, 63, 702, 0.630 us, 7.020 us, 63, 702, none</column>
 <column name="dstout_loop_proc_U0">dstout_loop_proc, 24, 663, 0.240 us, 6.630 us, 24, 663, none</column>
+<column name="dstin_loop_proc_U0">dstin_loop_proc, 14, 653, 0.140 us, 6.530 us, 14, 653, none</column>
 <column name="dataflow_in_loop_height_loop_entry6_U0">dataflow_in_loop_height_loop_entry6, 0, 0, 0 ns, 0 ns, 0, 0, none</column>
 </table>
 </item>
@@ -52,23 +52,23 @@
 <keys size="6">Name, BRAM_18K, DSP, FF, LUT, URAM</keys>
 <column name="DSP">-, -, -, -, -</column>
 <column name="Expression">-, -, 0, 18, -</column>
-<column name="FIFO">-, -, 3069, 2108, -</column>
-<column name="Instance">-, 14, 14049, 9112, -</column>
+<column name="FIFO">-, -, 2277, 1564, -</column>
+<column name="Instance">-, 12, 8408, 5256, -</column>
 <column name="Memory">7, -, 0, 0, -</column>
 <column name="Multiplexer">-, -, -, 27, -</column>
 <column name="Register">-, -, 3, -, -</column>
 <specialColumn name="Available">280, 220, 106400, 53200, 0</specialColumn>
-<specialColumn name="Utilization (%)">2, 6, 16, 21, 0</specialColumn>
+<specialColumn name="Utilization (%)">2, 5, 10, 12, 0</specialColumn>
 </table>
 </item>
 <item name = "Detail">
 <section name = "" level="1">
 <item name = "Instance"><table name="" hasTotal="1">
 <keys size="7">Instance, Module, BRAM_18K, DSP, FF, LUT, URAM</keys>
-<column name="dataflow_in_loop_height_loop_entry6_U0">dataflow_in_loop_height_loop_entry6, 0, 0, 2, 272, 0</column>
-<column name="dstin_loop_proc_U0">dstin_loop_proc, 0, 1, 6377, 4169, 0</column>
+<column name="dataflow_in_loop_height_loop_entry6_U0">dataflow_in_loop_height_loop_entry6, 0, 0, 2, 200, 0</column>
+<column name="dstin_loop_proc_U0">dstin_loop_proc, 0, 0, 590, 352, 0</column>
 <column name="dstout_loop_proc_U0">dstout_loop_proc, 0, 12, 687, 524, 0</column>
-<column name="src_loop_proc_U0">src_loop_proc, 0, 1, 6983, 4147, 0</column>
+<column name="src_loop_proc_U0">src_loop_proc, 0, 0, 7129, 4180, 0</column>
 </table>
 </item>
 <item name = "DSP"><table name="" hasTotal="0">
@@ -83,35 +83,27 @@
 </item>
 <item name = "FIFO"><table name="" hasTotal="1">
 <keys size="8">Name, BRAM_18K, FF, LUT, URAM, Depth, Bits, Size:D*B</keys>
-<column name="a_c4_U">0, 99, 0, -, 2, 20, 40</column>
 <column name="a_c_U">0, 99, 0, -, 2, 20, 40</column>
 <column name="alpha_c_U">0, 99, 0, -, 3, 8, 24</column>
-<column name="b_c6_U">0, 99, 0, -, 2, 20, 40</column>
 <column name="b_c_U">0, 99, 0, -, 2, 20, 40</column>
-<column name="c_c5_U">0, 99, 0, -, 2, 20, 40</column>
 <column name="c_c_U">0, 99, 0, -, 2, 20, 40</column>
-<column name="d_c3_U">0, 99, 0, -, 2, 20, 40</column>
 <column name="d_c_U">0, 99, 0, -, 2, 20, 40</column>
 <column name="dstin_c_U">0, 99, 0, -, 2, 64, 128</column>
 <column name="dstout_c_U">0, 99, 0, -, 3, 64, 192</column>
-<column name="frame_size_c11_U">0, 99, 0, -, 3, 32, 96</column>
+<column name="frame_size_c3_U">0, 99, 0, -, 3, 32, 96</column>
 <column name="frame_size_c_U">0, 99, 0, -, 2, 32, 64</column>
 <column name="id_c_U">0, 99, 0, -, 2, 32, 64</column>
-<column name="m_c7_U">0, 99, 0, -, 2, 32, 64</column>
 <column name="m_c_U">0, 99, 0, -, 2, 32, 64</column>
-<column name="mapchip_draw_xsize_c12_U">0, 99, 0, -, 2, 32, 64</column>
 <column name="mapchip_draw_xsize_c1_U">0, 99, 0, -, 2, 32, 64</column>
+<column name="mapchip_draw_xsize_c4_U">0, 99, 0, -, 2, 32, 64</column>
 <column name="mapchip_draw_xsize_c_U">0, 99, 0, -, 2, 32, 64</column>
-<column name="mapchip_maxheight_c9_U">0, 99, 0, -, 2, 32, 64</column>
 <column name="mapchip_maxheight_c_U">0, 99, 0, -, 2, 32, 64</column>
-<column name="mapchip_maxwidth_c2_U">0, 99, 0, -, 2, 32, 64</column>
 <column name="mapchip_maxwidth_c_U">0, 99, 0, -, 2, 32, 64</column>
-<column name="n_c10_U">0, 99, 0, -, 2, 32, 64</column>
 <column name="n_c_U">0, 99, 0, -, 2, 32, 64</column>
 <column name="srcin_c_U">0, 99, 0, -, 2, 64, 128</column>
-<column name="trunc_ln69_c13_U">0, 99, 0, -, 2, 32, 64</column>
-<column name="trunc_ln69_c8_U">0, 99, 0, -, 2, 32, 64</column>
-<column name="trunc_ln69_c_U">0, 99, 0, -, 2, 32, 64</column>
+<column name="trunc_ln1345_c2_U">0, 99, 0, -, 2, 32, 64</column>
+<column name="trunc_ln1345_c5_U">0, 99, 0, -, 2, 32, 64</column>
+<column name="trunc_ln1345_c_U">0, 99, 0, -, 2, 32, 64</column>
 <column name="xstart_pos_c_U">0, 99, 0, -, 2, 32, 64</column>
 <column name="ystart_pos_c_U">0, 99, 0, -, 2, 32, 64</column>
 </table>
@@ -171,8 +163,8 @@
 <column name="b_ap_vld">in, 1, ap_none, b, scalar</column>
 <column name="m">in, 32, ap_none, m, scalar</column>
 <column name="m_ap_vld">in, 1, ap_none, m, scalar</column>
-<column name="trunc_ln69">in, 32, ap_none, trunc_ln69, scalar</column>
-<column name="trunc_ln69_ap_vld">in, 1, ap_none, trunc_ln69, scalar</column>
+<column name="trunc_ln1345">in, 32, ap_none, trunc_ln1345, scalar</column>
+<column name="trunc_ln1345_ap_vld">in, 1, ap_none, trunc_ln1345, scalar</column>
 <column name="mapchip_maxheight">in, 32, ap_none, mapchip_maxheight, scalar</column>
 <column name="mapchip_maxheight_ap_vld">in, 1, ap_none, mapchip_maxheight, scalar</column>
 <column name="n">in, 32, ap_none, n, scalar</column>

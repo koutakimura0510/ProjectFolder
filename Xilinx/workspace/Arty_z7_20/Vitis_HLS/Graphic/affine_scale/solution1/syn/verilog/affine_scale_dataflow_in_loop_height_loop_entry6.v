@@ -22,7 +22,7 @@ module affine_scale_dataflow_in_loop_height_loop_entry6 (
         c,
         b,
         m,
-        trunc_ln69,
+        trunc_ln1345,
         mapchip_maxheight,
         n,
         id,
@@ -42,57 +42,33 @@ module affine_scale_dataflow_in_loop_height_loop_entry6 (
         mapchip_maxwidth_out_din,
         mapchip_maxwidth_out_full_n,
         mapchip_maxwidth_out_write,
-        mapchip_maxwidth_out2_din,
-        mapchip_maxwidth_out2_full_n,
-        mapchip_maxwidth_out2_write,
         d_out_din,
         d_out_full_n,
         d_out_write,
-        d_out3_din,
-        d_out3_full_n,
-        d_out3_write,
         a_out_din,
         a_out_full_n,
         a_out_write,
-        a_out4_din,
-        a_out4_full_n,
-        a_out4_write,
         c_out_din,
         c_out_full_n,
         c_out_write,
-        c_out5_din,
-        c_out5_full_n,
-        c_out5_write,
         b_out_din,
         b_out_full_n,
         b_out_write,
-        b_out6_din,
-        b_out6_full_n,
-        b_out6_write,
         m_out_din,
         m_out_full_n,
         m_out_write,
-        m_out7_din,
-        m_out7_full_n,
-        m_out7_write,
-        trunc_ln69_out_din,
-        trunc_ln69_out_full_n,
-        trunc_ln69_out_write,
-        trunc_ln69_out8_din,
-        trunc_ln69_out8_full_n,
-        trunc_ln69_out8_write,
+        trunc_ln1345_out_din,
+        trunc_ln1345_out_full_n,
+        trunc_ln1345_out_write,
+        trunc_ln1345_out2_din,
+        trunc_ln1345_out2_full_n,
+        trunc_ln1345_out2_write,
         mapchip_maxheight_out_din,
         mapchip_maxheight_out_full_n,
         mapchip_maxheight_out_write,
-        mapchip_maxheight_out9_din,
-        mapchip_maxheight_out9_full_n,
-        mapchip_maxheight_out9_write,
         n_out_din,
         n_out_full_n,
         n_out_write,
-        n_out10_din,
-        n_out10_full_n,
-        n_out10_write,
         id_out_din,
         id_out_full_n,
         id_out_write,
@@ -108,9 +84,9 @@ module affine_scale_dataflow_in_loop_height_loop_entry6 (
         frame_size_out_din,
         frame_size_out_full_n,
         frame_size_out_write,
-        frame_size_out11_din,
-        frame_size_out11_full_n,
-        frame_size_out11_write,
+        frame_size_out3_din,
+        frame_size_out3_full_n,
+        frame_size_out3_write,
         dstin_out_din,
         dstin_out_full_n,
         dstin_out_write,
@@ -138,7 +114,7 @@ input  [19:0] a;
 input  [19:0] c;
 input  [19:0] b;
 input  [31:0] m;
-input  [31:0] trunc_ln69;
+input  [31:0] trunc_ln1345;
 input  [31:0] mapchip_maxheight;
 input  [31:0] n;
 input  [31:0] id;
@@ -158,57 +134,33 @@ output   mapchip_draw_xsize_out1_write;
 output  [31:0] mapchip_maxwidth_out_din;
 input   mapchip_maxwidth_out_full_n;
 output   mapchip_maxwidth_out_write;
-output  [31:0] mapchip_maxwidth_out2_din;
-input   mapchip_maxwidth_out2_full_n;
-output   mapchip_maxwidth_out2_write;
 output  [19:0] d_out_din;
 input   d_out_full_n;
 output   d_out_write;
-output  [19:0] d_out3_din;
-input   d_out3_full_n;
-output   d_out3_write;
 output  [19:0] a_out_din;
 input   a_out_full_n;
 output   a_out_write;
-output  [19:0] a_out4_din;
-input   a_out4_full_n;
-output   a_out4_write;
 output  [19:0] c_out_din;
 input   c_out_full_n;
 output   c_out_write;
-output  [19:0] c_out5_din;
-input   c_out5_full_n;
-output   c_out5_write;
 output  [19:0] b_out_din;
 input   b_out_full_n;
 output   b_out_write;
-output  [19:0] b_out6_din;
-input   b_out6_full_n;
-output   b_out6_write;
 output  [31:0] m_out_din;
 input   m_out_full_n;
 output   m_out_write;
-output  [31:0] m_out7_din;
-input   m_out7_full_n;
-output   m_out7_write;
-output  [31:0] trunc_ln69_out_din;
-input   trunc_ln69_out_full_n;
-output   trunc_ln69_out_write;
-output  [31:0] trunc_ln69_out8_din;
-input   trunc_ln69_out8_full_n;
-output   trunc_ln69_out8_write;
+output  [31:0] trunc_ln1345_out_din;
+input   trunc_ln1345_out_full_n;
+output   trunc_ln1345_out_write;
+output  [31:0] trunc_ln1345_out2_din;
+input   trunc_ln1345_out2_full_n;
+output   trunc_ln1345_out2_write;
 output  [31:0] mapchip_maxheight_out_din;
 input   mapchip_maxheight_out_full_n;
 output   mapchip_maxheight_out_write;
-output  [31:0] mapchip_maxheight_out9_din;
-input   mapchip_maxheight_out9_full_n;
-output   mapchip_maxheight_out9_write;
 output  [31:0] n_out_din;
 input   n_out_full_n;
 output   n_out_write;
-output  [31:0] n_out10_din;
-input   n_out10_full_n;
-output   n_out10_write;
 output  [31:0] id_out_din;
 input   id_out_full_n;
 output   id_out_write;
@@ -224,9 +176,9 @@ output   srcin_out_write;
 output  [31:0] frame_size_out_din;
 input   frame_size_out_full_n;
 output   frame_size_out_write;
-output  [31:0] frame_size_out11_din;
-input   frame_size_out11_full_n;
-output   frame_size_out11_write;
+output  [31:0] frame_size_out3_din;
+input   frame_size_out3_full_n;
+output   frame_size_out3_write;
 output  [63:0] dstin_out_din;
 input   dstin_out_full_n;
 output   dstin_out_write;
@@ -243,29 +195,21 @@ reg ap_ready;
 reg mapchip_draw_xsize_out_write;
 reg mapchip_draw_xsize_out1_write;
 reg mapchip_maxwidth_out_write;
-reg mapchip_maxwidth_out2_write;
 reg d_out_write;
-reg d_out3_write;
 reg a_out_write;
-reg a_out4_write;
 reg c_out_write;
-reg c_out5_write;
 reg b_out_write;
-reg b_out6_write;
 reg m_out_write;
-reg m_out7_write;
-reg trunc_ln69_out_write;
-reg trunc_ln69_out8_write;
+reg trunc_ln1345_out_write;
+reg trunc_ln1345_out2_write;
 reg mapchip_maxheight_out_write;
-reg mapchip_maxheight_out9_write;
 reg n_out_write;
-reg n_out10_write;
 reg id_out_write;
 reg ystart_pos_out_write;
 reg xstart_pos_out_write;
 reg srcin_out_write;
 reg frame_size_out_write;
-reg frame_size_out11_write;
+reg frame_size_out3_write;
 reg dstin_out_write;
 reg alpha_out_write;
 reg dstout_out_write;
@@ -276,29 +220,21 @@ wire    ap_CS_fsm_state1;
 reg    mapchip_draw_xsize_out_blk_n;
 reg    mapchip_draw_xsize_out1_blk_n;
 reg    mapchip_maxwidth_out_blk_n;
-reg    mapchip_maxwidth_out2_blk_n;
 reg    d_out_blk_n;
-reg    d_out3_blk_n;
 reg    a_out_blk_n;
-reg    a_out4_blk_n;
 reg    c_out_blk_n;
-reg    c_out5_blk_n;
 reg    b_out_blk_n;
-reg    b_out6_blk_n;
 reg    m_out_blk_n;
-reg    m_out7_blk_n;
-reg    trunc_ln69_out_blk_n;
-reg    trunc_ln69_out8_blk_n;
+reg    trunc_ln1345_out_blk_n;
+reg    trunc_ln1345_out2_blk_n;
 reg    mapchip_maxheight_out_blk_n;
-reg    mapchip_maxheight_out9_blk_n;
 reg    n_out_blk_n;
-reg    n_out10_blk_n;
 reg    id_out_blk_n;
 reg    ystart_pos_out_blk_n;
 reg    xstart_pos_out_blk_n;
 reg    srcin_out_blk_n;
 reg    frame_size_out_blk_n;
-reg    frame_size_out11_blk_n;
+reg    frame_size_out3_blk_n;
 reg    dstin_out_blk_n;
 reg    alpha_out_blk_n;
 reg    dstout_out_blk_n;
@@ -326,25 +262,9 @@ always @ (posedge ap_clk) begin
     end else begin
         if ((ap_continue == 1'b1)) begin
             ap_done_reg <= 1'b0;
-        end else if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+        end else if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
             ap_done_reg <= 1'b1;
         end
-    end
-end
-
-always @ (*) begin
-    if ((~((ap_start == 1'b0) | (ap_done_reg == 1'b1)) & (1'b1 == ap_CS_fsm_state1))) begin
-        a_out4_blk_n = a_out4_full_n;
-    end else begin
-        a_out4_blk_n = 1'b1;
-    end
-end
-
-always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
-        a_out4_write = 1'b1;
-    end else begin
-        a_out4_write = 1'b0;
     end
 end
 
@@ -357,7 +277,7 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         a_out_write = 1'b1;
     end else begin
         a_out_write = 1'b0;
@@ -373,7 +293,7 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         alpha_out_write = 1'b1;
     end else begin
         alpha_out_write = 1'b0;
@@ -381,7 +301,7 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         ap_done = 1'b1;
     end else begin
         ap_done = ap_done_reg;
@@ -397,26 +317,10 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         ap_ready = 1'b1;
     end else begin
         ap_ready = 1'b0;
-    end
-end
-
-always @ (*) begin
-    if ((~((ap_start == 1'b0) | (ap_done_reg == 1'b1)) & (1'b1 == ap_CS_fsm_state1))) begin
-        b_out6_blk_n = b_out6_full_n;
-    end else begin
-        b_out6_blk_n = 1'b1;
-    end
-end
-
-always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
-        b_out6_write = 1'b1;
-    end else begin
-        b_out6_write = 1'b0;
     end
 end
 
@@ -429,26 +333,10 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         b_out_write = 1'b1;
     end else begin
         b_out_write = 1'b0;
-    end
-end
-
-always @ (*) begin
-    if ((~((ap_start == 1'b0) | (ap_done_reg == 1'b1)) & (1'b1 == ap_CS_fsm_state1))) begin
-        c_out5_blk_n = c_out5_full_n;
-    end else begin
-        c_out5_blk_n = 1'b1;
-    end
-end
-
-always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
-        c_out5_write = 1'b1;
-    end else begin
-        c_out5_write = 1'b0;
     end
 end
 
@@ -461,26 +349,10 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         c_out_write = 1'b1;
     end else begin
         c_out_write = 1'b0;
-    end
-end
-
-always @ (*) begin
-    if ((~((ap_start == 1'b0) | (ap_done_reg == 1'b1)) & (1'b1 == ap_CS_fsm_state1))) begin
-        d_out3_blk_n = d_out3_full_n;
-    end else begin
-        d_out3_blk_n = 1'b1;
-    end
-end
-
-always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
-        d_out3_write = 1'b1;
-    end else begin
-        d_out3_write = 1'b0;
     end
 end
 
@@ -493,7 +365,7 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         d_out_write = 1'b1;
     end else begin
         d_out_write = 1'b0;
@@ -509,7 +381,7 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         dstin_out_write = 1'b1;
     end else begin
         dstin_out_write = 1'b0;
@@ -525,7 +397,7 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         dstout_out_write = 1'b1;
     end else begin
         dstout_out_write = 1'b0;
@@ -534,17 +406,17 @@ end
 
 always @ (*) begin
     if ((~((ap_start == 1'b0) | (ap_done_reg == 1'b1)) & (1'b1 == ap_CS_fsm_state1))) begin
-        frame_size_out11_blk_n = frame_size_out11_full_n;
+        frame_size_out3_blk_n = frame_size_out3_full_n;
     end else begin
-        frame_size_out11_blk_n = 1'b1;
+        frame_size_out3_blk_n = 1'b1;
     end
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
-        frame_size_out11_write = 1'b1;
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+        frame_size_out3_write = 1'b1;
     end else begin
-        frame_size_out11_write = 1'b0;
+        frame_size_out3_write = 1'b0;
     end
 end
 
@@ -557,7 +429,7 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         frame_size_out_write = 1'b1;
     end else begin
         frame_size_out_write = 1'b0;
@@ -573,26 +445,10 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         id_out_write = 1'b1;
     end else begin
         id_out_write = 1'b0;
-    end
-end
-
-always @ (*) begin
-    if ((~((ap_start == 1'b0) | (ap_done_reg == 1'b1)) & (1'b1 == ap_CS_fsm_state1))) begin
-        m_out7_blk_n = m_out7_full_n;
-    end else begin
-        m_out7_blk_n = 1'b1;
-    end
-end
-
-always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
-        m_out7_write = 1'b1;
-    end else begin
-        m_out7_write = 1'b0;
     end
 end
 
@@ -605,7 +461,7 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         m_out_write = 1'b1;
     end else begin
         m_out_write = 1'b0;
@@ -621,7 +477,7 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         mapchip_draw_xsize_out1_write = 1'b1;
     end else begin
         mapchip_draw_xsize_out1_write = 1'b0;
@@ -637,26 +493,10 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         mapchip_draw_xsize_out_write = 1'b1;
     end else begin
         mapchip_draw_xsize_out_write = 1'b0;
-    end
-end
-
-always @ (*) begin
-    if ((~((ap_start == 1'b0) | (ap_done_reg == 1'b1)) & (1'b1 == ap_CS_fsm_state1))) begin
-        mapchip_maxheight_out9_blk_n = mapchip_maxheight_out9_full_n;
-    end else begin
-        mapchip_maxheight_out9_blk_n = 1'b1;
-    end
-end
-
-always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
-        mapchip_maxheight_out9_write = 1'b1;
-    end else begin
-        mapchip_maxheight_out9_write = 1'b0;
     end
 end
 
@@ -669,26 +509,10 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         mapchip_maxheight_out_write = 1'b1;
     end else begin
         mapchip_maxheight_out_write = 1'b0;
-    end
-end
-
-always @ (*) begin
-    if ((~((ap_start == 1'b0) | (ap_done_reg == 1'b1)) & (1'b1 == ap_CS_fsm_state1))) begin
-        mapchip_maxwidth_out2_blk_n = mapchip_maxwidth_out2_full_n;
-    end else begin
-        mapchip_maxwidth_out2_blk_n = 1'b1;
-    end
-end
-
-always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
-        mapchip_maxwidth_out2_write = 1'b1;
-    end else begin
-        mapchip_maxwidth_out2_write = 1'b0;
     end
 end
 
@@ -701,26 +525,10 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         mapchip_maxwidth_out_write = 1'b1;
     end else begin
         mapchip_maxwidth_out_write = 1'b0;
-    end
-end
-
-always @ (*) begin
-    if ((~((ap_start == 1'b0) | (ap_done_reg == 1'b1)) & (1'b1 == ap_CS_fsm_state1))) begin
-        n_out10_blk_n = n_out10_full_n;
-    end else begin
-        n_out10_blk_n = 1'b1;
-    end
-end
-
-always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
-        n_out10_write = 1'b1;
-    end else begin
-        n_out10_write = 1'b0;
     end
 end
 
@@ -733,7 +541,7 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         n_out_write = 1'b1;
     end else begin
         n_out_write = 1'b0;
@@ -749,7 +557,7 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         srcin_out_write = 1'b1;
     end else begin
         srcin_out_write = 1'b0;
@@ -758,33 +566,33 @@ end
 
 always @ (*) begin
     if ((~((ap_start == 1'b0) | (ap_done_reg == 1'b1)) & (1'b1 == ap_CS_fsm_state1))) begin
-        trunc_ln69_out8_blk_n = trunc_ln69_out8_full_n;
+        trunc_ln1345_out2_blk_n = trunc_ln1345_out2_full_n;
     end else begin
-        trunc_ln69_out8_blk_n = 1'b1;
+        trunc_ln1345_out2_blk_n = 1'b1;
     end
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
-        trunc_ln69_out8_write = 1'b1;
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+        trunc_ln1345_out2_write = 1'b1;
     end else begin
-        trunc_ln69_out8_write = 1'b0;
+        trunc_ln1345_out2_write = 1'b0;
     end
 end
 
 always @ (*) begin
     if ((~((ap_start == 1'b0) | (ap_done_reg == 1'b1)) & (1'b1 == ap_CS_fsm_state1))) begin
-        trunc_ln69_out_blk_n = trunc_ln69_out_full_n;
+        trunc_ln1345_out_blk_n = trunc_ln1345_out_full_n;
     end else begin
-        trunc_ln69_out_blk_n = 1'b1;
+        trunc_ln1345_out_blk_n = 1'b1;
     end
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
-        trunc_ln69_out_write = 1'b1;
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+        trunc_ln1345_out_write = 1'b1;
     end else begin
-        trunc_ln69_out_write = 1'b0;
+        trunc_ln1345_out_write = 1'b0;
     end
 end
 
@@ -797,7 +605,7 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         xstart_pos_out_write = 1'b1;
     end else begin
         xstart_pos_out_write = 1'b0;
@@ -813,7 +621,7 @@ always @ (*) begin
 end
 
 always @ (*) begin
-    if ((~((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
+    if ((~((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0)) & (1'b1 == ap_CS_fsm_state1))) begin
         ystart_pos_out_write = 1'b1;
     end else begin
         ystart_pos_out_write = 1'b0;
@@ -831,8 +639,6 @@ always @ (*) begin
     endcase
 end
 
-assign a_out4_din = a;
-
 assign a_out_din = a;
 
 assign alpha_out_din = alpha;
@@ -840,18 +646,12 @@ assign alpha_out_din = alpha;
 assign ap_CS_fsm_state1 = ap_CS_fsm[32'd0];
 
 always @ (*) begin
-    ap_block_state1 = ((trunc_ln69_out_full_n == 1'b0) | (m_out7_full_n == 1'b0) | (m_out_full_n == 1'b0) | (b_out6_full_n == 1'b0) | (b_out_full_n == 1'b0) | (c_out5_full_n == 1'b0) | (c_out_full_n == 1'b0) | (ap_start == 1'b0) | (d_out3_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out2_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out4_full_n) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out11_full_n == 1'b0) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0) | (xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out10_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out9_full_n == 1'b0) | (ap_done_reg == 1'b1) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln69_out8_full_n == 1'b0));
+    ap_block_state1 = ((xstart_pos_out_full_n == 1'b0) | (ystart_pos_out_full_n == 1'b0) | (id_out_full_n == 1'b0) | (n_out_full_n == 1'b0) | (mapchip_maxheight_out_full_n == 1'b0) | (trunc_ln1345_out2_full_n == 1'b0) | (trunc_ln1345_out_full_n == 1'b0) | (m_out_full_n == 1'b0) | (ap_start == 1'b0) | (b_out_full_n == 1'b0) | (c_out_full_n == 1'b0) | (d_out_full_n == 1'b0) | (mapchip_maxwidth_out_full_n == 1'b0) | (mapchip_draw_xsize_out1_full_n == 1'b0) | (mapchip_draw_xsize_out_full_n == 1'b0) | (1'b0 == a_out_full_n) | (1'b0 == alpha_out_full_n) | (dstout_out_full_n == 1'b0) | (dstin_out_full_n == 1'b0) | (frame_size_out3_full_n == 1'b0) | (ap_done_reg == 1'b1) | (frame_size_out_full_n == 1'b0) | (srcin_out_full_n == 1'b0));
 end
-
-assign b_out6_din = b;
 
 assign b_out_din = b;
 
-assign c_out5_din = c;
-
 assign c_out_din = c;
-
-assign d_out3_din = d;
 
 assign d_out_din = d;
 
@@ -859,13 +659,11 @@ assign dstin_out_din = dstin;
 
 assign dstout_out_din = dstout;
 
-assign frame_size_out11_din = frame_size;
+assign frame_size_out3_din = frame_size;
 
 assign frame_size_out_din = frame_size;
 
 assign id_out_din = id;
-
-assign m_out7_din = m;
 
 assign m_out_din = m;
 
@@ -873,23 +671,17 @@ assign mapchip_draw_xsize_out1_din = mapchip_draw_xsize;
 
 assign mapchip_draw_xsize_out_din = mapchip_draw_xsize;
 
-assign mapchip_maxheight_out9_din = mapchip_maxheight;
-
 assign mapchip_maxheight_out_din = mapchip_maxheight;
 
-assign mapchip_maxwidth_out2_din = mapchip_maxwidth;
-
 assign mapchip_maxwidth_out_din = mapchip_maxwidth;
-
-assign n_out10_din = n;
 
 assign n_out_din = n;
 
 assign srcin_out_din = srcin;
 
-assign trunc_ln69_out8_din = trunc_ln69;
+assign trunc_ln1345_out2_din = trunc_ln1345;
 
-assign trunc_ln69_out_din = trunc_ln69;
+assign trunc_ln1345_out_din = trunc_ln1345;
 
 assign xstart_pos_out_din = xstart_pos;
 
