@@ -99,7 +99,6 @@ bool isEscape(void)
  * 101	110		3
  * 110	111		3
  * 111	1000	4
- * 
  */
 uint32_t get_rand(uint32_t seed)
 {

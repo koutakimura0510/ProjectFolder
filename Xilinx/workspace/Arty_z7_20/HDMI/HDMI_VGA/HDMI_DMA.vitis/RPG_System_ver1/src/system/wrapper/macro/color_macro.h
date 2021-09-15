@@ -7,6 +7,18 @@
 
 
 /*
+ * 8bit色データの最大値
+ */
+#define COLOR_MAX_MASK	(255)
+
+
+/*
+ * RBGループ用定数
+ */
+#define COLOR_NUMBER_RBG	(3)
+
+
+/*
  * alpha値を操作する定数
  */
 #define COLOR_ALPHA_MAX	(255)
