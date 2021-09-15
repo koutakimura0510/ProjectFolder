@@ -16,26 +16,17 @@
 #include "opening.h"
 
 #ifdef MYDEBUG
-#include "xil_io.h"
+	// #include "xil_io.h"
+	#include "xil_printf.h"
 #endif
+
+
+/* demoウィンドウを描画する時にコメントを外す */
+#define DEMO_WINDOW_ON
 
 
 /* ファイル内関数 */
 static void config_initialize(GameWrapper *const game);
-
-
-// #define DEBUG_SDREAD
-#ifdef MYDEBUG_SDREAD
-static void debug_sdread(GameWrapper *const game);
-/*
- * デバッグ用データ読み込み
- */
-static void debug_sdread(GameWrapper *const game)
-{
-	cmd_db_reset(game, COMMAND_OPENING_SYSTEM, 0);
-	opening_savedata_load(game);
-}
-#endif
 
 
 /*
@@ -48,7 +39,7 @@ static void debug_sdread(GameWrapper *const game)
 void load_display_draw(GameWrapper *const game)
 {
 	patblt(game->conf.work.adr, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT, COLOR_BLACK);
-	game->conf.animation.count = (game->conf.display.uncommon_window * DIG_3_FIX) / (NUM(bitmap_init) + NUM(sound_init)) + 1;
+	game->conf.animation.count = ((game->conf.display.uncommon_window * DIG_3_FIX) / game->conf.animation.acc) + 1;
 	font_dram_draw(game, LOAD_FONT_XDRAW_POS, LOAD_FONT_YDRAW_POS, MEMORY_CMD_MSG_ID, CMD_MSG_ID_LOAD_GAME_1, EVENT_MSG_SUB_MSG, COLOR_WHITE);
 	patblt(game->conf.work.adr, LOAD_GAUGE_XSTART_WHITE, LOAD_GAUGE_YSTART_WHITE, LOAD_GAUGE_WIDTH_WHITE, LOAD_GAUGE_HEIGHT_WHITE, COLOR_WHITE);
 	patblt(game->conf.work.adr, LOAD_GAUGE_XSTART_BLACK, LOAD_GAUGE_YSTART_BLACK, LOAD_GAUGE_WIDTH_BLACK, LOAD_GAUGE_HEIGHT_BLACK, COLOR_BLACK);
@@ -85,7 +76,8 @@ void story_opening_mode(GameWrapper *const game)
 
 /*
  * ver1. 2021/07/21
- * 起動時の周辺機器の初期設定
+ * main関数内で呼び出しを行う。
+ * 起動時の周辺機器の初期設定を行う。
  */
 void opening_hardware_init(GameWrapper *const game)
 {
@@ -95,9 +87,62 @@ void opening_hardware_init(GameWrapper *const game)
 	vdma_init();
 	timer_init();
 	frame_buffer_clear();
+
+#ifdef DEMO_WINDOW_ON
+	game->conf.display.sub_state = OPENING_DEMO_WINDOW;
+#else
 	game->conf.display.sub_state = OPENING_BITMAP_LOAD;
-	game->conf.display.uncommon_window = 0;
-	game->conf.animation.count = 0;
+#endif
+}
+
+
+/**
+ * @brief  起動時のデモ動作用の映像データを出力する
+ * @note   
+ * @retval None
+ */
+static void opening_demo_window(GameWrapper *const game)
+{
+	patblt(DEMO_WINDOW_CENTER_POS, 0, 0, DEMO_WINDOW_FILL_XSIZE, DEMO_WINDOW_FILL_YSIZE, game->conf.display.uncommon_window);
+	game->mapchip.srcin      = DEMO_WINDOW_CENTER_POS;
+	game->mapchip.dstin      = DEMO_WINDOW_CENTER_POS;
+	game->mapchip.dstout     = game->conf.work.adr;
+	game->mapchip.maxwidth   = DEMO_WINDOW_FILL_XSIZE;
+	game->mapchip.maxheight  = DEMO_WINDOW_FILL_YSIZE;
+	game->mapchip.alpha      = COLOR_ALPHA_MAX;
+	game->mapchip.id         = 0;
+	affine_roulette(game);
+
+	if (true == tmr_constant(&game->conf.animation.count, TM_100MS_COUNT))
+	{
+		game->mapchip.rad += 15;
+
+		if (359 < game->mapchip.rad)
+		{
+			game->mapchip.rad = 0;
+		}
+
+		game->conf.animation.count = get_time();
+	}
+
+	for (uint32_t i = 0; i < COLOR_NUMBER_RBG; i++)
+	{
+		if (true == tmr_constant(&game->conf.battle.effect.com_time[i], TM_10MS_COUNT + (i * TM_20MS_COUNT)))
+		{
+			uint32_t bit  = i << COLOR_NUMBER_RBG;
+			uint32_t mask = (MAX_32BIT ^ (MAX_8BIT << bit));
+			game->conf.battle.effect.com_time[i] = get_time();
+			game->conf.display.uncommon_window   = mask | ((((game->conf.display.uncommon_window >> bit) + 1) & COLOR_MAX_MASK) << bit);
+		}
+	}
+
+	if (SW_A & get_key(false))
+	{
+		game->conf.display.sub_state = OPENING_BITMAP_LOAD;
+		game->conf.display.uncommon_window = 0;
+		game->conf.animation.count = 0;
+		game->conf.animation.acc = NUM(bitmap_init) + NUM(sound_init);
+	}
 }
 
 
