@@ -222,6 +222,27 @@ typedef struct
 } ItemConf;
 
 
+/**
+ * @brief  色データを生成しアニメーションなどの操作をする時に使用
+ * @note   Xilinxの映像出力の仕様上、ARBGの色データの並び順になっている
+ * 
+ * @param alpha 透過値
+ * @param r 赤
+ * @param b 青
+ * @param g 緑
+ * @param update_time[] 時間経過で色データの変更を行う時に利用する
+ * @retval None
+ */
+typedef struct
+{
+    uint32_t alpha;
+    uint32_t r;
+    uint32_t b;
+    uint32_t g;
+    uint32_t update_time[COLOR_NUMBER_ARBG];
+} ColorConf;
+
+
 /*
  * ver2. 2021/07/04
  * メンバの要素を親子関係に分けて管理するように変更
@@ -243,6 +264,7 @@ typedef struct conf
     AnimationConf animation;
     CookingConf cook;
     ItemConf    item;
+    ColorConf   color;
 } ConfWrapper;
 
 #endif

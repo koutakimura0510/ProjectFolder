@@ -16,6 +16,7 @@
  * RBGループ用定数
  */
 #define COLOR_NUMBER_RBG	(3)
+#define COLOR_NUMBER_ARBG	(4)
 
 
 /*
