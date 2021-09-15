@@ -16,6 +16,13 @@
 #define opening_macro_h   /* by using protection macros */
 
 
+/* デモ映像の描画開始位置 */
+#define DEMO_WINDOW_FILL_XSIZE		(120)
+#define DEMO_WINDOW_FILL_YSIZE		(120)
+#define DEMO_WINDOW_DEFAULT_POS		((DEMO_WINDOW_FILL_XSIZE << RGB_BYTE_SHIFT) + (DEMO_WINDOW_FILL_YSIZE * MAX_V_WIDTH))
+#define DEMO_WINDOW_CENTER_POS		(DRAM_BACKGROUND_ADDR_BASE + DISPLAY_CENTER_POS - DEMO_WINDOW_DEFAULT_POS)
+
+
 /* カーソル移動の移動値 */
 #define OPENING_CURSOL_INTERVAL     (40)
 
