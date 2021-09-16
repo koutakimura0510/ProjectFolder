@@ -55,7 +55,7 @@ static void set_world_event(GameWrapper *const game)
 			game->conf.file.mapchip  	= event->next_file_mapchip_id;
 			game->conf.file.object   	= event->next_file_object_id;
 			game->conf.file.bgm      	= event->next_file_bgm_id;
-			game->conf.map.next    		= event->next_map;
+			game->conf.map.name    		= event->next_map;
 			game->conf.map.canpass_id	= event->next_map_canpass_id;
 			game->conf.map.obj_startid	= event->next_map_object_startid;
 			game->conf.map.obj_endid	= event->next_map_object_endid;
@@ -86,7 +86,7 @@ static void set_submap_event(GameWrapper *const game)
 		{
 			game->conf.file.mapdata  = event->next_file_mapdata_id;
 			game->conf.file.object   = event->next_file_object_id;
-			game->conf.map.next    	 = event->next_map;
+			game->conf.map.name    	 = event->next_map;
 			game->unit.pos.unitx     = (uint32_t)event->unitx  << MAPCHIP_SHIFT;
 			game->unit.pos.unity     = (uint32_t)event->unity  << MAPCHIP_SHIFT;
 			game->unit.pos.fieldx    = (uint32_t)event->fieldx << MAPCHIP_SHIFT;

@@ -25,7 +25,7 @@ bool isDirect_worldmap(GameWrapper *const game)
     const WorldWrapper *world = &world_wrapper;
     bool direct;
 
-    switch (game->conf.map.next)
+    switch (game->conf.map.name)
     {
     case GEKAI_MAP_ID:
         direct = isDirect_gekai(game, world);

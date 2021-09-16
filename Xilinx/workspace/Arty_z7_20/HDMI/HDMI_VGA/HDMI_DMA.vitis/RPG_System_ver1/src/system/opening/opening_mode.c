@@ -375,7 +375,7 @@ static void config_initialize(GameWrapper *const game)
     game->conf.display.drawtype         = DISPLAY_FIELD_CENTER_DRAW;
     game->conf.map.back                 = DRAM_MAPDATA_ADDR_START;
     game->conf.map.obj                  = DRAM_MAPDATA_OBJECT_ADDR_START;
-    game->conf.map.next                 = GEKAI_MAP_ID;
+    game->conf.map.name                 = GEKAI_MAP_ID;
     game->conf.map.canpass_id           = CAN_PASS_MAPCHIP_ID_MAX_GEKAI; 
     game->conf.map.obj_startid          = OBJECT_START_MAPID_GEKAI;
     game->conf.map.obj_endid            = OBJECT_END_MAPID_GEKAI;

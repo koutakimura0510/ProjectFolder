@@ -20,11 +20,11 @@ bool isDirect_buildmap(GameWrapper *const game)
 {
 	const NextmapState *next = nextmap_state;
 
-	if (game->conf.map.next != game->conf.old.nextmap)
+	if (game->conf.map.name != game->conf.old.nextmap)
 	{
 		for (uint8_t i = 0; i < NEXTMAP_DIRECT_ID_DB_SIZE; i++, next++)
 		{
-			if (game->conf.map.next == next->nextmap)
+			if (game->conf.map.name == next->nextmap)
 			{
 				game->conf.old.nextmap = next->nextmap;
 				game->conf.old.row_count = i;

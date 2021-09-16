@@ -56,7 +56,7 @@ typedef struct file
  * canpass_id   通行可能なオブジェクトのIDを保存
  * obj_startid  オブジェクトの画像データの開始番号を指定、通常0から開始
  * obj_endid    オブジェクトの画像データの終了番号を指定
- * next         現在表示中のマップモードを保存
+ * name         現在表示中、または表示させるマップ名のIDを保存
  */
 typedef struct map
 {
@@ -65,7 +65,7 @@ typedef struct map
     uint8_t  canpass_id;
     uint8_t  obj_startid;
     uint8_t  obj_endid;
-    uint32_t next;
+    uint32_t name;
 } MapConf;
 
 
