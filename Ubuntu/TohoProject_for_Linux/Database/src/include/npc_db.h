@@ -9,12 +9,10 @@
 #ifndef npc_db_h_
 #define npc_db_h_
 
-
 /* データベースの要素数 */
-#define NPC_MAP_DB_SIZE   	 ((sizeof (npc_map_db))		/ (sizeof (NpcMapDB)))
-#define NPC_BITMAP_DB_SIZE   ((sizeof (npc_bitmap_db))	/ (sizeof (NpcBitmapDB)))
-#define NPC_PATTERN_DB_SIZE  ((sizeof (npc_pattern_db)) / (sizeof (NpcPatternDB)))
-
+#define NPC_MAP_DB_SIZE ((sizeof(npc_map_db)) / (sizeof(NpcMapDB)))
+#define NPC_BITMAP_DB_SIZE ((sizeof(npc_bitmap_db)) / (sizeof(NpcBitmapDB)))
+#define NPC_PATTERN_DB_SIZE ((sizeof(npc_pattern_db)) / (sizeof(NpcPatternDB)))
 
 /**
  * @brief  マップに出現させる村人の番号を管理する
@@ -36,17 +34,75 @@ typedef struct npc_map_db
 } NpcMapDB;
 
 static const NpcMapDB npc_map_db[] = {
-	{GEKAI_MAP_ID,			{0, }, },
-	{TIKAI_MAP_ID,			{0, }, },
-	{TENKAI_MAP_ID,			{0, }, },
-	{HAZAMA_MAP_ID,			{0, }, },
-	{MAKAI_MAP_ID,			{0, }, },
-	{ROMEN_VIRRAGE_ID,		{1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,},	},
-	{ROMEN_HOUSE1_LOOM1_ID,	{0, }, },
-	{ROMEN_HOUSE2_LOOM1_ID,	{0, }, },
-	{ROMEN_DANGEON_ID,		{0, }, },
+	{
+		GEKAI_MAP_ID,
+		{
+			0,
+		},
+	},
+	{
+		TIKAI_MAP_ID,
+		{
+			0,
+		},
+	},
+	{
+		TENKAI_MAP_ID,
+		{
+			0,
+		},
+	},
+	{
+		HAZAMA_MAP_ID,
+		{
+			0,
+		},
+	},
+	{
+		MAKAI_MAP_ID,
+		{
+			0,
+		},
+	},
+	{
+		ROMEN_VIRRAGE_ID,
+		{
+			1,
+			2,
+			3,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+		},
+	},
+	{
+		ROMEN_HOUSE1_LOOM1_ID,
+		{
+			0,
+		},
+	},
+	{
+		ROMEN_HOUSE2_LOOM1_ID,
+		{
+			0,
+		},
+	},
+	{
+		ROMEN_DANGEON_ID,
+		{
+			0,
+		},
+	},
 };
-
 
 /*!
  * @brief NPCの行動パターンについて管理するデータべース
@@ -88,10 +144,49 @@ typedef struct npc_pattern_db
 } NpcPatternDB;
 
 static const NpcPatternDB npc_pattern_db[] = {
-	{1, NPC_GUAL_1_WORLD, 27, 28, 2, 2, 2, 2, TM_100MS_COUNT, TM_100MS_COUNT, TM_100MS_COUNT, NPC_PATTERN_RANDOM,},
-	{2, NPC_GUAL_2_WORLD, 27, 13, 0, 0, 0, 0, TM_100MS_COUNT, TM_100MS_COUNT, TM_100MS_COUNT, NPC_PATTERN_STAND, },
+	{
+		1,
+		NPC_GUAL_1_WORLD,
+		27,
+		28,
+		2,
+		2,
+		2,
+		2,
+		TM_100MS_COUNT,
+		TM_100MS_COUNT,
+		TM_100MS_COUNT,
+		NPC_PATTERN_RANDOM,
+	},
+	{
+		2,
+		NPC_GUAL_2_WORLD,
+		27,
+		13,
+		0,
+		0,
+		0,
+		0,
+		TM_100MS_COUNT,
+		TM_100MS_COUNT,
+		TM_100MS_COUNT,
+		NPC_PATTERN_STAND,
+	},
+	{
+		3,
+		NPC_GUAL_2_WORLD,
+		32,
+		36,
+		1,
+		1,
+		1,
+		1,
+		TM_500MS_COUNT,
+		TM_300MS_COUNT,
+		TM_300MS_COUNT,
+		NPC_PATTERN_RANDOM,
+	},
 };
-
 
 /**
  * @brief  NPCのメッセージデータに関するデータを管理するデータベース
@@ -120,10 +215,10 @@ typedef struct noc_msg_db
 } NpcMsgDB;
 
 static const NpcMsgDB npc_msg_db[] = {
-	{1, FLAG_NPC_MSG_EVENT, 0, "ここはロメンの村よ・・・", "ここはロメンの村よ！！"},
-	{2, FLAG_NPC_MSG_EVENT, 0, "いらっしゃいまし～", "いらっしゃいまし！"},
+	{1, FLAG_NPC_MSG_EVENT, 0, 		"ここはロメンの村よ・・・", "ここはロメンの村よ！！"},
+	{2, FLAG_NPC_MSG_EVENT, 0, 		"いらっしゃいまし～", "いらっしゃいまし！"},
+	{3, FLAG_NPC_MSG_CONTINUE, 0, 	"森にでっかい鳥が居座っちゃって、\n食べ物が鳥に行けないのよ", "いらっしゃいまし！"},
 };
-
 
 /*!
  * @brief NPCの画像データについて管理するデータベース
@@ -138,7 +233,7 @@ typedef struct npc_bitmap_db
 	uint32_t id;
 	uint32_t srcin;
 	uint32_t xsize;
-    uint32_t ysize;
+	uint32_t ysize;
 	uint32_t mapchip_id;
 } NpcBitmapDB;
 
@@ -146,7 +241,6 @@ static const NpcBitmapDB npc_bitmap_db[] = {
 	{NPC_GUAL_1_WORLD, DRAM_NPC_WORLD_ADDR_BASE, 32, 32, 0},
 	{NPC_GUAL_2_WORLD, DRAM_NPC_WORLD_ADDR_BASE, 32, 32, 1},
 };
-
 
 /**
  * @brief  NPCのマップ連番の書き出し
@@ -171,13 +265,12 @@ void npc_map_write(FILE *fp, FILE *byte)
 	}
 
 	if (NPC_MAP_DB_SIZE != MAP_NAME_ID_END)
-    {
-        printf("--- ERROR --- MAP_NAME_ID_END or NPC_MAP_DB_SIZE");
-    }
+	{
+		printf("--- ERROR --- MAP_NAME_ID_END or NPC_MAP_DB_SIZE");
+	}
 
 	printf("NPC MAP TOTAL NUMBER = %ld\n", NPC_MAP_DB_SIZE);
 }
-
 
 /*
  * npcの行動パターンの書き出し
@@ -210,7 +303,6 @@ void npc_pattern_write(FILE *fp, FILE *byte)
 	printf("NPC PATTERN TOTAL NUMBER = %ld\n", NPC_PATTERN_DB_SIZE);
 }
 
-
 /*
  * npcの画像データのデータを書き出し
  */
@@ -233,14 +325,11 @@ void npc_bitmap_write(FILE *fp, FILE *byte)
 	}
 
 	if (NPC_BITMAP_DB_SIZE != NPC_ID_END)
-    {
-        printf("--- ERROR --- NPC_ID_END or NPC_BITMAP_DB_SIZE");
-    }
+	{
+		printf("--- ERROR --- NPC_ID_END or NPC_BITMAP_DB_SIZE");
+	}
 
 	printf("NPC BITMAP TOTAL NUMBER = %ld\n", NPC_BITMAP_DB_SIZE);
 }
-
-
-
 
 #endif
