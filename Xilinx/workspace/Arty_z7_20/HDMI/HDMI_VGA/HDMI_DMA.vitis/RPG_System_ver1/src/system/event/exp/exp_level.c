@@ -31,7 +31,7 @@ static void update_hero_skill(GameWrapper *const game, uint8_t hero_id);
 void hero_initialize(GameWrapper *const game)
 {
 	static const uint8_t level[] = {
-		99, 99, 99, 99, 99, 99, 99, 99,
+		2, 20, 5, 99, 99, 99, 99, 99,
 	};
 
 	static const uint8_t weapon[] = {

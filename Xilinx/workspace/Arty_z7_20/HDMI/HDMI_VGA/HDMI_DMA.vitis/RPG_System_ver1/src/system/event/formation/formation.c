@@ -34,10 +34,5 @@ void hero_formation_swap(GameWrapper *game, uint8_t hero_origin, uint8_t hero_ex
             break;
         }
     }
-
-    // game->hero_
-    // game->hero[HERO_NUMBER]   = game->hero[hero_origin];
-    // game->hero[hero_origin]   = game->hero[hero_exchange];
-    // game->hero[hero_exchange] = game->hero[HERO_NUMBER];
 }
 
