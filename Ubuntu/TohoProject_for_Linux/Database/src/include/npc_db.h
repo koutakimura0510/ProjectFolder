@@ -120,8 +120,8 @@ typedef struct noc_msg_db
 } NpcMsgDB;
 
 static const NpcMsgDB npc_msg_db[] = {
-	{1, FLAG_NPC_MSG_EVENT, "ここはロメンの村よ・・・", "ここはロメンの村よ！！"},
-	{2, FLAG_NPC_MSG_EVENT, "最近森にでっかい鳥が現れるようになって、\n食料を取りに行けなくて困ってるのよ", "誰かが鳥を追っ払ってくれたみたい！\nこれで食べ物に困らなくて済むわ！"},
+	{1, FLAG_NPC_MSG_EVENT, 0, "ここはロメンの村よ・・・", "ここはロメンの村よ！！"},
+	{2, FLAG_NPC_MSG_EVENT, 0, "いらっしゃいまし～", "いらっしゃいまし！"},
 };
 
 

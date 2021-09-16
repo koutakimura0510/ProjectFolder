@@ -29,9 +29,10 @@
 
 
 
-/*
- * ver1. 2021/06/01
- * イベントの種類を定義
+/**
+ * @brief  固定イベントのIDを管理する
+ * @note   
+ * @retval
  */
 typedef enum
 {
@@ -49,7 +50,7 @@ typedef enum
 	EVENT_TYPE_OPEN_DOOR,				// 扉を空けるアニメーションイベント
 	EVENT_TYPE_SPECIAL_OPEN_DOOR,		// 鍵付きの扉を空けるイベント
 	EVENT_TYPE_NULL,
-} RomenEventID;
+} FixedEventID;
 
 
 /*
