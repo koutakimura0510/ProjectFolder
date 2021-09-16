@@ -93,6 +93,37 @@ static const NpcPatternDB npc_pattern_db[] = {
 };
 
 
+/**
+ * @brief  NPCのメッセージデータに関するデータを管理するデータベース
+ * @note   ロメンの村を例としてイベントメッセージについて残しておく
+ * 
+ * [NPC番号1,2の場合]
+ * ロメンのイベント判定は森の雷鳥を倒したらフラグ回収とする。
+ * event_flagにフラグ検出用の定数を指定して、NPCに話しかけた時にフラグを確認しメッセージの切り替え判定をする。
+ * 
+ * [NPC単独にフラグ管理方法]
+ * NPC番号3に話しかけた時に、DRAMのNPCフラグ管理開始アドレスから、アドレスを3つ進めたアドレスにフラグのデータを保存する
+ * 
+ * @param map_npcid マップに登場させるNPCの番号を管理するデータベースに対応した番号を指定
+ * @param msg_flag メッセージの表示パターンを指定
+ * @param msg_event_1 イベント前のメッセージを保存
+ * @param msg_event_2 イベント後のメッセージを保存
+ * @retval None
+ */
+typedef struct noc_msg_db
+{
+	uint32_t map_npcid;
+	uint32_t event_id;
+	uint32_t event_flag;
+	char *msg_event_1;
+	char *msg_event_2;
+} NpcMsgDB;
+
+static const NpcMsgDB npc_msg_db[] = {
+	{1, FLAG_NPC_MSG_EVENT, "ここはロメンの村よ・・・", "ここはロメンの村よ！！"},
+	{2, FLAG_NPC_MSG_EVENT, "最近森にでっかい鳥が現れるようになって、\n食料を取りに行けなくて困ってるのよ", "誰かが鳥を追っ払ってくれたみたい！\nこれで食べ物に困らなくて済むわ！"},
+};
+
 
 /*!
  * @brief NPCの画像データについて管理するデータベース

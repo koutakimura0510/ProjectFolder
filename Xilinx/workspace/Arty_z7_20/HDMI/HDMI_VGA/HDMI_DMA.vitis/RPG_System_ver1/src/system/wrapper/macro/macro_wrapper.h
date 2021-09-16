@@ -21,5 +21,6 @@
 #include "rom_macro.h"
 #include "system_length_macro.h"
 #include "npc_macro.h"
+#include "event_id_macro.h"
 
 #endif
