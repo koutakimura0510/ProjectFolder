@@ -107,37 +107,13 @@ void set_score(GameWrapper *const game, uint32_t step_on_count, uint32_t bullet_
 /**
  * @brief  弾幕ミニゲームの起動時のロード処理
  * @note   
- * @param  game: 
  * @retval None
  */
 static void barrage_sd_load(GameWrapper *const game)
 {
 	bgm_stop();
-
-	static const uint8_t barrage_init[] =
-	{
-		FILE_ACCESS_MAPDATA_MINIGAME,
-		FILE_ACCESS_BACK_YUUHI,
-	};
-
-    static const uint8_t sound_init[] =
-	{
-        FILE_ACCESS_BGM_COIN,
-		FILE_ACCESS_BGM_JUMP,
-		FILE_ACCESS_BGM_BOM,
-		FILE_ACCESS_BGM_PITYN,
-		FILE_ACCESS_BGM_ENDING,
-    };
-
-	for (uint8_t i = 0; i < NUM(barrage_init); i++)
-	{
-		sd_fread(barrage_init[i]);
-	}
-
-	for (uint8_t i = 0; i < NUM(sound_init); i++)
-	{
-		file_sound_load(sound_init[i]);
-	}
+	sd_fread(FILE_ACCESS_MAPDATA_MINIGAME);
+	sd_fread(FILE_ACCESS_BACK_YUUHI);
 	game->conf.display.sub_state = MINIGAME_TITLE_DRAW_ID;
 
 #ifdef MYDEBUG

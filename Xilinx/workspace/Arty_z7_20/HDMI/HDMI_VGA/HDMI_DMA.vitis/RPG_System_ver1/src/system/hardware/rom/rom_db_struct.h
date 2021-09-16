@@ -242,7 +242,7 @@ static const SoundDB sound_db[] =
     {FILE_ACCESS_BGM_MINORIKO,          "/Bgm/minoriko",            DRAM_SOUND_FIELD_ADDR_START,        },
     {FILE_ACCESS_BGM_SIZUHA,            "/Bgm/sizuha",              DRAM_SOUND_FIELD_ADDR_START,        },
     {FILE_ACCESS_BGM_KOGASA,            "/Bgm/101_kogasa",          DRAM_SOUND_FIELD_ADDR_START,        },
-    {FILE_ACCESS_BGM_ENDING,            "/Bgm/ending",              DRAM_SOUND_BATTLE_ADDR_START,       },
+    {FILE_ACCESS_BGM_ENDING,            "/Bgm/ending",              DRAM_SOUND_SPARE_ADDR_START,        },
     {FILE_ACCESS_BGM_MURA_1,            "/Bgm/1_mura",              DRAM_SOUND_FIELD_ADDR_START,        },
     {FILE_ACCESS_BGM_FIELD,             "/Bgm/2_inada",             DRAM_SOUND_FIELD_ADDR_START,        },
     {FILE_ACCESS_BGM_FIELD_GEKAI,       "/Bgm/201_gekai_field",     DRAM_SOUND_FIELD_ADDR_START,        },
