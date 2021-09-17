@@ -330,6 +330,7 @@ static const SystemFile system_file[] =
     {FILE_ACCESS_SIN_TABLE,         "/sys/sin"                  },
     {FILE_ACCESS_COS_TABLE,         "/sys/cos"                  },
     {FILE_ACCESS_TYPE_STR,          "/sys/type_bit"             },
+    {FILE_ACCESS_VARIABLE_MSG,      "/sys/variable_msg"         },
     {FILE_ACCESS_TOTAL_BYTE,        "/sys/byte"                 },
 };
 
@@ -337,15 +338,10 @@ static const SystemFile system_file[] =
 /*
  * ver1. 2021/07/15
  * システム構造体の各メンバの長さを管理
- * -
- * MEMORYから開始される定数を指定
- * system_member
- * 
- * 構造体の要素数(行)の数を指定
- * id_len
- * 
- * メンバーの最大数(列)を指定
- * member_len
+ *
+ * system_member MEMORYから開始される定数を指定
+ * id_len 構造体の要素数(行)の数を指定
+ * member_len メンバーの最大数(列)を指定
  */
 typedef struct
 {
@@ -389,6 +385,7 @@ static const SystemLength system_length[] =
     {MEMORY_SIN_ID,             SIN_TABLE_MAX,                          SIN_SUB_MEMBER_NUMBER               },
     {MEMORY_COS_ID,             COS_TABLE_MAX,                          COS_SUB_MEMBER_NUMBER               },
     {MEMORY_TYPE_STR_ID,        UNIT_RES_SIZE,                          TYPE_STR_SUB_MEMBER_NUMBER          },
+    {MEMORY_VARIABLE_MSG_ID,    VARIABLE_MSG_SIZE,                      MEMBER_LEN_VARIABLE                 },
 };
 
 #endif
