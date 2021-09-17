@@ -52,6 +52,7 @@ void error_print(uint32_t a, uint32_t b)
 #include "cooking_db.h"
 #include "npc_db.h"
 #include "sin_cos.h"
+#include "event_variable_msg_db.h"
 // #include "sound_db.h"
 // #include "bitmap_db.h"
 

@@ -95,7 +95,7 @@ static const NpcPatternDB npc_pattern_db[] = {
 
 
 /*!
- * @brief NPCの画像データについて管理するデータベース
+ * @brief NPCに利用するの画像データについて管理するデータベース
  * @note 
  * @param srcin DRAMのアドレス
  * @param xsize width
