@@ -27,6 +27,7 @@ GameWrapper game_wrapper;
 
 /* 文字列カウント用関数 */
 uint32_t sjis_write(FILE *fp, const char *msg);
+uint32_t sjis_length(const char *msg);
 
 void error_print(uint32_t a, uint32_t b)
 {

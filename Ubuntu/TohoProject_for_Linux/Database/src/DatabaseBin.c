@@ -52,7 +52,6 @@ static const FuncFile funcfile[] = {
 };
 
 
-
 /*
  * ver1. 2021/07/13
  * sjisフォント取得
@@ -78,6 +77,32 @@ uint32_t sjis_write(FILE *fp, const char *msg)
 		}
 	}
 	// printf("count = %d\n", count);
+
+	return count;
+}
+
+
+/*
+ * ver1. 2021/07/13
+ * 文字列数取得
+ */
+uint32_t sjis_length(const char *msg)
+{
+	uint32_t count = 0;
+
+	while (msg[0] != '\0')
+	{
+		uint32_t sjis = *msg & 0xff;
+		sjis = (sjis << 8) | (*(msg + 1) & 0xff);
+		msg += 2;
+		count++;
+
+		while (*msg == '\n')
+		{
+			msg++;
+			count++;
+		}
+	}
 
 	return count;
 }
