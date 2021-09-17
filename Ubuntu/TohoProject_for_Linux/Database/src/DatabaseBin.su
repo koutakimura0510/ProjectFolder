@@ -33,6 +33,6 @@ npc_db.h:154:6:npc_pattern_write	48	static
 npc_db.h:186:6:npc_bitmap_write	48	static
 sin_cos.h:43:6:sin_write	48	static
 sin_cos.h:60:6:cos_write	48	static
-event_variable_msg_db.h:60:6:variable_msg_write	48	static
+event_variable_msg_db.h:54:6:variable_msg_write	64	static
 DatabaseBin.c:60:10:sjis_write	48	static
 DatabaseBin.c:91:5:main	64	static

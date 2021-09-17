@@ -14,10 +14,6 @@
  */
 #define EVENT_VARIABLE_MSG_DB_SIZE ((sizeof (variable_msg_db)) / (sizeof (VariableMsgDB)))
 
-static const char *npc_1[] = {"ロメンの村へようこそ・・・", "ロメンの村へようこそ！"};
-static const char *npc_2[] = {"いらっしゃいまし～", "いらっしゃいまし！",};
-static const char *npc_3[] = {"森にでっかい鳥が居座っちゃって、\n食べ物を取りに行けないのよ", "どうしましょう・・・", "誰かが鳥を追っ払ってくれたの！\nこれで食べ物を取りに行けるわ！"};
-
 
 /**
  * @brief  のメッセージデータに関するデータを管理するデータベース
@@ -31,20 +27,19 @@ static const char *npc_3[] = {"森にでっかい鳥が居座っちゃって、\
  * NPC番号3に話しかけた時に、DRAMのNPCフラグ管理開始アドレスから、アドレスを3つ進めたアドレスにフラグのデータを保存する
  * 
  * @param msg_event_id direct_macro.hに定義されているイベントIDを指定
- * @param *msg_event[] イベント後のメッセージを保存
+ * @param *msg_event[] メッセージを保存
  * @retval None
  */
 typedef struct variable_msg_db
 {
 	uint32_t msg_event_id;
-	char **msg_event;
-	uint32_t len;
+	const char *msg_event[10];
 } VariableMsgDB;
 
 static const VariableMsgDB variable_msg_db[] = {
-	{ROMEN_NPC_ID_1, (char **)npc_1, NUM(npc_1)},
-	{ROMEN_NPC_ID_2, (char **)npc_2, NUM(npc_2)},
-	{ROMEN_NPC_ID_3, (char **)npc_3, NUM(npc_3)},
+	{ROMEN_NPC_ID_1, {"ロメンの村へようこそ・・・", "ロメンの村へようこそ！", "\0"}},
+	{ROMEN_NPC_ID_2, {"いらっしゃいまし～", "いらっしゃいまし！", "\0"}},
+	{ROMEN_NPC_ID_3, {"森にでっかい鳥が居座っちゃって、\n食べ物を取りに行けないのよ", "どうしましょう・・・", "誰かが鳥を追っ払ってくれたの！\nこれで食べ物を取りに行けるわ！", "\0"}},
 
 	/*TODO
 	 * 仲間の戦闘中のメッセージなども連番にする
@@ -62,12 +57,21 @@ void variable_msg_write(FILE *fp, FILE *byte)
 
 	for (uint32_t i = 0; i < EVENT_VARIABLE_MSG_DB_SIZE; i++, p++)
 	{
+		uint32_t count = 0;
 		fprintf(fp, "0x%08x,\n", p->msg_event_id);
-		fprintf(fp, "0x%08x,\n", p->len);
-		fprintf(byte, "0x%08x,\n", 1);
 		fprintf(byte, "0x%08x,\n", 1);
 
-		for (uint32_t j = 0; j < p->len; j++)
+		for (uint32_t j = 0; j < NUM(p->msg_event); j++, count++)
+		{
+			if ("\0" == p->msg_event[j])
+			{
+				fprintf(fp, "0x%08x,\n", count);
+				fprintf(byte, "0x%08x,\n", 1);
+				break;
+			}
+		}
+
+		for (uint32_t j = 0; j < count; j++)
 		{
 			fprintf(byte, "0x%08x,\n", sjis_write(fp, p->msg_event[j]));
 		}
