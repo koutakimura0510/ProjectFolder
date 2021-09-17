@@ -9,8 +9,10 @@
 #define ON_DIRECT       (true)
 #define NON_DIRECT      (false)
 
-/*
- * 当たり判定座標参照用ID
+/**
+ * @brief  イベント管理用IDを定義
+ * @note   
+ * @retval None
  */
 typedef enum
 {

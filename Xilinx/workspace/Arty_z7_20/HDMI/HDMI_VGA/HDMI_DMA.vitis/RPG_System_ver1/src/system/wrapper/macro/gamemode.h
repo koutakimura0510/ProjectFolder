@@ -26,7 +26,7 @@
 /* イベントフラグ関連の定数 */
 #define FLAG_NPC_MSG_DEFALUT			(100000) /* 同じメッセージのみ */
 #define FLAG_NPC_MSG_EVENT				(101000) /* 特定のイベント後にメッセージが変化 */
-#define FLAG_NPC_MSG_CONTINUE			(102000) /* 連続で話しかけるとメッセージが変化 */
+#define FLAG_NPC_MSG_CONTINUE			(102000) /* 連続で話しかけるとメッセージが変化し特定のイベント発生時にメッセージが変化 */
 
 /* モードID最大値 */
 #define SYSTEM_NULL						(0xffffffff)

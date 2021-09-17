@@ -94,6 +94,30 @@ static const NpcPatternDB npc_pattern_db[] = {
 };
 
 
+/**
+ * @brief  npcのイベントデータを管理するデータベース
+ * @note   
+ * @param map_npcid マップに登場させるNPCの番号を管理するデータベースに対応した番号を指定
+ * @param event_id どのようなイベントの管理を行うかを判定するIDを指定
+ * @param event_flag 特定のイベント発生時にメッセージを変化させるため、必要なフラグを指定する
+ * @param get_event_id NPCに話しかけた時に発生するイベントのフラグを保存、利用しない場合は0を指定
+ * @retval None
+ */
+typedef struct npc_event_db
+{
+	uint32_t map_npcid;
+	uint32_t event_id;
+	uint32_t event_flag;
+	uint32_t get_event_id;
+} NpcEventDB;
+
+static const NpcEventDB npc_event_db[] = {
+	{ROMEN_NPC_ID_1, FLAG_NPC_MSG_EVENT,	1000, 0,	},
+	{ROMEN_NPC_ID_2, FLAG_NPC_MSG_EVENT,	1000, 0,	},
+	{ROMEN_NPC_ID_3, FLAG_NPC_MSG_CONTINUE,	1000, 0,	},
+};
+
+
 /*!
  * @brief NPCに利用するの画像データについて管理するデータベース
  * @note 
