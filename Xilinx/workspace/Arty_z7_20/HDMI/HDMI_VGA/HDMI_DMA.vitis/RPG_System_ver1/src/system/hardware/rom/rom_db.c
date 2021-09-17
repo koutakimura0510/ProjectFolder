@@ -559,23 +559,12 @@ uint32_t fetch_dram_db(GameWrapper *const game, uint8_t main_member, uint32_t su
 {
     const SystemLength *length = system_length;
     SystemAddress *system      = &system_address;
-    uint32_t *main_adr         = system->start_adr[main_member];
-    uint32_t *sub_adr          = system->p[main_member];
-
-    // if ((game->conf.db.old_main_member == main_member) && (game->conf.db.old_sub_id == sub_id) && (game->conf.db.old_sub_member == sub_member))
-    // {
-    //     game->conf.db.data = game->conf.db.old_data;
-    //     game->conf.db.len  = game->conf.db.old_len;
-    //     return *game->conf.db.data;
-    // }
-
-    // game->conf.db.old_main_member = main_member;
-    // game->conf.db.old_sub_id      = sub_id;
-    // game->conf.db.old_sub_member  = sub_member;
+    uint32_t *main_adr         = system->start_adr[main_member];    /* データベースのメンバのデータが保存されているアドレスを取得 */
+    uint32_t *sub_adr          = system->p[main_member];            /* データベースのメンバの長さが保存されているアドレスを取得 */
 
     for (uint32_t i = 0; i < FILE_SYSTEM_LENGTH_SIZE; i++, length++)
     {
-        if (main_member == length->system_member)   //アクセスしたいファイルデータが保存されている先頭アドレスまで進む
+        if (main_member == length->system_member)   /* アクセスしたいファイルデータが保存されている先頭アドレスまで進む */
         {
             break;
         }
@@ -583,13 +572,13 @@ uint32_t fetch_dram_db(GameWrapper *const game, uint8_t main_member, uint32_t su
 
     for (uint32_t i = 0; i < length->id_len; i++)
     {
-        if (sub_id == *main_adr)    //データベースの形で保存されているため、IDでテーブルの検索を行う
+        if (sub_id == *main_adr)    /* データベースの形で保存されているため、IDでテーブルの検索を行う */
         {
             break;
         }
         else
         {
-            for (uint32_t j = 0; j < length->member_len; j++)    //IDが一致していなければ、列のデータ数分アドレスを進める
+            for (uint32_t j = 0; j < length->member_len; j++)    /* IDが一致していなければ、列のデータ数分アドレスを進める */
             {
                 main_adr = main_adr + *sub_adr;
                 sub_adr++;
@@ -597,19 +586,91 @@ uint32_t fetch_dram_db(GameWrapper *const game, uint8_t main_member, uint32_t su
         }
     }
 
-    for (uint32_t i = 0; i < sub_member; i++)    //一致したIDの列の取得したいメンバまでアドレスを進める
+    for (uint32_t i = 0; i < sub_member; i++)    /* 一致したIDの列の取得したいメンバまでアドレスを進める */
     {
         main_adr = main_adr + *sub_adr;
         sub_adr++;
     }
 
-    game->conf.db.data     = main_adr;
+    game->conf.db.data     = main_adr;  /* 呼び出し元で戻り値以外でもデータを利用する場合があるため保存しておく */
     game->conf.db.len      = sub_adr;
     game->conf.db.old_data = game->conf.db.data;
     game->conf.db.old_len  = game->conf.db.len;
 
     return *main_adr;
 }
+
+
+/**
+ * @brief  メッセージデータベースのデータを取得する
+ * @note   sub_idに指定するIDについて
+ * 
+ * NPCのメッセージを取得したい場合は、NpcMsgDBのmap_npcidを指定する
+ * 仲間のメッセージについては、後日考える
+ * 
+ * @param  main_member: フィルデータにアクセスするための定数値を指定
+ * @param  sub_id: 取得したいメッセージに対応したIDを指定
+ * @retval 
+ */
+uint32_t fetch_dram_msg(GameWrapper *const game, uint8_t main_member, uint32_t sub_id)
+{
+    const SystemLength *length = system_length;
+    SystemAddress *system      = &system_address;
+    uint32_t *main_adr         = system->start_adr[main_member];    /* データベースのメンバのデータが保存されているアドレスを取得 */
+    uint32_t *sub_adr          = system->p[main_member];            /* データベースのメンバの長さが保存されているアドレスを取得 */
+    uint32_t *event_flag       = DRAM_FLAG_MSG_EVENT_ADDR_START;
+    uint32_t row;
+
+    for (uint32_t i = 0; i < FILE_SYSTEM_LENGTH_SIZE; i++, length++)
+    {
+        if (main_member == length->system_member)   /* アクセスしたいファイルデータが保存されている先頭アドレスまで進む */
+        {
+            break;
+        }
+    }
+
+    for (uint32_t i = 0; i < length->id_len; i++)
+    {
+        if (sub_id == *main_adr)    /* データベースの形で保存されているため、IDでテーブルの検索を行う */
+        {
+            break;
+        }
+        else
+        {
+            main_adr++;                         /* 行数が保存されているアドレスまで進める */
+            sub_adr++;
+            row = *main_adr + 1;                /* メッセージの行数 + 1アドレスを進めると、データベースの次の行に行ける */
+
+            for (uint32_t j = 0; j < row; j++)  /* 列のデータ数分アドレスを進める */
+            {
+                main_adr = main_adr + *sub_adr; /* 文字の行数と文字列分アドレスを進めてデータベースの次の行まで進む */
+                sub_adr++;
+            }
+        }
+    }
+
+    for (uint8_t i = 0; i < 2; i++) /* ポインタが文字列を指す箇所までアドレスを進める */
+    {
+        main_adr++;
+        sub_adr++;
+    }
+
+    event_flag = event_flag + sub_id; /* アドレスがNPCのIDが保存されている領域を指しているため、IDを取得しNPCのイベント情報領域のDRAMのアドレスにアクセスする */
+
+    for (uint32_t i = 0; i < *event_flag; i++)    /* 一致したIDの列の取得したいメンバまでアドレスを進める */
+    {
+        main_adr = main_adr + *sub_adr;
+        sub_adr++;
+    }
+
+    game->conf.db.data     = main_adr;  /* 呼び出し元で戻り値以外でもデータを利用する場合があるため保存しておく */
+    game->conf.db.len      = sub_adr;
+    game->conf.db.old_data = game->conf.db.data;
+    game->conf.db.old_len  = game->conf.db.len;
+
+    return *main_adr;
+}
+
 
 /*
  * ver1. 2021/07/14
