@@ -16,11 +16,14 @@
 #ifndef system_length_macro_h   /* prevent circular inclusions */
 #define system_length_macro_h   /* by using protection macros */
 
+/*
+ * データベースの行のメンバ数が可変であればSystemLength構造体のmember_lenメンバにこの定数を利用する
+ */
+#define MEMBER_LEN_VARIABLE     (0)
+
+
 /* ファイル名の最大文字数 */
 #define FILENAME_BUFFER_SIZE    (32)
-
-
-
 
 /* メッセージファイルアプリケーションで出力された定数を記入 */
 #define MSG_TOTAL_ID_END        	(8)
@@ -37,6 +40,8 @@
 /* 属性データベースの行数 */
 #define UNIT_RES_SIZE               (19)
 
+/* 可変式イベントメッセージデータベースの行数 */
+#define VARIABLE_MSG_SIZE           (3)
 
 /*
  * ver1. 2021/07/15
@@ -77,6 +82,7 @@ typedef enum
     MEMORY_SIN_ID,              //sinのデータテーブル 0~360の計361個ある
     MEMORY_COS_ID,              //cosのデータテーブル 0~360の計361個ある
     MEMORY_TYPE_STR_ID,         //属性の文字描画を管理するファイル
+    MEMORY_VARIABLE_MSG_ID,     //可変式のイベントメッセージを管理するファイル
 } MemoryDataAccess;
 
 
