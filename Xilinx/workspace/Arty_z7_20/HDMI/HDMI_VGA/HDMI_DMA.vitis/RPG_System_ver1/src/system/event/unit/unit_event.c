@@ -133,6 +133,8 @@ void unit_action_update(GameWrapper *const game, uint8_t sw)
  */
 void direction_update_key(GameWrapper *const game, uint8_t sw)
 {
+    unit_mapchippos_update(game);
+    
     if ((game->unit.pos.anime_cnt & ANIMATION_MAX_PIXEL_MASK) && (game->conf.display.system == SYSTEM_MAP_DEFAULT_WINDOW))
     {
         return;
@@ -173,7 +175,6 @@ void direction_update_key(GameWrapper *const game, uint8_t sw)
     }
 
     eventpos_update_key(game, sw & SW_A);
-    unit_mapchippos_update(game);
 }
 
 
@@ -188,17 +189,6 @@ void direction_update_key(GameWrapper *const game, uint8_t sw)
  */
 void unit_pos_update(GameWrapper *const game)
 {
-    static uint32_t t = 0;
-
-//    if (game->conf.display.system == SYSTEM_MINIGAME_WINDOW)
-//    {
-//        if (false == tmr_constant(&t, game->unit.action.move_speed))
-//        {
-//            ;
-//        }
-//        t = get_time();
-//    }
-
     switch (game->unit.pos.unitdir)
     {
     case DIR_RIGHT:
@@ -413,30 +403,6 @@ static void unit_mapchippos_update(GameWrapper *const game)
         break;
     }
 
-    // if (game->unit.pos.anime_cnt < 1)
-    // {
-    //     game->unit.draw.mapchip_id = UNIT_WORK_TYPE_CENTER + game->unit.draw.cutpos;
-    //     return;
-    // }
-
-    // if (game->unit.pos.anime_cnt < 8)
-    // {
-    //     game->unit.draw.mapchip_id = UNIT_WORK_TYPE_LEFT + game->unit.draw.cutpos;
-    //     return;
-    // }
-
-    // if (game->unit.pos.anime_cnt < 16)
-    // {
-    //     game->unit.draw.mapchip_id = UNIT_WORK_TYPE_CENTER + game->unit.draw.cutpos;
-    //     return;
-    // }
-
-    // if (game->unit.pos.anime_cnt < 24)
-    // {
-    //     game->unit.draw.mapchip_id = UNIT_WORK_TYPE_RIGHT + game->unit.draw.cutpos;
-    //     return;
-    // }
-
     switch (game->unit.draw.workpos & UNIT_WALK_TYPE_NUM)
     {
     case UNIT_WORK_TYPE_LEFT:
@@ -465,12 +431,12 @@ static void unit_mapchippos_update(GameWrapper *const game)
  */
 static void adjust_unit_action(GameWrapper *const game)
 {
-    if (game->unit.pos.unity < 0)
+    if (game->unit.pos.unity < 0)   /* 画面上部に達した時の処理 */
     {
-        game->unit.pos.unity++;
+        game->unit.pos.unity = 0;
     }
 
-    if (SIZE_UNIT_MAX_YDRAW == game->unit.pos.unity)
+    if (SIZE_UNIT_MAX_YDRAW <= game->unit.pos.unity)    /* ジャンプ時の画面下部の座標処理 */
     {
         set_jump_motion(JUMP_OFF);
     }
@@ -480,14 +446,14 @@ static void adjust_unit_action(GameWrapper *const game)
     case DIR_RIGHT:
         if (SIZE_UNIT_MAX_XDRAW < game->unit.pos.unitx)
         {
-            game->unit.pos.unitx--;
+            game->unit.pos.unitx -= game->unit.pos.animation_pixel_x;
         }
         break;
 
     case DIR_LEFT:
         if (game->unit.pos.unitx < 0)
         {
-            game->unit.pos.unitx++;
+            game->unit.pos.unitx += game->unit.pos.animation_pixel_x;
         }
         break;
 

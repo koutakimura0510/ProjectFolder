@@ -306,8 +306,8 @@ static void map_center_draw(GameWrapper *const game, MapElement *map)
             {
                 game->mapchip.dstin  = CHIP_RGB(x) + map->draw_adr;
                 game->mapchip.dstout = game->mapchip.dstin;
-                // png_mapchip(game);
-                put_mapchip(game);
+                png_mapchip(game);
+                // put_mapchip(game);
             }
         }
 	}
@@ -432,7 +432,8 @@ static void left_edge_draw(GameWrapper *const game, MapElement *map, uint32_t xs
         game->mapchip.draw_xsize = xsize - game->unit.pos.anime_cnt;
         game->mapchip.dstin      = map->draw_adr + XRGB((VIDEO_WIDTH - xsize + game->unit.pos.anime_cnt));
         game->mapchip.dstout     = game->mapchip.dstin;
-        put_mapchip(game);
+        // put_mapchip(game);
+        png_mapchip(game);
     }
 }
 
@@ -453,8 +454,8 @@ static void right_edge_draw(GameWrapper *const game, MapElement *map, SDL_Rect *
         game->mapchip.draw_xsize = rect->w;
         game->mapchip.dstin      = map->draw_adr;
         game->mapchip.dstout     = map->draw_adr;
-        // png_mapchip(game);
-        put_mapchip(game);
+        png_mapchip(game);
+        // put_mapchip(game);
     }
 }
 
@@ -480,8 +481,8 @@ static void xcenter_draw(GameWrapper *const game, MapElement *map)
         {
             game->mapchip.dstin  = map->draw_adr + map->center + CHIP_RGB(j);
             game->mapchip.dstout = game->mapchip.dstin;
-            // png_mapchip(game);
-            put_mapchip(game);
+            png_mapchip(game);
+            // put_mapchip(game);
         }
     }
 }
@@ -508,8 +509,8 @@ static void top_edge_draw(GameWrapper *const game, MapElement *map, SDL_Rect *co
         game->mapchip.draw_ysize = rect->h;
         game->mapchip.dstin      = map->draw_adr;
         game->mapchip.dstout     = game->mapchip.dstin;
-        // png_mapchip(game);
-        put_mapchip(game);
+        png_mapchip(game);
+        // put_mapchip(game);
     }
 }
 
@@ -539,8 +540,8 @@ static void under_edge_draw(GameWrapper *const game, MapElement *map, uint32_t y
         game->mapchip.draw_ysize = ysize - game->unit.pos.anime_cnt;
         game->mapchip.dstin      = map->draw_adr + YRGB((VIDEO_HEIGHT - ysize + game->unit.pos.anime_cnt));
         game->mapchip.dstout     = game->mapchip.dstin;
-        // png_mapchip(game);
-        put_mapchip(game);
+        png_mapchip(game);
+        // put_mapchip(game);
     }
 }
 
@@ -572,8 +573,8 @@ static void ycenter_draw(GameWrapper *const game, MapElement *map, uint32_t xsiz
         {
             game->mapchip.dstin  = map->draw_adr + map->center + (j * anime_pos);
             game->mapchip.dstout = game->mapchip.dstin;
-            // png_mapchip(game);
-            put_mapchip(game);
+            png_mapchip(game);
+            // put_mapchip(game);
         }
     }
 }

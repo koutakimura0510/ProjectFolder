@@ -128,26 +128,15 @@ void jump_move(GameWrapper *const game)
         return;
     }
 
-    if (false == tmr_constant(&jump->time, jump->speed))
-    {
-        return;
-    }
-
     if (jump->pixel_count < 0)
     {
-        if (jump->speed != game->unit.action.jump_fall_speed)
-        {
-            jump->speed--;
-        }
-        game->unit.pos.unity++;
+        game->unit.pos.unity += 6;
     }
     else
     {
-        jump->speed++;
-        jump->pixel_count--;
-        game->unit.pos.unity--;
+        jump->pixel_count -= 6;
+        game->unit.pos.unity -= 6;
     }
-    jump->time = get_time();
 }
 
 

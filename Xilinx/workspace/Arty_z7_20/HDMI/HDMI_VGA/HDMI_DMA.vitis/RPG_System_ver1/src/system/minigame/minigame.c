@@ -27,14 +27,12 @@ static PlayTimer  playtimer;
 /* 状態遷移関数 */
 static void barrage_sd_load(GameWrapper *const game);
 static void barrage_minigame_title(GameWrapper *const game);
-static void barrage_player_select(GameWrapper *const game);
 static void barrage_game_play(GameWrapper *const game);
 static void barrage_result(GameWrapper *const game);
 
 /* コンフィグ関数 */
-static void barrage_character_update(GameWrapper *const game, uint8_t unit_id);
+static void barrage_character_update(GameWrapper *const game);
 static void barrage_unit_reset(GameWrapper *const game);
-static void barrage_unitselect_draw(GameWrapper *const game);
 static void barrage_object_reset(GameWrapper *const game);
 static void barrage_bomb_draw(GameWrapper *const game);
 static void barrage_time_draw(GameWrapper *const game);
@@ -56,7 +54,6 @@ typedef struct
 static const MinigameState minigame_state[] = {
 	{MINIGAME_START_LOAD_ID,	barrage_sd_load			},
 	{MINIGAME_TITLE_DRAW_ID,	barrage_minigame_title	},
-	{MINIGAME_UNIT_SELECT_ID,	barrage_player_select	},
 	{MINIGAME_PLAYING_ID,		barrage_game_play		},
 	{MINIGAME_RESULT_DRAW_ID,	barrage_result			},
 };
@@ -114,6 +111,8 @@ static void barrage_sd_load(GameWrapper *const game)
 	bgm_stop();
 	sd_fread(FILE_ACCESS_MAPDATA_MINIGAME);
 	sd_fread(FILE_ACCESS_BACK_YUUHI);
+	barrage_character_update(game);
+	file_sound_load(fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, HERO_MINORIKO, MINIGAME_SUB_MEMBER_SOUND_ID));
 	game->conf.display.sub_state = MINIGAME_TITLE_DRAW_ID;
 
 #ifdef MYDEBUG
@@ -134,9 +133,20 @@ static void barrage_minigame_title(GameWrapper *const game)
 	switch (get_key(false))
 	{
 	case SW_A:
-		game->conf.display.sub_state = MINIGAME_UNIT_SELECT_ID;
+		game->conf.display.sub_state = MINIGAME_PLAYING_ID;
 		game->conf.display.drawtype  = DISPLAY_FIELD_CENTER_DRAW;
 		bgm_update(game, SOUND_ID_CMD_BUTTON, SOUND_CH_KEY_WORK);
+		bgm_update(game, fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, HERO_MINORIKO, MINIGAME_SUB_MEMBER_BGM_ID), SOUND_CH_BGM_WORK);
+		barrage_unit_reset(game);
+		animation_reset();
+		barrage_object_reset(game);
+		shooting_reset();
+		background_draw(game, DRAM_BACKGROUND_ADDR_BASE);
+		standerd_game(game);
+		framebuffer_copy(game->conf.work.adr, DRAM_BACKUP_FBUF_ADDR_BASE, VIDEO_WIDTH, VIDEO_HEIGHT, VIDEO_WIDTH);
+		framebuffer_copy(DRAM_BACKGROUND_ADDR_BASE, DRAM_BACKUP_FBUF_ADDR_BASE, VIDEO_WIDTH, VIDEO_HEIGHT-32, VIDEO_WIDTH);
+		game->conf.display.sub_state = MINIGAME_PLAYING_ID;
+		game->conf.display.uncommon_window = 0;
 		break;
 
 	case SW_B:
@@ -152,41 +162,6 @@ static void barrage_minigame_title(GameWrapper *const game)
 	}
 }
 
-
-/**
- * @brief  キャラクターの選択を行い、選択後に次の状態の設定を行う
- * 
- * @note   現在のフレームバッファ領域にミニゲームの画面の描画を行った後に、バックアップ領域に描画データをコピーしておく
- *         ミニゲーム中はマップやバックグラウンドの画像データの変更は行わないため、バックアップ領域のデータをコピーだけすればよく
- *         処理速度の改善を行うことができる
- * 
- * @param  game: 
- * @retval None
- */
-static void barrage_player_select(GameWrapper *const game)
-{
-	patblt(game->conf.work.adr, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT, COLOR_DARK_BLUE);
-	barrage_unitselect_draw(game);
-	cursol_draw(game, MINIGAME_CONFIG_CURSOL_POS, MINIGAME_CONFIG_CURSOL_INTERVAL, CURSOL_TYPE_DEFAULT_DRAW);
-
-	if (SW_A == cmd_key(game))
-	{
-		/* 初期化処理 */
-		barrage_character_update(game, game->cmd.cursol.y);
-		file_sound_load(fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, game->cmd.cursol.y, MINIGAME_SUB_MEMBER_SOUND_ID));
-		bgm_update(game, fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, game->cmd.cursol.y, MINIGAME_SUB_MEMBER_BGM_ID), SOUND_CH_BGM_WORK);
-		barrage_unit_reset(game);
-		animation_reset();
-		barrage_object_reset(game);
-		shooting_reset();
-		background_draw(game, DRAM_BACKGROUND_ADDR_BASE);
-		standerd_game(game);
-		framebuffer_copy(game->conf.work.adr, DRAM_BACKUP_FBUF_ADDR_BASE, VIDEO_WIDTH, VIDEO_HEIGHT, VIDEO_WIDTH);
-		framebuffer_copy(DRAM_BACKGROUND_ADDR_BASE, DRAM_BACKUP_FBUF_ADDR_BASE, VIDEO_WIDTH, VIDEO_HEIGHT-32, VIDEO_WIDTH);
-		game->conf.display.sub_state = MINIGAME_PLAYING_ID;
-		game->conf.display.uncommon_window = 0;
-	}
-}
 
 
 /*
@@ -246,14 +221,14 @@ static void barrage_result(GameWrapper *const game)
 /*
  * ミニゲームのキャラクターのステータスの保存
  */
-static void barrage_character_update(GameWrapper *const game, uint8_t unit_id)
+static void barrage_character_update(GameWrapper *const game)
 {
-    game->unit.draw.chara_chipid      = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, unit_id, MINIGAME_SUB_MEMBER_CHIP_ID);
-    game->unit.action.move_speed      = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, unit_id, MINIGAME_SUB_MEMBER_MOVE_SPEED);
-    game->unit.action.jump_rise_speed = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, unit_id, MINIGAME_SUB_MEMBER_JUMP_RISESPEED);
-	game->unit.action.jump_fall_speed = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, unit_id, MINIGAME_SUB_MEMBER_JUMP_FALLSPEED);
-	game->unit.action.jump_height     = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, unit_id, MINIGAME_SUB_MEMBER_JUMP_HEIGHT);
-	game->unit.action.bomb_number     = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, unit_id, MINIGAME_SUB_MEMBER_BOMB_NUMBER);
+    game->unit.draw.chara_chipid      = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, HERO_MINORIKO, MINIGAME_SUB_MEMBER_CHIP_ID);
+    game->unit.action.move_speed      = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, HERO_MINORIKO, MINIGAME_SUB_MEMBER_MOVE_SPEED);
+    game->unit.action.jump_rise_speed = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, HERO_MINORIKO, MINIGAME_SUB_MEMBER_JUMP_RISESPEED);
+	game->unit.action.jump_fall_speed = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, HERO_MINORIKO, MINIGAME_SUB_MEMBER_JUMP_FALLSPEED);
+	game->unit.action.jump_height     = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, HERO_MINORIKO, MINIGAME_SUB_MEMBER_JUMP_HEIGHT);
+	game->unit.action.bomb_number     = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, HERO_MINORIKO, MINIGAME_SUB_MEMBER_BOMB_NUMBER);
 }
 
 
@@ -293,42 +268,6 @@ static void barrage_object_reset(GameWrapper *const game)
     sb->score            = 0;
     p->play_timer        = 0;
     p->count             = 0;
-}
-
-
-/*
- * キャラクター選択画面のキャラクターと説明文の描画
- */
-static void barrage_unitselect_draw(GameWrapper *const game)
-{
-	static const uint8_t chip[] = {
-		MAPCHIP_MINORIKO,
-		MAPCHIP_SIZUHA,
-		MAPCHIP_KANAKO,
-		MAPCHIP_KOGASA,
-		MAPCHIP_YUUKA,
-		MAPCHIP_REMIRIA,
-		MAPCHIP_SATORI,
-		MAPCHIP_TENSI,
-	};
-
-    for (uint32_t i = 0; i < game->conf.system.paty_member; i++)
-    {
-        game->mapchip.srcin		 = DRAM_UNIT_ADDR_BASE;
-		game->mapchip.maxwidth	 = SIZE_UNIT_WIDTH;
-		game->mapchip.maxheight	 = SIZE_UNIT_HEIGHT;
-		game->mapchip.draw_xsize = SIZE_UNIT_WIDTH;
-		game->mapchip.draw_ysize = SIZE_UNIT_HEIGHT;
-		game->mapchip.xstart_pos = 0;
-		game->mapchip.ystart_pos = 0;
-		game->mapchip.frame_size = VIDEO_WIDTH;
-		game->mapchip.alpha		 = 255;
-		game->mapchip.id 	 	 = chip[i];
-		game->mapchip.dstin  	 = MINIGAME_CONFIG_UNIT_XPOS + MINIGAME_CONFIG_UNIT_YPOS+ (MINIGAME_CONFIG_UNIT_YPOS * i) + game->conf.work.adr;
-		game->mapchip.dstout 	 = game->mapchip.dstin;
-        png_mapchip(game);
-		font_dram_draw(game, MINIGAME_CONFIG_MSG_XPOS, MINIGAME_CONFIG_MSG_YPOS + (i << MAPCHIP_SHIFT), MEMORY_MINIGAME_MSG_ID, i, MINIGAME_SUB_MEMBER_MSG, COLOR_WHITE);
-    }
 }
 
 

@@ -263,8 +263,8 @@ static void paty_swap(GameWrapper *const game)
  */
 static void paty_tools_swap(GameWrapper *const game)
 {
-    bool isValid;
-    bool isEquip;
+    bool isValid;   /* 他の仲間が装備しているか確認 */
+    bool isEquip;   /* 装備可能者か確認 */
 
     if (game->cmd.cursol.y != 0)
     {
@@ -311,10 +311,12 @@ static void paty_tools_swap(GameWrapper *const game)
 
     case CURSOL_ARMOR_CHANGE:
         game->hero[game->conf.battle.hero.sort_order[game->cmd.cursol.x]].equip.armor = game->cmd.cursol.y;
+        equip_ref_update(game, game->conf.battle.hero.sort_order[game->cmd.cursol.x]);
         break;
 
     case CURSOL_AMULET_CHANGE:
         game->hero[game->conf.battle.hero.sort_order[game->cmd.cursol.x]].equip.amulet = game->cmd.cursol.y;
+        equip_ref_update(game, game->conf.battle.hero.sort_order[game->cmd.cursol.x]);
         break;
 
     case CURSOL_ITEM_CHANGE:
