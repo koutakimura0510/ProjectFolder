@@ -24,10 +24,10 @@
  */
 typedef enum
 {
-	OPENING_DEMO_WINDOW,
 	OPENING_BITMAP_LOAD,
 	OPENING_MUSIC_LOAD,
 	OPENING_DB_LOAD,
+	OPENING_DEMO_WINDOW,
 	OPENING_SYSTEM_DRAW,
 	OPENING_SAVE_LOAD,
 	OPENING_LOAD_END,
@@ -58,10 +58,10 @@ typedef struct
 
 static const OpeningState opening_state[] =
 {
-	{OPENING_DEMO_WINDOW,	opening_demo_window		},
 	{OPENING_BITMAP_LOAD,	opening_bitmap_load		},
 	{OPENING_MUSIC_LOAD,	opening_music_load		},
 	{OPENING_DB_LOAD, 		opening_db_load,		},
+	{OPENING_DEMO_WINDOW,	opening_demo_window		},
 	{OPENING_SYSTEM_DRAW, 	opening_title_draw,		},
 	{OPENING_SAVE_LOAD, 	opening_savedata_load,	},
 };

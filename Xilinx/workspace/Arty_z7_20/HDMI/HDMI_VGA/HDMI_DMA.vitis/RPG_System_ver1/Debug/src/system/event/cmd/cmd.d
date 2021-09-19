@@ -18,6 +18,7 @@ src/system/event/cmd/cmd.o src/system/event/cmd/cmd.o: \
  ../src/system/event/cmd/../../wrapper/macro/rom_macro.h \
  ../src/system/event/cmd/../../wrapper/macro/system_length_macro.h \
  ../src/system/event/cmd/../../wrapper/macro/npc_macro.h \
+ ../src/system/event/cmd/../../wrapper/macro/event_id_macro.h \
  ../src/system/event/cmd/../../wrapper/hero_wrapper.h \
  ../src/system/event/cmd/../../wrapper/unit_wrapper.h \
  ../src/system/event/cmd/../../wrapper/mapchip_wrapper.h \
@@ -39,7 +40,6 @@ src/system/event/cmd/cmd.o src/system/event/cmd/cmd.o: \
  ../src/system/event/cmd/../../wrapper/../hardware/wrapper/../sound/dtm_macro.h \
  ../src/system/event/cmd/../../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/event/cmd/../../wrapper/../event/wrapper/event_local.h \
- ../src/system/event/cmd/../../wrapper/../event/wrapper/event_id_macro.h \
  ../src/system/event/cmd/../../wrapper/../event/wrapper/../draw/detection_macro.h \
  ../src/system/event/cmd/../../wrapper/../event/wrapper/../draw/draw_macro.h \
  ../src/system/event/cmd/../../wrapper/../event/wrapper/../unit/unit_event_macro.h \
@@ -108,6 +108,8 @@ src/system/event/cmd/cmd.o src/system/event/cmd/cmd.o: \
 
 ../src/system/event/cmd/../../wrapper/macro/npc_macro.h:
 
+../src/system/event/cmd/../../wrapper/macro/event_id_macro.h:
+
 ../src/system/event/cmd/../../wrapper/hero_wrapper.h:
 
 ../src/system/event/cmd/../../wrapper/unit_wrapper.h:
@@ -149,8 +151,6 @@ src/system/event/cmd/cmd.o src/system/event/cmd/cmd.o: \
 ../src/system/event/cmd/../../wrapper/../hardware/wrapper/../rom/rom_func.h:
 
 ../src/system/event/cmd/../../wrapper/../event/wrapper/event_local.h:
-
-../src/system/event/cmd/../../wrapper/../event/wrapper/event_id_macro.h:
 
 ../src/system/event/cmd/../../wrapper/../event/wrapper/../draw/detection_macro.h:
 

@@ -94,6 +94,7 @@ static void system_standerd_window(GameWrapper *const game)
 	{
 		game->conf.display.system = SYSTEM_MINIGAME_WINDOW;
 		cmd_db_reset(game, COMMAND_MINIGAME_SYSTEM, 0);
+		patblt(game->conf.work.adr, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT, COLOR_BLACK);
 	}
 
 	if (CAN_MOVE == can)

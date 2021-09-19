@@ -165,20 +165,33 @@ uint8_t get_key(bool longkey)
         return sw;
     }
 
-#ifdef KEYDEBUG
-    if (longkey == true)
-    {
-        sw_up = sw;
-        return sw;
-    }
-#else
     if (longkey == true)
     {
         uint8_t sw_ab = sw_up & SW_AB;
         sw_up = sw;
         return sw ^ sw_ab;
     }
-#endif
+
+    return 0;
+}
+
+
+/* デモ動作キーコンフィグ */
+uint8_t get_demo_key(bool longkey)
+{
+    static uint8_t sw_up  = 0;
+    uint8_t sw = GET_FPGA_SW;
+
+    if (sw == 0)
+    {
+        sw_up = 0;
+    }
+
+    if (longkey == true)
+    {
+        sw_up = sw;
+        return sw;
+    }
 
     return 0;
 }

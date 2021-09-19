@@ -28,9 +28,9 @@ element_db.h:443:13:type_bit_write	48	static
 dtm_db.h:131:6:dtm_rom	3904	static
 dtm_db.h:170:6:dtm_write	48	static
 cooking_db.h:49:6:cooking_write	48	static
-npc_db.h:123:6:npc_map_write	64	static
-npc_db.h:154:6:npc_pattern_write	48	static
-npc_db.h:186:6:npc_bitmap_write	48	static
+npc_db.h:147:6:npc_map_write	64	static
+npc_db.h:178:6:npc_pattern_write	48	static
+npc_db.h:210:6:npc_bitmap_write	48	static
 sin_cos.h:43:6:sin_write	48	static
 sin_cos.h:60:6:cos_write	48	static
 event_variable_msg_db.h:54:6:variable_msg_write	64	static

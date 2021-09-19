@@ -19,6 +19,7 @@ src/system/event/battle/config/config.o \
  ../src/system/event/battle/config/../../../wrapper/macro/rom_macro.h \
  ../src/system/event/battle/config/../../../wrapper/macro/system_length_macro.h \
  ../src/system/event/battle/config/../../../wrapper/macro/npc_macro.h \
+ ../src/system/event/battle/config/../../../wrapper/macro/event_id_macro.h \
  ../src/system/event/battle/config/../../../wrapper/hero_wrapper.h \
  ../src/system/event/battle/config/../../../wrapper/unit_wrapper.h \
  ../src/system/event/battle/config/../../../wrapper/mapchip_wrapper.h \
@@ -40,7 +41,6 @@ src/system/event/battle/config/config.o \
  ../src/system/event/battle/config/../../../wrapper/../hardware/wrapper/../sound/dtm_macro.h \
  ../src/system/event/battle/config/../../../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/event/battle/config/../../../wrapper/../event/wrapper/event_local.h \
- ../src/system/event/battle/config/../../../wrapper/../event/wrapper/event_id_macro.h \
  ../src/system/event/battle/config/../../../wrapper/../event/wrapper/../draw/detection_macro.h \
  ../src/system/event/battle/config/../../../wrapper/../event/wrapper/../draw/draw_macro.h \
  ../src/system/event/battle/config/../../../wrapper/../event/wrapper/../unit/unit_event_macro.h \
@@ -120,6 +120,8 @@ src/system/event/battle/config/config.o \
 
 ../src/system/event/battle/config/../../../wrapper/macro/npc_macro.h:
 
+../src/system/event/battle/config/../../../wrapper/macro/event_id_macro.h:
+
 ../src/system/event/battle/config/../../../wrapper/hero_wrapper.h:
 
 ../src/system/event/battle/config/../../../wrapper/unit_wrapper.h:
@@ -161,8 +163,6 @@ src/system/event/battle/config/config.o \
 ../src/system/event/battle/config/../../../wrapper/../hardware/wrapper/../rom/rom_func.h:
 
 ../src/system/event/battle/config/../../../wrapper/../event/wrapper/event_local.h:
-
-../src/system/event/battle/config/../../../wrapper/../event/wrapper/event_id_macro.h:
 
 ../src/system/event/battle/config/../../../wrapper/../event/wrapper/../draw/detection_macro.h:
 

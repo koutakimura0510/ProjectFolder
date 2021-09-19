@@ -19,7 +19,6 @@ static void top_edge_draw(GameWrapper *const game, MapElement *map, SDL_Rect *co
 static void ycenter_draw(GameWrapper *const game, MapElement *map, uint32_t xsize, uint32_t anime_pos);
 static void display_darkening_draw(GameWrapper *const game, uint8_t vdma_pos);
 static void display_gradually_draw(GameWrapper *const game, uint8_t vdma_pos);
-static void fog_draw(GameWrapper *const game);
 
 
 /*

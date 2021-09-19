@@ -133,7 +133,7 @@ void bullet_draw(GameWrapper *const game)
     game->mapchip.xstart_pos = 0;
     game->mapchip.ystart_pos = 0;
     game->mapchip.frame_size = VIDEO_WIDTH;
-    game->mapchip.cut_color  = COLOR_BLACK_ADD;
+    game->mapchip.cut_color  = COLOR_WHITE;
 
     for (uint8_t i = 0; i < bullets_timer(bullet); i++, shot++)
     {

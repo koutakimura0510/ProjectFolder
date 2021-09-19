@@ -9,6 +9,7 @@
 *.index
 *.bmp
 *.o
+*.d
 *.wav
 *.mp3
 *.exe

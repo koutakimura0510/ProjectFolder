@@ -20,7 +20,7 @@
 
 
 /* 原点を画面の中央 */
-#define DISPLAY_CENTER_POS  ((MAX_V_WIDTH * 240) * (320 << RGB_BYTE_SHIFT))
+#define DISPLAY_CENTER_POS  ((240 * MAX_V_WIDTH) + (320 * 4))
 
 
 /*
@@ -48,7 +48,7 @@
 /*
  * ミニゲームモードのアニメーションixel数を定義
  */
-#define ANIMATION_MINIGAME_PIXEL_X	(1)
+#define ANIMATION_MINIGAME_PIXEL_X	(8)
 #define ANIMATION_MINIGAME_PIXEL_Y	(0)
 
 

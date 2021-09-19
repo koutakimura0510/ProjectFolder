@@ -618,7 +618,7 @@ uint32_t fetch_dram_msg(GameWrapper *const game, uint8_t main_member, uint32_t s
     SystemAddress *system      = &system_address;
     uint32_t *main_adr         = system->start_adr[main_member];    /* データベースのメンバのデータが保存されているアドレスを取得 */
     uint32_t *sub_adr          = system->p[main_member];            /* データベースのメンバの長さが保存されているアドレスを取得 */
-    uint32_t *event_flag       = DRAM_FLAG_MSG_EVENT_ADDR_START;
+    uint32_t *event_flag       = DRAM_FLAG_EVENT_ADDR_START;
     uint32_t row;
 
     for (uint32_t i = 0; i < FILE_SYSTEM_LENGTH_SIZE; i++, length++)

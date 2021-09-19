@@ -135,6 +135,9 @@ void put_mapchip(GameWrapper *const game)
 	/* マップチップIDを設定 */
 	XMapchip_Set_id(&ChipInstance, game->mapchip.id);
 
+	/* 切り取り色 */
+	XMapchip_Set_crip(&ChipInstance, game->mapchip.cut_color);
+
 	/* ハード動作 */
 	XMapchip_Start(&ChipInstance);
 	while (XMapchip_IsDone(&ChipInstance) == 0);

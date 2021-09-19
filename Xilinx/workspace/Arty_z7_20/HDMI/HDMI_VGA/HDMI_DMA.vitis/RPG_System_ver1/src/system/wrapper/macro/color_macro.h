@@ -28,6 +28,10 @@
 #define COLOR_ALPHA_DEC	(5)
 
 
+/* ミニゲーム用画像データのカットカラー */
+#define COLOR_WHITE_CUT         (0xffffffff)
+
+
 /*
  * 色データを管理
  * XilinxのHDMIのIPの使用上

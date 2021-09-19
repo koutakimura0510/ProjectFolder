@@ -18,6 +18,7 @@ src/system/opening/opening_mode.o src/system/opening/opening_mode.o: \
  ../src/system/opening/../wrapper/macro/rom_macro.h \
  ../src/system/opening/../wrapper/macro/system_length_macro.h \
  ../src/system/opening/../wrapper/macro/npc_macro.h \
+ ../src/system/opening/../wrapper/macro/event_id_macro.h \
  ../src/system/opening/../wrapper/hero_wrapper.h \
  ../src/system/opening/../wrapper/unit_wrapper.h \
  ../src/system/opening/../wrapper/mapchip_wrapper.h \
@@ -39,7 +40,6 @@ src/system/opening/opening_mode.o src/system/opening/opening_mode.o: \
  ../src/system/opening/../wrapper/../hardware/wrapper/../sound/dtm_macro.h \
  ../src/system/opening/../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/opening/../wrapper/../event/wrapper/event_local.h \
- ../src/system/opening/../wrapper/../event/wrapper/event_id_macro.h \
  ../src/system/opening/../wrapper/../event/wrapper/../draw/detection_macro.h \
  ../src/system/opening/../wrapper/../event/wrapper/../draw/draw_macro.h \
  ../src/system/opening/../wrapper/../event/wrapper/../unit/unit_event_macro.h \
@@ -68,17 +68,11 @@ src/system/opening/opening_mode.o src/system/opening/opening_mode.o: \
  ../src/system/opening/../wrapper/../opening/opening_macro.h \
  ../src/system/opening/../wrapper/../minigame/minigame_local.h \
  ../src/system/opening/opening.h \
- /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xil_io.h \
- /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xil_types.h \
  /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xil_printf.h \
+ /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xil_types.h \
  /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xparameters.h \
  /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xparameters_ps.h \
- /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/bspconfig.h \
- /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xstatus.h \
- /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xil_assert.h \
- /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xpseudo_asm.h \
- /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xreg_cortexa9.h \
- /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xpseudo_asm_gcc.h
+ /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/bspconfig.h
 
 ../src/system/opening/../wrapper/game_wrapper.h:
 
@@ -115,6 +109,8 @@ src/system/opening/opening_mode.o src/system/opening/opening_mode.o: \
 ../src/system/opening/../wrapper/macro/system_length_macro.h:
 
 ../src/system/opening/../wrapper/macro/npc_macro.h:
+
+../src/system/opening/../wrapper/macro/event_id_macro.h:
 
 ../src/system/opening/../wrapper/hero_wrapper.h:
 
@@ -157,8 +153,6 @@ src/system/opening/opening_mode.o src/system/opening/opening_mode.o: \
 ../src/system/opening/../wrapper/../hardware/wrapper/../rom/rom_func.h:
 
 ../src/system/opening/../wrapper/../event/wrapper/event_local.h:
-
-../src/system/opening/../wrapper/../event/wrapper/event_id_macro.h:
 
 ../src/system/opening/../wrapper/../event/wrapper/../draw/detection_macro.h:
 
@@ -216,24 +210,12 @@ src/system/opening/opening_mode.o src/system/opening/opening_mode.o: \
 
 ../src/system/opening/opening.h:
 
-/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xil_io.h:
+/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xil_printf.h:
 
 /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xil_types.h:
-
-/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xil_printf.h:
 
 /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xparameters.h:
 
 /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xparameters_ps.h:
 
 /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/bspconfig.h:
-
-/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xstatus.h:
-
-/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xil_assert.h:
-
-/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xpseudo_asm.h:
-
-/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xreg_cortexa9.h:
-
-/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RpgPlatform/export/RpgPlatform/sw/RpgPlatform/standalone_domain/bspinclude/include/xpseudo_asm_gcc.h:

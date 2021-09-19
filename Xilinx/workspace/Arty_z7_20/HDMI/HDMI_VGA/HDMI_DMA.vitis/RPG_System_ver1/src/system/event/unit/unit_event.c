@@ -190,14 +190,14 @@ void unit_pos_update(GameWrapper *const game)
 {
     static uint32_t t = 0;
 
-    if (game->conf.display.system == SYSTEM_MINIGAME_WINDOW)
-    {
-        if (false == tmr_constant(&t, game->unit.action.move_speed))
-        {
-            return;
-        }
-        t = get_time();
-    }
+//    if (game->conf.display.system == SYSTEM_MINIGAME_WINDOW)
+//    {
+//        if (false == tmr_constant(&t, game->unit.action.move_speed))
+//        {
+//            ;
+//        }
+//        t = get_time();
+//    }
 
     switch (game->unit.pos.unitdir)
     {

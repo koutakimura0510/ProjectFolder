@@ -28,7 +28,6 @@
 
 #define NUM(ary) (sizeof(ary)/sizeof(ary[0]))
 
-// #define KEYDEBUG    /* キーの長押しデバッグ時に使用 */
 #define MYDEBUG
 
 #include <stdint.h>

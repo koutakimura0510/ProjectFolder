@@ -19,6 +19,7 @@ src/system/event/battle/subwindow/sub_window.o \
  ../src/system/event/battle/subwindow/../../../wrapper/macro/rom_macro.h \
  ../src/system/event/battle/subwindow/../../../wrapper/macro/system_length_macro.h \
  ../src/system/event/battle/subwindow/../../../wrapper/macro/npc_macro.h \
+ ../src/system/event/battle/subwindow/../../../wrapper/macro/event_id_macro.h \
  ../src/system/event/battle/subwindow/../../../wrapper/hero_wrapper.h \
  ../src/system/event/battle/subwindow/../../../wrapper/unit_wrapper.h \
  ../src/system/event/battle/subwindow/../../../wrapper/mapchip_wrapper.h \
@@ -40,7 +41,6 @@ src/system/event/battle/subwindow/sub_window.o \
  ../src/system/event/battle/subwindow/../../../wrapper/../hardware/wrapper/../sound/dtm_macro.h \
  ../src/system/event/battle/subwindow/../../../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/event/battle/subwindow/../../../wrapper/../event/wrapper/event_local.h \
- ../src/system/event/battle/subwindow/../../../wrapper/../event/wrapper/event_id_macro.h \
  ../src/system/event/battle/subwindow/../../../wrapper/../event/wrapper/../draw/detection_macro.h \
  ../src/system/event/battle/subwindow/../../../wrapper/../event/wrapper/../draw/draw_macro.h \
  ../src/system/event/battle/subwindow/../../../wrapper/../event/wrapper/../unit/unit_event_macro.h \
@@ -115,6 +115,8 @@ src/system/event/battle/subwindow/sub_window.o \
 
 ../src/system/event/battle/subwindow/../../../wrapper/macro/npc_macro.h:
 
+../src/system/event/battle/subwindow/../../../wrapper/macro/event_id_macro.h:
+
 ../src/system/event/battle/subwindow/../../../wrapper/hero_wrapper.h:
 
 ../src/system/event/battle/subwindow/../../../wrapper/unit_wrapper.h:
@@ -156,8 +158,6 @@ src/system/event/battle/subwindow/sub_window.o \
 ../src/system/event/battle/subwindow/../../../wrapper/../hardware/wrapper/../rom/rom_func.h:
 
 ../src/system/event/battle/subwindow/../../../wrapper/../event/wrapper/event_local.h:
-
-../src/system/event/battle/subwindow/../../../wrapper/../event/wrapper/event_id_macro.h:
 
 ../src/system/event/battle/subwindow/../../../wrapper/../event/wrapper/../draw/detection_macro.h:
 

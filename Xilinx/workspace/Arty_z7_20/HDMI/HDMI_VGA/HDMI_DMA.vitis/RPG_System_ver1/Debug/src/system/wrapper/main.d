@@ -17,6 +17,7 @@ src/system/wrapper/main.o src/system/wrapper/main.o: \
  ../src/system/wrapper/macro/rom_macro.h \
  ../src/system/wrapper/macro/system_length_macro.h \
  ../src/system/wrapper/macro/npc_macro.h \
+ ../src/system/wrapper/macro/event_id_macro.h \
  ../src/system/wrapper/hero_wrapper.h \
  ../src/system/wrapper/unit_wrapper.h \
  ../src/system/wrapper/mapchip_wrapper.h \
@@ -37,7 +38,6 @@ src/system/wrapper/main.o src/system/wrapper/main.o: \
  ../src/system/wrapper/../hardware/wrapper/../sound/dtm_macro.h \
  ../src/system/wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/wrapper/../event/wrapper/event_local.h \
- ../src/system/wrapper/../event/wrapper/event_id_macro.h \
  ../src/system/wrapper/../event/wrapper/../draw/detection_macro.h \
  ../src/system/wrapper/../event/wrapper/../draw/draw_macro.h \
  ../src/system/wrapper/../event/wrapper/../unit/unit_event_macro.h \
@@ -102,6 +102,8 @@ src/system/wrapper/main.o src/system/wrapper/main.o: \
 
 ../src/system/wrapper/macro/npc_macro.h:
 
+../src/system/wrapper/macro/event_id_macro.h:
+
 ../src/system/wrapper/hero_wrapper.h:
 
 ../src/system/wrapper/unit_wrapper.h:
@@ -143,8 +145,6 @@ src/system/wrapper/main.o src/system/wrapper/main.o: \
 ../src/system/wrapper/../hardware/wrapper/../rom/rom_func.h:
 
 ../src/system/wrapper/../event/wrapper/event_local.h:
-
-../src/system/wrapper/../event/wrapper/event_id_macro.h:
 
 ../src/system/wrapper/../event/wrapper/../draw/detection_macro.h:
 

@@ -4,7 +4,7 @@
 
 #include "../wrapper/game_wrapper.h"
 #include "minigame.h"
-#include "minigame_macro"
+#include "minigame_macro.h"
 #include "minigame_struct.h"
 
 #ifdef MYDEBUG
@@ -167,7 +167,7 @@ static void barrage_player_select(GameWrapper *const game)
 {
 	patblt(game->conf.work.adr, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT, COLOR_DARK_BLUE);
 	barrage_unitselect_draw(game);
-	cursol_draw(game, MINIGAME_CONFIG_CURSOL_POS, SIZE_UNIT_HEIGHT, CURSOL_TYPE_DEFAULT_DRAW);
+	cursol_draw(game, MINIGAME_CONFIG_CURSOL_POS, MINIGAME_CONFIG_CURSOL_INTERVAL, CURSOL_TYPE_DEFAULT_DRAW);
 
 	if (SW_A == cmd_key(game))
 	{
@@ -182,6 +182,7 @@ static void barrage_player_select(GameWrapper *const game)
 		background_draw(game, DRAM_BACKGROUND_ADDR_BASE);
 		standerd_game(game);
 		framebuffer_copy(game->conf.work.adr, DRAM_BACKUP_FBUF_ADDR_BASE, VIDEO_WIDTH, VIDEO_HEIGHT, VIDEO_WIDTH);
+		framebuffer_copy(DRAM_BACKGROUND_ADDR_BASE, DRAM_BACKUP_FBUF_ADDR_BASE, VIDEO_WIDTH, VIDEO_HEIGHT-32, VIDEO_WIDTH);
 		game->conf.display.sub_state = MINIGAME_PLAYING_ID;
 		game->conf.display.uncommon_window = 0;
 	}
@@ -323,7 +324,7 @@ static void barrage_unitselect_draw(GameWrapper *const game)
 		game->mapchip.frame_size = VIDEO_WIDTH;
 		game->mapchip.alpha		 = 255;
 		game->mapchip.id 	 	 = chip[i];
-		game->mapchip.dstin  	 = MINIGAME_CONFIG_UNIT_XPOS + (MINIGAME_CONFIG_UNIT_YPOS * i) + game->conf.work.adr;
+		game->mapchip.dstin  	 = MINIGAME_CONFIG_UNIT_XPOS + MINIGAME_CONFIG_UNIT_YPOS+ (MINIGAME_CONFIG_UNIT_YPOS * i) + game->conf.work.adr;
 		game->mapchip.dstout 	 = game->mapchip.dstin;
         png_mapchip(game);
 		font_dram_draw(game, MINIGAME_CONFIG_MSG_XPOS, MINIGAME_CONFIG_MSG_YPOS + (i << MAPCHIP_SHIFT), MEMORY_MINIGAME_MSG_ID, i, MINIGAME_SUB_MEMBER_MSG, COLOR_WHITE);

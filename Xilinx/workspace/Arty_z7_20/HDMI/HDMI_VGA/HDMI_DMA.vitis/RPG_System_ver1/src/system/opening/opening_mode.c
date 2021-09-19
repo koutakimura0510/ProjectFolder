@@ -87,51 +87,10 @@ void opening_hardware_init(GameWrapper *const game)
 	vdma_init();
 	timer_init();
 	frame_buffer_clear();
-
-#ifdef DEMO_WINDOW_ON
-	game->conf.display.sub_state = OPENING_DEMO_WINDOW;
-#else
 	game->conf.display.sub_state = OPENING_BITMAP_LOAD;
-#endif
-}
-
-
-/**
- * @brief  起動時のデモ動作用の映像データを出力する
- * @note   
- * @retval None
- */
-static void opening_demo_window(GameWrapper *const game)
-{
-	patblt(DEMO_WINDOW_CENTER_POS, 0, 0, DEMO_WINDOW_FILL_XSIZE, DEMO_WINDOW_FILL_YSIZE, game->conf.display.uncommon_window);
-	game->mapchip.srcin      = DEMO_WINDOW_CENTER_POS;
-	game->mapchip.dstin      = DEMO_WINDOW_CENTER_POS;
-	game->mapchip.dstout     = game->conf.work.adr;
-	game->mapchip.maxwidth   = DEMO_WINDOW_FILL_XSIZE;
-	game->mapchip.maxheight  = DEMO_WINDOW_FILL_YSIZE;
-	game->mapchip.alpha      = COLOR_ALPHA_MAX;
-	game->mapchip.id         = 0;
-	affine_roulette(game);
-	affine_rad_save(game, 15, TM_100MS_COUNT);
-
-	for (uint32_t i = 0; i < COLOR_NUMBER_RBG; i++)
-	{
-		if (true == tmr_constant(&game->conf.battle.effect.com_time[i], TM_10MS_COUNT + (i * TM_20MS_COUNT)))
-		{
-			uint32_t bit  = i << COLOR_NUMBER_RBG;
-			uint32_t mask = (MAX_32BIT ^ (MAX_8BIT << bit));
-			game->conf.battle.effect.com_time[i] = get_time();
-			game->conf.display.uncommon_window   = mask | ((((game->conf.display.uncommon_window >> bit) + 1) & COLOR_MAX_MASK) << bit);
-		}
-	}
-
-	if (SW_A & get_key(false))
-	{
-		game->conf.display.sub_state = OPENING_BITMAP_LOAD;
-		game->conf.display.uncommon_window = 0;
-		game->conf.animation.count = 0;
-		game->conf.animation.acc = NUM(bitmap_init) + NUM(sound_init);
-	}
+	game->conf.display.uncommon_window = 0;
+	game->conf.animation.count = 0;
+	game->conf.animation.acc = NUM(bitmap_init) + NUM(sound_init);
 }
 
 
@@ -186,41 +145,25 @@ static void opening_db_load(GameWrapper *const game)
 {
 	cmd_db_reset(game, COMMAND_OPENING_SYSTEM, 1);
 	bgm_update(game, SOUND_ID_TITLE, SOUND_CH_BGM_WORK);
+
+#ifdef DEMO_WINDOW_ON
+	game->conf.display.sub_state = OPENING_DEMO_WINDOW;
+#else
 	game->conf.display.sub_state = OPENING_SYSTEM_DRAW;
+#endif
 }
 
 
-/*
- * ver. 2021/06/28
- * タイトル画面の背景描画
+/**
+ * @brief  起動時のデモ動作用の映像データを出力する
+ * @note   
+ * @retval None
  */
-static void opening_title_draw(GameWrapper *const game)
+static void opening_demo_window(GameWrapper *const game)
 {
-	game->mapchip.maxwidth   = VIDEO_WIDTH;
-	game->mapchip.maxheight  = VIDEO_HEIGHT;
-	game->mapchip.draw_xsize = VIDEO_WIDTH;
-	game->mapchip.draw_ysize = VIDEO_HEIGHT;
-	game->mapchip.xstart_pos = 0;
-	game->mapchip.ystart_pos = 0;
-	game->mapchip.frame_size = VIDEO_WIDTH;
-	game->mapchip.id 		 = 0;
-	game->mapchip.srcin      = DRAM_TITLE_1_ADDR_BASE;
-	game->mapchip.dstin      = DRAM_TITLE_1_ADDR_BASE;
-	game->mapchip.dstout     = game->conf.work.adr;
-	game->mapchip.alpha		 = COLOR_ALPHA_MAX;
-	game->mapchip.cut_color	 = COLOR_WHITE;
-	put_mapchip(game);
-	cursol_draw(game, OPENING_CURSOL_DEFAULT_POS, OPENING_CURSOL_INTERVAL_YPOS, CURSOL_TYPE_DEFAULT_DRAW);
-
-	// if (SW_A & cmd_key(game))
-	// {
-	// 	bgm_update(game, SOUND_ID_CMD_BUTTON2, SOUND_CH_KEY_WORK);
-	// 	game->conf.display.sub_state = OPENING_SAVE_LOAD;
-	// }
-
 	static SDL_Rect rect = (SDL_Rect){0, 0, 0, 0,};
 	static SDL_Timer timer = {0};
-
+	patblt(game->conf.work.adr, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT, COLOR_BLACK);
 	game->mapchip.maxwidth   = SIZE_UNIT_WIDTH;
 	game->mapchip.maxheight  = SIZE_UNIT_HEIGHT;
 	game->mapchip.draw_xsize = VIDEO_WIDTH;
@@ -260,7 +203,7 @@ static void opening_title_draw(GameWrapper *const game)
 		timer.count = get_time();
 	}
 
-	switch (get_key(true))
+	switch (get_demo_key(true))
 	{
 	case SW_RIGHT:
 		rect.w+=8;
@@ -294,8 +237,43 @@ static void opening_title_draw(GameWrapper *const game)
 		rect.y-=4;
 		break;
 
+	case SW_B:
+		game->conf.display.sub_state = OPENING_SYSTEM_DRAW;
+		cmd_db_reset(game, COMMAND_OPENING_SYSTEM, 1);
+		break;
+
 	default:
 		break;
+	}
+}
+
+
+/*
+ * ver. 2021/06/28
+ * タイトル画面の背景描画
+ */
+static void opening_title_draw(GameWrapper *const game)
+{
+	game->mapchip.maxwidth   = VIDEO_WIDTH;
+	game->mapchip.maxheight  = VIDEO_HEIGHT;
+	game->mapchip.draw_xsize = VIDEO_WIDTH;
+	game->mapchip.draw_ysize = VIDEO_HEIGHT;
+	game->mapchip.xstart_pos = 0;
+	game->mapchip.ystart_pos = 0;
+	game->mapchip.frame_size = VIDEO_WIDTH;
+	game->mapchip.id 		 = 0;
+	game->mapchip.srcin      = DRAM_TITLE_1_ADDR_BASE;
+	game->mapchip.dstin      = DRAM_TITLE_1_ADDR_BASE;
+	game->mapchip.dstout     = game->conf.work.adr;
+	game->mapchip.alpha		 = COLOR_ALPHA_MAX;
+	game->mapchip.cut_color	 = COLOR_WHITE;
+	put_mapchip(game);
+	cursol_draw(game, OPENING_CURSOL_DEFAULT_POS, OPENING_CURSOL_INTERVAL_YPOS, CURSOL_TYPE_DEFAULT_DRAW);
+
+	if (SW_A & cmd_key(game))
+	{
+		bgm_update(game, SOUND_ID_CMD_BUTTON2, SOUND_CH_KEY_WORK);
+		game->conf.display.sub_state = OPENING_SAVE_LOAD;
 	}
 }
 

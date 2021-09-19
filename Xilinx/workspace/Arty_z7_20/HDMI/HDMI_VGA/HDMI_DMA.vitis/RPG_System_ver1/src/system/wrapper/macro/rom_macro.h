@@ -57,6 +57,8 @@
  * 0x1E00_0000 ~ 0x1E49_41D0	// フォント、マップデータ
  * 
  * 0x1E49_4200 ~ 0x1FFF_FFFF	// NULL
+ * 
+ * 0x1F00_0000 ~ 0x1FFF_FFFF    // イベントフラグ管理領域
  */
 
 /* 基本となる保存アドレスを定義 */
@@ -72,6 +74,7 @@
 #define DRAM_SOUND_FANFARE_ADDR_BASE_START   (0x19000000)
 #define DRAM_SOUND_SPARE_ADDR_BASE_START     (0x1A000000)
 #define DRAM_FONT_SJIS_ADDR_BASE_START 		 (0x1e000000)
+#define DRAM_FLAG_EVENT_ADDR_BASE_START		 (0x1e000000)
 
 
 /*
@@ -288,6 +291,10 @@
 #define DRAM_MAPDATA_OBJECT_ADDR_BASE 		(DRAM_MAPDATA_ADDR_BASE + (250 * 250 * 4))		// マップデータのオブジェクト
 
 
+/* イベントフラグ管理領域 */
+#define DRAM_FLAG_EVENT_ADDR_BASE           (DRAM_FLAG_EVENT_ADDR_BASE_START)
+
+
 /*
  * 開始アドレスをポインタで参照する場合使用する
  */
@@ -461,6 +468,10 @@
 /* 専用技 */
 #define DRAM_EFFECT_KANAKO_8_ADDR_START              (uint32_t *)(DRAM_EFFECT_KANAKO_8_ADDR_BASE)
 #define DRAM_EFFECT_REMIRIA_7_ADDR_START             (uint32_t *)(DRAM_EFFECT_REMIRIA_7_ADDR_BASE)
+
+
+/* イベントフラグ領域 */
+#define DRAM_FLAG_EVENT_ADDR_START                  (uint32_t *)(DRAM_FLAG_EVENT_ADDR_BASE)
 
 
 /*
