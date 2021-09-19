@@ -224,10 +224,6 @@ static void barrage_result(GameWrapper *const game)
 static void barrage_character_update(GameWrapper *const game)
 {
     game->unit.draw.chara_chipid      = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, HERO_MINORIKO, MINIGAME_SUB_MEMBER_CHIP_ID);
-    game->unit.action.move_speed      = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, HERO_MINORIKO, MINIGAME_SUB_MEMBER_MOVE_SPEED);
-    game->unit.action.jump_rise_speed = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, HERO_MINORIKO, MINIGAME_SUB_MEMBER_JUMP_RISESPEED);
-	game->unit.action.jump_fall_speed = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, HERO_MINORIKO, MINIGAME_SUB_MEMBER_JUMP_FALLSPEED);
-	game->unit.action.jump_height     = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, HERO_MINORIKO, MINIGAME_SUB_MEMBER_JUMP_HEIGHT);
 	game->unit.action.bomb_number     = fetch_dram_db(game, MEMORY_MINIGAME_MSG_ID, HERO_MINORIKO, MINIGAME_SUB_MEMBER_BOMB_NUMBER);
 }
 
@@ -249,6 +245,7 @@ static void barrage_unit_reset(GameWrapper *const game)
 	game->unit.draw.workpos    		= UNIT_WORK_TYPE_CENTER;
 	game->unit.draw.cutpos     		= UNIT_CUT_DOWN + game->unit.draw.chara_chipid;
 	game->unit.draw.mapchip_id 		= UNIT_WORK_TYPE_CENTER + game->unit.draw.cutpos;
+	game->unit.action.jump_count_number = 2;
 }
 
 

@@ -17,6 +17,8 @@
 *.png
 *.jpg
 *.bmp
+*.elf
+*.size
 
 # TohoProjectのworkspaceのみgitに反映させる
 Xilinx/*

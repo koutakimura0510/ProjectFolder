@@ -203,7 +203,7 @@ static void opening_demo_window(GameWrapper *const game)
 		timer.count = get_time();
 	}
 
-	switch (get_demo_key(true))
+	switch (GET_FPGA_SW)
 	{
 	case SW_RIGHT:
 		rect.w+=8;
@@ -370,5 +370,4 @@ static void config_initialize(GameWrapper *const game)
 	game->unit.draw.cutpos              = UNIT_CUT_DOWN + game->unit.draw.chara_chipid;
 	game->unit.draw.mapchip_id          = UNIT_WORK_TYPE_CENTER + game->unit.draw.cutpos;
     game->unit.draw.chara_chipid        = MAPCHIP_MINORIKO;
-    game->unit.action.move_speed        = TM_300US_COUNT;
 }

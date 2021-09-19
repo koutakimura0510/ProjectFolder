@@ -176,28 +176,6 @@ uint8_t get_key(bool longkey)
 }
 
 
-/* デモ動作キーコンフィグ */
-uint8_t get_demo_key(bool longkey)
-{
-    static uint8_t sw_up  = 0;
-    uint8_t sw = GET_FPGA_SW;
-
-    if (sw == 0)
-    {
-        sw_up = 0;
-    }
-
-    if (longkey == true)
-    {
-        sw_up = sw;
-        return sw;
-    }
-
-    return 0;
-}
-
-
-
 /*
  * 指定時間経過したか判断を行う
  *

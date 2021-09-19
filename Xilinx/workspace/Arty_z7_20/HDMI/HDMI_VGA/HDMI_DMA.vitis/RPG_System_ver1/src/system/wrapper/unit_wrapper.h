@@ -16,30 +16,17 @@
 #ifndef unit_wrapper_h   /* prevent circular inclusions */
 #define unit_wrapper_h   /* by using protection macros */
 
-/*
- * キャラクターのアクション時の動作方法を管理
- *
- * ジャンプ時の上昇の速度を保存
- * jump_rise_speed
+/**
+ * @brief  ミニゲームのアニメーションのメンバを管理
+ * @note   
  * 
- * ジャンプ時の下降の速度を保存
- * jump_fall_speed
- * 
- * ジャンプの高さを保存
- * jump_height
- * 
- * キャラクターのx軸の移動速度を管理
- * move_speed
- * 
- * 爆弾の所持数を保存
- * bomb_number
+ * @param  jump_count_number ジャンプの残り回数を保存
+ * @param  bomb_number 爆弾の数を保存
+ * @retval None
  */
 typedef struct unit_action
 {
-    uint32_t jump_rise_speed;
-    uint32_t jump_fall_speed;
-	int32_t  jump_height;
-    uint32_t move_speed;
+    uint8_t jump_count_number;
 	uint8_t  bomb_number;
 } UnitAction;
 

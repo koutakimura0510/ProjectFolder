@@ -63,6 +63,7 @@ bool conf_anime_update(GameWrapper *const game, int32_t pos)
 {
     game->conf.animation.vel += game->conf.animation.acc;
     game->conf.animation.y   += game->conf.animation.vel;
+    
     if (pos < game->conf.animation.y)
     {
         return true;
@@ -100,9 +101,6 @@ void animation_reset(void)
 
     p->motion           = JUMP_OFF;
     p->pixel_count      = 0;
-    p->speed            = 0;
-    p->state            = 0;
-    p->time             = 0;
     p->jump_count       = 0;
 
     for (uint8_t i = 0; i < REALTIME_EFFECT_NUMBER; i++, r_effect++)
@@ -130,12 +128,12 @@ void jump_move(GameWrapper *const game)
 
     if (jump->pixel_count < 0)
     {
-        game->unit.pos.unity += 6;
+        game->unit.pos.unity += 8;
     }
     else
     {
-        jump->pixel_count -= 6;
-        game->unit.pos.unity -= 6;
+        jump->pixel_count -= 8;
+        game->unit.pos.unity -= 8;
     }
 }
 
@@ -170,8 +168,7 @@ void set_jump_status(GameWrapper *const game)
     JumpDB *jump = &jump_db;
     
     jump->motion = JUMP_ON;
-    jump->speed  = game->unit.action.jump_rise_speed;
-    jump->pixel_count = game->unit.action.jump_height;
+    jump->pixel_count = 115;
     jump->jump_count++;
 }
 

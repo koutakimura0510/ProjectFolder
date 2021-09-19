@@ -15,15 +15,6 @@
  * ジャンプ中の移動ピクセル数をカウント
  * pixel_count
  * 
- * 現在の速度を指定
- * speed
- * 
- * ジャンプ中の動作を判定
- * state
- * 
- * 滞空時間を指定
- * time
- * 
  * 地面に落ちずにジャンプした回数を保存
  * jump_count
  */
@@ -31,9 +22,6 @@ typedef struct Jump_db
 {
     bool     motion;
     int32_t  pixel_count;
-    uint32_t speed;
-    uint8_t  state;
-    uint32_t time;
     uint32_t jump_count;
 } JumpDB;
 
