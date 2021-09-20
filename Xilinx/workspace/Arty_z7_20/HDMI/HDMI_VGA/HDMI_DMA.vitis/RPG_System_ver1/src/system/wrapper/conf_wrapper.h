@@ -95,7 +95,7 @@ typedef struct event
 typedef struct display
 {
     uint32_t system;
-    uint8_t  sub_state;
+    uint32_t sub_state;
     uint8_t  drawtype;
     uint32_t uncommon_window;
 } DisplayConf;

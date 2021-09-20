@@ -9,9 +9,11 @@
 
 /* ウィンドウ描画のモードID */
 #define SYSTEM_OPENING_WINDOW		    (0)  	// オープニング描画
+#define SYSTEM_NEXT_SYSTEM_PIPE         (1000)  // バトルやミニゲーム突入時のパイプ処理
 #define SYSTEM_BATTLE_STATE				(4999)
 #define SYSTEM_BATTLE_ENEMY				(5000)	// バトル突入表示
 #define SYSTEM_BATTLE_RESULT			(5001)	// バトル終了表示
+#define SYSTEM_MINIGAME_STATE	        (7499)	// ミニゲームに移行
 #define SYSTEM_MINIGAME_WINDOW	        (7500)	// ミニゲーム表示
 #define SYSTEM_MAP_DEFAULT_WINDOW		(10000) // 通常表示
 #define SYSTEM_MAP_DARKENING_WINDOW		(10030)	// 徐々に暗転

@@ -155,6 +155,8 @@ static void barrage_minigame_title(GameWrapper *const game)
 		game->conf.animation.count = 0;
 		game->conf.event.id   	   = DIRECT_ROMEN_ID_EXIT;
 		game->conf.event.type 	   = EVENT_TYPE_WORLD_STATE_OTHER_MAP;		
+		game->unit.pos.animation_pixel_x    = ANIMATION_STORY_PIXEL_NUM;
+		game->unit.pos.animation_pixel_y    = ANIMATION_STORY_PIXEL_NUM;
 		break;
 
 	default:
@@ -245,7 +247,6 @@ static void barrage_unit_reset(GameWrapper *const game)
 	game->unit.draw.workpos    		= UNIT_WORK_TYPE_CENTER;
 	game->unit.draw.cutpos     		= UNIT_CUT_DOWN + game->unit.draw.chara_chipid;
 	game->unit.draw.mapchip_id 		= UNIT_WORK_TYPE_CENTER + game->unit.draw.cutpos;
-	game->unit.action.jump_count_number = 2;
 }
 
 

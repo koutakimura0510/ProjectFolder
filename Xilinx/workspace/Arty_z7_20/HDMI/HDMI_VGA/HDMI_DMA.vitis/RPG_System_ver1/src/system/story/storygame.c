@@ -92,8 +92,9 @@ static void system_standerd_window(GameWrapper *const game)
 
 	if (SW_B == sw)
 	{
-		game->conf.display.system = SYSTEM_MINIGAME_WINDOW;
 		cmd_db_reset(game, COMMAND_MINIGAME_SYSTEM, 0);
+		game->conf.display.system = SYSTEM_NEXT_SYSTEM_PIPE;
+		game->conf.display.sub_state = SYSTEM_MINIGAME_STATE;
 	}
 
 	if (CAN_MOVE == can)
@@ -142,6 +143,7 @@ static void system_state_nextwindow(GameWrapper *const game)
 	game->conf.display.system   = p->next_system;
 	game->conf.display.drawtype = p->next_draw_type;
 }
+
 
 /*
  * ver1. 2021/06/14
@@ -200,15 +202,31 @@ static void system_msg_window(GameWrapper *const game)
 }
 
 
-/*
- * ver1. 2021/06/27
- * 戦闘モードに移行するパイプ処理を行う
+/**
+ * @brief  特定のイベントモードに移行する際のパイプ処理を行う
+ * @note   今のところは戦闘モードとミニゲームモードの2種類のみである
+ * 
+ * @retval None
  */
-static void system_battle_state(GameWrapper *const game)
+static void system_next_pipe(GameWrapper *const game)
 {
 	patblt(game->conf.work.adr, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT, COLOR_BLACK);
 	frame_buffer_other_copy(game);
-	game->conf.display.system = SYSTEM_BATTLE_ENEMY;
+
+	switch (game->conf.display.sub_state)
+	{
+	case SYSTEM_BATTLE_STATE:
+		game->conf.display.system = SYSTEM_BATTLE_ENEMY;
+		break;
+
+	case SYSTEM_MINIGAME_STATE:
+		game->conf.display.system = SYSTEM_MINIGAME_WINDOW;
+		game->conf.display.sub_state = MINIGAME_START_LOAD_ID;	/* ミニゲームの状態遷移用にIDを設定しておく */
+		break;
+
+	default:
+		break;
+	}
 }
 
 

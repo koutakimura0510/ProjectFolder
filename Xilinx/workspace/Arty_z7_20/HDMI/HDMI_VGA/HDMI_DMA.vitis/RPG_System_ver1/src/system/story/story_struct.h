@@ -17,8 +17,8 @@ static void system_standerd_window(GameWrapper *const game);
 static void system_nextdata_reading(GameWrapper *const game);
 static void system_state_nextwindow(GameWrapper *const game);
 static void system_msg_window(GameWrapper *const game);
+static void system_next_pipe(GameWrapper *const game);
 static void system_battle_window(GameWrapper *const game);
-static void system_battle_state(GameWrapper *const game);
 static void system_minigame_window(GameWrapper *const game);
 static void system_menu_window(GameWrapper *const game);
 
@@ -43,7 +43,7 @@ static const SystemState system_state[] =
 	{SYSTEM_MAP_GRADUALLY_WINDOW, 	system_state_nextwindow,	},
 	{SYSTEM_SHOP_WINDOW,  			system_standerd_window,		},
 	{SYSTEM_MSG_WINDOW,  			system_msg_window,			},
-	{SYSTEM_BATTLE_STATE,  			system_battle_state,		},
+	{SYSTEM_NEXT_SYSTEM_PIPE,		system_next_pipe,			},
 	{SYSTEM_BATTLE_ENEMY,  			system_battle_window,		},
 	{SYSTEM_BATTLE_RESULT, 			system_standerd_window,		},
 	{SYSTEM_MINIGAME_WINDOW,		system_minigame_window		},

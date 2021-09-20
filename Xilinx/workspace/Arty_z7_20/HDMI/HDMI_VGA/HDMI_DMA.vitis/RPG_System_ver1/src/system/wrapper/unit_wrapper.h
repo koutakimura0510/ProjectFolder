@@ -20,13 +20,11 @@
  * @brief  ミニゲームのアニメーションのメンバを管理
  * @note   
  * 
- * @param  jump_count_number ジャンプの残り回数を保存
  * @param  bomb_number 爆弾の数を保存
  * @retval None
  */
 typedef struct unit_action
 {
-    uint8_t jump_count_number;
 	uint8_t  bomb_number;
 } UnitAction;
 

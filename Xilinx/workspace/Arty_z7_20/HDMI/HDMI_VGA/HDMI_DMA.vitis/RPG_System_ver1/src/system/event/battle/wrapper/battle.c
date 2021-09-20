@@ -67,11 +67,12 @@ bool battle_rush_state(GameWrapper *const game)
 
     if (10 < xorshift(encount))
     {
-        #ifdef MYDEBUG
+#ifdef MYDEBUG
         xil_printf("Encount! work = %d\n", game->unit.pos.encount >> MAPCHIP_SHIFT);
-        #endif
-        game->unit.pos.encount      = 0;
-        game->conf.display.system   = SYSTEM_BATTLE_STATE;
+#endif
+        game->unit.pos.encount       = 0;
+        game->conf.display.system    = SYSTEM_NEXT_SYSTEM_PIPE;
+        game->conf.display.sub_state = SYSTEM_BATTLE_STATE;
         battle_initialize(game);
         return ON_DIRECT;
     }

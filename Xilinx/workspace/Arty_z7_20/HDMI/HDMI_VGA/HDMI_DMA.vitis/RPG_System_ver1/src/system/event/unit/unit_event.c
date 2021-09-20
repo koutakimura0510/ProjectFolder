@@ -112,9 +112,8 @@ void unit_action_update(GameWrapper *const game, uint8_t sw)
 {
     if (SW_A & sw)
     {
-        if ((JUMP_OFF == get_jump_motion()) || (game->unit.action.jump_count_number != 0))
+        if (JUMP_OFF == get_jump_motion())
         {
-            game->unit.action.jump_count_number--;
             bgm_update(game, SOUND_ID_JUMP, SOUND_CH_EFFECT2_WORK);
             set_jump_status(game);
         }
@@ -439,7 +438,6 @@ static void adjust_unit_action(GameWrapper *const game)
 
     if (SIZE_UNIT_MAX_YDRAW <= game->unit.pos.unity)    /* ジャンプ時の画面下部の座標処理 */
     {
-        game->unit.action.jump_count_number = 2;
         set_jump_motion(JUMP_OFF);
     }
     
