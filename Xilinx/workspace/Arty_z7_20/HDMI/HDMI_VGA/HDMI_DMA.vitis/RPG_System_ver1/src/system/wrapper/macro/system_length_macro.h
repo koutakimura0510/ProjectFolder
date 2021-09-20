@@ -406,7 +406,18 @@ typedef enum
 typedef enum
 {
     NPC_SUB_MEMBER_MAP_ID,                  /* マップのID */
-    NPC_SUB_MEMBER_MAP_NPC_NUM,             /* NPCの連番*/
+    NPC_SUB_MEMBER_MAP_NPC_NUM_0,           /* NPCの連番*/
+    NPC_SUB_MEMBER_MAP_NPC_NUM_1,           /* NPCの連番*/
+    NPC_SUB_MEMBER_MAP_NPC_NUM_2,           /* NPCの連番*/
+    NPC_SUB_MEMBER_MAP_NPC_NUM_3,           /* NPCの連番*/
+    NPC_SUB_MEMBER_MAP_NPC_NUM_4,           /* NPCの連番*/
+    NPC_SUB_MEMBER_MAP_NPC_NUM_5,           /* NPCの連番*/
+    NPC_SUB_MEMBER_MAP_NPC_NUM_6,           /* NPCの連番*/
+    NPC_SUB_MEMBER_MAP_NPC_NUM_7,           /* NPCの連番*/
+    NPC_SUB_MEMBER_MAP_NPC_NUM_8,           /* NPCの連番*/
+    NPC_SUB_MEMBER_MAP_NPC_NUM_9,           /* NPCの連番*/
+    NPC_SUB_MEMBER_MAP_NPC_NUM_10,          /* NPCの連番*/
+    NPC_SUB_MEMBER_MAP_NUMBER,
 } NpcMapNUmber;
 
 typedef enum
@@ -425,6 +436,15 @@ typedef enum
     NPC_SUB_MEMBER_PATTERN_ACTION_PATTERN,  /* アニメーションの種類 */
     NPC_SUB_MEMBER_PATTERN_NUMBER,
 } NpcPatternNumber;
+
+typedef enum
+{
+    NPC_SUB_MEMBER_EVENT_MAP_NPCID,
+    NPC_SUB_MEMBER_EVENT_ID,
+    NPC_SUB_MEMBER_EVENT_FLAG,
+    NPC_SUB_MEMBER_EVENT_GET_FLAG,
+    NPC_SUB_MEMBER_EVENT_NUMBER,
+} NpcEventNumber;
 
 typedef enum
 {

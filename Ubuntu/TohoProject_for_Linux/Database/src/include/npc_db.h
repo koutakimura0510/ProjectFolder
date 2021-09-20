@@ -108,7 +108,7 @@ typedef struct npc_event_db
 	uint32_t map_npcid;
 	uint32_t event_id;
 	uint32_t event_flag;
-	uint32_t get_event_id;
+	uint32_t get_event_flag;
 } NpcEventDB;
 
 static const NpcEventDB npc_event_db[] = {

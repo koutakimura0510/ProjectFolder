@@ -22,5 +22,6 @@
 #include "system_length_macro.h"
 #include "npc_macro.h"
 #include "event_id_macro.h"
+#include "event_flag_macro.h"
 
 #endif
