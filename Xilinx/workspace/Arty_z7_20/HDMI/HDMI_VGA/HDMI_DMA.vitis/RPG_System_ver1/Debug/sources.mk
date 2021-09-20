@@ -42,6 +42,7 @@ src/system/event/item \
 src/system/event/map \
 src/system/event/menu \
 src/system/event/msg \
+src/system/event/npc \
 src/system/event/status \
 src/system/event/unit \
 src/system/hardware/fpga \

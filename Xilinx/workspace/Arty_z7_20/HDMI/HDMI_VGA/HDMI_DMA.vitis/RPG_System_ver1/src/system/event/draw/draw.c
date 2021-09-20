@@ -178,6 +178,7 @@ void nextdraw_ready(GameWrapper *const game)
     map_share_data(game, &map);
     map_another_data(game, &map, DRAW_TYPE_MAP);
     map_center_draw(game, &map);
+    npc_draw(game);
     player_draw(game);
     map_another_data(game, &map, DRAW_TYPE_OBJ);
     map_center_draw(game, &map);
@@ -204,6 +205,7 @@ static void map_draw(GameWrapper *const game)
             map_share_data(game, &map);
             map_another_data(game, &map, DRAW_TYPE_MAP);
 			state->map_window(game, &map);
+            npc_draw(game);
             player_draw(game);
             map_another_data(game, &map, DRAW_TYPE_OBJ);
 			state->map_window(game, &map);

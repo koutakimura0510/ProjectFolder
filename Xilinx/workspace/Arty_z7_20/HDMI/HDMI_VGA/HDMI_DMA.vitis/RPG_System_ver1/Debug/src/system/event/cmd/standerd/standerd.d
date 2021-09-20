@@ -20,6 +20,7 @@ src/system/event/cmd/standerd/standerd.o \
  ../src/system/event/cmd/standerd/../../../wrapper/macro/system_length_macro.h \
  ../src/system/event/cmd/standerd/../../../wrapper/macro/npc_macro.h \
  ../src/system/event/cmd/standerd/../../../wrapper/macro/event_id_macro.h \
+ ../src/system/event/cmd/standerd/../../../wrapper/macro/event_flag_macro.h \
  ../src/system/event/cmd/standerd/../../../wrapper/hero_wrapper.h \
  ../src/system/event/cmd/standerd/../../../wrapper/unit_wrapper.h \
  ../src/system/event/cmd/standerd/../../../wrapper/mapchip_wrapper.h \
@@ -27,6 +28,7 @@ src/system/event/cmd/standerd/standerd.o \
  ../src/system/event/cmd/standerd/../../../wrapper/battle_conf.h \
  ../src/system/event/cmd/standerd/../../../wrapper/cmd_wrapper.h \
  ../src/system/event/cmd/standerd/../../../wrapper/enemy_wrapper.h \
+ ../src/system/event/cmd/standerd/../../../wrapper/npc_wrapper.h \
  ../src/system/event/cmd/standerd/../../../wrapper/sdl_wrapper.h \
  ../src/system/event/cmd/standerd/../../../wrapper/../calc/calc_func.h \
  ../src/system/event/cmd/standerd/../../../wrapper/../calc/calc.h \
@@ -41,6 +43,7 @@ src/system/event/cmd/standerd/standerd.o \
  ../src/system/event/cmd/standerd/../../../wrapper/../hardware/wrapper/../sound/dtm_macro.h \
  ../src/system/event/cmd/standerd/../../../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/event_local.h \
+ ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../npc/npc_macro.h \
  ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../draw/detection_macro.h \
  ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../draw/draw_macro.h \
  ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../unit/unit_event_macro.h \
@@ -49,6 +52,7 @@ src/system/event/cmd/standerd/standerd.o \
  ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../animation/animation_macro.h \
  ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../status/status_macro.h \
  ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../menu/menu_macro.h \
+ ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../npc/npc_func.h \
  ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../exp/exp_func.h \
  ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../draw/draw_func.h \
  ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../direct/direct_func.h \
@@ -108,6 +112,8 @@ src/system/event/cmd/standerd/standerd.o \
 
 ../src/system/event/cmd/standerd/../../../wrapper/macro/event_id_macro.h:
 
+../src/system/event/cmd/standerd/../../../wrapper/macro/event_flag_macro.h:
+
 ../src/system/event/cmd/standerd/../../../wrapper/hero_wrapper.h:
 
 ../src/system/event/cmd/standerd/../../../wrapper/unit_wrapper.h:
@@ -121,6 +127,8 @@ src/system/event/cmd/standerd/standerd.o \
 ../src/system/event/cmd/standerd/../../../wrapper/cmd_wrapper.h:
 
 ../src/system/event/cmd/standerd/../../../wrapper/enemy_wrapper.h:
+
+../src/system/event/cmd/standerd/../../../wrapper/npc_wrapper.h:
 
 ../src/system/event/cmd/standerd/../../../wrapper/sdl_wrapper.h:
 
@@ -150,6 +158,8 @@ src/system/event/cmd/standerd/standerd.o \
 
 ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/event_local.h:
 
+../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../npc/npc_macro.h:
+
 ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../draw/detection_macro.h:
 
 ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../draw/draw_macro.h:
@@ -165,6 +175,8 @@ src/system/event/cmd/standerd/standerd.o \
 ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../status/status_macro.h:
 
 ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../menu/menu_macro.h:
+
+../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../npc/npc_func.h:
 
 ../src/system/event/cmd/standerd/../../../wrapper/../event/wrapper/../exp/exp_func.h:
 

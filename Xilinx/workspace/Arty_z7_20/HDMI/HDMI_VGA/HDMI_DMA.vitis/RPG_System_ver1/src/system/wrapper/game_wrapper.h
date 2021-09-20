@@ -39,6 +39,7 @@
 #include "conf_wrapper.h"
 #include "cmd_wrapper.h"
 #include "enemy_wrapper.h"
+#include "npc_wrapper.h"
 
 /*TODO システム構造体も、ファイルの命令に従ってDRAMにデータを保存するように変更する予定である。
  * 保存したデータのアドレスでアクセスする形になる。
@@ -61,6 +62,7 @@ typedef struct game
     CmdWrapper  cmd;
     HeroWrapper hero[HERO_NUMBER];
     EnemyWrapper enemy[BATTLE_ENEMY_NUMBER];
+    NpcWrapper  npc;
 } GameWrapper;
 
 

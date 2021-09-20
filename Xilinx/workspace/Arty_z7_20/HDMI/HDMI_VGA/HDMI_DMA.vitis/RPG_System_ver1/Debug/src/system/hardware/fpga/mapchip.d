@@ -40,6 +40,7 @@ src/system/hardware/fpga/mapchip.o src/system/hardware/fpga/mapchip.o: \
  ../src/system/hardware/fpga/../../wrapper/macro/system_length_macro.h \
  ../src/system/hardware/fpga/../../wrapper/macro/npc_macro.h \
  ../src/system/hardware/fpga/../../wrapper/macro/event_id_macro.h \
+ ../src/system/hardware/fpga/../../wrapper/macro/event_flag_macro.h \
  ../src/system/hardware/fpga/../../wrapper/hero_wrapper.h \
  ../src/system/hardware/fpga/../../wrapper/unit_wrapper.h \
  ../src/system/hardware/fpga/../../wrapper/mapchip_wrapper.h \
@@ -47,6 +48,7 @@ src/system/hardware/fpga/mapchip.o src/system/hardware/fpga/mapchip.o: \
  ../src/system/hardware/fpga/../../wrapper/battle_conf.h \
  ../src/system/hardware/fpga/../../wrapper/cmd_wrapper.h \
  ../src/system/hardware/fpga/../../wrapper/enemy_wrapper.h \
+ ../src/system/hardware/fpga/../../wrapper/npc_wrapper.h \
  ../src/system/hardware/fpga/../../wrapper/sdl_wrapper.h \
  ../src/system/hardware/fpga/../../wrapper/../calc/calc_func.h \
  ../src/system/hardware/fpga/../../wrapper/../calc/calc.h \
@@ -61,6 +63,7 @@ src/system/hardware/fpga/mapchip.o src/system/hardware/fpga/mapchip.o: \
  ../src/system/hardware/fpga/../../wrapper/../hardware/wrapper/../sound/dtm_macro.h \
  ../src/system/hardware/fpga/../../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/hardware/fpga/../../wrapper/../event/wrapper/event_local.h \
+ ../src/system/hardware/fpga/../../wrapper/../event/wrapper/../npc/npc_macro.h \
  ../src/system/hardware/fpga/../../wrapper/../event/wrapper/../draw/detection_macro.h \
  ../src/system/hardware/fpga/../../wrapper/../event/wrapper/../draw/draw_macro.h \
  ../src/system/hardware/fpga/../../wrapper/../event/wrapper/../unit/unit_event_macro.h \
@@ -69,6 +72,7 @@ src/system/hardware/fpga/mapchip.o src/system/hardware/fpga/mapchip.o: \
  ../src/system/hardware/fpga/../../wrapper/../event/wrapper/../animation/animation_macro.h \
  ../src/system/hardware/fpga/../../wrapper/../event/wrapper/../status/status_macro.h \
  ../src/system/hardware/fpga/../../wrapper/../event/wrapper/../menu/menu_macro.h \
+ ../src/system/hardware/fpga/../../wrapper/../event/wrapper/../npc/npc_func.h \
  ../src/system/hardware/fpga/../../wrapper/../event/wrapper/../exp/exp_func.h \
  ../src/system/hardware/fpga/../../wrapper/../event/wrapper/../draw/draw_func.h \
  ../src/system/hardware/fpga/../../wrapper/../event/wrapper/../direct/direct_func.h \
@@ -172,6 +176,8 @@ src/system/hardware/fpga/mapchip.o src/system/hardware/fpga/mapchip.o: \
 
 ../src/system/hardware/fpga/../../wrapper/macro/event_id_macro.h:
 
+../src/system/hardware/fpga/../../wrapper/macro/event_flag_macro.h:
+
 ../src/system/hardware/fpga/../../wrapper/hero_wrapper.h:
 
 ../src/system/hardware/fpga/../../wrapper/unit_wrapper.h:
@@ -185,6 +191,8 @@ src/system/hardware/fpga/mapchip.o src/system/hardware/fpga/mapchip.o: \
 ../src/system/hardware/fpga/../../wrapper/cmd_wrapper.h:
 
 ../src/system/hardware/fpga/../../wrapper/enemy_wrapper.h:
+
+../src/system/hardware/fpga/../../wrapper/npc_wrapper.h:
 
 ../src/system/hardware/fpga/../../wrapper/sdl_wrapper.h:
 
@@ -214,6 +222,8 @@ src/system/hardware/fpga/mapchip.o src/system/hardware/fpga/mapchip.o: \
 
 ../src/system/hardware/fpga/../../wrapper/../event/wrapper/event_local.h:
 
+../src/system/hardware/fpga/../../wrapper/../event/wrapper/../npc/npc_macro.h:
+
 ../src/system/hardware/fpga/../../wrapper/../event/wrapper/../draw/detection_macro.h:
 
 ../src/system/hardware/fpga/../../wrapper/../event/wrapper/../draw/draw_macro.h:
@@ -229,6 +239,8 @@ src/system/hardware/fpga/mapchip.o src/system/hardware/fpga/mapchip.o: \
 ../src/system/hardware/fpga/../../wrapper/../event/wrapper/../status/status_macro.h:
 
 ../src/system/hardware/fpga/../../wrapper/../event/wrapper/../menu/menu_macro.h:
+
+../src/system/hardware/fpga/../../wrapper/../event/wrapper/../npc/npc_func.h:
 
 ../src/system/hardware/fpga/../../wrapper/../event/wrapper/../exp/exp_func.h:
 

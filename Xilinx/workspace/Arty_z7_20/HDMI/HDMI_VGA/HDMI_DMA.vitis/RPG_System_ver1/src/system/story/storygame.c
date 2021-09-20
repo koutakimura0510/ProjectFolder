@@ -154,6 +154,7 @@ static void system_state_nextwindow(GameWrapper *const game)
 static void system_nextdata_reading(GameWrapper *const game)
 {
 	next_stage_update(game);
+	npc_config(game);
 
 	switch (game->conf.display.system)
 	{

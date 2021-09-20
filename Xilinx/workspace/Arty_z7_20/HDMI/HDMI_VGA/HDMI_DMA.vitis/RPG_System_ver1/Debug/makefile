@@ -18,6 +18,7 @@ RM := rm -rf
 -include src/system/hardware/fpga/subdir.mk
 -include src/system/event/unit/subdir.mk
 -include src/system/event/status/subdir.mk
+-include src/system/event/npc/subdir.mk
 -include src/system/event/msg/subdir.mk
 -include src/system/event/menu/subdir.mk
 -include src/system/event/map/subdir.mk

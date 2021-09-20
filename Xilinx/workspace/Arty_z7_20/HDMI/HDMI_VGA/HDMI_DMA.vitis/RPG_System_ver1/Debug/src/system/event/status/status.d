@@ -19,6 +19,7 @@ src/system/event/status/status.o src/system/event/status/status.o: \
  ../src/system/event/status/../../wrapper/macro/system_length_macro.h \
  ../src/system/event/status/../../wrapper/macro/npc_macro.h \
  ../src/system/event/status/../../wrapper/macro/event_id_macro.h \
+ ../src/system/event/status/../../wrapper/macro/event_flag_macro.h \
  ../src/system/event/status/../../wrapper/hero_wrapper.h \
  ../src/system/event/status/../../wrapper/unit_wrapper.h \
  ../src/system/event/status/../../wrapper/mapchip_wrapper.h \
@@ -26,6 +27,7 @@ src/system/event/status/status.o src/system/event/status/status.o: \
  ../src/system/event/status/../../wrapper/battle_conf.h \
  ../src/system/event/status/../../wrapper/cmd_wrapper.h \
  ../src/system/event/status/../../wrapper/enemy_wrapper.h \
+ ../src/system/event/status/../../wrapper/npc_wrapper.h \
  ../src/system/event/status/../../wrapper/sdl_wrapper.h \
  ../src/system/event/status/../../wrapper/../calc/calc_func.h \
  ../src/system/event/status/../../wrapper/../calc/calc.h \
@@ -40,6 +42,7 @@ src/system/event/status/status.o src/system/event/status/status.o: \
  ../src/system/event/status/../../wrapper/../hardware/wrapper/../sound/dtm_macro.h \
  ../src/system/event/status/../../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/event/status/../../wrapper/../event/wrapper/event_local.h \
+ ../src/system/event/status/../../wrapper/../event/wrapper/../npc/npc_macro.h \
  ../src/system/event/status/../../wrapper/../event/wrapper/../draw/detection_macro.h \
  ../src/system/event/status/../../wrapper/../event/wrapper/../draw/draw_macro.h \
  ../src/system/event/status/../../wrapper/../event/wrapper/../unit/unit_event_macro.h \
@@ -48,6 +51,7 @@ src/system/event/status/status.o src/system/event/status/status.o: \
  ../src/system/event/status/../../wrapper/../event/wrapper/../animation/animation_macro.h \
  ../src/system/event/status/../../wrapper/../event/wrapper/../status/status_macro.h \
  ../src/system/event/status/../../wrapper/../event/wrapper/../menu/menu_macro.h \
+ ../src/system/event/status/../../wrapper/../event/wrapper/../npc/npc_func.h \
  ../src/system/event/status/../../wrapper/../event/wrapper/../exp/exp_func.h \
  ../src/system/event/status/../../wrapper/../event/wrapper/../draw/draw_func.h \
  ../src/system/event/status/../../wrapper/../event/wrapper/../direct/direct_func.h \
@@ -106,6 +110,8 @@ src/system/event/status/status.o src/system/event/status/status.o: \
 
 ../src/system/event/status/../../wrapper/macro/event_id_macro.h:
 
+../src/system/event/status/../../wrapper/macro/event_flag_macro.h:
+
 ../src/system/event/status/../../wrapper/hero_wrapper.h:
 
 ../src/system/event/status/../../wrapper/unit_wrapper.h:
@@ -119,6 +125,8 @@ src/system/event/status/status.o src/system/event/status/status.o: \
 ../src/system/event/status/../../wrapper/cmd_wrapper.h:
 
 ../src/system/event/status/../../wrapper/enemy_wrapper.h:
+
+../src/system/event/status/../../wrapper/npc_wrapper.h:
 
 ../src/system/event/status/../../wrapper/sdl_wrapper.h:
 
@@ -148,6 +156,8 @@ src/system/event/status/status.o src/system/event/status/status.o: \
 
 ../src/system/event/status/../../wrapper/../event/wrapper/event_local.h:
 
+../src/system/event/status/../../wrapper/../event/wrapper/../npc/npc_macro.h:
+
 ../src/system/event/status/../../wrapper/../event/wrapper/../draw/detection_macro.h:
 
 ../src/system/event/status/../../wrapper/../event/wrapper/../draw/draw_macro.h:
@@ -163,6 +173,8 @@ src/system/event/status/status.o src/system/event/status/status.o: \
 ../src/system/event/status/../../wrapper/../event/wrapper/../status/status_macro.h:
 
 ../src/system/event/status/../../wrapper/../event/wrapper/../menu/menu_macro.h:
+
+../src/system/event/status/../../wrapper/../event/wrapper/../npc/npc_func.h:
 
 ../src/system/event/status/../../wrapper/../event/wrapper/../exp/exp_func.h:
 

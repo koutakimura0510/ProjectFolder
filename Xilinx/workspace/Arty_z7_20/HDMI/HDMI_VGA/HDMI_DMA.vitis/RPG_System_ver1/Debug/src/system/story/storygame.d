@@ -19,6 +19,7 @@ src/system/story/storygame.o src/system/story/storygame.o: \
  ../src/system/story/../wrapper/macro/system_length_macro.h \
  ../src/system/story/../wrapper/macro/npc_macro.h \
  ../src/system/story/../wrapper/macro/event_id_macro.h \
+ ../src/system/story/../wrapper/macro/event_flag_macro.h \
  ../src/system/story/../wrapper/hero_wrapper.h \
  ../src/system/story/../wrapper/unit_wrapper.h \
  ../src/system/story/../wrapper/mapchip_wrapper.h \
@@ -26,6 +27,7 @@ src/system/story/storygame.o src/system/story/storygame.o: \
  ../src/system/story/../wrapper/battle_conf.h \
  ../src/system/story/../wrapper/cmd_wrapper.h \
  ../src/system/story/../wrapper/enemy_wrapper.h \
+ ../src/system/story/../wrapper/npc_wrapper.h \
  ../src/system/story/../wrapper/sdl_wrapper.h \
  ../src/system/story/../wrapper/../calc/calc_func.h \
  ../src/system/story/../wrapper/../calc/calc.h \
@@ -40,6 +42,7 @@ src/system/story/storygame.o src/system/story/storygame.o: \
  ../src/system/story/../wrapper/../hardware/wrapper/../sound/dtm_macro.h \
  ../src/system/story/../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/story/../wrapper/../event/wrapper/event_local.h \
+ ../src/system/story/../wrapper/../event/wrapper/../npc/npc_macro.h \
  ../src/system/story/../wrapper/../event/wrapper/../draw/detection_macro.h \
  ../src/system/story/../wrapper/../event/wrapper/../draw/draw_macro.h \
  ../src/system/story/../wrapper/../event/wrapper/../unit/unit_event_macro.h \
@@ -48,6 +51,7 @@ src/system/story/storygame.o src/system/story/storygame.o: \
  ../src/system/story/../wrapper/../event/wrapper/../animation/animation_macro.h \
  ../src/system/story/../wrapper/../event/wrapper/../status/status_macro.h \
  ../src/system/story/../wrapper/../event/wrapper/../menu/menu_macro.h \
+ ../src/system/story/../wrapper/../event/wrapper/../npc/npc_func.h \
  ../src/system/story/../wrapper/../event/wrapper/../exp/exp_func.h \
  ../src/system/story/../wrapper/../event/wrapper/../draw/draw_func.h \
  ../src/system/story/../wrapper/../event/wrapper/../direct/direct_func.h \
@@ -107,6 +111,8 @@ src/system/story/storygame.o src/system/story/storygame.o: \
 
 ../src/system/story/../wrapper/macro/event_id_macro.h:
 
+../src/system/story/../wrapper/macro/event_flag_macro.h:
+
 ../src/system/story/../wrapper/hero_wrapper.h:
 
 ../src/system/story/../wrapper/unit_wrapper.h:
@@ -120,6 +126,8 @@ src/system/story/storygame.o src/system/story/storygame.o: \
 ../src/system/story/../wrapper/cmd_wrapper.h:
 
 ../src/system/story/../wrapper/enemy_wrapper.h:
+
+../src/system/story/../wrapper/npc_wrapper.h:
 
 ../src/system/story/../wrapper/sdl_wrapper.h:
 
@@ -149,6 +157,8 @@ src/system/story/storygame.o src/system/story/storygame.o: \
 
 ../src/system/story/../wrapper/../event/wrapper/event_local.h:
 
+../src/system/story/../wrapper/../event/wrapper/../npc/npc_macro.h:
+
 ../src/system/story/../wrapper/../event/wrapper/../draw/detection_macro.h:
 
 ../src/system/story/../wrapper/../event/wrapper/../draw/draw_macro.h:
@@ -164,6 +174,8 @@ src/system/story/storygame.o src/system/story/storygame.o: \
 ../src/system/story/../wrapper/../event/wrapper/../status/status_macro.h:
 
 ../src/system/story/../wrapper/../event/wrapper/../menu/menu_macro.h:
+
+../src/system/story/../wrapper/../event/wrapper/../npc/npc_func.h:
 
 ../src/system/story/../wrapper/../event/wrapper/../exp/exp_func.h:
 
