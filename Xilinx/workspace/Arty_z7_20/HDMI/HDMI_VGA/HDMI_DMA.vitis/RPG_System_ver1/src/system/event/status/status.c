@@ -190,7 +190,8 @@ void equip_ref_update(GameWrapper *const game, uint8_t hero_id)
 	game->hero[hero_id].equip.enchant.agi = enchant.fit_status[4];
 	game->hero[hero_id].equip.element.weapon = fetch_dram_db(game, MEMORY_ELEMENT_WEAPON_ID, game->hero[hero_id].equip.weapon, WEAPON_ELEMENT_SUB_MEMBER_TYPE_BIT);
 	game->hero[hero_id].equip.element.armor  = fetch_dram_db(game, MEMORY_ELEMENT_ARMOR_ID, game->hero[hero_id].equip.armor, ARMOR_ELEMENT_SUB_MEMBER_TYPE_BIT) | fetch_dram_db(game, MEMORY_ELEMENT_AMULET_ID, game->hero[hero_id].equip.amulet, AMULET_ELEMENT_SUB_MEMBER_TYPE_BIT);
-	game->hero[hero_id].equip.condition      = fetch_dram_db(game, MEMORY_ELEMENT_AMULET_ID, game->hero[hero_id].equip.amulet, AMULET_ELEMENT_SUB_MEMBER_CONDI_BIT);
+	// game->hero[hero_id].equip.condition      = fetch_dram_db(game, MEMORY_ELEMENT_AMULET_ID, game->hero[hero_id].equip.amulet, AMULET_ELEMENT_SUB_MEMBER_CONDI_BIT);
+	game->hero[hero_id].battle.condition     = fetch_dram_db(game, MEMORY_ELEMENT_AMULET_ID, game->hero[hero_id].equip.amulet, AMULET_ELEMENT_SUB_MEMBER_CONDI_BIT);
 }
 
 
