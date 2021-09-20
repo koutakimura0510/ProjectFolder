@@ -18,6 +18,7 @@
 
 
 /* マクロ定数を定義 */
+#include "../npc/npc_macro.h"
 #include "../draw/detection_macro.h"
 #include "../draw/draw_macro.h"
 #include "../unit/unit_event_macro.h"
@@ -30,6 +31,7 @@
 
 
 /* フォルダ全体で共有する関数ファイルを宣言 */
+#include "../npc/npc_func.h"
 #include "../exp/exp_func.h"
 #include "../draw/draw_func.h"
 #include "../direct/direct_func.h"

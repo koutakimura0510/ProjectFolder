@@ -16,9 +16,10 @@
  * @note   
  * @retval None
  */
-typedef enum
+typedef enum romen_flag_bit
 {
-    
-} RomenFlagBit;
+    ROMEN_KANBAN_READ = 1,
+    ROMEN_BOSS_DYE = 2,
+} Romen_Flag_Bit;
 
 #endif

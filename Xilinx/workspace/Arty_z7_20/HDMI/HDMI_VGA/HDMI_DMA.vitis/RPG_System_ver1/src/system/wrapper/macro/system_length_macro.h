@@ -35,7 +35,7 @@
 #define COS_TABLE_MAX               (361)
 
 /* NPCの連番データベースの行数 */
-#define NPC_PATTERN_DB_COL          (2)
+#define NPC_PATTERN_DB_COL          (3)
 
 /* 属性データベースの行数 */
 #define UNIT_RES_SIZE               (19)
@@ -78,6 +78,7 @@ typedef enum
     MEMORY_ITEM_CONDITION_ID,   //アイテムの状態異常の効果データファイル
     MEMORY_NPC_MAP_ID,          //npcの描画番号
     MEMORY_NPC_PATTERN_ID,      //npcの行動パターンファイル
+    MEMORY_NPC_EVENT_ID,        //npcのイベントデータファイル
     MEMORY_NPC_BITMAP_ID,       //npcの画像データファイル
     MEMORY_SIN_ID,              //sinのデータテーブル 0~360の計361個ある
     MEMORY_COS_ID,              //cosのデータテーブル 0~360の計361個ある

@@ -44,6 +44,7 @@ static const FuncFile funcfile[] = {
 	{"./raw/item_condition.raw",	item_condition_write	},
 	{"./raw/npc_map.raw",			npc_map_write	 		},
 	{"./raw/npc_pattern.raw",		npc_pattern_write		},
+	{"./raw/npc_event.raw",			npc_event_write			},
 	{"./raw/npc_bitmap.raw",		npc_bitmap_write 		},
 	{"./raw/sin.raw",				sin_write				},
 	{"./raw/cos.raw",				cos_write				},

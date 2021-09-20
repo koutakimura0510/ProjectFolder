@@ -13,6 +13,7 @@
 /* データベースの要素数 */
 #define NPC_MAP_DB_SIZE   	 ((sizeof (npc_map_db))		/ (sizeof (NpcMapDB)))
 #define NPC_BITMAP_DB_SIZE   ((sizeof (npc_bitmap_db))	/ (sizeof (NpcBitmapDB)))
+#define NPC_EVENT_DB_SIZE    ((sizeof (npc_event_db))	/ (sizeof (NpcEventDB)))
 #define NPC_PATTERN_DB_SIZE  ((sizeof (npc_pattern_db)) / (sizeof (NpcPatternDB)))
 
 
@@ -112,9 +113,9 @@ typedef struct npc_event_db
 } NpcEventDB;
 
 static const NpcEventDB npc_event_db[] = {
-	{ROMEN_NPC_ID_1, FLAG_NPC_MSG_EVENT,	1000, 0,	},
-	{ROMEN_NPC_ID_2, FLAG_NPC_MSG_EVENT,	1000, 0,	},
-	{ROMEN_NPC_ID_3, FLAG_NPC_MSG_CONTINUE,	1000, 0,	},
+	{ ROMEN_NPC_ID_1, FLAG_NPC_MSG_EVENT,    ROMEN_BOSS_DYE, 0, },
+	{ ROMEN_NPC_ID_2, FLAG_NPC_MSG_EVENT,    ROMEN_BOSS_DYE, 0, },
+	{ ROMEN_NPC_ID_3, FLAG_NPC_MSG_CONTINUE, ROMEN_BOSS_DYE, 0, },
 };
 
 
@@ -157,7 +158,7 @@ void npc_map_write(FILE *fp, FILE *byte)
 			fprintf(fp, "0x%08x,\n", p->npc_number[j]);
 		}
 
-		for (uint32_t j = 0; j < NPC_SUB_MEMBER_MAP_NPC_NUM + NPC_MAX_DRAW_NUM; j++)
+		for (uint32_t j = 0; j < 1 + NPC_MAX_DRAW_NUM; j++)
 		{
 			fprintf(byte, "0x%08x,\n", 1);
 		}
@@ -201,6 +202,30 @@ void npc_pattern_write(FILE *fp, FILE *byte)
 	}
 
 	printf("NPC PATTERN TOTAL NUMBER = %ld\n", NPC_PATTERN_DB_SIZE);
+}
+
+
+/*
+ * npcの行動パターンの書き出し
+ */
+void npc_event_write(FILE *fp, FILE *byte)
+{
+	const NpcEventDB *p = npc_event_db;
+
+	for (uint32_t i = 0; i < NPC_EVENT_DB_SIZE; i++, p++)
+	{
+		fprintf(fp, "0x%08x,\n", p->map_npcid);
+		fprintf(fp, "0x%08x,\n", p->event_id);
+		fprintf(fp, "0x%08x,\n", p->event_flag);
+		fprintf(fp, "0x%08x,\n", p->get_event_flag);
+
+		for (uint32_t j = 0; j < NPC_SUB_MEMBER_EVENT_NUMBER; j++)
+		{
+			fprintf(byte, "0x%08x,\n", 1);
+		}
+	}
+
+	printf("NPC EVENT TOTAL NUMBER = %ld\n", NPC_EVENT_DB_SIZE);
 }
 
 
