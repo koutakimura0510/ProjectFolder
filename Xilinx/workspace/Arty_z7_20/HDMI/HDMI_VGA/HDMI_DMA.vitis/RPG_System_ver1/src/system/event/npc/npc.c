@@ -42,8 +42,6 @@ void npc_config(GameWrapper *const game)
 void npc_draw(GameWrapper *const game)
 {
     game->mapchip.frame_size = VIDEO_WIDTH;
-    game->mapchip.xstart_pos = 0;
-    game->mapchip.ystart_pos = 0;
     game->mapchip.alpha		 = 255;
     game->mapchip.srcin      = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_SRCIN);
     game->mapchip.maxwidth	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_XSIZE);
@@ -53,6 +51,8 @@ void npc_draw(GameWrapper *const game)
 
     for (uint8_t i = 0; i < game->npc.number; i++)
     {
+        game->mapchip.xstart_pos = 0;
+        game->mapchip.ystart_pos = 0;
         game->mapchip.id     = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[i], NPC_SUB_MEMBER_BITMAP_MAPCHIPID);
         game->mapchip.dstin  = game->conf.work.adr + XRGB(game->npc.xpos[i]) + YRGB(game->npc.ypos[i]);
         game->mapchip.dstout = game->mapchip.dstin;

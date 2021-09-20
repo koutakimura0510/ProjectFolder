@@ -16,6 +16,7 @@
  */
 typedef enum
 {
+    EVENT_ID_START,
     ROMEN_NPC_ID_1,
     ROMEN_NPC_ID_2,
     ROMEN_NPC_ID_3,
