@@ -19,6 +19,9 @@
 *.bmp
 *.elf
 *.size
+*.xpr
+*.wpc
+*.lpr
 
 # TohoProjectのworkspaceのみgitに反映させる
 Xilinx/*
@@ -37,6 +40,7 @@ Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/*
 # PWM回路反映
 !Xilinx/workspace/Arty_z7_20/PWM/
 Xilinx/workspace/Arty_z7_20/PWM/*
+!Xilinx/workspace/Arty_z7_20/PWM/pwm_deep/
 
 # Vitis_HLSの画像処理回路は反映させる
 !Xilinx/workspace/Arty_z7_20/Vitis_HLS/
