@@ -22,6 +22,12 @@
 *.xpr
 *.wpc
 *.lpr
+*.xml
+*.rst
+*.pb
+*.rpt
+*.rpx
+*.dcp
 
 # TohoProjectのworkspaceのみgitに反映させる
 Xilinx/*
@@ -41,6 +47,16 @@ Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/*
 !Xilinx/workspace/Arty_z7_20/PWM/
 Xilinx/workspace/Arty_z7_20/PWM/*
 !Xilinx/workspace/Arty_z7_20/PWM/pwm_deep/
+
+# I2S回路反映
+!Xilinx/workspace/Arty_z7_20/SOUND/
+Xilinx/workspace/Arty_z7_20/SOUND/*
+!Xilinx/workspace/Arty_z7_20/SOUND/I2S/
+Xilinx/workspace/Arty_z7_20/SOUND/I2S/*
+!Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/
+Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/*
+!Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/I2S_OUTPUT.srcs/
+# Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/I2S_OUTPUT.srcs/*
 
 # Vitis_HLSの画像処理回路は反映させる
 !Xilinx/workspace/Arty_z7_20/Vitis_HLS/
