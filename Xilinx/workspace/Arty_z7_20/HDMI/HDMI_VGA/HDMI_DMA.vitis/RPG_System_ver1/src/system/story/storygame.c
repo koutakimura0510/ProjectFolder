@@ -167,11 +167,15 @@ static void system_nextdata_reading(GameWrapper *const game)
 		sd_fread(game->conf.file.mapchip);
 		sd_fread(game->conf.file.mapdata);
 		sd_fread(game->conf.file.object);
+		sd_fread(game->conf.file.region);
+		sd_fread(game->conf.file.npc);
 		break;
 
 	case SYSTEM_NEXT_SUBMAP_READING:
 		sd_fread(game->conf.file.mapdata);
 		sd_fread(game->conf.file.object);
+		sd_fread(game->conf.file.region);
+		sd_fread(game->conf.file.npc);
 		break;
 
 	default:

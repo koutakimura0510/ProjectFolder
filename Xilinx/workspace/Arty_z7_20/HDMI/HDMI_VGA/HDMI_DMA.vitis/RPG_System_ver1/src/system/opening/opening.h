@@ -96,6 +96,8 @@ static const uint8_t bitmap_init[] =
 	/* マップデータの配列ID */
 	FILE_ACCESS_MAPDATA_GEKAI,
 	FILE_ACCESS_MAPDATA_GEKAI_OBJECT,
+	FILE_ACCESS_MAPDATA_GEKAI_REGION,
+	FILE_ACCESS_MAPDATA_GEKAI_NPC,
 
 	/* 基本アイコン、今のところ小中サイズ */
 	FILE_ACCESS_BACK_ICON,

@@ -288,7 +288,9 @@
 #define DRAM_FONT_DAMEGE_ADDR_BASE	  		(DRAM_FONT_SJIS_ADDR_BASE + (144 * 7901 * 4))	// ダメージフォント
 #define DRAM_FONT_HEAL_ADDR_BASE	  		(DRAM_FONT_DAMEGE_ADDR_BASE + (104 * 16 * 4))	// 回復フォント
 #define DRAM_MAPDATA_ADDR_BASE		  		(DRAM_FONT_HEAL_ADDR_BASE + (104 * 16 * 4))	    // マップデータの背景画像
-#define DRAM_MAPDATA_OBJECT_ADDR_BASE 		(DRAM_MAPDATA_ADDR_BASE + (250 * 250 * 4))		// マップデータのオブジェクト
+#define DRAM_MAPDATA_OBJECT_ADDR_BASE 		(DRAM_MAPDATA_ADDR_BASE   + (250 * 250 * 4))		// マップデータのオブジェクト
+#define DRAM_MAPDATA_REGION_ADDR_BASE 		(DRAM_MAPDATA_OBJECT_ADDR_BASE + (250 * 250 * 4))	// リージョンマップID
+#define DRAM_MAPDATA_NPC_ADDR_BASE   		(DRAM_MAPDATA_REGION_ADDR_BASE + (250 * 250 * 4))	// マップNPC配置ID
 
 
 /* イベントフラグ管理領域 */
@@ -328,6 +330,8 @@
 /* マップの背景とオブジェクト */
 #define DRAM_MAPDATA_ADDR_START     			(uint32_t *)(DRAM_MAPDATA_ADDR_BASE)
 #define DRAM_MAPDATA_OBJECT_ADDR_START 			(uint32_t *)(DRAM_MAPDATA_OBJECT_ADDR_BASE)
+#define DRAM_MAPDATA_REGION_ADDR_START 			(uint32_t *)(DRAM_MAPDATA_REGION_ADDR_BASE)
+#define DRAM_MAPDATA_NPC_ADDR_START 			(uint32_t *)(DRAM_MAPDATA_NPC_ADDR_BASE)
 
 
 /* カラーパレットとコピー領域 */

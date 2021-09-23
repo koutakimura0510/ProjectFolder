@@ -67,6 +67,8 @@ typedef struct world_event
 	uint32_t event_type;
 	uint32_t next_file_mapdata_id;
 	uint32_t next_file_object_id;
+	uint32_t next_file_region_id;
+	uint32_t next_file_npc_id;
 	uint32_t next_file_mapchip_id;
 	uint32_t next_file_bgm_id;
 	uint32_t next_map;
@@ -86,6 +88,8 @@ static const WorldEvent world_event[] =
 		EVENT_TYPE_DANGEON_MOVE,
 		FILE_ACCESS_MAPDATA_MINIGAME,
 		FILE_ACCESS_MAPDATA_MINIGAME,
+		FILE_ACCESS_MAPDATA_MINIGAME,
+		FILE_ACCESS_MAPDATA_MINIGAME,
 		FILE_ACCESS_CHIP_MINIGAME,
 		SOUND_ID_FIELD_GEKAI,
 		ROMEN_DANGEON_ID,
@@ -97,6 +101,8 @@ static const WorldEvent world_event[] =
 		EVENT_TYPE_SUBMAP_MOVE,
 		FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE,
 		FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_OBJECT,
+		FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_REGION,
+		FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_NPC,
 		FILE_ACCESS_CHIP_ROMEN_VIRRAGE,
 		SOUND_ID_MURA_1,
 		ROMEN_VIRRAGE_ID,
@@ -111,6 +117,8 @@ static const WorldEvent world_event[] =
 		EVENT_TYPE_WORLD_MOVE,
 		FILE_ACCESS_MAPDATA_GEKAI,
 		FILE_ACCESS_MAPDATA_GEKAI_OBJECT,
+		FILE_ACCESS_MAPDATA_GEKAI_REGION,
+		FILE_ACCESS_MAPDATA_GEKAI_NPC,
 		FILE_ACCESS_CHIP_GEKAI,
 		SOUND_ID_FIELD_GEKAI,
 		GEKAI_MAP_ID,

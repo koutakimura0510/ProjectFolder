@@ -41,6 +41,8 @@ typedef struct file
 {
     uint32_t mapdata;
     uint32_t object;
+    uint32_t region;
+    uint32_t npc;
     uint32_t bgm;
     uint32_t mapchip;
 } FileAccses;

@@ -52,8 +52,10 @@ static void set_world_event(GameWrapper *const game)
 		{
 			game->conf.event.type 		= event->event_type;
 			game->conf.file.mapdata  	= event->next_file_mapdata_id;
-			game->conf.file.mapchip  	= event->next_file_mapchip_id;
 			game->conf.file.object   	= event->next_file_object_id;
+			game->conf.file.region   	= event->next_file_region_id;
+			game->conf.file.npc     	= event->next_file_npc_id;
+			game->conf.file.mapchip  	= event->next_file_mapchip_id;
 			game->conf.file.bgm      	= event->next_file_bgm_id;
 			game->conf.map.name    		= event->next_map;
 			game->conf.map.canpass_id	= event->next_map_canpass_id;
