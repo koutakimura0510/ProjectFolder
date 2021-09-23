@@ -88,11 +88,11 @@ static const BitmapDB bitmap_db[] =
     {FILE_ACCESS_MAPDATA_MINIGAME,              20,     15,    "/Map/minigame_map",         DRAM_MAPDATA_ADDR_START,                FILE_BUFFER_SIZE_MAPDATA_MINIGAME       },
     {FILE_ACCESS_MAPDATA_GEKAI,                 200,    200,   "/Map/map_gekai",            DRAM_MAPDATA_ADDR_START,                FILE_BUFFER_SIZE_MAPDATA_GEKAI          },
     {FILE_ACCESS_MAPDATA_GEKAI_OBJECT,          200,    200,   "/Map/obj_gekai",            DRAM_MAPDATA_OBJECT_ADDR_START,         FILE_BUFFER_SIZE_MAPDATA_GEKAI          },
-    {FILE_ACCESS_MAPDATA_GEKAI_REGION,          200,    200,   "/Map/reg_gekai",            DRAM_MAPDATA_REGION_ADDR_START,         FILE_BUFFER_SIZE_MAPDATA_GEKAI          },
+    {FILE_ACCESS_MAPDATA_GEKAI_REGION,          200,    200,   "/Map/region_gekai",         DRAM_MAPDATA_REGION_ADDR_START,         FILE_BUFFER_SIZE_MAPDATA_GEKAI          },
     {FILE_ACCESS_MAPDATA_GEKAI_NPC,             200,    200,   "/Map/npc_gekai",            DRAM_MAPDATA_NPC_ADDR_START,            FILE_BUFFER_SIZE_MAPDATA_GEKAI          },
     {FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE,         50,     50,    "/Map/map_romen_virrage",    DRAM_MAPDATA_ADDR_START,                FILE_BUFFER_SIZE_MAPDATA_ROMEN_VIRRAGE  },
     {FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_OBJECT,  50,     50,    "/Map/obj_romen_virrage",    DRAM_MAPDATA_OBJECT_ADDR_START,         FILE_BUFFER_SIZE_MAPDATA_ROMEN_VIRRAGE  },
-    {FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_REGION,  50,     50,    "/Map/reg_romen_virrage",    DRAM_MAPDATA_REGION_ADDR_START,         FILE_BUFFER_SIZE_MAPDATA_ROMEN_VIRRAGE  },
+    {FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_REGION,  50,     50,    "/Map/region_romen_virrage", DRAM_MAPDATA_REGION_ADDR_START,         FILE_BUFFER_SIZE_MAPDATA_ROMEN_VIRRAGE  },
     {FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_NPC,     50,     50,    "/Map/npc_romen_virrage",    DRAM_MAPDATA_NPC_ADDR_START,            FILE_BUFFER_SIZE_MAPDATA_ROMEN_VIRRAGE  },
 
     /* 背景・アイコン */
