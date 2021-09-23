@@ -8,33 +8,6 @@
 #define MAP_STATE_FUNC_DB_SIZE ((sizeof (map_state))/(sizeof (MapState)))
 
 
-/*
- * ver1. 2021/08/19
- * マップ描画に必要な座標計算用の変数を管理する構造体
- * バックグラウンドとオブジェクト描画の計算処理が同様のため、
- * 描画関数を呼び出す前に計算処理をしておき、メンバ変数を共有して使用することにした
- * 
- * obj_start    :オブジェクトとして使用するマップチップの開始ID
- * obj_end      :オブジェクトとして使用するマップチップの終了ID
- * xsize        :マップのxサイズ
- * field        :キャラクターの現在座標からフィールドの座標参照用の数値を保存
- * center       :キャラクターの移動アニメーション時の座標系産地を保存
- * draw_adr     :描画を行うアドレスの基本値を保存
- * index        :マップのデータが保存されている配列のインデックス参照用の値を保存
- * *buffer      :マップデータが保存されているアドレスを保存
- */
-typedef struct
-{
-    uint32_t obj_start;
-    uint32_t obj_end;
-    uint32_t xsize;
-    uint32_t field;
-    uint32_t center;
-    uint32_t draw_adr;
-    uint32_t index;
-    uint32_t *buffer;
-} MapElement;
-
 
 /*
  * 関数ポインタを使用するため構造体の前にファイル内関数を定義
