@@ -13,11 +13,11 @@
  * 関数ポインタを使用するため構造体の前にファイル内関数を定義
  */
 static void map_draw(GameWrapper *const game);
-static void map_center_draw(GameWrapper *const game, MapElement *map);
-static void map_right_draw(GameWrapper *const game, MapElement *map);
-static void map_left_draw(GameWrapper *const game, MapElement *map);
-static void map_up_draw(GameWrapper *const game, MapElement *map);
-static void map_down_draw(GameWrapper *const game, MapElement *map);
+static void map_center_draw(GameWrapper *const game, DrawElement *map);
+static void map_right_draw(GameWrapper *const game, DrawElement *map);
+static void map_left_draw(GameWrapper *const game, DrawElement *map);
+static void map_up_draw(GameWrapper *const game, DrawElement *map);
+static void map_down_draw(GameWrapper *const game, DrawElement *map);
 static void frame_buffer_darkening_copy(GameWrapper *const game);
 static void frame_buffer_nextdraw_ready(GameWrapper *const game);
 
@@ -58,7 +58,7 @@ static const DisplayState display_state[] =
 typedef struct
 {
 	uint8_t drawtype;
-	void (*map_window)(GameWrapper *const game, MapElement *map);
+	void (*map_window)(GameWrapper *const game, DrawElement *map);
 } MapState;
 
 static const MapState map_state[] =

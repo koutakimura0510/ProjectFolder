@@ -9,14 +9,14 @@
 /*
  * ファイル内関数
  */
-static void map_share_data(GameWrapper *const game, MapElement *map);
-static void map_another_data(GameWrapper *const game, MapElement *map, uint8_t draw_type);
-static void left_edge_draw(GameWrapper *const game, MapElement *map, uint32_t xsize);
-static void right_edge_draw(GameWrapper *const game, MapElement *map, SDL_Rect *const rect);
-static void xcenter_draw(GameWrapper *const game, MapElement *map);
-static void under_edge_draw(GameWrapper *const game, MapElement *map, uint32_t yindex, uint32_t ysize);
-static void top_edge_draw(GameWrapper *const game, MapElement *map, SDL_Rect *const rect);
-static void ycenter_draw(GameWrapper *const game, MapElement *map, uint32_t xsize, uint32_t anime_pos);
+static void map_share_data(GameWrapper *const game, DrawElement *map);
+static void map_another_data(GameWrapper *const game, DrawElement *map, uint8_t draw_type);
+static void left_edge_draw(GameWrapper *const game, DrawElement *map, uint32_t xsize);
+static void right_edge_draw(GameWrapper *const game, DrawElement *map, SDL_Rect *const rect);
+static void xcenter_draw(GameWrapper *const game, DrawElement *map);
+static void under_edge_draw(GameWrapper *const game, DrawElement *map, uint32_t yindex, uint32_t ysize);
+static void top_edge_draw(GameWrapper *const game, DrawElement *map, SDL_Rect *const rect);
+static void ycenter_draw(GameWrapper *const game, DrawElement *map, uint32_t xsize, uint32_t anime_pos);
 static void display_darkening_draw(GameWrapper *const game, uint8_t vdma_pos);
 static void display_gradually_draw(GameWrapper *const game, uint8_t vdma_pos);
 
@@ -173,7 +173,7 @@ void frame_buffer_other_copy(GameWrapper *const game)
  */
 void nextdraw_ready(GameWrapper *const game)
 {
-    MapElement map;
+    DrawElement map;
 
     map_share_data(game, &map);
     map_another_data(game, &map, DRAW_TYPE_MAP);
@@ -196,7 +196,7 @@ void nextdraw_ready(GameWrapper *const game)
 static void map_draw(GameWrapper *const game)
 {
     const MapState *state = map_state;
-    MapElement map;
+    DrawElement map;
 
 	for (uint8_t i = 0; i < MAP_STATE_FUNC_DB_SIZE; i++, state++)
 	{
@@ -219,7 +219,7 @@ static void map_draw(GameWrapper *const game)
  * ver1. 2021/08/21
  * 背景とオブジェクトの描画で共有するデータの初期設定
  */
-static void map_share_data(GameWrapper *const game, MapElement *map)
+static void map_share_data(GameWrapper *const game, DrawElement *map)
 {
     map->xsize = get_mapsize('w');
     map->field  = CHIP_LEFT(game->unit.pos.fieldx) + (CHIP_LEFT(game->unit.pos.fieldy) * map->xsize);
@@ -255,11 +255,11 @@ static void map_share_data(GameWrapper *const game, MapElement *map)
  * バックグラウンドとオブジェクトでマップデータの保存アドレスが異なるため
  * 状態変数を取得して配列のアドレスを保存するようにした
  */
-static void map_another_data(GameWrapper *const game, MapElement *map, uint8_t draw_type)
+static void map_another_data(GameWrapper *const game, DrawElement *map, uint8_t draw_type)
 {
-    map->obj_start           = (draw_type == DRAW_TYPE_MAP) ? 0 : game->conf.map.obj_startid;
-    map->obj_end             = (draw_type == DRAW_TYPE_MAP) ? 0xffffffff : game->conf.map.obj_endid;
-    map->buffer              = (draw_type == DRAW_TYPE_MAP) ? game->conf.map.back : game->conf.map.obj;
+    map->obj_start = (draw_type == DRAW_TYPE_MAP) ? 0 : game->conf.map.obj_startid;
+    map->obj_end   = (draw_type == DRAW_TYPE_MAP) ? 0xffffffff : game->conf.map.obj_endid;
+    map->buffer    = (draw_type == DRAW_TYPE_MAP) ? game->conf.map.back : game->conf.map.obj;
 
     if (game->conf.display.system == SYSTEM_MINIGAME_WINDOW)
     {
@@ -288,7 +288,7 @@ static void map_another_data(GameWrapper *const game, MapElement *map, uint8_t d
  * ver1. 2021/06/20
  * オブジェクト領域の描画
  */
-static void map_center_draw(GameWrapper *const game, MapElement *map)
+static void map_center_draw(GameWrapper *const game, DrawElement *map)
 {
 	for (uint32_t y = 0; y < MAPCHIP_DRAW_MAX_HEIGHT; y++)
 	{
@@ -323,7 +323,7 @@ static void map_center_draw(GameWrapper *const game, MapElement *map)
  * ver1. 2021/06/20
  * 右移動時のオブジェクト描画
  */
-static void map_right_draw(GameWrapper *const game, MapElement *map)
+static void map_right_draw(GameWrapper *const game, DrawElement *map)
 {
     SDL_Rect rect;
 
@@ -346,7 +346,7 @@ static void map_right_draw(GameWrapper *const game, MapElement *map)
  * ver1. 2021/06/20
  * 左移動時のオブジェクト描画
  */
-static void map_left_draw(GameWrapper *const game, MapElement *map)
+static void map_left_draw(GameWrapper *const game, DrawElement *map)
 {
     SDL_Rect rect;
 
@@ -370,7 +370,7 @@ static void map_left_draw(GameWrapper *const game, MapElement *map)
  * ver1. 2021/06/20
  * 上移動時のオブジェクト描画
  */
-static void map_up_draw(GameWrapper *const game, MapElement *map)
+static void map_up_draw(GameWrapper *const game, DrawElement *map)
 {
     SDL_Rect rect;
 
@@ -395,7 +395,7 @@ static void map_up_draw(GameWrapper *const game, MapElement *map)
  * ver1. 2021/06/20
  * 下移動時のオブジェクト描画
  */
-static void map_down_draw(GameWrapper *const game, MapElement *map)
+static void map_down_draw(GameWrapper *const game, DrawElement *map)
 {
     SDL_Rect rect;
 
@@ -419,10 +419,10 @@ static void map_down_draw(GameWrapper *const game, MapElement *map)
  * xsize    :右移動時、game->unit.pos.anime_cnt << 1を指定
  *          :左移動時、MAPCHIP_WIDTHを指定
  */
-static void left_edge_draw(GameWrapper *const game, MapElement *map, uint32_t xsize)
+static void left_edge_draw(GameWrapper *const game, DrawElement *map, uint32_t xsize)
 {
-    game->mapchip.id         = map->buffer[map->index + MAPCHIP_DRAW_MAX_WIDTH];
     game->mapchip.xstart_pos = 0;
+    game->mapchip.id         = map->buffer[map->index + MAPCHIP_DRAW_MAX_WIDTH];
 
     if (game->mapchip.id == 0)
     {
@@ -434,7 +434,6 @@ static void left_edge_draw(GameWrapper *const game, MapElement *map, uint32_t xs
         game->mapchip.draw_xsize = xsize - game->unit.pos.anime_cnt;
         game->mapchip.dstin      = map->draw_adr + XRGB((VIDEO_WIDTH - xsize + game->unit.pos.anime_cnt));
         game->mapchip.dstout     = game->mapchip.dstin;
-        // put_mapchip(game);
         png_mapchip(game);
     }
 }
@@ -444,11 +443,16 @@ static void left_edge_draw(GameWrapper *const game, MapElement *map, uint32_t xs
  * ver1. 2021/08/19
  * 左右アニメーション時の右端の描画処理
  */
-static void right_edge_draw(GameWrapper *const game, MapElement *map, SDL_Rect *const rect)
+static void right_edge_draw(GameWrapper *const game, DrawElement *map, SDL_Rect *const rect)
 {
     map->draw_adr = (rect->y * START_LEFT_ANIMATION_POS) + game->conf.work.adr;
     map->index  = (rect->y * map->xsize) + map->field;
     game->mapchip.id = map->buffer[map->index];
+
+    if (game->mapchip.id == 0)
+    {
+        return;
+    }
 
     if ((map->obj_start <= game->mapchip.id) && (game->mapchip.id <= map->obj_end))
     {
@@ -457,7 +461,6 @@ static void right_edge_draw(GameWrapper *const game, MapElement *map, SDL_Rect *
         game->mapchip.dstin      = map->draw_adr;
         game->mapchip.dstout     = map->draw_adr;
         png_mapchip(game);
-        // put_mapchip(game);
     }
 }
 
@@ -466,7 +469,7 @@ static void right_edge_draw(GameWrapper *const game, MapElement *map, SDL_Rect *
  * ver1. 2021/08/19
  * 左右アニメーション時の左端の次のマップ位置からの描画処理
  */
-static void xcenter_draw(GameWrapper *const game, MapElement *map)
+static void xcenter_draw(GameWrapper *const game, DrawElement *map)
 {
     game->mapchip.draw_xsize = MAPCHIP_WIDTH;
 
@@ -494,7 +497,7 @@ static void xcenter_draw(GameWrapper *const game, MapElement *map)
  * ver1. 2021/08/19
  * 上下マップ移動時の上端の描画を行う処理
  */
-static void top_edge_draw(GameWrapper *const game, MapElement *map, SDL_Rect *const rect)
+static void top_edge_draw(GameWrapper *const game, DrawElement *map, SDL_Rect *const rect)
 {
     map->draw_adr    = CHIP_RGB(rect->w) + game->conf.work.adr;
     map->index       = rect->w + map->field;
@@ -527,7 +530,7 @@ static void top_edge_draw(GameWrapper *const game, MapElement *map, SDL_Rect *co
  * ysize    :下アニメーション時はgame->unit.pos.anime_cntを2倍した値を指定
  *          :上アニメーション時はMAPCHIP_HEIGHTを指定
  */
-static void under_edge_draw(GameWrapper *const game, MapElement *map, uint32_t yindex, uint32_t ysize)
+static void under_edge_draw(GameWrapper *const game, DrawElement *map, uint32_t yindex, uint32_t ysize)
 {
     game->mapchip.id         = map->buffer[map->index + (map->xsize * yindex)];
     game->mapchip.ystart_pos = 0;
@@ -558,7 +561,7 @@ static void under_edge_draw(GameWrapper *const game, MapElement *map, uint32_t y
  * anime_pos:上アニメーション時はSTART_UP_ANIMATION_POSを指定
  *          :下アニメーション時はSTART_DOWN_ANIMATION_POSを指定
  */
-static void ycenter_draw(GameWrapper *const game, MapElement *map, uint32_t xsize, uint32_t anime_pos)
+static void ycenter_draw(GameWrapper *const game, DrawElement *map, uint32_t xsize, uint32_t anime_pos)
 {
     game->mapchip.draw_ysize = MAPCHIP_WIDTH;
 
