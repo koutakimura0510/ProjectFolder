@@ -41,6 +41,29 @@ void npc_config(GameWrapper *const game)
  */
 void npc_draw(GameWrapper *const game)
 {
+    const NpcDrawing *p = npc_drawing;
+
+    for (uint8_t i = 0; i < NPC_STATE_FUNC_DB_SIZE; i++, p++)
+	{
+		if (game->conf.display.drawtype == p->drawtype)
+		{
+            map_share_data(game, &map);
+            map_another_data(game, &map, DRAW_TYPE_MAP);
+			state->map_window(game, &map);
+            npc_draw(game);
+            player_draw(game);
+            map_another_data(game, &map, DRAW_TYPE_OBJ);
+			state->map_window(game, &map);
+			break;
+		}
+	}
+}
+
+
+static void npc_center_draw(GameWrapper *const game)
+{
+    if (game->unit.pos.fieldx )
+    game->unit.pos.fieldx + game->unit.pos.unitx;
     game->mapchip.frame_size = VIDEO_WIDTH;
     game->mapchip.alpha		 = 255;
     game->mapchip.srcin      = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_SRCIN);

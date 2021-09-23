@@ -28,21 +28,19 @@
 #define XRGB(x)	(int32_t)(x << RGB_BYTE_SHIFT)
 #define YRGB(y)	(int32_t)(y * MAX_V_WIDTH)
 
-
 /* Width、Heightの中央をもとめる、DRAMの仕様上中央値にバイト分の計算を行う */
 #define W_CENTER(x)			(int32_t)((x >> 1) << RGB_BYTE_SHIFT)
 #define H_CENTER(y)			(int32_t)((y >> 1) * MAX_V_WIDTH)
-
 
 /* マップチップのサイズ調整のシフト動作 */
 #define CHIP_RGB(pos)		(uint32_t)(pos << MAPCHIP_WIDTH_SHIFT)//MAPCHIP_HEIGHT_SHIFと同義
 #define CHIP_LEFT(pos)		(uint32_t)(pos >> MAPCHIP_SHIFT)
 
-
 /* 画面のサイズや座標を求める基本計算 */
 #define DISPLAY_POS(x, y, size) (x + (y * size))
 #define DISPLAY_YPOS(y, size) (y * size)
 #define DISPLAY_FLASH_RANGE(y, size) (y * size)
+
 
 
 /* 固定少数 */

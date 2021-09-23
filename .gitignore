@@ -56,7 +56,6 @@ Xilinx/workspace/Arty_z7_20/SOUND/I2S/*
 !Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/
 Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/*
 !Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/I2S_OUTPUT.srcs/
-# Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/I2S_OUTPUT.srcs/*
 
 # Vitis_HLSの画像処理回路は反映させる
 !Xilinx/workspace/Arty_z7_20/Vitis_HLS/
