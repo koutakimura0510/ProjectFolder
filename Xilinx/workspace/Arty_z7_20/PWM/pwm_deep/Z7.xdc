@@ -1,0 +1,1 @@
+../../constraints/Arty-Z7-20-Master.xdc

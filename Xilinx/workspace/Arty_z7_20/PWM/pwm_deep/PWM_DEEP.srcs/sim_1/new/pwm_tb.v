@@ -14,19 +14,17 @@ module pwm_tb;
 
 /* comment */
 parameter CYCLE = 10;
-
-integer count = 0;
-
 reg reset, clk;
 wire pwm, pwm_debug, led;
 
-defparam pwm_top.MAX_CLK = 4;
-pwm_top i0(
+// defparam pwm_top.MAX_CLK = 4;
+pwm_top #(.MAX_CLK(CYCLE))
+    i0(
     .CLK(clk),
     .RESET(reset),
-    .PWM(pwm),
-    .pwm_debug(pwm_debug),
-    .LED(led),
+    .AUD_PWM(pwm),
+    .CK_IO0(pwm_debug),
+    .LED1(led)
 );
 
 always #(CYCLE/2)

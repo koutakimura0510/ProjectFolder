@@ -9,15 +9,15 @@
  * pwm出力サンプル回路
  */
 module pwm_top(
-    input CLK,      /* 125MHz */
-    input RESET,    /* RESET端子 */
-    output PWM,     /* pwm出力 */
-    output PWM_DEBUG, /* オシロで確認用にPWMの出力端子を増やす */
-    output LED      /* 動作確認用LED端子 */
+    input CLK,              /* 125MHz */
+    input [1:0] SLIDE_SW,   /* duty変更用 */
+    output AUD_PWM,         /* pwm出力 */
+    output CK_IO8,          /* オシロで確認用にPWMの出力端子を増やす */
+    output LED1             /* 動作確認用LED端子 */
 );
 
 /* 内部パラメータ */
-parameter MAX_CLK = (125000000 - 1) /* 入力クロックの1秒周期の最大値 */
+parameter MAX_CLK = (125000000 - 1); /* 入力クロックの1秒周期の最大値 */
 parameter COUNT_WIDTH = 32;         /* 音源の分解能 */
 parameter SOUND_BLOCK = (88-1);     /* 音源数 */
 
@@ -25,6 +25,8 @@ parameter SOUND_BLOCK = (88-1);     /* 音源数 */
 /* 内部レジスタ */
 reg [6:0] temp;              /* sound_blockインデックス参照用 一応ピアノの88鍵盤のbit幅を用意した */
 reg [COUNT_WIDTH-1:0] duty;  /* 周期カウンタ用レジスタ */
+reg [COUNT_WIDTH-1:0] pulse_count;
+reg pulse_out;
 reg [COUNT_WIDTH-1:0] sound_block[0:SOUND_BLOCK]; /* ドレミファソラシドの音源 */
 reg [26:0] count;
 
@@ -123,46 +125,50 @@ end
 
 
 /* 1秒カウンタ */
-always @(posedge CLK, negedge RESET) begin
-    if (RESET == 1'h0) begin
+always @(posedge CLK) begin
+    if (count == MAX_CLK) begin
         count <= 0;
     end else begin
-        if (count == MAX_CLK) begin
-            count <= 0;
-        end else begin
-            count <= 27'd1;
-        end
+        count <= count + 27'd1;
     end
 end
 
 
 /* 一定周期でtemp切替 */
-always @(posedge CLK negedge RESET) begin
-    if (RESET == 1'h0) begin
-        temp <= 64;
-    end else begin
-        if (count == MAX_CLK) begin
-            if (temp == 71) begin
-                temp <= 64;
-            end else begin
-                temp <= temp + 7'd1;
-            end
+always @(posedge CLK) begin
+    if (count == MAX_CLK) begin
+        if (71 < temp) begin
+            temp <= 64;
+        end else begin
+            temp <= temp + 7'd1;
         end
     end
 end
 
 
+/* duty比更新 50% 25% */
+always @(posedge CLK) begin
+    duty[31:30] <= SLIDE_SW;
+end
+
+
 /* tempの間隔で音源切替 */
-always @(posedge CLK, negedge RESET) begin
-    if (RESET == 1'h0) begin
-        duty <= 0;
+always @(posedge CLK) begin
+    pulse_count <= pulse_count + sound_block[temp];
+end
+
+/* pulse波発生 */
+always @(posedge CLK) begin
+    if (pulse_count < duty) begin
+        pulse_out <= 1'd1;
     end else begin
-        duty <= duty + sound_block[temp];
+        pulse_out <= 1'd0;
     end
 end
 
-assign LED = duty[31];
-assign PWM = duty[31];
-assign PWM_DEBUG = duty[31];
+
+assign LED1 = pulse_out;
+assign AUD_PWM = pulse_out;
+assign CK_IO8 = pulse_out;
 
 endmodule
