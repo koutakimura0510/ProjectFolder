@@ -41,44 +41,61 @@ void npc_config(GameWrapper *const game)
  */
 void npc_draw(GameWrapper *const game)
 {
-    const NpcDrawing *p = npc_drawing;
+    MapElement map;
 
-    for (uint8_t i = 0; i < NPC_STATE_FUNC_DB_SIZE; i++, p++)
-	{
-		if (game->conf.display.drawtype == p->drawtype)
-		{
-            map_share_data(game, &map);
-            map_another_data(game, &map, DRAW_TYPE_MAP);
-			state->map_window(game, &map);
-            npc_draw(game);
-            player_draw(game);
-            map_another_data(game, &map, DRAW_TYPE_OBJ);
-			state->map_window(game, &map);
-			break;
-		}
-	}
-}
-
-
-static void npc_center_draw(GameWrapper *const game)
-{
-    if (game->unit.pos.fieldx )
-    game->unit.pos.fieldx + game->unit.pos.unitx;
+    map.buffer = DRAM_MAPDATA_NPC_ADDR_START;
+    map.xsize  = get_mapsize('w');
+    map.field  = CHIP_LEFT(game->unit.pos.fieldx) + (CHIP_LEFT(game->unit.pos.fieldy) * map.xsize);
     game->mapchip.frame_size = VIDEO_WIDTH;
-    game->mapchip.alpha		 = 255;
+    game->mapchip.alpha		 = COLOR_ALPHA_MAX;
     game->mapchip.srcin      = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_SRCIN);
     game->mapchip.maxwidth	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_XSIZE);
     game->mapchip.maxheight	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_YSIZE);
     game->mapchip.draw_xsize = game->mapchip.maxwidth;
     game->mapchip.draw_ysize = game->mapchip.maxheight;
+    game->mapchip.xstart_pos = 0;
+    game->mapchip.ystart_pos = 0;
 
-    for (uint8_t i = 0; i < game->npc.number; i++)
+    for (uint32_t y = 0; y < MAPCHIP_DRAW_MAX_HEIGHT; y++)
     {
-        game->mapchip.xstart_pos = 0;
-        game->mapchip.ystart_pos = 0;
-        game->mapchip.id     = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[i], NPC_SUB_MEMBER_BITMAP_MAPCHIPID);
-        game->mapchip.dstin  = game->conf.work.adr + XRGB(game->npc.xpos[i]) + YRGB(game->npc.ypos[i]);
-        game->mapchip.dstout = game->mapchip.dstin;
-        png_mapchip(game);
-    }
+        map.index    = (y * map.xsize) + map.field;
+
+        for (uint32_t x = 0; x < MAPCHIP_DRAW_MAX_WIDTH; x++)
+        {
+            game->mapchip.id = map.buffer[x + map.index];
+
+            if (game->mapchip.id == 0)
+            {
+                continue;
+            }
+
+            game->mapchip.dstin  = CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + game->conf.work.adr;
+            game->mapchip.dstout = game->mapchip.dstin;
+            png_mapchip(game);
+        }
+	}
 }
+
+
+// static void npc_center_draw(GameWrapper *const game)
+// {
+//     if (game->unit.pos.fieldx )
+//     game->unit.pos.fieldx + game->unit.pos.unitx;
+//     game->mapchip.frame_size = VIDEO_WIDTH;
+//     game->mapchip.alpha		 = 255;
+//     game->mapchip.srcin      = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_SRCIN);
+//     game->mapchip.maxwidth	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_XSIZE);
+//     game->mapchip.maxheight	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_YSIZE);
+//     game->mapchip.draw_xsize = game->mapchip.maxwidth;
+//     game->mapchip.draw_ysize = game->mapchip.maxheight;
+
+//     for (uint8_t i = 0; i < game->npc.number; i++)
+//     {
+//         game->mapchip.xstart_pos = 0;
+//         game->mapchip.ystart_pos = 0;
+//         game->mapchip.id     = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[i], NPC_SUB_MEMBER_BITMAP_MAPCHIPID);
+//         game->mapchip.dstin  = game->conf.work.adr + XRGB(game->npc.xpos[i]) + YRGB(game->npc.ypos[i]);
+//         game->mapchip.dstout = game->mapchip.dstin;
+//         png_mapchip(game);
+//     }
+// }
