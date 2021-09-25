@@ -23,5 +23,6 @@
 #include "npc_macro.h"
 #include "event_id_macro.h"
 #include "event_flag_macro.h"
+#include "dtm_macro.h"
 
 #endif

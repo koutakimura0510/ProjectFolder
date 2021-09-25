@@ -303,6 +303,8 @@ static const SystemFile system_file[] =
 {
     {FILE_ACCESS_ENEMY_PARA,        "/sys/enemy"                },
     {FILE_ACCESS_ENEMY_NAME,        "/sys/enemy_name"           },
+    {FILE_ACCESS_BUILD_CONFIG,      "/sys/build_config"         },
+    {FILE_ACCESS_BUILD_FILE,        "/sys/build_file"           },
     {FILE_ACCESS_ITEM_BATTLE,       "/sys/item"                 },
     {FILE_ACCESS_ITEM_WEAPON,       "/sys/weapon"               },
     {FILE_ACCESS_ITEM_ARMOR,        "/sys/armor"                },
@@ -336,7 +338,6 @@ static const SystemFile system_file[] =
     {FILE_ACCESS_COS_TABLE,         "/sys/cos"                  },
     {FILE_ACCESS_TYPE_STR,          "/sys/type_bit"             },
     {FILE_ACCESS_VARIABLE_MSG,      "/sys/variable_msg"         },
-    {FILE_ACCESS_DEBUG_SELECT,      "/sys/debug_select"         },
     {FILE_ACCESS_TOTAL_BYTE,        "/sys/byte"                 },
 };
 
@@ -360,6 +361,8 @@ static const SystemLength system_length[] =
 {
     {MEMORY_ENEMY_PARA_ID,      MONSTER_ID_END,                         ENEMY_SUB_MEMBER_PARA_NUMBER        },
     {MEMORY_ENEMY_NAME_ID,      MONSTER_ID_END,                         EVENT_MSG_MEMBER_NUMBER             },
+    {MEMORY_BUILD_CONFIG_ID,    MAP_NAME_ID_END,                        BUILD_SUB_MEMBER_CONFIG_NUMBER      },
+    {MEMORY_BUILD_FILE_ID,      MAP_NAME_ID_END,                        BUILD_SUB_MEMBER_FILE_NUMBER        },
     {MEMORY_ITEM_ID,            ITEM_NAME_ID_END,                       ITEM_MEMBER_NUMBER                  },
     {MEMORY_WEAPON_ID,          WEAPON_NAME_ID_END,                     WEAPON_MEMBER_NUMBER                },
     {MEMORY_ARMOR_ID,           ARMOR_NAME_ID_END,                      ARMOR_MEMBER_NUMBER                 },
@@ -393,7 +396,6 @@ static const SystemLength system_length[] =
     {MEMORY_COS_ID,             COS_TABLE_MAX,                          COS_SUB_MEMBER_NUMBER               },
     {MEMORY_TYPE_STR_ID,        UNIT_RES_SIZE,                          TYPE_STR_SUB_MEMBER_NUMBER          },
     {MEMORY_VARIABLE_MSG_ID,    VARIABLE_MSG_SIZE,                      MEMBER_LEN_VARIABLE                 },
-    {MEMORY_DEBUG_ID,           MAP_NAME_ID_END,                        DEBUG_SUB_MEMBER_NUMBER             },
 };
 
 #endif

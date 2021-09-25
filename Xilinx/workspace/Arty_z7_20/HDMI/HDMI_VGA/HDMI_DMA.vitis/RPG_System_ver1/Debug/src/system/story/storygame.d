@@ -20,6 +20,7 @@ src/system/story/storygame.o src/system/story/storygame.o: \
  ../src/system/story/../wrapper/macro/npc_macro.h \
  ../src/system/story/../wrapper/macro/event_id_macro.h \
  ../src/system/story/../wrapper/macro/event_flag_macro.h \
+ ../src/system/story/../wrapper/macro/dtm_macro.h \
  ../src/system/story/../wrapper/hero_wrapper.h \
  ../src/system/story/../wrapper/unit_wrapper.h \
  ../src/system/story/../wrapper/mapchip_wrapper.h \
@@ -39,7 +40,6 @@ src/system/story/storygame.o src/system/story/storygame.o: \
  ../src/system/story/../wrapper/../hardware/wrapper/../fpga/mapchip_macro.h \
  ../src/system/story/../wrapper/../hardware/wrapper/../fpga/vdma_macro.h \
  ../src/system/story/../wrapper/../hardware/wrapper/../sound/sound_func.h \
- ../src/system/story/../wrapper/../hardware/wrapper/../sound/dtm_macro.h \
  ../src/system/story/../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/story/../wrapper/../event/wrapper/event_local.h \
  ../src/system/story/../wrapper/../event/wrapper/../npc/npc_macro.h \
@@ -113,6 +113,8 @@ src/system/story/storygame.o src/system/story/storygame.o: \
 
 ../src/system/story/../wrapper/macro/event_flag_macro.h:
 
+../src/system/story/../wrapper/macro/dtm_macro.h:
+
 ../src/system/story/../wrapper/hero_wrapper.h:
 
 ../src/system/story/../wrapper/unit_wrapper.h:
@@ -150,8 +152,6 @@ src/system/story/storygame.o src/system/story/storygame.o: \
 ../src/system/story/../wrapper/../hardware/wrapper/../fpga/vdma_macro.h:
 
 ../src/system/story/../wrapper/../hardware/wrapper/../sound/sound_func.h:
-
-../src/system/story/../wrapper/../hardware/wrapper/../sound/dtm_macro.h:
 
 ../src/system/story/../wrapper/../hardware/wrapper/../rom/rom_func.h:
 

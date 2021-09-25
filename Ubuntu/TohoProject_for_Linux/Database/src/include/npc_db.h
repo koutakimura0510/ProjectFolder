@@ -46,6 +46,7 @@ static const NpcMapDB npc_map_db[] = {
 	{ROMEN_HOUSE1_LOOM1_ID,	{0, }, },
 	{ROMEN_HOUSE2_LOOM1_ID,	{0, }, },
 	{ROMEN_DANGEON_ID,		{0, }, },
+	{BEGINNING_HILL_ID,		{0, }, },
 };
 
 
@@ -164,11 +165,7 @@ void npc_map_write(FILE *fp, FILE *byte)
 		}
 	}
 
-	if (NPC_MAP_DB_SIZE != MAP_NAME_ID_END)
-    {
-        printf("--- ERROR --- MAP_NAME_ID_END or NPC_MAP_DB_SIZE");
-    }
-
+	error_print(NPC_MAP_DB_SIZE, MAP_NAME_ID_END, "NPC_MAP_DB_SIZE");
 	printf("NPC MAP TOTAL NUMBER = %ld\n", NPC_MAP_DB_SIZE);
 }
 

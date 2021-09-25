@@ -21,6 +21,7 @@ src/system/event/cmd/opening/opening.o \
  ../src/system/event/cmd/opening/../../../wrapper/macro/npc_macro.h \
  ../src/system/event/cmd/opening/../../../wrapper/macro/event_id_macro.h \
  ../src/system/event/cmd/opening/../../../wrapper/macro/event_flag_macro.h \
+ ../src/system/event/cmd/opening/../../../wrapper/macro/dtm_macro.h \
  ../src/system/event/cmd/opening/../../../wrapper/hero_wrapper.h \
  ../src/system/event/cmd/opening/../../../wrapper/unit_wrapper.h \
  ../src/system/event/cmd/opening/../../../wrapper/mapchip_wrapper.h \
@@ -40,7 +41,6 @@ src/system/event/cmd/opening/opening.o \
  ../src/system/event/cmd/opening/../../../wrapper/../hardware/wrapper/../fpga/mapchip_macro.h \
  ../src/system/event/cmd/opening/../../../wrapper/../hardware/wrapper/../fpga/vdma_macro.h \
  ../src/system/event/cmd/opening/../../../wrapper/../hardware/wrapper/../sound/sound_func.h \
- ../src/system/event/cmd/opening/../../../wrapper/../hardware/wrapper/../sound/dtm_macro.h \
  ../src/system/event/cmd/opening/../../../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/event/cmd/opening/../../../wrapper/../event/wrapper/event_local.h \
  ../src/system/event/cmd/opening/../../../wrapper/../event/wrapper/../npc/npc_macro.h \
@@ -115,6 +115,8 @@ src/system/event/cmd/opening/opening.o \
 
 ../src/system/event/cmd/opening/../../../wrapper/macro/event_flag_macro.h:
 
+../src/system/event/cmd/opening/../../../wrapper/macro/dtm_macro.h:
+
 ../src/system/event/cmd/opening/../../../wrapper/hero_wrapper.h:
 
 ../src/system/event/cmd/opening/../../../wrapper/unit_wrapper.h:
@@ -152,8 +154,6 @@ src/system/event/cmd/opening/opening.o \
 ../src/system/event/cmd/opening/../../../wrapper/../hardware/wrapper/../fpga/vdma_macro.h:
 
 ../src/system/event/cmd/opening/../../../wrapper/../hardware/wrapper/../sound/sound_func.h:
-
-../src/system/event/cmd/opening/../../../wrapper/../hardware/wrapper/../sound/dtm_macro.h:
 
 ../src/system/event/cmd/opening/../../../wrapper/../hardware/wrapper/../rom/rom_func.h:
 

@@ -91,6 +91,7 @@ typedef enum
 /* 状態異常系のアイテムをまとめる */
 typedef enum
 {
+    CONDITION_ITEM_MARISA_KINOKO,     // 魔理沙のキノコ
     CONDITION_ITEM_SANAE_OMAMORI,     // 早苗のお守り
     CONDITION_ITEM_ONI_SYURAN,        // 伊吹瓢
     CONDITION_ITEM_END,

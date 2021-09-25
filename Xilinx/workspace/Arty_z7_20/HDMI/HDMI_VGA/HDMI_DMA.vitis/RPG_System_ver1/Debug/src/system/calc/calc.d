@@ -19,6 +19,7 @@ src/system/calc/calc.o src/system/calc/calc.o: ../src/system/calc/calc.c \
  ../src/system/calc/../wrapper/macro/npc_macro.h \
  ../src/system/calc/../wrapper/macro/event_id_macro.h \
  ../src/system/calc/../wrapper/macro/event_flag_macro.h \
+ ../src/system/calc/../wrapper/macro/dtm_macro.h \
  ../src/system/calc/../wrapper/hero_wrapper.h \
  ../src/system/calc/../wrapper/unit_wrapper.h \
  ../src/system/calc/../wrapper/mapchip_wrapper.h \
@@ -38,7 +39,6 @@ src/system/calc/calc.o src/system/calc/calc.o: ../src/system/calc/calc.c \
  ../src/system/calc/../wrapper/../hardware/wrapper/../fpga/mapchip_macro.h \
  ../src/system/calc/../wrapper/../hardware/wrapper/../fpga/vdma_macro.h \
  ../src/system/calc/../wrapper/../hardware/wrapper/../sound/sound_func.h \
- ../src/system/calc/../wrapper/../hardware/wrapper/../sound/dtm_macro.h \
  ../src/system/calc/../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/calc/../wrapper/../event/wrapper/event_local.h \
  ../src/system/calc/../wrapper/../event/wrapper/../npc/npc_macro.h \
@@ -111,6 +111,8 @@ src/system/calc/calc.o src/system/calc/calc.o: ../src/system/calc/calc.c \
 
 ../src/system/calc/../wrapper/macro/event_flag_macro.h:
 
+../src/system/calc/../wrapper/macro/dtm_macro.h:
+
 ../src/system/calc/../wrapper/hero_wrapper.h:
 
 ../src/system/calc/../wrapper/unit_wrapper.h:
@@ -148,8 +150,6 @@ src/system/calc/calc.o src/system/calc/calc.o: ../src/system/calc/calc.c \
 ../src/system/calc/../wrapper/../hardware/wrapper/../fpga/vdma_macro.h:
 
 ../src/system/calc/../wrapper/../hardware/wrapper/../sound/sound_func.h:
-
-../src/system/calc/../wrapper/../hardware/wrapper/../sound/dtm_macro.h:
 
 ../src/system/calc/../wrapper/../hardware/wrapper/../rom/rom_func.h:
 

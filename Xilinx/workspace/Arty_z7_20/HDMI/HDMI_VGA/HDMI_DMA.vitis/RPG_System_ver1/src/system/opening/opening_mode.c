@@ -144,10 +144,14 @@ static void opening_music_load(GameWrapper *const game)
 static void opening_db_load(GameWrapper *const game)
 {
 	cmd_db_reset(game, COMMAND_OPENING_SYSTEM, 1);
-	bgm_update(game, SOUND_ID_TITLE, SOUND_CH_BGM_WORK);
+	// bgm_update(game, SOUND_ID_TITLE, SOUND_CH_BGM_WORK);
 
 #ifdef DEMO_WINDOW_ON
 	game->conf.display.sub_state = OPENING_DEMO_WINDOW;
+
+	game->conf.display.sub_state = OPENING_BUILD_SELECT;
+	cmd_db_reset(game, COMMAND_BUILD_SYSTEM, 0);
+
 #else
 	game->conf.display.sub_state = OPENING_SYSTEM_DRAW;
 #endif
@@ -240,6 +244,7 @@ static void opening_demo_window(GameWrapper *const game)
 	case SW_B:
 		game->conf.display.sub_state = OPENING_SYSTEM_DRAW;
 		cmd_db_reset(game, COMMAND_OPENING_SYSTEM, 1);
+		bgm_update(game, SOUND_ID_TITLE, SOUND_CH_BGM_WORK);
 		break;
 
 	default:
@@ -272,8 +277,45 @@ static void opening_title_draw(GameWrapper *const game)
 
 	if (SW_A & cmd_key(game))
 	{
+		bgm_stop();
 		bgm_update(game, SOUND_ID_CMD_BUTTON2, SOUND_CH_KEY_WORK);
+		game->conf.display.sub_state = OPENING_BUILD_SELECT;
+		cmd_db_reset(game, COMMAND_BUILD_SYSTEM, 0);
+	}
+}
+
+
+/**
+ * @brief  デバッグを開始する町、フィールド、ダンジョンを選択する
+ * @note   
+ * @retval None
+ */
+static void build_select(GameWrapper *const game)
+{
+	patblt(game->conf.work.adr, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT, COLOR_BLACK);
+	font_dram_draw(game, LOAD_FONT_XDRAW_POS, LOAD_FONT_YDRAW_POS, MEMORY_BUILD_CONFIG_ID, game->cmd.cursol.y, BUILD_SUB_MEMBER_CONFIG_NAME, COLOR_WHITE);
+
+	if (SW_A & cmd_key(game))
+	{
 		game->conf.display.sub_state = OPENING_SAVE_LOAD;
+		game->conf.map.name        = fetch_dram_db(game, MEMORY_BUILD_CONFIG_ID, game->cmd.cursol.oldy, BUILD_SUB_MEMBER_CONFIG_MAP_NAME);
+		game->conf.map.canpass_id  = fetch_dram_db(game, MEMORY_BUILD_CONFIG_ID, game->cmd.cursol.oldy, BUILD_SUB_MEMBER_CONFIG_CANPASS_ID);
+		game->conf.map.obj_startid = fetch_dram_db(game, MEMORY_BUILD_CONFIG_ID, game->cmd.cursol.oldy, BUILD_SUB_MEMBER_CONFIG_OBJ_START_ID);
+		game->conf.map.obj_endid   = fetch_dram_db(game, MEMORY_BUILD_CONFIG_ID, game->cmd.cursol.oldy, BUILD_SUB_MEMBER_CONFIG_OBJ_END_ID);
+		game->conf.event.type      = fetch_dram_db(game, MEMORY_BUILD_CONFIG_ID, game->cmd.cursol.oldy, BUILD_SUB_MEMBER_CONFIG_DEBUG_EVENT_TYPE);
+		game->unit.pos.fieldx      = fetch_dram_db(game, MEMORY_BUILD_CONFIG_ID, game->cmd.cursol.oldy, BUILD_SUB_MEMBER_CONFIG_DEBUG_START_FIELDX) << MAPCHIP_SHIFT;
+		game->unit.pos.fieldy      = fetch_dram_db(game, MEMORY_BUILD_CONFIG_ID, game->cmd.cursol.oldy, BUILD_SUB_MEMBER_CONFIG_DEBUG_START_FIELDY) << MAPCHIP_SHIFT;
+		game->unit.pos.unitx       = fetch_dram_db(game, MEMORY_BUILD_CONFIG_ID, game->cmd.cursol.oldy, BUILD_SUB_MEMBER_CONFIG_DEBUG_START_UNITX) << MAPCHIP_SHIFT;
+		game->unit.pos.unity       = fetch_dram_db(game, MEMORY_BUILD_CONFIG_ID, game->cmd.cursol.oldy, BUILD_SUB_MEMBER_CONFIG_DEBUG_START_UNITY) << MAPCHIP_SHIFT;
+		
+		/* 選択したマップ情報読み込み */
+		sd_fread(fetch_dram_db(game, MEMORY_BUILD_FILE_ID, game->cmd.cursol.oldy, BUILD_SUB_MEMBER_FILE_MAPCHIP_FILE));
+		sd_fread(fetch_dram_db(game, MEMORY_BUILD_FILE_ID, game->cmd.cursol.oldy, BUILD_SUB_MEMBER_FILE_MAP_FILE));
+		sd_fread(fetch_dram_db(game, MEMORY_BUILD_FILE_ID, game->cmd.cursol.oldy, BUILD_SUB_MEMBER_FILE_OBJ_FILE));
+		sd_fread(fetch_dram_db(game, MEMORY_BUILD_FILE_ID, game->cmd.cursol.oldy, BUILD_SUB_MEMBER_FILE_REGION_FILE));
+		sd_fread(fetch_dram_db(game, MEMORY_BUILD_FILE_ID, game->cmd.cursol.oldy, BUILD_SUB_MEMBER_FILE_NPC_FILE));
+		bgm_load(game, fetch_dram_db(game, MEMORY_BUILD_FILE_ID, game->cmd.cursol.oldy, BUILD_SUB_MEMBER_FILE_SOUND_FILE));
+		bgm_update(game, fetch_dram_db(game, MEMORY_BUILD_FILE_ID, game->cmd.cursol.oldy, BUILD_SUB_MEMBER_FILE_SOUND_FILE), SOUND_CH_BGM_WORK);
 	}
 }
 
@@ -284,18 +326,8 @@ static void opening_title_draw(GameWrapper *const game)
  */
 static void opening_savedata_load(GameWrapper *const game)
 {
-	bgm_stop();
-
-	if (game->cmd.sub_system == COMMAND_OPENING_MINIGAME)
-	{
-		game->conf.display.system = SYSTEM_MINIGAME_WINDOW;
-		return;
-	}
-
 	config_initialize(game);
 	hero_initialize(game);
-	bgm_load(game, SOUND_ID_FIELD_GEKAI);	//今はとりあえずフィールド音源を流す
-	bgm_update(game, SOUND_ID_FIELD_GEKAI, SOUND_CH_BGM_WORK);
 }
 
 
@@ -348,27 +380,11 @@ static void config_initialize(GameWrapper *const game)
 	{
 		game->conf.battle.hero.sort_order[i] = i;
 	}
-    game->conf.event.type               = EVENT_TYPE_WORLD_MOVE;
+
     game->conf.display.system           = SYSTEM_MAP_DEFAULT_WINDOW;
     game->conf.display.drawtype         = DISPLAY_FIELD_CENTER_DRAW;
     game->conf.map.back                 = DRAM_MAPDATA_ADDR_START;
     game->conf.map.obj                  = DRAM_MAPDATA_OBJECT_ADDR_START;
-    // game->conf.map.name                 = GEKAI_MAP_ID;
-    // game->conf.map.canpass_id           = CAN_PASS_MAPCHIP_ID_MAX_GEKAI; 
-    // game->conf.map.obj_startid          = OBJECT_START_MAPID_GEKAI;
-    // game->conf.map.obj_endid            = OBJECT_END_MAPID_GEKAI;
-    // game->unit.pos.fieldx               = 160 << MAPCHIP_SHIFT;
-    // game->unit.pos.fieldy               = 39  << MAPCHIP_SHIFT;
-    // game->unit.pos.unitx                = 320;
-    // game->unit.pos.unity                = 224;
-    game->unit.pos.fieldx               = 15 << MAPCHIP_SHIFT;
-    game->unit.pos.fieldy               = 16 << MAPCHIP_SHIFT;
-    game->unit.pos.unitx                = 16;
-    game->unit.pos.unity                = 14;
-    game->conf.map.name                 = ROMEN_VIRRAGE_ID;
-    game->conf.map.canpass_id           = CAN_PASS_MAPCHIP_ID_MAX_ROMEN_VIRRAGE; 
-    game->conf.map.obj_startid          = OBJECT_START_MAPID_ROMEN_VIRRAGE;
-    game->conf.map.obj_endid            = OBJECT_END_MAPID_ROMEN_VIRRAGE;
 	game->unit.pos.unitdir	            = DIR_WAIT;
     game->unit.pos.animation_pixel_x    = ANIMATION_STORY_PIXEL_NUM;
     game->unit.pos.animation_pixel_y    = ANIMATION_STORY_PIXEL_NUM;
@@ -378,20 +394,4 @@ static void config_initialize(GameWrapper *const game)
 	game->unit.draw.cutpos              = UNIT_CUT_DOWN + game->unit.draw.chara_chipid;
 	game->unit.draw.mapchip_id          = UNIT_WORK_TYPE_CENTER + game->unit.draw.cutpos;
     game->unit.draw.chara_chipid        = MAPCHIP_MINORIKO;
-}
-
-
-/**
- * @brief  デバッグを開始する町、フィールド、ダンジョンを選択する
- * @note   
- * @retval None
- */
-static void debug_pos_select(GameWrapper *const game)
-{
-	patblt(game->conf.work.adr, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT, COLOR_BLACK);
-
-	for (uint32_t i = 0; i < MAP_NAME_ID_END; i++)
-	{
-		font_dram_draw(game, LOAD_FONT_XDRAW_POS, LOAD_FONT_YDRAW_POS, MEMORY_CMD_MSG_ID, i, EVENT_MSG_SUB_MSG, COLOR_WHITE);
-	}
 }

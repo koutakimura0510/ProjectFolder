@@ -28,7 +28,6 @@
 #define OBJECT_END_MAPID_ROMEN_VIRRAGE			(95)
 
 
-
 /**
  * @brief  固定イベントのIDを管理する
  * @note   

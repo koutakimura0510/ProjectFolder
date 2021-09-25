@@ -536,24 +536,13 @@ static void system_address_update(uint32_t id, uint32_t *p)
 }
 
 
-/*
- * ver3. 2021/07/30
- * 前回アクセスしたIDと同じならば、前回取得したデータと同じデータを取得するように変更
- * -
- * ver2. 2021/07/20
- * 戻り値に参照したメンバのデータを取得するように変更
- *
- * ver1. 2021/07/15
- * 
- * システムデータの開始アドレスとそのサイズを取得
- * データの開始アドレスの順番はrom_db_strunc.hのメンバを参照
- * -
- * 引数例1
- * DRAMに保存されているアイテムデータの内、アイテム番号がITEM_OUGONDANGO(2)で、nameを取得したい場合
- * main_member = MEMORY_ITEM_ID
- * sub_id      = ITEM_OUGONDANGO
- * sub_member  = ITEM_SUB_MEMBER_NAME
- * -
+/**
+ * @brief  データの開始アドレスの順番はrom_db_strunc.hのメンバを参照
+ * @note   
+ * @param  main_member: MEMORY_xxx_IDと名の付く番号を指定
+ * @param  sub_id: データベースの行の先頭のIDを指定
+ * @param  sub_member: xxxSUB_MEMBER_xxx_xxx sub_idと一致した行の取得するメンバ名を指定
+ * @retval 
  */
 uint32_t fetch_dram_db(GameWrapper *const game, uint8_t main_member, uint32_t sub_id, uint32_t sub_member)
 {
