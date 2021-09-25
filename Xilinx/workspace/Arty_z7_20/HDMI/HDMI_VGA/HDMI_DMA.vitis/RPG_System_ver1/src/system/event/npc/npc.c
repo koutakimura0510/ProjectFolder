@@ -104,6 +104,7 @@ static void npc_center_draw(GameWrapper *const game, DrawElement *const npc)
  */
 static void npc_right_draw(GameWrapper *const game, DrawElement *const npc)
 {
+    SDL_Rect rect;
     npc->buffer = DRAM_MAPDATA_NPC_ADDR_START;
     npc->xsize  = get_mapsize('w');
     npc->field  = CHIP_LEFT(game->unit.pos.fieldx) + (CHIP_LEFT(game->unit.pos.fieldy) * npc->xsize);
@@ -112,16 +113,14 @@ static void npc_right_draw(GameWrapper *const game, DrawElement *const npc)
     game->mapchip.srcin      = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_SRCIN);
     game->mapchip.maxwidth	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_XSIZE);
     game->mapchip.maxheight	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_YSIZE);
-    game->mapchip.draw_xsize = game->mapchip.maxwidth;
     game->mapchip.draw_ysize = game->mapchip.maxheight;
-    game->mapchip.xstart_pos = 0;
     game->mapchip.ystart_pos = 0;
 
     for (uint32_t y = 0; y < MAPCHIP_DRAW_MAX_HEIGHT; y++)
     {
         npc->index = (y * npc->xsize) + npc->field;
 
-        for (uint32_t x = 0; x < MAPCHIP_DRAW_MAX_WIDTH; x++)
+        for (uint32_t x = 0; x < MAPCHIP_DRAW_MAX_WIDTH + 1; x++)
         {
             game->mapchip.id = npc->buffer[x + npc->index];
 
@@ -130,7 +129,26 @@ static void npc_right_draw(GameWrapper *const game, DrawElement *const npc)
                 continue;
             }
 
-            game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) - XRGB(game->unit.pos.anime_cnt);
+            if (x == 0)
+            {
+                game->mapchip.xstart_pos = game->unit.pos.anime_cnt;
+                game->mapchip.draw_xsize = game->mapchip.maxwidth - game->unit.pos.anime_cnt;
+                rect.x = 0;
+            }
+            else if (x == MAPCHIP_DRAW_MAX_WIDTH)
+            {
+                game->mapchip.xstart_pos = 0;
+                game->mapchip.draw_xsize = game->unit.pos.anime_cnt;
+                rect.x = XRGB(game->unit.pos.anime_cnt);
+            }
+            else
+            {
+                game->mapchip.xstart_pos = 0;
+                game->mapchip.draw_xsize = game->mapchip.maxwidth;
+                rect.x = XRGB(game->unit.pos.anime_cnt);
+            }
+
+            game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) - rect.x;
             game->mapchip.dstout = game->mapchip.dstin;
             png_mapchip(game);
         }
@@ -145,24 +163,23 @@ static void npc_right_draw(GameWrapper *const game, DrawElement *const npc)
  */
 static void npc_left_draw(GameWrapper *const game, DrawElement *const npc)
 {
+    SDL_Rect rect;
     npc->buffer = DRAM_MAPDATA_NPC_ADDR_START;
     npc->xsize  = get_mapsize('w');
-    npc->field  = CHIP_LEFT(game->unit.pos.fieldx) + (CHIP_LEFT(game->unit.pos.fieldy) * npc->xsize) + 1;
+    npc->field  = CHIP_LEFT(game->unit.pos.fieldx) + (CHIP_LEFT(game->unit.pos.fieldy) * npc->xsize);
     game->mapchip.frame_size = VIDEO_WIDTH;
     game->mapchip.alpha		 = COLOR_ALPHA_MAX;
     game->mapchip.srcin      = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_SRCIN);
     game->mapchip.maxwidth	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_XSIZE);
     game->mapchip.maxheight	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_YSIZE);
-    game->mapchip.draw_xsize = game->mapchip.maxwidth;
     game->mapchip.draw_ysize = game->mapchip.maxheight;
-    game->mapchip.xstart_pos = 0;
     game->mapchip.ystart_pos = 0;
 
     for (uint32_t y = 0; y < MAPCHIP_DRAW_MAX_HEIGHT; y++)
     {
         npc->index = (y * npc->xsize) + npc->field;
 
-        for (uint32_t x = 0; x < MAPCHIP_DRAW_MAX_WIDTH; x++)
+        for (uint32_t x = 0; x < MAPCHIP_DRAW_MAX_WIDTH+1; x++)
         {
             game->mapchip.id = npc->buffer[x + npc->index];
 
@@ -171,7 +188,26 @@ static void npc_left_draw(GameWrapper *const game, DrawElement *const npc)
                 continue;
             }
 
-            game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + XRGB(game->unit.pos.anime_cnt);
+            if (x == 0)
+            {
+                game->mapchip.xstart_pos = game->mapchip.maxwidth - game->unit.pos.anime_cnt;
+                game->mapchip.draw_xsize = game->unit.pos.anime_cnt;
+                rect.x = 0;
+            }
+            else if (x == MAPCHIP_DRAW_MAX_WIDTH)
+            {
+                game->mapchip.xstart_pos = 0;
+                game->mapchip.draw_xsize = game->mapchip.maxwidth - game->unit.pos.anime_cnt;
+                rect.x = XRGB(game->unit.pos.anime_cnt) - CHIP_RGB(1);
+            }
+            else
+            {
+                game->mapchip.xstart_pos = 0;
+                game->mapchip.draw_xsize = game->mapchip.maxwidth;
+                rect.x = XRGB(game->unit.pos.anime_cnt) - CHIP_RGB(1);
+            }
+
+            game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + rect.x;
             game->mapchip.dstout = game->mapchip.dstin;
             png_mapchip(game);
         }
@@ -196,13 +232,11 @@ static void npc_up_draw(GameWrapper *const game, DrawElement *const npc)
     game->mapchip.maxwidth	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_XSIZE);
     game->mapchip.maxheight	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_YSIZE);
     game->mapchip.draw_xsize = game->mapchip.maxwidth;
-    game->mapchip.draw_ysize = game->mapchip.maxheight;
     game->mapchip.xstart_pos = 0;
-    game->mapchip.ystart_pos = 0;
 
-    for (uint32_t y = 0; y < MAPCHIP_DRAW_MAX_HEIGHT; y++)
+    for (uint32_t y = 0; y < MAPCHIP_DRAW_MAX_HEIGHT+1; y++)
     {
-        npc->index = (y * npc->xsize) + npc->field + npc->xsize;
+        npc->index = (y * npc->xsize) + npc->field;
 
         for (uint32_t x = 0; x < MAPCHIP_DRAW_MAX_WIDTH; x++)
         {
@@ -213,7 +247,20 @@ static void npc_up_draw(GameWrapper *const game, DrawElement *const npc)
                 continue;
             }
 
-            game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + YRGB(game->unit.pos.anime_cnt);
+            if (y == 0)
+            {
+                game->mapchip.ystart_pos = game->mapchip.maxheight - game->unit.pos.anime_cnt;
+                game->mapchip.draw_ysize = game->unit.pos.anime_cnt;
+                rect.y = 0;
+            }
+            else
+            {
+                game->mapchip.ystart_pos = 0;
+                game->mapchip.draw_ysize = game->mapchip.maxheight;
+                rect.y = YRGB(game->unit.pos.anime_cnt) - (CHIP_RGB(1) * VIDEO_WIDTH);
+            }
+
+            game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + rect.y;
             game->mapchip.dstout = game->mapchip.dstin;
             png_mapchip(game);
         }
