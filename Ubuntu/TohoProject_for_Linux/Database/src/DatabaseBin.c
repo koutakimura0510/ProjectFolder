@@ -50,6 +50,7 @@ static const FuncFile funcfile[] = {
 	{"./raw/cos.raw",				cos_write				},
 	{"./raw/type_bit.raw",			type_bit_write			},
 	{"./raw/variable_msg.raw",		variable_msg_write		},
+	{"./raw/debug_select.raw",		debug_select_write		},
 };
 
 

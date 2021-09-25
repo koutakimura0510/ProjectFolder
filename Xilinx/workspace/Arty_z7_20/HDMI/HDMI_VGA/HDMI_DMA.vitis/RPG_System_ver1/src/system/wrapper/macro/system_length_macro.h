@@ -84,6 +84,7 @@ typedef enum
     MEMORY_COS_ID,              //cosのデータテーブル 0~360の計361個ある
     MEMORY_TYPE_STR_ID,         //属性の文字描画を管理するファイル
     MEMORY_VARIABLE_MSG_ID,     //可変式のイベントメッセージを管理するファイル
+    MEMORY_DEBUG_ID,            //起動時のデバッグ開始先を選択するファイル
 } MemoryDataAccess;
 
 
@@ -475,4 +476,18 @@ typedef enum
     TYPE_STR_SUB_MEMBER_MSG,                /* 属性を表す一文字の文字 */
     TYPE_STR_SUB_MEMBER_NUMBER,
 } TypeBitStr;
+
+typedef enum
+{
+    DEBUG_SUB_MEMBER_MAP_NAME,
+    DEBUG_SUB_MEMBER_START_UNITX,
+    DEBUG_SUB_MEMBER_START_UNITY,
+    DEBUG_SUB_MEMBER_START_FIELDX,
+    DEBUG_SUB_MEMBER_START_FIELDY,
+    DEBUG_SUB_MEMBER_CANPASS_ID,
+    DEBUG_SUB_MEMBER_OBJ_START_ID,
+    DEBUG_SUB_MEMBER_OBJ_END_ID,
+    DEBUG_SUB_MEMBER_NAME,
+    DEBUG_SUB_MEMBER_NUMBER,
+} DebugSelectID;
 #endif

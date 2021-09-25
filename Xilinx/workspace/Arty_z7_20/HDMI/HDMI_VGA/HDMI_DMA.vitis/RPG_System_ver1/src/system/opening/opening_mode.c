@@ -353,14 +353,22 @@ static void config_initialize(GameWrapper *const game)
     game->conf.display.drawtype         = DISPLAY_FIELD_CENTER_DRAW;
     game->conf.map.back                 = DRAM_MAPDATA_ADDR_START;
     game->conf.map.obj                  = DRAM_MAPDATA_OBJECT_ADDR_START;
-    game->conf.map.name                 = GEKAI_MAP_ID;
-    game->conf.map.canpass_id           = CAN_PASS_MAPCHIP_ID_MAX_GEKAI; 
-    game->conf.map.obj_startid          = OBJECT_START_MAPID_GEKAI;
-    game->conf.map.obj_endid            = OBJECT_END_MAPID_GEKAI;
-    game->unit.pos.fieldx               = 160 << MAPCHIP_SHIFT;
-    game->unit.pos.fieldy               = 39  << MAPCHIP_SHIFT;
-    game->unit.pos.unitx                = 320;
-    game->unit.pos.unity                = 224;
+    // game->conf.map.name                 = GEKAI_MAP_ID;
+    // game->conf.map.canpass_id           = CAN_PASS_MAPCHIP_ID_MAX_GEKAI; 
+    // game->conf.map.obj_startid          = OBJECT_START_MAPID_GEKAI;
+    // game->conf.map.obj_endid            = OBJECT_END_MAPID_GEKAI;
+    // game->unit.pos.fieldx               = 160 << MAPCHIP_SHIFT;
+    // game->unit.pos.fieldy               = 39  << MAPCHIP_SHIFT;
+    // game->unit.pos.unitx                = 320;
+    // game->unit.pos.unity                = 224;
+    game->unit.pos.fieldx               = 15 << MAPCHIP_SHIFT;
+    game->unit.pos.fieldy               = 16 << MAPCHIP_SHIFT;
+    game->unit.pos.unitx                = 16;
+    game->unit.pos.unity                = 14;
+    game->conf.map.name                 = ROMEN_VIRRAGE_ID;
+    game->conf.map.canpass_id           = CAN_PASS_MAPCHIP_ID_MAX_ROMEN_VIRRAGE; 
+    game->conf.map.obj_startid          = OBJECT_START_MAPID_ROMEN_VIRRAGE;
+    game->conf.map.obj_endid            = OBJECT_END_MAPID_ROMEN_VIRRAGE;
 	game->unit.pos.unitdir	            = DIR_WAIT;
     game->unit.pos.animation_pixel_x    = ANIMATION_STORY_PIXEL_NUM;
     game->unit.pos.animation_pixel_y    = ANIMATION_STORY_PIXEL_NUM;
@@ -370,4 +378,20 @@ static void config_initialize(GameWrapper *const game)
 	game->unit.draw.cutpos              = UNIT_CUT_DOWN + game->unit.draw.chara_chipid;
 	game->unit.draw.mapchip_id          = UNIT_WORK_TYPE_CENTER + game->unit.draw.cutpos;
     game->unit.draw.chara_chipid        = MAPCHIP_MINORIKO;
+}
+
+
+/**
+ * @brief  デバッグを開始する町、フィールド、ダンジョンを選択する
+ * @note   
+ * @retval None
+ */
+static void debug_pos_select(GameWrapper *const game)
+{
+	patblt(game->conf.work.adr, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT, COLOR_BLACK);
+
+	for (uint32_t i = 0; i < MAP_NAME_ID_END; i++)
+	{
+		font_dram_draw(game, LOAD_FONT_XDRAW_POS, LOAD_FONT_YDRAW_POS, MEMORY_CMD_MSG_ID, i, EVENT_MSG_SUB_MSG, COLOR_WHITE);
+	}
 }

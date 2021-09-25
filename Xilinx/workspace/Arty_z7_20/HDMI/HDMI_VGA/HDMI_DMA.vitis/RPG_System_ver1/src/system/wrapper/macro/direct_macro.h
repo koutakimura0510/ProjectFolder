@@ -75,6 +75,7 @@ typedef enum
     ROMEN_HOUSE1_LOOM1_ID,
     ROMEN_HOUSE2_LOOM1_ID,
     ROMEN_DANGEON_ID,
+    BEGINNING_HILL_ID,  // はじまりの丘
     MAP_NAME_ID_END,
 } MapNameID;
 

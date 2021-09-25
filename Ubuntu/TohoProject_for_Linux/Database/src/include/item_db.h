@@ -361,7 +361,7 @@ void weapon_write(FILE *fp, FILE *byte)
 		fprintf(byte, "0x%08x,\n", sjis_write(fp, item->msg));
 	}
 
-    error_print(WEAPON_DB_SIZE, WEAPON_NAME_ID_END);
+    error_print(WEAPON_DB_SIZE, WEAPON_NAME_ID_END, "weapon");
     printf("WEAPON DB TOTAL NUMBER= %ld\n", WEAPON_DB_SIZE);
 }
 
@@ -393,7 +393,7 @@ void armor_write(FILE *fp, FILE *byte)
 		fprintf(byte, "0x%08x,\n", sjis_write(fp, item->msg));
 	}
 
-    error_print(ARMOR_DB_SIZE, ARMOR_NAME_ID_END);
+    error_print(ARMOR_DB_SIZE, ARMOR_NAME_ID_END, "armor");
     printf("ARMOR DB TOTAL NUMBER= %ld\n", ARMOR_DB_SIZE);
 }
 
@@ -421,7 +421,7 @@ void amulet_write(FILE *fp, FILE *byte)
 		fprintf(byte, "0x%08x,\n", sjis_write(fp, item->msg));
 	}
 
-    error_print(AMULET_DB_SIZE, AMULET_NAME_ID_END);
+    error_print(AMULET_DB_SIZE, AMULET_NAME_ID_END, "amulet");
     printf("AMULET DB TOTAL NUMBER= %ld\n", AMULET_DB_SIZE);
 }
 
