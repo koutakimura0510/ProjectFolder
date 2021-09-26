@@ -45,6 +45,22 @@ void npc_config(GameWrapper *const game)
         game->npc.pos[NPC_INDEX_X][i] = 0;
         game->npc.pos[NPC_INDEX_Y][i] = 0;
     }
+
+    uint32_t size = get_mapsize('w') * get_mapsize('h');
+
+    for (uint8_t j = 0; j < game->npc.number; j++)  /* 初期位置のインデックスを保存 */
+    {
+        uint32_t *buffer = DRAM_MAPDATA_NPC_ADDR_START;
+
+        for (uint32_t i = 0; i < size; i++, buffer++)
+        {
+            if (*buffer == game->npc.map_npcid[j])
+            {
+                game->npc.dram_index[j] = i;
+                break;
+            }
+        }
+    }
 }
 
 
@@ -68,41 +84,6 @@ void npc_draw(GameWrapper *const game)
 			break;
 		}
 	}
-}
-
-
-/**
- * @brief  ランダム方向に行動するNPCの座標更新
- * @note   
- * npc.pos[][]の二次元配列参照計算方法
- * right,left時はx座標を更新しなければならない
- * up,down時はy座標を更新しなければならない
- * 
- * x = Index[0], right,left = 0,1
- * y = Index[1], up,down = 2,3
- * 1bitシフトすると0,もしくは1が残るためindexを参照できる
- * 
- * @retval None
- */
-static void npc_random_update(GameWrapper *const game, uint8_t index)
-{
-    uint8_t rand_number = get_random(0x03); /* 上下左右の要素の合計が3のため 0 ~ 3の値を取得 */
-    int8_t range = fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, game->npc.map_npcid[index], NPC_SUB_MEMBER_PATTERN_RANGE_LEFT + rand_number);
-
-    if ((rand_number == NPC_POS_UPDATE_LEFT) || (rand_number == NPC_POS_UPDATE_UP))
-    {
-        if (range < game->npc.pos[range >> 1][index])
-        {
-            game->npc.pos[range >> 1][index]--;
-        }
-    }
-    else /* RIGHT、もしくはDOWNの処理を行う */
-    {
-        if (game->npc.pos[range >> 1][index] < range)
-        {
-            game->npc.pos[range >> 1][index]++;
-        }
-    }
 }
 
 
@@ -167,6 +148,44 @@ static void npc_mapchip_update(GameWrapper *const game)
             game->npc.anime_time[i] = get_time();
         }
     }
+}
+
+
+/**
+ * @brief  ランダム方向に行動するNPCの座標更新
+ * @note   
+ * npc.pos[][]の二次元配列参照計算方法
+ * right,left時はx座標を更新しなければならない
+ * up,down時はy座標を更新しなければならない
+ * 
+ * x = Index[0], right,left = 0,1
+ * y = Index[1], up,down = 2,3
+ * 1bitシフトすると0,もしくは1が残るためindexを参照できる
+ * 
+ * @retval None
+ */
+static void npc_random_update(GameWrapper *const game, uint8_t index)
+{
+    uint8_t rand_number = get_random(0x03); /* 上下左右の要素の合計が3のため 0 ~ 3の値を取得 */
+    int8_t range = fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, game->npc.map_npcid[index], NPC_SUB_MEMBER_PATTERN_RANGE_LEFT + rand_number);
+
+    if ((rand_number == NPC_POS_UPDATE_LEFT) || (rand_number == NPC_POS_UPDATE_UP))
+    {
+        if (range < game->npc.pos[range >> 1][index])
+        {
+            game->npc.pos[range >> 1][index]--;
+            // game->
+        }
+    }
+    else /* RIGHT、もしくはDOWNの処理を行う */
+    {
+        if (game->npc.pos[range >> 1][index] < range)
+        {
+            game->npc.pos[range >> 1][index]++;
+        }
+    }
+
+    game->npc.dir[index] = NPC_DIR_EDGE * rand_number;
 }
 
 

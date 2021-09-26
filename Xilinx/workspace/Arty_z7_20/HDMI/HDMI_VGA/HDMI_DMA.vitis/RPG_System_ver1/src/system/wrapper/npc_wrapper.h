@@ -36,6 +36,7 @@ typedef struct npc_wrapper
     uint8_t dir[NPC_MAX_DRAW_NUM];
     uint32_t anime_time[NPC_MAX_DRAW_NUM];
     uint32_t dir_time[NPC_MAX_DRAW_NUM];
+    uint32_t dram_index[NPC_MAX_DRAW_NUM];
     uint8_t number;
 } NpcWrapper;
 
