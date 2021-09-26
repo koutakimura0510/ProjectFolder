@@ -1,5 +1,12 @@
 /**
- * @brief   システムマクロを管理するヘッダーファイル
+ * Create 2021/09/26
+ * Author koutakimura
+ * Editor VSCode ver1.57.1
+ * Build  Vitis20.2
+ * Borad  ArtyZ7-20
+ * -
+ * @brief システムのファイル作成アプリケーションや、ゲームアプリケーションの動作に使用する
+ *        定数ファイルを管理するラッパーヘッダーファイル
  */
 
 #ifndef macro_wrapper_h   /* prevent circular inclusions */
