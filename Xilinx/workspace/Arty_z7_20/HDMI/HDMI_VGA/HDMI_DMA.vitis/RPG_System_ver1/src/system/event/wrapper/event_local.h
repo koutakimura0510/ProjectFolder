@@ -47,7 +47,6 @@ typedef struct
 
 
 /* マクロ定数を定義 */
-#include "../npc/npc_macro.h"
 #include "../draw/detection_macro.h"
 #include "../draw/draw_macro.h"
 #include "../unit/unit_event_macro.h"
