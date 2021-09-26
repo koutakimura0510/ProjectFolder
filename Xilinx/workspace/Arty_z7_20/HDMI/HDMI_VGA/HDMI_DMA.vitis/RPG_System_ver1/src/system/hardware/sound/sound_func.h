@@ -1,8 +1,6 @@
 #ifndef sound_func_h   /* prevent circular inclusions */
 #define sound_func_h   /* by using protection macros */
 
-#include "dtm_macro.h"
-
 bool dtmwork_init(void);
 void bgm_playback(void);
 void bgm_load(GameWrapper *const game, uint8_t sound_id);

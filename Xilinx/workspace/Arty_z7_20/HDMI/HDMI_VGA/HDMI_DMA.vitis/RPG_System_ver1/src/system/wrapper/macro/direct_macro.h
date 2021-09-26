@@ -20,6 +20,7 @@ typedef enum
     ROMEN_NPC_ID_1,
     ROMEN_NPC_ID_2,
     ROMEN_NPC_ID_3,
+    ROMEN_NPC_ID_4,
     
     DIRECT_GEKAI_ID_START,
     DIRECT_GEKAI_ROMEN_VILLAGE_ID,
@@ -75,6 +76,7 @@ typedef enum
     ROMEN_HOUSE1_LOOM1_ID,
     ROMEN_HOUSE2_LOOM1_ID,
     ROMEN_DANGEON_ID,
+    BEGINNING_HILL_ID,  // はじまりの丘
     MAP_NAME_ID_END,
 } MapNameID;
 

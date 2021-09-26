@@ -17,6 +17,8 @@
 static const FuncFile funcfile[] = {
 	{"./raw/enemy.raw",				enemy_write				},
 	{"./raw/enemy_name.raw",		enemy_name_write		},
+	{"./raw/build_config.raw",		build_config_write		},
+	{"./raw/build_file.raw",		build_file_write		},
 	{"./raw/item.raw",				item_write				},
 	{"./raw/weapon.raw",			weapon_write			},
 	{"./raw/armor.raw",				armor_write				},

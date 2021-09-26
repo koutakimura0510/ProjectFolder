@@ -35,13 +35,13 @@
 #define COS_TABLE_MAX               (361)
 
 /* NPCの連番データベースの行数 */
-#define NPC_PATTERN_DB_COL          (3)
+#define NPC_PATTERN_DB_COL          (4)
 
 /* 属性データベースの行数 */
 #define UNIT_RES_SIZE               (19)
 
 /* 可変式イベントメッセージデータベースの行数 */
-#define VARIABLE_MSG_SIZE           (3)
+#define VARIABLE_MSG_SIZE           (4)
 
 /*
  * ver1. 2021/07/15
@@ -51,6 +51,8 @@ typedef enum
 {
     MEMORY_ENEMY_PARA_ID,       //敵のパラメータファイル
     MEMORY_ENEMY_NAME_ID,       //敵の名前ファイル
+    MEMORY_BUILD_CONFIG_ID,     //ビルドの基本情報のファイル
+    MEMORY_BUILD_FILE_ID,       //ファイルを利用するビルドデータベースファイル
     MEMORY_ITEM_ID,             //アイテムファイル
     MEMORY_WEAPON_ID,           //武器ファイル
     MEMORY_ARMOR_ID,            //防具ファイル
@@ -475,4 +477,31 @@ typedef enum
     TYPE_STR_SUB_MEMBER_MSG,                /* 属性を表す一文字の文字 */
     TYPE_STR_SUB_MEMBER_NUMBER,
 } TypeBitStr;
+
+typedef enum
+{
+    BUILD_SUB_MEMBER_CONFIG_MAP_NAME,
+    BUILD_SUB_MEMBER_CONFIG_DEBUG_START_UNITX,
+    BUILD_SUB_MEMBER_CONFIG_DEBUG_START_UNITY,
+    BUILD_SUB_MEMBER_CONFIG_DEBUG_START_FIELDX,
+    BUILD_SUB_MEMBER_CONFIG_DEBUG_START_FIELDY,
+    BUILD_SUB_MEMBER_CONFIG_DEBUG_EVENT_TYPE,
+    BUILD_SUB_MEMBER_CONFIG_CANPASS_ID,
+    BUILD_SUB_MEMBER_CONFIG_OBJ_START_ID,
+    BUILD_SUB_MEMBER_CONFIG_OBJ_END_ID,
+    BUILD_SUB_MEMBER_CONFIG_NAME,
+    BUILD_SUB_MEMBER_CONFIG_NUMBER,
+} BuildConfigID;
+
+typedef enum
+{
+    BUILD_SUB_MEMBER_FILE_MAP_NAME,
+    BUILD_SUB_MEMBER_FILE_MAP_FILE,
+    BUILD_SUB_MEMBER_FILE_OBJ_FILE,
+    BUILD_SUB_MEMBER_FILE_REGION_FILE,
+    BUILD_SUB_MEMBER_FILE_NPC_FILE,
+    BUILD_SUB_MEMBER_FILE_MAPCHIP_FILE,
+    BUILD_SUB_MEMBER_FILE_SOUND_FILE,
+    BUILD_SUB_MEMBER_FILE_NUMBER,
+} BuildFileID;
 #endif

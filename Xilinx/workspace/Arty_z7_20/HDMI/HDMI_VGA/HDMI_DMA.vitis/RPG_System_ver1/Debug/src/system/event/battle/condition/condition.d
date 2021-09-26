@@ -21,6 +21,7 @@ src/system/event/battle/condition/condition.o \
  ../src/system/event/battle/condition/../../../wrapper/macro/npc_macro.h \
  ../src/system/event/battle/condition/../../../wrapper/macro/event_id_macro.h \
  ../src/system/event/battle/condition/../../../wrapper/macro/event_flag_macro.h \
+ ../src/system/event/battle/condition/../../../wrapper/macro/dtm_macro.h \
  ../src/system/event/battle/condition/../../../wrapper/hero_wrapper.h \
  ../src/system/event/battle/condition/../../../wrapper/unit_wrapper.h \
  ../src/system/event/battle/condition/../../../wrapper/mapchip_wrapper.h \
@@ -40,10 +41,8 @@ src/system/event/battle/condition/condition.o \
  ../src/system/event/battle/condition/../../../wrapper/../hardware/wrapper/../fpga/mapchip_macro.h \
  ../src/system/event/battle/condition/../../../wrapper/../hardware/wrapper/../fpga/vdma_macro.h \
  ../src/system/event/battle/condition/../../../wrapper/../hardware/wrapper/../sound/sound_func.h \
- ../src/system/event/battle/condition/../../../wrapper/../hardware/wrapper/../sound/dtm_macro.h \
  ../src/system/event/battle/condition/../../../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/event/battle/condition/../../../wrapper/../event/wrapper/event_local.h \
- ../src/system/event/battle/condition/../../../wrapper/../event/wrapper/../npc/npc_macro.h \
  ../src/system/event/battle/condition/../../../wrapper/../event/wrapper/../draw/detection_macro.h \
  ../src/system/event/battle/condition/../../../wrapper/../event/wrapper/../draw/draw_macro.h \
  ../src/system/event/battle/condition/../../../wrapper/../event/wrapper/../unit/unit_event_macro.h \
@@ -124,6 +123,8 @@ src/system/event/battle/condition/condition.o \
 
 ../src/system/event/battle/condition/../../../wrapper/macro/event_flag_macro.h:
 
+../src/system/event/battle/condition/../../../wrapper/macro/dtm_macro.h:
+
 ../src/system/event/battle/condition/../../../wrapper/hero_wrapper.h:
 
 ../src/system/event/battle/condition/../../../wrapper/unit_wrapper.h:
@@ -162,13 +163,9 @@ src/system/event/battle/condition/condition.o \
 
 ../src/system/event/battle/condition/../../../wrapper/../hardware/wrapper/../sound/sound_func.h:
 
-../src/system/event/battle/condition/../../../wrapper/../hardware/wrapper/../sound/dtm_macro.h:
-
 ../src/system/event/battle/condition/../../../wrapper/../hardware/wrapper/../rom/rom_func.h:
 
 ../src/system/event/battle/condition/../../../wrapper/../event/wrapper/event_local.h:
-
-../src/system/event/battle/condition/../../../wrapper/../event/wrapper/../npc/npc_macro.h:
 
 ../src/system/event/battle/condition/../../../wrapper/../event/wrapper/../draw/detection_macro.h:
 

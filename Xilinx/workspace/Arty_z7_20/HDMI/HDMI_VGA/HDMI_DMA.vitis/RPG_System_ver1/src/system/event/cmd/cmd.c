@@ -59,6 +59,11 @@ void cmd_db_reset(GameWrapper *const game, uint8_t system, uint8_t ystart)
 		game->cmd.cursol.yend = OPENING_CURSOL_END;
 		break;
 
+	case COMMAND_BUILD_SYSTEM:
+		game->cmd.sub_system  = COMMAND_MAIN;
+		game->cmd.cursol.yend = MAP_NAME_ID_END;
+		break;
+
 	case COMMAND_BATTLE_SYSTEM:
 		game->cmd.sub_system    = COMMAND_MAIN;
 		game->cmd.window.sub_id = BATTLE_WINDOW_SUB_NON;
@@ -166,6 +171,10 @@ uint8_t cmd_key(GameWrapper *const game)
 	switch (game->cmd.system)
 	{
 	case COMMAND_OPENING_SYSTEM:
+		opening_key(game, key.bit);
+		break;
+
+	case COMMAND_BUILD_SYSTEM:
 		opening_key(game, key.bit);
 		break;
 

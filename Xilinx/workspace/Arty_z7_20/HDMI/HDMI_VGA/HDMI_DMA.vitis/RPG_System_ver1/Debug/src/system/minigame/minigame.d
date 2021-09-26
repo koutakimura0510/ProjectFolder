@@ -20,6 +20,7 @@ src/system/minigame/minigame.o src/system/minigame/minigame.o: \
  ../src/system/minigame/../wrapper/macro/npc_macro.h \
  ../src/system/minigame/../wrapper/macro/event_id_macro.h \
  ../src/system/minigame/../wrapper/macro/event_flag_macro.h \
+ ../src/system/minigame/../wrapper/macro/dtm_macro.h \
  ../src/system/minigame/../wrapper/hero_wrapper.h \
  ../src/system/minigame/../wrapper/unit_wrapper.h \
  ../src/system/minigame/../wrapper/mapchip_wrapper.h \
@@ -39,10 +40,8 @@ src/system/minigame/minigame.o src/system/minigame/minigame.o: \
  ../src/system/minigame/../wrapper/../hardware/wrapper/../fpga/mapchip_macro.h \
  ../src/system/minigame/../wrapper/../hardware/wrapper/../fpga/vdma_macro.h \
  ../src/system/minigame/../wrapper/../hardware/wrapper/../sound/sound_func.h \
- ../src/system/minigame/../wrapper/../hardware/wrapper/../sound/dtm_macro.h \
  ../src/system/minigame/../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/minigame/../wrapper/../event/wrapper/event_local.h \
- ../src/system/minigame/../wrapper/../event/wrapper/../npc/npc_macro.h \
  ../src/system/minigame/../wrapper/../event/wrapper/../draw/detection_macro.h \
  ../src/system/minigame/../wrapper/../event/wrapper/../draw/draw_macro.h \
  ../src/system/minigame/../wrapper/../event/wrapper/../unit/unit_event_macro.h \
@@ -122,6 +121,8 @@ src/system/minigame/minigame.o src/system/minigame/minigame.o: \
 
 ../src/system/minigame/../wrapper/macro/event_flag_macro.h:
 
+../src/system/minigame/../wrapper/macro/dtm_macro.h:
+
 ../src/system/minigame/../wrapper/hero_wrapper.h:
 
 ../src/system/minigame/../wrapper/unit_wrapper.h:
@@ -160,13 +161,9 @@ src/system/minigame/minigame.o src/system/minigame/minigame.o: \
 
 ../src/system/minigame/../wrapper/../hardware/wrapper/../sound/sound_func.h:
 
-../src/system/minigame/../wrapper/../hardware/wrapper/../sound/dtm_macro.h:
-
 ../src/system/minigame/../wrapper/../hardware/wrapper/../rom/rom_func.h:
 
 ../src/system/minigame/../wrapper/../event/wrapper/event_local.h:
-
-../src/system/minigame/../wrapper/../event/wrapper/../npc/npc_macro.h:
 
 ../src/system/minigame/../wrapper/../event/wrapper/../draw/detection_macro.h:
 

@@ -106,6 +106,18 @@ uint32_t get_rand(uint32_t seed)
 }
 
 
+/**
+ * @brief  ランダム値の取得
+ * @note   
+ * @param  seed: 
+ * @retval 
+ */
+uint8_t get_random(uint8_t seed)
+{
+	return xorshift(get_time()) & seed;
+}
+
+
 /*
  * ver1. 2021/08/18
  * 引数で指定した値までのパーセント値を取得

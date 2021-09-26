@@ -9,6 +9,7 @@ uint32_t bit_count(uint32_t bits);
 bool isEscape(void);
 uint32_t xorshift(uint32_t seed);
 uint32_t get_rand(uint32_t seed);
+uint8_t get_random(uint8_t seed);
 uint8_t get_percent(uint8_t seed);
 
 #endif
