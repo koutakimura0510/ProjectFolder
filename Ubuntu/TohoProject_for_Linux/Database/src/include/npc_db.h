@@ -42,7 +42,7 @@ static const NpcMapDB npc_map_db[] = {
 	{TENKAI_MAP_ID,			{0, }, },
 	{HAZAMA_MAP_ID,			{0, }, },
 	{MAKAI_MAP_ID,			{0, }, },
-	{ROMEN_VIRRAGE_ID,		{ROMEN_NPC_ID_1, ROMEN_NPC_ID_2, ROMEN_NPC_ID_3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,},	},
+	{ROMEN_VIRRAGE_ID,		{ROMEN_NPC_ID_1, ROMEN_NPC_ID_2, ROMEN_NPC_ID_3, ROMEN_NPC_ID_4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,},	},
 	{ROMEN_HOUSE1_LOOM1_ID,	{0, }, },
 	{ROMEN_HOUSE2_LOOM1_ID,	{0, }, },
 	{ROMEN_DANGEON_ID,		{0, }, },
@@ -79,10 +79,10 @@ typedef struct npc_pattern_db
 	uint32_t npcid;
 	uint32_t xinit;
 	uint32_t yinit;
-	uint32_t range_left;
-	uint32_t range_right;
-	uint32_t range_up;
-	uint32_t range_down;
+	int32_t range_left;
+	int32_t range_right;
+	int32_t range_up;
+	int32_t range_down;
 	uint32_t action_speed;
 	uint32_t update_speed;
 	uint32_t mapchip_speed;
@@ -90,9 +90,10 @@ typedef struct npc_pattern_db
 } NpcPatternDB;
 
 static const NpcPatternDB npc_pattern_db[] = {
-	{ROMEN_NPC_ID_1, NPC_GUAL_1_WORLD, 27, 28, 2, 2, 2, 2, TM_100MS_COUNT, TM_100MS_COUNT, TM_100MS_COUNT, NPC_PATTERN_RANDOM,},
-	{ROMEN_NPC_ID_2, NPC_GUAL_2_WORLD, 27, 13, 0, 0, 0, 0, TM_100MS_COUNT, TM_100MS_COUNT, TM_100MS_COUNT, NPC_PATTERN_STAND, },
-	{ROMEN_NPC_ID_3, NPC_GUAL_2_WORLD, 32, 36, 1, 1, 1, 1, TM_500MS_COUNT, TM_300MS_COUNT, TM_300MS_COUNT, NPC_PATTERN_RANDOM, },
+	{ROMEN_NPC_ID_1, NPC_GUAL_1_WORLD, 27, 28,  0, 0,  0, 0, TM_700MS_COUNT, TM_700MS_COUNT, TM_700MS_COUNT, NPC_PATTERN_STAND, 	},
+	{ROMEN_NPC_ID_2, NPC_GUAL_2_WORLD, 27, 13,  0, 0,  0, 0, TM_700MS_COUNT, TM_700MS_COUNT, TM_700MS_COUNT, NPC_PATTERN_STAND, 	},
+	{ROMEN_NPC_ID_3, NPC_GUAL_2_WORLD, 32, 36, -1, 1, -1, 1, TM_700MS_COUNT, TM_700MS_COUNT, TM_700MS_COUNT, NPC_PATTERN_RANDOM, 	},
+	{ROMEN_NPC_ID_4, NPC_GUAL_1_WORLD, 39, 36, -2, 2, -2, 2, TM_700MS_COUNT, TM_700MS_COUNT, TM_700MS_COUNT, NPC_PATTERN_ROULETTE, 	},
 };
 
 
@@ -117,6 +118,7 @@ static const NpcEventDB npc_event_db[] = {
 	{ ROMEN_NPC_ID_1, FLAG_NPC_MSG_EVENT,    ROMEN_BOSS_DYE, 0, },
 	{ ROMEN_NPC_ID_2, FLAG_NPC_MSG_EVENT,    ROMEN_BOSS_DYE, 0, },
 	{ ROMEN_NPC_ID_3, FLAG_NPC_MSG_CONTINUE, ROMEN_BOSS_DYE, 0, },
+	{ ROMEN_NPC_ID_4, FLAG_NPC_MSG_CONTINUE, ROMEN_BOSS_DYE, 0, },
 };
 
 

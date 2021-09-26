@@ -42,7 +42,6 @@ src/system/minigame/shooting.o src/system/minigame/shooting.o: \
  ../src/system/minigame/../wrapper/../hardware/wrapper/../sound/sound_func.h \
  ../src/system/minigame/../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/minigame/../wrapper/../event/wrapper/event_local.h \
- ../src/system/minigame/../wrapper/../event/wrapper/../npc/npc_macro.h \
  ../src/system/minigame/../wrapper/../event/wrapper/../draw/detection_macro.h \
  ../src/system/minigame/../wrapper/../event/wrapper/../draw/draw_macro.h \
  ../src/system/minigame/../wrapper/../event/wrapper/../unit/unit_event_macro.h \
@@ -158,8 +157,6 @@ src/system/minigame/shooting.o src/system/minigame/shooting.o: \
 ../src/system/minigame/../wrapper/../hardware/wrapper/../rom/rom_func.h:
 
 ../src/system/minigame/../wrapper/../event/wrapper/event_local.h:
-
-../src/system/minigame/../wrapper/../event/wrapper/../npc/npc_macro.h:
 
 ../src/system/minigame/../wrapper/../event/wrapper/../draw/detection_macro.h:
 

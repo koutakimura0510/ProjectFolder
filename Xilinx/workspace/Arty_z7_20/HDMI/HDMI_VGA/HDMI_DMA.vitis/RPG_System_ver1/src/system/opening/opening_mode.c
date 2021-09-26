@@ -394,4 +394,5 @@ static void config_initialize(GameWrapper *const game)
 	game->unit.draw.cutpos              = UNIT_CUT_DOWN + game->unit.draw.chara_chipid;
 	game->unit.draw.mapchip_id          = UNIT_WORK_TYPE_CENTER + game->unit.draw.cutpos;
     game->unit.draw.chara_chipid        = MAPCHIP_MINORIKO;
+	npc_config(game);
 }

@@ -32,6 +32,33 @@
 #define NPC_DIR_UP      (18)
 
 
+/**
+ * @brief  npcの座標管理構造体のインデックス番号
+ * @note   
+ * @retval None
+ */
+typedef enum
+{
+	NPC_INDEX_X,
+	NPC_INDEX_Y,
+	NPC_INDEX_NUMBER,
+} NpcIndexPos;
+
+
+/**
+ * @brief  NPCの座標更新に使用する状態管理定数
+ * @note   
+ * @retval None
+ */
+typedef enum
+{
+	NPC_POS_UPDATE_LEFT,
+	NPC_POS_UPDATE_RIGHT,
+	NPC_POS_UPDATE_UP,
+	NPC_POS_UPDATE_DOWN,
+} NpcDirUpdate;
+
+
 /*!
  * \brief NPCの行動パターンを管理
  */

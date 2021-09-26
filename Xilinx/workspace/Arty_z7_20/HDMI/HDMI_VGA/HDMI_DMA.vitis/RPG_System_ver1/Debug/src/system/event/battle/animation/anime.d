@@ -43,7 +43,6 @@ src/system/event/battle/animation/anime.o \
  ../src/system/event/battle/animation/../../../wrapper/../hardware/wrapper/../sound/sound_func.h \
  ../src/system/event/battle/animation/../../../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/event/battle/animation/../../../wrapper/../event/wrapper/event_local.h \
- ../src/system/event/battle/animation/../../../wrapper/../event/wrapper/../npc/npc_macro.h \
  ../src/system/event/battle/animation/../../../wrapper/../event/wrapper/../draw/detection_macro.h \
  ../src/system/event/battle/animation/../../../wrapper/../event/wrapper/../draw/draw_macro.h \
  ../src/system/event/battle/animation/../../../wrapper/../event/wrapper/../unit/unit_event_macro.h \
@@ -166,8 +165,6 @@ src/system/event/battle/animation/anime.o \
 ../src/system/event/battle/animation/../../../wrapper/../hardware/wrapper/../rom/rom_func.h:
 
 ../src/system/event/battle/animation/../../../wrapper/../event/wrapper/event_local.h:
-
-../src/system/event/battle/animation/../../../wrapper/../event/wrapper/../npc/npc_macro.h:
 
 ../src/system/event/battle/animation/../../../wrapper/../event/wrapper/../draw/detection_macro.h:
 

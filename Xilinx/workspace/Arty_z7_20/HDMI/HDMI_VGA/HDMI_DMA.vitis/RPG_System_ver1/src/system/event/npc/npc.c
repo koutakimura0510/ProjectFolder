@@ -11,6 +11,13 @@
 #include "npc_struct.h"
 
 
+/* npcの操作に関するファイル内関数 */
+static void npc_random_update(GameWrapper *const game, uint8_t index);
+static void npc_dir_update(GameWrapper *const game);
+static void npc_mapchip_update(GameWrapper *const game);
+
+
+
 /**
  * @brief  DRAMに保存されているNPCのデータをラッパー構造体に保存
  * @note   構造体に保存しておくと、DRAMアクセスの時間を減らせるため作った
@@ -28,9 +35,15 @@ void npc_config(GameWrapper *const game)
             break;
         }
 
-        game->npc.id[i]   = fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, map_npcid, NPC_SUB_MEMBER_PATTERN_NPCID);
-        game->npc.xpos[i] = fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, map_npcid, NPC_SUB_MEMBER_PATTERN_XINIT);
-        game->npc.ypos[i] = fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, map_npcid, NPC_SUB_MEMBER_PATTERN_YINIT);
+        game->npc.map_npcid[i]  = map_npcid;
+        game->npc.id[i]         = fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, map_npcid,       NPC_SUB_MEMBER_PATTERN_NPCID);
+        game->npc.mapchip_id[i] = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID,  game->npc.id[i], NPC_SUB_MEMBER_BITMAP_MAPCHIPID);
+        game->npc.cut_pos[i]    = 0;
+        game->npc.dir[i]        = NPC_DIR_DOWN;
+        game->npc.anime_time[i] = 0;
+        game->npc.dir_time[i]   = 0;
+        game->npc.pos[NPC_INDEX_X][i] = 0;
+        game->npc.pos[NPC_INDEX_Y][i] = 0;
     }
 }
 
@@ -49,10 +62,111 @@ void npc_draw(GameWrapper *const game)
 	{
 		if (game->conf.display.drawtype == p->drawtype)
 		{
+            npc_dir_update(game);
+            npc_mapchip_update(game);
 			p->npc_window(game, &npc);
 			break;
 		}
 	}
+}
+
+
+/**
+ * @brief  ランダム方向に行動するNPCの座標更新
+ * @note   
+ * npc.pos[][]の二次元配列参照計算方法
+ * right,left時はx座標を更新しなければならない
+ * up,down時はy座標を更新しなければならない
+ * 
+ * x = Index[0], right,left = 0,1
+ * y = Index[1], up,down = 2,3
+ * 1bitシフトすると0,もしくは1が残るためindexを参照できる
+ * 
+ * @retval None
+ */
+static void npc_random_update(GameWrapper *const game, uint8_t index)
+{
+    uint8_t rand_number = get_random(0x03); /* 上下左右の要素の合計が3のため 0 ~ 3の値を取得 */
+    int8_t range = fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, game->npc.map_npcid[index], NPC_SUB_MEMBER_PATTERN_RANGE_LEFT + rand_number);
+
+    if ((rand_number == NPC_POS_UPDATE_LEFT) || (rand_number == NPC_POS_UPDATE_UP))
+    {
+        if (range < game->npc.pos[range >> 1][index])
+        {
+            game->npc.pos[range >> 1][index]--;
+        }
+    }
+    else /* RIGHT、もしくはDOWNの処理を行う */
+    {
+        if (game->npc.pos[range >> 1][index] < range)
+        {
+            game->npc.pos[range >> 1][index]++;
+        }
+    }
+}
+
+
+/**
+ * @brief  npcの向きの更新処理
+ * @note   データベースから向きを変更する周期を取得し、前回の時間から一定時間経過していたら
+ *         NPCの行動パターンによってNPCの現在の座標を更新する
+ * @retval None
+ */
+static void npc_dir_update(GameWrapper *const game)
+{
+    for (uint8_t i = 0; i < game->npc.number; i++)
+    {
+        if (false == tmr_constant(&game->npc.dir_time[i], fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, game->npc.map_npcid[i], NPC_SUB_MEMBER_PATTERN_UPDATE_SPEED)))
+        {
+            continue;
+        }
+
+        switch (fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, game->npc.map_npcid[i], NPC_SUB_MEMBER_PATTERN_ACTION_PATTERN))
+        {
+        case NPC_PATTERN_RANDOM:
+            npc_random_update(game, i);
+            break;
+
+        case NPC_PATTERN_ROULETTE:
+            break;
+
+        case NPC_PATTERN_STEP:
+            break;
+
+        case NPC_PATTERN_FAST_STEP:
+            break;
+
+        case NPC_PATTERN_STAND:
+            break;
+        
+        default:
+            break;
+        }
+
+        game->npc.dir_time[i] = get_time();
+    }
+}
+
+
+/**
+ * @brief  npcの歩行アニメーションマップチップ更新処理
+ * @note   マップチップの並び順が0.左足、1.直立、2.右足の順番で並んでいる
+ *         直立の描画は行わないため、0.左足、2.右足のマップチップを交互に入れ替える
+ * 
+ * @retval None
+ */
+static void npc_mapchip_update(GameWrapper *const game)
+{
+    for (uint8_t i = 0; i < game->npc.number; i++)
+    {
+        if (true == tmr_constant(&game->npc.anime_time[i], fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, game->npc.map_npcid[i], NPC_SUB_MEMBER_PATTERN_MAPCHIP_SPEED)))
+        {
+            game->npc.cut_pos[i] += 2;
+            game->npc.cut_pos[i] &= 0x02;
+            game->npc.mapchip_id[i] = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[i], NPC_SUB_MEMBER_BITMAP_MAPCHIPID) + game->npc.cut_pos[i] + game->npc.dir[i];
+            game->npc.anime_time[i] = get_time();
+        }
+    }
 }
 
 
@@ -63,9 +177,9 @@ void npc_draw(GameWrapper *const game)
  */
 static void npc_center_draw(GameWrapper *const game, DrawElement *const npc)
 {
-    npc->buffer = DRAM_MAPDATA_NPC_ADDR_START;
-    npc->xsize  = get_mapsize('w');
-    npc->field  = CHIP_LEFT(game->unit.pos.fieldx) + (CHIP_LEFT(game->unit.pos.fieldy) * npc->xsize);
+    npc->buffer              = DRAM_MAPDATA_NPC_ADDR_START;
+    npc->xsize               = get_mapsize('w');
+    npc->field               = CHIP_LEFT(game->unit.pos.fieldx) + (CHIP_LEFT(game->unit.pos.fieldy) * npc->xsize);
     game->mapchip.frame_size = VIDEO_WIDTH;
     game->mapchip.alpha		 = COLOR_ALPHA_MAX;
     game->mapchip.srcin      = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_SRCIN);
@@ -76,22 +190,30 @@ static void npc_center_draw(GameWrapper *const game, DrawElement *const npc)
     game->mapchip.xstart_pos = 0;
     game->mapchip.ystart_pos = 0;
 
-    for (uint32_t y = 0; y < MAPCHIP_DRAW_MAX_HEIGHT; y++)
+    for (uint32_t y = 0; y < MAPCHIP_DRAW_MAX_HEIGHT; y++)  /* 一画面分npcマップファイルのID検索を行う */
     {
         npc->index = (y * npc->xsize) + npc->field;
 
         for (uint32_t x = 0; x < MAPCHIP_DRAW_MAX_WIDTH; x++)
         {
-            game->mapchip.id = npc->buffer[x + npc->index];
+            uint8_t id = npc->buffer[x + npc->index];
 
-            if (game->mapchip.id == 0)
+            if (0 == id)
             {
                 continue;
             }
 
-            game->mapchip.dstin  = CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + game->conf.work.adr;
-            game->mapchip.dstout = game->mapchip.dstin;
-            png_mapchip(game);
+            for (uint8_t i = 0; i < game->npc.number; i++)  /* npcidでインデックスの検索を行い、描画IDを取得する */
+            {
+                if (id == game->npc.map_npcid[i])
+                {
+                    game->mapchip.id     = game->npc.mapchip_id[i];
+                    game->mapchip.dstin  = CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + game->conf.work.adr;
+                    game->mapchip.dstout = game->mapchip.dstin;
+                    png_mapchip(game);
+                    break;
+                }
+            }
         }
 	}
 }

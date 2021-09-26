@@ -35,13 +35,13 @@
 #define COS_TABLE_MAX               (361)
 
 /* NPCの連番データベースの行数 */
-#define NPC_PATTERN_DB_COL          (3)
+#define NPC_PATTERN_DB_COL          (4)
 
 /* 属性データベースの行数 */
 #define UNIT_RES_SIZE               (19)
 
 /* 可変式イベントメッセージデータベースの行数 */
-#define VARIABLE_MSG_SIZE           (3)
+#define VARIABLE_MSG_SIZE           (4)
 
 /*
  * ver1. 2021/07/15

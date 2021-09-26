@@ -41,7 +41,6 @@ src/system/calc/calc.o src/system/calc/calc.o: ../src/system/calc/calc.c \
  ../src/system/calc/../wrapper/../hardware/wrapper/../sound/sound_func.h \
  ../src/system/calc/../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/calc/../wrapper/../event/wrapper/event_local.h \
- ../src/system/calc/../wrapper/../event/wrapper/../npc/npc_macro.h \
  ../src/system/calc/../wrapper/../event/wrapper/../draw/detection_macro.h \
  ../src/system/calc/../wrapper/../event/wrapper/../draw/draw_macro.h \
  ../src/system/calc/../wrapper/../event/wrapper/../unit/unit_event_macro.h \
@@ -154,8 +153,6 @@ src/system/calc/calc.o src/system/calc/calc.o: ../src/system/calc/calc.c \
 ../src/system/calc/../wrapper/../hardware/wrapper/../rom/rom_func.h:
 
 ../src/system/calc/../wrapper/../event/wrapper/event_local.h:
-
-../src/system/calc/../wrapper/../event/wrapper/../npc/npc_macro.h:
 
 ../src/system/calc/../wrapper/../event/wrapper/../draw/detection_macro.h:
 

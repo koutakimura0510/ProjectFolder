@@ -44,7 +44,6 @@ src/system/hardware/sound/dtm.o src/system/hardware/sound/dtm.o: \
  ../src/system/hardware/sound/../../wrapper/../hardware/wrapper/../sound/sound_func.h \
  ../src/system/hardware/sound/../../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/hardware/sound/../../wrapper/../event/wrapper/event_local.h \
- ../src/system/hardware/sound/../../wrapper/../event/wrapper/../npc/npc_macro.h \
  ../src/system/hardware/sound/../../wrapper/../event/wrapper/../draw/detection_macro.h \
  ../src/system/hardware/sound/../../wrapper/../event/wrapper/../draw/draw_macro.h \
  ../src/system/hardware/sound/../../wrapper/../event/wrapper/../unit/unit_event_macro.h \
@@ -162,8 +161,6 @@ src/system/hardware/sound/dtm.o src/system/hardware/sound/dtm.o: \
 ../src/system/hardware/sound/../../wrapper/../hardware/wrapper/../rom/rom_func.h:
 
 ../src/system/hardware/sound/../../wrapper/../event/wrapper/event_local.h:
-
-../src/system/hardware/sound/../../wrapper/../event/wrapper/../npc/npc_macro.h:
 
 ../src/system/hardware/sound/../../wrapper/../event/wrapper/../draw/detection_macro.h:
 

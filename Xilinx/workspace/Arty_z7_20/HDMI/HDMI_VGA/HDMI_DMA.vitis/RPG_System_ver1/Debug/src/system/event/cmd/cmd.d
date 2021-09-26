@@ -42,7 +42,6 @@ src/system/event/cmd/cmd.o src/system/event/cmd/cmd.o: \
  ../src/system/event/cmd/../../wrapper/../hardware/wrapper/../sound/sound_func.h \
  ../src/system/event/cmd/../../wrapper/../hardware/wrapper/../rom/rom_func.h \
  ../src/system/event/cmd/../../wrapper/../event/wrapper/event_local.h \
- ../src/system/event/cmd/../../wrapper/../event/wrapper/../npc/npc_macro.h \
  ../src/system/event/cmd/../../wrapper/../event/wrapper/../draw/detection_macro.h \
  ../src/system/event/cmd/../../wrapper/../event/wrapper/../draw/draw_macro.h \
  ../src/system/event/cmd/../../wrapper/../event/wrapper/../unit/unit_event_macro.h \
@@ -159,8 +158,6 @@ src/system/event/cmd/cmd.o src/system/event/cmd/cmd.o: \
 ../src/system/event/cmd/../../wrapper/../hardware/wrapper/../rom/rom_func.h:
 
 ../src/system/event/cmd/../../wrapper/../event/wrapper/event_local.h:
-
-../src/system/event/cmd/../../wrapper/../event/wrapper/../npc/npc_macro.h:
 
 ../src/system/event/cmd/../../wrapper/../event/wrapper/../draw/detection_macro.h:
 
