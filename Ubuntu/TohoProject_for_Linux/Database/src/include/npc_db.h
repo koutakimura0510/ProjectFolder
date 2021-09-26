@@ -139,7 +139,7 @@ typedef struct npc_bitmap_db
 
 static const NpcBitmapDB npc_bitmap_db[] = {
 	{NPC_GUAL_1_WORLD, DRAM_NPC_WORLD_ADDR_BASE, 32, 32, 0},
-	{NPC_GUAL_2_WORLD, DRAM_NPC_WORLD_ADDR_BASE, 32, 32, 1},
+	{NPC_GUAL_2_WORLD, DRAM_NPC_WORLD_ADDR_BASE, 32, 32, 3},
 };
 
 
