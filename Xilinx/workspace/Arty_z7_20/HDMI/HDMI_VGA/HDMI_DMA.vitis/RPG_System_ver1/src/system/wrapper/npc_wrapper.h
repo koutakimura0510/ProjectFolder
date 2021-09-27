@@ -17,7 +17,7 @@
  * @note   分かりにくそうなメンバの詳細を記述するよ。
  * 
  * dram_indexに(x, y)の初期位置の合計値を保存するよ。
- * pos[x or y][]に現在の1マス辺りの行動値を保存するよ。
+ * map_pos[x or y][]に現在の1マス辺りの行動値を保存するよ。
  * NPCの行動パターンデータベースから移動量の最大値を取得して最大値を超えないように移動するよ。
  * 最大値がx(-2, 2):y(-3, 3)だったら初期位置から、
  * 左に2マス：右に2マス：上に3マス：下に3マスだけ移動できるよ。
@@ -25,13 +25,14 @@
  * 
  * @param  map_npcid マップが保持するNPCの連番を保存
  * @param  id npc自身が持つIDを保存
- * @param  pos[] NPCのx,y座標の移動量を保存、[0][]=xの移動量を保存。[1][]=yの移動量を保存
+ * @param  map_pos[] NPCのx,y座標の移動量を保存、[0][]=xの移動量を保存。[1][]=yの移動量を保存
  * @param  dram_index マップデータのNPCの初期座標を保存
  * @param  mapchip_id 描画を行うマップチップのIDを保存
  * @param  cut_pos マップチップの切り取り箇所を保存
  * @param  dir NPCの現在の向きを保存
  * @param  anime_time マップチップ切り替え時間を保存
  * @param  dir_time 行動パターンを実行する時間を保存
+ * @param  active_state 現在のNPCの状態を管理
  * @param  number 現在のマップに描画するNPCの最大数を保存
  * @retval None
  */
@@ -39,14 +40,17 @@ typedef struct npc_wrapper
 {
     uint32_t map_npcid[NPC_MAX_DRAW_NUM];
     uint32_t id[NPC_MAX_DRAW_NUM];
-    uint8_t  pos[NPC_INDEX_NUMBER][NPC_MAX_DRAW_NUM];
+    int8_t   map_pos[NPC_INDEX_NUMBER][NPC_MAX_DRAW_NUM];
+    int32_t  x[NPC_MAX_DRAW_NUM];
+    int32_t  y[NPC_MAX_DRAW_NUM];
     uint32_t dram_index[NPC_MAX_DRAW_NUM];
     uint8_t  mapchip_id[NPC_MAX_DRAW_NUM];
     uint8_t  cut_pos[NPC_MAX_DRAW_NUM];
     uint8_t  dir[NPC_MAX_DRAW_NUM];
     uint32_t anime_time[NPC_MAX_DRAW_NUM];
     uint32_t dir_time[NPC_MAX_DRAW_NUM];
-    uint8_t number;
+    uint8_t  active_state[NPC_MAX_DRAW_NUM];
+    uint8_t  number;
 } NpcWrapper;
 
 #endif
