@@ -9,6 +9,7 @@
  */
 #include "../../wrapper/game_wrapper.h"
 #include "npc_struct.h"
+#include "xil_cache.h"
 
 
 /* npcの操作に関するファイル内関数 */
@@ -148,44 +149,6 @@ static void npc_mapchip_update(GameWrapper *const game)
             game->npc.anime_time[i] = get_time();
         }
     }
-}
-
-
-/**
- * @brief  ランダム方向に行動するNPCの座標更新
- * @note   
- * npc.pos[][]の二次元配列参照計算方法
- * right,left時はx座標を更新しなければならない
- * up,down時はy座標を更新しなければならない
- * 
- * x = Index[0], right,left = 0,1
- * y = Index[1], up,down = 2,3
- * 1bitシフトすると0,もしくは1が残るためindexを参照できる
- * 
- * @retval None
- */
-static void npc_random_update(GameWrapper *const game, uint8_t index)
-{
-    uint8_t rand_number = get_random(0x03); /* 上下左右の要素の合計が3のため 0 ~ 3の値を取得 */
-    int8_t range = fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, game->npc.map_npcid[index], NPC_SUB_MEMBER_PATTERN_RANGE_LEFT + rand_number);
-
-    if ((rand_number == NPC_POS_UPDATE_LEFT) || (rand_number == NPC_POS_UPDATE_UP))
-    {
-        if (range < game->npc.pos[range >> 1][index])
-        {
-            game->npc.pos[range >> 1][index]--;
-            // game->
-        }
-    }
-    else /* RIGHT、もしくはDOWNの処理を行う */
-    {
-        if (game->npc.pos[range >> 1][index] < range)
-        {
-            game->npc.pos[range >> 1][index]++;
-        }
-    }
-
-    game->npc.dir[index] = NPC_DIR_EDGE * rand_number;
 }
 
 
@@ -464,4 +427,57 @@ static void npc_down_draw(GameWrapper *const game, DrawElement *const npc)
             png_mapchip(game);
         }
 	}
+}
+
+
+/**
+ * @brief  ランダム方向に行動するNPCの座標更新判定処理
+ * @note   
+ * npc.pos[][]の二次元配列参照計算方法
+ * right,left時はx座標を更新しなければならない
+ * up,down時はy座標を更新しなければならない
+ * 
+ * x = Index[0], right,left = 0,1
+ * y = Index[1], up,down = 2,3
+ * 1bitシフトすると0,もしくは1が残るためindexを参照できる
+ * 
+ * @retval None
+ */
+static void npc_random_update(GameWrapper *const game, uint8_t index)
+{
+    uint8_t rand_number = get_random(0x03); /* 上下左右の要素の合計が3のため 0 ~ 3の値を取得 */
+    int32_t range = fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, game->npc.map_npcid[index], NPC_SUB_MEMBER_PATTERN_RANGE_LEFT + rand_number);
+    uint8_t range_bit = range >> 1;
+    int32_t sign = 0;
+
+    if ((rand_number == NPC_POS_UPDATE_LEFT) || (rand_number == NPC_POS_UPDATE_UP))
+    {
+        if (range <= game->npc.pos[range_bit][index])
+        {
+            sign = -1;
+        }
+    }
+    else /* RIGHT、もしくはDOWNの処理を行う */
+    {
+        if (game->npc.pos[range_bit][index] < range)
+        {
+            sign = 1;
+        }
+    }
+
+    if (sign != 0)
+    {
+        uint32_t *buffer = DRAM_MAPDATA_NPC_ADDR_START;
+        /* npcマップの移動前の座標を初期化 */
+        game->npc.pos[range_bit][index] += sign;
+        buffer[game->npc.dram_index[index]] = 0;
+        Xil_DCacheFlushRange((uint32_t)(buffer + game->npc.dram_index[index]), 4);
+
+        /* 移動後の座標に番号を保存 */
+        game->npc.dram_index[index] += (range_bit == 0) ? sign : get_mapsize('w') * sign;
+        buffer[game->npc.dram_index[index]] = game->npc.map_npcid[index];
+        Xil_DCacheFlushRange((uint32_t)(buffer + game->npc.dram_index[index]), 4);
+    }
+
+    game->npc.dir[index] = NPC_DIR_EDGE * rand_number;
 }
