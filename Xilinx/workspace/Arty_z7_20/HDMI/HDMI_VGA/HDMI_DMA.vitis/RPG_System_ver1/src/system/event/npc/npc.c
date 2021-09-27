@@ -36,15 +36,16 @@ void npc_config(GameWrapper *const game)
             break;
         }
 
-        game->npc.map_npcid[i]  = map_npcid;
-        game->npc.id[i]         = fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, map_npcid,       NPC_SUB_MEMBER_PATTERN_NPCID);
-        game->npc.mapchip_id[i] = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID,  game->npc.id[i], NPC_SUB_MEMBER_BITMAP_MAPCHIPID);
-        game->npc.cut_pos[i]    = 0;
-        game->npc.dir[i]        = NPC_DIR_DOWN;
-        game->npc.anime_time[i] = 0;
-        game->npc.dir_time[i]   = 0;
-        game->npc.pos[NPC_INDEX_X][i] = 0;
-        game->npc.pos[NPC_INDEX_Y][i] = 0;
+        game->npc.map_npcid[i]    = map_npcid;
+        game->npc.id[i]           = fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, map_npcid,       NPC_SUB_MEMBER_PATTERN_NPCID);
+        game->npc.mapchip_id[i]   = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID,  game->npc.id[i], NPC_SUB_MEMBER_BITMAP_MAPCHIPID);
+        game->npc.cut_pos[i]      = 0;
+        game->npc.dir[i]          = NPC_DIR_DOWN;
+        game->npc.anime_time[i]   = 0;
+        game->npc.dir_time[i]     = 0;
+        game->npc.active_state[i] = NPC_ACTIVE_STAND;
+        game->npc.map_pos[NPC_INDEX_X][i] = 0;
+        game->npc.map_pos[NPC_INDEX_Y][i] = 0;
     }
 
     uint32_t size = get_mapsize('w') * get_mapsize('h');
@@ -107,6 +108,11 @@ static void npc_dir_update(GameWrapper *const game)
 {
     for (uint8_t i = 0; i < game->npc.number; i++)
     {
+        if (NPC_ACTIVE_ANIMATION == game->npc.active_state[i])
+        {
+            continue;
+        }
+
         if (false == tmr_constant(&game->npc.dir_time[i], fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, game->npc.map_npcid[i], NPC_SUB_MEMBER_PATTERN_UPDATE_SPEED)))
         {
             continue;
@@ -135,6 +141,41 @@ static void npc_dir_update(GameWrapper *const game)
         }
 
         game->npc.dir_time[i] = get_time();
+    }
+}
+
+
+/**
+ * @brief  NPC_ACTIVE_ANIMATION時のpixel座標更新処理
+ * @note   
+ * @retval None
+ */
+static void npc_pixel_update(GameWrapper *const game)
+{
+    for (uint8_t i = 0; i < game->npc.number; i++)
+    {
+        if (NPC_ACTIVE_STAND == game->npc.active_state[i])
+        {
+            continue;
+        }
+
+        switch (game->npc.dir[i])
+        {
+        case NPC_DIR_DOWN:
+            break;
+
+        case NPC_DIR_LEFT:
+            break;
+
+        case NPC_DIR_RIGHT:
+            break;
+
+        case NPC_DIR_UP:
+            break;
+        
+        default:
+            break;
+        }
     }
 }
 
@@ -435,7 +476,7 @@ static void npc_down_draw(GameWrapper *const game, DrawElement *const npc)
 /**
  * @brief  ランダム方向に行動するNPCの座標更新処理
  * @note   
- * npc.pos[][]の二次元配列参照計算方法
+ * npc.map_pos[][]の二次元配列参照計算方法
  * right,left時はx座標を更新しなければならない
  * up,down時はy座標を更新しなければならない
  * 
@@ -448,16 +489,16 @@ static void npc_down_draw(GameWrapper *const game, DrawElement *const npc)
 static void npc_random_update(GameWrapper *const game, uint8_t index)
 {
     uint8_t rand_number = get_random(0x03); /* 上下左右の要素の合計が3のため 0 ~ 3の値を取得 */
-    int8_t  range = fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, game->npc.map_npcid[index], NPC_SUB_MEMBER_PATTERN_RANGE_LEFT + rand_number);
-    uint8_t range_bit = range >> 1;
-    int32_t sign = 0;
+    int8_t  range       = fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, game->npc.map_npcid[index], NPC_SUB_MEMBER_PATTERN_RANGE_LEFT + rand_number);
+    uint8_t range_bit   = range >> 1;
+    int32_t sign        = 0;
 
-    if (range < game->npc.pos[range_bit][index]) /* 左、上移動の判定 */
+    if (range < game->npc.map_pos[range_bit][index]) /* 左、上移動の判定 */
     {
         sign = -1;
     }
 
-    if (game->npc.pos[range_bit][index] < range) /* 右、下移動の判定 */
+    if (game->npc.map_pos[range_bit][index] < range) /* 右、下移動の判定 */
     {
         sign = 1;
     }
@@ -466,15 +507,18 @@ static void npc_random_update(GameWrapper *const game, uint8_t index)
     {
         uint32_t *buffer = DRAM_MAPDATA_NPC_ADDR_START;
 
+        /* npcの設定データ処理 */
+        game->npc.active_state[i] = NPC_ACTIVE_ANIMATION;
+        game->npc.map_pos[range_bit][index] += sign;
+        game->npc.dir[index] = NPC_DIR_EDGE * rand_number;
+
         /* npcマップの移動前の座標を初期化 */
-        game->npc.pos[range_bit][index] += sign;
         buffer[game->npc.dram_index[index]] = 0;
         Xil_DCacheFlushRange((uint32_t)(buffer + game->npc.dram_index[index]), 4);
 
-        /* 移動後の座標に番号を保存と向きを更新 */
+        /* 移動後の座標に番号を保存 */
         game->npc.dram_index[index] += (range_bit == 0) ? sign : get_mapsize('w') * sign;
         buffer[game->npc.dram_index[index]] = game->npc.map_npcid[index];
         Xil_DCacheFlushRange((uint32_t)(buffer + game->npc.dram_index[index]), 4);
-        game->npc.dir[index] = NPC_DIR_EDGE * rand_number;
     }
 }
