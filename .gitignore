@@ -28,6 +28,7 @@
 *.rpt
 *.rpx
 *.dcp
+*.udb
 
 # TohoProjectのworkspaceのみgitに反映させる
 Xilinx/*
