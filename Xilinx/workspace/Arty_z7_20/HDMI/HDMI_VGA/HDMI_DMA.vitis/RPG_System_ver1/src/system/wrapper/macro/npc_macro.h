@@ -33,45 +33,6 @@
 #define NPC_DIR_UP      (18)
 
 
-/**
- * @brief  npcの座標管理構造体のインデックス番号
- * @note   
- * @retval None
- */
-typedef enum
-{
-	NPC_INDEX_X,
-	NPC_INDEX_Y,
-	NPC_INDEX_NUMBER,
-} NpcIndexPos;
-
-
-/**
- * @brief  NPCの座標更新に使用する状態管理定数
- * @note   
- * @retval None
- */
-typedef enum
-{
-	NPC_POS_UPDATE_LEFT,
-	NPC_POS_UPDATE_RIGHT,
-	NPC_POS_UPDATE_UP,
-	NPC_POS_UPDATE_DOWN,
-} NpcDirUpdate;
-
-
-/*!
- * \brief NPCの行動パターンを管理
- */
-typedef enum
-{
-	NPC_PATTERN_RANDOM,		/* ランダム移動 */
-	NPC_PATTERN_ROULETTE,	/* 回転移動 */
-	NPC_PATTERN_STEP,		/* その場で足踏み */
-	NPC_PATTERN_FAST_STEP,	/* その場で高速で足踏み */
-	NPC_PATTERN_STAND,		/* 棒立ち */
-} NpcPatternID;
-
 /*!
  * \brief NPCのIDを管理
  *
@@ -89,5 +50,54 @@ typedef enum
 	NPC_GUAL_2_WORLD,		/* 黒髪ポニーテール */
 	NPC_ID_END,
 } NpcNumberID;
+
+
+/**
+ * @brief  npcの現在の状態を管理する
+ * 
+ * @note   状態遷移詳細
+ * NPC_ACTIVE_STAND
+ * 初期状態はSTANDから始まる。
+ * STAND状態ではNPCのアニメーションは行わず、メモリ領域の移動処理が行われるまでSTAND状態を維持する
+ * 
+ * NPC_ACTIVE_ANIMATION
+ * NPCの初期位置を管理するDRAMのメモリ領域でNPCの移動処理が行われた場合、
+ * この状態に遷移しアニメーションを行う。
+ * STAND状態でなければメモリ領域の移動処理は行わない。
+ * 
+ * @retval None
+ */
+typedef enum
+{
+	NPC_ACTIVE_STAND,
+	NPC_ACTIVE_ANIMATION,
+} NpcActicState;
+
+
+/*!
+ * \brief NPCの行動パターンを管理
+ */
+typedef enum
+{
+	NPC_PATTERN_RANDOM,		/* ランダム移動 */
+	NPC_PATTERN_ROULETTE,	/* 回転移動 */
+	NPC_PATTERN_STEP,		/* その場で足踏み */
+	NPC_PATTERN_FAST_STEP,	/* その場で高速で足踏み */
+	NPC_PATTERN_STAND,		/* 棒立ち */
+} NpcPatternID;
+
+
+/**
+ * @brief  npcの座標管理構造体のインデックス番号
+ * @note   
+ * @retval None
+ */
+typedef enum
+{
+	NPC_INDEX_X,
+	NPC_INDEX_Y,
+	NPC_INDEX_NUMBER,
+} NpcIndexPos;
+
 
 #endif
