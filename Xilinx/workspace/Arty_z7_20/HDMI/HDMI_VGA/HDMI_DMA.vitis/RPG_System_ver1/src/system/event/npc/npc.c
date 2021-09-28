@@ -11,12 +11,15 @@
 #include "npc_struct.h"
 #include "xil_cache.h"
 
+/* pixel移動アニメーションのONOFF */
+#define NPC_MOVE_DEBUG
+
 
 /* npcの操作に関するファイル内関数 */
 static void npc_random_update(GameWrapper *const game, uint8_t index);
 static void npc_dir_update(GameWrapper *const game);
+static void npc_pixel_update(GameWrapper *const game);
 static void npc_mapchip_update(GameWrapper *const game);
-
 
 
 /**
@@ -46,6 +49,8 @@ void npc_config(GameWrapper *const game)
         game->npc.active_state[i] = NPC_ACTIVE_STAND;
         game->npc.map_pos[NPC_INDEX_X][i] = 0;
         game->npc.map_pos[NPC_INDEX_Y][i] = 0;
+        game->npc.pixel_adjust[NPC_INDEX_X][i] = 0;
+        game->npc.pixel_adjust[NPC_INDEX_Y][i] = 0;
     }
 
     uint32_t size = get_mapsize('w') * get_mapsize('h');
@@ -90,8 +95,9 @@ void npc_draw(GameWrapper *const game)
 		if (game->conf.display.drawtype == p->drawtype)
 		{
             npc_dir_update(game);
+            npc_pixel_update(game);
             npc_mapchip_update(game);
-			p->npc_window(game, &npc);
+            p->npc_window(game, &npc);
 			break;
 		}
 	}
@@ -152,8 +158,14 @@ static void npc_dir_update(GameWrapper *const game)
  */
 static void npc_pixel_update(GameWrapper *const game)
 {
+    uint8_t index;
+
     for (uint8_t i = 0; i < game->npc.number; i++)
     {
+#ifdef NPC_MOVE_DEBUG
+        game->npc.active_state[i] = NPC_ACTIVE_STAND;
+        continue;
+#endif
         if (NPC_ACTIVE_STAND == game->npc.active_state[i])
         {
             continue;
@@ -162,19 +174,32 @@ static void npc_pixel_update(GameWrapper *const game)
         switch (game->npc.dir[i])
         {
         case NPC_DIR_DOWN:
-            break;
-
-        case NPC_DIR_LEFT:
-            break;
-
-        case NPC_DIR_RIGHT:
+            index = NPC_INDEX_Y;
+            game->npc.pixel_adjust[index][i] += game->unit.animation_pixel_y;
             break;
 
         case NPC_DIR_UP:
+            index = NPC_INDEX_Y;
+            game->npc.pixel_adjust[index][i] -= game->unit.animation_pixel_y;
+            break;
+
+        case NPC_DIR_RIGHT:
+            index = NPC_INDEX_X;
+            game->npc.pixel_adjust[index][i] += game->unit.animation_pixel_x;
+            break;
+
+        case NPC_DIR_LEFT:
+            index = NPC_INDEX_X;
+            game->npc.pixel_adjust[index][i] -= game->unit.animation_pixel_x;
             break;
         
         default:
             break;
+        }
+
+        if (game->npc.pixel_adjust[index][i] == 0)
+        {
+            game->npc.active_state[i] = NPC_ACTIVE_STAND;
         }
     }
 }
@@ -231,8 +256,9 @@ static void npc_center_draw(GameWrapper *const game, DrawElement *const npc)
             {
                 if (id == game->npc.map_npcid[i])
                 {
-                    game->mapchip.id     = game->npc.mapchip_id[i];
-                    game->mapchip.dstin  = CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + game->conf.work.adr;
+                    int32_t adjust_pos = CHIP_ADDR_SHIFT(game->npc.pixel_adjust[NPC_INDEX_X][i]) + CHIP_ADDR_SHIFT(game->npc.pixel_adjust[NPC_INDEX_Y][i]);
+                    game->mapchip.id = game->npc.mapchip_id[i];
+                    game->mapchip.dstin  = CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + game->conf.work.adr + adjust_pos;
                     game->mapchip.dstout = game->mapchip.dstin;
                     png_mapchip(game);
                     break;
@@ -291,7 +317,7 @@ static void npc_right_draw(GameWrapper *const game, DrawElement *const npc)
                 if (id == game->npc.map_npcid[i])
                 {
                     game->mapchip.id     = game->npc.mapchip_id[i];
-                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) - rect.x;
+                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) - rect.x + CHIP_ADDR_SHIFT(game->npc.pixel_adjust[NPC_INDEX_X][i]);
                     game->mapchip.dstout = game->mapchip.dstin;
                     png_mapchip(game);
                     break;
@@ -350,7 +376,7 @@ static void npc_left_draw(GameWrapper *const game, DrawElement *const npc)
                 if (id == game->npc.map_npcid[i])
                 {
                     game->mapchip.id     = game->npc.mapchip_id[i];
-                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + rect.x;
+                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + rect.x + CHIP_ADDR_SHIFT(game->npc.pixel_adjust[NPC_INDEX_X][i]);
                     game->mapchip.dstout = game->mapchip.dstin;
                     png_mapchip(game);
                     break;
@@ -403,7 +429,7 @@ static void npc_up_draw(GameWrapper *const game, DrawElement *const npc)
                 if (id == game->npc.map_npcid[i])
                 {
                     game->mapchip.id     = game->npc.mapchip_id[i];
-                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + rect.y;
+                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + rect.y + CHIP_ADDR_SHIFT(game->npc.pixel_adjust[NPC_INDEX_Y][i]);
                     game->mapchip.dstout = game->mapchip.dstin;
                     png_mapchip(game);
                     break;
@@ -462,7 +488,7 @@ static void npc_down_draw(GameWrapper *const game, DrawElement *const npc)
                 if (id == game->npc.map_npcid[i])
                 {
                     game->mapchip.id     = game->npc.mapchip_id[i];
-                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) - rect.y;
+                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) - rect.y + CHIP_ADDR_SHIFT(game->npc.pixel_adjust[NPC_INDEX_Y][i]);
                     game->mapchip.dstout = game->mapchip.dstin;
                     png_mapchip(game);
                     break;
@@ -507,10 +533,13 @@ static void npc_random_update(GameWrapper *const game, uint8_t index)
     {
         uint32_t *buffer = DRAM_MAPDATA_NPC_ADDR_START;
 
-        /* npcの設定データ処理 */
+        /* npcの状態・向き・座標データ更新 */
+        game->npc.dir[index]      = NPC_DIR_EDGE * rand_number;
         game->npc.active_state[i] = NPC_ACTIVE_ANIMATION;
         game->npc.map_pos[range_bit][index] += sign;
-        game->npc.dir[index] = NPC_DIR_EDGE * rand_number;
+
+        /* 座標調整用データの更新。アニメーション処理関数内でpixel数の操作を行う */
+        game->pixel_adjust[range_bit][index] = MAPCHIP_WIDTH * (~sign + 1);
 
         /* npcマップの移動前の座標を初期化 */
         buffer[game->npc.dram_index[index]] = 0;
