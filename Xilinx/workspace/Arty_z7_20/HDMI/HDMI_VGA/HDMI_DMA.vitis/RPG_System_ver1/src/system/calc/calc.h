@@ -36,6 +36,9 @@
 #define CHIP_RGB(pos)		(uint32_t)(pos << MAPCHIP_WIDTH_SHIFT)//MAPCHIP_HEIGHT_SHIFと同義
 #define CHIP_LEFT(pos)		(uint32_t)(pos >> MAPCHIP_SHIFT)
 
+#define CHIP_ADDR_SHIFT(pos) (int32_t)(pos << MAPCHIP_WIDTH_SHIFT) //MAPCHIP_HEIGHT_SHIFと同義、負の演算version
+
+
 /* 画面のサイズや座標を求める基本計算 */
 #define DISPLAY_POS(x, y, size) (x + (y * size))
 #define DISPLAY_YPOS(y, size) (y * size)
