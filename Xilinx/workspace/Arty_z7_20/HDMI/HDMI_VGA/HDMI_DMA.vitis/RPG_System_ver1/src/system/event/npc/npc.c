@@ -229,7 +229,7 @@ static void npc_center_draw(GameWrapper *const game, DrawElement *const npc)
             {
                 if (id == game->npc.map_npcid[i])
                 {
-                    int32_t adjust_pos = CHIP_ADDR_SHIFT(game->npc.pixel_adjust[NPC_INDEX_X][i]) + CHIP_ADDR_SHIFT(game->npc.pixel_adjust[NPC_INDEX_Y][i]);
+                    int32_t adjust_pos = XRGB(game->npc.pixel_adjust[NPC_INDEX_X][i]) + YRGB(game->npc.pixel_adjust[NPC_INDEX_Y][i]);
                     game->mapchip.id = game->npc.mapchip_id[i];
                     game->mapchip.dstin  = CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + game->conf.work.adr + adjust_pos;
                     game->mapchip.dstout = game->mapchip.dstin;
@@ -292,7 +292,7 @@ static void npc_right_draw(GameWrapper *const game, DrawElement *const npc)
                 if (id == game->npc.map_npcid[i])
                 {
                     game->mapchip.id     = game->npc.mapchip_id[i];
-                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) - rect.x + CHIP_ADDR_SHIFT(game->npc.pixel_adjust[NPC_INDEX_X][i]);
+                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) - rect.x + XRGB(game->npc.pixel_adjust[NPC_INDEX_X][i]);
                     game->mapchip.dstout = game->mapchip.dstin;
                     png_mapchip(game);
                     break;
@@ -351,7 +351,7 @@ static void npc_left_draw(GameWrapper *const game, DrawElement *const npc)
                 if (id == game->npc.map_npcid[i])
                 {
                     game->mapchip.id     = game->npc.mapchip_id[i];
-                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + rect.x + CHIP_ADDR_SHIFT(game->npc.pixel_adjust[NPC_INDEX_X][i]);
+                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + rect.x + XRGB(game->npc.pixel_adjust[NPC_INDEX_X][i]);
                     game->mapchip.dstout = game->mapchip.dstin;
                     png_mapchip(game);
                     break;
@@ -404,7 +404,7 @@ static void npc_up_draw(GameWrapper *const game, DrawElement *const npc)
                 if (id == game->npc.map_npcid[i])
                 {
                     game->mapchip.id     = game->npc.mapchip_id[i];
-                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + rect.y + CHIP_ADDR_SHIFT(game->npc.pixel_adjust[NPC_INDEX_Y][i]);
+                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + rect.y + YRGB(game->npc.pixel_adjust[NPC_INDEX_Y][i]);
                     game->mapchip.dstout = game->mapchip.dstin;
                     png_mapchip(game);
                     break;
@@ -463,7 +463,7 @@ static void npc_down_draw(GameWrapper *const game, DrawElement *const npc)
                 if (id == game->npc.map_npcid[i])
                 {
                     game->mapchip.id     = game->npc.mapchip_id[i];
-                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) - rect.y + CHIP_ADDR_SHIFT(game->npc.pixel_adjust[NPC_INDEX_Y][i]);
+                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) - rect.y + YRGB(game->npc.pixel_adjust[NPC_INDEX_Y][i]);
                     game->mapchip.dstout = game->mapchip.dstin;
                     png_mapchip(game);
                     break;
