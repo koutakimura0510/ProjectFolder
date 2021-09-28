@@ -11,14 +11,10 @@
 #include "npc_struct.h"
 #include "xil_cache.h"
 
-/* pixel移動アニメーションのONOFF */
-#define NPC_MOVE_DEBUG
-
 
 /* npcの操作に関するファイル内関数 */
+static void npc_position_update(GameWrapper *const game);
 static void npc_random_update(GameWrapper *const game, uint8_t index);
-static void npc_dir_update(GameWrapper *const game);
-static void npc_pixel_update(GameWrapper *const game);
 static void npc_mapchip_update(GameWrapper *const game);
 
 
@@ -94,8 +90,7 @@ void npc_draw(GameWrapper *const game)
 	{
 		if (game->conf.display.drawtype == p->drawtype)
 		{
-            npc_dir_update(game);
-            npc_pixel_update(game);
+            npc_position_update(game);
             npc_mapchip_update(game);
             p->npc_window(game, &npc);
 			break;
@@ -105,102 +100,17 @@ void npc_draw(GameWrapper *const game)
 
 
 /**
- * @brief  npcの向きの更新処理
- * @note   データベースから向きを変更する周期を取得し、前回の時間から一定時間経過していたら
- *         NPCの行動パターンによってNPCの現在の座標を更新する
- * @retval None
- */
-static void npc_dir_update(GameWrapper *const game)
-{
-    for (uint8_t i = 0; i < game->npc.number; i++)
-    {
-        if (NPC_ACTIVE_ANIMATION == game->npc.active_state[i])
-        {
-            continue;
-        }
-
-        if (false == tmr_constant(&game->npc.dir_time[i], fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, game->npc.map_npcid[i], NPC_SUB_MEMBER_PATTERN_UPDATE_SPEED)))
-        {
-            continue;
-        }
-
-        switch (fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, game->npc.map_npcid[i], NPC_SUB_MEMBER_PATTERN_ACTION_PATTERN))
-        {
-        case NPC_PATTERN_RANDOM:
-            npc_random_update(game, i);
-            break;
-
-        case NPC_PATTERN_ROULETTE:
-            break;
-
-        case NPC_PATTERN_STEP:
-            break;
-
-        case NPC_PATTERN_FAST_STEP:
-            break;
-
-        case NPC_PATTERN_STAND:
-            break;
-        
-        default:
-            break;
-        }
-
-        game->npc.dir_time[i] = get_time();
-    }
-}
-
-
-/**
- * @brief  NPC_ACTIVE_ANIMATION時のpixel座標更新処理
+ * @brief  現在のNPCのアニメーション状況によって座標・向きメンバの更新関数を実行する
  * @note   
  * @retval None
  */
-static void npc_pixel_update(GameWrapper *const game)
+static void npc_position_update(GameWrapper *const game)
 {
-    uint8_t index;
+    const NpcPosition *p = npc_position;
 
     for (uint8_t i = 0; i < game->npc.number; i++)
     {
-#ifdef NPC_MOVE_DEBUG
-        game->npc.active_state[i] = NPC_ACTIVE_STAND;
-        continue;
-#endif
-        if (NPC_ACTIVE_STAND == game->npc.active_state[i])
-        {
-            continue;
-        }
-
-        switch (game->npc.dir[i])
-        {
-        case NPC_DIR_DOWN:
-            index = NPC_INDEX_Y;
-            game->npc.pixel_adjust[index][i] += game->unit.animation_pixel_y;
-            break;
-
-        case NPC_DIR_UP:
-            index = NPC_INDEX_Y;
-            game->npc.pixel_adjust[index][i] -= game->unit.animation_pixel_y;
-            break;
-
-        case NPC_DIR_RIGHT:
-            index = NPC_INDEX_X;
-            game->npc.pixel_adjust[index][i] += game->unit.animation_pixel_x;
-            break;
-
-        case NPC_DIR_LEFT:
-            index = NPC_INDEX_X;
-            game->npc.pixel_adjust[index][i] -= game->unit.animation_pixel_x;
-            break;
-        
-        default:
-            break;
-        }
-
-        if (game->npc.pixel_adjust[index][i] == 0)
-        {
-            game->npc.active_state[i] = NPC_ACTIVE_STAND;
-        }
+        p->npc_position(game, i)[game->npc.active_state[i]];
     }
 }
 
@@ -225,6 +135,69 @@ static void npc_mapchip_update(GameWrapper *const game)
         }
     }
 }
+
+
+/**
+ * @brief  npc描画の設定メンバから描画座標を計算しDRAMにNPCの描画データを保存する
+ * @note   
+ * @param  game: 
+ * @param  npc: 
+ * @retval None
+ */
+// static void npc_dram_update(GameWrapper *const game, DrawElement *const npc)
+// {
+//     const NpcDrawing *p = npc_drawing;
+
+//     DrawElement npc;
+
+//     npc->buffer = DRAM_MAPDATA_NPC_ADDR_START;
+//     npc->xsize  = get_mapsize('w');
+//     npc->field  = CHIP_LEFT(game->unit.pos.fieldx) + (CHIP_LEFT(game->unit.pos.fieldy) * npc->xsize);
+//     game->mapchip.frame_size = VIDEO_WIDTH;
+//     game->mapchip.alpha		 = COLOR_ALPHA_MAX;
+//     game->mapchip.srcin      = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_SRCIN);
+//     game->mapchip.maxwidth	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_XSIZE);
+//     game->mapchip.maxheight	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_YSIZE);
+
+//     for (uint8_t i = 0; i < NPC_STATE_FUNC_DB_SIZE; i++, p++)
+//     {
+//         if (game->conf.display.drawtype == p->drawtype)
+//         {
+//             break;
+//         }
+//     }
+
+//     for (uint32_t y = 0; y < MAPCHIP_DRAW_MAX_HEIGHT; y++)  /* 一画面分npcマップファイルのID検索を行う */
+//     {
+//         npc->index = (y * npc->xsize) + npc->field;
+
+//         for (uint32_t x = 0; x < MAPCHIP_DRAW_MAX_WIDTH; x++)
+//         {
+//             uint8_t id = npc->buffer[x + npc->index];
+
+//             if (0 == id)
+//             {
+//                 continue;
+//             }
+
+//             // p->npc_window(game, &npc);
+
+//             for (uint8_t i = 0; i < game->npc.number; i++)  /* npcidでインデックスの検索を行い、描画IDを取得する */
+//             {
+//                 if (id == game->npc.map_npcid[i])
+//                 {
+//                     int32_t adjust_pos = CHIP_ADDR_SHIFT(game->npc.pixel_adjust[NPC_INDEX_X][i]) + CHIP_ADDR_SHIFT(game->npc.pixel_adjust[NPC_INDEX_Y][i]);
+//                     game->mapchip.id = game->npc.mapchip_id[i];
+//                     game->mapchip.dstin  = CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + game->conf.work.adr + adjust_pos;
+//                     game->mapchip.dstout = game->mapchip.dstin;
+//                     png_mapchip(game);
+//                     break;
+//                 }
+//             }
+//         }
+// 	}
+// }
+
 
 
 /**
@@ -267,6 +240,8 @@ static void npc_center_draw(GameWrapper *const game, DrawElement *const npc)
         }
 	}
 }
+
+
 
 
 /**
@@ -496,6 +471,87 @@ static void npc_down_draw(GameWrapper *const game, DrawElement *const npc)
             }
         }
 	}
+}
+
+
+/**
+ * @brief  npcの向きの更新処理
+ * @note   データベースから向きを変更する周期を取得し、前回の時間から一定時間経過していたら
+ *         NPCの行動パターンによってNPCの現在の座標を更新する
+ * @retval None
+ */
+static void npc_dir_update(GameWrapper *const game, uint8_t index)
+{
+    if (false == tmr_constant(&game->npc.dir_time[index], fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, game->npc.map_npcid[index], NPC_SUB_MEMBER_PATTERN_UPDATE_SPEED)))
+    {
+        return;
+    }
+
+    switch (fetch_dram_db(game, MEMORY_NPC_PATTERN_ID, game->npc.map_npcid[index], NPC_SUB_MEMBER_PATTERN_ACTION_PATTERN))
+    {
+    case NPC_PATTERN_RANDOM:
+        npc_random_update(game, index);
+        break;
+
+    case NPC_PATTERN_ROULETTE:
+        break;
+
+    case NPC_PATTERN_STEP:
+        break;
+
+    case NPC_PATTERN_FAST_STEP:
+        break;
+
+    case NPC_PATTERN_STAND:
+        break;
+    
+    default:
+        break;
+    }
+
+    game->npc.dir_time[index] = get_time();
+}
+
+
+/**
+ * @brief  NPC_ACTIVE_ANIMATION時のpixel座標更新処理
+ * @note   
+ * @retval None
+ */
+static void npc_pixel_update(GameWrapper *const game, uint8_t index)
+{
+    uint8_t xy;
+
+    switch (game->npc.dir[index])
+    {
+    case NPC_DIR_DOWN:
+        xy = NPC_INDEX_Y;
+        game->npc.pixel_adjust[xy][index] += game->unit.animation_pixel_y;
+        break;
+
+    case NPC_DIR_UP:
+        xy = NPC_INDEX_Y;
+        game->npc.pixel_adjust[xy][index] -= game->unit.animation_pixel_y;
+        break;
+
+    case NPC_DIR_RIGHT:
+        xy = NPC_INDEX_X;
+        game->npc.pixel_adjust[xy][index] += game->unit.animation_pixel_x;
+        break;
+
+    case NPC_DIR_LEFT:
+        xy = NPC_INDEX_X;
+        game->npc.pixel_adjust[xy][index] -= game->unit.animation_pixel_x;
+        break;
+    
+    default:
+        break;
+    }
+
+    if (game->npc.pixel_adjust[xy][index] == 0)
+    {
+        game->npc.active_state[index] = NPC_ACTIVE_STAND;
+    }
 }
 
 
