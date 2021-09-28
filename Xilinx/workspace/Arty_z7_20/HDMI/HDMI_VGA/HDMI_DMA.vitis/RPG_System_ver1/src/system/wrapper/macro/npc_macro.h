@@ -71,6 +71,7 @@ typedef enum
 {
 	NPC_ACTIVE_STAND,
 	NPC_ACTIVE_ANIMATION,
+	NPC_ACTIVE_NUMBER,
 } NpcActicState;
 
 
