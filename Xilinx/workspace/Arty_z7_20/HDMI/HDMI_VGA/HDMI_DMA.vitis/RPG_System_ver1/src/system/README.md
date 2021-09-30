@@ -100,27 +100,24 @@
 </br>
 </br>
 
-## 【各ディレクトリのファイル概要】
-<details>
-  <summary>概要</summary></br>
-
-  1. xxx_gloval_func.h</br>
-    カレントディレクトリ外で呼び出しを行う関数を記載。</br>
-
-  2. xxx_local_func.h</br>
-    カレントディレクトリで呼び出しを行う関数を記載。</br>
-
-  3. xxx_struct.h</br>
-    カレントディレクトリで使用する構造体を記載。</br>
-
-  4. xxx_macro.h</br>
-    define定義の定数を記載。</br>
-  </br>
-</details>
-</br>
-</br>
 
 ## 【履歴】
+<details>
+<summary>2021/09</summary></br>
+  把握している限りでは必要な機能はあとイベント実装のみ。</br>
+  </br>
+</details>
+<details>
+<summary>2021/08</summary></br>
+  コメントの書き方を変更。vscodeプラグインのDocumetationをしようすることにした。</br>
+  </br>
+</details>
+<details>
+<summary>2021/07</summary></br>
+  環境がUbuntuなのでファイル出力のアプリケーションに、シンボリックリンクを使用することとした。</br>
+  面倒だと感じた作業はなるべく省略可していきたい。</br>
+  </br>
+</details>
 <details>
 <summary>2021/06</summary></br>
   コメントの先頭にversion情報、日付を記載するようにした。</br> 
