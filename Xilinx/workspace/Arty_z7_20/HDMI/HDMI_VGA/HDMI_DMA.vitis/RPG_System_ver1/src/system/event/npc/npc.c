@@ -199,6 +199,28 @@ static void npc_mapchip_update(GameWrapper *const game)
 // }
 
 
+// static void npc_center_pos(GameWrapper *const game, SDL_Rect *const pos, int32_t index)
+// {
+
+// }
+// static void npc_up_pos(GameWrapper *const game, SDL_Rect *const pos, int32_t index)
+// {
+
+// }
+// static void npc_down_pos(GameWrapper *const game, SDL_Rect *const pos, int32_t index)
+// {
+
+// }
+// static void npc_right_pos(GameWrapper *const game, SDL_Rect *const pos, int32_t index)
+// {
+
+// }
+// static void npc_left_pos(GameWrapper *const game, SDL_Rect *const pos, int32_t index)
+// {
+
+// }
+
+
 
 /**
  * @brief  画面の上下左右のアニメーションを行わない場合のNPC描画処理
@@ -317,8 +339,9 @@ static void npc_left_draw(GameWrapper *const game, DrawElement *const npc)
     for (uint32_t y = 0; y < MAPCHIP_DRAW_MAX_HEIGHT; y++)
     {
         npc->index = (y * npc->xsize) + npc->field;
+        rect.h = CHIP_RGB(y) * VIDEO_WIDTH;
 
-        for (uint32_t x = 0; x < MAPCHIP_DRAW_MAX_WIDTH+1; x++)
+        for (uint32_t x = 0; x < MAPCHIP_DRAW_MAX_WIDTH + 1; x++)
         {
             uint8_t id = npc->buffer[x + npc->index];
 
@@ -351,7 +374,7 @@ static void npc_left_draw(GameWrapper *const game, DrawElement *const npc)
                 if (id == game->npc.map_npcid[i])
                 {
                     game->mapchip.id     = game->npc.mapchip_id[i];
-                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + rect.x + XRGB(game->npc.pixel_adjust[NPC_INDEX_X][i]);
+                    game->mapchip.dstin  = game->conf.work.adr + CHIP_RGB(x) + rect.h + rect.x + XRGB(game->npc.pixel_adjust[NPC_INDEX_X][i]);
                     game->mapchip.dstout = game->mapchip.dstin;
                     png_mapchip(game);
                     break;
