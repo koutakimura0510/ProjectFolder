@@ -24,13 +24,19 @@
 /**
  * @brief  NPCの向きに対するマップチップの切り取り開始座標を定義
  * @note   画像データの横幅や縦幅によって数値が変更されるため注意
+ *         実際のマップチップの並び順とは対応していなく、データベースの向きデータの並び順と対応しているため注意
+ * 
  * @retval 
  */
 #define NPC_DIR_EDGE    (6)
-#define NPC_DIR_DOWN    (0)
-#define NPC_DIR_LEFT    (6)
-#define NPC_DIR_RIGHT   (12)
-#define NPC_DIR_UP      (18)
+// #define NPC_DIR_DOWN    (0)
+// #define NPC_DIR_LEFT    (6)
+// #define NPC_DIR_RIGHT   (12)
+// #define NPC_DIR_UP      (18)
+#define NPC_DIR_LEFT    (0)
+#define NPC_DIR_RIGHT   (6)
+#define NPC_DIR_UP      (12)
+#define NPC_DIR_DOWN    (18)
 
 
 /*!
