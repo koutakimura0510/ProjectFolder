@@ -32,11 +32,11 @@ static void npc_down_draw(GameWrapper *const game, DrawElement *const npc);
  */
 typedef struct
 {
-	void (*npc_position)(GameWrapper *const game, uint8_t index)[NPC_ACTIVE_NUMBER];
+	void (*const npc_position[NPC_ACTIVE_NUMBER])(GameWrapper *const game, uint8_t index);
 } NpcPosition;
 
 static const NpcPosition npc_position = {
-	npc_dir_update, npc_pixel_update,
+	{npc_dir_update, npc_pixel_update},
 };
 
 
