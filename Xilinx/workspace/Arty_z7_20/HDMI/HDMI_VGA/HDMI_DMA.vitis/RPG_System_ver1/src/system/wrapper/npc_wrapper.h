@@ -39,6 +39,7 @@
  * @param  mapchip_id 描画を行うマップチップのIDを保存
  * @param  cut_pos マップチップの切り取り箇所を保存
  * @param  dir NPCの現在の向きを保存
+ * @param  cut_dir 向きに応じた切り取り座標を保存
  * @param  anime_time マップチップ切り替え時間を保存
  * @param  dir_time 行動パターンを実行する時間を保存
  * @param  active_state 現在のNPCの状態を管理
@@ -55,6 +56,7 @@ typedef struct npc_wrapper
     uint8_t  mapchip_id[NPC_MAX_DRAW_NUM];
     uint8_t  cut_pos[NPC_MAX_DRAW_NUM];
     uint8_t  dir[NPC_MAX_DRAW_NUM];
+    uint8_t  cut_dir[NPC_MAX_DRAW_NUM];
     uint32_t anime_time[NPC_MAX_DRAW_NUM];
     uint32_t dir_time[NPC_MAX_DRAW_NUM];
     uint8_t  active_state[NPC_MAX_DRAW_NUM];
