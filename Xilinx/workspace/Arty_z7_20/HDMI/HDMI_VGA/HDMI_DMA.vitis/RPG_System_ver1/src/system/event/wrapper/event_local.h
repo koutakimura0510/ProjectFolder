@@ -37,8 +37,8 @@ typedef struct
     uint32_t obj_start;
     uint32_t obj_end;
     uint32_t xsize;
-    uint32_t field;
-    uint32_t center;
+    int32_t  field;
+    int32_t center;
     uint32_t draw_adr;
     uint32_t index;
     uint32_t *buffer;
