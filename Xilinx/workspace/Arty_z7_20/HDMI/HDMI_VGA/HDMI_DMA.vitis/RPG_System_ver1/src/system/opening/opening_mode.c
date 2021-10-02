@@ -386,8 +386,10 @@ static void config_initialize(GameWrapper *const game)
     game->conf.map.back                 = DRAM_MAPDATA_ADDR_START;
     game->conf.map.obj                  = DRAM_MAPDATA_OBJECT_ADDR_START;
 	game->unit.pos.unitdir	            = DIR_WAIT;
-    game->unit.pos.animation_pixel_x    = ANIMATION_STORY_PIXEL_NUM;
-    game->unit.pos.animation_pixel_y    = ANIMATION_STORY_PIXEL_NUM;
+    game->unit.pos.animation_pixel_x    = 1;
+    game->unit.pos.animation_pixel_y    = 1;
+    // game->unit.pos.animation_pixel_x    = ANIMATION_STORY_PIXEL_NUM;
+    // game->unit.pos.animation_pixel_y    = ANIMATION_STORY_PIXEL_NUM;
     game->unit.pos.anime_cnt            = 0;
     game->unit.pos.encount              = 0;
 	game->unit.draw.workpos             = UNIT_WORK_TYPE_CENTER;
