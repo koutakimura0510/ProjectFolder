@@ -159,7 +159,7 @@ static uint8_t bullets_timer(BulletsNum *const bullet)
 {
     if (bullet->bullets != (BULLET_NUM - 1))
     {
-        if (true == tmr_constant(&bullet->time, TM_2SEC_COUNT))
+        if (true == tmr_constant(&bullet->time, TM_1_5SEC_COUNT))
         {
             ShotPos *p          = &shotpos[bullet->bullets];
             p->xpos             = xorshift(get_time()) & 0x01ff;

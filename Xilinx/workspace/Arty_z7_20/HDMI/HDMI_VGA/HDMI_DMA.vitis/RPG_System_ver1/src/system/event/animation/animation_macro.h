@@ -53,7 +53,7 @@ typedef enum
 /*
  * エフェクトのアニメーション数
  */
-#define EFFECT_BOMB_ANIMATION_NUM   (10)
+#define EFFECT_BOMB_ANIMATION_NUM   (15)
 #define EFFECT_STEP_ANIMATION_NUM   (8)
 #define EFFECT_PITYUN_ANIMATION_NUM (8)
 

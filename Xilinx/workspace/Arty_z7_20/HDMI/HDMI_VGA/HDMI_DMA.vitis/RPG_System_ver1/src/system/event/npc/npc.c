@@ -231,28 +231,11 @@ static void npc_mapchip_update(GameWrapper *const game)
  */
 static void npc_center_draw(GameWrapper *const game, DrawElement *const npc)
 {
-    game->mapchip.draw_ysize = game->mapchip.maxheight;
-    game->mapchip.ystart_pos = 0;
-    uint8_t yloop = 1;
-    uint8_t xloop = 1;
-
-    // if (CHIP_LEFT(game->unit.pos.fieldy) != 0)
-    // {
-    //     npc->field -= (npc->xsize << 1);
-    //     yloop = 2;
-    // }
-
-    if (CHIP_LEFT(game->unit.pos.fieldx) != 0)
-    {
-        npc->center = -2;
-        xloop = 1;
-    }
-
-    for (uint32_t y = 0; y < MAPCHIP_DRAW_MAX_HEIGHT + yloop; y++)  /* 一画面分npcマップファイルのID検索を行う */
+    for (int32_t y = -1; y < MAPCHIP_DRAW_MAX_HEIGHT + 1; y++)  /* 一画面分npcマップファイルのID検索を行う */
     {
         npc->index = (y * npc->xsize) + npc->field;
 
-        for (uint32_t x = 0; x < MAPCHIP_DRAW_MAX_WIDTH + xloop; x++)
+        for (int32_t x = -1; x < MAPCHIP_DRAW_MAX_WIDTH + 1; x++)
         {
             uint8_t id = npc->buffer[x + npc->index + npc->center];
 
@@ -261,26 +244,112 @@ static void npc_center_draw(GameWrapper *const game, DrawElement *const npc)
                 continue;
             }
 
-            if (x == 0)
-            {
-                game->mapchip.draw_xsize = game->unit.pos.anime_cnt;
-                game->mapchip.xstart_pos = game->mapchip.maxwidth - game->unit.pos.anime_cnt;
-            }
-            else
-            {
-                game->mapchip.draw_xsize = game->mapchip.maxwidth;
-                game->mapchip.xstart_pos = 0;
-            }
-
             for (uint8_t i = 0; i < game->npc.number; i++)  /* npcidでインデックスの検索を行い、描画IDを取得する */
             {
                 if (id == game->npc.map_npcid[i])
                 {
-                    int32_t adjust_pos   = XRGB(game->npc.pixel_adjust[NPC_INDEX_X][i]) + YRGB(game->npc.pixel_adjust[NPC_INDEX_Y][i]);
-                    game->mapchip.id     = game->npc.mapchip_id[i];
-                    game->mapchip.dstin  = CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + game->conf.work.adr + adjust_pos;
-                    game->mapchip.dstout = game->mapchip.dstin;
-                    png_mapchip(game);
+                    int32_t edge_xpos = 0;
+                    int32_t edge_ypos = 0;
+
+                    if (x == -1)
+                    {
+                        if (game->npc.dir[i] == NPC_DIR_LEFT)
+                        {
+                            game->mapchip.draw_xsize = game->npc.pixel_adjust[NPC_INDEX_X][i];
+                            game->mapchip.xstart_pos = game->mapchip.maxwidth - game->npc.pixel_adjust[NPC_INDEX_X][i];
+                            edge_xpos = 32 - game->npc.pixel_adjust[NPC_INDEX_X][i];
+                        }
+                        else
+                        {
+                            game->mapchip.draw_xsize = 0;
+                        }
+                    }
+                    else if (x == 0)
+                    {
+                        if (game->npc.dir[i] == NPC_DIR_RIGHT)
+                        {
+                            game->mapchip.draw_xsize = 32 + game->npc.pixel_adjust[NPC_INDEX_X][i];
+                            game->mapchip.xstart_pos = -game->npc.pixel_adjust[NPC_INDEX_X][i];
+                            edge_xpos = -game->npc.pixel_adjust[NPC_INDEX_X][i];
+                        }
+                        else
+                        {
+                            game->mapchip.draw_xsize = game->mapchip.maxwidth;
+                            game->mapchip.xstart_pos = 0;
+                        }
+                    }
+                    else if (x == MAPCHIP_DRAW_MAX_WIDTH)
+                    {
+                        if (game->npc.dir[i] == NPC_DIR_RIGHT)
+                        {
+                            game->mapchip.draw_xsize = -game->npc.pixel_adjust[NPC_INDEX_X][i];
+                            game->mapchip.xstart_pos = 0;
+                        }
+                        else
+                        {
+                            game->mapchip.draw_xsize = 0;
+                        }
+                    }
+                    else if (x == MAPCHIP_DRAW_MAX_WIDTH-1)
+                    {
+                        if (game->npc.dir[i] == NPC_DIR_LEFT)
+                        {
+                            game->mapchip.draw_xsize = 32 - game->npc.pixel_adjust[NPC_INDEX_X][i];
+                            game->mapchip.xstart_pos = 0;
+                        }
+                        else
+                        {
+                            game->mapchip.draw_xsize = 32;
+                            game->mapchip.xstart_pos = 0;
+                        }
+                    }
+                    else
+                    {
+                        game->mapchip.draw_xsize = game->mapchip.maxwidth;
+                        game->mapchip.xstart_pos = 0;
+                    }
+
+                    if (y == -1)
+                    {
+                        if (game->npc.dir[i] == NPC_DIR_UP)
+                        {
+                            game->mapchip.draw_ysize = game->npc.pixel_adjust[NPC_INDEX_Y][i];
+                            game->mapchip.ystart_pos = 32 - game->npc.pixel_adjust[NPC_INDEX_Y][i];
+                            edge_ypos = 32 - game->npc.pixel_adjust[NPC_INDEX_Y][i];
+                        }
+                        else
+                        {
+                            game->mapchip.draw_ysize = 0;
+                        }
+                    }
+                    else if (y == 0)
+                    {
+                        if (game->npc.dir[i] == NPC_DIR_DOWN)
+                        {
+                            game->mapchip.draw_ysize = 32 + game->npc.pixel_adjust[NPC_INDEX_Y][i];
+                            game->mapchip.ystart_pos = -game->npc.pixel_adjust[NPC_INDEX_Y][i];
+                            edge_ypos = -game->npc.pixel_adjust[NPC_INDEX_Y][i];
+                        }
+                        else
+                        {
+                            game->mapchip.draw_ysize = game->mapchip.maxheight;
+                            game->mapchip.ystart_pos = 0;
+                        }
+                    }
+                    else
+                    {
+                        game->mapchip.draw_ysize = game->mapchip.maxheight;
+                        game->mapchip.ystart_pos = 0;
+                    }
+
+                    if ((game->mapchip.draw_xsize != 0) && (game->mapchip.draw_ysize != 0))
+                    {
+                        int32_t adjust_pos   = XRGB(game->npc.pixel_adjust[NPC_INDEX_X][i]) + YRGB(game->npc.pixel_adjust[NPC_INDEX_Y][i]);
+                        game->mapchip.id     = game->npc.mapchip_id[i];
+                        game->mapchip.dstin  = CHIP_RGB(x) + (CHIP_RGB(y) * VIDEO_WIDTH) + game->conf.work.adr + adjust_pos + XRGB(edge_xpos) + YRGB(edge_ypos);
+                        game->mapchip.dstout = game->mapchip.dstin;
+                        png_mapchip(game);
+                    }
                     break;
                 }
             }

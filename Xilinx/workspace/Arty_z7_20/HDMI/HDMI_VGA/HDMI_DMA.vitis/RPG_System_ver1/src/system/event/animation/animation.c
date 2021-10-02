@@ -239,7 +239,7 @@ bool realtime_effect_draw(GameWrapper *const game, uint8_t effect_id)
     game->mapchip.id         = p->mapchip_id;
     png_mapchip(game);
 
-    if (true == tmr_constant(&p->timer, TM_80MS_COUNT))
+    if (true == tmr_constant(&p->timer, TM_60MS_COUNT))
     {
         p->mapchip_id++;
         p->timer = get_time();

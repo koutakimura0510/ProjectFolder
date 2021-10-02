@@ -174,8 +174,8 @@
 /*
  * ミニゲームの爆弾エフェクトの描画幅
  */
-#define SIZE_BOMB_WIDTH   (240)
-#define SIZE_BOMB_HEIGHT  (240)
+#define SIZE_BOMB_WIDTH   (192)
+#define SIZE_BOMB_HEIGHT  (192)
 #define SIZE_BOMB_MAXSIZE (SIZE_BOMB_WIDTH * SIZE_BOMB_HEIGHT)
 
 

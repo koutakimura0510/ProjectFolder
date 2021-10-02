@@ -104,9 +104,9 @@ static const BitmapDB bitmap_db[] =
     {FILE_ACCESS_BACK_ICON,                      16,     16,   "/Back/icon",                DRAM_ICON_ADDR_START,                   RAW_FILE_STATS + 1                      },
     {FILE_ACCESS_BACK_ICON2,                     30,     34,   "/Back/cursol",              DRAM_ICON_2_ADDR_START,                 RAW_FILE_STATS + 1                      },
 
-    /* エフェクト */
+    /* ミニゲームエフェクト */
     {FILE_ACCESS_HIT_EFFECT_1,                  1080,   120,   "/Effect/hit1",              DRAM_EFFECT_HITBOX_ADDR_START,          FILE_BUFFER_SIZE_HITBOX                 },
-    {FILE_ACCESS_HIT_EFFECT_2,                  2400,   240,   "/Effect/hit2",              DRAM_EFFECT_ADDR_START,                 FILE_BUFFER_SIZE_BOMB                   },
+    {FILE_ACCESS_HIT_EFFECT_2,                   960,   576,   "/Effect/bomb",              DRAM_EFFECT_ADDR_START,                 FILE_BUFFER_SIZE_BOMB                   },
     {FILE_ACCESS_HIT_EFFECT_3,                   960,   120,   "/Effect/hit3",              DRAM_EFFECT_PITYUN_ADDR_START,          FILE_BUFFER_SIZE_PITYUN                 },
 
     /* バトルエフェクト */

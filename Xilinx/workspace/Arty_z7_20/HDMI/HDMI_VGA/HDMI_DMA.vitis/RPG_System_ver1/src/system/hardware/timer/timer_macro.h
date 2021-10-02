@@ -127,4 +127,10 @@
 #define TM_950US_COUNT 	(TM_50US_COUNT  * 19)
 
 
+/*
+ * 小数点タイム
+ */
+#define TM_1_5SEC_COUNT	(TM_1SEC_COUNT + TM_500MS_COUNT)
+
+
 #endif
