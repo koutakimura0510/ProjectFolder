@@ -51,7 +51,7 @@ typedef struct npc_wrapper
     uint32_t map_npcid[NPC_MAX_DRAW_NUM];
     uint32_t id[NPC_MAX_DRAW_NUM];
     int8_t   map_pos[NPC_INDEX_NUMBER][NPC_MAX_DRAW_NUM];
-    int32_t  pixel_adjust[NPC_INDEX_NUMBER][NPC_MAX_DRAW_NUM];
+    int32_t  move_weight[NPC_MAX_DRAW_NUM];
     uint32_t dram_index[NPC_MAX_DRAW_NUM];
     uint8_t  mapchip_id[NPC_MAX_DRAW_NUM];
     uint8_t  cut_pos[NPC_MAX_DRAW_NUM];
@@ -59,6 +59,8 @@ typedef struct npc_wrapper
     uint8_t  cut_dir[NPC_MAX_DRAW_NUM];
     uint32_t anime_time[NPC_MAX_DRAW_NUM];
     uint32_t dir_time[NPC_MAX_DRAW_NUM];
+    int32_t  xpos[NPC_MAX_DRAW_NUM];
+    int32_t  ypos[NPC_MAX_DRAW_NUM];
     uint8_t  active_state[NPC_MAX_DRAW_NUM];
     uint8_t  number;
 } NpcWrapper;
