@@ -12,14 +12,38 @@
 #include "xil_cache.h"
 
 
-/* npcの操作に関するファイル内関数 */
+/* npc_draw関数内で実行 */
 static void npc_position_update(GameWrapper *const game);
-static void npc_random_update(GameWrapper *const game, uint8_t index);
 static void npc_mapchip_update(GameWrapper *const game);
 static void npc_pixel_draw(GameWrapper *const game);
+
+/* 次の行動パターンを決定 */
+static void npc_random_update(GameWrapper *const game, uint8_t index);
+
+/* 現在座標から描画方法を決定 */
 static bool isNpc_edge(GameWrapper *const game, SDL_Rect *const lsbEdge, SDL_Rect *const msbEdge, uint8_t index);
 static void npc_side_edge(GameWrapper *const game, SDL_Rect *const lsbEdge, SDL_Rect *const msbEdge, uint8_t index);
 static void npc_vertical_edge(GameWrapper *const game, SDL_Rect *const lsbEdge, SDL_Rect *const msbEdge, uint8_t index);
+
+/* NPCのアニメーション処理時の座標・向き更新 */
+static void npc_dir_update(GameWrapper *const game, uint8_t index);
+static void npc_pixel_update(GameWrapper *const game, uint8_t index);
+
+
+/**
+ * @brief  NPCのアニメーション状態によってメンバの更新関数を変更する関数ポインタ
+ * @note   
+ * @retval None
+ */
+typedef struct
+{
+	void (*const npc_position[NPC_ACTIVE_NUMBER])(GameWrapper *const game, uint8_t index);
+} NpcPosition;
+
+static const NpcPosition npc_position = {
+	{npc_dir_update, npc_pixel_update},
+};
+
 
 
 /**
@@ -75,8 +99,13 @@ void npc_config(GameWrapper *const game)
 
 
 /**
- * @brief  npcの描画を行う
- * @note   
+ * @brief  npcの座標・向き更新・描画処理
+ * 
+ * @note
+ * それぞれのデータ設定と現在座標のNPC描画関数を分けて考えた
+ * 座標やマップチップ更新関数を一定期間ごとに実行し、
+ * 描画関数内で設定されたデータに基づき処理を行うようにした
+ * 
  * @retval None
  */
 void npc_draw(GameWrapper *const game)
@@ -88,8 +117,12 @@ void npc_draw(GameWrapper *const game)
 
 
 /**
- * @brief  現在のNPCのアニメーション状況によって座標・向きメンバの更新関数を実行する
- * @note   
+ * @brief  現在のNPCの状態によって座標・向きメンバの更新関数を実行する
+ * 
+ * @note   関数ポインタテーブル実行関数について
+ * NPC_ACTIVE_ANIMATION : 座標更新関数を処理する
+ * NPC_ACTIVE_STAND : 次のNPCの行動パターンを決定する関数を処理
+ * 
  * @retval None
  */
 static void npc_position_update(GameWrapper *const game)
@@ -105,8 +138,10 @@ static void npc_position_update(GameWrapper *const game)
 
 /**
  * @brief  npcの歩行アニメーションマップチップ更新処理
- * @note   マップチップの並び順が0.左足、1.直立、2.右足の順番で並んでいる
- *         直立の描画は行わないため、0.左足、2.右足のマップチップを交互に入れ替える
+ * @note   
+ * マップチップの並び順が0.左足、1.直立、2.右足の順番で並んでいる
+ * 直立の描画は行わないため、0.左足、2.右足のマップチップを交互に入れ替える
+ * 0と2の画像データを繰り返すため、カット座標を+2してビット演算で0と2を判定している
  * 
  * @retval None
  */
@@ -138,6 +173,8 @@ static void npc_pixel_draw(GameWrapper *const game)
 
     game->mapchip.frame_size = VIDEO_WIDTH;
     game->mapchip.alpha		 = COLOR_ALPHA_MAX;
+
+    /* もし、NPC毎のに使用する画像データが異なればfor文内に移動する */
     game->mapchip.srcin      = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_SRCIN);
     game->mapchip.maxwidth	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_XSIZE);
     game->mapchip.maxheight	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_YSIZE);
@@ -148,7 +185,7 @@ static void npc_pixel_draw(GameWrapper *const game)
     msbEdge.x = game->unit.pos.unitx + game->unit.pos.fieldx + VIDEO_WIDTH_HALF;
     msbEdge.y = game->unit.pos.unity + game->unit.pos.fieldy + VIDEO_HEIGHT_HALF_POS;
 
-    /* キャラクター―の座標からNPCの描画調整座標を計算 */
+    /* キャラクターの座標からNPCの描画調整座標を計算 */
     lsbEdge.w = (game->unit.pos.fieldx < VIDEO_WIDTH_HALF) ? XRGB((VIDEO_WIDTH_HALF - (VIDEO_WIDTH_HALF - game->unit.pos.fieldx))) : XRGB((VIDEO_WIDTH_HALF + (game->unit.pos.fieldx - VIDEO_WIDTH_HALF)));
     lsbEdge.h = YRGB(game->unit.pos.fieldy);
 
@@ -167,7 +204,6 @@ static void npc_pixel_draw(GameWrapper *const game)
         }
     }
 }
-
 
 
 /**
@@ -226,7 +262,7 @@ static void npc_side_edge(GameWrapper *const game, SDL_Rect *const lsbEdge, SDL_
     {
         game->mapchip.xstart_pos = lsbEdge->x - game->npc.xpos[index];
         game->mapchip.draw_xsize = MAPCHIP_WIDTH - game->mapchip.xstart_pos;
-        msbEdge->w -= XRGB(game->mapchip.xstart_pos);
+        msbEdge->w -= XRGB(game->mapchip.xstart_pos);   /* 何故か描画がずれるため表示座標を調整している */
         return;
     }
 
@@ -249,7 +285,7 @@ static void npc_vertical_edge(GameWrapper *const game, SDL_Rect *const lsbEdge, 
     {
         game->mapchip.ystart_pos = lsbEdge->y - game->npc.ypos[index];
         game->mapchip.draw_ysize = MAPCHIP_WIDTH - game->mapchip.ystart_pos;
-        msbEdge->h -= YRGB(game->mapchip.ystart_pos);
+        msbEdge->h -= YRGB(game->mapchip.ystart_pos); /* 何故か描画がずれるため表示座標を調整している */
     }
     else
     {
@@ -261,8 +297,11 @@ static void npc_vertical_edge(GameWrapper *const game, SDL_Rect *const lsbEdge, 
 
 /**
  * @brief  npcの向きの更新処理
- * @note   データベースから向きを変更する周期を取得し、前回の時間から一定時間経過していたら
- *         NPCの行動パターンによってNPCの現在の座標を更新する
+ * 
+ * @note   
+ * データベースから向きを変更する周期を取得し、前回の時間から一定時間経過していたら
+ * NPCの行動パターンによってNPCの現在の座標を更新する
+ * 
  * @retval None
  */
 static void npc_dir_update(GameWrapper *const game, uint8_t index)
@@ -300,7 +339,10 @@ static void npc_dir_update(GameWrapper *const game, uint8_t index)
 
 /**
  * @brief  状態NPC_ACTIVE_ANIMATIONのpixel座標更新処理
- * @note   移動数の重み分向きの方向にpixel座標の更新を行い、重みが0になればNPC_ACTIVE_STAND状態に移行する
+ * 
+ * @note   
+ * 移動数の重み分向きの方向にpixel座標の更新を行い、重みが0になればNPC_ACTIVE_STAND状態に移行する
+ * 
  * @retval None
  */
 static void npc_pixel_update(GameWrapper *const game, uint8_t index)
