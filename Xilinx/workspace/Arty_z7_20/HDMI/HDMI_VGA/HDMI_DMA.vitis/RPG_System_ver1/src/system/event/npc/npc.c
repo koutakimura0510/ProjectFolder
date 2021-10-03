@@ -138,7 +138,11 @@ static void npc_position_update(GameWrapper *const game)
 
 /**
  * @brief  npcの歩行アニメーションマップチップ更新処理
- * @note   
+ * @note
+ * 下記の計算について
+ * game->npc.cut_pos[i] += 2;
+ * game->npc.cut_pos[i] &= 0x02;
+ * 
  * マップチップの並び順が0.左足、1.直立、2.右足の順番で並んでいる
  * 直立の描画は行わないため、0.左足、2.右足のマップチップを交互に入れ替える
  * 0と2の画像データを繰り返すため、カット座標を+2してビット演算で0と2を判定している
@@ -168,8 +172,21 @@ static void npc_mapchip_update(GameWrapper *const game)
  */
 static void npc_pixel_draw(GameWrapper *const game)
 {
-    SDL_Rect lsbEdge;
-    SDL_Rect msbEdge;
+    SDL_Rect lsbEdge = {
+        /* キャラクターの座標から表示幅の端の座標を計算 */
+        .lsbEdge.x = game->unit.pos.unitx + game->unit.pos.fieldx - VIDEO_WIDTH_HALF,
+        .lsbEdge.y = game->unit.pos.unity + game->unit.pos.fieldy - VIDEO_HEIGHT_HALF_POS,
+
+        /* キャラクターの座標からNPCの描画調整座標を計算 */
+        .lsbEdge.w = (game->unit.pos.fieldx < VIDEO_WIDTH_HALF) ? XRGB((VIDEO_WIDTH_HALF - (VIDEO_WIDTH_HALF - game->unit.pos.fieldx))) : XRGB((VIDEO_WIDTH_HALF + (game->unit.pos.fieldx - VIDEO_WIDTH_HALF))),
+        .lsbEdge.h = YRGB(game->unit.pos.fieldy),
+    };
+
+    SDL_Rect msbEdge = {
+        /* キャラクターの座標から表示幅の端の座標を計算 */
+        .msbEdge.x = game->unit.pos.unitx + game->unit.pos.fieldx + VIDEO_WIDTH_HALF,
+        .msbEdge.y = game->unit.pos.unity + game->unit.pos.fieldy + VIDEO_HEIGHT_HALF_POS,
+    };
 
     game->mapchip.frame_size = VIDEO_WIDTH;
     game->mapchip.alpha		 = COLOR_ALPHA_MAX;
@@ -178,16 +195,6 @@ static void npc_pixel_draw(GameWrapper *const game)
     game->mapchip.srcin      = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_SRCIN);
     game->mapchip.maxwidth	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_XSIZE);
     game->mapchip.maxheight	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_YSIZE);
-
-    /* キャラクターの座標から表示幅の端の座標を計算 */
-    lsbEdge.x = game->unit.pos.unitx + game->unit.pos.fieldx - VIDEO_WIDTH_HALF;
-    lsbEdge.y = game->unit.pos.unity + game->unit.pos.fieldy - VIDEO_HEIGHT_HALF_POS;
-    msbEdge.x = game->unit.pos.unitx + game->unit.pos.fieldx + VIDEO_WIDTH_HALF;
-    msbEdge.y = game->unit.pos.unity + game->unit.pos.fieldy + VIDEO_HEIGHT_HALF_POS;
-
-    /* キャラクターの座標からNPCの描画調整座標を計算 */
-    lsbEdge.w = (game->unit.pos.fieldx < VIDEO_WIDTH_HALF) ? XRGB((VIDEO_WIDTH_HALF - (VIDEO_WIDTH_HALF - game->unit.pos.fieldx))) : XRGB((VIDEO_WIDTH_HALF + (game->unit.pos.fieldx - VIDEO_WIDTH_HALF)));
-    lsbEdge.h = YRGB(game->unit.pos.fieldy);
 
     for (uint8_t i = 0; i < game->npc.number; i++)
     {
