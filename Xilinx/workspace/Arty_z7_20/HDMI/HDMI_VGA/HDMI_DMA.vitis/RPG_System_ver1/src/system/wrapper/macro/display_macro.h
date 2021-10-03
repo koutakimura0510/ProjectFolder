@@ -29,6 +29,10 @@
 #define VIDEO_WIDTH_HALF    (VIDEO_WIDTH >> 1)
 #define VIDEO_HEIGHT_HALF   (VIDEO_HEIGHT >> 1)
 
+/* 画面中央の座標 */
+#define VIDEO_WIDTH_HALF_POS   (VIDEO_WIDTH_HALF + 16)
+#define VIDEO_HEIGHT_HALF_POS   (VIDEO_HEIGHT_HALF + 16)
+
 
 /*
  * 1マスの大きさ
