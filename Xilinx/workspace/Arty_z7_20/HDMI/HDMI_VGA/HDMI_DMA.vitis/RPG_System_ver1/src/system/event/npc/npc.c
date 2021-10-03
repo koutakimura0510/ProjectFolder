@@ -127,9 +127,8 @@ static void npc_mapchip_update(GameWrapper *const game)
 
 
 /**
- * @brief  npc描画の設定メンバから描画座標を計算しDRAMにNPCの描画データを保存する
+ * @brief  npcとキャラクターの現在座標から描画幅の設定をしNPCの描画データ設定を行う
  * @note   
- * @param  npc: 
  * @retval None
  */
 static void npc_pixel_draw(GameWrapper *const game)
