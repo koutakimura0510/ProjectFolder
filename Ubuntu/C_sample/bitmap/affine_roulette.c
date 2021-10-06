@@ -166,7 +166,7 @@ int main(int argc, char const *argv[])
 	for (uint8_t i = 0; i < 3600; i++)
 	{
 		usleep(10000);
-		// rangle++;
+		rangle++;
 		if (rangle == 360)
 		{
 			rangle = 0;
