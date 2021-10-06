@@ -11,7 +11,7 @@
  * RAM     512KB
  * L1Cache 32KB
  * -
- * バトル時のコマンド入力確定時の操作関数を管理するファイル
+ * コマンド入力確定時の操作関数を管理するファイル
  */
 #include "../../../wrapper/game_wrapper.h"
 #include "cmd_standerd.h"
