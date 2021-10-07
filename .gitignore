@@ -44,6 +44,10 @@ Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/*
 Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/*
 !Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RPG_System_ver1/
 
+!Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.srcs/
+Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.srcs/*
+!Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.srcs/sources_1
+
 # PWM回路反映
 !Xilinx/workspace/Arty_z7_20/PWM/
 Xilinx/workspace/Arty_z7_20/PWM/*
