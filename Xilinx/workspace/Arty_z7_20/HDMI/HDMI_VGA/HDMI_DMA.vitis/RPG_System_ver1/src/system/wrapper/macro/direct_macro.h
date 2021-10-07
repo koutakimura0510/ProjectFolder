@@ -80,4 +80,24 @@ typedef enum
     MAP_NAME_ID_END,
 } MapNameID;
 
+
+/**
+ * @brief  ワールドマップのマップ移動判定用データベースのIDを定義
+ * @note   
+ * @retval None
+ */
+typedef enum
+{
+    WORLD_DIRECT_GEKAI_START,
+    WORLD_DIRECT_GEKAI_ROMEN_VILLAGE = WORLD_DIRECT_GEKAI_START,
+    WORLD_DIRECT_GEKAI_ROMEN_TREE,
+    WORLD_DIRECT_GEKAI_END,
+
+    // WORLD_DIRRECT_GEKAI_START = WORLD_DIRECT_GEKAI_END 連番にする
+    // WORLD_DIRRECT_GEKAI_xxx   = WORLD_DIRECT_GEKAI_END 連番にする
+} MapDirectNumber;
+
+
+
+
 #endif
