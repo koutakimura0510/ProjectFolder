@@ -81,4 +81,47 @@ static const WorldLoopCount world_loop_count[] = {
 	{MAKAI_MAP_ID,	WORLD_DIRECT_GEKAI_START, WORLD_DIRECT_GEKAI_END},
 };
 
+/* データベース書き込み */
+void world_direct_write(FILE *fp, FILE *byte)
+{
+	const WorldmapDirect *p = worldmap_direct;
+
+	for (uint32_t i = 0; i < WORLDMAP_DIRECT_DB_SIZE; i++, p++)
+	{
+		fprintf(fp, "0x%08x,\n", p->world_direct_id);
+		fprintf(fp, "0x%08x,\n", p->direct_xpos);
+		fprintf(fp, "0x%08x,\n", p->direct_ypos);
+		fprintf(fp, "0x%08x,\n", p->next_mapname_id);
+		fprintf(fp, "0x%08x,\n", p->event_type);
+
+		for (int j = 0; j < WORLD_DIRECT_EN5D; j++)
+		{
+			fprintf(byte, "0x%08x,\n", 1);
+		}
+	}
+
+	error_print(WORLDMAP_DIRECT_DB_SIZE, WORLD_DIRECT_END, "MAP ALL MOVE NUMBER");
+}
+
+
+/* データベース書き込み */
+void world_loop_write(FILE *fp, FILE *byte)
+{
+	const WorldLoopCount *p = world_loop_count;
+
+	for (uint32_t i = 0; i < WORLDMAP_LOOP_DB_SIZE; i++, p++)
+	{
+		fprintf(fp, "0x%08x,\n", p->map_name);
+		fprintf(fp, "0x%08x,\n", p->start_id);
+		fprintf(fp, "0x%08x,\n", p->loop_count);
+
+		for (int j = 0; j < 3; j++)
+		{
+			fprintf(byte, "0x%08x,\n", 1);
+		}
+	}
+
+	error_print(MAP_MOVE_ALL_DB_SIZE, TRY_MAP_NAME_END, "MAP ALL MOVE NUMBER");
+}
+
 #endif

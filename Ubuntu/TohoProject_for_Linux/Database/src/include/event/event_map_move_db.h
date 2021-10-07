@@ -117,7 +117,7 @@ void map_all_write(FILE *fp, FILE *byte)
 		fprintf(fp, "0x%08x,\n", p->fieldx);
 		fprintf(fp, "0x%08x,\n", p->fieldy);
 
-		for (int j = 0; j < 16; j++)
+		for (int j = 0; j < TRY_MAP_MEMBER_NUMBER; j++)
 		{
 			fprintf(byte, "0x%08x,\n", 1);
 		}
