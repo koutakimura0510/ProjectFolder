@@ -190,8 +190,7 @@ void item_enchant_write(FILE *fp, FILE *byte)
 		}
 	}
 
-	error_print(ITEM_ENCHANT_DB_SIZE, ENCHANT_ITEM_END, "Item Enchant");
-	printf("ITEM ENCHANT TOTAL NUMBER = %ld\n", ITEM_ENCHANT_DB_SIZE);
+	error_print(ITEM_ENCHANT_DB_SIZE, ENCHANT_ITEM_END, "ITEM ENCHANT TOTAL NUMBER");
 }
 
 
@@ -216,8 +215,7 @@ void item_condition_write(FILE *fp, FILE *byte)
 		}
 	}
 
-	error_print(ITEM_CONDITION_DB_SIZE, CONDITION_ITEM_END, "Item Condition");
-	printf("ITEM CONDITION TOTAL NUMBER = %ld\n", ITEM_CONDITION_DB_SIZE);
+	error_print(ITEM_CONDITION_DB_SIZE, CONDITION_ITEM_END, "ITEM CONDITION TOTAL NUMBER");
 }
 
 

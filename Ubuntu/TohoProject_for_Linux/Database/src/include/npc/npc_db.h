@@ -167,8 +167,7 @@ void npc_map_write(FILE *fp, FILE *byte)
 		}
 	}
 
-	error_print(NPC_MAP_DB_SIZE, MAP_NAME_ID_END, "NPC_MAP_DB_SIZE");
-	printf("NPC MAP TOTAL NUMBER = %ld\n", NPC_MAP_DB_SIZE);
+	error_print(NPC_MAP_DB_SIZE, MAP_NAME_ID_END, "NPC MAP TOTAL NUMBER");
 }
 
 

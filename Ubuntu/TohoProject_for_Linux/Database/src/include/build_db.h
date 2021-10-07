@@ -118,8 +118,7 @@ void build_config_write(FILE *fp, FILE *byte)
 		fprintf(byte, "0x%08x,\n", sjis_write(fp, p->name));
 	}
 
-    error_print(BUILD_CONFIG_DB_SIZE, MAP_NAME_ID_END, "debug config");
-	printf("DEBUG CONFIG TOTAL NUMBER= %ld\n", BUILD_CONFIG_DB_SIZE);
+    error_print(BUILD_CONFIG_DB_SIZE, MAP_NAME_ID_END, "DEBUG CONFIG TOTAL NUMBER");
 }
 
 
@@ -148,8 +147,7 @@ void build_file_write(FILE *fp, FILE *byte)
         }
 	}
 
-    error_print(BUILD_FILE_DB_SIZE, MAP_NAME_ID_END, "debug file");
-	printf("DEBUG FILE TOTAL NUMBER= %ld\n", BUILD_FILE_DB_SIZE);
+    error_print(BUILD_FILE_DB_SIZE, MAP_NAME_ID_END, "DEBUG FILE TOTAL NUMBER");
 }
 
 

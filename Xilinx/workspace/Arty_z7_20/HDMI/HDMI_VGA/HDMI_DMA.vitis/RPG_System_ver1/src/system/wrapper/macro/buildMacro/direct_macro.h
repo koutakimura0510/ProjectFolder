@@ -57,6 +57,7 @@ typedef enum
     TRY_ROMEN_VIRRAGE_ID,
     TRY_ROMEN_DANGEON_ID,
     TRY_ROMEN_EXIT_ID,
+    TRY_MAP_NAME_END,
     TRY_MAP_NAME_NULL,
 } NextMapNameID;
 

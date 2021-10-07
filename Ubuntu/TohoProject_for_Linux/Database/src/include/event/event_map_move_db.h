@@ -22,8 +22,7 @@
 /*
  * 構造体の要素数
  */
-#define EVENT_WORLD_DB_SIZE 		((sizeof (map_move_all)) / (sizeof (MapMoveAll)))
-#define EVENT_SUBMAP_MOVE_DB_SIZE 	((sizeof (submap_move)) / (sizeof (SubmapMove)))
+#define MAP_MOVE_ALL_DB_SIZE ((sizeof (map_move_all)) / (sizeof (MapMoveAll)))
 
 
 /**
@@ -94,35 +93,37 @@ static const MapMoveAll map_move_all[] =
 
 
 
-// void npc_msg_write(FILE *fp, FILE *byte)
-// {
-// 	const NpcMsg *p = npc_msg;
+/* データベース書き込み */
+void map_all_write(FILE *fp, FILE *byte)
+{
+	const MapMoveAll *p = map_move_all;
 
-// 	for (uint32_t i = 0; i < NPC_MSG_DB_SIZE; i++, p++)
-// 	{
-// 		uint32_t count = 0;
-// 		fprintf(fp, "0x%08x,\n", p->msg_event_id);
-// 		fprintf(byte, "0x%08x,\n", 1);
+	for (uint32_t i = 0; i < MAP_MOVE_ALL_DB_SIZE; i++, p++)
+	{
+		fprintf(fp, "0x%08x,\n", p->next_mapname_id);
+		fprintf(fp, "0x%08x,\n", p->event_type);
+		fprintf(fp, "0x%08x,\n", p->next_file_mapdata_id);
+		fprintf(fp, "0x%08x,\n", p->next_file_object_id);
+		fprintf(fp, "0x%08x,\n", p->next_file_region_id);
+		fprintf(fp, "0x%08x,\n", p->next_file_npc_id);
+		fprintf(fp, "0x%08x,\n", p->next_file_mapchip_id);
+		fprintf(fp, "0x%08x,\n", p->next_file_bgm_id);
+		fprintf(fp, "0x%08x,\n", p->next_map);
+		fprintf(fp, "0x%08x,\n", p->next_map_canpass_id);
+		fprintf(fp, "0x%08x,\n", p->next_map_object_startid);
+		fprintf(fp, "0x%08x,\n", p->next_map_object_endid);
+		fprintf(fp, "0x%08x,\n", p->unitx);
+		fprintf(fp, "0x%08x,\n", p->unity);
+		fprintf(fp, "0x%08x,\n", p->fieldx);
+		fprintf(fp, "0x%08x,\n", p->fieldy);
 
-// 		for (uint32_t j = 0; j < NUM(p->msg_event); j++, count++)
-// 		{
-// 			if ("\0" == p->msg_event[j])
-// 			{
-// 				fprintf(fp, "0x%08x,\n", count);
-// 				fprintf(byte, "0x%08x,\n", 1);
-// 				break;
-// 			}
-// 		}
+		for (int j = 0; j < 16; j++)
+		{
+			fprintf(byte, "0x%08x,\n", 1);
+		}
+	}
 
-// 		for (uint32_t j = 0; j < count; j++)
-// 		{
-// 			fprintf(byte, "0x%08x,\n", sjis_write(fp, p->msg_event[j]));
-// 		}
-// 	}
-
-// 	printf("VARIABLE MSG TOTAL NUMBER = %ld\n", NPC_MSG_DB_SIZE);
-// }
-
-
+	error_print(NPC_MSG_DB_SIZE, TRY_MAP_NAME_END, "MAP ALL MOVE NUMBER");
+}
 
 #endif
