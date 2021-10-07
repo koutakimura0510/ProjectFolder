@@ -1,14 +1,16 @@
 /*
- * 城と街中の当たり判定を管理
+ * Create 2021/10/07
+ * Author koutakimura
+ * OS     Ubuntu LTS 20.04
+ * Editor VSCode ver1.57.1
+ * -
+ * ロメン村のイベント判定を管理するファイル
  */
+#ifndef romen_db_h   /* prevent circular inclusions */
+#define romen_db_h   /* by using protection macros */
 
-#ifndef direct_build_struct_h   /* prevent circular inclusions */
-#define direct_build_struct_h   /* by using protection macros */
 
-
-/*
- * 構造体の要素数
- */
+/* データベースの行数 */
 #define SUBMAP_DIRECT_DB_SIZE ((sizeof (submap_direct))/(sizeof (SubmapDirect)))
 
 
@@ -37,6 +39,11 @@
  * VARIABLEの場合 xpos, yposは0を指定
  * point
  */
+/**
+ * @brief  ロメンの村の固定座標のイベントを管理するデータベース
+ * @note   
+ * @retval None
+ */
 typedef struct
 {
 	uint32_t event_id;
@@ -47,18 +54,6 @@ typedef struct
 	uint8_t ypos;
 	uint8_t point;
 } SubmapDirect;
-
-
-/* TODO
- * サブマップ内の可変イベント処理はどうするか考える
- *
- * 〇可変イベント処理とは？
- * 宝箱のような固定イベントではなく、NPCが町中を徘徊していたりするイベントのこと
- * 
- * ver1. 2021/06/10
- * サブマップのイベントのすべてを管理するデータベース
- * 座標に応じてウィンドウの表示方法、イベントの種類、そのイベントのIDを取得
- */
 
 static const SubmapDirect submap_direct[] =
 {
@@ -81,5 +76,6 @@ static const SubmapDirect submap_direct[] =
 	{DIRECT_ROMEN_ID_LOOM2_START,EVENT_TYPE_NULL, 					SYSTEM_NULL,					DISPLAY_NULL_DRAW,			0,	0,	DIRECT_POINT_NULL		},
 	{DIRECT_ROMEN_ID_LOOM2,	 	 EVENT_TYPE_SAMEMAP_MOVE,  			SYSTEM_MAP_DARKENING_SUBMAP,	DISPLAY_DARKENING_DRAW, 	12, 10,	DIRECT_POINT_FIXED		},
 };
+
 
 #endif

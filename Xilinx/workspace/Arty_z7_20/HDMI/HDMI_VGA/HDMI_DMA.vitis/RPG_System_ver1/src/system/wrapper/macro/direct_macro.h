@@ -9,6 +9,7 @@
 #define ON_DIRECT       (true)
 #define NON_DIRECT      (false)
 
+/* TODO フラグを取得したり変換しないイベントIDと可変イベント用IDを分ける */
 /**
  * @brief  イベント管理用IDを定義
  * @note   

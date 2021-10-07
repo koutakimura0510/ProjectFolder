@@ -40,7 +40,6 @@ void error_print(uint32_t a, uint32_t b, char *msg)
 /* データベースのインクルード */
 #include "system_db.h"
 #include "item_db.h"
-#include "event_db.h"
 #include "minigame_db.h"
 #include "effect_db.h"
 #include "level_db.h"
@@ -53,8 +52,12 @@ void error_print(uint32_t a, uint32_t b, char *msg)
 #include "cooking_db.h"
 #include "npc_db.h"
 #include "sin_cos.h"
-#include "event_variable_msg_db.h"
 #include "build_db.h"
+#include "./event/event_db.h"
+#include "./event/event_variable_msg_db.h"
+#include "./event/event_map_move_db.h"
+#include "./event/event_world_direct_db.h"
+#include "./buildDB/romen_db.h"
 // #include "sound_db.h"
 // #include "bitmap_db.h"
 
