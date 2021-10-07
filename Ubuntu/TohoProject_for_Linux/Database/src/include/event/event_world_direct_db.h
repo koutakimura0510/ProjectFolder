@@ -27,17 +27,17 @@
  * 
  * 処理の順番としては、
  * 1. direct_xpos,yposで座標を検索
- * 2. 一致すればevent_idとevent_typeを保存
+ * 2. 一致すればnext_mapname_idとevent_typeを保存
  * 3. 移動アニメーションのため画面を暗転させる
  * 4. 暗転中に取得したevent_typeでデータの取得数の判定を行う。
- * 5. 判定を行ったらevent_idでデータベースの検索を行いデータを取得する
+ * 5. 判定を行ったらnext_mapname_idでデータベースの検索を行いデータを取得する
  * 6. 表示させるマップデータをフレームバッファに保存し表示する
  * 7. 特殊イベントが無ければ1 ~ 6を繰り返す
  * 
  * @param world_direcy_id データベースの当たり判定検索用のIDを保存
  * @param direct_xpos 当たり判定のx座標を指定
  * @param direct_ypos 当たり判定のy座標を指定
- * @param event_id 連番のイベント番号を指定する
+ * @param next_mapname_id 連番のイベント番号を指定する
  * @param event_type 発生するイベントタイプを指定する
  * @retval None
  */
@@ -46,14 +46,14 @@ typedef struct worldmap_direct
 	uint32_t world_direct_id;
 	uint32_t direct_xpos;
 	uint32_t direct_ypos;
-	uint32_t event_id;
+	uint32_t next_mapname_id;
 	uint32_t event_type;
 } WorldmapDirect;
 
 static const WorldmapDirect worldmap_direct[] =
 {
-	{WORLD_DIRECT_GEKAI_ROMEN_VILLAGE, 171, 45, DIRECT_GEKAI_ROMEN_VILLAGE_ID, EVENT_TYPE_WORLD_STATE_OTHER_MAP, },
-	{WORLD_DIRECT_GEKAI_ROMEN_TREE,    166, 49, DIRECT_GEKAI_ROMEN_TREE_ID, EVENT_TYPE_WORLD_STATE_OTHER_MAP, },
+	{WORLD_DIRECT_GEKAI_ROMEN_VILLAGE, 171, 45, TRY_ROMEN_VIRRAGE_ID, EVENT_TYPE_WORLD_STATE_OTHER_MAP, },
+	{WORLD_DIRECT_GEKAI_ROMEN_TREE,    166, 49, TRY_ROMEN_DANGEON_ID, EVENT_TYPE_WORLD_STATE_OTHER_MAP, },
 };
 
 

@@ -5,13 +5,23 @@
 #ifndef event_id_macro_h   /* prevent circular inclusions */
 #define event_id_macro_h   /* by using protection macros */
 
-
-/*
- * 当たり判定を固定座標か可変座評か選択
+/**
+ * @brief  イベントの発生条件を判定する定数を定義
+ * @note   
+ * 
+ * 不変イベント
+ * ストーリーの進行上まったく変化しないイベントのことやフラグが無いことを指す。
+ * 例、村の壺の中のアイテムを一度取ったら無くなり続けるなど
+ * 
+ * 可変イベント
+ * 一度調べたらフラグを取得出来たり、ある特定のフラグが立っていたら
+ * イベントが分岐するなどのイベントを指す。
+ * 
+ * また、出口の判定などにも利用する
  */
-#define DIRECT_POINT_FIXED		(0)
-#define DIRECT_POINT_VARIABLE	(1)
-#define DIRECT_POINT_NULL		(2)
+#define EVENT_FIXED		(0)  /* 不変のイベント */
+#define EVENT_VARIABLE	(1)  /* 可変のイベント */
+#define EVENT_NULL		(2)
 
 
 /*

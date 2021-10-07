@@ -9,9 +9,8 @@
 #define ON_DIRECT       (true)
 #define NON_DIRECT      (false)
 
-/* TODO フラグを取得したり変換しないイベントIDと可変イベント用IDを分ける */
 /**
- * @brief  イベント管理用IDを定義
+ * @brief  NPCのイベント番号を管理
  * @note   
  * @retval None
  */
@@ -22,41 +21,7 @@ typedef enum
     ROMEN_NPC_ID_2,
     ROMEN_NPC_ID_3,
     ROMEN_NPC_ID_4,
-    
-    DIRECT_GEKAI_ID_START,
-    DIRECT_GEKAI_ROMEN_VILLAGE_ID,
-    DIRECT_GEKAI_ROMEN_TREE_ID,
-    DIRECT_GEKAI_ID_END,
-
-    DIRECT_ROMEN_ID_START,
-    DIRECT_ROMEN_ID_EXIT,
-    DIRECT_ROMEN_ID_HOUSE1,
-    DIRECT_ROMEN_ID_HOUSE2,
-    DIRECT_ROMEN_ID_KANBAN1,
-    DIRECT_ROMEN_ID_KANBAN3_1,
-    DIRECT_ROMEN_ID_KANBAN3_2,
-    DIRECT_ROMEN_ID_KANBAN4,
-    DIRECT_ROMEN_ID_KANBAN5,
-    DIRECT_ROMEN_ID_ITEM_SHOP,
-    DIRECT_ROMEN_ID_WEPON_SHOP,
-    DIRECT_ROMEN_ID_ITEM1,
-    DIRECT_ROMEN_ID_ITEM2,
-    DIRECT_ROMEN_ID_ITEM3,
-    DIRECT_ROMEN_ID_END,
-
-    DIRECT_ROMEN_ID_LOOM1_START,
-    DIRECT_ROMEN_ID_LOOM1,
-    DIRECT_ROMEN_ID_LOOM1_END,
-
-    DIRECT_ROMEN_ID_LOOM2_START,
-    DIRECT_ROMEN_ID_LOOM2,
-    DIRECT_ROMEN_ID_LOOM2_END,
-
-    DIRECT_ROMEN_DANGEON_ID_START,
-    DIRECT_ROMEN_DANGEON_ID_END,
-
-    DIRECT_NULL,
-} ExitID;
+} BuildNpcNumber;
 
 
 /**
@@ -80,6 +45,20 @@ typedef enum
     BEGINNING_HILL_ID,  // はじまりの丘
     MAP_NAME_ID_END,
 } MapNameID;
+
+
+/**
+ * @brief  マップ間移動時に使用する定数
+ * @note   
+ * @retval None
+ */
+typedef enum
+{
+    TRY_ROMEN_VIRRAGE_ID,
+    TRY_ROMEN_DANGEON_ID,
+    TRY_ROMEN_EXIT_ID,
+    TRY_MAP_NAME_NULL,
+} NextMapNameID;
 
 
 /**

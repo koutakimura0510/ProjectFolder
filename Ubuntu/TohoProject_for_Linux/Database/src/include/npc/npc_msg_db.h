@@ -3,16 +3,16 @@
  * Author koutakimura
  * OS     Ubuntu LTS 20.04
  *
- * 可変式のイベントメッセージについて管理するファイル
+ * NPCのメッセージ管理ファイル
  */
-#ifndef event_variable_msg_db_h   /* prevent circular inclusions */
-#define event_variable_msg_db_h   /* by using protection macros */
+#ifndef event_msg_db_h   /* prevent circular inclusions */
+#define event_msg_db_h   /* by using protection macros */
 
 
 /*
  * 文字列管理データベースの要素数
  */
-#define EVENT_VARIABLE_MSG_DB_SIZE ((sizeof (variable_msg_db)) / (sizeof (VariableMsgDB)))
+#define NPC_MSG_DB_SIZE ((sizeof (npc_msg)) / (sizeof (NpcMsg)))
 
 
 /**
@@ -32,41 +32,28 @@
  * @param *msg_event[] メッセージを保存
  * @retval None
  */
-typedef struct variable_msg_db
+typedef struct npc_msg
 {
 	uint32_t msg_event_id;
 	const char *msg_event[10];
-} VariableMsgDB;
+} NpcMsg;
 
-static const VariableMsgDB variable_msg_db[] = {
+static const NpcMsg npc_msg[] = {
 	{ROMEN_NPC_ID_1, {"ロメンの村へようこそ・・・", "ロメンの村へようこそ！", "\0"}},
 	{ROMEN_NPC_ID_2, {"いらっしゃいまし～", "いらっしゃいまし！", "\0"}},
 	{ROMEN_NPC_ID_3, {"森にでっかい鳥が居座っちゃって、\n食べ物を取りに行けないのよ", "どうしましょう・・・", "誰かが鳥を追っ払ってくれたの！\nこれで食べ物を取りに行けるわ！", "\0"}},
 	{ROMEN_NPC_ID_4, {"トレーニングの邪魔すんじゃねぇ！", "はなしかけんじゃねぇ！", "\0"}},
-	// {DIRECT_ROMEN_ID_ITEM1,	 	{"アルテマウェポンを手に入れた", "\0"}},
-	// {DIRECT_ROMEN_ID_ITEM2,	 	{"やくそうを手に入れた", "\0"}},
-	// {DIRECT_ROMEN_ID_ITEM3,	 	{"あああ", "\0"}},
-	// {DIRECT_ROMEN_ID_KANBAN1, 	{"空けるな危険", "\0"}},
-	// {DIRECT_ROMEN_ID_KANBAN3_1,	{"穣子へ\nお姉ちゃんは無事です。\n崖の上にある家のじじいに森で倒れている所を助けてもらいました。\n一緒に吸い込まれたから、きっと近くにいるだろうと思い、\nお姉ちゃんは穣子を探しに森に行っています。\n森は魔物がいて危険なので、\nもしこの便りを見たら、森には来ないで町に居てください。\n\n静葉より", "\0"}},
-	// {DIRECT_ROMEN_ID_KANBAN3_2,	{"夕方、森で雷鳥出没　注意するように", "\0"}},
-	// {DIRECT_ROMEN_ID_KANBAN4, 	{"道具屋", "\0"}},
-	// {DIRECT_ROMEN_ID_KANBAN5, 	{"武器屋", "\0"}},
-
-	/*TODO
-	 * 仲間の戦闘中のメッセージなども連番にする
-	 * 障害物などのメッセージも連番にしてしまう
-	 */
 };
 
 
 /*
- * npcの画像データのデータを書き出し
+ * npcのメッセージデータのデータを書き出し
  */
-void variable_msg_write(FILE *fp, FILE *byte)
+void npc_msg_write(FILE *fp, FILE *byte)
 {
-	const VariableMsgDB *p = variable_msg_db;
+	const NpcMsg *p = npc_msg;
 
-	for (uint32_t i = 0; i < EVENT_VARIABLE_MSG_DB_SIZE; i++, p++)
+	for (uint32_t i = 0; i < NPC_MSG_DB_SIZE; i++, p++)
 	{
 		uint32_t count = 0;
 		fprintf(fp, "0x%08x,\n", p->msg_event_id);
@@ -88,7 +75,7 @@ void variable_msg_write(FILE *fp, FILE *byte)
 		}
 	}
 
-	printf("VARIABLE MSG TOTAL NUMBER = %ld\n", EVENT_VARIABLE_MSG_DB_SIZE);
+	printf("NPC MSG TOTAL NUMBER = %ld\n", NPC_MSG_DB_SIZE);
 }
 
 

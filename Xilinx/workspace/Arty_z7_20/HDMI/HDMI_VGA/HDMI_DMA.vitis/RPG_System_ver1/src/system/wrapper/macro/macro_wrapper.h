@@ -14,7 +14,6 @@
 
 #include "gamemode.h"
 #include "hero_macro.h"
-#include "direct_macro.h"
 #include "display_macro.h"
 #include "color_macro.h"
 #include "cmd_msg_macro.h"
@@ -31,5 +30,8 @@
 #include "event_id_macro.h"
 #include "event_flag_macro.h"
 #include "dtm_macro.h"
+
+#include "./buildMacro/direct_macro.h"
+#include "./buildMacro/romen_macro.h"
 
 #endif

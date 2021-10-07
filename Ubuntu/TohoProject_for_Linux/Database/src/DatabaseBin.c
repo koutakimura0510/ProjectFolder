@@ -24,7 +24,7 @@ static const FuncFile funcfile[] = {
 	{"./raw/armor.raw",				armor_write				},
 	{"./raw/amulet.raw",			amulet_write			},
 	{"./raw/cook.raw",				cooking_write			},
-	{"./raw/event.raw",				event_msg_write			},
+	// {"./raw/event.raw",				event_msg_write			},
 	{"./raw/mini.raw",				minigame_write			},
 	{"./raw/cmd.raw",				cmd_write				},
 	{"./raw/score.raw",				score_write				},
@@ -48,10 +48,11 @@ static const FuncFile funcfile[] = {
 	{"./raw/npc_pattern.raw",		npc_pattern_write		},
 	{"./raw/npc_event.raw",			npc_event_write			},
 	{"./raw/npc_bitmap.raw",		npc_bitmap_write 		},
+	{"./raw/npc_msg.raw",			npc_msg_write	 		},
 	{"./raw/sin.raw",				sin_write				},
 	{"./raw/cos.raw",				cos_write				},
 	{"./raw/type_bit.raw",			type_bit_write			},
-	{"./raw/variable_msg.raw",		variable_msg_write		},
+	// {"./raw/variable_msg.raw",		variable_msg_write		},
 };
 
 

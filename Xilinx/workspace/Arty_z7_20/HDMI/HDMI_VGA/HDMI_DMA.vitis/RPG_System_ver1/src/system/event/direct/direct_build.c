@@ -102,7 +102,7 @@ static bool isDirect_point(GameWrapper *const game, const SubmapDirect *submap, 
 
 	switch (submap->point)
 	{
-	case DIRECT_POINT_FIXED:
+	case DIRECT_FIXED:
 		xpos = (uint32_t)submap->xpos << MAPCHIP_SHIFT;
 		ypos = (uint32_t)submap->ypos << MAPCHIP_SHIFT;
 
@@ -119,7 +119,7 @@ static bool isDirect_point(GameWrapper *const game, const SubmapDirect *submap, 
 		}
 		return NON_DIRECT;
 	
-	case DIRECT_POINT_VARIABLE:
+	case DIRECT_VARIABLE:
 		mapx = get_mapsize('w') - 1;
 		mapy = get_mapsize('h') - 1;
 		x >>= MAPCHIP_SHIFT;

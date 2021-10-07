@@ -16,6 +16,10 @@
 		"effect_msg_macro.h": "c",
 		"enemy_macro.h": "c",
 		"game_wrapper.h": "c",
-		"rom_db_struct.h": "c"
+		"rom_db_struct.h": "c",
+		"build_db.h": "c",
+		"event_world_direct_db.h": "c",
+		"event_map_move_db.h": "c",
+		"npc_msg_db.h": "c"
 	}
 }

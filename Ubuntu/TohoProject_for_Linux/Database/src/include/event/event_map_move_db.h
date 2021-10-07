@@ -29,7 +29,7 @@
 /**
  * @brief  マップ間移動時にBGMと使用するマップチップの画像データの変更を行う必要がある場合の情報を管理
  * 
- * @param event_id イベントIDを指定し一致した行のデータを取得
+ * @param next_mapname_id イベントIDを指定し一致した行のデータを取得
  * @param event_type 発生したイベントのタイプを指定する
  * @param next_file_mapdata_id 使用するマップのバックデータにアクセスするファイル番号を指定
  * @param next_file_object_id 使用するマップのオブジェクトにアクセスするファイル番号を指定
@@ -50,7 +50,7 @@
  */
 typedef struct map_move_all
 {
-	uint32_t event_id;
+	uint32_t next_mapname_id;
 	uint32_t event_type;
 	uint32_t next_file_mapdata_id;
 	uint32_t next_file_object_id;
@@ -70,13 +70,13 @@ typedef struct map_move_all
 
 static const MapMoveAll map_move_all[] =
 {
-	{DIRECT_GEKAI_ROMEN_TREE_ID, EVENT_TYPE_DANGEON_MOVE,
+	{TRY_ROMEN_VIRRAGE_ID, EVENT_TYPE_DANGEON_MOVE,
 	FILE_ACCESS_MAPDATA_MINIGAME, FILE_ACCESS_MAPDATA_MINIGAME, FILE_ACCESS_MAPDATA_MINIGAME, FILE_ACCESS_MAPDATA_MINIGAME, FILE_ACCESS_CHIP_MINIGAME,SOUND_ID_FIELD_GEKAI,
 	ROMEN_DANGEON_ID,
 	0, 0, 0,
 	5, 7, 0, 0},
 
-	{DIRECT_GEKAI_ROMEN_VILLAGE_ID, EVENT_TYPE_SUBMAP_MOVE,
+	{TRY_ROMEN_DANGEON_ID, EVENT_TYPE_SUBMAP_MOVE,
 	FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE, FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_OBJECT, FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_REGION, FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_NPC, FILE_ACCESS_CHIP_ROMEN_VIRRAGE, SOUND_ID_MURA_1,
 	ROMEN_VIRRAGE_ID,
 	CAN_PASS_MAPCHIP_ID_MAX_ROMEN_VIRRAGE,
@@ -84,7 +84,7 @@ static const MapMoveAll map_move_all[] =
 	OBJECT_END_MAPID_ROMEN_VIRRAGE,
 	10, 12, 16, 35,},
 
-	{DIRECT_ROMEN_ID_EXIT, EVENT_TYPE_WORLD_MOVE,
+	{TRY_ROMEN_EXIT_ID, EVENT_TYPE_WORLD_MOVE,
 	FILE_ACCESS_MAPDATA_GEKAI, FILE_ACCESS_MAPDATA_GEKAI_OBJECT, FILE_ACCESS_MAPDATA_GEKAI_REGION, FILE_ACCESS_MAPDATA_GEKAI_NPC, FILE_ACCESS_CHIP_GEKAI, SOUND_ID_FIELD_GEKAI, GEKAI_MAP_ID,
 	CAN_PASS_MAPCHIP_ID_MAX_GEKAI,
 	OBJECT_START_MAPID_GEKAI,
@@ -93,39 +93,36 @@ static const MapMoveAll map_move_all[] =
 };
 
 
-/*
- *
- * ver1. 2021/06/02
- * 当たり判定が行われた場合、当たり判定を管理するbuild_struct.hに定義されている構造体のeventidを取得し、
- * このデータベースのevent_idと一致した行のマップデータと開始座標を取得する
- * 同一マップ間の移動は同じマップチップを使用するため、
- * マップデータのファイルと次のマップデータを表すIDだけ管理する
- * 
- * 動作例
- * ロメン村の家１の入り口と当たり判定があった場合、eventidを取得
- * 次にこの構造体のメンバevent_idを比較していき、一致した行のマップデータアクセスID、移動先のマップ名、表示座標を取得する
- * サブマップ間移動のため、家１の部屋１に移動IDを更新する。
- * 部屋１の出口と当たり判定があった場合は、ロメン村の全体マップに移動したとみなし、そのデータを取得する。
- */
-typedef struct submap_move
-{
-	uint32_t event_id;
-	uint32_t next_file_mapdata_id;
-	uint32_t next_file_object_id;
-	uint32_t next_map;
-	uint8_t unitx;
-	uint8_t unity;
-	uint8_t fieldx;
-	uint8_t fieldy;
-} SubmapMove;
 
-static const SubmapMove submap_move[] =
-{
-	{DIRECT_ROMEN_ID_HOUSE1, FILE_ACCESS_MAPDATA_ROMEN_HOUSE1,  FILE_ACCESS_MAPDATA_ROMEN_HOUSE1_OBJECT,  FILE_ACCESS_MAPDATA_ROMEN_HOUSE1_REGION, FILE_ACCESS_MAPDATA_ROMEN_HOUSE1_NPC, ROMEN_HOUSE1_LOOM1_ID, 	10, 1, 0, 0},
-	{DIRECT_ROMEN_ID_HOUSE2, FILE_ACCESS_MAPDATA_ROMEN_HOUSE2,  FILE_ACCESS_MAPDATA_ROMEN_HOUSE2_OBJECT,  FILE_ACCESS_MAPDATA_ROMEN_HOUSE2_REGION, FILE_ACCESS_MAPDATA_ROMEN_HOUSE2_NPC, ROMEN_HOUSE2_LOOM1_ID, 	10, 7, 0, 0},
-	{DIRECT_ROMEN_ID_LOOM1,  FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE, FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_OBJECT, FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_REGION, FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_NPC, ROMEN_VIRRAGE_ID, 		0, 0, 0, 0},
-	{DIRECT_ROMEN_ID_LOOM2,	 FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE, FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_OBJECT, FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_REGION, FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_NPC, ROMEN_VIRRAGE_ID, 		1, 1, 0, 0},
+// void npc_msg_write(FILE *fp, FILE *byte)
+// {
+// 	const NpcMsg *p = npc_msg;
 
-};
+// 	for (uint32_t i = 0; i < NPC_MSG_DB_SIZE; i++, p++)
+// 	{
+// 		uint32_t count = 0;
+// 		fprintf(fp, "0x%08x,\n", p->msg_event_id);
+// 		fprintf(byte, "0x%08x,\n", 1);
+
+// 		for (uint32_t j = 0; j < NUM(p->msg_event); j++, count++)
+// 		{
+// 			if ("\0" == p->msg_event[j])
+// 			{
+// 				fprintf(fp, "0x%08x,\n", count);
+// 				fprintf(byte, "0x%08x,\n", 1);
+// 				break;
+// 			}
+// 		}
+
+// 		for (uint32_t j = 0; j < count; j++)
+// 		{
+// 			fprintf(byte, "0x%08x,\n", sjis_write(fp, p->msg_event[j]));
+// 		}
+// 	}
+
+// 	printf("VARIABLE MSG TOTAL NUMBER = %ld\n", NPC_MSG_DB_SIZE);
+// }
+
+
 
 #endif
