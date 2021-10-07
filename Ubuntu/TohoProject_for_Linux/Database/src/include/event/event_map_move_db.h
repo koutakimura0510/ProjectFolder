@@ -123,7 +123,7 @@ void map_all_write(FILE *fp, FILE *byte)
 		}
 	}
 
-	error_print(NPC_MSG_DB_SIZE, TRY_MAP_NAME_END, "MAP ALL MOVE NUMBER");
+	error_print(MAP_MOVE_ALL_DB_SIZE, TRY_MAP_NAME_END, "MAP ALL MOVE NUMBER");
 }
 
 #endif

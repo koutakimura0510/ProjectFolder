@@ -33,11 +33,11 @@ void error_print(uint32_t a, uint32_t b, char *msg)
 {
 	if (a != b)
 	{
-		printf(" - ERROR - %s, %ld, %ld\n", msg, a, b);
+		printf(" - ERROR - %s, %d, %d\n", msg, a, b);
 	}
 	else
 	{
-		printf("%s, %ld\n", msg, a);
+		printf("%s, %d\n", msg, a);
 	}
 }
 
