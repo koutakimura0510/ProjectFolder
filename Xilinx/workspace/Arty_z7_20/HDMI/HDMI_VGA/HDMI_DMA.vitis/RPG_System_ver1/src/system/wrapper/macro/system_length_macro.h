@@ -10,7 +10,7 @@
  * RAM     512KB
  * L1Cache 32KB
  * -
- * ファイルデータにアクセスするとぃすうをまとめたヘッダーファイル
+ * ファイルデータにアクセスする定数をまとめたヘッダーファイル
  */
 
 #ifndef system_length_macro_h   /* prevent circular inclusions */
@@ -41,7 +41,13 @@
 #define UNIT_RES_SIZE               (19)
 
 /* 可変式イベントメッセージデータベースの行数 */
-#define VARIABLE_MSG_SIZE           (4)
+#define NPC_MSG_SIZE                (4)
+
+/* WorldLoopCount Table number */
+#define WORLD_LOOP_COUNT_DB_LINE    (5)
+
+/* build submap Table number */
+#define BUILD_SUBMAP_COUNT_DB_LINE  (4)
 
 /*
  * ver1. 2021/07/15
@@ -54,6 +60,11 @@ typedef enum
     MEMORY_BUILD_CONFIG_ID,     //ビルドの基本情報のファイル
     MEMORY_BUILD_FILE_ID,       //ファイルを利用するビルドデータベースファイル
     MEMORY_MAP_ALL_ID,          //ワールドマップを含んだマップ移動のファイル
+    MEMORY_WORLD_DIRECT_ID,     //ワールドマップのイベント当たり判定ファイル
+    MEMORY_WORLD_LOOP_ID,       //ワールドマップのループ回数判定ファイル
+    MEMORY_BUILD_POS_ID,        //イベント発生座標管理ファイル
+    MEMORY_BUILD_EVENT_ID,      //発生イベント管理ファイル
+    MEMORY_BUILD_SUBMAP_ID,     //サブマップイベント管理ファイル
     MEMORY_ITEM_ID,             //アイテムファイル
     MEMORY_WEAPON_ID,           //武器ファイル
     MEMORY_ARMOR_ID,            //防具ファイル
@@ -83,10 +94,10 @@ typedef enum
     MEMORY_NPC_PATTERN_ID,      //npcの行動パターンファイル
     MEMORY_NPC_EVENT_ID,        //npcのイベントデータファイル
     MEMORY_NPC_BITMAP_ID,       //npcの画像データファイル
+    MEMORY_NPC_MSG_ID,          //可変式のイベントメッセージを管理するファイル
     MEMORY_SIN_ID,              //sinのデータテーブル 0~360の計361個ある
     MEMORY_COS_ID,              //cosのデータテーブル 0~360の計361個ある
     MEMORY_TYPE_STR_ID,         //属性の文字描画を管理するファイル
-    MEMORY_VARIABLE_MSG_ID,     //可変式のイベントメッセージを管理するファイル
 } MemoryDataAccess;
 
 
@@ -506,6 +517,7 @@ typedef enum
     BUILD_SUB_MEMBER_FILE_NUMBER,
 } BuildFileID;
 
+
 typedef enum
 {
     TRY_MAP_MEMBER_NEXT_MAPNAME_ID,
@@ -527,5 +539,61 @@ typedef enum
     TRY_MAP_MEMBER_NUMBER,
 } WorldMapAllID;
 
+/* WorldmapDirect */
+typedef enum
+{
+    WORLD_DIRECT_MEMBER_DIRECT_ID,
+    WORLD_DIRECT_MEMBER_XPOS,
+    WORLD_DIRECT_MEMBER_YPOS,
+    WORLD_DIRECT_MEMBER_MAPNAME_ID,
+    WORLD_DIRECT_MEMBER_EVENT_TYPE,
+    WORLD_DIRECT_MEMBER_NUMBER,
+} WorldDirectID;
+
+/* WorldLoopCount */
+typedef enum
+{
+    WORLD_LOOPCOUNT_MEMBER_MAP_NAME,
+    WORLD_LOOPCOUNT_MEMBER_START_ID,
+    WORLD_LOOPCOUNT_MEMBER_LOOP_COUNT,
+    WORLD_LOOPCOUNT_MEMBER_NUMBER,
+} WorldLoopID;
+
+/* build_pos */
+typedef enum
+{
+    BUILD_POS_MEMBER_XPOS,
+    BUILD_POS_MEMBER_YPOS,
+    BUILD_POS_MEMBER_EVENT_ID,
+    BUILD_POS_MEMBER_ISVARIABLE,
+    BUILD_POS_MEMBER_NUMBER,
+} BuildPosID;
+
+/* build_event */
+typedef enum
+{
+    BUILD_EVENT_MEMBER_EVENT_ID,
+    BUILD_EVENT_MEMBER_EVENT_TYPE,
+    BUILD_EVENT_MEMBER_NEXT_MAPNAME_ID,
+    BUILD_EVENT_MEMBER_NEXT_SYSTEM,
+    BUILD_EVENT_MEMBER_NEXT_DRAYTYPE,
+    BUILD_EVENT_MEMBER_NUMBER,
+} BuildEventID;
+
+/* build_submap */
+typedef enum
+{
+    BUILD_SUBMAP_MEMBER_EVENT_ID,
+    BUILD_SUBMAP_MEMBER_NEXT_FILE_MAPDATA_ID,
+    BUILD_SUBMAP_MEMBER_NEXT_FILE_OBJECT_ID,
+    BUILD_SUBMAP_MEMBER_NEXT_FILE_REGION_ID,
+    BUILD_SUBMAP_MEMBER_NEXT_FILE_NPC_ID,
+    BUILD_SUBMAP_MEMBER_NEXT_MAP,
+    BUILD_SUBMAP_MEMBER_UNITX,
+    BUILD_SUBMAP_MEMBER_UNITY,
+    BUILD_SUBMAP_MEMBER_FILEDX,
+    BUILD_SUBMAP_MEMBER_FILEDY,
+    BUILD_SUBMAP_MEMBER_NUMBER,
+} BuildSubmapID;
 
 #endif

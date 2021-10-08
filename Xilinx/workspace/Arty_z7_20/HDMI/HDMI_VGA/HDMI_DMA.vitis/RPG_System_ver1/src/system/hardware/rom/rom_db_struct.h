@@ -306,12 +306,19 @@ static const SystemFile system_file[] =
     {FILE_ACCESS_BUILD_CONFIG,      "/sys/build_config"         },
     {FILE_ACCESS_BUILD_FILE,        "/sys/build_file"           },
     {FILE_ACCESS_MAP_ALL,           "/sys/map_all"              },
+    {FILE_ACCESS_WORLD_DIRECT,      "/sys/world_direct"         },
+    {FILE_ACCESS_WORLD_LOOP_COUNT,  "/sys/world_loop"           },
+    {FILE_ACCESS_BUILD_POS,         "/sys/build_pos"            },
+    {FILE_ACCESS_BUILD_EVENT,       "/sys/build_event"          },
+    {FILE_ACCESS_BUILD_SUBMAP,      "/sys/build_submap"         },
     {FILE_ACCESS_ITEM_BATTLE,       "/sys/item"                 },
     {FILE_ACCESS_ITEM_WEAPON,       "/sys/weapon"               },
     {FILE_ACCESS_ITEM_ARMOR,        "/sys/armor"                },
     {FILE_ACCESS_ITEM_AMULET,       "/sys/amulet"               },
     {FILE_ACCESS_COOKING,           "/sys/cook"                 },
+
     {FILE_ACCESS_MSG_EVENT,         "/sys/event"                },
+
     {FILE_ACCESS_MSG_MINIGAME,      "/sys/mini"                 },
     {FILE_ACCESS_MSG_CMD,           "/sys/cmd"                  },
     {FILE_ACCESS_MINI_SCORE,        "/sys/score"                },
@@ -335,10 +342,10 @@ static const SystemFile system_file[] =
     {FILE_ACCESS_NPC_PATTERN,       "/sys/npc_pattern"          },
     {FILE_ACCESS_NPC_EVENT,         "/sys/npc_event"            },
     {FILE_ACCESS_NPC_BITMAP,        "/sys/npc_bitmap"           },
+    {FILE_ACCESS_NPC_MSG,           "/sys/npc_msg"              },
     {FILE_ACCESS_SIN_TABLE,         "/sys/sin"                  },
     {FILE_ACCESS_COS_TABLE,         "/sys/cos"                  },
     {FILE_ACCESS_TYPE_STR,          "/sys/type_bit"             },
-    {FILE_ACCESS_VARIABLE_MSG,      "/sys/variable_msg"         },
     {FILE_ACCESS_TOTAL_BYTE,        "/sys/byte"                 },
 };
 
@@ -365,12 +372,19 @@ static const SystemLength system_length[] =
     {MEMORY_BUILD_CONFIG_ID,    MAP_NAME_ID_END,                        BUILD_SUB_MEMBER_CONFIG_NUMBER      },
     {MEMORY_BUILD_FILE_ID,      MAP_NAME_ID_END,                        BUILD_SUB_MEMBER_FILE_NUMBER        },
     {MEMORY_MAP_ALL_ID,         TRY_MAP_NAME_END,                       TRY_MAP_MEMBER_NUMBER               },
+    {MEMORY_WORLD_DIRECT_ID,    WORLD_DIRECT_END,                       WORLD_DIRECT_MEMBER_NUMBER          },
+    {MEMORY_WORLD_LOOP_ID,      WORLD_LOOP_COUNT_DB_LINE,               WORLD_LOOPCOUNT_MEMBER_NUMBER       },
+    {MEMORY_BUILD_POS_ID,       DIRECT_BUILD_END_EVENT,                 BUILD_POS_MEMBER_NUMBER             },
+    {MEMORY_BUILD_EVENT_ID,     DIRECT_BUILD_END_EVENT,                 BUILD_EVENT_MEMBER_NUMBER           },
+    {MEMORY_BUILD_SUBMAP_ID,    BUILD_SUBMAP_COUNT_DB_LINE,             BUILD_SUBMAP_MEMBER_NUMBER          },
     {MEMORY_ITEM_ID,            ITEM_NAME_ID_END,                       ITEM_MEMBER_NUMBER                  },
     {MEMORY_WEAPON_ID,          WEAPON_NAME_ID_END,                     WEAPON_MEMBER_NUMBER                },
     {MEMORY_ARMOR_ID,           ARMOR_NAME_ID_END,                      ARMOR_MEMBER_NUMBER                 },
     {MEMORY_AMULET_ID,          AMULET_NAME_ID_END,                     AMULET_MEMBER_NUMBER                },
     {MEMORY_COOK_ID,            COOK_ID_END,                            COOK_SUB_MEMBER_NUMBER              },
+
     {MEMORY_EVENT_MSG_ID,       MSG_TOTAL_ID_END,                       EVENT_MSG_MEMBER_NUMBER             },
+
     {MEMORY_MINIGAME_MSG_ID,    MINIGAME_TOTAL_ID_END,                  MINIGAME_MSG_MEMBER_NUMBER          },
     {MEMORY_CMD_MSG_ID,         CMD_MSG_ID_END,                         EVENT_MSG_MEMBER_NUMBER             },
     {MEMORY_MINIGAME_SCORE_ID,  MINIGAME_SCORE_TOTAL_ID_END,            MINIGAME_SCORE_MEMBER_NUMBER        },
@@ -394,10 +408,10 @@ static const SystemLength system_length[] =
     {MEMORY_NPC_PATTERN_ID,     NPC_PATTERN_DB_COL,                     NPC_SUB_MEMBER_PATTERN_NUMBER       },
     {MEMORY_NPC_EVENT_ID,       NPC_PATTERN_DB_COL,                     NPC_SUB_MEMBER_EVENT_NUMBER         },
     {MEMORY_NPC_BITMAP_ID,      NPC_ID_END,                             NPC_SUB_MEMBER_BITMAP_NUMBER        },
+    {MEMORY_NPC_MSG_ID,         NPC_MSG_SIZE,                           MEMBER_LEN_VARIABLE                 },
     {MEMORY_SIN_ID,             SIN_TABLE_MAX,                          SIN_SUB_MEMBER_NUMBER               },
     {MEMORY_COS_ID,             COS_TABLE_MAX,                          COS_SUB_MEMBER_NUMBER               },
     {MEMORY_TYPE_STR_ID,        UNIT_RES_SIZE,                          TYPE_STR_SUB_MEMBER_NUMBER          },
-    {MEMORY_VARIABLE_MSG_ID,    VARIABLE_MSG_SIZE,                      MEMBER_LEN_VARIABLE                 },
 };
 
 #endif
