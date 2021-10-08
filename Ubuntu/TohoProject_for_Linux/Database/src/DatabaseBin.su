@@ -32,8 +32,8 @@ sin_cos.h:60:6:cos_write	48	static
 build_db.h:97:6:build_config_write	48	static
 build_db.h:130:6:build_file_write	48	static
 event_map_move_db.h:97:6:map_all_write	48	static
-event_world_direct_db.h:88:6:world_direct_write	48	static
-event_world_direct_db.h:115:6:world_loop_write	48	static
+event_world_direct_db.h:89:6:world_direct_write	48	static
+event_world_direct_db.h:116:6:world_loop_write	48	static
 npc_db.h:151:6:npc_map_write	64	static
 npc_db.h:177:6:npc_pattern_write	48	static
 npc_db.h:209:6:npc_event_write	48	static
@@ -42,6 +42,7 @@ npc_msg_db.h:52:6:npc_msg_write	64	static
 build_db.h:142:6:build_pos_write	48	static
 build_db.h:170:6:build_event_write	48	static
 build_db.h:199:6:build_submap_write	48	static
-DatabaseBin.c:69:10:sjis_write	48	static
-DatabaseBin.c:99:10:sjis_length	16	static
-DatabaseBin.c:126:5:main	64	static
+build_msg_db.h:46:6:build_msg_write	48	static
+DatabaseBin.c:68:10:sjis_write	48	static
+DatabaseBin.c:98:10:sjis_length	16	static
+DatabaseBin.c:125:5:main	64	static

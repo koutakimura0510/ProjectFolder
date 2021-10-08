@@ -61,6 +61,7 @@ void error_print(uint32_t a, uint32_t b, char *msg)
 #include "./npc/npc_db.h"
 #include "./npc/npc_msg_db.h"
 #include "./buildDB/build_db.h"
+#include "./buildDB/build_msg_db.h"
 // #include "sound_db.h"
 // #include "bitmap_db.h"
 

@@ -25,7 +25,7 @@ static const FuncFile funcfile[] = {
 	{"./raw/build_pos.raw",			build_pos_write			},
 	{"./raw/build_event.raw",		build_event_write		},
 	{"./raw/build_move.raw",		build_submap_write		},
-	// {"./raw/event.raw",				event_msg_write			},
+	{"./raw/build_msg.raw",			build_msg_write			},
 	{"./raw/item.raw",				item_write				},
 	{"./raw/weapon.raw",			weapon_write			},
 	{"./raw/armor.raw",				armor_write				},
