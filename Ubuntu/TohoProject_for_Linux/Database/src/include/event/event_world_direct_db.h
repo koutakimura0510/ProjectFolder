@@ -81,6 +81,7 @@ static const WorldLoopCount world_loop_count[] = {
 	{MAKAI_MAP_ID,	WORLD_DIRECT_GEKAI_START, WORLD_DIRECT_GEKAI_END},
 };
 
+
 /**
  * @brief  ワールドマップの当たり判定データの書き出し
  * @retval None
