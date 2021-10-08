@@ -311,14 +311,12 @@ static const SystemFile system_file[] =
     {FILE_ACCESS_BUILD_POS,         "/sys/build_pos"            },
     {FILE_ACCESS_BUILD_EVENT,       "/sys/build_event"          },
     {FILE_ACCESS_BUILD_SUBMAP,      "/sys/build_submap"         },
+    {FILE_ACCESS_BUILD_MSG,         "/sys/build_msg"            },
     {FILE_ACCESS_ITEM_BATTLE,       "/sys/item"                 },
     {FILE_ACCESS_ITEM_WEAPON,       "/sys/weapon"               },
     {FILE_ACCESS_ITEM_ARMOR,        "/sys/armor"                },
     {FILE_ACCESS_ITEM_AMULET,       "/sys/amulet"               },
     {FILE_ACCESS_COOKING,           "/sys/cook"                 },
-
-    {FILE_ACCESS_MSG_EVENT,         "/sys/event"                },
-
     {FILE_ACCESS_MSG_MINIGAME,      "/sys/mini"                 },
     {FILE_ACCESS_MSG_CMD,           "/sys/cmd"                  },
     {FILE_ACCESS_MINI_SCORE,        "/sys/score"                },
@@ -377,14 +375,12 @@ static const SystemLength system_length[] =
     {MEMORY_BUILD_POS_ID,       DIRECT_BUILD_END_EVENT,                 BUILD_POS_MEMBER_NUMBER             },
     {MEMORY_BUILD_EVENT_ID,     DIRECT_BUILD_END_EVENT,                 BUILD_EVENT_MEMBER_NUMBER           },
     {MEMORY_BUILD_SUBMAP_ID,    BUILD_SUBMAP_COUNT_DB_LINE,             BUILD_SUBMAP_MEMBER_NUMBER          },
+    {MEMORY_BUILD_MSG_ID,       MSG_TOTAL_ID_END,                       EVENT_MSG_MEMBER_NUMBER             },
     {MEMORY_ITEM_ID,            ITEM_NAME_ID_END,                       ITEM_MEMBER_NUMBER                  },
     {MEMORY_WEAPON_ID,          WEAPON_NAME_ID_END,                     WEAPON_MEMBER_NUMBER                },
     {MEMORY_ARMOR_ID,           ARMOR_NAME_ID_END,                      ARMOR_MEMBER_NUMBER                 },
     {MEMORY_AMULET_ID,          AMULET_NAME_ID_END,                     AMULET_MEMBER_NUMBER                },
     {MEMORY_COOK_ID,            COOK_ID_END,                            COOK_SUB_MEMBER_NUMBER              },
-
-    {MEMORY_EVENT_MSG_ID,       MSG_TOTAL_ID_END,                       EVENT_MSG_MEMBER_NUMBER             },
-
     {MEMORY_MINIGAME_MSG_ID,    MINIGAME_TOTAL_ID_END,                  MINIGAME_MSG_MEMBER_NUMBER          },
     {MEMORY_CMD_MSG_ID,         CMD_MSG_ID_END,                         EVENT_MSG_MEMBER_NUMBER             },
     {MEMORY_MINIGAME_SCORE_ID,  MINIGAME_SCORE_TOTAL_ID_END,            MINIGAME_SCORE_MEMBER_NUMBER        },
