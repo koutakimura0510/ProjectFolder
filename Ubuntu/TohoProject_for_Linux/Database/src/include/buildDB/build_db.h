@@ -156,7 +156,7 @@ void build_pos_write(FILE *fp, FILE *byte)
 		}
 	}
 
-	error_print(BUILD_EVENT_POS_DB_SIZE, BUILD_POS_MEMBER_NUMBER, "ROMEN POS TOTAL NUMBER");
+	error_print(BUILD_EVENT_POS_DB_SIZE, DIRECT_BUILD_END_EVENT, "BUILD POS TOTAL NUMBER");
 }
 
 
@@ -185,7 +185,7 @@ void build_event_write(FILE *fp, FILE *byte)
 		}
 	}
 
-	error_print(BUILD_EVENT_DB_SIZE, BUILD_EVENT_MEMBER_NUMBER, "ROMEN EVENT TOTAL NUMBER");
+	error_print(BUILD_EVENT_DB_SIZE, DIRECT_BUILD_END_EVENT, "BUILD EVENT TOTAL NUMBER");
 }
 
 
@@ -219,7 +219,7 @@ void build_submap_write(FILE *fp, FILE *byte)
 		}
 	}
 
-	error_print(BUILD_MOVE_DB_SIZE, BUILD_SUBMAP_MEMBER_NUMBER, "ROMEN SUBMAP TOTAL NUMBER");
+	error_print(BUILD_MOVE_DB_SIZE, 4, "BUILD SUBMAP TOTAL NUMBER");
 }
 
 
