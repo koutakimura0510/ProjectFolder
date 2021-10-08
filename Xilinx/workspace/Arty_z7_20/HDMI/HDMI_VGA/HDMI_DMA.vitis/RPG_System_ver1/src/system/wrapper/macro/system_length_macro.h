@@ -65,12 +65,12 @@ typedef enum
     MEMORY_BUILD_POS_ID,        //イベント発生座標管理ファイル
     MEMORY_BUILD_EVENT_ID,      //発生イベント管理ファイル
     MEMORY_BUILD_SUBMAP_ID,     //サブマップイベント管理ファイル
+    MEMORY_BUILD_MSG_ID,        //イベントのメッセージファイル
     MEMORY_ITEM_ID,             //アイテムファイル
     MEMORY_WEAPON_ID,           //武器ファイル
     MEMORY_ARMOR_ID,            //防具ファイル
     MEMORY_AMULET_ID,           //アクセサリファイル
     MEMORY_COOK_ID,             //料理ファイル
-    MEMORY_EVENT_MSG_ID,        //イベントのメッセージファイル
     MEMORY_MINIGAME_MSG_ID,     //ミニゲームファイル
     MEMORY_CMD_MSG_ID,          //システムコマンドファイル
     MEMORY_MINIGAME_SCORE_ID,   //ミニゲームのスコアファイル
@@ -518,6 +518,7 @@ typedef enum
 } BuildFileID;
 
 
+/* MapMoveAll */
 typedef enum
 {
     TRY_MAP_MEMBER_NEXT_MAPNAME_ID,
