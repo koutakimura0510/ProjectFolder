@@ -81,7 +81,10 @@ static const WorldLoopCount world_loop_count[] = {
 	{MAKAI_MAP_ID,	WORLD_DIRECT_GEKAI_START, WORLD_DIRECT_GEKAI_END},
 };
 
-/* データベース書き込み */
+/**
+ * @brief  ワールドマップの当たり判定データの書き出し
+ * @retval None
+ */
 void world_direct_write(FILE *fp, FILE *byte)
 {
 	const WorldmapDirect *p = worldmap_direct;
@@ -94,7 +97,7 @@ void world_direct_write(FILE *fp, FILE *byte)
 		fprintf(fp, "0x%08x,\n", p->next_mapname_id);
 		fprintf(fp, "0x%08x,\n", p->event_type);
 
-		for (int j = 0; j < WORLD_DIRECT_EN5D; j++)
+		for (int j = 0; j < WORLD_DIRECT_END; j++)
 		{
 			fprintf(byte, "0x%08x,\n", 1);
 		}
@@ -105,6 +108,10 @@ void world_direct_write(FILE *fp, FILE *byte)
 
 
 /* データベース書き込み */
+/**
+ * @brief  ワールドマップのデータベース参照回数データの書き出し
+ * @retval None
+ */
 void world_loop_write(FILE *fp, FILE *byte)
 {
 	const WorldLoopCount *p = world_loop_count;
@@ -115,7 +122,7 @@ void world_loop_write(FILE *fp, FILE *byte)
 		fprintf(fp, "0x%08x,\n", p->start_id);
 		fprintf(fp, "0x%08x,\n", p->loop_count);
 
-		for (int j = 0; j < 3; j++)
+		for (int j = 0; j < WORLD_LOOPCOUNT_MEMBER_NUMBER; j++)
 		{
 			fprintf(byte, "0x%08x,\n", 1);
 		}
