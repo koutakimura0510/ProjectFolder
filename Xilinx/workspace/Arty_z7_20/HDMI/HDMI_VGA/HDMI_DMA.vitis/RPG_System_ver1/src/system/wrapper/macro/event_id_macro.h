@@ -19,8 +19,8 @@
  * 
  * また、出口の判定などにも利用する
  */
-#define EVENT_FIXED		(0)  /* 不変のイベント */
 #define EVENT_VARIABLE	(1)  /* 可変のイベント */
+#define EVENT_FIXED		(3)  /* 不変のイベント */
 #define EVENT_NULL		(2)
 
 
