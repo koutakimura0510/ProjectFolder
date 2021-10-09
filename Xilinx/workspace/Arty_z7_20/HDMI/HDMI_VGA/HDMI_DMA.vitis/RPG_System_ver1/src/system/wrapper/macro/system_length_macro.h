@@ -43,9 +43,6 @@
 /* 可変式イベントメッセージデータベースの行数 */
 #define NPC_MSG_SIZE                (4)
 
-/* WorldLoopCount Table number */
-#define WORLD_LOOP_COUNT_DB_LINE    (5)
-
 /* build submap Table number */
 #define BUILD_SUBMAP_COUNT_DB_LINE  (4)
 
@@ -61,7 +58,7 @@ typedef enum
     MEMORY_BUILD_FILE_ID,       //ファイルを利用するビルドデータベースファイル
     MEMORY_MAP_ALL_ID,          //ワールドマップを含んだマップ移動のファイル
     MEMORY_WORLD_DIRECT_ID,     //ワールドマップのイベント当たり判定ファイル
-    MEMORY_WORLD_LOOP_ID,       //ワールドマップのループ回数判定ファイル
+    MEMORY_BUILD_LOOP_ID,       //イベントデータベースのループ回数判定ファイル
     MEMORY_BUILD_POS_ID,        //イベント発生座標管理ファイル
     MEMORY_BUILD_EVENT_ID,      //発生イベント管理ファイル
     MEMORY_BUILD_SUBMAP_ID,     //サブマップイベント管理ファイル
@@ -554,10 +551,10 @@ typedef enum
 /* WorldLoopCount */
 typedef enum
 {
-    WORLD_LOOPCOUNT_MEMBER_MAP_NAME,
-    WORLD_LOOPCOUNT_MEMBER_START_ID,
-    WORLD_LOOPCOUNT_MEMBER_LOOP_COUNT,
-    WORLD_LOOPCOUNT_MEMBER_NUMBER,
+    BUILD_LOOPCOUNT_MEMBER_MAP_NAME,
+    BUILD_LOOPCOUNT_MEMBER_START_ID,
+    BUILD_LOOPCOUNT_MEMBER_LOOP_COUNT,
+    BUILD_LOOPCOUNT_MEMBER_NUMBER,
 } WorldLoopID;
 
 /* build_pos */
@@ -577,7 +574,7 @@ typedef enum
     BUILD_EVENT_MEMBER_EVENT_TYPE,
     BUILD_EVENT_MEMBER_NEXT_MAPNAME_ID,
     BUILD_EVENT_MEMBER_NEXT_SYSTEM,
-    BUILD_EVENT_MEMBER_NEXT_DRAYTYPE,
+    BUILD_EVENT_MEMBER_NEXT_DRAWTYPE,
     BUILD_EVENT_MEMBER_NUMBER,
 } BuildEventID;
 
@@ -592,8 +589,8 @@ typedef enum
     BUILD_SUBMAP_MEMBER_NEXT_MAP,
     BUILD_SUBMAP_MEMBER_UNITX,
     BUILD_SUBMAP_MEMBER_UNITY,
-    BUILD_SUBMAP_MEMBER_FILEDX,
-    BUILD_SUBMAP_MEMBER_FILEDY,
+    BUILD_SUBMAP_MEMBER_FIELDX,
+    BUILD_SUBMAP_MEMBER_FIELDY,
     BUILD_SUBMAP_MEMBER_NUMBER,
 } BuildSubmapID;
 

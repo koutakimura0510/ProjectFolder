@@ -5,7 +5,6 @@ src/system/event/battle/action/action.o \
  ../src/system/event/battle/action/../../../wrapper/macro/macro_wrapper.h \
  ../src/system/event/battle/action/../../../wrapper/macro/gamemode.h \
  ../src/system/event/battle/action/../../../wrapper/macro/hero_macro.h \
- ../src/system/event/battle/action/../../../wrapper/macro/direct_macro.h \
  ../src/system/event/battle/action/../../../wrapper/macro/display_macro.h \
  ../src/system/event/battle/action/../../../wrapper/macro/color_macro.h \
  ../src/system/event/battle/action/../../../wrapper/macro/cmd_msg_macro.h \
@@ -22,6 +21,8 @@ src/system/event/battle/action/action.o \
  ../src/system/event/battle/action/../../../wrapper/macro/event_id_macro.h \
  ../src/system/event/battle/action/../../../wrapper/macro/event_flag_macro.h \
  ../src/system/event/battle/action/../../../wrapper/macro/dtm_macro.h \
+ ../src/system/event/battle/action/../../../wrapper/macro/./buildMacro/direct_macro.h \
+ ../src/system/event/battle/action/../../../wrapper/macro/./buildMacro/event_macro.h \
  ../src/system/event/battle/action/../../../wrapper/hero_wrapper.h \
  ../src/system/event/battle/action/../../../wrapper/unit_wrapper.h \
  ../src/system/event/battle/action/../../../wrapper/mapchip_wrapper.h \
@@ -96,8 +97,6 @@ src/system/event/battle/action/action.o \
 
 ../src/system/event/battle/action/../../../wrapper/macro/hero_macro.h:
 
-../src/system/event/battle/action/../../../wrapper/macro/direct_macro.h:
-
 ../src/system/event/battle/action/../../../wrapper/macro/display_macro.h:
 
 ../src/system/event/battle/action/../../../wrapper/macro/color_macro.h:
@@ -129,6 +128,10 @@ src/system/event/battle/action/action.o \
 ../src/system/event/battle/action/../../../wrapper/macro/event_flag_macro.h:
 
 ../src/system/event/battle/action/../../../wrapper/macro/dtm_macro.h:
+
+../src/system/event/battle/action/../../../wrapper/macro/./buildMacro/direct_macro.h:
+
+../src/system/event/battle/action/../../../wrapper/macro/./buildMacro/event_macro.h:
 
 ../src/system/event/battle/action/../../../wrapper/hero_wrapper.h:
 

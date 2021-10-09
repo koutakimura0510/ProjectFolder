@@ -5,7 +5,6 @@ src/system/event/direct/direct_build.o \
  ../src/system/event/direct/../../wrapper/macro/macro_wrapper.h \
  ../src/system/event/direct/../../wrapper/macro/gamemode.h \
  ../src/system/event/direct/../../wrapper/macro/hero_macro.h \
- ../src/system/event/direct/../../wrapper/macro/direct_macro.h \
  ../src/system/event/direct/../../wrapper/macro/display_macro.h \
  ../src/system/event/direct/../../wrapper/macro/color_macro.h \
  ../src/system/event/direct/../../wrapper/macro/cmd_msg_macro.h \
@@ -22,6 +21,8 @@ src/system/event/direct/direct_build.o \
  ../src/system/event/direct/../../wrapper/macro/event_id_macro.h \
  ../src/system/event/direct/../../wrapper/macro/event_flag_macro.h \
  ../src/system/event/direct/../../wrapper/macro/dtm_macro.h \
+ ../src/system/event/direct/../../wrapper/macro/./buildMacro/direct_macro.h \
+ ../src/system/event/direct/../../wrapper/macro/./buildMacro/event_macro.h \
  ../src/system/event/direct/../../wrapper/hero_wrapper.h \
  ../src/system/event/direct/../../wrapper/unit_wrapper.h \
  ../src/system/event/direct/../../wrapper/mapchip_wrapper.h \
@@ -70,9 +71,7 @@ src/system/event/direct/direct_build.o \
  ../src/system/event/direct/../../wrapper/../story/story_local.h \
  ../src/system/event/direct/../../wrapper/../opening/opening_local.h \
  ../src/system/event/direct/../../wrapper/../opening/opening_macro.h \
- ../src/system/event/direct/../../wrapper/../minigame/minigame_local.h \
- ../src/system/event/direct/direct_build_funcptr.h \
- ../src/system/event/direct/direct_build_struct.h
+ ../src/system/event/direct/../../wrapper/../minigame/minigame_local.h
 
 ../src/system/event/direct/../../wrapper/game_wrapper.h:
 
@@ -81,8 +80,6 @@ src/system/event/direct/direct_build.o \
 ../src/system/event/direct/../../wrapper/macro/gamemode.h:
 
 ../src/system/event/direct/../../wrapper/macro/hero_macro.h:
-
-../src/system/event/direct/../../wrapper/macro/direct_macro.h:
 
 ../src/system/event/direct/../../wrapper/macro/display_macro.h:
 
@@ -115,6 +112,10 @@ src/system/event/direct/direct_build.o \
 ../src/system/event/direct/../../wrapper/macro/event_flag_macro.h:
 
 ../src/system/event/direct/../../wrapper/macro/dtm_macro.h:
+
+../src/system/event/direct/../../wrapper/macro/./buildMacro/direct_macro.h:
+
+../src/system/event/direct/../../wrapper/macro/./buildMacro/event_macro.h:
 
 ../src/system/event/direct/../../wrapper/hero_wrapper.h:
 
@@ -213,7 +214,3 @@ src/system/event/direct/direct_build.o \
 ../src/system/event/direct/../../wrapper/../opening/opening_macro.h:
 
 ../src/system/event/direct/../../wrapper/../minigame/minigame_local.h:
-
-../src/system/event/direct/direct_build_funcptr.h:
-
-../src/system/event/direct/direct_build_struct.h:

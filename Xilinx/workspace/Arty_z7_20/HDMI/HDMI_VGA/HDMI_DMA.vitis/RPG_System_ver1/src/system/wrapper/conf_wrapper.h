@@ -58,7 +58,7 @@ typedef struct file
  * canpass_id   通行可能なオブジェクトのIDを保存
  * obj_startid  オブジェクトの画像データの開始番号を指定、通常0から開始
  * obj_endid    オブジェクトの画像データの終了番号を指定
- * name         現在表示中、または表示させるマップ名のIDを保存
+ * name         現在表示中、または表示させるマップ名のIDを保存 xxx_MAP_ID
  */
 typedef struct map
 {
@@ -71,14 +71,20 @@ typedef struct map
 } MapConf;
 
 
-/*
- * ver1. 2021/07/04
- * ゲームモード中に発生するイベントIDとそのタイプを管理
+/**
+ * @brief  ゲームモード中に発生するイベントIDとそのタイプを管理
+ * @note   
+ * 
+ * @param  id イベント発生時のイベントIDを保存 
+ * @param  type イベント発生時のイベントタイプを保存 EVENT_TYPExxx
+ * @param  try_mapname_id ワールドマップを含んだ移動時のイベントマップIDを保存 TRY_MAP_NAME_xxx
+ * @retval None
  */
 typedef struct event
 {
     uint32_t id;
     uint32_t type;
+    uint32_t try_mapname_id;
 } EventConf;
 
 

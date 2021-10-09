@@ -4,7 +4,6 @@ src/system/event/map/event_map.o src/system/event/map/event_map.o: \
  ../src/system/event/map/../../wrapper/macro/macro_wrapper.h \
  ../src/system/event/map/../../wrapper/macro/gamemode.h \
  ../src/system/event/map/../../wrapper/macro/hero_macro.h \
- ../src/system/event/map/../../wrapper/macro/direct_macro.h \
  ../src/system/event/map/../../wrapper/macro/display_macro.h \
  ../src/system/event/map/../../wrapper/macro/color_macro.h \
  ../src/system/event/map/../../wrapper/macro/cmd_msg_macro.h \
@@ -21,6 +20,8 @@ src/system/event/map/event_map.o src/system/event/map/event_map.o: \
  ../src/system/event/map/../../wrapper/macro/event_id_macro.h \
  ../src/system/event/map/../../wrapper/macro/event_flag_macro.h \
  ../src/system/event/map/../../wrapper/macro/dtm_macro.h \
+ ../src/system/event/map/../../wrapper/macro/./buildMacro/direct_macro.h \
+ ../src/system/event/map/../../wrapper/macro/./buildMacro/event_macro.h \
  ../src/system/event/map/../../wrapper/hero_wrapper.h \
  ../src/system/event/map/../../wrapper/unit_wrapper.h \
  ../src/system/event/map/../../wrapper/mapchip_wrapper.h \
@@ -69,8 +70,7 @@ src/system/event/map/event_map.o src/system/event/map/event_map.o: \
  ../src/system/event/map/../../wrapper/../story/story_local.h \
  ../src/system/event/map/../../wrapper/../opening/opening_local.h \
  ../src/system/event/map/../../wrapper/../opening/opening_macro.h \
- ../src/system/event/map/../../wrapper/../minigame/minigame_local.h \
- ../src/system/event/map/event_map_move_struct.h
+ ../src/system/event/map/../../wrapper/../minigame/minigame_local.h
 
 ../src/system/event/map/../../wrapper/game_wrapper.h:
 
@@ -79,8 +79,6 @@ src/system/event/map/event_map.o src/system/event/map/event_map.o: \
 ../src/system/event/map/../../wrapper/macro/gamemode.h:
 
 ../src/system/event/map/../../wrapper/macro/hero_macro.h:
-
-../src/system/event/map/../../wrapper/macro/direct_macro.h:
 
 ../src/system/event/map/../../wrapper/macro/display_macro.h:
 
@@ -113,6 +111,10 @@ src/system/event/map/event_map.o src/system/event/map/event_map.o: \
 ../src/system/event/map/../../wrapper/macro/event_flag_macro.h:
 
 ../src/system/event/map/../../wrapper/macro/dtm_macro.h:
+
+../src/system/event/map/../../wrapper/macro/./buildMacro/direct_macro.h:
+
+../src/system/event/map/../../wrapper/macro/./buildMacro/event_macro.h:
 
 ../src/system/event/map/../../wrapper/hero_wrapper.h:
 
@@ -211,5 +213,3 @@ src/system/event/map/event_map.o src/system/event/map/event_map.o: \
 ../src/system/event/map/../../wrapper/../opening/opening_macro.h:
 
 ../src/system/event/map/../../wrapper/../minigame/minigame_local.h:
-
-../src/system/event/map/event_map_move_struct.h:

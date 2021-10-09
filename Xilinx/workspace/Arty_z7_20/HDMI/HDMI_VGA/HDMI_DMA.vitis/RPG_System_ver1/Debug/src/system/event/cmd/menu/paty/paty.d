@@ -6,7 +6,6 @@ src/system/event/cmd/menu/paty/paty.o \
  ../src/system/event/cmd/menu/paty/../../../../wrapper/macro/macro_wrapper.h \
  ../src/system/event/cmd/menu/paty/../../../../wrapper/macro/gamemode.h \
  ../src/system/event/cmd/menu/paty/../../../../wrapper/macro/hero_macro.h \
- ../src/system/event/cmd/menu/paty/../../../../wrapper/macro/direct_macro.h \
  ../src/system/event/cmd/menu/paty/../../../../wrapper/macro/display_macro.h \
  ../src/system/event/cmd/menu/paty/../../../../wrapper/macro/color_macro.h \
  ../src/system/event/cmd/menu/paty/../../../../wrapper/macro/cmd_msg_macro.h \
@@ -23,6 +22,8 @@ src/system/event/cmd/menu/paty/paty.o \
  ../src/system/event/cmd/menu/paty/../../../../wrapper/macro/event_id_macro.h \
  ../src/system/event/cmd/menu/paty/../../../../wrapper/macro/event_flag_macro.h \
  ../src/system/event/cmd/menu/paty/../../../../wrapper/macro/dtm_macro.h \
+ ../src/system/event/cmd/menu/paty/../../../../wrapper/macro/./buildMacro/direct_macro.h \
+ ../src/system/event/cmd/menu/paty/../../../../wrapper/macro/./buildMacro/event_macro.h \
  ../src/system/event/cmd/menu/paty/../../../../wrapper/hero_wrapper.h \
  ../src/system/event/cmd/menu/paty/../../../../wrapper/unit_wrapper.h \
  ../src/system/event/cmd/menu/paty/../../../../wrapper/mapchip_wrapper.h \
@@ -87,8 +88,6 @@ src/system/event/cmd/menu/paty/paty.o \
 
 ../src/system/event/cmd/menu/paty/../../../../wrapper/macro/hero_macro.h:
 
-../src/system/event/cmd/menu/paty/../../../../wrapper/macro/direct_macro.h:
-
 ../src/system/event/cmd/menu/paty/../../../../wrapper/macro/display_macro.h:
 
 ../src/system/event/cmd/menu/paty/../../../../wrapper/macro/color_macro.h:
@@ -120,6 +119,10 @@ src/system/event/cmd/menu/paty/paty.o \
 ../src/system/event/cmd/menu/paty/../../../../wrapper/macro/event_flag_macro.h:
 
 ../src/system/event/cmd/menu/paty/../../../../wrapper/macro/dtm_macro.h:
+
+../src/system/event/cmd/menu/paty/../../../../wrapper/macro/./buildMacro/direct_macro.h:
+
+../src/system/event/cmd/menu/paty/../../../../wrapper/macro/./buildMacro/event_macro.h:
 
 ../src/system/event/cmd/menu/paty/../../../../wrapper/hero_wrapper.h:
 

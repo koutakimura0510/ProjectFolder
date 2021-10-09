@@ -174,18 +174,18 @@ static void npc_pixel_draw(GameWrapper *const game)
 {
     SDL_Rect lsbEdge = {
         /* キャラクターの座標から表示幅の端の座標を計算 */
-        .lsbEdge.x = game->unit.pos.unitx + game->unit.pos.fieldx - VIDEO_WIDTH_HALF,
-        .lsbEdge.y = game->unit.pos.unity + game->unit.pos.fieldy - VIDEO_HEIGHT_HALF_POS,
+        .x = game->unit.pos.unitx + game->unit.pos.fieldx - VIDEO_WIDTH_HALF,
+        .y = game->unit.pos.unity + game->unit.pos.fieldy - VIDEO_HEIGHT_HALF_POS,
 
         /* キャラクターの座標からNPCの描画調整座標を計算 */
-        .lsbEdge.w = (game->unit.pos.fieldx < VIDEO_WIDTH_HALF) ? XRGB((VIDEO_WIDTH_HALF - (VIDEO_WIDTH_HALF - game->unit.pos.fieldx))) : XRGB((VIDEO_WIDTH_HALF + (game->unit.pos.fieldx - VIDEO_WIDTH_HALF))),
-        .lsbEdge.h = YRGB(game->unit.pos.fieldy),
+        .w = (game->unit.pos.fieldx < VIDEO_WIDTH_HALF) ? XRGB((VIDEO_WIDTH_HALF - (VIDEO_WIDTH_HALF - game->unit.pos.fieldx))) : XRGB((VIDEO_WIDTH_HALF + (game->unit.pos.fieldx - VIDEO_WIDTH_HALF))),
+        .h = YRGB(game->unit.pos.fieldy),
     };
 
     SDL_Rect msbEdge = {
         /* キャラクターの座標から表示幅の端の座標を計算 */
-        .msbEdge.x = game->unit.pos.unitx + game->unit.pos.fieldx + VIDEO_WIDTH_HALF,
-        .msbEdge.y = game->unit.pos.unity + game->unit.pos.fieldy + VIDEO_HEIGHT_HALF_POS,
+        .x = game->unit.pos.unitx + game->unit.pos.fieldx + VIDEO_WIDTH_HALF,
+        .y = game->unit.pos.unity + game->unit.pos.fieldy + VIDEO_HEIGHT_HALF_POS,
     };
 
     game->mapchip.frame_size = VIDEO_WIDTH;

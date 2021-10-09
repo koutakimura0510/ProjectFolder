@@ -4,7 +4,6 @@ src/system/hardware/fpga/vdma.o src/system/hardware/fpga/vdma.o: \
  ../src/system/hardware/fpga/../../wrapper/macro/macro_wrapper.h \
  ../src/system/hardware/fpga/../../wrapper/macro/gamemode.h \
  ../src/system/hardware/fpga/../../wrapper/macro/hero_macro.h \
- ../src/system/hardware/fpga/../../wrapper/macro/direct_macro.h \
  ../src/system/hardware/fpga/../../wrapper/macro/display_macro.h \
  ../src/system/hardware/fpga/../../wrapper/macro/color_macro.h \
  ../src/system/hardware/fpga/../../wrapper/macro/cmd_msg_macro.h \
@@ -21,6 +20,8 @@ src/system/hardware/fpga/vdma.o src/system/hardware/fpga/vdma.o: \
  ../src/system/hardware/fpga/../../wrapper/macro/event_id_macro.h \
  ../src/system/hardware/fpga/../../wrapper/macro/event_flag_macro.h \
  ../src/system/hardware/fpga/../../wrapper/macro/dtm_macro.h \
+ ../src/system/hardware/fpga/../../wrapper/macro/./buildMacro/direct_macro.h \
+ ../src/system/hardware/fpga/../../wrapper/macro/./buildMacro/event_macro.h \
  ../src/system/hardware/fpga/../../wrapper/hero_wrapper.h \
  ../src/system/hardware/fpga/../../wrapper/unit_wrapper.h \
  ../src/system/hardware/fpga/../../wrapper/mapchip_wrapper.h \
@@ -95,8 +96,6 @@ src/system/hardware/fpga/vdma.o src/system/hardware/fpga/vdma.o: \
 
 ../src/system/hardware/fpga/../../wrapper/macro/hero_macro.h:
 
-../src/system/hardware/fpga/../../wrapper/macro/direct_macro.h:
-
 ../src/system/hardware/fpga/../../wrapper/macro/display_macro.h:
 
 ../src/system/hardware/fpga/../../wrapper/macro/color_macro.h:
@@ -128,6 +127,10 @@ src/system/hardware/fpga/vdma.o src/system/hardware/fpga/vdma.o: \
 ../src/system/hardware/fpga/../../wrapper/macro/event_flag_macro.h:
 
 ../src/system/hardware/fpga/../../wrapper/macro/dtm_macro.h:
+
+../src/system/hardware/fpga/../../wrapper/macro/./buildMacro/direct_macro.h:
+
+../src/system/hardware/fpga/../../wrapper/macro/./buildMacro/event_macro.h:
 
 ../src/system/hardware/fpga/../../wrapper/hero_wrapper.h:
 

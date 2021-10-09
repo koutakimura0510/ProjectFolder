@@ -5,7 +5,6 @@ src/system/event/cmd/standerd/standerd.o \
  ../src/system/event/cmd/standerd/../../../wrapper/macro/macro_wrapper.h \
  ../src/system/event/cmd/standerd/../../../wrapper/macro/gamemode.h \
  ../src/system/event/cmd/standerd/../../../wrapper/macro/hero_macro.h \
- ../src/system/event/cmd/standerd/../../../wrapper/macro/direct_macro.h \
  ../src/system/event/cmd/standerd/../../../wrapper/macro/display_macro.h \
  ../src/system/event/cmd/standerd/../../../wrapper/macro/color_macro.h \
  ../src/system/event/cmd/standerd/../../../wrapper/macro/cmd_msg_macro.h \
@@ -22,6 +21,8 @@ src/system/event/cmd/standerd/standerd.o \
  ../src/system/event/cmd/standerd/../../../wrapper/macro/event_id_macro.h \
  ../src/system/event/cmd/standerd/../../../wrapper/macro/event_flag_macro.h \
  ../src/system/event/cmd/standerd/../../../wrapper/macro/dtm_macro.h \
+ ../src/system/event/cmd/standerd/../../../wrapper/macro/./buildMacro/direct_macro.h \
+ ../src/system/event/cmd/standerd/../../../wrapper/macro/./buildMacro/event_macro.h \
  ../src/system/event/cmd/standerd/../../../wrapper/hero_wrapper.h \
  ../src/system/event/cmd/standerd/../../../wrapper/unit_wrapper.h \
  ../src/system/event/cmd/standerd/../../../wrapper/mapchip_wrapper.h \
@@ -81,8 +82,6 @@ src/system/event/cmd/standerd/standerd.o \
 
 ../src/system/event/cmd/standerd/../../../wrapper/macro/hero_macro.h:
 
-../src/system/event/cmd/standerd/../../../wrapper/macro/direct_macro.h:
-
 ../src/system/event/cmd/standerd/../../../wrapper/macro/display_macro.h:
 
 ../src/system/event/cmd/standerd/../../../wrapper/macro/color_macro.h:
@@ -114,6 +113,10 @@ src/system/event/cmd/standerd/standerd.o \
 ../src/system/event/cmd/standerd/../../../wrapper/macro/event_flag_macro.h:
 
 ../src/system/event/cmd/standerd/../../../wrapper/macro/dtm_macro.h:
+
+../src/system/event/cmd/standerd/../../../wrapper/macro/./buildMacro/direct_macro.h:
+
+../src/system/event/cmd/standerd/../../../wrapper/macro/./buildMacro/event_macro.h:
 
 ../src/system/event/cmd/standerd/../../../wrapper/hero_wrapper.h:
 

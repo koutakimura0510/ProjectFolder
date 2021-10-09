@@ -4,7 +4,6 @@ src/system/event/cmd/battle/battle.o src/system/event/cmd/battle/battle.o: \
  ../src/system/event/cmd/battle/../../../wrapper/macro/macro_wrapper.h \
  ../src/system/event/cmd/battle/../../../wrapper/macro/gamemode.h \
  ../src/system/event/cmd/battle/../../../wrapper/macro/hero_macro.h \
- ../src/system/event/cmd/battle/../../../wrapper/macro/direct_macro.h \
  ../src/system/event/cmd/battle/../../../wrapper/macro/display_macro.h \
  ../src/system/event/cmd/battle/../../../wrapper/macro/color_macro.h \
  ../src/system/event/cmd/battle/../../../wrapper/macro/cmd_msg_macro.h \
@@ -21,6 +20,8 @@ src/system/event/cmd/battle/battle.o src/system/event/cmd/battle/battle.o: \
  ../src/system/event/cmd/battle/../../../wrapper/macro/event_id_macro.h \
  ../src/system/event/cmd/battle/../../../wrapper/macro/event_flag_macro.h \
  ../src/system/event/cmd/battle/../../../wrapper/macro/dtm_macro.h \
+ ../src/system/event/cmd/battle/../../../wrapper/macro/./buildMacro/direct_macro.h \
+ ../src/system/event/cmd/battle/../../../wrapper/macro/./buildMacro/event_macro.h \
  ../src/system/event/cmd/battle/../../../wrapper/hero_wrapper.h \
  ../src/system/event/cmd/battle/../../../wrapper/unit_wrapper.h \
  ../src/system/event/cmd/battle/../../../wrapper/mapchip_wrapper.h \
@@ -81,8 +82,6 @@ src/system/event/cmd/battle/battle.o src/system/event/cmd/battle/battle.o: \
 
 ../src/system/event/cmd/battle/../../../wrapper/macro/hero_macro.h:
 
-../src/system/event/cmd/battle/../../../wrapper/macro/direct_macro.h:
-
 ../src/system/event/cmd/battle/../../../wrapper/macro/display_macro.h:
 
 ../src/system/event/cmd/battle/../../../wrapper/macro/color_macro.h:
@@ -114,6 +113,10 @@ src/system/event/cmd/battle/battle.o src/system/event/cmd/battle/battle.o: \
 ../src/system/event/cmd/battle/../../../wrapper/macro/event_flag_macro.h:
 
 ../src/system/event/cmd/battle/../../../wrapper/macro/dtm_macro.h:
+
+../src/system/event/cmd/battle/../../../wrapper/macro/./buildMacro/direct_macro.h:
+
+../src/system/event/cmd/battle/../../../wrapper/macro/./buildMacro/event_macro.h:
 
 ../src/system/event/cmd/battle/../../../wrapper/hero_wrapper.h:
 

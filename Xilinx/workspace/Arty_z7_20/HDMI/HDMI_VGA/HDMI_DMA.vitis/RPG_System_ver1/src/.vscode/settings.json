@@ -4,6 +4,7 @@
         "local_share.h": "c",
         "/system/wrapper/game_wrapper.h": "c",
         "game_wrapper.h": "c",
-        "cmd_standerd.h": "c"
+        "cmd_standerd.h": "c",
+        "direct_build_funcptr.h": "c"
     }
 }

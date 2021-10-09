@@ -3,7 +3,6 @@ src/system/calc/calc.o src/system/calc/calc.o: ../src/system/calc/calc.c \
  ../src/system/calc/../wrapper/macro/macro_wrapper.h \
  ../src/system/calc/../wrapper/macro/gamemode.h \
  ../src/system/calc/../wrapper/macro/hero_macro.h \
- ../src/system/calc/../wrapper/macro/direct_macro.h \
  ../src/system/calc/../wrapper/macro/display_macro.h \
  ../src/system/calc/../wrapper/macro/color_macro.h \
  ../src/system/calc/../wrapper/macro/cmd_msg_macro.h \
@@ -20,6 +19,8 @@ src/system/calc/calc.o src/system/calc/calc.o: ../src/system/calc/calc.c \
  ../src/system/calc/../wrapper/macro/event_id_macro.h \
  ../src/system/calc/../wrapper/macro/event_flag_macro.h \
  ../src/system/calc/../wrapper/macro/dtm_macro.h \
+ ../src/system/calc/../wrapper/macro/./buildMacro/direct_macro.h \
+ ../src/system/calc/../wrapper/macro/./buildMacro/event_macro.h \
  ../src/system/calc/../wrapper/hero_wrapper.h \
  ../src/system/calc/../wrapper/unit_wrapper.h \
  ../src/system/calc/../wrapper/mapchip_wrapper.h \
@@ -78,8 +79,6 @@ src/system/calc/calc.o src/system/calc/calc.o: ../src/system/calc/calc.c \
 
 ../src/system/calc/../wrapper/macro/hero_macro.h:
 
-../src/system/calc/../wrapper/macro/direct_macro.h:
-
 ../src/system/calc/../wrapper/macro/display_macro.h:
 
 ../src/system/calc/../wrapper/macro/color_macro.h:
@@ -111,6 +110,10 @@ src/system/calc/calc.o src/system/calc/calc.o: ../src/system/calc/calc.c \
 ../src/system/calc/../wrapper/macro/event_flag_macro.h:
 
 ../src/system/calc/../wrapper/macro/dtm_macro.h:
+
+../src/system/calc/../wrapper/macro/./buildMacro/direct_macro.h:
+
+../src/system/calc/../wrapper/macro/./buildMacro/event_macro.h:
 
 ../src/system/calc/../wrapper/hero_wrapper.h:
 

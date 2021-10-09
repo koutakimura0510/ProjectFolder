@@ -6,7 +6,6 @@ src/system/hardware/sound/dtm.o src/system/hardware/sound/dtm.o: \
  ../src/system/hardware/sound/../../wrapper/macro/macro_wrapper.h \
  ../src/system/hardware/sound/../../wrapper/macro/gamemode.h \
  ../src/system/hardware/sound/../../wrapper/macro/hero_macro.h \
- ../src/system/hardware/sound/../../wrapper/macro/direct_macro.h \
  ../src/system/hardware/sound/../../wrapper/macro/display_macro.h \
  ../src/system/hardware/sound/../../wrapper/macro/color_macro.h \
  ../src/system/hardware/sound/../../wrapper/macro/cmd_msg_macro.h \
@@ -23,6 +22,8 @@ src/system/hardware/sound/dtm.o src/system/hardware/sound/dtm.o: \
  ../src/system/hardware/sound/../../wrapper/macro/event_id_macro.h \
  ../src/system/hardware/sound/../../wrapper/macro/event_flag_macro.h \
  ../src/system/hardware/sound/../../wrapper/macro/dtm_macro.h \
+ ../src/system/hardware/sound/../../wrapper/macro/./buildMacro/direct_macro.h \
+ ../src/system/hardware/sound/../../wrapper/macro/./buildMacro/event_macro.h \
  ../src/system/hardware/sound/../../wrapper/hero_wrapper.h \
  ../src/system/hardware/sound/../../wrapper/unit_wrapper.h \
  ../src/system/hardware/sound/../../wrapper/mapchip_wrapper.h \
@@ -86,8 +87,6 @@ src/system/hardware/sound/dtm.o src/system/hardware/sound/dtm.o: \
 
 ../src/system/hardware/sound/../../wrapper/macro/hero_macro.h:
 
-../src/system/hardware/sound/../../wrapper/macro/direct_macro.h:
-
 ../src/system/hardware/sound/../../wrapper/macro/display_macro.h:
 
 ../src/system/hardware/sound/../../wrapper/macro/color_macro.h:
@@ -119,6 +118,10 @@ src/system/hardware/sound/dtm.o src/system/hardware/sound/dtm.o: \
 ../src/system/hardware/sound/../../wrapper/macro/event_flag_macro.h:
 
 ../src/system/hardware/sound/../../wrapper/macro/dtm_macro.h:
+
+../src/system/hardware/sound/../../wrapper/macro/./buildMacro/direct_macro.h:
+
+../src/system/hardware/sound/../../wrapper/macro/./buildMacro/event_macro.h:
 
 ../src/system/hardware/sound/../../wrapper/hero_wrapper.h:
 

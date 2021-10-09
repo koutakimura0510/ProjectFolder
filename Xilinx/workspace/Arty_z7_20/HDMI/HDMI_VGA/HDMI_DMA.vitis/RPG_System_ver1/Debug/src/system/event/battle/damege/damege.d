@@ -5,7 +5,6 @@ src/system/event/battle/damege/damege.o \
  ../src/system/event/battle/damege/../../../wrapper/macro/macro_wrapper.h \
  ../src/system/event/battle/damege/../../../wrapper/macro/gamemode.h \
  ../src/system/event/battle/damege/../../../wrapper/macro/hero_macro.h \
- ../src/system/event/battle/damege/../../../wrapper/macro/direct_macro.h \
  ../src/system/event/battle/damege/../../../wrapper/macro/display_macro.h \
  ../src/system/event/battle/damege/../../../wrapper/macro/color_macro.h \
  ../src/system/event/battle/damege/../../../wrapper/macro/cmd_msg_macro.h \
@@ -22,6 +21,8 @@ src/system/event/battle/damege/damege.o \
  ../src/system/event/battle/damege/../../../wrapper/macro/event_id_macro.h \
  ../src/system/event/battle/damege/../../../wrapper/macro/event_flag_macro.h \
  ../src/system/event/battle/damege/../../../wrapper/macro/dtm_macro.h \
+ ../src/system/event/battle/damege/../../../wrapper/macro/./buildMacro/direct_macro.h \
+ ../src/system/event/battle/damege/../../../wrapper/macro/./buildMacro/event_macro.h \
  ../src/system/event/battle/damege/../../../wrapper/hero_wrapper.h \
  ../src/system/event/battle/damege/../../../wrapper/unit_wrapper.h \
  ../src/system/event/battle/damege/../../../wrapper/mapchip_wrapper.h \
@@ -95,8 +96,6 @@ src/system/event/battle/damege/damege.o \
 
 ../src/system/event/battle/damege/../../../wrapper/macro/hero_macro.h:
 
-../src/system/event/battle/damege/../../../wrapper/macro/direct_macro.h:
-
 ../src/system/event/battle/damege/../../../wrapper/macro/display_macro.h:
 
 ../src/system/event/battle/damege/../../../wrapper/macro/color_macro.h:
@@ -128,6 +127,10 @@ src/system/event/battle/damege/damege.o \
 ../src/system/event/battle/damege/../../../wrapper/macro/event_flag_macro.h:
 
 ../src/system/event/battle/damege/../../../wrapper/macro/dtm_macro.h:
+
+../src/system/event/battle/damege/../../../wrapper/macro/./buildMacro/direct_macro.h:
+
+../src/system/event/battle/damege/../../../wrapper/macro/./buildMacro/event_macro.h:
 
 ../src/system/event/battle/damege/../../../wrapper/hero_wrapper.h:
 

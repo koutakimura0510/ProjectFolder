@@ -4,7 +4,6 @@ src/system/minigame/shooting.o src/system/minigame/shooting.o: \
  ../src/system/minigame/../wrapper/macro/macro_wrapper.h \
  ../src/system/minigame/../wrapper/macro/gamemode.h \
  ../src/system/minigame/../wrapper/macro/hero_macro.h \
- ../src/system/minigame/../wrapper/macro/direct_macro.h \
  ../src/system/minigame/../wrapper/macro/display_macro.h \
  ../src/system/minigame/../wrapper/macro/color_macro.h \
  ../src/system/minigame/../wrapper/macro/cmd_msg_macro.h \
@@ -21,6 +20,8 @@ src/system/minigame/shooting.o src/system/minigame/shooting.o: \
  ../src/system/minigame/../wrapper/macro/event_id_macro.h \
  ../src/system/minigame/../wrapper/macro/event_flag_macro.h \
  ../src/system/minigame/../wrapper/macro/dtm_macro.h \
+ ../src/system/minigame/../wrapper/macro/./buildMacro/direct_macro.h \
+ ../src/system/minigame/../wrapper/macro/./buildMacro/event_macro.h \
  ../src/system/minigame/../wrapper/hero_wrapper.h \
  ../src/system/minigame/../wrapper/unit_wrapper.h \
  ../src/system/minigame/../wrapper/mapchip_wrapper.h \
@@ -82,8 +83,6 @@ src/system/minigame/shooting.o src/system/minigame/shooting.o: \
 
 ../src/system/minigame/../wrapper/macro/hero_macro.h:
 
-../src/system/minigame/../wrapper/macro/direct_macro.h:
-
 ../src/system/minigame/../wrapper/macro/display_macro.h:
 
 ../src/system/minigame/../wrapper/macro/color_macro.h:
@@ -115,6 +114,10 @@ src/system/minigame/shooting.o src/system/minigame/shooting.o: \
 ../src/system/minigame/../wrapper/macro/event_flag_macro.h:
 
 ../src/system/minigame/../wrapper/macro/dtm_macro.h:
+
+../src/system/minigame/../wrapper/macro/./buildMacro/direct_macro.h:
+
+../src/system/minigame/../wrapper/macro/./buildMacro/event_macro.h:
 
 ../src/system/minigame/../wrapper/hero_wrapper.h:
 

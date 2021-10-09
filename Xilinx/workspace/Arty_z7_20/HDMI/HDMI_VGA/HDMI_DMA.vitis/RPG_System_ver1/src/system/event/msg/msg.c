@@ -123,7 +123,7 @@ void event_msg_draw(GameWrapper *const game)
 		COLOR_BLACK
 	);
 
-    font_dram_draw(game, EVENT_MSG_XSTRAT, EVENT_MSG_YSTRAT, MEMORY_EVENT_MSG_ID, game->conf.event.id, EVENT_MSG_SUB_MSG, COLOR_WHITE);
+    font_dram_draw(game, EVENT_MSG_XSTRAT, EVENT_MSG_YSTRAT, MEMORY_BUILD_MSG_ID, game->conf.event.id, EVENT_MSG_SUB_MSG, COLOR_WHITE);
 }
 
 

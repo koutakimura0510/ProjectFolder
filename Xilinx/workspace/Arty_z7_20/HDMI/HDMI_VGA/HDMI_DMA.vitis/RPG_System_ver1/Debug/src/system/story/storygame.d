@@ -4,7 +4,6 @@ src/system/story/storygame.o src/system/story/storygame.o: \
  ../src/system/story/../wrapper/macro/macro_wrapper.h \
  ../src/system/story/../wrapper/macro/gamemode.h \
  ../src/system/story/../wrapper/macro/hero_macro.h \
- ../src/system/story/../wrapper/macro/direct_macro.h \
  ../src/system/story/../wrapper/macro/display_macro.h \
  ../src/system/story/../wrapper/macro/color_macro.h \
  ../src/system/story/../wrapper/macro/cmd_msg_macro.h \
@@ -21,6 +20,8 @@ src/system/story/storygame.o src/system/story/storygame.o: \
  ../src/system/story/../wrapper/macro/event_id_macro.h \
  ../src/system/story/../wrapper/macro/event_flag_macro.h \
  ../src/system/story/../wrapper/macro/dtm_macro.h \
+ ../src/system/story/../wrapper/macro/./buildMacro/direct_macro.h \
+ ../src/system/story/../wrapper/macro/./buildMacro/event_macro.h \
  ../src/system/story/../wrapper/hero_wrapper.h \
  ../src/system/story/../wrapper/unit_wrapper.h \
  ../src/system/story/../wrapper/mapchip_wrapper.h \
@@ -80,8 +81,6 @@ src/system/story/storygame.o src/system/story/storygame.o: \
 
 ../src/system/story/../wrapper/macro/hero_macro.h:
 
-../src/system/story/../wrapper/macro/direct_macro.h:
-
 ../src/system/story/../wrapper/macro/display_macro.h:
 
 ../src/system/story/../wrapper/macro/color_macro.h:
@@ -113,6 +112,10 @@ src/system/story/storygame.o src/system/story/storygame.o: \
 ../src/system/story/../wrapper/macro/event_flag_macro.h:
 
 ../src/system/story/../wrapper/macro/dtm_macro.h:
+
+../src/system/story/../wrapper/macro/./buildMacro/direct_macro.h:
+
+../src/system/story/../wrapper/macro/./buildMacro/event_macro.h:
 
 ../src/system/story/../wrapper/hero_wrapper.h:
 

@@ -14,7 +14,7 @@
  * 構造体の要素数
  */
 #define WORLDMAP_DIRECT_DB_SIZE ((sizeof (worldmap_direct)) / (sizeof (WorldmapDirect)))
-#define WORLDMAP_LOOP_DB_SIZE ((sizeof (world_loop_count)) / (sizeof (WorldLoopCount)))
+#define BUILD_LOOP_DB_SIZE ((sizeof (build_loop_count)) / (sizeof (BuildLoopCount)))
 
 
 /**
@@ -58,27 +58,32 @@ static const WorldmapDirect worldmap_direct[] =
 
 
 /**
- * @brief  ワールドマップの当たり判定検索時のループ回数を管理するデータベース
+ * @brief  ワールドマップや町ダンジョン内の当たり判定検索時のループ回数を管理するデータベース
  * @note   
  * 
- * @param ワールドマップのIDを指定
- * @param 上記のWorldmapDirectの検索する開始行を指定
- * @param 上記のWorldmapDirectの検索する終了行を指定
+ * @param マップ名のIDを指定 xxx_MAP_ID
+ * @param データベースを検索する開始行を指定
+ * @param データベースを検索する終了行を指定
  * @retval None
  */
-typedef struct world_loop_count
+typedef struct build_loop_count
 {
 	uint32_t map_name;
 	uint32_t start_id;
 	uint32_t loop_count;
-} WorldLoopCount;
+} BuildLoopCount;
 
-static const WorldLoopCount world_loop_count[] = {
-	{GEKAI_MAP_ID,	WORLD_DIRECT_GEKAI_START, WORLD_DIRECT_GEKAI_END},
-	{TIKAI_MAP_ID,	WORLD_DIRECT_GEKAI_START, WORLD_DIRECT_GEKAI_END},
-	{TENKAI_MAP_ID,	WORLD_DIRECT_GEKAI_START, WORLD_DIRECT_GEKAI_END},
-	{HAZAMA_MAP_ID,	WORLD_DIRECT_GEKAI_START, WORLD_DIRECT_GEKAI_END},
-	{MAKAI_MAP_ID,	WORLD_DIRECT_GEKAI_START, WORLD_DIRECT_GEKAI_END},
+static const BuildLoopCount build_loop_count[] = {
+	{GEKAI_MAP_ID,			WORLD_DIRECT_GEKAI_START, WORLD_DIRECT_GEKAI_END},
+	{TIKAI_MAP_ID,			WORLD_DIRECT_GEKAI_START, WORLD_DIRECT_GEKAI_END},
+	{TENKAI_MAP_ID,			WORLD_DIRECT_GEKAI_START, WORLD_DIRECT_GEKAI_END},
+	{HAZAMA_MAP_ID,			WORLD_DIRECT_GEKAI_START, WORLD_DIRECT_GEKAI_END},
+	{MAKAI_MAP_ID,			WORLD_DIRECT_GEKAI_START, WORLD_DIRECT_GEKAI_END},
+	{ROMEN_VIRRAGE_ID,		DIRECT_ROMEN_ID_START,    DIRECT_ROMEN_ID_END	},
+	{ROMEN_HOUSE1_LOOM1_ID,	WORLD_DIRECT_GEKAI_START, WORLD_DIRECT_GEKAI_END},
+	{ROMEN_HOUSE2_LOOM1_ID,	WORLD_DIRECT_GEKAI_START, WORLD_DIRECT_GEKAI_END},
+	{ROMEN_DANGEON_ID,		WORLD_DIRECT_GEKAI_START, WORLD_DIRECT_GEKAI_END},
+	{BEGINNING_HILL_ID,		WORLD_DIRECT_GEKAI_START, WORLD_DIRECT_GEKAI_END},
 };
 
 
@@ -98,7 +103,7 @@ void world_direct_write(FILE *fp, FILE *byte)
 		fprintf(fp, "0x%08x,\n", p->next_mapname_id);
 		fprintf(fp, "0x%08x,\n", p->event_type);
 
-		for (int j = 0; j < WORLD_DIRECT_END; j++)
+		for (int j = 0; j < WORLD_DIRECT_MEMBER_NUMBER; j++)
 		{
 			fprintf(byte, "0x%08x,\n", 1);
 		}
@@ -108,28 +113,27 @@ void world_direct_write(FILE *fp, FILE *byte)
 }
 
 
-/* データベース書き込み */
 /**
- * @brief  ワールドマップのデータベース参照回数データの書き出し
+ * @brief  マップイベントのデータベース参照回数データの書き出し
  * @retval None
  */
-void world_loop_write(FILE *fp, FILE *byte)
+void build_loop_write(FILE *fp, FILE *byte)
 {
-	const WorldLoopCount *p = world_loop_count;
+	const BuildLoopCount *p = build_loop_count;
 
-	for (uint32_t i = 0; i < WORLDMAP_LOOP_DB_SIZE; i++, p++)
+	for (uint32_t i = 0; i < BUILD_LOOP_DB_SIZE; i++, p++)
 	{
 		fprintf(fp, "0x%08x,\n", p->map_name);
 		fprintf(fp, "0x%08x,\n", p->start_id);
 		fprintf(fp, "0x%08x,\n", p->loop_count);
 
-		for (int j = 0; j < WORLD_LOOPCOUNT_MEMBER_NUMBER; j++)
+		for (int j = 0; j < BUILD_LOOPCOUNT_MEMBER_NUMBER; j++)
 		{
 			fprintf(byte, "0x%08x,\n", 1);
 		}
 	}
 
-	error_print(MAP_MOVE_ALL_DB_SIZE, TRY_MAP_NAME_END, "MAP ALL MOVE NUMBER");
+	error_print(BUILD_LOOP_DB_SIZE, MAP_NAME_ID_END, "BUILD LOOP COUNT NUMBER");
 }
 
 #endif

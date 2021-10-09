@@ -22,7 +22,7 @@
 
 
 /* demoウィンドウを描画する時にコメントを外す */
-#define DEMO_WINDOW_ON
+// #define DEMO_WINDOW_ON
 
 
 /* ファイル内関数 */
@@ -154,6 +154,7 @@ static void opening_db_load(GameWrapper *const game)
 
 #else
 	game->conf.display.sub_state = OPENING_SYSTEM_DRAW;
+	bgm_update(game, SOUND_ID_TITLE, SOUND_CH_BGM_WORK);
 #endif
 }
 

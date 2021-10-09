@@ -4,7 +4,6 @@ src/system/event/draw/draw.o src/system/event/draw/draw.o: \
  ../src/system/event/draw/../../wrapper/macro/macro_wrapper.h \
  ../src/system/event/draw/../../wrapper/macro/gamemode.h \
  ../src/system/event/draw/../../wrapper/macro/hero_macro.h \
- ../src/system/event/draw/../../wrapper/macro/direct_macro.h \
  ../src/system/event/draw/../../wrapper/macro/display_macro.h \
  ../src/system/event/draw/../../wrapper/macro/color_macro.h \
  ../src/system/event/draw/../../wrapper/macro/cmd_msg_macro.h \
@@ -21,6 +20,8 @@ src/system/event/draw/draw.o src/system/event/draw/draw.o: \
  ../src/system/event/draw/../../wrapper/macro/event_id_macro.h \
  ../src/system/event/draw/../../wrapper/macro/event_flag_macro.h \
  ../src/system/event/draw/../../wrapper/macro/dtm_macro.h \
+ ../src/system/event/draw/../../wrapper/macro/./buildMacro/direct_macro.h \
+ ../src/system/event/draw/../../wrapper/macro/./buildMacro/event_macro.h \
  ../src/system/event/draw/../../wrapper/hero_wrapper.h \
  ../src/system/event/draw/../../wrapper/unit_wrapper.h \
  ../src/system/event/draw/../../wrapper/mapchip_wrapper.h \
@@ -80,8 +81,6 @@ src/system/event/draw/draw.o src/system/event/draw/draw.o: \
 
 ../src/system/event/draw/../../wrapper/macro/hero_macro.h:
 
-../src/system/event/draw/../../wrapper/macro/direct_macro.h:
-
 ../src/system/event/draw/../../wrapper/macro/display_macro.h:
 
 ../src/system/event/draw/../../wrapper/macro/color_macro.h:
@@ -113,6 +112,10 @@ src/system/event/draw/draw.o src/system/event/draw/draw.o: \
 ../src/system/event/draw/../../wrapper/macro/event_flag_macro.h:
 
 ../src/system/event/draw/../../wrapper/macro/dtm_macro.h:
+
+../src/system/event/draw/../../wrapper/macro/./buildMacro/direct_macro.h:
+
+../src/system/event/draw/../../wrapper/macro/./buildMacro/event_macro.h:
 
 ../src/system/event/draw/../../wrapper/hero_wrapper.h:
 

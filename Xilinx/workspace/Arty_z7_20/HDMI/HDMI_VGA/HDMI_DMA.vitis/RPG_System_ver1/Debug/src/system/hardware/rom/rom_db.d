@@ -4,7 +4,6 @@ src/system/hardware/rom/rom_db.o src/system/hardware/rom/rom_db.o: \
  ../src/system/hardware/rom/../../wrapper/macro/macro_wrapper.h \
  ../src/system/hardware/rom/../../wrapper/macro/gamemode.h \
  ../src/system/hardware/rom/../../wrapper/macro/hero_macro.h \
- ../src/system/hardware/rom/../../wrapper/macro/direct_macro.h \
  ../src/system/hardware/rom/../../wrapper/macro/display_macro.h \
  ../src/system/hardware/rom/../../wrapper/macro/color_macro.h \
  ../src/system/hardware/rom/../../wrapper/macro/cmd_msg_macro.h \
@@ -21,6 +20,8 @@ src/system/hardware/rom/rom_db.o src/system/hardware/rom/rom_db.o: \
  ../src/system/hardware/rom/../../wrapper/macro/event_id_macro.h \
  ../src/system/hardware/rom/../../wrapper/macro/event_flag_macro.h \
  ../src/system/hardware/rom/../../wrapper/macro/dtm_macro.h \
+ ../src/system/hardware/rom/../../wrapper/macro/./buildMacro/direct_macro.h \
+ ../src/system/hardware/rom/../../wrapper/macro/./buildMacro/event_macro.h \
  ../src/system/hardware/rom/../../wrapper/hero_wrapper.h \
  ../src/system/hardware/rom/../../wrapper/unit_wrapper.h \
  ../src/system/hardware/rom/../../wrapper/mapchip_wrapper.h \
@@ -100,8 +101,6 @@ src/system/hardware/rom/rom_db.o src/system/hardware/rom/rom_db.o: \
 
 ../src/system/hardware/rom/../../wrapper/macro/hero_macro.h:
 
-../src/system/hardware/rom/../../wrapper/macro/direct_macro.h:
-
 ../src/system/hardware/rom/../../wrapper/macro/display_macro.h:
 
 ../src/system/hardware/rom/../../wrapper/macro/color_macro.h:
@@ -133,6 +132,10 @@ src/system/hardware/rom/rom_db.o src/system/hardware/rom/rom_db.o: \
 ../src/system/hardware/rom/../../wrapper/macro/event_flag_macro.h:
 
 ../src/system/hardware/rom/../../wrapper/macro/dtm_macro.h:
+
+../src/system/hardware/rom/../../wrapper/macro/./buildMacro/direct_macro.h:
+
+../src/system/hardware/rom/../../wrapper/macro/./buildMacro/event_macro.h:
 
 ../src/system/hardware/rom/../../wrapper/hero_wrapper.h:
 

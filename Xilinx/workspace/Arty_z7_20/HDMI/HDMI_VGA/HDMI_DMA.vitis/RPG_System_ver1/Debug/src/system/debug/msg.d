@@ -3,7 +3,6 @@ src/system/debug/msg.o src/system/debug/msg.o: ../src/system/debug/msg.c \
  ../src/system/debug/../wrapper/macro/macro_wrapper.h \
  ../src/system/debug/../wrapper/macro/gamemode.h \
  ../src/system/debug/../wrapper/macro/hero_macro.h \
- ../src/system/debug/../wrapper/macro/direct_macro.h \
  ../src/system/debug/../wrapper/macro/display_macro.h \
  ../src/system/debug/../wrapper/macro/color_macro.h \
  ../src/system/debug/../wrapper/macro/cmd_msg_macro.h \
@@ -20,6 +19,8 @@ src/system/debug/msg.o src/system/debug/msg.o: ../src/system/debug/msg.c \
  ../src/system/debug/../wrapper/macro/event_id_macro.h \
  ../src/system/debug/../wrapper/macro/event_flag_macro.h \
  ../src/system/debug/../wrapper/macro/dtm_macro.h \
+ ../src/system/debug/../wrapper/macro/./buildMacro/direct_macro.h \
+ ../src/system/debug/../wrapper/macro/./buildMacro/event_macro.h \
  ../src/system/debug/../wrapper/hero_wrapper.h \
  ../src/system/debug/../wrapper/unit_wrapper.h \
  ../src/system/debug/../wrapper/mapchip_wrapper.h \
@@ -78,8 +79,6 @@ src/system/debug/msg.o src/system/debug/msg.o: ../src/system/debug/msg.c \
 
 ../src/system/debug/../wrapper/macro/hero_macro.h:
 
-../src/system/debug/../wrapper/macro/direct_macro.h:
-
 ../src/system/debug/../wrapper/macro/display_macro.h:
 
 ../src/system/debug/../wrapper/macro/color_macro.h:
@@ -111,6 +110,10 @@ src/system/debug/msg.o src/system/debug/msg.o: ../src/system/debug/msg.c \
 ../src/system/debug/../wrapper/macro/event_flag_macro.h:
 
 ../src/system/debug/../wrapper/macro/dtm_macro.h:
+
+../src/system/debug/../wrapper/macro/./buildMacro/direct_macro.h:
+
+../src/system/debug/../wrapper/macro/./buildMacro/event_macro.h:
 
 ../src/system/debug/../wrapper/hero_wrapper.h:
 

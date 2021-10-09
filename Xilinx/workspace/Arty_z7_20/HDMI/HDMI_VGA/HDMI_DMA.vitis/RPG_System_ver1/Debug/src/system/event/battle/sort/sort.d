@@ -4,7 +4,6 @@ src/system/event/battle/sort/sort.o src/system/event/battle/sort/sort.o: \
  ../src/system/event/battle/sort/../../../wrapper/macro/macro_wrapper.h \
  ../src/system/event/battle/sort/../../../wrapper/macro/gamemode.h \
  ../src/system/event/battle/sort/../../../wrapper/macro/hero_macro.h \
- ../src/system/event/battle/sort/../../../wrapper/macro/direct_macro.h \
  ../src/system/event/battle/sort/../../../wrapper/macro/display_macro.h \
  ../src/system/event/battle/sort/../../../wrapper/macro/color_macro.h \
  ../src/system/event/battle/sort/../../../wrapper/macro/cmd_msg_macro.h \
@@ -21,6 +20,8 @@ src/system/event/battle/sort/sort.o src/system/event/battle/sort/sort.o: \
  ../src/system/event/battle/sort/../../../wrapper/macro/event_id_macro.h \
  ../src/system/event/battle/sort/../../../wrapper/macro/event_flag_macro.h \
  ../src/system/event/battle/sort/../../../wrapper/macro/dtm_macro.h \
+ ../src/system/event/battle/sort/../../../wrapper/macro/./buildMacro/direct_macro.h \
+ ../src/system/event/battle/sort/../../../wrapper/macro/./buildMacro/event_macro.h \
  ../src/system/event/battle/sort/../../../wrapper/hero_wrapper.h \
  ../src/system/event/battle/sort/../../../wrapper/unit_wrapper.h \
  ../src/system/event/battle/sort/../../../wrapper/mapchip_wrapper.h \
@@ -89,8 +90,6 @@ src/system/event/battle/sort/sort.o src/system/event/battle/sort/sort.o: \
 
 ../src/system/event/battle/sort/../../../wrapper/macro/hero_macro.h:
 
-../src/system/event/battle/sort/../../../wrapper/macro/direct_macro.h:
-
 ../src/system/event/battle/sort/../../../wrapper/macro/display_macro.h:
 
 ../src/system/event/battle/sort/../../../wrapper/macro/color_macro.h:
@@ -122,6 +121,10 @@ src/system/event/battle/sort/sort.o src/system/event/battle/sort/sort.o: \
 ../src/system/event/battle/sort/../../../wrapper/macro/event_flag_macro.h:
 
 ../src/system/event/battle/sort/../../../wrapper/macro/dtm_macro.h:
+
+../src/system/event/battle/sort/../../../wrapper/macro/./buildMacro/direct_macro.h:
+
+../src/system/event/battle/sort/../../../wrapper/macro/./buildMacro/event_macro.h:
 
 ../src/system/event/battle/sort/../../../wrapper/hero_wrapper.h:
 

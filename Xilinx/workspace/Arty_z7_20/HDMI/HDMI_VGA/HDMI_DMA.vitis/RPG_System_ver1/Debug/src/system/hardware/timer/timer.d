@@ -4,7 +4,6 @@ src/system/hardware/timer/timer.o src/system/hardware/timer/timer.o: \
  ../src/system/hardware/timer/../../wrapper/macro/macro_wrapper.h \
  ../src/system/hardware/timer/../../wrapper/macro/gamemode.h \
  ../src/system/hardware/timer/../../wrapper/macro/hero_macro.h \
- ../src/system/hardware/timer/../../wrapper/macro/direct_macro.h \
  ../src/system/hardware/timer/../../wrapper/macro/display_macro.h \
  ../src/system/hardware/timer/../../wrapper/macro/color_macro.h \
  ../src/system/hardware/timer/../../wrapper/macro/cmd_msg_macro.h \
@@ -21,6 +20,8 @@ src/system/hardware/timer/timer.o src/system/hardware/timer/timer.o: \
  ../src/system/hardware/timer/../../wrapper/macro/event_id_macro.h \
  ../src/system/hardware/timer/../../wrapper/macro/event_flag_macro.h \
  ../src/system/hardware/timer/../../wrapper/macro/dtm_macro.h \
+ ../src/system/hardware/timer/../../wrapper/macro/./buildMacro/direct_macro.h \
+ ../src/system/hardware/timer/../../wrapper/macro/./buildMacro/event_macro.h \
  ../src/system/hardware/timer/../../wrapper/hero_wrapper.h \
  ../src/system/hardware/timer/../../wrapper/unit_wrapper.h \
  ../src/system/hardware/timer/../../wrapper/mapchip_wrapper.h \
@@ -96,8 +97,6 @@ src/system/hardware/timer/timer.o src/system/hardware/timer/timer.o: \
 
 ../src/system/hardware/timer/../../wrapper/macro/hero_macro.h:
 
-../src/system/hardware/timer/../../wrapper/macro/direct_macro.h:
-
 ../src/system/hardware/timer/../../wrapper/macro/display_macro.h:
 
 ../src/system/hardware/timer/../../wrapper/macro/color_macro.h:
@@ -129,6 +128,10 @@ src/system/hardware/timer/timer.o src/system/hardware/timer/timer.o: \
 ../src/system/hardware/timer/../../wrapper/macro/event_flag_macro.h:
 
 ../src/system/hardware/timer/../../wrapper/macro/dtm_macro.h:
+
+../src/system/hardware/timer/../../wrapper/macro/./buildMacro/direct_macro.h:
+
+../src/system/hardware/timer/../../wrapper/macro/./buildMacro/event_macro.h:
 
 ../src/system/hardware/timer/../../wrapper/hero_wrapper.h:
 
