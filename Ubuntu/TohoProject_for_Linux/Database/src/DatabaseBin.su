@@ -39,9 +39,9 @@ npc_db.h:177:6:npc_pattern_write	48	static
 npc_db.h:209:6:npc_event_write	48	static
 npc_db.h:233:6:npc_bitmap_write	48	static
 npc_msg_db.h:52:6:npc_msg_write	64	static
-build_db.h:142:6:build_pos_write	48	static
-build_db.h:170:6:build_event_write	48	static
-build_db.h:199:6:build_submap_write	48	static
+build_db.h:140:6:build_pos_write	48	static
+build_db.h:166:6:build_event_write	48	static
+build_db.h:193:6:build_submap_write	48	static
 build_msg_db.h:46:6:build_msg_write	48	static
 DatabaseBin.c:68:10:sjis_write	48	static
 DatabaseBin.c:98:10:sjis_length	16	static
