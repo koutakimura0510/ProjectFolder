@@ -4,22 +4,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../src/system/event/direct/direct_build.c \
-../src/system/event/direct/direct_dangeon.c \
-../src/system/event/direct/direct_worldmap.c \
-../src/system/event/direct/direct_wrapper.c 
+../src/system/event/direct/direct_map.c 
 
 OBJS += \
-./src/system/event/direct/direct_build.o \
-./src/system/event/direct/direct_dangeon.o \
-./src/system/event/direct/direct_worldmap.o \
-./src/system/event/direct/direct_wrapper.o 
+./src/system/event/direct/direct_map.o 
 
 C_DEPS += \
-./src/system/event/direct/direct_build.d \
-./src/system/event/direct/direct_dangeon.d \
-./src/system/event/direct/direct_worldmap.d \
-./src/system/event/direct/direct_wrapper.d 
+./src/system/event/direct/direct_map.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
