@@ -64,7 +64,7 @@ static bool isDirect_point(GameWrapper *const game, uint8_t i, uint32_t x, uint3
 
 		if ((game->unit.pos.eventx == xpos) && (game->unit.pos.eventy == ypos))
 		{
-			if (fetch_dram_db(game, MEMORY_BUILD_EVENT_ID, i, BUILD_EVENT_MEMBER_EVENT_TYPE) == SYSTEM_MSG_WINDOW) {
+			if (fetch_dram_db(game, MEMORY_BUILD_EVENT_ID, i, BUILD_EVENT_MEMBER_NEXT_SYSTEM) == SYSTEM_MSG_WINDOW) {
 				return ON_DIRECT;
 			}
 		}
