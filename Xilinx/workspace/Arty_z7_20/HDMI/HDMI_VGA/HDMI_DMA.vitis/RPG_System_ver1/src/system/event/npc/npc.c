@@ -99,13 +99,32 @@ void npc_config(GameWrapper *const game)
 
 
 /**
- * @brief  NPCに話しかけた時のイベント発生処理
+ * @brief  NPCのメッセージイベント発生処理
  * @note   
  * @retval 
  */
-bool npc_event(GameWrapper *const game)
+bool isNpc_event(GameWrapper *const game)
 {
-    
+    SDL_Rect point = {
+        .x = game->unit.pos.eventx >> MAPCHIP_SHIFT,
+        .y = (game->unit.pos.eventy >> MAPCHIP_SHIFT) * get_mapsize('w'),
+    };
+
+    point.h = point.x + point.y;
+
+	for (uint32_t i = 0; i < game->npc.number; i++)
+    {
+        if (game->npc.dram_index[i] == point.h)
+        {
+            // game->npc.dir[index]          = NPC_DIR_EDGE * rand_number;
+            // game->npc.cut_dir[index]      = (game->npc.dir[index] == NPC_DIR_DOWN) ? 0 : game->npc.dir[index] + NPC_DIR_EDGE;
+			game->conf.display.system   = SYSTEM_MSG_WINDOW;
+			game->conf.display.drawtype = DISPLAY_FIELD_CENTER_DRAW;
+			return ON_DIRECT;
+        }
+    }
+
+    return NON_DIRECT;
 }
 
 
