@@ -12,6 +12,7 @@
 
 
 void npc_config(GameWrapper *const game);
+bool isNpc_event(GameWrapper *const game);
 void npc_draw(GameWrapper *const game);
 
 #endif
