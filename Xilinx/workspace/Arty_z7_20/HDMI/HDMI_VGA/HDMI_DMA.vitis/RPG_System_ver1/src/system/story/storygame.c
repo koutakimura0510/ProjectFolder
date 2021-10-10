@@ -84,8 +84,9 @@ static void system_standerd_window(GameWrapper *const game)
 	direction_update_key(game, sw);
 	bool can    = isDirect_object(game);
 	bool direct = isDirect_event(game);
+	bool npc    = isNpc_event(game);
 
-	if ((direct == NON_DIRECT) && (SW_A == (sw & SW_A)))
+	if ((npc == NON_DIRECT) && (direct == NON_DIRECT) && (SW_A == (sw & SW_A)))
 	{
 		menu_window_init(game);
 	}
@@ -107,13 +108,14 @@ static void system_standerd_window(GameWrapper *const game)
 		direct = battle_rush_state(game);
 	}
 
-	if (direct == NON_DIRECT)
+	if ((direct == NON_DIRECT) && (npc == NON_DIRECT))
 	{
 		standerd_game(game);
 	}
 	else
 	{
 		nextdraw_ready(game);
+		frame_buffer_other_copy(game);
 		// game->conf.display.drawtype = DISPLAY_DARKENING_DRAW;
 	}
 }
@@ -195,7 +197,7 @@ static void system_nextdata_reading(GameWrapper *const game)
  */
 static void system_msg_window(GameWrapper *const game)
 {
-	nextdraw_ready(game);
+	// nextdraw_ready(game);
 	event_msg_draw(game);
 	
 	if (SW_A == get_key(false))
@@ -264,7 +266,7 @@ static void system_battle_window(GameWrapper *const game)
  */
 static void system_menu_window(GameWrapper *const game)
 {
-	nextdraw_ready(game);
+	// nextdraw_ready(game);
 	menu_window_wrapper(game);
 }
 
