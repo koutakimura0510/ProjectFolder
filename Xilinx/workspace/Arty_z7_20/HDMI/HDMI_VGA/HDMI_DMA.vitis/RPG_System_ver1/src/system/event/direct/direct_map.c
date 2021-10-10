@@ -15,7 +15,7 @@ static bool isEvent_variable(GameWrapper *const game, SDL_Rect *const point);
 
 /**
  * @brief  イベント座標判定用関数の状態遷移関数ポインタテーブル
- * @note   
+ * @note   イベントが固定「0」と可変「1」が存在する。
  * @retval None
  */
 typedef struct
@@ -141,7 +141,7 @@ static bool isDirect_worldmap(GameWrapper *const game)
     uint8_t db_start_row = fetch_dram_db(game, MEMORY_BUILD_LOOP_ID, game->conf.map.name, BUILD_LOOPCOUNT_MEMBER_START_ID);
     uint8_t db_end_row   = fetch_dram_db(game, MEMORY_BUILD_LOOP_ID, game->conf.map.name, BUILD_LOOPCOUNT_MEMBER_LOOP_COUNT);
 
-    for (uint8_t i = db_start_row; i < db_end_row; i++)
+    for (uint32_t i = db_start_row; i < db_end_row; i++)
     {
         uint32_t direct_x = fetch_dram_db(game, MEMORY_WORLD_DIRECT_ID, i, WORLD_DIRECT_MEMBER_XPOS) << MAPCHIP_SHIFT;
         uint32_t direct_y = fetch_dram_db(game, MEMORY_WORLD_DIRECT_ID, i, WORLD_DIRECT_MEMBER_YPOS) << MAPCHIP_SHIFT;
@@ -162,9 +162,10 @@ static bool isDirect_worldmap(GameWrapper *const game)
 }
 
 
-/*
- * 町のデータベースから当たり判定座標を読み取り当たり判定を行う
- * 停止中のキャラクターとデータベースの座標が重なった場合にIDを取得する
+/**
+ * @brief  サブマップ内のイベント発生座標を確認し当たり判定処理を管理する関数
+ * @note   イベントを管理するデータベースの開始行と終了行を取得し、その範囲内でループ処理を行う
+ * @retval イベント発生時true
  */
 static bool isDirect_buildmap(GameWrapper *const game)
 {
@@ -175,9 +176,9 @@ static bool isDirect_buildmap(GameWrapper *const game)
 
 	uint8_t db_start_row = fetch_dram_db(game, MEMORY_BUILD_LOOP_ID, game->conf.map.name, BUILD_LOOPCOUNT_MEMBER_START_ID);
     uint8_t db_end_row   = fetch_dram_db(game, MEMORY_BUILD_LOOP_ID, game->conf.map.name, BUILD_LOOPCOUNT_MEMBER_LOOP_COUNT);
-    const EventPoint *p  = &event_point;
+    const EventPoint *p  = &event_point; /* 可変・固定イベント発生確認関数ポインタの取得 */
 
-	for (uint8_t i = db_start_row; i < db_end_row; i++)
+	for (uint32_t i = db_start_row; i < db_end_row; i++)
     {
         point.h = i;
 
@@ -230,6 +231,7 @@ static bool isEvent_fixed(GameWrapper *const game, SDL_Rect *const point)
             return ON_DIRECT;
         }
     }
+
     return NON_DIRECT;
 }
 

@@ -99,6 +99,17 @@ void npc_config(GameWrapper *const game)
 
 
 /**
+ * @brief  NPCに話しかけた時のイベント発生処理
+ * @note   
+ * @retval 
+ */
+bool npc_event(GameWrapper *const game)
+{
+    
+}
+
+
+/**
  * @brief  npcの座標・向き更新・描画処理
  * 
  * @note

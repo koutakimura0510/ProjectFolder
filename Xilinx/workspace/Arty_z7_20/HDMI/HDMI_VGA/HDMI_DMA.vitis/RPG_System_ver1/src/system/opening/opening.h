@@ -98,7 +98,7 @@ static const uint8_t bitmap_init[] =
 	FILE_ACCESS_BACK_ICON2,
 
 	/* バックグラウンドデータ */
-	// FILE_ACCESS_BACK_TITLE1,
+	FILE_ACCESS_BACK_TITLE1,
 	// FILE_ACCESS_BACK_GRASS,
 	// FILE_ACCESS_BACK_FOG,
 	FILE_ACCESS_NPC_WORLD,
