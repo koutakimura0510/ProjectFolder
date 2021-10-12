@@ -597,8 +597,8 @@ uint32_t fetch_dram_db(GameWrapper *const game, uint8_t main_member, uint32_t su
  * NPCのメッセージを取得したい場合は、NpcMsgDBのmap_npcidを指定する
  * 仲間のメッセージについては、後日考える
  * 
- * @param  main_member: フィルデータにアクセスするための定数値を指定
- * @param  sub_id: 取得したいメッセージに対応したIDを指定
+ * @param  main_member: フィルデータにアクセスするための定数値を指定、MEMORY_xxx
+ * @param  sub_id: 取得したいメッセージに対応したIDを指定、例　NPCならば ROMEN_NPC_xxxなど
  * @retval 
  */
 uint32_t fetch_dram_msg(GameWrapper *const game, uint8_t main_member, uint32_t sub_id)
@@ -646,13 +646,13 @@ uint32_t fetch_dram_msg(GameWrapper *const game, uint8_t main_member, uint32_t s
 
     event_flag = event_flag + sub_id; /* アドレスがNPCのIDが保存されている領域を指しているため、IDを取得しNPCのイベント情報領域のDRAMのアドレスにアクセスする */
 
-    for (uint32_t i = 0; i < *event_flag; i++)    /* 一致したIDの列の取得したいメンバまでアドレスを進める */
+    for (uint32_t i = 0; i < *event_flag; i++) /* 一致したIDの列の取得したいメンバまでアドレスを進める */
     {
         main_adr = main_adr + *sub_adr;
         sub_adr++;
     }
 
-    game->conf.db.data     = main_adr;  /* 呼び出し元で戻り値以外でもデータを利用する場合があるため保存しておく */
+    game->conf.db.data     = main_adr; /* 呼び出し元で戻り値以外でもデータを利用する場合があるため保存しておく */
     game->conf.db.len      = sub_adr;
     game->conf.db.old_data = game->conf.db.data;
     game->conf.db.old_len  = game->conf.db.len;
