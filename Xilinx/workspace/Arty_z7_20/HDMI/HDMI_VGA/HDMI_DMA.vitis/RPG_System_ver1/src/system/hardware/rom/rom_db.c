@@ -599,9 +599,10 @@ uint32_t fetch_dram_db(GameWrapper *const game, uint8_t main_member, uint32_t su
  * 
  * @param  main_member: フィルデータにアクセスするための定数値を指定、MEMORY_xxx
  * @param  sub_id: 取得したいメッセージに対応したIDを指定、例　NPCならば ROMEN_NPC_xxxなど
+ * @param  sub_member 使用しない、関数ポインタ利用のため定義している
  * @retval 
  */
-uint32_t fetch_dram_msg(GameWrapper *const game, uint8_t main_member, uint32_t sub_id)
+uint32_t fetch_dram_msg(GameWrapper *const game, uint8_t main_member, uint32_t sub_id, uint32_t sub_member)
 {
     const SystemLength *length = system_length;
     SystemAddress *system      = &system_address;
