@@ -49,8 +49,15 @@ int main(void)
 	rect[1] = (SDL_Rect){1, 2, 3, 4};
 	rect[2] = (SDL_Rect){2, 3, 4, 5};
 	rect[3] = (SDL_Rect){3, 4, 5, 6};
-
 	sdl_printf(rect, NUM(rect));
+
+	SDL_Rect square = {
+		.x = 1,
+		.y = 1,
+		.w = 1,
+		.h = 1,
+	};
+	sdl_printf(&square, 1);
 
 	return 0;
 }
