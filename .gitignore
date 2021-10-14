@@ -53,6 +53,8 @@ Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.srcs/*
 Xilinx/Reference/*
 !Xilinx/Reference/Board
 Xilinx/Reference/Board/*
+!Xilinx/Reference/Board/digilent-xdc-master/
+Xilinx/Reference/Board/digilent-xdc-master/*
 # !Xilinx/workspace/Reference/Board/
 # Xilinx/workspace/Reference/Board/*
 
