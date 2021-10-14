@@ -36,7 +36,6 @@
 #define EVENT_MSG_YSTRAT    (MSG_WINDOW_BLACK_FRAME_YSTART + 10)
 
 
-
 /*
  * ver1. 2021/07/04
  * ゼロサプレス動作指定
@@ -45,5 +44,30 @@
 #define ZERO_SUP_OFF        (1)
 #define ZERO_SUP_STATUS     (2)
 
+
+/**
+ * @brief  メッセージの種類を定義
+ * @note   
+ * @retval None
+ */
+typedef enum
+{
+	MSG_TYPE_UNVARIABLE, /* comment */
+	MSG_TYPE_NPC,        /* NPCのメッセージデータベースアクセス */
+	MSG_TYPE_HERO,       /* 仲間の会話メッセージデータベースアクセス */
+	MSG_TYPE_EVENT,      /* 宝箱を開けたなどのイベントメッセージデータベースアクセス */
+	MSG_TYPE_STORY,      /* ストーリー進行中のメッセージデータベースアクセス */
+} MsgTypeNumber;
+
+/**
+ * @brief  メッセージDBアクセス時の利用する関数を選択するインデックスを定義
+ * @note   
+ * @retval None
+ */
+typedef enum
+{
+	MSG_FUNC_INDEX_0,
+	MSG_FUNC_INDEX_1,
+} MsgAccessNumber;
 
 #endif
