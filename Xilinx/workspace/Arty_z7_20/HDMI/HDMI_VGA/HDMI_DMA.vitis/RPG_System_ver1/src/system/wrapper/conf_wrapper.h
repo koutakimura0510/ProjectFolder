@@ -251,6 +251,22 @@ typedef struct
 } ColorConf;
 
 
+/**
+ * @brief  メッセージデータのアクセス方法を管理する構造体
+ * @note   
+ * 
+ * @param msg_type mscディレクトリのmsg_macroに定義されているメッセージの種類を保存
+ * @param access_func 関数ポインタ参照時のインデックスを指定、0,1
+ * 
+ * @retval None
+ */
+typedef struct
+{
+    uint8_t type;
+    uint8_t access_func;
+} MsgConf;
+
+
 /*
  * ver2. 2021/07/04
  * メンバの要素を親子関係に分けて管理するように変更
@@ -273,6 +289,7 @@ typedef struct conf
     CookingConf cook;
     ItemConf    item;
     ColorConf   color;
+    MsgConf     msg;
 } ConfWrapper;
 
 #endif
