@@ -27,6 +27,7 @@
 
 /* ファイル内関数 */
 static void config_initialize(GameWrapper *const game);
+static void event_initialize(GameWrapper *const game);
 
 
 /*
@@ -329,8 +330,8 @@ static void opening_savedata_load(GameWrapper *const game)
 {
 	config_initialize(game);
 	hero_initialize(game);
+	event_initialize(game);
 }
-
 
 /* TODO
  * ここでセーブデータファイルを全て読み込み
@@ -387,8 +388,6 @@ static void config_initialize(GameWrapper *const game)
     game->conf.map.back                 = DRAM_MAPDATA_ADDR_START;
     game->conf.map.obj                  = DRAM_MAPDATA_OBJECT_ADDR_START;
 	game->unit.pos.unitdir	            = DIR_WAIT;
-    // game->unit.pos.animation_pixel_x    = 2;
-    // game->unit.pos.animation_pixel_y    = 2;
     game->unit.pos.animation_pixel_x    = ANIMATION_STORY_PIXEL_NUM;
     game->unit.pos.animation_pixel_y    = ANIMATION_STORY_PIXEL_NUM;
     game->unit.pos.anime_cnt            = 0;
@@ -398,4 +397,24 @@ static void config_initialize(GameWrapper *const game)
 	game->unit.draw.mapchip_id          = UNIT_WORK_TYPE_CENTER + game->unit.draw.cutpos;
     game->unit.draw.chara_chipid        = MAPCHIP_MINORIKO;
 	npc_config(game);
+}
+
+
+/**
+ * @brief  DRAMのイベントフラグ領域の初期化
+ * @note
+ * @retval None
+ */
+static void event_initialize(GameWrapper *const game)
+{
+	//TODO とりあえず現状は0クリア
+	uint32_t *p = DRAM_FLAG_EVENT_ADDR_START;
+	uint32_t total_event_num = NPC_EVENT_END_ID;
+
+	for (uint32_t i = 0; i < total_event_num; i++, p++)
+	{
+		*p = 0;
+	}
+
+	Xil_DCacheFlushRange(DRAM_FLAG_EVENT_ADDR_BASE, total_event_num);   // 1アドレスがbyteのため2bitシフトさせる
 }

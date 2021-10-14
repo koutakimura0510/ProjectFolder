@@ -44,6 +44,8 @@
  * @param unity マップ間移動が発生した場合のキャラクターの描画開始座標を指定
  * @param fieldx マップ間移動が発生した場合のキャラクターの描画開始座標を指定
  * @param fieldy マップ間移動が発生した場合のキャラクターの描画開始座標を指定
+ * @param anime_pixelx マップのxpixel移動数
+ * @param anime_pixely マップのypixel移動数
  * @note   
  * @retval None
  */
@@ -65,6 +67,8 @@ typedef struct map_move_all
 	uint8_t unity;
 	uint8_t fieldx;
 	uint8_t fieldy;
+	uint8_t anime_pixelx;
+	uint8_t anime_pixely;
 } MapMoveAll;
 
 static const MapMoveAll map_move_all[] =
@@ -75,7 +79,7 @@ static const MapMoveAll map_move_all[] =
 	CAN_PASS_MAPCHIP_ID_MAX_ROMEN_VIRRAGE,
 	OBJECT_START_MAPID_ROMEN_VIRRAGE,
 	OBJECT_END_MAPID_ROMEN_VIRRAGE,
-	10, 12, 16, 35,},
+	10, 12, 16, 35, 4, 4},
 
 	{TRY_ROMEN_DANGEON_ID, EVENT_TYPE_DANGEON_MOVE,
 	FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE, FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_OBJECT, FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_REGION, FILE_ACCESS_MAPDATA_ROMEN_VIRRAGE_NPC, FILE_ACCESS_CHIP_ROMEN_VIRRAGE, SOUND_ID_MURA_1,
@@ -83,7 +87,7 @@ static const MapMoveAll map_move_all[] =
 	CAN_PASS_MAPCHIP_ID_MAX_ROMEN_VIRRAGE,
 	OBJECT_START_MAPID_ROMEN_VIRRAGE,
 	OBJECT_END_MAPID_ROMEN_VIRRAGE,
-	10, 12, 16, 35,},
+	10, 12, 16, 35, 4, 4},
 
 	{TRY_ROMEN_EXIT_ID, EVENT_TYPE_WORLD_MOVE,
 	FILE_ACCESS_MAPDATA_GEKAI, FILE_ACCESS_MAPDATA_GEKAI_OBJECT, FILE_ACCESS_MAPDATA_GEKAI_REGION, FILE_ACCESS_MAPDATA_GEKAI_NPC, FILE_ACCESS_CHIP_GEKAI, SOUND_ID_FIELD_GEKAI,
@@ -91,7 +95,7 @@ static const MapMoveAll map_move_all[] =
 	CAN_PASS_MAPCHIP_ID_MAX_GEKAI,
 	OBJECT_START_MAPID_GEKAI,
 	OBJECT_END_MAPID_GEKAI,
-	10, 7, 160, 39},
+	10, 7, 160, 39, 2, 2},
 };
 
 
@@ -119,6 +123,8 @@ void map_all_write(FILE *fp, FILE *byte)
 		fprintf(fp, "0x%08x,\n", p->unity);
 		fprintf(fp, "0x%08x,\n", p->fieldx);
 		fprintf(fp, "0x%08x,\n", p->fieldy);
+		fprintf(fp, "0x%08x,\n", p->anime_pixelx);
+		fprintf(fp, "0x%08x,\n", p->anime_pixely);
 
 		for (int j = 0; j < TRY_MAP_MEMBER_NUMBER; j++)
 		{

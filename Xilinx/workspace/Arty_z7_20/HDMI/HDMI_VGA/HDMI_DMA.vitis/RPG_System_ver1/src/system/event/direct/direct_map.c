@@ -225,9 +225,12 @@ static bool isEvent_fixed(GameWrapper *const game, SDL_Rect *const point)
         return ON_DIRECT;
     }
 
+    /* メッセージイベントの場合の当たり判定 */
     if ((game->unit.pos.eventx == xpos) && (game->unit.pos.eventy == ypos))
     {
         if (SYSTEM_MSG_WINDOW == fetch_dram_db(game, MEMORY_BUILD_EVENT_ID, point->h, BUILD_EVENT_MEMBER_NEXT_SYSTEM)) {
+            game->conf.msg.type         = MSG_TYPE_EVENT;
+            game->conf.msg.access_func  = MSG_FUNC_INDEX_0;
             return ON_DIRECT;
         }
     }

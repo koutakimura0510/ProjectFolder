@@ -40,9 +40,6 @@
 /* 属性データベースの行数 */
 #define UNIT_RES_SIZE               (19)
 
-/* 可変式イベントメッセージデータベースの行数 */
-#define NPC_MSG_SIZE                (4)
-
 /* build submap Table number */
 #define BUILD_SUBMAP_COUNT_DB_LINE  (4)
 
@@ -534,6 +531,8 @@ typedef enum
     TRY_MAP_MEMBER_UNITY,
     TRY_MAP_MEMBER_FIELDX,
     TRY_MAP_MEMBER_FIELDY,
+    TRY_MAP_MEMBER_ANIME_PIXELX,
+    TRY_MAP_MEMBER_ANIME_PIXELY,
     TRY_MAP_MEMBER_NUMBER,
 } WorldMapAllID;
 

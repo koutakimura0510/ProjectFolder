@@ -21,6 +21,7 @@ typedef enum
     ROMEN_NPC_ID_2,
     ROMEN_NPC_ID_3,
     ROMEN_NPC_ID_4,
+    NPC_EVENT_END_ID = ROMEN_NPC_ID_4,
 } BuildNpcNumber;
 
 

@@ -29,15 +29,16 @@
  * @retval 
  */
 #define NPC_DIR_EDGE    (6)
-// #define NPC_DIR_DOWN    (0)
-// #define NPC_DIR_LEFT    (6)
-// #define NPC_DIR_RIGHT   (12)
-// #define NPC_DIR_UP      (18)
 #define NPC_DIR_LEFT    (0)
 #define NPC_DIR_RIGHT   (6)
 #define NPC_DIR_UP      (12)
 #define NPC_DIR_DOWN    (18)
 
+/* データベースに対応した向きの切り取り座標 */
+#define NPC_DIR_CUT_DOWN    (0)
+#define NPC_DIR_CUT_LEFT    (6)
+#define NPC_DIR_CUT_RIGHT   (12)
+#define NPC_DIR_CUT_UP      (18)
 
 /*!
  * \brief NPCのIDを管理

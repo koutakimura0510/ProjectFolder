@@ -45,23 +45,28 @@ void next_stage_update(GameWrapper *const game)
  */
 static void set_world_event(GameWrapper *const game)
 {
-	game->conf.event.type 		= fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_EVENT_TYPE);
-	game->conf.file.mapdata  	= fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_FILE_MAPDATA_ID);
-	game->conf.file.object   	= fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_FILE_OBJECT_ID);
-	game->conf.file.region   	= fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_FILE_REGION_ID);
-	game->conf.file.npc     	= fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_FILE_NPC_ID);
-	game->conf.file.mapchip  	= fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_FILE_MAPCHIP_ID);
-	game->conf.file.bgm      	= fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_FILE_BGM_ID);
-	game->conf.map.name    		= fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_MAP);
-	game->conf.map.canpass_id	= fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_MAP_CANPASS_ID);
-	game->conf.map.obj_startid	= fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_MAP_OBJECT_STARTID);
-	game->conf.map.obj_endid	= fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_MAP_OBJECT_ENDID);
-	game->unit.pos.unitx    	= fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_UNITX) << MAPCHIP_SHIFT;
-	game->unit.pos.unity    	= fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_UNITY) << MAPCHIP_SHIFT;
-	game->unit.pos.fieldx   	= fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_FIELDX) << MAPCHIP_SHIFT;
-	game->unit.pos.fieldy   	= fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_FIELDY) << MAPCHIP_SHIFT;
-	game->unit.pos.unitdir  	= DIR_WAIT;
-	game->unit.pos.anime_cnt	= 0;
+	game->conf.event.type 		     = fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_EVENT_TYPE);
+	game->conf.file.mapdata  	     = fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_FILE_MAPDATA_ID);
+	game->conf.file.object   	     = fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_FILE_OBJECT_ID);
+	game->conf.file.region   	     = fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_FILE_REGION_ID);
+	game->conf.file.npc     	     = fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_FILE_NPC_ID);
+	game->conf.file.mapchip  	     = fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_FILE_MAPCHIP_ID);
+	game->conf.file.bgm      	     = fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_FILE_BGM_ID);
+	game->conf.map.name    		     = fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_MAP);
+	game->conf.map.canpass_id	     = fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_MAP_CANPASS_ID);
+	game->conf.map.obj_startid	     = fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_MAP_OBJECT_STARTID);
+	game->conf.map.obj_endid	     = fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_NEXT_MAP_OBJECT_ENDID);
+	game->unit.pos.unitx    	     = fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_UNITX) << MAPCHIP_SHIFT;
+	game->unit.pos.unity    	     = fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_UNITY) << MAPCHIP_SHIFT;
+	game->unit.pos.fieldx   	     = fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_FIELDX) << MAPCHIP_SHIFT;
+	game->unit.pos.fieldy   	     = fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_FIELDY) << MAPCHIP_SHIFT;
+	game->unit.pos.animation_pixel_x = fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_ANIME_PIXELX);
+	game->unit.pos.animation_pixel_y = fetch_dram_db(game, MEMORY_MAP_ALL_ID, game->conf.event.try_mapname_id, TRY_MAP_MEMBER_ANIME_PIXELY);
+	game->unit.pos.unitdir  	     = DIR_WAIT;
+	game->unit.pos.anime_cnt	     = 0;
+	game->unit.draw.workpos          = UNIT_WORK_TYPE_CENTER;
+	game->unit.draw.cutpos           = UNIT_CUT_DOWN + game->unit.draw.chara_chipid;
+	game->unit.draw.mapchip_id       = UNIT_WORK_TYPE_CENTER + game->unit.draw.cutpos;
 }
 
 
@@ -72,15 +77,18 @@ static void set_world_event(GameWrapper *const game)
  */
 static void set_submap_event(GameWrapper *const game)
 {
-	game->conf.file.mapdata  = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_NEXT_FILE_MAPDATA_ID);
-	game->conf.file.object   = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_NEXT_FILE_OBJECT_ID);
-	game->conf.file.region   = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_NEXT_FILE_REGION_ID);
-	game->conf.file.npc      = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_NEXT_FILE_NPC_ID);
-	game->conf.map.name    	 = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_NEXT_MAP);
-	game->unit.pos.unitx     = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_UNITX) << MAPCHIP_SHIFT;
-	game->unit.pos.unity     = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_UNITY) << MAPCHIP_SHIFT;
-	game->unit.pos.fieldx    = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_FIELDX) << MAPCHIP_SHIFT;
-	game->unit.pos.fieldy    = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_FIELDX) << MAPCHIP_SHIFT;
-	game->unit.pos.unitdir   = DIR_WAIT;
-	game->unit.pos.anime_cnt = 0;
+	game->conf.file.mapdata    = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_NEXT_FILE_MAPDATA_ID);
+	game->conf.file.object     = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_NEXT_FILE_OBJECT_ID);
+	game->conf.file.region     = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_NEXT_FILE_REGION_ID);
+	game->conf.file.npc        = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_NEXT_FILE_NPC_ID);
+	game->conf.map.name    	   = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_NEXT_MAP);
+	game->unit.pos.unitx       = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_UNITX) << MAPCHIP_SHIFT;
+	game->unit.pos.unity       = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_UNITY) << MAPCHIP_SHIFT;
+	game->unit.pos.fieldx      = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_FIELDX) << MAPCHIP_SHIFT;
+	game->unit.pos.fieldy      = fetch_dram_db(game, MEMORY_BUILD_SUBMAP_ID, game->conf.event.id, BUILD_SUBMAP_MEMBER_FIELDX) << MAPCHIP_SHIFT;
+	game->unit.pos.unitdir     = DIR_WAIT;
+	game->unit.pos.anime_cnt   = 0;
+	game->unit.draw.workpos    = UNIT_WORK_TYPE_CENTER;
+	game->unit.draw.cutpos     = UNIT_CUT_DOWN + game->unit.draw.chara_chipid;
+	game->unit.draw.mapchip_id = UNIT_WORK_TYPE_CENTER + game->unit.draw.cutpos;
 }

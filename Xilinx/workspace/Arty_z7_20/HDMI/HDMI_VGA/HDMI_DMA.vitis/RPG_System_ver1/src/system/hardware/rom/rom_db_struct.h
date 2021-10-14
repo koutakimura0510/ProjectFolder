@@ -404,7 +404,7 @@ static const SystemLength system_length[] =
     {MEMORY_NPC_PATTERN_ID,     NPC_PATTERN_DB_COL,                     NPC_SUB_MEMBER_PATTERN_NUMBER       },
     {MEMORY_NPC_EVENT_ID,       NPC_PATTERN_DB_COL,                     NPC_SUB_MEMBER_EVENT_NUMBER         },
     {MEMORY_NPC_BITMAP_ID,      NPC_ID_END,                             NPC_SUB_MEMBER_BITMAP_NUMBER        },
-    {MEMORY_NPC_MSG_ID,         NPC_MSG_SIZE,                           MEMBER_LEN_VARIABLE                 },
+    {MEMORY_NPC_MSG_ID,         NPC_EVENT_END_ID,                       MEMBER_LEN_VARIABLE                 },
     {MEMORY_SIN_ID,             SIN_TABLE_MAX,                          SIN_SUB_MEMBER_NUMBER               },
     {MEMORY_COS_ID,             COS_TABLE_MAX,                          COS_SUB_MEMBER_NUMBER               },
     {MEMORY_TYPE_STR_ID,        UNIT_RES_SIZE,                          TYPE_STR_SUB_MEMBER_NUMBER          },

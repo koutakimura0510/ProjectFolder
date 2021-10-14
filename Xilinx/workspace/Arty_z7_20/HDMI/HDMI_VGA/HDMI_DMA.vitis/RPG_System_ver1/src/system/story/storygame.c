@@ -204,7 +204,9 @@ static void system_msg_window(GameWrapper *const game)
 	{
 		game->conf.display.system   = SYSTEM_MAP_DEFAULT_WINDOW;
 		game->conf.display.drawtype = DISPLAY_FIELD_CENTER_DRAW;
-		game->conf.event.type 		= EVENT_TYPE_SUBMAP_MOVE;
+		game->conf.event.type       = EVENT_TYPE_SUBMAP_MOVE;
+		game->conf.msg.type         = MSG_TYPE_UNVARIABLE;
+		game->conf.msg.access_func  = MSG_FUNC_INDEX_0;
 	}
 }
 

@@ -591,23 +591,25 @@ uint32_t fetch_dram_db(GameWrapper *const game, uint8_t main_member, uint32_t su
 
 
 /**
- * @brief  メッセージデータベースのデータを取得する
- * @note   sub_idに指定するIDについて
+ * @brief  メッセージデータベースのアドレスを取得する
  * 
- * NPCのメッセージを取得したい場合は、NpcMsgDBのmap_npcidを指定する
- * 仲間のメッセージについては、後日考える
+ * @note   データのアクセス方法が複雑なため、処理手順を下記に記す
+ * 「１」DBファイルのデータの並び順
+ * データ詳細: DB_Accsess_ID, MsgBuffer_Length, msg1,   msg2,   msgxxx ---
+ * データ例  : 0,             2,                あいう, かきく, '\0'
  * 
- * @param  main_member: フィルデータにアクセスするための定数値を指定
- * @param  sub_id: 取得したいメッセージに対応したIDを指定
+ * @param  main_member: ファイルデータにアクセスするための定数値を指定、MEMORY_xxx
+ * @param  sub_id: 取得したいメッセージに対応したIDを指定、例　NPCならば ROMEN_NPC_xxxなど
+ * @param  sub_member 使用しないため0を指定、関数ポインタ利用のため定義している
  * @retval 
  */
-uint32_t fetch_dram_msg(GameWrapper *const game, uint8_t main_member, uint32_t sub_id)
+uint32_t fetch_dram_msg(GameWrapper *const game, uint8_t main_member, uint32_t sub_id, uint32_t sub_member)
 {
     const SystemLength *length = system_length;
     SystemAddress *system      = &system_address;
     uint32_t *main_adr         = system->start_adr[main_member];    /* データベースのメンバのデータが保存されているアドレスを取得 */
     uint32_t *sub_adr          = system->p[main_member];            /* データベースのメンバの長さが保存されているアドレスを取得 */
-    uint32_t *event_flag       = DRAM_FLAG_EVENT_ADDR_START;
+    uint32_t *event_ptr        = DRAM_FLAG_EVENT_ADDR_START;        /* NPCのイベントフラグ取得状況管理アドレスを指すポインタ */
     uint32_t row;
 
     for (uint32_t i = 0; i < FILE_SYSTEM_LENGTH_SIZE; i++, length++)
@@ -644,15 +646,15 @@ uint32_t fetch_dram_msg(GameWrapper *const game, uint8_t main_member, uint32_t s
         sub_adr++;
     }
 
-    event_flag = event_flag + sub_id; /* アドレスがNPCのIDが保存されている領域を指しているため、IDを取得しNPCのイベント情報領域のDRAMのアドレスにアクセスする */
+    event_ptr = event_ptr + sub_id; /* 指定のID分アドレスを進める */
 
-    for (uint32_t i = 0; i < *event_flag; i++)    /* 一致したIDの列の取得したいメンバまでアドレスを進める */
+    for (uint32_t i = 0; i < *event_ptr; i++) /* 一致したIDの列の取得したいメンバまでアドレスを進める */
     {
         main_adr = main_adr + *sub_adr;
         sub_adr++;
     }
 
-    game->conf.db.data     = main_adr;  /* 呼び出し元で戻り値以外でもデータを利用する場合があるため保存しておく */
+    game->conf.db.data     = main_adr; /* 呼び出し元で戻り値以外でもデータを利用する場合があるため保存しておく */
     game->conf.db.len      = sub_adr;
     game->conf.db.old_data = game->conf.db.data;
     game->conf.db.old_len  = game->conf.db.len;
