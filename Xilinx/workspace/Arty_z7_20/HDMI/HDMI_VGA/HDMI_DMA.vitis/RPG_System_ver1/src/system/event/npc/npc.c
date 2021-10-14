@@ -29,6 +29,9 @@ static void npc_vertical_edge(GameWrapper *const game, SDL_Rect *const lsbEdge, 
 static void npc_dir_update(GameWrapper *const game, uint8_t index);
 static void npc_pixel_update(GameWrapper *const game, uint8_t index);
 
+/* 会話イベント時のNPCの向きデータを取得 */
+static uint8_t npc_dir_cut(GameWrapper *const game);
+
 
 /**
  * @brief  NPCのアニメーション状態によってメンバの更新関数を変更する関数ポインタ
@@ -100,7 +103,9 @@ void npc_config(GameWrapper *const game)
 
 /**
  * @brief  NPCのメッセージイベント発生処理
- * @note   
+ * @note
+ * プレイヤーのイベント座標メンバを計算しインデックスを抽出する。
+ * NPCの現在のインデックスと一致したらメッセージイベントを発生させる
  * @retval 
  */
 bool isNpc_event(GameWrapper *const game)
@@ -116,9 +121,9 @@ bool isNpc_event(GameWrapper *const game)
         if (game->npc.dram_index[i] == point.h)
         {
             // game->npc.dir[index]          = NPC_DIR_EDGE * rand_number;
-            // game->npc.cut_dir[index]      = (game->npc.dir[index] == NPC_DIR_DOWN) ? 0 : game->npc.dir[index] + NPC_DIR_EDGE;
-			game->conf.display.system   = SYSTEM_MSG_WINDOW;
-			game->conf.display.drawtype = DISPLAY_FIELD_CENTER_DRAW;
+            game->npc.cut_dir[index]    = npc_dir_cut(game);
+            game->conf.display.system   = SYSTEM_MSG_WINDOW;
+            game->conf.display.drawtype = DISPLAY_FIELD_CENTER_DRAW;
             game->conf.msg.type         = MSG_TYPE_NPC;
             game->conf.msg.access_func  = MSG_FUNC_INDEX_1;
 			return ON_DIRECT;
@@ -453,7 +458,7 @@ static void npc_random_update(GameWrapper *const game, uint8_t index)
 
         /* npcの状態・向き・座標データ更新 */
         game->npc.dir[index]          = NPC_DIR_EDGE * rand_number;
-        game->npc.cut_dir[index]      = (game->npc.dir[index] == NPC_DIR_DOWN) ? 0 : game->npc.dir[index] + NPC_DIR_EDGE;
+        game->npc.cut_dir[index]      = (game->npc.dir[index] == NPC_DIR_DOWN) ? NPC_DIR_CUT_DOWN : game->npc.dir[index] + NPC_DIR_EDGE;
         game->npc.active_state[index] = NPC_ACTIVE_ANIMATION;
         game->npc.map_pos[range_bit][index] += sign;
 
@@ -468,5 +473,32 @@ static void npc_random_update(GameWrapper *const game, uint8_t index)
         game->npc.dram_index[index] += (range_bit == 0) ? sign : get_mapsize('w') * sign;
         buffer[game->npc.dram_index[index]] = game->npc.map_npcid[index];
         Xil_DCacheFlushRange((uint32_t)(buffer + game->npc.dram_index[index]), 4);
+    }
+}
+
+
+/**
+ * @brief  会話イベントの時プレイヤーの向きに応じてNPCの向きを変更するため、向きの値を取得する
+ * @note   
+ * @retval 
+ */
+static uint8_t npc_dir_cut(GameWrapper *const game)
+{
+    switch (game->unit.pos.unitdir)
+    {
+    case DIR_RIGHT:
+        return NPC_DIR_CUT_LEFT;
+
+    case DIR_LEFT:
+        return NPC_DIR_CUT_RIGHT;
+
+    case DIR_UP:
+        return NPC_DIR_CUT_DOWN;
+
+    case DIR_DOWN:
+        return NPC_DIR_CUT_UP;
+
+    default:
+        return NPC_DIR_CUT_DOWN;
     }
 }
