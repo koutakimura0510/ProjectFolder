@@ -172,6 +172,8 @@ void font_dram_draw(GameWrapper *const game, uint32_t xstart, uint32_t ystart, u
     uint32_t line = 0;      // 改行計算用
 
     funcMsg[game->conf.msg.access_func](game, system_member, file_id, sub_member);
+
+
     game->mapchip.maxwidth	 = SIZE_FONT_SJIS_WIDTH;
 	game->mapchip.maxheight	 = SIZE_FONT_SJIS_HEIGHT;
 	game->mapchip.draw_xsize = SIZE_FONT_SJIS_WIDTH;
