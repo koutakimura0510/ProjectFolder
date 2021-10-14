@@ -49,10 +49,10 @@ Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.srcs/*
 !Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.srcs/sources_1
 
 #
-!Xilinx/workspace/Reference/
-Xilinx/workspace/Reference/*
-!Xilinx/workspace/Reference/Board
-Xilinx/workspace/Reference/Board/*
+!Xilinx/Reference/
+Xilinx/Reference/*
+!Xilinx/Reference/Board
+Xilinx/Reference/Board/*
 # !Xilinx/workspace/Reference/Board/
 # Xilinx/workspace/Reference/Board/*
 
