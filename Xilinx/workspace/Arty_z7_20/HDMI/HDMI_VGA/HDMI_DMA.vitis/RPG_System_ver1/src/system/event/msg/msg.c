@@ -17,6 +17,45 @@
 #include "../../wrapper/game_wrapper.h"
 
 
+/**
+ * @brief  DRAMのメッセージデータアクセス関数操作、関数ポインタテーブル
+ * @note   可変と不変のメッセージ参照関数が異なるため、関数テーブルを利用して処理を分岐させることとした
+ * @param  fetch_dram_db: メッセージ内容が変わらない場合の関数処理
+ * @param  fetch_dram_msg: メッセージ内容が変わる場合の関数処理
+ * @retval 
+ */
+static const uint32_t (*const funcMsg[])(GameWrapper *const game, uint8_t main_member, uint32_t sub_id, uint32_t sub_member) {
+    fetch_dram_db,
+    fetch_dram_msg,
+};
+
+
+/**
+ * @brief  メッセージの種類に対応するデータベースアクセスIDを管理する
+ * 
+ * @note  データの並び順は以下の通りである
+ * MSG_TYPE_UNVARIABLE
+ * MSG_TYPE_NPC
+ * MSG_TYPE_HERO
+ * MSG_TYPE_EVENT
+ * MSG_TYPE_STORY
+ * 
+ * @retval None
+ */
+typedef struct msg_type
+{
+    uint8_t system_member;
+    uint32_t sub_member;
+} Msg_Type;
+
+static const Msg_Type msg_type[] = {
+    {0, 0,},
+    {MEMORY_NPC_MSG_ID, 0,},
+    {0, 0,},
+    {MEMORY_BUILD_MSG_ID, EVENT_MSG_SUB_MSG,},
+    {0, 0,},
+};
+
 /*
  * ファイル内関数宣言
  */
@@ -98,32 +137,18 @@ void result_font_draw(GameWrapper *const game, uint32_t xstart, uint32_t ystart,
 }
 
 
-/* 
- * ver1. 2021/06/25
- * イベントメッセージの描画処理
- * 白の縁取りの黒の背景を画面中央に描画し、その背景内に文字の描画を行う
+/**
+ * @brief  メッセージウィンドウの描画処理
+ * @note   発生するメッセージイベントの種類に応じてDRAMにアクセスするデータをを変更する
+ * @retval None
  */
 void event_msg_draw(GameWrapper *const game)
 {
-	patblt(
-		game->conf.work.adr,
-		MSG_WINDOW_WHITE_FRAME_XSTART,
-		MSG_WINDOW_WHITE_FRAME_YSTART,
-		MSG_WINDOW_WHITE_FRAME_XEND,
-		MSG_WINDOW_WHITE_FRAME_YEND,
-		COLOR_WHITE
-	);
+    const Msg_Type *p = &msg_type[game->conf.msg.type];
 
-	patblt(
-		game->conf.work.adr,
-		MSG_WINDOW_BLACK_FRAME_XSTART,
-		MSG_WINDOW_BLACK_FRAME_YSTART,
-		MSG_WINDOW_BLACK_FRAME_XEND,
-		MSG_WINDOW_BLACK_FRAME_YEND,
-		COLOR_BLACK
-	);
-
-    font_dram_draw(game, EVENT_MSG_XSTRAT, EVENT_MSG_YSTRAT, MEMORY_BUILD_MSG_ID, game->conf.event.id, EVENT_MSG_SUB_MSG, COLOR_WHITE);
+    patblt(game->conf.work.adr, MSG_WINDOW_WHITE_FRAME_XSTART, MSG_WINDOW_WHITE_FRAME_YSTART, MSG_WINDOW_WHITE_FRAME_XEND, MSG_WINDOW_WHITE_FRAME_YEND, COLOR_WHITE);
+    patblt(game->conf.work.adr, MSG_WINDOW_BLACK_FRAME_XSTART, MSG_WINDOW_BLACK_FRAME_YSTART, MSG_WINDOW_BLACK_FRAME_XEND, MSG_WINDOW_BLACK_FRAME_YEND, COLOR_BLACK);
+    font_dram_draw(game, EVENT_MSG_XSTRAT, EVENT_MSG_YSTRAT, p->system_member, game->conf.event.id, p->sub_member, COLOR_WHITE);
 }
 
 
@@ -146,8 +171,8 @@ void font_dram_draw(GameWrapper *const game, uint32_t xstart, uint32_t ystart, u
     uint32_t msg_count = 0; // 文字数カウント
     uint32_t line = 0;      // 改行計算用
 
-    fetch_dram_db(game, system_member, file_id, sub_member);
-	game->mapchip.maxwidth	 = SIZE_FONT_SJIS_WIDTH;
+    funcMsg[game->conf.msg.access_func](game, system_member, file_id, sub_member);
+    game->mapchip.maxwidth	 = SIZE_FONT_SJIS_WIDTH;
 	game->mapchip.maxheight	 = SIZE_FONT_SJIS_HEIGHT;
 	game->mapchip.draw_xsize = SIZE_FONT_SJIS_WIDTH;
 	game->mapchip.draw_ysize = SIZE_FONT_SJIS_HEIGHT;
