@@ -108,9 +108,8 @@ bool isNpc_event(GameWrapper *const game)
     SDL_Rect point = {
         .x = game->unit.pos.eventx >> MAPCHIP_SHIFT,
         .y = (game->unit.pos.eventy >> MAPCHIP_SHIFT) * get_mapsize('w'),
+        .h = point.x + point.y,
     };
-
-    point.h = point.x + point.y;
 
 	for (uint32_t i = 0; i < game->npc.number; i++)
     {

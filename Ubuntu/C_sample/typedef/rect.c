@@ -25,7 +25,6 @@ typedef struct sdl_rect
 
 
 /*
- * ver1. 2021/08/17
  * SDL_Rectのメンバに保存されているデータを出力
  */
 void sdl_printf(SDL_Rect *rect, int index)
@@ -38,7 +37,6 @@ void sdl_printf(SDL_Rect *rect, int index)
 
 
 /*
- * ver1. 2021/08/17
  * main関数、
  */
 int main(void)
@@ -53,10 +51,11 @@ int main(void)
 
 	SDL_Rect square = {
 		.x = 1,
-		.y = 1,
+		.y = rect[3].y,
 		.w = 1,
-		.h = 1,
+		.h = square.x + square.y,
 	};
+
 	sdl_printf(&square, 1);
 
 	return 0;
