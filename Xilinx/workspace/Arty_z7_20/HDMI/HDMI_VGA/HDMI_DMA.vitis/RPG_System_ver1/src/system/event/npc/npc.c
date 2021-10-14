@@ -120,6 +120,8 @@ bool isNpc_event(GameWrapper *const game)
             // game->npc.cut_dir[index]      = (game->npc.dir[index] == NPC_DIR_DOWN) ? 0 : game->npc.dir[index] + NPC_DIR_EDGE;
 			game->conf.display.system   = SYSTEM_MSG_WINDOW;
 			game->conf.display.drawtype = DISPLAY_FIELD_CENTER_DRAW;
+            game->conf.msg.type         = MSG_TYPE_NPC;
+            game->conf.msg.access_func  = MSG_FUNC_INDEX_1;
 			return ON_DIRECT;
         }
     }
