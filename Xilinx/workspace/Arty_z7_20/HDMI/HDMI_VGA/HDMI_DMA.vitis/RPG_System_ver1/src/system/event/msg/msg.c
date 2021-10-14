@@ -33,12 +33,12 @@ static const uint32_t (*const funcMsg[])(GameWrapper *const game, uint8_t main_m
 /**
  * @brief  メッセージの種類に対応するデータベースアクセスIDを管理する
  * 
- * @note  データの並び順は以下の通りである
- * MSG_TYPE_UNVARIABLE
- * MSG_TYPE_NPC
- * MSG_TYPE_HERO
- * MSG_TYPE_EVENT
- * MSG_TYPE_STORY
+ * @note  データの並び順と実行関数は以下の通りである
+ * MSG_TYPE_UNVARIABLE fetch_dram_db
+ * MSG_TYPE_NPC fetch_dram_msg
+ * MSG_TYPE_HERO fetch_dram_msg
+ * MSG_TYPE_EVENT fetch_dram_db
+ * MSG_TYPE_STORY fetch_dram_msg
  * 
  * @retval None
  */
@@ -49,11 +49,11 @@ typedef struct msg_type
 } Msg_Type;
 
 static const Msg_Type msg_type[] = {
-    {0, 0,},
+    {0, 0,}, /* 0で固定 */
     {MEMORY_NPC_MSG_ID, 0,},
-    {0, 0,},
+    {0, 0,}, /* まだDBを作成していない */
     {MEMORY_BUILD_MSG_ID, EVENT_MSG_SUB_MSG,},
-    {0, 0,},
+    {0, 0,}, /* まだDBを作成していない */
 };
 
 /*
