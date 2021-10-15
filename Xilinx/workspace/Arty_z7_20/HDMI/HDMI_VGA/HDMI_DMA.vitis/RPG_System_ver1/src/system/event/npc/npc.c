@@ -236,7 +236,7 @@ static void npc_pixel_draw(GameWrapper *const game)
     {
         if (true == isNpc_edge(game, &lsbEdge, &msbEdge, i))
         {
-            msbEdge.w = lsbEdge.w;
+            msbEdge.w = lsbEdge.w;  /* lsbEdgeは元データとして残しておきmsbEdgeで計算処理を行う */
             msbEdge.h = lsbEdge.h;
             npc_side_edge(game, &lsbEdge, &msbEdge, i);
             npc_vertical_edge(game, &lsbEdge, &msbEdge, i);
