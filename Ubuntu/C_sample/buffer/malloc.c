@@ -3,9 +3,9 @@
 
 int main(void)
 {
-    char *heap;
+    int *heap;
 
-    heap = (char *)malloc(sizeof(char) * 20000);
+    heap = (int *)malloc(sizeof(int) * 20000);
 
     if (heap == NULL)
     {
@@ -14,6 +14,7 @@ int main(void)
     }
     heap[19999] = 100;
     printf("heap[19999] = %d\n", heap[19999]);
+    printf("heap = %p\n", heap);
     free(heap);
 
     return 0;
