@@ -150,8 +150,8 @@ static const BitmapDB bitmap_db[] =
     {FILE_ACCESS_EFFECT_BATTLE_REMIRIA_7,       480,    384,   "/Effect/e_remiria_7",       DRAM_EFFECT_REMIRIA_7_ADDR_START,           FILE_BUFFER_SIZE_EFFECT_BATTLE_CONDITION   },
 
     /* フォント */
-    {FILE_ACCESS_FONT_SUUZI_1,                  156,    24,    "/Font/font_suuzi",          DRAM_FONT_SCORE_ADDR_START,             FILE_BUFFER_SIZE_FONT_SCORE             },
-    {FILE_ACCESS_FONT_RESULT,                   624,    96,    "/Font/font_result",         DRAM_FONT_RESULT_ADDR_START,            FILE_BUFFER_SIZE_FONT_RESULT            },
+    {FILE_ACCESS_FONT_SUUZI_1,                  156,     24,    "/Font/font_suuzi",          DRAM_FONT_SCORE_ADDR_START,             FILE_BUFFER_SIZE_FONT_SCORE             },
+    {FILE_ACCESS_FONT_RESULT,                   624,     96,    "/Font/font_result",         DRAM_FONT_RESULT_ADDR_START,            FILE_BUFFER_SIZE_FONT_RESULT            },
     {FILE_ACCESS_FONT_SJIS,                     144,   7901,   "/Font/font_sjis",           DRAM_FONT_SJIS_ADDR_START,              FILE_BUFFER_SIZE_FONT_SJIS              },
     {FILE_ACCESS_FONT_DAMEGE,                   104,     16,   "/Font/font_damege",         DRAM_FONT_DAMEGE_ADDR_START,            FILE_BUFFER_SIZE_FONT_DAMEGE            },
     {FILE_ACCESS_FONT_HEAL,                     104,     16,   "/Font/font_heal",           DRAM_FONT_HEAL_ADDR_START,              FILE_BUFFER_SIZE_FONT_DAMEGE            },
