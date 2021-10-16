@@ -169,7 +169,9 @@ void frame_buffer_other_copy(GameWrapper *const game)
 
 /*
  * ver1. 2021/06/19
- * マップ移動時に現在のバッファのアドレスに描画データを書き込み
+ * マップ移動時や画面停止時のウィンドウ描画処理関数
+ * 
+ * 特定の画面イベント時にはNPCの座標更新及び画像データ更新は行わない
  */
 void nextdraw_ready(GameWrapper *const game)
 {
@@ -178,7 +180,7 @@ void nextdraw_ready(GameWrapper *const game)
     map_share_data(game, &map);
     map_another_data(game, &map, DRAW_TYPE_MAP);
     map_center_draw(game, &map);
-    npc_draw(game);
+    npc_pixel_draw(game);
     player_draw(game);
     map_another_data(game, &map, DRAW_TYPE_OBJ);
     map_center_draw(game, &map);
@@ -205,7 +207,7 @@ static void map_draw(GameWrapper *const game)
             map_share_data(game, &map);
             map_another_data(game, &map, DRAW_TYPE_MAP);
 			state->map_window(game, &map);
-            npc_draw(game);
+            npc_upgrade(game);
             player_draw(game);
             map_another_data(game, &map, DRAW_TYPE_OBJ);
 			state->map_window(game, &map);
