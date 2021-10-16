@@ -443,10 +443,6 @@ uint32_t get_sound_length(uint32_t fileid)
 
 
 /*
- * ver1. 2021/07/15
- * システムbinファイル読み込み処理
- */
-/*
  * rawファイルのRGBデータ部分の読み込み
  *
  * 1. 読み込み指定バイト数と実際に読み込んだバイト数が異なった時、
@@ -457,39 +453,37 @@ uint32_t get_sound_length(uint32_t fileid)
 static bool file_database_load(void)
 {
     FIL fil;
+    const SystemLength *len  = system_length;
     const SystemFile *system = system_file;
+    SystemAddress *address   = &system_address;
+
     uint32_t *p = DRAM_SYSTEM_BIN_ADDR_START;
     uint32_t total_size = 0;
-    int32_t bytes;
+    int32_t bytes, i;
     char heap[12];
 
-    for (uint8_t i = 0; i < FILE_SYSTEM_DB_SIZE; i++, system++)
+    for (i = 0; i < FILE_SYSTEM_DB_SIZE; i++, system++)
     {
         filename_update(filename, system->filename);
 
-#ifdef MYDEBUG
         if (FR_OK != f_open(&fil, filename, FA_READ))
         {
             xil_printf("Init Open Error %s\r\n", filename);
             return false;
         }
-        system_address_update(i, p);
+
+        // system_address_update(i, p);
+        address->start_adr[i] = p;
         xil_printf("Init File %s, 0x%8x ~ ", filename, (uint32_t)p);
-#else
-        f_open(&fil, filename, FA_READ);
-        system_address_update(i, p);
-#endif
+
         while (1)
         {
-#ifdef MYDEBUG
             if (FR_OK != f_read(&fil, heap, RAW_INIT_FILE_READ_SIZE, (UINT *)&bytes))
             {
                 msg_fprintf("Error Database Init File", filename, __func__, __LINE__);
                 return false;
             }
-#else
-            f_read(&fil, heap, RAW_INIT_FILE_READ_SIZE, (UINT *)&bytes);
-#endif
+
             if (bytes != 0)
             {
                 *p = str_hex(heap, 8);
@@ -501,10 +495,38 @@ static bool file_database_load(void)
                 break;
             }
         }
+
         f_close(&fil);
-#ifdef MYDEBUG
         xil_printf("0x%8x\r\n", (uint32_t)p);
-#endif
+    }
+
+    p = address->start_adr[i-1]; /* byte.rawの開始アドレス取得 */
+
+    for (i = 0; i < FILE_SYSTEM_LENGTH_SIZE; i++, len++)
+    {
+        address->p[i] = p;
+
+        if (len->member_len == MEMBER_LEN_VARIABLE)
+        {
+            uint32_t *event_adr = address->start_adr[i];
+
+            for (uint32_t j = 0; j < len->id_len; j++)  /* メンバの列が可変の場合のアドレス保存方法 */
+            {
+                event_adr++;
+                p++;
+                uint32_t membe_len = *event_adr + 1; /* ID + 文字列配列の要素カウント数 + 文字列メンバ列数 */
+
+                for (uint8_t k = 0; k < membe_len; k++)
+                {
+                    event_adr = event_adr + *p; /* 次の行までアドレスを進める */
+                    p++;
+                }
+            }
+        }
+        else
+        {
+            p = p + (len->id_len * len->member_len); /* メンバの列が固定の場合のアドレス保存方法 */
+        }
     }
 
     Xil_DCacheFlushRange(DRAM_SYSTEM_BIN_ADDR_BASE, total_size << 2);
@@ -524,13 +546,30 @@ static void system_address_update(uint32_t id, uint32_t *p)
 
     system->start_adr[id] = p;
 
-    if (id == (FILE_ACCESS_TOTAL_BYTE - FILE_SYSTEM_ID_START - 1))  //ファイルIDが最後まで読み込まれたら情報を書き出す
+    if (id != (FILE_ACCESS_TOTAL_BYTE - FILE_SYSTEM_ID_START - 1))  //ファイルIDが最後まで読み込まれたら情報を書き出す
     {
+        return;
+    }
 
-        for (uint8_t i = 0; i < FILE_SYSTEM_LENGTH_SIZE; i++, len++)
+    for (uint8_t i = 0; i < FILE_SYSTEM_LENGTH_SIZE; i++, len++)
+    {
+        system->p[i] = p;
+
+        if (len->member_len == MEMBER_LEN_VARIABLE)
         {
-            system->p[i] = p;
-            p = p + (len->id_len * len->member_len);
+            uint32_t *event_adr = system->start_adr[i];
+
+            for (uint32_t j = 0; j < len->id_len; j++)  /* メンバの列が可変の場合のアドレス保存方法 */
+            {
+                event_adr++;
+                uint32_t membe_len = *event_adr + 3; /* ID + 文字列配列の要素カウント数 + 文字列メンバ列数 */
+                event_adr = event_adr + membe_len; /* 次の行までアドレスを進める */
+                p = p + membe_len; /* 次の行までアドレスを進める */
+            }
+        }
+        else
+        {
+            p = p + (len->id_len * len->member_len); /* メンバの列が固定の場合のアドレス保存方法 */
         }
     }
 }
