@@ -65,17 +65,19 @@ void npc_msg_write(FILE *fp, FILE *byte)
 			{
 				fprintf(fp, "0x%08x,\n", count);
 				fprintf(byte, "0x%08x,\n", 1);
+				printf("count = %d\n", count);
 				break;
 			}
 		}
 
 		for (uint32_t j = 0; j < count; j++)
 		{
+			// printf("str = %d\n", sjis_write(fp, p->msg_event[j]));
 			fprintf(byte, "0x%08x,\n", sjis_write(fp, p->msg_event[j]));
 		}
 	}
 
-	printf("NPC MSG TOTAL NUMBER = %ld\n", NPC_MSG_DB_SIZE);
+	error_print(NPC_EVENT_END_ID, NPC_MSG_DB_SIZE, "NPC MSG TOTAL NUMBER");
 }
 
 
