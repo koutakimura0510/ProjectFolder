@@ -60,6 +60,11 @@ typedef enum
     MEMORY_BUILD_EVENT_ID,      //発生イベント管理ファイル
     MEMORY_BUILD_SUBMAP_ID,     //サブマップイベント管理ファイル
     MEMORY_BUILD_MSG_ID,        //イベントのメッセージファイル
+    MEMORY_NPC_MSG_ID,          //可変式のイベントメッセージを管理するファイル
+    MEMORY_NPC_MAP_ID,          //npcの描画番号
+    MEMORY_NPC_PATTERN_ID,      //npcの行動パターンファイル
+    MEMORY_NPC_EVENT_ID,        //npcのイベントデータファイル
+    MEMORY_NPC_BITMAP_ID,       //npcの画像データファイル
     MEMORY_ITEM_ID,             //アイテムファイル
     MEMORY_WEAPON_ID,           //武器ファイル
     MEMORY_ARMOR_ID,            //防具ファイル
@@ -84,11 +89,6 @@ typedef enum
     MEMORY_DTM_ID,              //音源の演奏データファイル
     MEMORY_ITEM_ENCHANT_ID,     //アイテムのステータス操作データファイル
     MEMORY_ITEM_CONDITION_ID,   //アイテムの状態異常の効果データファイル
-    MEMORY_NPC_MAP_ID,          //npcの描画番号
-    MEMORY_NPC_PATTERN_ID,      //npcの行動パターンファイル
-    MEMORY_NPC_EVENT_ID,        //npcのイベントデータファイル
-    MEMORY_NPC_BITMAP_ID,       //npcの画像データファイル
-    MEMORY_NPC_MSG_ID,          //可変式のイベントメッセージを管理するファイル
     MEMORY_SIN_ID,              //sinのデータテーブル 0~360の計361個ある
     MEMORY_COS_ID,              //cosのデータテーブル 0~360の計361個ある
     MEMORY_TYPE_STR_ID,         //属性の文字描画を管理するファイル
