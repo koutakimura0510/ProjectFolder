@@ -128,7 +128,10 @@ static void cmd_menu_main(GameWrapper *const game)
 {
 	switch (game->cmd.cursol.y)
 	{
-	case COMMAND_MENU_TALK:
+	case COMMAND_MENU_TALK: /* 仲間のメッセージイベントデータと表示方法設定 */
+        game->conf.msg.type         = MSG_TYPE_EVENT;
+        game->conf.msg.access_func  = MSG_FUNC_INDEX_0;
+        game->conf.event.id = DIRECT_ROMEN_ID_KANBAN3_1;
 		game->conf.display.sub_state = MENU_TALK_WINDOW;
 		break;
 

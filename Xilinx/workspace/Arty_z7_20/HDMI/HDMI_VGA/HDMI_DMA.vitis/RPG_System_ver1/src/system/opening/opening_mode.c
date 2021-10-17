@@ -14,6 +14,7 @@
  */
 #include "../wrapper/game_wrapper.h"
 #include "opening.h"
+#include "xil_cache.h"
 
 #ifdef MYDEBUG
 	// #include "xil_io.h"
@@ -409,7 +410,7 @@ static void event_initialize(GameWrapper *const game)
 {
 	//TODO とりあえず現状は0クリア
 	uint32_t *p = DRAM_FLAG_EVENT_ADDR_START;
-	uint32_t total_event_num = NPC_EVENT_END_ID;
+	uint32_t total_event_num = NPC_EVENT_END_ID + 1;
 
 	for (uint32_t i = 0; i < total_event_num; i++, p++)
 	{

@@ -312,6 +312,11 @@ static const SystemFile system_file[] =
     {FILE_ACCESS_BUILD_EVENT,       "/sys/build_event"          },
     {FILE_ACCESS_BUILD_SUBMAP,      "/sys/build_submap"         },
     {FILE_ACCESS_BUILD_MSG,         "/sys/build_msg"            },
+    {FILE_ACCESS_NPC_MSG,           "/sys/npc_msg"              },
+    {FILE_ACCESS_NPC_MAP,           "/sys/npc_map"              },
+    {FILE_ACCESS_NPC_PATTERN,       "/sys/npc_pattern"          },
+    {FILE_ACCESS_NPC_EVENT,         "/sys/npc_event"            },
+    {FILE_ACCESS_NPC_BITMAP,        "/sys/npc_bitmap"           },
     {FILE_ACCESS_ITEM_BATTLE,       "/sys/item"                 },
     {FILE_ACCESS_ITEM_WEAPON,       "/sys/weapon"               },
     {FILE_ACCESS_ITEM_ARMOR,        "/sys/armor"                },
@@ -336,11 +341,6 @@ static const SystemFile system_file[] =
     {FILE_ACCESS_SOUND,             "/sys/dtm"                  },
     {FILE_ACCESS_ITEM_ENCHANT,      "/sys/item_enchant"         },
     {FILE_ACCESS_ITEM_CONDITION,    "/sys/item_condition"       },
-    {FILE_ACCESS_NPC_MAP,           "/sys/npc_map"              },
-    {FILE_ACCESS_NPC_PATTERN,       "/sys/npc_pattern"          },
-    {FILE_ACCESS_NPC_EVENT,         "/sys/npc_event"            },
-    {FILE_ACCESS_NPC_BITMAP,        "/sys/npc_bitmap"           },
-    {FILE_ACCESS_NPC_MSG,           "/sys/npc_msg"              },
     {FILE_ACCESS_SIN_TABLE,         "/sys/sin"                  },
     {FILE_ACCESS_COS_TABLE,         "/sys/cos"                  },
     {FILE_ACCESS_TYPE_STR,          "/sys/type_bit"             },
@@ -348,13 +348,18 @@ static const SystemFile system_file[] =
 };
 
 
-/*
- * ver1. 2021/07/15
- * システム構造体の各メンバの長さを管理
- *
- * system_member MEMORYから開始される定数を指定
- * id_len 構造体の要素数(行)の数を指定
- * member_len メンバーの最大数(列)を指定
+/**
+ * @brief  システム構造体の各メンバの長さを管理
+ * 
+ * @note   この構造体のデータ利用方法
+ * DRAMに保存するファイルデータの先頭アドレスを上記のSystemAdress構造体に順番に保存していく。
+ * その先頭アドレスの計算方法にid_lenとmember_len利用する。
+ * もし、メンバが可変のMEMBER_LEN_VARIABLEであれば、アドレスを保存していく関数内で決められたアドレスの算出方法で保存する
+ * 
+ * @param  system_member MEMORYから開始される定数を指定
+ * @param  id_len 構造体の要素数(行)の数を指定
+ * @param  member_len メンバーの最大数(列)を指定
+ * @retval None
  */
 typedef struct
 {
@@ -376,6 +381,11 @@ static const SystemLength system_length[] =
     {MEMORY_BUILD_EVENT_ID,     DIRECT_BUILD_END_EVENT,                 BUILD_EVENT_MEMBER_NUMBER           },
     {MEMORY_BUILD_SUBMAP_ID,    BUILD_SUBMAP_COUNT_DB_LINE,             BUILD_SUBMAP_MEMBER_NUMBER          },
     {MEMORY_BUILD_MSG_ID,       MSG_TOTAL_ID_END,                       EVENT_MSG_MEMBER_NUMBER             },
+    {MEMORY_NPC_MSG_ID,         NPC_EVENT_END_ID,                       MEMBER_LEN_VARIABLE                 },
+    {MEMORY_NPC_MAP_ID,         MAP_NAME_ID_END,                        NPC_MAX_DRAW_NUM + 1                },
+    {MEMORY_NPC_PATTERN_ID,     NPC_PATTERN_DB_COL,                     NPC_SUB_MEMBER_PATTERN_NUMBER       },
+    {MEMORY_NPC_EVENT_ID,       NPC_PATTERN_DB_COL,                     NPC_SUB_MEMBER_EVENT_NUMBER         },
+    {MEMORY_NPC_BITMAP_ID,      NPC_ID_END,                             NPC_SUB_MEMBER_BITMAP_NUMBER        },
     {MEMORY_ITEM_ID,            ITEM_NAME_ID_END,                       ITEM_MEMBER_NUMBER                  },
     {MEMORY_WEAPON_ID,          WEAPON_NAME_ID_END,                     WEAPON_MEMBER_NUMBER                },
     {MEMORY_ARMOR_ID,           ARMOR_NAME_ID_END,                      ARMOR_MEMBER_NUMBER                 },
@@ -400,11 +410,6 @@ static const SystemLength system_length[] =
     {MEMORY_DTM_ID,             SOUND_ID_END,                           DTM_SUB_MEMBER_NUMBER               },
     {MEMORY_ITEM_ENCHANT_ID,    ENCHANT_ITEM_END,                       ITEM_SUB_MEMBER_ENCHANT_NUMBER      },
     {MEMORY_ITEM_CONDITION_ID,  CONDITION_ITEM_END,                     ITEM_SUB_MEMBER_CONDITION_NUMBER    },
-    {MEMORY_NPC_MAP_ID,         MAP_NAME_ID_END,                        NPC_MAX_DRAW_NUM + 1                },
-    {MEMORY_NPC_PATTERN_ID,     NPC_PATTERN_DB_COL,                     NPC_SUB_MEMBER_PATTERN_NUMBER       },
-    {MEMORY_NPC_EVENT_ID,       NPC_PATTERN_DB_COL,                     NPC_SUB_MEMBER_EVENT_NUMBER         },
-    {MEMORY_NPC_BITMAP_ID,      NPC_ID_END,                             NPC_SUB_MEMBER_BITMAP_NUMBER        },
-    {MEMORY_NPC_MSG_ID,         NPC_EVENT_END_ID,                       MEMBER_LEN_VARIABLE                 },
     {MEMORY_SIN_ID,             SIN_TABLE_MAX,                          SIN_SUB_MEMBER_NUMBER               },
     {MEMORY_COS_ID,             COS_TABLE_MAX,                          COS_SUB_MEMBER_NUMBER               },
     {MEMORY_TYPE_STR_ID,        UNIT_RES_SIZE,                          TYPE_STR_SUB_MEMBER_NUMBER          },

@@ -12,10 +12,9 @@
 #include "xil_cache.h"
 
 
-/* npc_draw関数内で実行 */
+/* npc_upgrade関数内で実行 */
 static void npc_position_update(GameWrapper *const game);
 static void npc_mapchip_update(GameWrapper *const game);
-static void npc_pixel_draw(GameWrapper *const game);
 
 /* 次の行動パターンを決定 */
 static void npc_random_update(GameWrapper *const game, uint8_t index);
@@ -51,7 +50,11 @@ static const NpcPosition npc_position = {
 
 /**
  * @brief  DRAMに保存されているNPCのデータをラッパー構造体に保存
- * @note   構造体に保存しておくと、DRAMアクセスの時間を減らせるため作った
+ * @note
+ * 構造体に保存しておくと、DRAMアクセスの時間を減らせるため作った
+ * 一つのマップに最大15体のNPCが配置可能でNPC番号0はNPC連番IDの終了を意味している。
+ * 
+ * 
  * @retval None
  */
 void npc_config(GameWrapper *const game)
@@ -82,7 +85,7 @@ void npc_config(GameWrapper *const game)
     int32_t xsize = get_mapsize('w');
     int32_t size  = xsize * get_mapsize('h');
 
-    for (uint8_t j = 0; j < game->npc.number; j++)  /* 初期位置のインデックスを保存 */
+    for (uint8_t j = 0; j < game->npc.number; j++)  /* NPCの初期位置のインデックスを一体ずつ保存 */
     {
         uint32_t *buffer = DRAM_MAPDATA_NPC_ADDR_START;
 
@@ -106,7 +109,8 @@ void npc_config(GameWrapper *const game)
  * @note
  * プレイヤーのイベント座標メンバを計算しインデックスを抽出する。
  * NPCの現在のインデックスと一致したらメッセージイベントを発生させる
- * @retval 
+ * 
+ * @retval npcとイベントが発生したらtrue
  */
 bool isNpc_event(GameWrapper *const game)
 {
@@ -115,17 +119,19 @@ bool isNpc_event(GameWrapper *const game)
         .y = (game->unit.pos.eventy >> MAPCHIP_SHIFT) * get_mapsize('w'),
         .h = point.x + point.y,
     };
-
-	for (uint32_t i = 0; i < game->npc.number; i++)
+    
+    for (uint32_t i = 0; i < game->npc.number; i++)
     {
         if (game->npc.dram_index[i] == point.h)
         {
             // game->npc.dir[index]          = NPC_DIR_EDGE * rand_number;
-            game->npc.cut_dir[index]    = npc_dir_cut(game);
+            game->npc.cut_dir[i]        = npc_dir_cut(game);
+            game->conf.event.id         = game->npc.map_npcid[i];
             game->conf.display.system   = SYSTEM_MSG_WINDOW;
             game->conf.display.drawtype = DISPLAY_FIELD_CENTER_DRAW;
             game->conf.msg.type         = MSG_TYPE_NPC;
             game->conf.msg.access_func  = MSG_FUNC_INDEX_1;
+            npc_mapchip_update(game);
 			return ON_DIRECT;
         }
     }
@@ -144,11 +150,59 @@ bool isNpc_event(GameWrapper *const game)
  * 
  * @retval None
  */
-void npc_draw(GameWrapper *const game)
+void npc_upgrade(GameWrapper *const game)
 {
     npc_position_update(game);
     npc_mapchip_update(game);
     npc_pixel_draw(game);
+}
+
+
+/**
+ * @brief  npcとキャラクターの現在座標から描画幅の設定をしNPCの描画データ設定を行う
+ * @note   
+ * @retval None
+ */
+void npc_pixel_draw(GameWrapper *const game)
+{
+    SDL_Rect lsbEdge = {
+        /* キャラクターの座標から表示幅の端の座標を計算 */
+        .x = game->unit.pos.unitx + game->unit.pos.fieldx - VIDEO_WIDTH_HALF,
+        .y = game->unit.pos.unity + game->unit.pos.fieldy - VIDEO_HEIGHT_HALF_POS,
+
+        /* キャラクターの座標からNPCの描画調整座標を計算 */
+        .w = (game->unit.pos.fieldx < VIDEO_WIDTH_HALF) ? XRGB((VIDEO_WIDTH_HALF - (VIDEO_WIDTH_HALF - game->unit.pos.fieldx))) : XRGB((VIDEO_WIDTH_HALF + (game->unit.pos.fieldx - VIDEO_WIDTH_HALF))),
+        .h = YRGB(game->unit.pos.fieldy),
+    };
+
+    SDL_Rect msbEdge = {
+        /* キャラクターの座標から表示幅の端の座標を計算 */
+        .x = game->unit.pos.unitx + game->unit.pos.fieldx + VIDEO_WIDTH_HALF,
+        .y = game->unit.pos.unity + game->unit.pos.fieldy + VIDEO_HEIGHT_HALF_POS,
+    };
+
+    game->mapchip.frame_size = VIDEO_WIDTH;
+    game->mapchip.alpha		 = COLOR_ALPHA_MAX;
+
+    /* もし、NPC毎のに使用する画像データが異なればfor文内に移動する */
+    game->mapchip.srcin      = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_SRCIN);
+    game->mapchip.maxwidth	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_XSIZE);
+    game->mapchip.maxheight	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_YSIZE);
+
+    for (uint8_t i = 0; i < game->npc.number; i++)
+    {
+        if (true == isNpc_edge(game, &lsbEdge, &msbEdge, i))
+        {
+            msbEdge.w = lsbEdge.w;  /* lsbEdgeは元データとして残しておきmsbEdgeで計算処理を行う */
+            msbEdge.h = lsbEdge.h;
+            npc_side_edge(game, &lsbEdge, &msbEdge, i);
+            npc_vertical_edge(game, &lsbEdge, &msbEdge, i);
+            game->mapchip.id     = game->npc.mapchip_id[i];
+            game->mapchip.dstin  = game->conf.work.adr + XRGB(game->npc.xpos[i]) + YRGB(game->npc.ypos[i]) - msbEdge.w - msbEdge.h;
+            game->mapchip.dstout = game->mapchip.dstin;
+            png_mapchip(game);
+        }
+    }
 }
 
 
@@ -197,54 +251,6 @@ static void npc_mapchip_update(GameWrapper *const game)
         }
 
         game->npc.mapchip_id[i] = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[i], NPC_SUB_MEMBER_BITMAP_MAPCHIPID) + game->npc.cut_pos[i] + game->npc.cut_dir[i];
-    }
-}
-
-
-/**
- * @brief  npcとキャラクターの現在座標から描画幅の設定をしNPCの描画データ設定を行う
- * @note   
- * @retval None
- */
-static void npc_pixel_draw(GameWrapper *const game)
-{
-    SDL_Rect lsbEdge = {
-        /* キャラクターの座標から表示幅の端の座標を計算 */
-        .x = game->unit.pos.unitx + game->unit.pos.fieldx - VIDEO_WIDTH_HALF,
-        .y = game->unit.pos.unity + game->unit.pos.fieldy - VIDEO_HEIGHT_HALF_POS,
-
-        /* キャラクターの座標からNPCの描画調整座標を計算 */
-        .w = (game->unit.pos.fieldx < VIDEO_WIDTH_HALF) ? XRGB((VIDEO_WIDTH_HALF - (VIDEO_WIDTH_HALF - game->unit.pos.fieldx))) : XRGB((VIDEO_WIDTH_HALF + (game->unit.pos.fieldx - VIDEO_WIDTH_HALF))),
-        .h = YRGB(game->unit.pos.fieldy),
-    };
-
-    SDL_Rect msbEdge = {
-        /* キャラクターの座標から表示幅の端の座標を計算 */
-        .x = game->unit.pos.unitx + game->unit.pos.fieldx + VIDEO_WIDTH_HALF,
-        .y = game->unit.pos.unity + game->unit.pos.fieldy + VIDEO_HEIGHT_HALF_POS,
-    };
-
-    game->mapchip.frame_size = VIDEO_WIDTH;
-    game->mapchip.alpha		 = COLOR_ALPHA_MAX;
-
-    /* もし、NPC毎のに使用する画像データが異なればfor文内に移動する */
-    game->mapchip.srcin      = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_SRCIN);
-    game->mapchip.maxwidth	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_XSIZE);
-    game->mapchip.maxheight	 = fetch_dram_db(game, MEMORY_NPC_BITMAP_ID, game->npc.id[0], NPC_SUB_MEMBER_BITMAP_YSIZE);
-
-    for (uint8_t i = 0; i < game->npc.number; i++)
-    {
-        if (true == isNpc_edge(game, &lsbEdge, &msbEdge, i))
-        {
-            msbEdge.w = lsbEdge.w;  /* lsbEdgeは元データとして残しておきmsbEdgeで計算処理を行う */
-            msbEdge.h = lsbEdge.h;
-            npc_side_edge(game, &lsbEdge, &msbEdge, i);
-            npc_vertical_edge(game, &lsbEdge, &msbEdge, i);
-            game->mapchip.id     = game->npc.mapchip_id[i];
-            game->mapchip.dstin  = game->conf.work.adr + XRGB(game->npc.xpos[i]) + YRGB(game->npc.ypos[i]) - msbEdge.w - msbEdge.h;
-            game->mapchip.dstout = game->mapchip.dstin;
-            png_mapchip(game);
-        }
     }
 }
 
@@ -455,24 +461,29 @@ static void npc_random_update(GameWrapper *const game, uint8_t index)
     if (sign != 0)
     {
         uint32_t *buffer = DRAM_MAPDATA_NPC_ADDR_START;
+        int8_t pos_adjust = (range_bit == 0) ? sign : get_mapsize('w') * sign;
 
         /* npcの状態・向き・座標データ更新 */
-        game->npc.dir[index]          = NPC_DIR_EDGE * rand_number;
-        game->npc.cut_dir[index]      = (game->npc.dir[index] == NPC_DIR_DOWN) ? NPC_DIR_CUT_DOWN : game->npc.dir[index] + NPC_DIR_EDGE;
-        game->npc.active_state[index] = NPC_ACTIVE_ANIMATION;
-        game->npc.map_pos[range_bit][index] += sign;
+        game->npc.dir[index]     = NPC_DIR_EDGE * rand_number;
+        game->npc.cut_dir[index] = (game->npc.dir[index] == NPC_DIR_DOWN) ? NPC_DIR_CUT_DOWN : game->npc.dir[index] + NPC_DIR_EDGE;
 
-        /* 残り移動数の重みづけを行う (移動量 x 移動回数) = 32 / (移動量x / 2) */
-        game->npc.move_weight[index] = MAPCHIP_WIDTH >> (game->unit.pos.animation_pixel_x >> 1);
+        if ((game->npc.dram_index[index] + pos_adjust) != get_unit_index(game, DIR_WAIT))
+        {
+            game->npc.active_state[index] = NPC_ACTIVE_ANIMATION;
+            game->npc.map_pos[range_bit][index] += sign;
 
-        /* npcマップの移動前の座標を初期化 */
-        buffer[game->npc.dram_index[index]] = 0;
-        Xil_DCacheFlushRange((uint32_t)(buffer + game->npc.dram_index[index]), 4);
+            /* 残り移動数の重みづけを行う (移動量 x 移動回数) = 32 / (移動量x / 2) */
+            game->npc.move_weight[index] = MAPCHIP_WIDTH >> (game->unit.pos.animation_pixel_x >> 1);
 
-        /* 移動後の座標に番号を保存 */
-        game->npc.dram_index[index] += (range_bit == 0) ? sign : get_mapsize('w') * sign;
-        buffer[game->npc.dram_index[index]] = game->npc.map_npcid[index];
-        Xil_DCacheFlushRange((uint32_t)(buffer + game->npc.dram_index[index]), 4);
+            /* npcマップの移動前の座標を初期化 */
+            buffer[game->npc.dram_index[index]] = 0;
+            Xil_DCacheFlushRange((uint32_t)(buffer + game->npc.dram_index[index]), 4);
+
+            /* 移動後の座標に番号を保存 */
+            game->npc.dram_index[index] += pos_adjust;
+            buffer[game->npc.dram_index[index]] = game->npc.map_npcid[index];
+            Xil_DCacheFlushRange((uint32_t)(buffer + game->npc.dram_index[index]), 4);
+        }
     }
 }
 
@@ -484,7 +495,7 @@ static void npc_random_update(GameWrapper *const game, uint8_t index)
  */
 static uint8_t npc_dir_cut(GameWrapper *const game)
 {
-    switch (game->unit.pos.unitdir)
+    switch (game->unit.pos.old_key)
     {
     case DIR_RIGHT:
         return NPC_DIR_CUT_LEFT;

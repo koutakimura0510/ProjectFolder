@@ -31,7 +31,7 @@ sin_cos.h:43:6:sin_write	48	static
 sin_cos.h:60:6:cos_write	48	static
 build_db.h:97:6:build_config_write	48	static
 build_db.h:130:6:build_file_write	48	static
-event_map_move_db.h:100:6:map_all_write	48	static
+event_map_move_db.h:104:6:map_all_write	48	static
 event_world_direct_db.h:94:6:world_direct_write	48	static
 event_world_direct_db.h:120:6:build_loop_write	48	static
 npc_db.h:151:6:npc_map_write	64	static

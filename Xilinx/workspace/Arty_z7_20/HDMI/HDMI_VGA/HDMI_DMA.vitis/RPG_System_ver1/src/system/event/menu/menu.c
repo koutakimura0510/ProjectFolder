@@ -78,6 +78,8 @@ void menu_window_wrapper(GameWrapper *const game)
     case MENU_SELECT_END:
         game->conf.display.system    = SYSTEM_MAP_DEFAULT_WINDOW;
         game->conf.display.drawtype  = DISPLAY_FIELD_CENTER_DRAW;
+        game->conf.msg.type          = MSG_TYPE_UNVARIABLE;
+		game->conf.msg.access_func   = MSG_FUNC_INDEX_0;
         break;
 
     default:
@@ -110,7 +112,6 @@ static void menu_select_window(GameWrapper *const game)
  */
 static void menu_talk_window(GameWrapper *const game)
 {
-    game->conf.event.id = DIRECT_ROMEN_ID_KANBAN3_1;
     event_msg_draw(game);
 }
 

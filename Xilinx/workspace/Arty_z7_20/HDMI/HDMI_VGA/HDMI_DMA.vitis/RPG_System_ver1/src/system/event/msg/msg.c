@@ -24,7 +24,7 @@
  * @param  fetch_dram_msg: メッセージ内容が変わる場合の関数処理
  * @retval 
  */
-static const uint32_t (*const funcMsg[])(GameWrapper *const game, uint8_t main_member, uint32_t sub_id, uint32_t sub_member) {
+static const uint32_t (*const funcMsg[])(GameWrapper *const game, uint8_t main_member, uint32_t sub_id, uint32_t sub_member) = {
     fetch_dram_db,
     fetch_dram_msg,
 };
@@ -172,7 +172,6 @@ void font_dram_draw(GameWrapper *const game, uint32_t xstart, uint32_t ystart, u
     uint32_t line = 0;      // 改行計算用
 
     funcMsg[game->conf.msg.access_func](game, system_member, file_id, sub_member);
-
 
     game->mapchip.maxwidth	 = SIZE_FONT_SJIS_WIDTH;
 	game->mapchip.maxheight	 = SIZE_FONT_SJIS_HEIGHT;

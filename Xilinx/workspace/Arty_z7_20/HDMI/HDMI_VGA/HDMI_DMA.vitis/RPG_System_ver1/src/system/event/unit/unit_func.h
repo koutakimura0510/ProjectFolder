@@ -11,6 +11,7 @@ void player_frame_draw(GameWrapper *const game, uint32_t pos);
 void direction_update_key(GameWrapper *const game, uint8_t sw);
 void unit_pos_update(GameWrapper *const game);
 void unit_action_update(GameWrapper *const game, uint8_t sw);
+int32_t get_unit_index(GameWrapper *const game, uint8_t dir);
 
 
 #endif
