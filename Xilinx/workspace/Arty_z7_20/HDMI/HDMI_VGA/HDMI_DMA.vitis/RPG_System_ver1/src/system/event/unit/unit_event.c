@@ -189,6 +189,19 @@ void direction_update_key(GameWrapper *const game, uint8_t sw)
  */
 void unit_pos_update(GameWrapper *const game)
 {
+    if (game->unit.pos.anime_cnt == 0)
+    {
+        int32_t pos = get_unit_index(game, game->unit.pos.unitdir);
+
+        for (uint8_t i = 0; i < game->npc.number; i++)
+        {
+            if (game->npc.dram_index[i] == pos)
+            {
+                return;
+            }
+        }
+    }
+
     switch (game->unit.pos.unitdir)
     {
     case DIR_RIGHT:
@@ -222,6 +235,47 @@ void unit_pos_update(GameWrapper *const game)
             game->conf.display.drawtype = DISPLAY_FIELD_CENTER_DRAW;
         }
         // game->unit.pos.anime_cnt &= ANIMATION_MAX_PIXEL_MASK;
+    }
+}
+
+
+/**
+ * @brief  プレイヤーの現在座標から配列にアクセスするためのインデックスを取得する
+ * @note   
+ * @param  dir: インデックス調整用のプレイヤーの向きを指定する
+ * DIR_RIGHT 右方向に移動した場合の調整を行う
+ * DIR_LEFT 左方向に移動した場合の調整を行う
+ * DIR_UP 上方向に移動した場合の調整を行う
+ * DIR_DOWN 下方向に移動した場合の調整を行う
+ * DIR_WAIT 向きによる調整をしない
+ * 
+ * @retval None
+ */
+int32_t get_unit_index(GameWrapper *const game, uint8_t dir)
+{
+    /* キャラクターの現在座標からインデックス番号を計算 */
+    SDL_Rect unit_pos = {
+        .x = (game->unit.pos.unitx + game->unit.pos.fieldx) >> MAPCHIP_SHIFT,
+        .y = ((game->unit.pos.unity + game->unit.pos.fieldy) >> MAPCHIP_SHIFT) * get_mapsize('w'),
+        .h = unit_pos.x + unit_pos.y,
+    };
+
+    switch (dir)
+    {
+    case DIR_RIGHT:
+        return unit_pos.h + 1;
+
+    case DIR_LEFT:
+        return unit_pos.h - 1;
+
+    case DIR_UP:
+        return unit_pos.h - get_mapsize('w');
+
+    case DIR_DOWN:
+        return unit_pos.h + get_mapsize('w');
+
+    default:
+        return unit_pos.h;
     }
 }
 

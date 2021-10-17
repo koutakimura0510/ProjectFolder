@@ -57,7 +57,6 @@ static void mapsize_db_write(MapSize_DB *p, uint32_t *wbuff);
 static uint32_t str_hex(char *str, uint8_t slen);
 static const SoundDB *search_sound_db(uint32_t fileid);
 static bool file_database_load(void);
-static void system_address_update(uint32_t id, uint32_t *p);
 static void filename_update(char *file, const char *path);
 
 
@@ -442,13 +441,10 @@ uint32_t get_sound_length(uint32_t fileid)
 }
 
 
-/*
- * rawファイルのRGBデータ部分の読み込み
- *
- * 1. 読み込み指定バイト数と実際に読み込んだバイト数が異なった時、
- *    ファイルの末尾まで読み込んだと判断し、ループを抜ける
- * 2. ARGB16進数データを文字列として読み込むため、4byteデータに変換を行う
- * 3. マップチップデータは連番としてデータの保存を行うため、前回のアドレスを保存しておく
+/**
+ * @brief  起動時にファイルに保存されているデータベース情報を読み込む
+ * @note   
+ * @retval 
  */
 static bool file_database_load(void)
 {
@@ -458,8 +454,9 @@ static bool file_database_load(void)
     SystemAddress *address   = &system_address;
 
     uint32_t *p = DRAM_SYSTEM_BIN_ADDR_START;
-    uint32_t total_size = 0;
-    int32_t bytes, i;
+    uint32_t total_size = 0; /* データを読み込んだ回数をカウント */
+    int32_t bytes;
+    int32_t i;
     char heap[12];
 
     for (i = 0; i < FILE_SYSTEM_DB_SIZE; i++, system++)
@@ -472,7 +469,6 @@ static bool file_database_load(void)
             return false;
         }
 
-        // system_address_update(i, p);
         address->start_adr[i] = p;
         xil_printf("Init File %s, 0x%8x ~ ", filename, (uint32_t)p);
 
@@ -500,11 +496,12 @@ static bool file_database_load(void)
         xil_printf("0x%8x\r\n", (uint32_t)p);
     }
 
+    Xil_DCacheFlushRange(DRAM_SYSTEM_BIN_ADDR_BASE, total_size << 2);
     p = address->start_adr[i-1]; /* byte.rawの開始アドレス取得 */
 
-    for (i = 0; i < FILE_SYSTEM_LENGTH_SIZE; i++, len++)
+    for (i = 0; i < FILE_SYSTEM_LENGTH_SIZE; i++, len++) /* 各ファイルの行 * 列の最大数を保存していく */
     {
-        address->p[i] = p;
+        address->p[i] = p; /* byte.rawに保存されている各ファイルデータの先頭アドレスを保存 */
 
         if (len->member_len == MEMBER_LEN_VARIABLE)
         {
@@ -529,49 +526,8 @@ static bool file_database_load(void)
         }
     }
 
-    Xil_DCacheFlushRange(DRAM_SYSTEM_BIN_ADDR_BASE, total_size << 2);
 
     return true;
-}
-
-
-/*
- * ver1. 2021/07/15
- * システムデータの各メンバのアクセスアドレスを保存する
- */
-static void system_address_update(uint32_t id, uint32_t *p)
-{
-    SystemAddress *system = &system_address;
-    const SystemLength *len = system_length;
-
-    system->start_adr[id] = p;
-
-    if (id != (FILE_ACCESS_TOTAL_BYTE - FILE_SYSTEM_ID_START - 1))  //ファイルIDが最後まで読み込まれたら情報を書き出す
-    {
-        return;
-    }
-
-    for (uint8_t i = 0; i < FILE_SYSTEM_LENGTH_SIZE; i++, len++)
-    {
-        system->p[i] = p;
-
-        if (len->member_len == MEMBER_LEN_VARIABLE)
-        {
-            uint32_t *event_adr = system->start_adr[i];
-
-            for (uint32_t j = 0; j < len->id_len; j++)  /* メンバの列が可変の場合のアドレス保存方法 */
-            {
-                event_adr++;
-                uint32_t membe_len = *event_adr + 3; /* ID + 文字列配列の要素カウント数 + 文字列メンバ列数 */
-                event_adr = event_adr + membe_len; /* 次の行までアドレスを進める */
-                p = p + membe_len; /* 次の行までアドレスを進める */
-            }
-        }
-        else
-        {
-            p = p + (len->id_len * len->member_len); /* メンバの列が固定の場合のアドレス保存方法 */
-        }
-    }
 }
 
 

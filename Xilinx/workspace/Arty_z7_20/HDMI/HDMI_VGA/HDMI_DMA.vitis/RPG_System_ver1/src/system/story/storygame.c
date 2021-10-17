@@ -88,7 +88,7 @@ static void system_standerd_window(GameWrapper *const game)
 
 	if ((npc == NON_DIRECT) && (direct == NON_DIRECT) && (SW_A == (sw & SW_A)))
 	{
-		// direct = ON_DIRECT;
+		direct = ON_DIRECT;
 		menu_window_init(game);
 	}
 

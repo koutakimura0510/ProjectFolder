@@ -119,8 +119,8 @@ bool isNpc_event(GameWrapper *const game)
         .y = (game->unit.pos.eventy >> MAPCHIP_SHIFT) * get_mapsize('w'),
         .h = point.x + point.y,
     };
-
-	for (uint32_t i = 0; i < game->npc.number; i++)
+    
+    for (uint32_t i = 0; i < game->npc.number; i++)
     {
         if (game->npc.dram_index[i] == point.h)
         {
@@ -131,6 +131,7 @@ bool isNpc_event(GameWrapper *const game)
             game->conf.display.drawtype = DISPLAY_FIELD_CENTER_DRAW;
             game->conf.msg.type         = MSG_TYPE_NPC;
             game->conf.msg.access_func  = MSG_FUNC_INDEX_1;
+            npc_mapchip_update(game);
 			return ON_DIRECT;
         }
     }
@@ -460,24 +461,29 @@ static void npc_random_update(GameWrapper *const game, uint8_t index)
     if (sign != 0)
     {
         uint32_t *buffer = DRAM_MAPDATA_NPC_ADDR_START;
+        int8_t pos_adjust = (range_bit == 0) ? sign : get_mapsize('w') * sign;
 
         /* npcの状態・向き・座標データ更新 */
-        game->npc.dir[index]          = NPC_DIR_EDGE * rand_number;
-        game->npc.cut_dir[index]      = (game->npc.dir[index] == NPC_DIR_DOWN) ? NPC_DIR_CUT_DOWN : game->npc.dir[index] + NPC_DIR_EDGE;
-        game->npc.active_state[index] = NPC_ACTIVE_ANIMATION;
-        game->npc.map_pos[range_bit][index] += sign;
+        game->npc.dir[index]     = NPC_DIR_EDGE * rand_number;
+        game->npc.cut_dir[index] = (game->npc.dir[index] == NPC_DIR_DOWN) ? NPC_DIR_CUT_DOWN : game->npc.dir[index] + NPC_DIR_EDGE;
 
-        /* 残り移動数の重みづけを行う (移動量 x 移動回数) = 32 / (移動量x / 2) */
-        game->npc.move_weight[index] = MAPCHIP_WIDTH >> (game->unit.pos.animation_pixel_x >> 1);
+        if ((game->npc.dram_index[index] + pos_adjust) != get_unit_index(game, DIR_WAIT))
+        {
+            game->npc.active_state[index] = NPC_ACTIVE_ANIMATION;
+            game->npc.map_pos[range_bit][index] += sign;
 
-        /* npcマップの移動前の座標を初期化 */
-        buffer[game->npc.dram_index[index]] = 0;
-        Xil_DCacheFlushRange((uint32_t)(buffer + game->npc.dram_index[index]), 4);
+            /* 残り移動数の重みづけを行う (移動量 x 移動回数) = 32 / (移動量x / 2) */
+            game->npc.move_weight[index] = MAPCHIP_WIDTH >> (game->unit.pos.animation_pixel_x >> 1);
 
-        /* 移動後の座標に番号を保存 */
-        game->npc.dram_index[index] += (range_bit == 0) ? sign : get_mapsize('w') * sign;
-        buffer[game->npc.dram_index[index]] = game->npc.map_npcid[index];
-        Xil_DCacheFlushRange((uint32_t)(buffer + game->npc.dram_index[index]), 4);
+            /* npcマップの移動前の座標を初期化 */
+            buffer[game->npc.dram_index[index]] = 0;
+            Xil_DCacheFlushRange((uint32_t)(buffer + game->npc.dram_index[index]), 4);
+
+            /* 移動後の座標に番号を保存 */
+            game->npc.dram_index[index] += pos_adjust;
+            buffer[game->npc.dram_index[index]] = game->npc.map_npcid[index];
+            Xil_DCacheFlushRange((uint32_t)(buffer + game->npc.dram_index[index]), 4);
+        }
     }
 }
 
@@ -489,7 +495,7 @@ static void npc_random_update(GameWrapper *const game, uint8_t index)
  */
 static uint8_t npc_dir_cut(GameWrapper *const game)
 {
-    switch (game->unit.pos.unitdir)
+    switch (game->unit.pos.old_key)
     {
     case DIR_RIGHT:
         return NPC_DIR_CUT_LEFT;
