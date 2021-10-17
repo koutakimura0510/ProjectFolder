@@ -232,7 +232,7 @@ static bool image_rgb_road(FIL *fil, BitmapWork *const bitmap_work, uint32_t id)
         else
         {
             read_size = RAW_FILE_STATS;
-			len += RAW_FILE_STATS;
+            len += RAW_FILE_STATS;
         }
 
 #ifdef MYDEBUG
