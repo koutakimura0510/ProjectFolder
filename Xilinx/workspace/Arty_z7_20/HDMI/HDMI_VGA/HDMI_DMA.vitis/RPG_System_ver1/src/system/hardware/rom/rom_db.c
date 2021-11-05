@@ -531,6 +531,12 @@ static bool file_database_load(void)
 }
 
 
+/* TODO DRAMにイベントフラグのデータを保存したり読みだしたりする処理を追加予定
+ * 
+ */
+// uint32_t fetch_event_flag()
+
+
 /**
  * @brief  データの開始アドレスの順番はrom_db_strunc.hのメンバを参照
  * @note   
@@ -586,12 +592,18 @@ uint32_t fetch_dram_db(GameWrapper *const game, uint8_t main_member, uint32_t su
 
 
 /**
- * @brief  メッセージデータベースのアドレスを取得する
+ * @brief  DRAMに保存されている可変式のメッセージデータベースのアドレスを取得する
  * 
- * @note   データのアクセス方法が複雑なため、処理手順を下記に記す
+ * @note
+ * 引数にアクセスするデータベースの名前と先頭列のIDを指定することによって、
+ * 関数内で自動的にDRAMに保存されているフラグ状況を管理するアドレスにアクセスし、
+ * 描画するメッセージデータのアドレスを取得できるようにしてある。
+ * 
+ * データのアクセス方法が複雑なため、処理手順を下記に記す
  * 「１」DBファイルのデータの並び順
  * データ詳細: DB_Accsess_ID, MsgBuffer_Length, msg1,   msg2,   msgxxx ---
  * データ例  : 0,             2,                あいう, かきく, '\0'
+ * 
  * 
  * @param  main_member: ファイルデータにアクセスするための定数値を指定、MEMORY_xxx
  * @param  sub_id: 取得したいメッセージに対応したIDを指定、例　NPCならば ROMEN_NPC_xxxなど
@@ -604,7 +616,7 @@ uint32_t fetch_dram_msg(GameWrapper *const game, uint8_t main_member, uint32_t s
     SystemAddress *system      = &system_address;
     uint32_t *main_adr         = system->start_adr[main_member];    /* データベースのメンバのデータが保存されているアドレスを取得 */
     uint32_t *sub_adr          = system->p[main_member];            /* データベースのメンバの長さが保存されているアドレスを取得 */
-    uint32_t *event_ptr        = DRAM_FLAG_EVENT_ADDR_START;        /* NPCのイベントフラグ取得状況管理アドレスを指すポインタ */
+    uint32_t *event_ptr        = DRAM_FLAG_EVENT_ADDR_START;        /* DRAMのイベントフラグ状況管理アドレスを指すポインタ */
     uint32_t row;
 
     for (uint32_t i = 0; i < FILE_SYSTEM_LENGTH_SIZE; i++, length++)

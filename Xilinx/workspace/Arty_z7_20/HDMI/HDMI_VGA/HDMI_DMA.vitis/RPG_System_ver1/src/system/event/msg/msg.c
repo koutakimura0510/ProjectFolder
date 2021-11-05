@@ -34,11 +34,11 @@ static const uint32_t (*const funcMsg[])(GameWrapper *const game, uint8_t main_m
  * @brief  メッセージの種類に対応するデータベースアクセスIDを管理する
  * 
  * @note  データの並び順と実行関数は以下の通りである
- * MSG_TYPE_UNVARIABLE fetch_dram_db
- * MSG_TYPE_NPC fetch_dram_msg
- * MSG_TYPE_HERO fetch_dram_msg
- * MSG_TYPE_EVENT fetch_dram_db
- * MSG_TYPE_STORY fetch_dram_msg
+ * MSG_TYPE_UNVARIABLE = fetch_dram_db
+ * MSG_TYPE_NPC        = fetch_dram_msg
+ * MSG_TYPE_HERO       = fetch_dram_msg
+ * MSG_TYPE_EVENT      = fetch_dram_db
+ * MSG_TYPE_STORY      = fetch_dram_msg
  * 
  * @retval None
  */
@@ -50,9 +50,9 @@ typedef struct msg_type
 
 static const Msg_Type msg_type[] = {
     {0, 0,}, /* 0で固定 */
-    {MEMORY_NPC_MSG_ID, 0,},
+    {MEMORY_NPC_MSG_ID, 0,}, /* sub_memberは0で固定 */
     {0, 0,}, /* まだDBを作成していない */
-    {MEMORY_BUILD_MSG_ID, EVENT_MSG_SUB_MSG,},
+    {MEMORY_BUILD_MSG_ID, EVENT_MSG_SUB_MSG,}, /* メッセージが可変しないためEVENT_MSG_SUB_MSGを指定 */
     {0, 0,}, /* まだDBを作成していない */
 };
 
@@ -139,7 +139,10 @@ void result_font_draw(GameWrapper *const game, uint32_t xstart, uint32_t ystart,
 
 /**
  * @brief  メッセージウィンドウの描画処理
- * @note   発生するメッセージイベントの種類に応じてDRAMにアクセスするデータをを変更する
+ * @note   
+ * 発生するメッセージイベントの種類に応じてDRAMにアクセスするデータをを変更する
+ * 
+ * 
  * @retval None
  */
 void event_msg_draw(GameWrapper *const game)
@@ -201,7 +204,7 @@ void font_dram_draw(GameWrapper *const game, uint32_t xstart, uint32_t ystart, u
 
         while (*game->conf.db.data == '\n')
         {
-            i++;
+            i++; // 改行文字は描画しないため飛ばす
             game->conf.db.data++;
             line += SIZE_FONT_SJIS_HEIGHT;
             msg_count = 0;

@@ -101,8 +101,7 @@ bool isDirect_object(GameWrapper *const game)
 }
 
 
-/* TODO
- * メッセージなどのイベント処理追加
+/* TODO メッセージなどのイベント処理追加
  * キャラクターの進行方向のイベント情報を取得
  */
 bool isDirect_event(GameWrapper *const game)

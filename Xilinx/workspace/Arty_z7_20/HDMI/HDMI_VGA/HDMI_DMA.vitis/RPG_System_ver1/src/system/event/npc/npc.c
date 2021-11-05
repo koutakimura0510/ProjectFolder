@@ -103,7 +103,6 @@ void npc_config(GameWrapper *const game)
     }
 }
 
-
 /**
  * @brief  NPCのメッセージイベント発生処理
  * @note

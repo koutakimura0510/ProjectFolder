@@ -42,9 +42,7 @@ bool dtmwork_init(void)
 }
 
 
-/* TODO
- * FPGAが音源データをDRAMから読み込むように変更予定
- * -
+/* TODO FPGAが音源データをDRAMから読み込むように変更予定
  * ver1. 201/05/21
  * BGMの再生、48khzごとFPGAに音源データをFPGAに送信
  *

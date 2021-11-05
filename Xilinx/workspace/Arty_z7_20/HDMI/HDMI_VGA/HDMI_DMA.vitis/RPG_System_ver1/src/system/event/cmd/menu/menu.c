@@ -167,7 +167,7 @@ static void cmd_menu_sub(GameWrapper *const game)
 	switch (game->conf.display.sub_state)
     {
     case MENU_TALK_WINDOW:
-		//TODO トーク文字列の描画が終了したら終了するように変更する
+		//TODO はなすコマンド実装はまだである。はなすの会話が終了したら状態遷移するように変更する
 		game->conf.display.sub_state = MENU_SELECT_END;
         break;
 
