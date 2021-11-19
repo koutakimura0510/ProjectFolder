@@ -15,3 +15,14 @@ workspaceのディレクトリは統一したかったため、デフォルト�
 </br>
 - vscode上でCtrl + shift + PにてPlatformIOと検索すると履歴に「New Terminal」が存在するので実行する。
 - pioのターミナル上でコマンドを実行する **pio settings set projects_dir 新規プロジェクト作成の絶対パス**
+</br>
+</br>
+## 「Ubuntu GPU認識」
+デフォルトの設定ではCPUのグラフィックを使用していたためGPUを認識させて切り替えたかった。</br>
+下記の順番でコマンドを実行して認識させた。</br>
+- lspci | grep -i nvidia
+- sudo add-apt-repository ppa:graphics-drivers/ppa
+- sudo apt update
+- sudo ubuntu-drivers autoinstall
+- sudo reboot 
+- nvidia-smi
