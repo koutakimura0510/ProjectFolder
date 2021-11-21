@@ -1,0 +1,23 @@
+{"sourceFile": [{
+      "name": "",
+      "directive": [
+        {
+          "functionName": "muladd",
+          "label": "muladd_loop",
+          "functionLabel": "",
+          "pragma": {"name": "PIPELINE"}
+        },
+        {
+          "functionName": "muladd",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "TOP",
+            "option": [{
+                "name": "name",
+                "value": "muladd"
+              }]
+          }
+        }
+      ]
+    }]}

@@ -1,0 +1,378 @@
+#-----------------------------------------------------------
+# Vivado v2020.2 (64-bit)
+# SW Build 3064766 on Wed Nov 18 09:12:47 MST 2020
+# IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+# Start of session at: Sun Apr  4 18:15:34 2021
+# Process ID: 174426
+# Current directory: /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.runs/design_1_muladd_0_0_synth_1
+# Command line: vivado -log design_1_muladd_0_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source design_1_muladd_0_0.tcl
+# Log file: /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.runs/design_1_muladd_0_0_synth_1/design_1_muladd_0_0.vds
+# Journal file: /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.runs/design_1_muladd_0_0_synth_1/vivado.jou
+#-----------------------------------------------------------
+source design_1_muladd_0_0.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd/solution3/impl/ip'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/tools/Xilinx/Vivado/2020.2/data/ip'.
+Command: synth_design -top design_1_muladd_0_0 -part xc7z020clg400-1 -mode out_of_context
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Device 21-403] Loading part xc7z020clg400-1
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 174464
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 2417.789 ; gain = 0.000 ; free physical = 14673 ; free virtual = 26217
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'design_1_muladd_0_0' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.gen/sources_1/bd/design_1/ip/design_1_muladd_0_0/synth/design_1_muladd_0_0.v:58]
+INFO: [Synth 8-6157] synthesizing module 'muladd' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.gen/sources_1/bd/design_1/ipshared/706f/hdl/verilog/muladd.v:12]
+	Parameter ap_ST_fsm_state1 bound to: 3'b001 
+	Parameter ap_ST_fsm_pp0_stage0 bound to: 3'b010 
+	Parameter ap_ST_fsm_state7 bound to: 3'b100 
+	Parameter C_S_AXI_CONTROL_DATA_WIDTH bound to: 32 - type: integer 
+	Parameter C_S_AXI_CONTROL_ADDR_WIDTH bound to: 8 - type: integer 
+	Parameter C_S_AXI_DATA_WIDTH bound to: 32 - type: integer 
+	Parameter C_S_AXI_CONTROL_WSTRB_WIDTH bound to: 4 - type: integer 
+	Parameter C_S_AXI_WSTRB_WIDTH bound to: 4 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'muladd_control_s_axi' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.gen/sources_1/bd/design_1/ipshared/706f/hdl/verilog/muladd_control_s_axi.v:6]
+	Parameter C_S_AXI_ADDR_WIDTH bound to: 8 - type: integer 
+	Parameter C_S_AXI_DATA_WIDTH bound to: 32 - type: integer 
+	Parameter ADDR_AP_CTRL bound to: 8'b00000000 
+	Parameter ADDR_GIE bound to: 8'b00000100 
+	Parameter ADDR_IER bound to: 8'b00001000 
+	Parameter ADDR_ISR bound to: 8'b00001100 
+	Parameter ADDR_AP_RETURN_0 bound to: 8'b00010000 
+	Parameter ADDR_A_BASE bound to: 8'b01000000 
+	Parameter ADDR_A_HIGH bound to: 8'b01111111 
+	Parameter ADDR_B_BASE bound to: 8'b10000000 
+	Parameter ADDR_B_HIGH bound to: 8'b10111111 
+	Parameter WRIDLE bound to: 2'b00 
+	Parameter WRDATA bound to: 2'b01 
+	Parameter WRRESP bound to: 2'b10 
+	Parameter WRRESET bound to: 2'b11 
+	Parameter RDIDLE bound to: 2'b00 
+	Parameter RDDATA bound to: 2'b01 
+	Parameter RDRESET bound to: 2'b10 
+	Parameter ADDR_BITS bound to: 8 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'muladd_control_s_axi_ram' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.gen/sources_1/bd/design_1/ipshared/706f/hdl/verilog/muladd_control_s_axi.v:496]
+	Parameter BYTES bound to: 4 - type: integer 
+	Parameter DEPTH bound to: 16 - type: integer 
+	Parameter AWIDTH bound to: 4 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'muladd_control_s_axi_ram' (1#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.gen/sources_1/bd/design_1/ipshared/706f/hdl/verilog/muladd_control_s_axi.v:496]
+INFO: [Synth 8-155] case statement is not full and has no default [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.gen/sources_1/bd/design_1/ipshared/706f/hdl/verilog/muladd_control_s_axi.v:275]
+INFO: [Synth 8-6155] done synthesizing module 'muladd_control_s_axi' (2#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.gen/sources_1/bd/design_1/ipshared/706f/hdl/verilog/muladd_control_s_axi.v:6]
+INFO: [Synth 8-6157] synthesizing module 'muladd_mul_32s_32s_32_2_1' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.gen/sources_1/bd/design_1/ipshared/706f/hdl/verilog/muladd_mul_32s_32s_32_2_1.v:25]
+	Parameter ID bound to: 1 - type: integer 
+	Parameter NUM_STAGE bound to: 2 - type: integer 
+	Parameter din0_WIDTH bound to: 32 - type: integer 
+	Parameter din1_WIDTH bound to: 32 - type: integer 
+	Parameter dout_WIDTH bound to: 32 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'muladd_mul_32s_32s_32_2_1_Multiplier_0' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.gen/sources_1/bd/design_1/ipshared/706f/hdl/verilog/muladd_mul_32s_32s_32_2_1.v:8]
+INFO: [Synth 8-6155] done synthesizing module 'muladd_mul_32s_32s_32_2_1_Multiplier_0' (3#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.gen/sources_1/bd/design_1/ipshared/706f/hdl/verilog/muladd_mul_32s_32s_32_2_1.v:8]
+INFO: [Synth 8-6155] done synthesizing module 'muladd_mul_32s_32s_32_2_1' (4#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.gen/sources_1/bd/design_1/ipshared/706f/hdl/verilog/muladd_mul_32s_32s_32_2_1.v:25]
+INFO: [Synth 8-6155] done synthesizing module 'muladd' (5#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.gen/sources_1/bd/design_1/ipshared/706f/hdl/verilog/muladd.v:12]
+INFO: [Synth 8-6155] done synthesizing module 'design_1_muladd_0_0' (6#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.gen/sources_1/bd/design_1/ip/design_1_muladd_0_0/synth/design_1_muladd_0_0.v:58]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 2417.789 ; gain = 0.000 ; free physical = 12962 ; free virtual = 24508
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 2417.789 ; gain = 0.000 ; free physical = 13773 ; free virtual = 25319
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 2417.789 ; gain = 0.000 ; free physical = 13773 ; free virtual = 25319
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.02 . Memory (MB): peak = 2417.789 ; gain = 0.000 ; free physical = 14491 ; free virtual = 26037
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.gen/sources_1/bd/design_1/ip/design_1_muladd_0_0/constraints/muladd_ooc.xdc] for cell 'inst'
+Finished Parsing XDC File [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.gen/sources_1/bd/design_1/ip/design_1_muladd_0_0/constraints/muladd_ooc.xdc] for cell 'inst'
+Parsing XDC File [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.runs/design_1_muladd_0_0_synth_1/dont_touch.xdc]
+Finished Parsing XDC File [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.runs/design_1_muladd_0_0_synth_1/dont_touch.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2534.516 ; gain = 0.000 ; free physical = 15054 ; free virtual = 26600
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2537.484 ; gain = 2.969 ; free physical = 15055 ; free virtual = 26601
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2537.484 ; gain = 119.695 ; free physical = 15167 ; free virtual = 26713
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7z020clg400-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2537.484 ; gain = 119.695 ; free physical = 15167 ; free virtual = 26713
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property KEEP_HIERARCHY = SOFT for inst. (constraint file  /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.runs/design_1_muladd_0_0_synth_1/dont_touch.xdc, line 9).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2537.484 ; gain = 119.695 ; free physical = 15170 ; free virtual = 26716
+---------------------------------------------------------------------------------
+INFO: [Synth 8-802] inferred FSM for state register 'wstate_reg' in module 'muladd_control_s_axi'
+INFO: [Synth 8-802] inferred FSM for state register 'rstate_reg' in module 'muladd_control_s_axi'
+INFO: [Synth 8-4490] FSM extraction disabled for register 'ap_CS_fsm_reg' through user attribute
+INFO: [Synth 8-3971] The signal "muladd_control_s_axi_ram:/gen_write[1].mem_reg" was recognized as a true dual port RAM template.
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                  iSTATE |                              001 |                               10
+*
+                  RDIDLE |                              010 |                               00
+                  RDDATA |                              100 |                               01
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'rstate_reg' using encoding 'one-hot' in module 'muladd_control_s_axi'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                  iSTATE |                             0001 |                               11
+*
+                  WRIDLE |                             0010 |                               00
+                  WRDATA |                             0100 |                               01
+                  WRRESP |                             1000 |                               10
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'wstate_reg' using encoding 'one-hot' in module 'muladd_control_s_axi'
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:09 ; elapsed = 00:00:11 . Memory (MB): peak = 2537.484 ; gain = 119.695 ; free physical = 15241 ; free virtual = 26789
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input    5 Bit       Adders := 1     
++---XORs : 
+	   2 Input      1 Bit         XORs := 2     
++---Registers : 
+	               32 Bit    Registers := 10    
+	                8 Bit    Registers := 1     
+	                5 Bit    Registers := 1     
+	                3 Bit    Registers := 1     
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 21    
++---Multipliers : 
+	              32x32  Multipliers := 1     
++---RAMs : 
+	              512 Bit	(16 X 32 bit)          RAMs := 2     
++---Muxes : 
+	   2 Input   32 Bit        Muxes := 27    
+	   2 Input    8 Bit        Muxes := 4     
+	   4 Input    4 Bit        Muxes := 1     
+	   2 Input    4 Bit        Muxes := 4     
+	   3 Input    3 Bit        Muxes := 1     
+	   2 Input    3 Bit        Muxes := 2     
+	   6 Input    3 Bit        Muxes := 1     
+	   2 Input    2 Bit        Muxes := 1     
+	   2 Input    1 Bit        Muxes := 8     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 220 (col length:60)
+BRAMs: 280 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+DSP Report: Generating DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product, operation Mode is: A2*B.
+DSP Report: register mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product is absorbed into DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product.
+DSP Report: operator mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product is absorbed into DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product.
+DSP Report: operator mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product is absorbed into DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product.
+DSP Report: Generating DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/p_reg, operation Mode is: (PCIN>>17)+A*B.
+DSP Report: register mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/p_reg is absorbed into DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/p_reg.
+DSP Report: operator mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product is absorbed into DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/p_reg.
+DSP Report: operator mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product is absorbed into DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/p_reg.
+DSP Report: Generating DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product, operation Mode is: A2*B2.
+DSP Report: register mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product is absorbed into DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product.
+DSP Report: register mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product is absorbed into DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product.
+DSP Report: operator mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product is absorbed into DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product.
+DSP Report: operator mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product is absorbed into DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product.
+DSP Report: Generating DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/p_reg, operation Mode is: (PCIN>>17)+A2*B.
+DSP Report: register mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/p_reg is absorbed into DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/p_reg.
+DSP Report: register mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/p_reg is absorbed into DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/p_reg.
+DSP Report: operator mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product is absorbed into DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/p_reg.
+DSP Report: operator mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/tmp_product is absorbed into DSP mul_32s_32s_32_2_1_U1/muladd_mul_32s_32s_32_2_1_Multiplier_0_U/p_reg.
+INFO: [Synth 8-3971] The signal "inst/control_s_axi_U/int_a/gen_write[1].mem_reg" was recognized as a true dual port RAM template.
+INFO: [Synth 8-3971] The signal "inst/control_s_axi_U/int_b/gen_write[1].mem_reg" was recognized as a true dual port RAM template.
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 2537.484 ; gain = 119.695 ; free physical = 15134 ; free virtual = 26692
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Preliminary Mapping	Report (see note below)
++------------+--------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name | RTL Object                                 | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++------------+--------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|inst        | control_s_axi_U/int_a/gen_write[1].mem_reg | 16 x 32(READ_FIRST)    | W | R | 16 x 32(READ_FIRST)    | W | R | Port A and B     | 0      | 1      | 
+|inst        | control_s_axi_U/int_b/gen_write[1].mem_reg | 16 x 32(READ_FIRST)    | W | R | 16 x 32(READ_FIRST)    | W | R | Port A and B     | 0      | 1      | 
++------------+--------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+Note: The table above is a preliminary report that shows the Block RAMs at the current stage of the synthesis flow. Some Block RAMs may be reimplemented as non Block RAM primitives later in the synthesis flow. Multiple instantiated Block RAMs are reported only once. 
+
+DSP: Preliminary Mapping	Report (see note below)
++------------+-----------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|Module Name | DSP Mapping     | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
++------------+-----------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|muladd      | A2*B            | 18     | 15     | -      | -      | 48     | 1    | 0    | -    | -    | -     | 0    | 0    | 
+|muladd      | (PCIN>>17)+A*B  | 15     | 15     | -      | -      | 48     | 0    | 0    | -    | -    | -     | 0    | 1    | 
+|muladd      | A2*B2           | 18     | 18     | -      | -      | 48     | 1    | 1    | -    | -    | -     | 0    | 0    | 
+|muladd      | (PCIN>>17)+A2*B | 18     | 15     | -      | -      | 48     | 1    | 0    | -    | -    | -     | 0    | 1    | 
++------------+-----------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+
+Note: The table above is a preliminary report that shows the DSPs inferred at the current stage of the synthesis flow. Some DSP may be reimplemented as non DSP primitives later in the synthesis flow. Multiple instantiated DSPs are reported only once.
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:17 ; elapsed = 00:00:18 . Memory (MB): peak = 2537.484 ; gain = 119.695 ; free physical = 14520 ; free virtual = 26078
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 2537.484 ; gain = 119.695 ; free physical = 14557 ; free virtual = 26116
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Final Mapping	Report
++------------+--------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name | RTL Object                                 | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++------------+--------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|inst        | control_s_axi_U/int_a/gen_write[1].mem_reg | 16 x 32(READ_FIRST)    | W | R | 16 x 32(READ_FIRST)    | W | R | Port A and B     | 0      | 1      | 
+|inst        | control_s_axi_U/int_b/gen_write[1].mem_reg | 16 x 32(READ_FIRST)    | W | R | 16 x 32(READ_FIRST)    | W | R | Port A and B     | 0      | 1      | 
++------------+--------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+INFO: [Synth 8-7052] The timing for the instance inst/control_s_axi_U/int_a/gen_write[1].mem_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance inst/control_s_axi_U/int_a/gen_write[1].mem_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance inst/control_s_axi_U/int_b/gen_write[1].mem_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance inst/control_s_axi_U/int_b/gen_write[1].mem_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 2537.484 ; gain = 119.695 ; free physical = 14622 ; free virtual = 26181
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:19 ; elapsed = 00:00:21 . Memory (MB): peak = 2537.484 ; gain = 119.695 ; free physical = 15086 ; free virtual = 26642
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:19 ; elapsed = 00:00:21 . Memory (MB): peak = 2537.484 ; gain = 119.695 ; free physical = 15085 ; free virtual = 26641
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:19 ; elapsed = 00:00:21 . Memory (MB): peak = 2537.484 ; gain = 119.695 ; free physical = 15086 ; free virtual = 26641
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:19 ; elapsed = 00:00:21 . Memory (MB): peak = 2537.484 ; gain = 119.695 ; free physical = 15085 ; free virtual = 26641
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:19 ; elapsed = 00:00:21 . Memory (MB): peak = 2537.484 ; gain = 119.695 ; free physical = 15079 ; free virtual = 26635
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:19 ; elapsed = 00:00:21 . Memory (MB): peak = 2537.484 ; gain = 119.695 ; free physical = 15078 ; free virtual = 26634
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+---------+------+
+|      |Cell     |Count |
++------+---------+------+
+|1     |CARRY4   |    12|
+|2     |DSP48E1  |     3|
+|4     |LUT1     |     3|
+|5     |LUT2     |    56|
+|6     |LUT3     |   137|
+|7     |LUT4     |    19|
+|8     |LUT5     |    10|
+|9     |LUT6     |    83|
+|10    |RAMB36E1 |     2|
+|11    |FDRE     |   319|
+|12    |FDSE     |     1|
++------+---------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:19 ; elapsed = 00:00:21 . Memory (MB): peak = 2537.484 ; gain = 119.695 ; free physical = 15077 ; free virtual = 26633
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:18 ; elapsed = 00:00:19 . Memory (MB): peak = 2537.484 ; gain = 0.000 ; free physical = 15149 ; free virtual = 26705
+Synthesis Optimization Complete : Time (s): cpu = 00:00:20 ; elapsed = 00:00:21 . Memory (MB): peak = 2537.484 ; gain = 119.695 ; free physical = 15149 ; free virtual = 26705
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.02 . Memory (MB): peak = 2537.484 ; gain = 0.000 ; free physical = 15238 ; free virtual = 26794
+INFO: [Netlist 29-17] Analyzing 17 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2553.500 ; gain = 0.000 ; free physical = 15181 ; free virtual = 26732
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+INFO: [Common 17-83] Releasing license: Synthesis
+42 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:29 ; elapsed = 00:00:25 . Memory (MB): peak = 2553.500 ; gain = 135.828 ; free physical = 15328 ; free virtual = 26879
+INFO: [Common 17-1381] The checkpoint '/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.runs/design_1_muladd_0_0_synth_1/design_1_muladd_0_0.dcp' has been generated.
+WARNING: [Common 17-576] 'use_project_ipc' is deprecated. This option is deprecated and no longer used.
+INFO: [Coretcl 2-1648] Added synthesis output to IP cache for IP design_1_muladd_0_0, cache-ID = 5c467b6f4e06bdee
+INFO: [Coretcl 2-1174] Renamed 6 cell refs.
+INFO: [Common 17-1381] The checkpoint '/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/muladd/muladd_vivado/muladd.runs/design_1_muladd_0_0_synth_1/design_1_muladd_0_0.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file design_1_muladd_0_0_utilization_synth.rpt -pb design_1_muladd_0_0_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Sun Apr  4 18:16:08 2021...

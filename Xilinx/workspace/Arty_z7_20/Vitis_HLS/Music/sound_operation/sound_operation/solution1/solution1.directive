@@ -1,0 +1,66 @@
+<AutoPilot:ProjectResources xmlns:AutoPilot="com.autoesl.autopilot.ui.directiveView">
+    <sourceFile name="">
+        <directive functionName="sound_operation" label="" functionLabel="">
+            <pragma name="TOP">
+                <option name="name" value="sound_operation"/>
+            </pragma>
+        </directive>
+        <directive functionName="sound_operation" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="ap_none" value="" positionalBoolean="mode"/>
+                <option name="register" value="" positionalBoolean="1"/>
+                <option name="port" value="sdata" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="sound_operation" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="ap_ctrl_none" value="" positionalBoolean="mode"/>
+                <option name="port" value="return" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="sound_operation" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="m_axi" value="" positionalBoolean="mode"/>
+                <option name="port" value="ramadr" positionalBoolean="4"/>
+                <option name="offset" value="slave"/>
+                <option name="bundle" value="ram"/>
+                <option name="num_read_outstanding" value="16"/>
+                <option name="max_read_burst_length" value="32"/>
+            </pragma>
+        </directive>
+        <directive functionName="sound_operation" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="ap_none" value="" positionalBoolean="mode"/>
+                <option name="register" value="" positionalBoolean="1"/>
+                <option name="port" value="opeout" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="sound_operation" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="ap_none" value="" positionalBoolean="mode"/>
+                <option name="register" value="" positionalBoolean="1"/>
+                <option name="port" value="cnt" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="sound_operation" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="ope" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="sound_operation" label="sound_operation_label0" functionLabel="">
+            <pragma name="PIPELINE">
+                <option name="rewind" value="" positionalBoolean="1"/>
+            </pragma>
+        </directive>
+        <directive functionName="sound_operation" label="sound_operation_label1" functionLabel="">
+            <pragma name="DATAFLOW"/>
+        </directive>
+        <directive functionName="sound_operation" label="" functionLabel="">
+            <pragma name="TOP">
+                <option name="name" value="sound_operation"/>
+            </pragma>
+        </directive>
+    </sourceFile>
+</AutoPilot:ProjectResources>
+

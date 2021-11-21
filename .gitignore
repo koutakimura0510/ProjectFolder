@@ -1,6 +1,7 @@
 *.bin
 *.build
 *.bmp
+*.bc
 *.cdb
 *.d
 *.dcp
@@ -9,6 +10,7 @@
 *.dat
 *.exe
 *.elf
+*.g
 *.hwh
 *.history
 *.hdb
@@ -94,26 +96,6 @@ Xilinx/Reference/Board/*
 Xilinx/Reference/Board/digilent-xdc-master/*
 !Xilinx/workspace/Reference/Board/
 Xilinx/workspace/Reference/Board/*
-
-
-# PWM回路反映
-# !Xilinx/workspace/Arty_z7_20/PWM/
-# Xilinx/workspace/Arty_z7_20/PWM/*
-# !Xilinx/workspace/Arty_z7_20/PWM/pwm_deep/
-
-# I2S回路反映
-# !Xilinx/workspace/Arty_z7_20/SOUND/
-# Xilinx/workspace/Arty_z7_20/SOUND/*
-# !Xilinx/workspace/Arty_z7_20/SOUND/I2S/
-# Xilinx/workspace/Arty_z7_20/SOUND/I2S/*
-# !Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/
-# Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/*
-# !Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/I2S_OUTPUT.srcs/
-
-# Vitis_HLSの画像処理回路は反映させる
-!Xilinx/workspace/Arty_z7_20/Vitis_HLS/
-Xilinx/workspace/Arty_z7_20/Vitis_HLS/*
-!Xilinx/workspace/Arty_z7_20/Vitis_HLS/Graphic/
 
 
 Excel/

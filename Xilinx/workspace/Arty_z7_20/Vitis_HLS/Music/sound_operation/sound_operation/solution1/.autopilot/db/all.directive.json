@@ -1,0 +1,183 @@
+{"sourceFile": [{
+      "name": "",
+      "directive": [
+        {
+          "functionName": "sound_operation",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "TOP",
+            "option": [{
+                "name": "name",
+                "value": "sound_operation"
+              }]
+          }
+        },
+        {
+          "functionName": "sound_operation",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "ap_none",
+                "value": ""
+              },
+              {
+                "name": "register",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "sdata"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "sound_operation",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "ap_ctrl_none",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "return"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "sound_operation",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "m_axi",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "ramadr"
+              },
+              {
+                "name": "offset",
+                "value": "slave"
+              },
+              {
+                "name": "bundle",
+                "value": "ram"
+              },
+              {
+                "name": "num_read_outstanding",
+                "value": "16"
+              },
+              {
+                "name": "max_read_burst_length",
+                "value": "32"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "sound_operation",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "ap_none",
+                "value": ""
+              },
+              {
+                "name": "register",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "opeout"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "sound_operation",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "ap_none",
+                "value": ""
+              },
+              {
+                "name": "register",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "cnt"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "sound_operation",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "s_axilite",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "ope"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "sound_operation",
+          "label": "sound_operation_label0",
+          "functionLabel": "",
+          "pragma": {
+            "name": "PIPELINE",
+            "option": [{
+                "name": "rewind",
+                "value": ""
+              }]
+          }
+        },
+        {
+          "functionName": "sound_operation",
+          "label": "sound_operation_label1",
+          "functionLabel": "",
+          "pragma": {"name": "DATAFLOW"}
+        },
+        {
+          "functionName": "sound_operation",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "TOP",
+            "option": [{
+                "name": "name",
+                "value": "sound_operation"
+              }]
+          }
+        }
+      ]
+    }]}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autopilotfilemapping:AutoPilotFileMapping xmlns:autopilotfilemapping="www.autoesl.com/autopilotfilemapping">
+  <source>
+    <originFiles name="led_blink.cpp" path="/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/LED/led_blink.cpp"/>
+  </source>
+  <testbench>
+    <originFiles name="led_blink_tb.cpp" path="/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/LED/led_blink_tb.cpp"/>
+  </testbench>
+</autopilotfilemapping:AutoPilotFileMapping>
