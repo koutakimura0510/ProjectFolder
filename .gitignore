@@ -122,16 +122,12 @@ Xilinx/workspace/ArtyS7/*
 !Xilinx/workspace/ArtyS7/Serial/
 
 
-# Ubuntuディレクトリは全てのファイルを反映させる
-# Ubuntu/
 Excel/
 Videos/
 Shortcut/
-# RaspberryPi/
 Android/
 Cad/
 picture/
-# python/
 Renesas/
 .history/
 tags
