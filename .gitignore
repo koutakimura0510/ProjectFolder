@@ -1,34 +1,54 @@
-*.ini
-*.pdom
-*.jou
-*.log
-*.str
-*.raw
 *.bin
 *.build
-*.index
 *.bmp
-*.o
 *.d
-*.wav
-*.mp3
+*.dcp
+*.bda
+*.dbg
+*.dat
 *.exe
+*.elf
+*.hwh
+*.ini
+*.info
+*.index
+*.jou
+*.jpg
+*.lpr
+*.log
+*.mp3
+*.mem
+*.o
 *.pdf
 *.png
-*.jpg
-*.bmp
-*.elf
-*.size
-*.xpr
-*.wpc
-*.lpr
-*.xml
-*.rst
 *.pb
+*.pdom
+*.prj
+*.prefs
+*.properties
+*.raw
+*.rst
 *.rpt
 *.rpx
-*.dcp
+*.reloc
+*.rlx
+*.rtti
+*.size
+*.str
+*.sdb
+*.svtype
+*.type
 *.udb
+*.wav
+*.wpc
+*.wcfg
+*.wdf
+*.wdb
+*.wdm
+*.xpr
+*.xci
+*.xml
+*.xdbg
 
 # TohoProjectのworkspaceのみgitに反映させる
 Xilinx/*
@@ -55,8 +75,8 @@ Xilinx/Reference/*
 Xilinx/Reference/Board/*
 !Xilinx/Reference/Board/digilent-xdc-master/
 Xilinx/Reference/Board/digilent-xdc-master/*
-# !Xilinx/workspace/Reference/Board/
-# Xilinx/workspace/Reference/Board/*
+!Xilinx/workspace/Reference/Board/
+Xilinx/workspace/Reference/Board/*
 
 
 # PWM回路反映
@@ -77,6 +97,10 @@ Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/*
 !Xilinx/workspace/Arty_z7_20/Vitis_HLS/
 Xilinx/workspace/Arty_z7_20/Vitis_HLS/*
 !Xilinx/workspace/Arty_z7_20/Vitis_HLS/Graphic/
+
+!Xilinx/workspace/ArtyS7/
+Xilinx/workspace/ArtyS7/*
+!Xilinx/workspace/ArtyS7/SignalTraining/
 
 
 # Ubuntuディレクトリは全てのファイルを反映させる

@@ -1,0 +1,32 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build",
+			"type": "shell",
+
+			// iverilog -o [出力ファイル名] -s [トップモジュール名] [.vファイルの羅列]
+			// -oオプションを省略すると出力ファイルはa.outになる。-sオプションは省略可能
+			// grepコマンドで一緒にvcdファイルの作成も行っている
+			"command": "rm *.vcd | iverilog -o led.out -s nv_tb *.v | vvp led.out",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		{
+			"label": "Simulation",
+			"type": "shell",
+			"command": "gtkwave led.vcd",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}
