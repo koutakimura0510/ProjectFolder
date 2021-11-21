@@ -9,6 +9,7 @@
 *.exe
 *.elf
 *.hwh
+*.history
 *.ini
 *.info
 *.index
@@ -16,8 +17,13 @@
 *.jpg
 *.lpr
 *.log
+*.lock
+*.location
+*.launch
+*.list
 *.mp3
 *.mem
+*.mk
 *.o
 *.pdf
 *.png
@@ -33,11 +39,14 @@
 *.reloc
 *.rlx
 *.rtti
+*.resources
 *.size
+*.su
 *.str
 *.sdb
 *.svtype
 *.type
+*.tree
 *.udb
 *.wav
 *.wpc
@@ -48,6 +57,7 @@
 *.xpr
 *.xci
 *.xml
+*.xmi
 *.xdbg
 
 # TohoProjectのworkspaceのみgitに反映させる
@@ -112,7 +122,7 @@ Shortcut/
 Music/
 RaspberryPi/
 Android/
-ARM/
+# ARM/
 Intel/
 Cad/
 picture/
