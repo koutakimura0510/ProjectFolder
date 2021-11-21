@@ -101,6 +101,7 @@ Xilinx/workspace/Arty_z7_20/Vitis_HLS/*
 !Xilinx/workspace/ArtyS7/
 Xilinx/workspace/ArtyS7/*
 !Xilinx/workspace/ArtyS7/SignalTraining/
+!Xilinx/workspace/ArtyS7/Serial/
 
 
 # Ubuntuディレクトリは全てのファイルを反映させる
