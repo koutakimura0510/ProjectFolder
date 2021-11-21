@@ -67,14 +67,13 @@
 *.xdbg
 
 # TohoProjectのworkspaceのみgitに反映させる
-Xilinx/*
-!Xilinx/workspace/
 Xilinx/workspace/IP/*
 Xilinx/workspace/Sample/*
 Xilinx/workspace/net_test/*
-!Xilinx/workspace/Arty_z7_20/
-Xilinx/workspace/Arty_z7_20/*
-!Xilinx/workspace/Arty_z7_20/HDMI/
+# !Xilinx/workspace/Arty_z7_20/
+# Xilinx/workspace/Arty_z7_20/*
+# !Xilinx/workspace/Arty_z7_20/HDMI/
+Xilinx/workspace/Arty_z7_20/AXI/*
 Xilinx/workspace/Arty_z7_20/HDMI/*
 !Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/
 Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/*
@@ -98,28 +97,23 @@ Xilinx/workspace/Reference/Board/*
 
 
 # PWM回路反映
-!Xilinx/workspace/Arty_z7_20/PWM/
-Xilinx/workspace/Arty_z7_20/PWM/*
-!Xilinx/workspace/Arty_z7_20/PWM/pwm_deep/
+# !Xilinx/workspace/Arty_z7_20/PWM/
+# Xilinx/workspace/Arty_z7_20/PWM/*
+# !Xilinx/workspace/Arty_z7_20/PWM/pwm_deep/
 
 # I2S回路反映
-!Xilinx/workspace/Arty_z7_20/SOUND/
-Xilinx/workspace/Arty_z7_20/SOUND/*
-!Xilinx/workspace/Arty_z7_20/SOUND/I2S/
-Xilinx/workspace/Arty_z7_20/SOUND/I2S/*
-!Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/
-Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/*
-!Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/I2S_OUTPUT.srcs/
+# !Xilinx/workspace/Arty_z7_20/SOUND/
+# Xilinx/workspace/Arty_z7_20/SOUND/*
+# !Xilinx/workspace/Arty_z7_20/SOUND/I2S/
+# Xilinx/workspace/Arty_z7_20/SOUND/I2S/*
+# !Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/
+# Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/*
+# !Xilinx/workspace/Arty_z7_20/SOUND/I2S/I2S_OUTPUT/I2S_OUTPUT.srcs/
 
 # Vitis_HLSの画像処理回路は反映させる
 !Xilinx/workspace/Arty_z7_20/Vitis_HLS/
 Xilinx/workspace/Arty_z7_20/Vitis_HLS/*
 !Xilinx/workspace/Arty_z7_20/Vitis_HLS/Graphic/
-
-!Xilinx/workspace/ArtyS7/
-Xilinx/workspace/ArtyS7/*
-!Xilinx/workspace/ArtyS7/SignalTraining/
-!Xilinx/workspace/ArtyS7/Serial/
 
 
 Excel/
