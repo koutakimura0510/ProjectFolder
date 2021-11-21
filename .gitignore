@@ -69,7 +69,9 @@
 # TohoProjectのworkspaceのみgitに反映させる
 Xilinx/*
 !Xilinx/workspace/
-Xilinx/workspace/*
+Xilinx/workspace/IP/*
+Xilinx/workspace/Sample/*
+Xilinx/workspace/net_test/*
 !Xilinx/workspace/Arty_z7_20/
 Xilinx/workspace/Arty_z7_20/*
 !Xilinx/workspace/Arty_z7_20/HDMI/

@@ -26,4 +26,7 @@ https://github.com/koutakimura0510/ProjectFolder/tree/master/Ubuntu</br></br>
 ## 5. Xilinx
 HDLのサンプルコードやZynqプロジェクトのアプリケーションを管理</br></br>
 **`今取り組んでいるもの`**
-https://github.com/koutakimura0510/ProjectFolder/tree/master/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RPG_System_ver1/src/system?ts=4</br></br>
+https://github.com/koutakimura0510/ProjectFolder/tree/master/Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.vitis/RPG_System_ver1/src/system?ts=4</br>
+</br>
+サンプルコード管理先</br>
+https://github.com/koutakimura0510/ProjectFolder/tree/master/Xilinx/workspace
