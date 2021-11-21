@@ -1,0 +1,3 @@
+xxdコマンド
+
+xxd -p .raw >> .txt

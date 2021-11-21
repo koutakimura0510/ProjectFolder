@@ -22,6 +22,7 @@
 *.launch
 *.list
 *.mp3
+*.m4a
 *.mem
 *.mk
 *.o
@@ -119,10 +120,8 @@ Xilinx/workspace/ArtyS7/*
 Excel/
 Videos/
 Shortcut/
-Music/
 RaspberryPi/
 Android/
-# ARM/
 Intel/
 Cad/
 picture/
