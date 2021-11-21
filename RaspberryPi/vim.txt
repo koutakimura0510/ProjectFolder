@@ -1,0 +1,268 @@
+"現在のファイルからnnoremapをafterに変換
+":%s/nnoremap/after/g
+
+"ディレクトリ内のファイル全体の文字列を変換
+":%s/nnoremap/after/gi
+
+"開いているすべてのタブの文字列を置換
+":tabdo %s/nnoremap/after/g
+
+if has('vim_starting')
+    ""wincmd l
+    ""terminal ++curwin
+    ""wincmd h
+endif
+
+"make QuickFixCmdウィンドウ自動描画"
+augroup QuickFixCmd
+    autocmd!
+    autocmd QuickFixCmdPost *grep* cwindow
+augroup END
+
+"タグの設定を可能にする"
+autocmd BufWritePost * call system("ctags -R")
+
+"ウィンドウ移動"
+nnoremap ww <C-w>w
+nnoremap tt <C-w>t
+
+"ショートカットキー割り当て
+inoremap <expr><F1> pumvisible() ? "<Down>" : "<C-n>"
+nnoremap <F4> :make clean<CR>
+inoremap <F4> <Esc>:make clean<CR>
+nnoremap <F5> :w<CR>:make<CR><C-w>w
+inoremap <F5> <Esc>:w<CR>:make<CR><C-w>w
+nnoremap <F6> :w<CR>:!make run<CR>
+inoremap <F6> <Esc>:w<CR>:!make run<CR>
+au QuickfixCmdPost make copen
+nnoremap <F7> :q<CR>
+inoremap <F7> <Esc>:q<CR>
+nnoremap <F8> :tabdo w<CR>
+inoremap <F8> <Esc>:tabdo w<CR>
+nnoremap <F9> :w<CR>:source ~/.vimrc<CR>
+inoremap <F9> <Esc>:w<CR>:source ~/.vimrc<CR>a
+
+
+"タブ移動
+nnoremap <C-L> :tabnext<CR>
+inoremap <C-W> <ESC>:tabnext<CR>a
+nnoremap <C-H> :tabprevious<CR>
+inoremap <C-T> <ESC>:tabprevious<CR>a
+
+"カーソル移動"
+inoremap <C-y> <Home>
+inoremap <C-p> <End>
+inoremap <C-k> <Up>
+inoremap <C-l> <Right>
+inoremap <C-h> <Left>
+inoremap <C-j> <Down>
+inoremap <C-b> <End><CR>
+
+
+function! ExecExCommand(cmd)
+    silent exec a:cmd
+    return ''
+endfunction
+
+inoremap <silent> <expr> <C-x> "<C-r>=ExecExCommand('normal x')<CR>"
+inoremap <silent> <expr> <C-d> "<C-r>=ExecExCommand('normal S')<CR>"
+inoremap <silent> <expr> <C-z> "<C-r>=ExecExCommand('normal u')<CR>"
+
+"補完系
+inoremap {} {<CR>}<Up><End><CR>
+inoremap [ []<LEFT>
+inoremap ( ()<LEFT>
+inoremap " ""<LEFT>
+inoremap /** /**-------------------------------------------------<CR><CR>-------------------------------------------------*/<Up> 
+inoremap main() int main(int argc, char **argv)<CR>{<CR>}<Up><End><CR>
+inoremap typedefs typedef struct {<CR>}<Up><End><CR>
+inoremap typedefe typedef enum {<CR>}<Up><End><CR>
+
+"補完表示 Enterで改行を行わない"
+set completeopt=menuone,noinsert
+inoremap <expr><CR> pumvisible() ? "<C-y>" : "<CR>"
+
+
+"色変更 on
+:syntax on
+
+"----------------------------------"
+" 文字色変更
+"----------------------------------"
+"コメント
+hi Comment ctermfg=2
+
+"定数
+hi Constant ctermfg=9
+
+"hi Ignore ctermfg=3
+"\r\n
+hi Special ctermfg=185
+
+"hi Character ctermfg=3
+"数値定数
+"hi Number ctermfg=3
+
+hi Label ctermfg=156
+
+"文字列
+hi String ctermfg=185
+
+"define
+hi Macro ctermfg=14
+
+"include
+hi Include ctermfg=26
+
+"typedef enum struct
+hi Structure ctermfg=173
+
+"type int void ---
+hi Type ctermfg=33
+
+"------------------------------------"
+
+"挿入モード時にBackキーで消去を行う
+set backspace=indent,eol,start
+
+"複数ファイルの編集を可能にする
+set hidden
+
+"Unicodeでの行末処理
+set ambiwidth=double
+
+"大文字小文字を区別しない
+set ignorecase
+
+"大文字で検索されたら対象を大文字限定にする
+set smartcase
+
+"行末まで検索したら行頭に戻る
+set wrapscan
+
+"検索結果をハイライト
+set hlsearch
+
+"コマンドライン補完
+set wildmenu
+set virtualedit=block
+
+"カーソルラインを設定"
+""set cursorline
+
+"行数表示
+set number
+
+"行番号強調"
+""hi CursorLineNr term=bold cterm=NONE ctermfg=228 ctermbg=NONE
+
+"バックアップを取らない
+set nobackup
+
+"swapファイルを作らない
+set noswapfile
+
+"強制終了時バックアップファイルを作らない
+set nowritebackup
+
+"コマンド履歴5000
+set history=5000
+
+"タブを4
+set tabstop=4
+set shiftwidth=4
+
+"-------Format
+"自動インデントを有効
+set autoindent
+set smartindent
+
+
+"------------------------------------------------"
+" netrxカスタマイズ
+"------------------------------------------------"
+let g:netrw_liststyle=1
+
+"ヘッダ非表示"
+"let g:netrw_banner=0
+let g:netrw_sizestyle="H"
+let g:netrw_timefmt="%Y/%m/%d(%a) %H:%M:%S"
+"let g:netrw_preview=0
+
+"vでプレビューを右側に描画"
+let g:netrw_altv=1
+
+"vでプレビューを右側に描画"
+let g:netrw_alto=1
+
+filetype plugin on
+"--------------------------------------------------"
+" ステータス描画
+"--------------------------------------------------"
+set laststatus=2    "ステータスラインを常に描画"
+set showmode        "現在のモードを描画"
+set showcmd         "コマンドをステータスラインに描画"
+set ruler           "ステータスラインの右側にカーソル描画"
+
+
+"------------------------------------------------"
+" マウスの入力受付
+"------------------------------------------------"
+if has('mouse')
+    set mouse=a
+    if has('mouse_sgr')
+        set ttymouse=sgr
+    elseif v:version > 703 || v:version is 703 && has('patch632')
+        set ttymouse=sgr
+    else
+        set ttymouse=xterm2
+    endif
+endif
+
+"------------------------------------------------"
+" 文字コード自動判別
+"------------------------------------------------"
+if &encoding !=# 'utf-8'
+    set encoding=japan
+    set fileencoding=japan
+endif
+if has('iconv')
+    let s:enc_euc = 'euc-jp'
+    let s:enc_jis = 'iso-2022-jp'
+    if iconv("\x87\x64\x87\x6a", 'cp932', 'eucjp-ms') ==# "\xad\xc5\xad\xcb"
+        let s:enc_euc = 'eucjp-ms'
+        let s:enc_jis = 'iso-2022-jp-3'
+    elseif iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
+        let s:enc_euc = 'euc-jisx0213'
+        let s:enc_jis = 'iso-2022-jp-3'
+    endif
+    if &encoding !=# 'utf-8'
+        let s:fileencodings_default = &fileencodings
+        let &fileencodings = s:enc_jis .','. s:enc_euc .',cp932'
+        let &fileencodings = &fileencodings .','. s:fileencodings_default
+        unlet s:fileencodings_default
+    else
+        let &fileencodings = &fileencodings .','. s:enc_jis
+        set fileencodings+=utf-8,ucs-21e,ucs-2
+        if &encoding =~# '^\(euc-jp\|euc-jisx0213\|eucjp-ms\)$'
+            set fileencodings+=cp932
+            set fileencodings-=euc-jp
+            set fileencodings-=euc-jisx0213
+            set fileencodings-=eucjp-ms
+            set &encoding = s:enc_euc
+            set &fileencoding = s:enc_euc
+        else
+            let &fileencodings = &fileencodings .','. s:enc_euc
+        endif
+    endif
+    unlet s:enc_euc
+    unlet s:enc_jis
+endif
+if has('autocmd')
+    function! AU_ReCheck_FENC()
+        if &fileencoding =~# 'iso-2022-jp' && search("{^\x01-\x7e}", 'n') == 0
+            let &fileencoding=&encoding
+        endif
+    endfunction
+    autocmd BufreadPost * call AU_ReCheck_FENC()
+endif

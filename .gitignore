@@ -125,12 +125,11 @@ Xilinx/workspace/ArtyS7/*
 Excel/
 Videos/
 Shortcut/
-RaspberryPi/
+# RaspberryPi/
 Android/
-# Intel/
 Cad/
 picture/
-python/
+# python/
 Renesas/
 .history/
 tags
