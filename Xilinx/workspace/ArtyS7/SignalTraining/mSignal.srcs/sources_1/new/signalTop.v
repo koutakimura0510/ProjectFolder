@@ -4,10 +4,10 @@
  * Editor VSCode ver1.57.1
  * Build  Vivado20.2
  * Borad  ArtyS7
- * -
+ * 
  * LED状態遷移プロジェクト
  */
-module nv_top
+module signalTop
 #(
 parameter pCLKFreqDiv10	= 12000000
 )(

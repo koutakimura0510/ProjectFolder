@@ -18,7 +18,7 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-module nv_tb;
+module signalTB;
 
 wire CarBlue, CarYellow, CarRed;
 wire WarkBlue, WarkRed, WarkDled;
@@ -30,9 +30,8 @@ parameter SIM_BLINK = 1;
 parameter LOOP = 5;
 integer i;
 
-nv_top #(.pCLKFreqDiv10(SIM_MAX))
-        i0(.oCB(CarBlue), .oCY(CarYellow), .oCR(CarRed),
-            .oWB(WarkBlue), .oWR(WarkRed), .oWD(WarkDled),
+signalTop #(.pCLKFreqDiv10(SIM_MAX))
+        i0(.oCB(CarBlue), .oCY(CarYellow), .oCR(CarRed), .oWB(WarkBlue), .oWR(WarkRed), .oWD(WarkDled),
             .iWPBS(sw), .iRST(reset), .iCLK(clk));
 
 always begin
