@@ -1,0 +1,240 @@
+# do I2S_run_msim_rtl_verilog.do
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# vlib rtl_work
+# vmap work rtl_work
+# Model Technology ModelSim - Intel FPGA Edition vmap 2020.1 Lib Mapping Utility 2020.02 Feb 28 2020
+# vmap work rtl_work 
+# Copying /home/koutakimura/intelFPGA_lite/20.1/modelsim_ase/linuxaloem/../modelsim.ini to modelsim.ini
+# Modifying modelsim.ini
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/FF.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 15:59:16 on Feb 06,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/FF.v 
+# -- Compiling module FF
+# 
+# Top level modules:
+# 	FF
+# End time: 15:59:16 on Feb 06,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/I2S.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 15:59:16 on Feb 06,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/I2S.v 
+# -- Compiling module I2S
+# 
+# Top level modules:
+# 	I2S
+# End time: 15:59:16 on Feb 06,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/SIM.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 15:59:16 on Feb 06,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/SIM.v 
+# -- Compiling module SIM
+# 
+# Top level modules:
+# 	SIM
+# End time: 15:59:16 on Feb 06,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs="+acc"  SIM
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs=""+acc"" SIM 
+# Start time: 15:59:16 on Feb 06,2021
+# Loading work.SIM
+# Loading work.I2S
+# Loading work.FF
+# 
+# add wave *
+# view structure
+# .main_pane.structure.interior.cs.body.struct
+# view signals
+# .main_pane.objects.interior.cs.body.tree
+# run -all
+# ** Note: $finish    : /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/SIM.v(35)
+#    Time: 160032 ns  Iteration: 0  Instance: /SIM
+# 1
+# Break in Module SIM at /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/SIM.v line 35
+add wave -position insertpoint  \
+{sim:/SIM/arduino_io[7]}
+add wave -position insertpoint  \
+{sim:/SIM/arduino_io[6]}
+add wave -position insertpoint  \
+{sim:/SIM/arduino_io[5]}
+add wave -position insertpoint  \
+sim:/SIM/i0/datai
+add wave -position insertpoint  \
+sim:/SIM/i0/datao
+add wave -position insertpoint  \
+sim:/SIM/i0/bcount
+restart
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/SIM/i0/lrclk_ix
+add wave -position insertpoint  \
+sim:/SIM/i0/bclk_ix
+add wave -position insertpoint  \
+sim:/SIM/i0/data_ix
+restart
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+restart -f
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/I2S.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 17:07:17 on Feb 06,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/I2S.v 
+# -- Compiling module I2S
+# 
+# Top level modules:
+# 	I2S
+# End time: 17:07:17 on Feb 06,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart
+# Loading work.I2S
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/SIM/i0/datax
+restart -f
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/I2S.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 17:15:07 on Feb 06,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/I2S.v 
+# -- Compiling module I2S
+# 
+# Top level modules:
+# 	I2S
+# End time: 17:15:07 on Feb 06,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.I2S
+run
+run
+add wave -position insertpoint  \
+sim:/SIM/i0/datar
+add wave -position insertpoint  \
+sim:/SIM/i0/datal
+restart -f
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+# ** Note: $finish    : /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/SIM.v(35)
+#    Time: 160032 ns  Iteration: 0  Instance: /SIM
+# 1
+# Break in Module SIM at /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/SIM.v line 35
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/I2S.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 17:31:33 on Feb 06,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/I2S.v 
+# -- Compiling module I2S
+# 
+# Top level modules:
+# 	I2S
+# End time: 17:31:33 on Feb 06,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart
+# Loading work.I2S
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+# End time: 18:19:13 on Feb 06,2021, Elapsed time: 2:19:57
+# Errors: 0, Warnings: 0

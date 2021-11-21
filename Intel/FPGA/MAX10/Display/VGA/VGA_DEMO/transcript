@@ -1,0 +1,182 @@
+# reading /home/koutakimura/intelFPGA_lite/20.1/modelsim_ase/linuxaloem/../modelsim.ini
+# Loading project work
+# Compile of TEST.v was successful.
+# Compile of VGA_DEMO.v was successful.
+# Compile of HVSYNC_GEN.v was successful.
+# 3 compiles, 0 failed with no errors.
+vsim work.TEST
+# vsim work.TEST 
+# Start time: 20:28:14 on Feb 15,2021
+# Loading work.TEST
+# Loading work.VGA_DEMO
+# Loading work.HVSYNC_GEN
+# ** Error: (vsim-3033) Instantiation of 'EN_GEN' failed. The design unit was not found.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 37
+#         Searched libraries:
+#             /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/work
+# ** Error: (vsim-3033) Instantiation of 'LED_DEMO' failed. The design unit was not found.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 38
+#         Searched libraries:
+#             /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/work
+# Error loading design
+# End time: 20:28:14 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 2, Warnings: 2
+vsim work.TEST
+# vsim work.TEST 
+# Start time: 20:28:53 on Feb 15,2021
+# Loading work.TEST
+# Loading work.VGA_DEMO
+# Loading work.HVSYNC_GEN
+# ** Error: (vsim-3033) Instantiation of 'EN_GEN' failed. The design unit was not found.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 37
+#         Searched libraries:
+#             /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/work
+# ** Error: (vsim-3033) Instantiation of 'LED_DEMO' failed. The design unit was not found.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 38
+#         Searched libraries:
+#             /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/work
+# Error loading design
+# End time: 20:28:53 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 2, Warnings: 1
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# No ports found in TEST
+# reading /home/koutakimura/intelFPGA_lite/20.1/modelsim_ase/linuxaloem/../modelsim.ini
+vdel -all -lib work
+# Loading project work
+# Compile of TEST.v was successful.
+# Compile of VGA_DEMO.v was successful.
+# Compile of HVSYNC_GEN.v was successful.
+# 3 compiles, 0 failed with no errors.
+vsim work.TEST
+# vsim work.TEST 
+# Start time: 20:32:32 on Feb 15,2021
+# Loading work.TEST
+# Loading work.VGA_DEMO
+# Loading work.HVSYNC_GEN
+# ** Error: (vsim-3033) Instantiation of 'EN_GEN' failed. The design unit was not found.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 37
+#         Searched libraries:
+#             /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/work
+# ** Error: (vsim-3033) Instantiation of 'LED_DEMO' failed. The design unit was not found.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 38
+#         Searched libraries:
+#             /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/work
+# Error loading design
+# End time: 20:32:32 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 2, Warnings: 7
+# Compile of TEST.v was successful.
+# Compile of VGA_DEMO.v was successful.
+# Compile of HVSYNC_GEN.v was successful.
+# Compile of EN_GEN.v was successful.
+# Compile of LED_DEMO.v was successful.
+# 5 compiles, 0 failed with no errors.
+vsim work.TEST
+# vsim work.TEST 
+# Start time: 20:33:31 on Feb 15,2021
+# Loading work.TEST
+# Loading work.VGA_DEMO
+# Loading work.HVSYNC_GEN
+# Loading work.EN_GEN
+# Loading work.LED_DEMO
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 37
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(37): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+add wave -position insertpoint  \
+sim:/TEST/i0/RESET
+add wave -position insertpoint  \
+sim:/TEST/i0/CLK
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_R
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_G
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_B
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_HS
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_VS
+add wave -position insertpoint  \
+sim:/TEST/i0/clk_gen
+add wave -position insertpoint  \
+sim:/TEST/i0/display_on
+add wave -position insertpoint  \
+sim:/TEST/i0/hpos
+add wave -position insertpoint  \
+sim:/TEST/i0/vpos
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/hmax
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/vmax
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+# ** Note: $finish    : /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v(36)
+#    Time: 200500 ns  Iteration: 0  Instance: /TEST
+# 1
+# Break in Module TEST at /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v line 36
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+# End time: 20:35:47 on Feb 15,2021, Elapsed time: 0:02:16
+# Errors: 0, Warnings: 6

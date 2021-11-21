@@ -1,0 +1,18 @@
+Fitter Status : Successful - Sat Feb  6 17:37:16 2021
+Quartus Prime Version : 20.1.1 Build 720 11/11/2020 SJ Lite Edition
+Revision Name : I2S
+Top-level Entity Name : I2S
+Family : MAX 10
+Device : 10M50DAF484C6GES
+Timing Models : Preliminary
+Total logic elements : 157 / 49,760 ( < 1 % )
+    Total combinational functions : 89 / 49,760 ( < 1 % )
+    Dedicated logic registers : 145 / 49,760 ( < 1 % )
+Total registers : 148
+Total pins : 18 / 360 ( 5 % )
+Total virtual pins : 0
+Total memory bits : 0 / 1,677,312 ( 0 % )
+Embedded Multiplier 9-bit elements : 0 / 288 ( 0 % )
+Total PLLs : 0 / 4 ( 0 % )
+UFM blocks : 0 / 1 ( 0 % )
+ADC blocks : 0 / 2 ( 0 % )

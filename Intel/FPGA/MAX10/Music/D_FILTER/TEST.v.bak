@@ -1,0 +1,52 @@
+/*
+ * テストベンチ
+ */
+
+`timescale 1ns / 1ps
+module TESET;
+
+reg [7:0] cnt;
+reg reset, clk;
+reg sclk, senable, mosi;
+wire [15:0] arduino_io;
+
+D_FILTER i0(.CLK(CLK), .RESET(reset), .ARDUINO_IO(arduino_io));
+
+parameter CYCLE = 32;
+
+always begin
+    #(CYCLE) clk = ~clk;
+end
+
+always begin
+    if (senable == 1'b0 && cnt != 8'd7) begin
+        #(CYCLE * 5)
+        sclk = ~sclk;
+        cnt <= cnt + 8'h1;
+    end
+end
+
+assign arduino_io[0] = (sclk == 1'b1) ? 1'b1 : 1'b0;
+assign arduino_io[1] = senable;
+assign arduino_io[2] = (sclk == 1'b1) ? 1'b1 : 1'b0;
+
+initial begin
+    #0;
+    reset   = 1;
+    clk     = 0;
+    sclk    = 0;
+    senable = 1;
+    mosi    = 0;
+
+    #(CYCLE);
+    reset   = 0;
+    senable = 0;
+
+    #(CYCLE * 20);
+    senable = 1;
+
+    #(CYCLE * 2000);
+    $finish;
+end
+
+endmodule

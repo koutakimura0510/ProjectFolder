@@ -1,0 +1,56 @@
+module NOTE (
+    CLK, RESET, ENABLE, GPIO
+);
+
+input CLK, RESET, ENABLE;
+output reg GPIO;
+reg [2:0]  cnt;
+reg [11:0] note, saw;
+
+always @(posedge CLK) begin
+    if (RESET == 1'b1) begin
+        cnt <= 3'b0;
+    end
+    else if (ENABLE == 1'b1) begin
+        if (cnt == 3'b7) begin
+            cnt <= 3'b0;
+        else
+            cnt <= cnt + 3'b1;
+        end
+    end
+end
+
+always @* begin
+    case (cnt)
+        3'h0: note <= 8'd224;
+        3'h1: note <= 8'd198;
+        3'h2: note <= 8'd176;
+        3'h3: note <= 8'd166;
+        3'h4: note <= 8'd148;
+        3'h5: note <= 8'd132;
+        3'h6: note <= 8'd118;
+        3'h7: note <= 8'd112;
+    endcase
+end
+
+always @(posedge CLK) begin
+    if (RESET) begin
+        saw <= 12'h0;
+    end
+    else begin
+        if (saw == note) begin
+            saw <= 0;
+        end
+        else begin
+            saw <= saw + 1'd1;
+        end
+    end
+end
+
+always @(posedge CLK) begin
+    if (saw == 12'h0) begin
+        GPIO <= ~GPIO;
+    end
+end
+
+endmodule

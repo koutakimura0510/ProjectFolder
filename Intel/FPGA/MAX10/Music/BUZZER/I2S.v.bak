@@ -1,0 +1,15 @@
+module I2S (
+    CLK, RESET,
+    LRCLK_IN, BCLK_IN, DOUT_IN,
+    LRCLK, BCLK, DOUT
+);
+
+input CLK, RESET;
+input LRCLK_IN, BCLK_IN, DOUT_IN;
+output LRCLK, BCLK, DOUT;
+
+assign LRCLK = LRCLK_IN;
+assign BCLK = BCLK_IN;
+assign DOUT = DOUT_IN;
+
+endmodule

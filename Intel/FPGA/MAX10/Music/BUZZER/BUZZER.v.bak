@@ -1,0 +1,13 @@
+module BUZZER (
+    input CLK, RESET,
+    output LEDR
+);
+
+always @(posedge CLK) begin
+    if (RESET == 1'b1)
+        LEDR <= 1'b0;
+    else
+        LEDR <= 1'b1;
+end
+
+endmodule

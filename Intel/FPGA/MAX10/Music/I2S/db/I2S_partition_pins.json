@@ -1,0 +1,41 @@
+{
+	"partitions" : [
+		{
+			"name" : "Top",
+			"pins" : [
+				{
+					"name" : "ARDUINO_IO[5]",
+					"strict" : false
+				},
+				{
+					"name" : "ARDUINO_IO[6]",
+					"strict" : false
+				},
+				{
+					"name" : "ARDUINO_IO[7]",
+					"strict" : false
+				},
+				{
+					"name" : "ARDUINO_IO[11]",
+					"strict" : false
+				},
+				{
+					"name" : "ARDUINO_IO[12]",
+					"strict" : false
+				},
+				{
+					"name" : "ARDUINO_IO[13]",
+					"strict" : false
+				},
+				{
+					"name" : "RESET",
+					"strict" : false
+				},
+				{
+					"name" : "CLK",
+					"strict" : false
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,67 @@
+/* -
+ * Arduino IO Pin
+ * [Input]
+ * IO7 LRCLK
+ * IO6 BCLK
+ * IO5 DIN
+ *
+ * [Output]
+ * IO13 LRCLK
+ * IO12 BCLK
+ * IO11 DIN
+ *
+ * [I2S]
+ * 48khzサンプリング　32bitデータ送信
+ * I2SのCLKで同期せずに、FPGAのCLKで同期を行う
+ * 1LRCLK分出力を遅らせ、1サイクルの間に音源データにフィルタをかける
+ */
+module D_FILTER (
+    input CLK, RESET,
+    inout [15:0] ARDUINO_IO
+);
+
+//* 音源データの取得
+wire SOUND_DATA, BCLK_LAST, LRCLK_LAST;
+wire [7:0] BCOUNT;
+wire [31:0] IDATA;
+wire [31:0] RDATA, LDATA;
+
+
+//* 同期カウンタのため、メタ・ステーブル対策を行う
+FF lrclk_ff (CLK, ARDUINO_IO[7], LRCLK);
+FF bclk_ff  (CLK, ARDUINO_IO[6], BCLK);
+FF data_ff  (CLK, ARDUINO_IO[5], DIN);
+
+//* 1LRCLK後の出力を取得
+I2S I2S_GET_DATA (CLK, RESET, LRCLK, BCLK, DIN, IDATA, BCOUNT, BCLK_LAST, LRCLK_LAST);
+
+MAVG_FILTER (.CLK(CLK),
+			 .RESET(RESET),
+			 .ENABLE(~BCLK_LAST & BCLK && BCOUNT == 0 && ~LRCLK),
+			 .IDATA(datai),
+			 .ODATA(RDATA)
+			);
+
+MAVG_FILTER (.CLK(CLK),
+			 .RESET(RESET),
+			 .ENABLE(~BCLK_LAST & BCLK && BCOUNT == 0 && LRCLK),
+			 .IDATA(IDATA),
+			 .ODATA(LDATA)
+			);
+
+I2S_OUT I2S_ODATA(.CLK(CLK),
+                  .RESET(RESET),
+                  .LRCLK(LRCLK),
+                  .BCLK_LAST(BCLK_LAST),
+                  .BCLK(BCLK),
+                  .BCOUNT(BCOUNT),
+                  .LDATA(LDATA),
+                  .RDATA(RDATA),
+                  .SOUND_DATA(SOUND_DATA)
+                );
+
+assign ARDUINO_IO[11] = SOUND_DATA;
+assign ARDUINO_IO[12] = BCLK;
+assign ARDUINO_IO[13] = LRCLK;
+
+endmodule

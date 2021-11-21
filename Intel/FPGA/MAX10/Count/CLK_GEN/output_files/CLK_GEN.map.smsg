@@ -1,0 +1,1 @@
+Info (10281): Verilog HDL Declaration information at CLK_GEN.v(9): object "DIV_NUMBER" differs only in case from object "div_number" in the same scope File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v Line: 9

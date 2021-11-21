@@ -1,0 +1,186 @@
+|VGA_SPI_TOP
+CLK => CLK.IN4
+RESET => RESET.IN1
+VGA_R[0] <= VGA_R.DB_MAX_OUTPUT_PORT_TYPE
+VGA_R[1] <= VGA_R.DB_MAX_OUTPUT_PORT_TYPE
+VGA_R[2] <= VGA_R.DB_MAX_OUTPUT_PORT_TYPE
+VGA_R[3] <= VGA_R.DB_MAX_OUTPUT_PORT_TYPE
+VGA_G[0] <= <GND>
+VGA_G[1] <= <GND>
+VGA_G[2] <= <GND>
+VGA_G[3] <= <GND>
+VGA_B[0] <= HVSYNC_GEN:SYNC_GEN.display_on
+VGA_B[1] <= HVSYNC_GEN:SYNC_GEN.display_on
+VGA_B[2] <= HVSYNC_GEN:SYNC_GEN.display_on
+VGA_B[3] <= HVSYNC_GEN:SYNC_GEN.display_on
+VGA_HS <= HVSYNC_GEN:SYNC_GEN.VGA_HS
+VGA_VS <= HVSYNC_GEN:SYNC_GEN.VGA_VS
+ARDUINO_IO[0] <> FF:sclk_ff.port1
+ARDUINO_IO[1] <> FF:cs_ff.port1
+ARDUINO_IO[2] <> FF:mosi_ff.port1
+ARDUINO_IO[3] <> <UNC>
+ARDUINO_IO[4] <> <UNC>
+ARDUINO_IO[5] <> <UNC>
+ARDUINO_IO[6] <> <UNC>
+ARDUINO_IO[7] <> <UNC>
+ARDUINO_IO[8] <> <UNC>
+ARDUINO_IO[9] <> <UNC>
+ARDUINO_IO[10] <> <UNC>
+ARDUINO_IO[11] <> <UNC>
+ARDUINO_IO[12] <> <UNC>
+ARDUINO_IO[13] <> <UNC>
+ARDUINO_IO[14] <> <UNC>
+ARDUINO_IO[15] <> <UNC>
+
+
+|VGA_SPI_TOP|FF:mosi_ff
+CLK => sreg[0].CLK
+CLK => sreg[1].CLK
+IDATA => sreg[0].DATAIN
+ODATA <= sreg[1].DB_MAX_OUTPUT_PORT_TYPE
+
+
+|VGA_SPI_TOP|FF:cs_ff
+CLK => sreg[0].CLK
+CLK => sreg[1].CLK
+IDATA => sreg[0].DATAIN
+ODATA <= sreg[1].DB_MAX_OUTPUT_PORT_TYPE
+
+
+|VGA_SPI_TOP|FF:sclk_ff
+CLK => sreg[0].CLK
+CLK => sreg[1].CLK
+IDATA => sreg[0].DATAIN
+ODATA <= sreg[1].DB_MAX_OUTPUT_PORT_TYPE
+
+
+|VGA_SPI_TOP|SPI:SPI_GET_DATA
+CLK => p_dat_reg[0].CLK
+CLK => p_dat_reg[1].CLK
+CLK => p_dat_reg[2].CLK
+CLK => p_dat_reg[3].CLK
+CLK => p_dat_reg[4].CLK
+CLK => p_dat_reg[5].CLK
+CLK => p_dat_reg[6].CLK
+CLK => p_dat_reg[7].CLK
+CLK => cnt_reg[0].CLK
+CLK => cnt_reg[1].CLK
+CLK => cnt_reg[2].CLK
+CLK => rcv_reg[0].CLK
+CLK => rcv_reg[1].CLK
+CLK => rcv_reg[2].CLK
+CLK => rcv_reg[3].CLK
+CLK => rcv_reg[4].CLK
+CLK => rcv_reg[5].CLK
+CLK => rcv_reg[6].CLK
+CLK => rcv_reg[7].CLK
+CLK => s_enb_reg.CLK
+CLK => s_clk_reg[0].CLK
+CLK => s_clk_reg[1].CLK
+CLK => s_clk_reg[2].CLK
+RESET => s_clk_reg.OUTPUTSELECT
+RESET => s_clk_reg.OUTPUTSELECT
+RESET => s_clk_reg.OUTPUTSELECT
+RESET => s_enb_reg.OUTPUTSELECT
+RESET => rcv_reg.OUTPUTSELECT
+RESET => rcv_reg.OUTPUTSELECT
+RESET => rcv_reg.OUTPUTSELECT
+RESET => rcv_reg.OUTPUTSELECT
+RESET => rcv_reg.OUTPUTSELECT
+RESET => rcv_reg.OUTPUTSELECT
+RESET => rcv_reg.OUTPUTSELECT
+RESET => rcv_reg.OUTPUTSELECT
+RESET => cnt_reg.OUTPUTSELECT
+RESET => cnt_reg.OUTPUTSELECT
+RESET => cnt_reg.OUTPUTSELECT
+RESET => p_dat_reg.OUTPUTSELECT
+RESET => p_dat_reg.OUTPUTSELECT
+RESET => p_dat_reg.OUTPUTSELECT
+RESET => p_dat_reg.OUTPUTSELECT
+RESET => p_dat_reg.OUTPUTSELECT
+RESET => p_dat_reg.OUTPUTSELECT
+RESET => p_dat_reg.OUTPUTSELECT
+RESET => p_dat_reg.OUTPUTSELECT
+SCLK => s_clk_reg.DATAA
+SENABLE => s_enb_reg.DATAB
+MOSI => rcv_reg.DATAB
+SDATA[0] <= p_dat_reg[0].DB_MAX_OUTPUT_PORT_TYPE
+SDATA[1] <= p_dat_reg[1].DB_MAX_OUTPUT_PORT_TYPE
+SDATA[2] <= p_dat_reg[2].DB_MAX_OUTPUT_PORT_TYPE
+SDATA[3] <= p_dat_reg[3].DB_MAX_OUTPUT_PORT_TYPE
+SDATA[4] <= p_dat_reg[4].DB_MAX_OUTPUT_PORT_TYPE
+SDATA[5] <= p_dat_reg[5].DB_MAX_OUTPUT_PORT_TYPE
+SDATA[6] <= p_dat_reg[6].DB_MAX_OUTPUT_PORT_TYPE
+SDATA[7] <= p_dat_reg[7].DB_MAX_OUTPUT_PORT_TYPE
+
+
+|VGA_SPI_TOP|HVSYNC_GEN:SYNC_GEN
+CLK => vpos[0]~reg0.CLK
+CLK => vpos[1]~reg0.CLK
+CLK => vpos[2]~reg0.CLK
+CLK => vpos[3]~reg0.CLK
+CLK => vpos[4]~reg0.CLK
+CLK => vpos[5]~reg0.CLK
+CLK => vpos[6]~reg0.CLK
+CLK => vpos[7]~reg0.CLK
+CLK => vpos[8]~reg0.CLK
+CLK => vpos[9]~reg0.CLK
+CLK => VGA_VS~reg0.CLK
+CLK => hpos[0]~reg0.CLK
+CLK => hpos[1]~reg0.CLK
+CLK => hpos[2]~reg0.CLK
+CLK => hpos[3]~reg0.CLK
+CLK => hpos[4]~reg0.CLK
+CLK => hpos[5]~reg0.CLK
+CLK => hpos[6]~reg0.CLK
+CLK => hpos[7]~reg0.CLK
+CLK => hpos[8]~reg0.CLK
+CLK => hpos[9]~reg0.CLK
+CLK => VGA_HS~reg0.CLK
+RESET => hpos.OUTPUTSELECT
+RESET => hpos.OUTPUTSELECT
+RESET => hpos.OUTPUTSELECT
+RESET => hpos.OUTPUTSELECT
+RESET => hpos.OUTPUTSELECT
+RESET => hpos.OUTPUTSELECT
+RESET => hpos.OUTPUTSELECT
+RESET => hpos.OUTPUTSELECT
+RESET => hpos.OUTPUTSELECT
+RESET => hpos.OUTPUTSELECT
+RESET => vpos.OUTPUTSELECT
+RESET => vpos.OUTPUTSELECT
+RESET => vpos.OUTPUTSELECT
+RESET => vpos.OUTPUTSELECT
+RESET => vpos.OUTPUTSELECT
+RESET => vpos.OUTPUTSELECT
+RESET => vpos.OUTPUTSELECT
+RESET => vpos.OUTPUTSELECT
+RESET => vpos.OUTPUTSELECT
+RESET => vpos.OUTPUTSELECT
+RESET => hmax.IN1
+RESET => vmax.IN1
+VGA_HS <= VGA_HS~reg0.DB_MAX_OUTPUT_PORT_TYPE
+VGA_VS <= VGA_VS~reg0.DB_MAX_OUTPUT_PORT_TYPE
+display_on <= display_on.DB_MAX_OUTPUT_PORT_TYPE
+hpos[0] <= hpos[0]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+hpos[1] <= hpos[1]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+hpos[2] <= hpos[2]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+hpos[3] <= hpos[3]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+hpos[4] <= hpos[4]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+hpos[5] <= hpos[5]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+hpos[6] <= hpos[6]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+hpos[7] <= hpos[7]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+hpos[8] <= hpos[8]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+hpos[9] <= hpos[9]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+vpos[0] <= vpos[0]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+vpos[1] <= vpos[1]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+vpos[2] <= vpos[2]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+vpos[3] <= vpos[3]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+vpos[4] <= vpos[4]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+vpos[5] <= vpos[5]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+vpos[6] <= vpos[6]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+vpos[7] <= vpos[7]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+vpos[8] <= vpos[8]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+vpos[9] <= vpos[9]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+

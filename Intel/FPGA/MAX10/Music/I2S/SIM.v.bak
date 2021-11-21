@@ -1,0 +1,36 @@
+`timescale 1ns / 1ps
+module SIM;
+// Inputs
+reg reset;
+reg clk;
+// Outputs
+wire [15:0] arduino_io;
+
+I2S (
+    .CLK(clk),
+    .RESET(reset),
+    .ARDUINO_IO(arduino_io)
+);
+
+parameter CYCLE = 32;                   // 1サイクルを64と定義する
+
+always #(CYCLE) clk = ~clk;             // クロック生成
+always #(CYCLE*907) arduino_io[7] = ~arduino_io[7];
+always #(CYCLE*907/32) arduino_io[6] = ~arduino_io[6];
+always #(CYCLE*907/32*6) arduino_io[5] = ~arduino_io[5];
+
+initial begin
+    #0;             // 初期化
+    reset = 1;
+    clk = 0;
+    bclk_i = 0;
+    data_i = 0;
+    lrclk_i = 1;
+
+    #(CYCLE);
+    reset = 0;        // リセット解除
+
+    #(CYCLE*5000);
+    $finish;        // シミュレーション終了
+end
+endmodule

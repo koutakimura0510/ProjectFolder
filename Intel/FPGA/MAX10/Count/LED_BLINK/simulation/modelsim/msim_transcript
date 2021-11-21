@@ -1,0 +1,56 @@
+# do LED_BLINK_run_msim_rtl_verilog.do
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# vlib rtl_work
+# vmap work rtl_work
+# Model Technology ModelSim - Intel FPGA Edition vmap 2020.1 Lib Mapping Utility 2020.02 Feb 28 2020
+# vmap work rtl_work 
+# Copying /home/koutakimura/intelFPGA_lite/20.1/modelsim_ase/linuxaloem/../modelsim.ini to modelsim.ini
+# Modifying modelsim.ini
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/LED_BLINK {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/LED_BLINK/LED_BLINK.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 16:06:55 on Jan 27,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/LED_BLINK" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/LED_BLINK/LED_BLINK.v 
+# -- Compiling module LED_BLINK
+# 
+# Top level modules:
+# 	LED_BLINK
+# End time: 16:06:55 on Jan 27,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/LED_BLINK {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/LED_BLINK/TEST_LED_BLINK.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 16:06:55 on Jan 27,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/LED_BLINK" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/LED_BLINK/TEST_LED_BLINK.v 
+# -- Compiling module TEST_LED_BLINK
+# 
+# Top level modules:
+# 	TEST_LED_BLINK
+# End time: 16:06:55 on Jan 27,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs="+acc"  TEST_LED_BLINK
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs=""+acc"" TEST_LED_BLINK 
+# Start time: 16:06:55 on Jan 27,2021
+# Loading work.TEST_LED_BLINK
+# Loading work.LED_BLINK
+# 
+# add wave *
+# view structure
+# .main_pane.structure.interior.cs.body.struct
+# view signals
+# .main_pane.objects.interior.cs.body.tree
+# run -all
+# ** Note: $stop    : /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/LED_BLINK/TEST_LED_BLINK.v(20)
+#    Time: 1620 ns  Iteration: 0  Instance: /TEST_LED_BLINK
+# Break in Module TEST_LED_BLINK at /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/LED_BLINK/TEST_LED_BLINK.v line 20
+add wave -position insertpoint  \
+sim:/TEST_LED_BLINK/i0/ENABLE
+run
+restart
+run
+run
+# End time: 16:09:06 on Jan 27,2021, Elapsed time: 0:02:11
+# Errors: 0, Warnings: 0

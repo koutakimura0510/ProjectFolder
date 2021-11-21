@@ -1,0 +1,16 @@
+Analysis & Synthesis Status : Successful - Thu Jan 28 19:26:00 2021
+Quartus Prime Version : 20.1.1 Build 720 11/11/2020 SJ Lite Edition
+Revision Name : nios2pio
+Top-level Entity Name : nios2pio
+Family : MAX 10
+Total logic elements : 3,475
+    Total combinational functions : 2,849
+    Dedicated logic registers : 1,961
+Total registers : 1961
+Total pins : 164
+Total virtual pins : 0
+Total memory bits : 128,512
+Embedded Multiplier 9-bit elements : 6
+Total PLLs : 0
+UFM blocks : 0
+ADC blocks : 0

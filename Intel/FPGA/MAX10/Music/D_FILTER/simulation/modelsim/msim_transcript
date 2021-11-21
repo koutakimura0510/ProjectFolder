@@ -1,0 +1,726 @@
+# do D_FILTER_run_msim_rtl_verilog.do
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# vlib rtl_work
+# vmap work rtl_work
+# Model Technology ModelSim - Intel FPGA Edition vmap 2020.1 Lib Mapping Utility 2020.02 Feb 28 2020
+# vmap work rtl_work 
+# Copying /home/koutakimura/intelFPGA_lite/20.1/modelsim_ase/linuxaloem/../modelsim.ini to modelsim.ini
+# Modifying modelsim.ini
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 13:53:35 on Feb 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 13:53:36 on Feb 13,2021, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/RC_FILTER.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 13:53:36 on Feb 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/RC_FILTER.v 
+# -- Compiling module RC_FILTER
+# 
+# Top level modules:
+# 	RC_FILTER
+# End time: 13:53:36 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/I2S_OUT.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 13:53:36 on Feb 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/I2S_OUT.v 
+# -- Compiling module I2S_OUT
+# 
+# Top level modules:
+# 	I2S_OUT
+# End time: 13:53:36 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/I2S.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 13:53:36 on Feb 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/I2S.v 
+# -- Compiling module I2S
+# 
+# Top level modules:
+# 	I2S
+# End time: 13:53:36 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/FF.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 13:53:36 on Feb 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/FF.v 
+# -- Compiling module FF
+# 
+# Top level modules:
+# 	FF
+# End time: 13:53:36 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/D_FILTER.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 13:53:36 on Feb 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/D_FILTER.v 
+# -- Compiling module D_FILTER
+# 
+# Top level modules:
+# 	D_FILTER
+# End time: 13:53:36 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/DECODER.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 13:53:36 on Feb 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/DECODER.v 
+# -- Compiling module DECODER
+# 
+# Top level modules:
+# 	DECODER
+# End time: 13:53:36 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 13:53:36 on Feb 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 13:53:36 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs="+acc"  TEST
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs=""+acc"" TEST 
+# Start time: 13:53:36 on Feb 13,2021
+# Loading work.TEST
+# Loading work.D_FILTER
+# Loading work.FF
+# Loading work.SPI
+# Loading work.I2S
+# Loading work.RC_FILTER
+# Loading work.I2S_OUT
+# Loading work.DECODER
+# 
+# add wave *
+# view structure
+# .main_pane.structure.interior.cs.body.struct
+# view signals
+# .main_pane.objects.interior.cs.body.tree
+# run -all
+# ** Note: $finish    : /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v(51)
+#    Time: 72064 ns  Iteration: 0  Instance: /TEST
+# 1
+# Break in Module TEST at /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v line 51
+add wave -position insertpoint  \
+sim:/TEST/i0/SPI_GET_DATA/s_clk_rise
+add wave -position insertpoint  \
+sim:/TEST/i0/SPI_GET_DATA/s_enb_reg
+add wave -position insertpoint  \
+sim:/TEST/i0/SPI_GET_DATA/s_clk_reg
+add wave -position insertpoint  \
+sim:/TEST/i0/SPI_GET_DATA/cnt_reg
+add wave -position insertpoint  \
+sim:/TEST/i0/SPI_GET_DATA/rcv_reg
+add wave -position insertpoint  \
+sim:/TEST/i0/SPI_GET_DATA/p_dat_reg
+add wave -position insertpoint  \
+sim:/TEST/i0/SPI_GET_DATA/MOSI
+restart
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 13:58:35 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 13:58:35 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.TEST
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/i0/SPI_GET_DATA/SCLK
+restart
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:37:21 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 14:37:21 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart
+# Loading work.SPI
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:39:08 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# ** Error: (vlog-13069) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v(26): near ":": syntax error, unexpected ':', expecting ';'.
+# End time: 14:39:08 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:39:36 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# ** Error: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v(26): A begin/end block was found with an empty body.  This is permitted in SystemVerilog, but not permitted in Verilog.  Please look for any stray semicolons.
+# End time: 14:39:36 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:39:47 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# ** Error: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v(26): A begin/end block was found with an empty body.  This is permitted in SystemVerilog, but not permitted in Verilog.  Please look for any stray semicolons.
+# End time: 14:39:47 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:40:13 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 14:40:13 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.SPI
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:57:26 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 14:57:26 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.SPI
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:57:49 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 14:57:49 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.SPI
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 15:08:56 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 15:08:56 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart
+# Loading work.SPI
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 15:33:19 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 15:33:19 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 15:33:21 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 15:33:21 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+run
+restart
+# Loading work.TEST
+# Loading work.SPI
+run
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/i0/SPI_GET_DATA/SDATA
+restart
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 15:40:41 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 15:40:41 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 15:40:42 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 15:40:42 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.TEST
+# Loading work.SPI
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 15:42:25 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 15:42:25 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.SPI
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 15:47:17 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 15:47:17 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.SPI
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 16:56:23 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 16:56:23 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 16:56:24 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 16:56:25 on Feb 13,2021, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+restart
+# Loading work.TEST
+# Loading work.SPI
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/i0/SPI_GET_DATA/s_enb_reg
+restart
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 16:59:16 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 16:59:16 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.TEST
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+restart
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 17:26:01 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 17:26:01 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.SPI
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 17:29:38 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 17:29:38 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 17:30:42 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 17:30:42 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.SPI
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 17:44:22 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 17:44:23 on Feb 13,2021, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.SPI
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 17:51:00 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 17:51:00 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.SPI
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 18:12:05 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 18:12:05 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.SPI
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 18:21:15 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 18:21:15 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.SPI
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 18:40:31 on Feb 13,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v 
+# -- Compiling module SPI
+# 
+# Top level modules:
+# 	SPI
+# End time: 18:40:31 on Feb 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.SPI
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+# End time: 19:05:48 on Feb 13,2021, Elapsed time: 5:12:12
+# Errors: 0, Warnings: 0

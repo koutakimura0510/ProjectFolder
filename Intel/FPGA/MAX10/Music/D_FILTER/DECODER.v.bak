@@ -1,0 +1,11 @@
+module DECODER(
+	input  [3:0] COUNT,
+	output reg [7:0] nSEG
+);
+
+always @(COUNT) begin
+	case (COUNT)
+		4'h0: nSEG <= 
+end
+
+endmodule 

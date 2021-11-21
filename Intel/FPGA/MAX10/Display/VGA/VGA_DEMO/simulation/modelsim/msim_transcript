@@ -1,0 +1,1586 @@
+# do VGA_DEMO_run_msim_rtl_verilog.do
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# vlib rtl_work
+# vmap work rtl_work
+# Model Technology ModelSim - Intel FPGA Edition vmap 2020.1 Lib Mapping Utility 2020.02 Feb 28 2020
+# vmap work rtl_work 
+# Copying /home/koutakimura/intelFPGA_lite/20.1/modelsim_ase/linuxaloem/../modelsim.ini to modelsim.ini
+# Modifying modelsim.ini
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/LEDR {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/LEDR/LED_DEMO.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:15:04 on Feb 15,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/LEDR" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/LEDR/LED_DEMO.v 
+# -- Compiling module LED_DEMO
+# 
+# Top level modules:
+# 	LED_DEMO
+# End time: 14:15:04 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/ENABLE {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/ENABLE/EN_GEN.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:15:04 on Feb 15,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/ENABLE" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/ENABLE/EN_GEN.v 
+# -- Compiling module EN_GEN
+# 
+# Top level modules:
+# 	EN_GEN
+# End time: 14:15:04 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:15:04 on Feb 15,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v 
+# -- Compiling module VGA_DEMO
+# 
+# Top level modules:
+# 	VGA_DEMO
+# End time: 14:15:04 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:15:04 on Feb 15,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v 
+# -- Compiling module HVSYNC_GEN
+# 
+# Top level modules:
+# 	HVSYNC_GEN
+# End time: 14:15:04 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:15:04 on Feb 15,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 14:15:04 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs="+acc"  TEST
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs=""+acc"" TEST 
+# Start time: 14:15:04 on Feb 15,2021
+# Loading work.TEST
+# Loading work.VGA_DEMO
+# Loading work.HVSYNC_GEN
+# Loading work.EN_GEN
+# Loading work.LED_DEMO
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+# 
+# add wave *
+# view structure
+# .main_pane.structure.interior.cs.body.struct
+# view signals
+# .main_pane.objects.interior.cs.body.tree
+# run -all
+# ** Note: $finish    : /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v(41)
+#    Time: 200500 ns  Iteration: 0  Instance: /TEST
+# 1
+# Break in Module TEST at /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v line 41
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/hpos
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/vpos
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/hmax
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/vmax
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/CLK
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/i0/hpos
+add wave -position insertpoint  \
+sim:/TEST/i0/vpos
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:21:35 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v 
+# -- Compiling module HVSYNC_GEN
+# 
+# Top level modules:
+# 	HVSYNC_GEN
+# End time: 14:21:35 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:21:37 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 14:21:37 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:21:39 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v 
+# -- Compiling module VGA_DEMO
+# 
+# Top level modules:
+# 	VGA_DEMO
+# End time: 14:21:40 on Feb 15,2021, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.TEST
+# Loading work.VGA_DEMO
+# Loading work.HVSYNC_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:24:46 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 14:24:46 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.TEST
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/RESET
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/CLK
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:32:22 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 14:32:22 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.TEST
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/r'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/g'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/b'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/SYNC_GEN/hpos'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/SYNC_GEN/vpos'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/SYNC_GEN/hmax'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/SYNC_GEN/vmax'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/SYNC_GEN/CLK'. 
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:34:39 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 14:34:39 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart
+# Loading work.TEST
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/i0/hpos
+add wave -position insertpoint  \
+sim:/TEST/i0/vpos
+add wave -position insertpoint  \
+sim:/TEST/i0/hmax
+add wave -position insertpoint  \
+sim:/TEST/i0/vmax
+restart -f
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:36:09 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 14:36:09 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:36:10 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v 
+# -- Compiling module VGA_DEMO
+# 
+# Top level modules:
+# 	VGA_DEMO
+# End time: 14:36:11 on Feb 15,2021, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:36:13 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v 
+# -- Compiling module HVSYNC_GEN
+# 
+# Top level modules:
+# 	HVSYNC_GEN
+# End time: 14:36:13 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.TEST
+# Loading work.VGA_DEMO
+# Loading work.HVSYNC_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/hmax'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/vmax'. 
+run
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/hsync
+add wave -position insertpoint  \
+sim:/TEST/vsync
+add wave -position insertpoint  \
+sim:/TEST/i0/clk_gen
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:40:45 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 14:40:45 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:40:47 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v 
+# -- Compiling module VGA_DEMO
+# 
+# Top level modules:
+# 	VGA_DEMO
+# End time: 14:40:47 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:40:48 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v 
+# -- Compiling module HVSYNC_GEN
+# 
+# Top level modules:
+# 	HVSYNC_GEN
+# End time: 14:40:48 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.TEST
+# Loading work.VGA_DEMO
+# Loading work.HVSYNC_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/hpos
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/hpos \
+sim:/TEST/i0/SYNC_GEN/vpos
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/hmax
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/vmax
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:45:25 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v 
+# -- Compiling module HVSYNC_GEN
+# 
+# Top level modules:
+# 	HVSYNC_GEN
+# End time: 14:45:25 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.HVSYNC_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:46:03 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 14:46:04 on Feb 15,2021, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:46:07 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v 
+# -- Compiling module HVSYNC_GEN
+# 
+# Top level modules:
+# 	HVSYNC_GEN
+# End time: 14:46:07 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.TEST
+# Loading work.HVSYNC_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:50:14 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v 
+# -- Compiling module HVSYNC_GEN
+# 
+# Top level modules:
+# 	HVSYNC_GEN
+# End time: 14:50:14 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.HVSYNC_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_R
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_G
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_B
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_HS
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_VS
+add wave -position insertpoint  \
+sim:/TEST/i0/ENABLE
+add wave -position insertpoint  \
+sim:/TEST/i0/display_on
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 14:51:26 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v 
+# -- Compiling module HVSYNC_GEN
+# 
+# Top level modules:
+# 	HVSYNC_GEN
+# End time: 14:51:26 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.HVSYNC_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/i0/hpos
+add wave -position insertpoint  \
+sim:/TEST/i0/vpos
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 15:04:07 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v 
+# -- Compiling module HVSYNC_GEN
+# 
+# Top level modules:
+# 	HVSYNC_GEN
+# End time: 15:04:07 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 15:04:08 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 15:04:08 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.TEST
+# Loading work.HVSYNC_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 15:07:19 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 15:07:19 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.TEST
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/clk_gen'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/SYNC_GEN/hpos'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/SYNC_GEN/vpos'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/SYNC_GEN/hmax'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/SYNC_GEN/vmax'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/VGA_R'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/VGA_G'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/VGA_B'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/VGA_HS'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/VGA_VS'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/display_on'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/hpos'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/vpos'. 
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 15:09:42 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 15:09:42 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# Loading work.TEST
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/hpos
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/vpos
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/hmax
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/vmax
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/CLK
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/r
+add wave -position insertpoint  \
+sim:/TEST/g
+add wave -position insertpoint  \
+sim:/TEST/b
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 17:58:47 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v 
+# -- Compiling module VGA_DEMO
+# 
+# Top level modules:
+# 	VGA_DEMO
+# End time: 17:58:47 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 17:58:50 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 17:58:50 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 17:58:53 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v 
+# -- Compiling module HVSYNC_GEN
+# 
+# Top level modules:
+# 	HVSYNC_GEN
+# End time: 17:58:53 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.TEST
+# Loading work.VGA_DEMO
+# Loading work.HVSYNC_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/display_on
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_R
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_G
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_B
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_HS
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_VS
+add wave -position insertpoint  \
+sim:/TEST/i0/ENABLE
+add wave -position insertpoint  \
+sim:/TEST/i0/display_on
+add wave -position insertpoint  \
+sim:/TEST/i0/clk_gen
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 18:04:01 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v 
+# -- Compiling module HVSYNC_GEN
+# 
+# Top level modules:
+# 	HVSYNC_GEN
+# End time: 18:04:01 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.HVSYNC_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 26
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(26): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+# A time value could not be extracted from the current line
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 18:12:26 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v 
+# -- Compiling module VGA_DEMO
+# 
+# Top level modules:
+# 	VGA_DEMO
+# End time: 18:12:26 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.VGA_DEMO
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 89
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(89): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+add wave -position insertpoint  \
+sim:/TEST/hsync
+add wave -position insertpoint  \
+sim:/TEST/vsync
+add wave -position insertpoint  \
+sim:/TEST/i0/hpos
+add wave -position insertpoint  \
+sim:/TEST/i0/vpos
+add wave -position insertpoint  \
+sim:/TEST/i0/hmax
+add wave -position insertpoint  \
+sim:/TEST/i0/vmax
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 89
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(89): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_R
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_G
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_B
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_HS
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_VS
+add wave -position insertpoint  \
+sim:/TEST/i0/display_on
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 89
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(89): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 18:14:17 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v 
+# -- Compiling module VGA_DEMO
+# 
+# Top level modules:
+# 	VGA_DEMO
+# End time: 18:14:17 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.VGA_DEMO
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 89
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(89): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 18:15:21 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 18:15:21 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.TEST
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 89
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(89): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 18:16:39 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v 
+# -- Compiling module VGA_DEMO
+# 
+# Top level modules:
+# 	VGA_DEMO
+# End time: 18:16:39 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.VGA_DEMO
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 89
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(89): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 18:24:56 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 18:24:56 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 18:24:58 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v 
+# -- Compiling module HVSYNC_GEN
+# 
+# Top level modules:
+# 	HVSYNC_GEN
+# End time: 18:24:58 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 18:25:00 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v 
+# -- Compiling module VGA_DEMO
+# 
+# Top level modules:
+# 	VGA_DEMO
+# End time: 18:25:00 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 18:25:11 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 18:25:11 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.TEST
+# Loading work.VGA_DEMO
+# Loading work.HVSYNC_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 25
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(25): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/hmax'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST/i0/vmax'. 
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/VGA_HS
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/VGA_VS
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/display_on
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/hpos
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/vpos
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/hmax
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/vmax
+add wave -position insertpoint sim:/TEST/*
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 25
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(25): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_R
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_G
+add wave -position insertpoint  \
+sim:/TEST/i0/VGA_B
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+# ** Note: $finish    : /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v(36)
+#    Time: 200500 ns  Iteration: 0  Instance: /TEST
+# 1
+# Break in Module TEST at /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v line 36
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/V_MAX
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/H_MAX
+run
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/H_MAX
+add wave -position insertpoint  \
+sim:/TEST/i0/SYNC_GEN/V_MAX
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 18:59:35 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v 
+# -- Compiling module HVSYNC_GEN
+# 
+# Top level modules:
+# 	HVSYNC_GEN
+# End time: 18:59:35 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 18:59:37 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 18:59:37 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.TEST
+# Loading work.HVSYNC_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 25
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(25): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+# ** Note: $finish    : /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v(36)
+#    Time: 200500 ns  Iteration: 0  Instance: /TEST
+# 1
+# Break in Module TEST at /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v line 36
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 19:03:00 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v 
+# -- Compiling module HVSYNC_GEN
+# 
+# Top level modules:
+# 	HVSYNC_GEN
+# End time: 19:03:00 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 19:03:03 on Feb 15,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v 
+# -- Compiling module VGA_DEMO
+# 
+# Top level modules:
+# 	VGA_DEMO
+# End time: 19:03:03 on Feb 15,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.VGA_DEMO
+# Loading work.HVSYNC_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'EN'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/EN File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v Line: 30
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v(30): [TFMPC] - Missing connection for port 'ENABLE_khz'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+# ** Note: $finish    : /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v(36)
+#    Time: 200500 ns  Iteration: 0  Instance: /TEST
+# 1
+# Break in Module TEST at /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v line 36
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+# End time: 20:06:47 on Feb 15,2021, Elapsed time: 5:51:43
+# Errors: 0, Warnings: 2

@@ -1,0 +1,16 @@
+Analysis & Synthesis Status : Successful - Fri Jan 29 14:25:21 2021
+Quartus Prime Version : 20.1.1 Build 720 11/11/2020 SJ Lite Edition
+Revision Name : DIGIT_24
+Top-level Entity Name : DIGIT_24
+Family : MAX 10
+Total logic elements : 1,233
+    Total combinational functions : 930
+    Dedicated logic registers : 716
+Total registers : 716
+Total pins : 109
+Total virtual pins : 0
+Total memory bits : 16,384
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 0
+UFM blocks : 0
+ADC blocks : 0

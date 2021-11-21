@@ -1,0 +1,323 @@
+m255
+K4
+z2
+!s11f vlog 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+d/home/koutakimura/workspace/ProjectFolder
+vAL_MOVE
+Z0 !s110 1611879630
+!i10b 1
+!s100 C7EEXV@ng]dE:?Yh3g:Rf3
+Z1 !s11b Dg1SIo80bB@j0V0VzS_@n1
+I2H<:2G63>X[7RidEmLL<13
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+Z3 d/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24
+w1611662360
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/AL_MOVE.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/AL_MOVE.v
+!i122 3
+L0 1 46
+Z4 OV;L;2020.1;71
+r1
+!s85 0
+31
+Z5 !s108 1611879630.000000
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/AL_MOVE.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/AL_MOVE.v|
+!i113 1
+Z6 o-work work
+Z7 tCvgOpt 0
+n@a@l_@m@o@v@e
+vALARMSET
+R0
+!i10b 1
+!s100 O@JV@VlFdaHB4LP0N=]SI0
+R1
+IJfzaUT8b2khb]7cli<P`k2
+R2
+R3
+w1611621954
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/ALARMSET.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/ALARMSET.v
+!i122 5
+Z8 L0 1 73
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/ALARMSET.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/ALARMSET.v|
+!i113 1
+R6
+R7
+n@a@l@a@r@m@s@e@t
+vBUZZER
+R0
+!i10b 1
+!s100 ?:[z@@=C`odFBc<bY@oLV3
+R1
+I2o]YDZ7@nY608bORo`aL=1
+R2
+R3
+w1611834164
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/BUZZER.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/BUZZER.v
+!i122 6
+L0 1 28
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/BUZZER.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/BUZZER.v|
+!i113 1
+R6
+R7
+n@b@u@z@z@e@r
+vCNT24
+R0
+!i10b 1
+!s100 bjhCDL?PQ7=Kd?kb49R342
+R1
+I`V8J0Ka:bR]WE<9geW:a91
+R2
+R3
+w1611624942
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/CNT24.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/CNT24.v
+!i122 7
+L0 1 89
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/CNT24.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/CNT24.v|
+!i113 1
+R6
+R7
+n@c@n@t24
+vCNT60
+R0
+!i10b 1
+!s100 F<j@?P<0flTZP;>E`@A@K1
+R1
+INQ`=EgaL8Ra0YF^HcilPe0
+R2
+R3
+w1611624802
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/CNT60.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/CNT60.v
+!i122 1
+L0 4 116
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/CNT60.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/CNT60.v|
+!i113 1
+R6
+R7
+n@c@n@t60
+vDECODER
+R0
+!i10b 1
+!s100 o5KZIeaeLbMObFb3GcT>d2
+R1
+IkJ:iTzFl[<hGYTW80cRjI0
+R2
+R3
+w1611622417
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DECODER.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DECODER.v
+!i122 2
+L0 4 35
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DECODER.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DECODER.v|
+!i113 1
+R6
+R7
+n@d@e@c@o@d@e@r
+vDIGIT_24
+R0
+!i10b 1
+!s100 fKX[X6gGeTe6L`cVfSTLS0
+R1
+ILhD>R1I=zHJ`FSCzTojBf0
+R2
+R3
+w1611704856
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24.v
+!i122 0
+L0 4 64
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24.v|
+!i113 1
+R6
+R7
+n@d@i@g@i@t_24
+vDIGIT_24_sim
+!s110 1611880641
+!i10b 1
+!s100 ^8MKN9XOGR<@R0z=Y6IN_2
+R1
+I0BL394z5[jB<QjRk>1:9]2
+R2
+R3
+w1611880636
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24_sim.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24_sim.v
+!i122 14
+L0 5 46
+R4
+r1
+!s85 0
+31
+!s108 1611880641.000000
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24_sim.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24_sim.v|
+!i113 1
+R6
+R7
+n@d@i@g@i@t_24_sim
+vENABLE_GENERATE
+!s110 1611880313
+!i10b 1
+!s100 jHRKXm?`SHif:FJAIV`LB3
+R1
+IWeO^eHQ__J66i95Gk3M4i2
+R2
+R3
+w1611880253
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/ENABLE_GENERATE.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/ENABLE_GENERATE.v
+!i122 13
+L0 4 34
+R4
+r1
+!s85 0
+31
+!s108 1611880313.000000
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/ENABLE_GENERATE.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/ENABLE_GENERATE.v|
+!i113 1
+R6
+R7
+n@e@n@a@b@l@e_@g@e@n@e@r@a@t@e
+vSEQUENCER
+R0
+!i10b 1
+!s100 =ToGBQ<Xj<4IViTko:g:z2
+R1
+I6>8FEdX]58Hbkn`X2`]5h1
+R2
+R3
+Z9 w1611576785
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SEQUENCER.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SEQUENCER.v
+!i122 9
+L0 1 38
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SEQUENCER.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SEQUENCER.v|
+!i113 1
+R6
+R7
+n@s@e@q@u@e@n@c@e@r
+vSERECTOR
+R0
+!i10b 1
+!s100 V`[U:F9=YGnckC_a;h]]b3
+R1
+IN98:R8DE@Mbg0=kALO7YG2
+R2
+R3
+w1611655576
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SERECTOR.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SERECTOR.v
+!i122 10
+L0 1 239
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SERECTOR.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SERECTOR.v|
+!i113 1
+R6
+R7
+n@s@e@r@e@c@t@o@r
+vSW_GEN
+R0
+!i10b 1
+!s100 mN>mE2:DB68Mi3i>j=b2T0
+R1
+IA3hV^o8CW:RUho6SIUQH@1
+R2
+R3
+w1611574806
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SW_GEN.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SW_GEN.v
+!i122 11
+L0 4 26
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SW_GEN.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SW_GEN.v|
+!i113 1
+R6
+R7
+n@s@w_@g@e@n
+vTSET
+R0
+!i10b 1
+!s100 z;aE22CWmME=hB8JNVk<f0
+R1
+IkXhLmCiah;L8XX6TF^RZ;0
+R2
+R3
+R9
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/TSET.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/TSET.v
+!i122 4
+R8
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/TSET.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/TSET.v|
+!i113 1
+R6
+R7
+n@t@s@e@t

@@ -1,0 +1,73 @@
+# do SEG10_COUNT_run_msim_rtl_verilog.do
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# vlib rtl_work
+# vmap work rtl_work
+# Model Technology ModelSim - Intel FPGA Edition vmap 2020.1 Lib Mapping Utility 2020.02 Feb 28 2020
+# vmap work rtl_work 
+# Copying /home/koutakimura/intelFPGA_lite/20.1/modelsim_ase/linuxaloem/../modelsim.ini to modelsim.ini
+# Modifying modelsim.ini
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/SEG10_COUNT {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/SEG10_COUNT/SEG10_COUNT.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 13:29:20 on Jan 24,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/SEG10_COUNT" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/SEG10_COUNT/SEG10_COUNT.v 
+# -- Compiling module SEG10_COUNT
+# 
+# Top level modules:
+# 	SEG10_COUNT
+# End time: 13:29:20 on Jan 24,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/SEG10_COUNT/simulation/modelsim {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/SEG10_COUNT/simulation/modelsim/SEG10_COUNT.vt}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 13:29:20 on Jan 24,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/SEG10_COUNT/simulation/modelsim" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/SEG10_COUNT/simulation/modelsim/SEG10_COUNT.vt 
+# -- Compiling module SEG10_COUNT_vlg_tst
+# 
+# Top level modules:
+# 	SEG10_COUNT_vlg_tst
+# End time: 13:29:20 on Jan 24,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs="+acc"  SEG10_COUNT
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs=""+acc"" SEG10_COUNT 
+# Start time: 13:29:20 on Jan 24,2021
+# Loading work.SEG10_COUNT
+# 
+# add wave *
+# view structure
+# .main_pane.structure.interior.cs.body.struct
+# view signals
+# .main_pane.objects.interior.cs.body.tree
+# run -all
+view -new wave
+# -new not supported on PE
+add wave -position insertpoint  \
+sim:/SEG10_COUNT/enable
+run
+run
+run
+run
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+wave create -pattern none -portmode input -language vlog /SEG10_COUNT/CLK
+# Editable Wave items are not compatible with the wave window's standard undo-redo.  Standard undo-redo has been disabled.
+# SEG10_COUNT
+wave create -pattern none -portmode input -language vlog /SEG10_COUNT/RST
+# SEG10_COUNT
+wave create -pattern none -portmode output -language vlog -range 7 0 /SEG10_COUNT/HEX0
+# SEG10_COUNT
+wave modify -driver expectedOutput -pattern counter -startvalue 00000000 -endvalue 11111111 -type Range -direction Up -period 50ns -step 1 -repeat forever -range 7 0 -starttime 0us -endtime 100us Edit:/SEG10_COUNT/HEX0
+# SEG10_COUNT
+wave modify -driver freeze -pattern clock -initialvalue (no value) -period 50ns -dutycycle 50 -starttime 0us -endtime 100us Edit:/SEG10_COUNT/CLK
+# SEG10_COUNT
+wave modify -driver freeze -pattern clock -initialvalue (no value) -period 50ns -dutycycle 50 -starttime 0us -endtime 100us Edit:/SEG10_COUNT/RST
+# SEG10_COUNT
+add wave -position insertpoint  \
+sim:/SEG10_COUNT/enable
+wave export -file {} -starttime 0 -endtime 100 -format vlog -designunit SEG10_COUNT
+# errormessage
+# Export file not specified.
+# Usage : wave export -file <name> -starttime <time> -endtime <time> -format  <["force" | "vcd" | "vhdl" | "vlog"]> -designunit <name> [-f]# End time: 13:40:45 on Jan 24,2021, Elapsed time: 0:11:25
+# Errors: 0, Warnings: 0

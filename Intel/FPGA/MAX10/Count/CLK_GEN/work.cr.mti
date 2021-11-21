@@ -1,0 +1,15 @@
+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module TEST_CLK_GEN
+
+Top level modules:
+	TEST_CLK_GEN
+
+} {} {}} /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module CLK_GEN
+
+Top level modules:
+	CLK_GEN
+
+} {} {}}

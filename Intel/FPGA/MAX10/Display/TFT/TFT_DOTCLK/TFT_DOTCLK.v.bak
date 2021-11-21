@@ -1,0 +1,68 @@
+/*
+ * -------------------------------------------------------------------
+ * TFT-LCDサンプルソース
+ * FPGAでTFT_LCD240x320の初期設定を行い、描画を行う
+ * RGBインターフェースモードで動作
+ * -------------------------------------------------------------------
+ * Quartus Prime: 20.1
+ * Ubuntu LTS   : 20.04
+ * Simlation    : Model Sim
+ * FPGA Board   : DE10_Lite
+ * TFT_LCD      : ILI9341 Controller
+ *
+ * Created on   : 2021/2/13
+ * Author       : kimura
+ *--------------------------------------------------------------------
+ */
+module TFT_DOTCLK (
+    input CLK, RESET,
+    inout [15:0] ARDUINO_IO,
+    inout [35:0] GPIO,
+    output [9:0] LEDR
+);
+
+/**------------------------------------------
+ * 使用するTFT液晶の詳細
+ *------------------------------------------*/
+parameter TFT_DISPLAY_WIDTH	        = 240;		// 最大横幅
+parameter TFT_DISPLAY_HEIGHT        = 320;		// 最大縦幅
+parameter TFT_MAX_SIZE              = (TFT_DISPLAY_WIDTH * TFT_DISPLAY_HEIGHT);
+
+/**------------------------------------------
+ * reg wire宣言
+ *------------------------------------------*/
+wire ENABLE, ENABLE_10ms;
+wire RD, WRX, DCX;
+wire DRAW_ON;
+
+EN_GEN EN (
+    .CLK(CLK),
+    .RESET(RESET),
+    .ENABLE(ENABLE),
+    .ENABLE_10ms(ENABLE_10ms)
+);
+
+TFT_INIT RGB_MODE (
+    .CLK(CLK),
+    .RESET(RESET),
+    .ENABLE_10ms(ENABLE_10ms),
+    .WRX(WRX),
+    .RD(RD),
+    .DCX(DCX),
+    .DRAW_ON(DRAW_ON),
+    .LEDR(LEDR)
+);
+
+
+assign GPIO[18]   = RD;
+assign GPIO[20]   = WRX;
+assign GPIO[22]   = DCX;
+assign GPIO[7:0]  = (DRAW_ON == 1'b0) ? tft_init[cnt][7:0] : 8'b00000000;
+assign GPIO[17:8] = 10'b0000000010;
+assign GPIO[24]   = 0;
+assign GPIO[33]   = 1;
+assign GPIO[27]   = 1;
+assign GPIO[29]   = 0;
+assign GPIO[31]   = 0;
+
+endmodule

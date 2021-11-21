@@ -1,0 +1,11 @@
+transcript on
+if {[file exists rtl_work]} {
+	vdel -lib rtl_work -all
+}
+vlib rtl_work
+vmap work rtl_work
+
+vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v}
+vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_INIT.v}
+vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/EN_GEN.v}
+

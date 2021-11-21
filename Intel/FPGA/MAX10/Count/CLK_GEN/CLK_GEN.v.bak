@@ -1,0 +1,41 @@
+module CLK_GEN (
+    input CLK
+);
+
+parameter DIV  = 4;
+parameter DIV_PARA = 5'h1;
+parameter DIV_NUMBER = 5'd25;
+
+wire ENABLE;
+
+reg [DIV:0] div_number;   // 分周数
+reg [DIV:0] cnt_p, cnt_n; // 立ち上がりと立ち下がりの回数をカウント
+reg out_p, out_n;         // 分周数x2の周波数を出力
+
+assign ENABLE = out_p ^ out_n;
+
+initial begin
+    div_number = DIV_NUMBER;
+    cnt_p = DIV_PARA;
+    cnt_n = DIV_PARA;
+    out_p = 1'h0;
+    out_n = 1'h0;
+end
+
+always @(posedge CLK) begin
+    cnt_p <= cnt_n + DIV_PARA;
+    if (cnt_n == div_number) begin
+        cnt_p <= DIV_PARA;
+        out_p <= ~out_p;
+    end
+end
+
+always @(negedge CLK) begin
+    cnt_n <= cnt_p + DIV_PARA;
+    if (cnt_p == div_number) begin
+        cnt_n <= DIV_PARA;
+        out_n <= ~out_n;
+    end
+end
+
+endmodule

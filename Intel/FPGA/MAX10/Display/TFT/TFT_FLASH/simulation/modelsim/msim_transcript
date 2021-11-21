@@ -1,0 +1,56 @@
+# do TFT_FLASH_run_msim_rtl_verilog.do
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# vlib rtl_work
+# vmap work rtl_work
+# Model Technology ModelSim - Intel FPGA Edition vmap 2020.1 Lib Mapping Utility 2020.02 Feb 28 2020
+# vmap work rtl_work 
+# Copying /home/koutakimura/intelFPGA_lite/20.1/modelsim_ase/linuxaloem/../modelsim.ini to modelsim.ini
+# Modifying modelsim.ini
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT_FLASH {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT_FLASH/TFT_FLASH.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 21:00:37 on Feb 18,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT_FLASH" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT_FLASH/TFT_FLASH.v 
+# -- Compiling module TFT_FLASH
+# 
+# Top level modules:
+# 	TFT_FLASH
+# End time: 21:00:37 on Feb 18,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT_FLASH {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT_FLASH/TEST.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 21:00:37 on Feb 18,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT_FLASH" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT_FLASH/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 21:00:37 on Feb 18,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs="+acc"  TEST
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs=""+acc"" TEST 
+# Start time: 21:00:37 on Feb 18,2021
+# Loading work.TEST
+# Loading work.TFT_FLASH
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 5, found 4.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT_FLASH/TEST.v Line: 15
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT_FLASH/TEST.v(15): [TFMPC] - Missing connection for port 'LEDR'.
+# 
+# add wave *
+# view structure
+# .main_pane.structure.interior.cs.body.struct
+# view signals
+# .main_pane.objects.interior.cs.body.tree
+# run -all
+# ** Note: $finish    : /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT_FLASH/TEST.v(28)
+#    Time: 200500 ns  Iteration: 0  Instance: /TEST
+# 1
+# Break in Module TEST at /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT_FLASH/TEST.v line 28
+add wave -position insertpoint  \
+sim:/TEST/i0/tft_init
+# End time: 21:11:44 on Feb 18,2021, Elapsed time: 0:11:07
+# Errors: 0, Warnings: 2

@@ -1,0 +1,4 @@
+module SERECTOR(CNT10, CNT10M, CNT6, CNT6M, CNT3T );
+
+
+endmodule

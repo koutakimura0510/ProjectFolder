@@ -1,0 +1,291 @@
+# do TFT_DOTCLK_run_msim_rtl_verilog.do
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# vlib rtl_work
+# vmap work rtl_work
+# Model Technology ModelSim - Intel FPGA Edition vmap 2020.1 Lib Mapping Utility 2020.02 Feb 28 2020
+# vmap work rtl_work 
+# Copying /home/koutakimura/intelFPGA_lite/20.1/modelsim_ase/linuxaloem/../modelsim.ini to modelsim.ini
+# Modifying modelsim.ini
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/SPI {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/SPI/SPI2.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 10:28:21 on Mar 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/SPI" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/SPI/SPI2.v 
+# -- Compiling module SPI2
+# 
+# Top level modules:
+# 	SPI2
+# End time: 10:28:22 on Mar 13,2021, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/RC_FILTER.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 10:28:22 on Mar 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/RC_FILTER.v 
+# -- Compiling module RC_FILTER
+# 
+# Top level modules:
+# 	RC_FILTER
+# End time: 10:28:22 on Mar 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/I2S_OUT.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 10:28:22 on Mar 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/I2S_OUT.v 
+# -- Compiling module I2S_OUT
+# 
+# Top level modules:
+# 	I2S_OUT
+# End time: 10:28:22 on Mar 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/I2S.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 10:28:22 on Mar 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/I2S.v 
+# -- Compiling module I2S
+# 
+# Top level modules:
+# 	I2S
+# End time: 10:28:22 on Mar 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/FF.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 10:28:22 on Mar 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/FF.v 
+# -- Compiling module FF
+# 
+# Top level modules:
+# 	FF
+# End time: 10:28:22 on Mar 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/DRAW_GEN.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 10:28:22 on Mar 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/DRAW_GEN.v 
+# -- Compiling module DRAW_GEN
+# 
+# Top level modules:
+# 	DRAW_GEN
+# End time: 10:28:22 on Mar 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 10:28:22 on Mar 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v 
+# -- Compiling module TFT_DOTCLK
+# 
+# Top level modules:
+# 	TFT_DOTCLK
+# End time: 10:28:22 on Mar 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_INIT.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 10:28:22 on Mar 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_INIT.v 
+# -- Compiling module TFT_INIT
+# 
+# Top level modules:
+# 	TFT_INIT
+# End time: 10:28:22 on Mar 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/HVSYNC_GEN.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 10:28:22 on Mar 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/HVSYNC_GEN.v 
+# -- Compiling module HVSYNC_GEN
+# 
+# Top level modules:
+# 	HVSYNC_GEN
+# End time: 10:28:22 on Mar 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TEST.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 10:28:22 on Mar 13,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TEST.v 
+# -- Compiling module TEST
+# 
+# Top level modules:
+# 	TEST
+# End time: 10:28:22 on Mar 13,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs="+acc"  TEST
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs=""+acc"" TEST 
+# Start time: 10:28:22 on Mar 13,2021
+# Loading work.TEST
+# Loading work.TFT_DOTCLK
+# Loading work.FF
+# Loading work.SPI2
+# Loading work.I2S
+# Loading work.RC_FILTER
+# Loading work.I2S_OUT
+# Loading work.TFT_INIT
+# Loading work.HVSYNC_GEN
+# Loading work.DRAW_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 5, found 4.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TEST.v Line: 15
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TEST.v(15): [TFMPC] - Missing connection for port 'LEDR'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'SPI_GET_DATA'.  Expected 9, found 6.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/SPI_GET_DATA File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v Line: 128
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v(128): [TFMPC] - Missing connection for port 'MISO'.
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v(128): [TFMPC] - Missing connection for port 'SPI_LOAD_ENABLE'.
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v(128): [TFMPC] - Missing connection for port 'SPI_BYTES'.
+# 
+# add wave *
+# view structure
+# .main_pane.structure.interior.cs.body.struct
+# view signals
+# .main_pane.objects.interior.cs.body.tree
+# run -all
+# ** Note: $finish    : /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TEST.v(29)
+#    Time: 500200 ns  Iteration: 0  Instance: /TEST
+# 1
+# Break in Module TEST at /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TEST.v line 29
+add wave -position insertpoint  \
+sim:/TEST/i0/SPI_GET_DATA/SCLK
+run
+run
+run
+run
+run
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 5, found 4.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TEST.v Line: 15
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TEST.v(15): [TFMPC] - Missing connection for port 'LEDR'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'SPI_GET_DATA'.  Expected 9, found 6.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/SPI_GET_DATA File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v Line: 128
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v(128): [TFMPC] - Missing connection for port 'MISO'.
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v(128): [TFMPC] - Missing connection for port 'SPI_LOAD_ENABLE'.
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v(128): [TFMPC] - Missing connection for port 'SPI_BYTES'.
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST/i0/HVSYNC/hpos
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 5, found 4.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TEST.v Line: 15
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TEST.v(15): [TFMPC] - Missing connection for port 'LEDR'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'SPI_GET_DATA'.  Expected 9, found 6.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST/i0/SPI_GET_DATA File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v Line: 128
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v(128): [TFMPC] - Missing connection for port 'MISO'.
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v(128): [TFMPC] - Missing connection for port 'SPI_LOAD_ENABLE'.
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v(128): [TFMPC] - Missing connection for port 'SPI_BYTES'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+# End time: 10:36:09 on Mar 13,2021, Elapsed time: 0:07:47
+# Errors: 0, Warnings: 6

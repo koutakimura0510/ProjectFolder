@@ -1,0 +1,67 @@
+module BUZZER (
+    CLK, RESET,
+    SW, KEY,
+    HEX0, HEX1, HEX2, HEX3, HEX4, HEX5,
+    LEDR, PS2_CLK, PS2_DAT,
+    VGA_R, VGA_G, VGA_B,
+	 VGA_HS, VGA_VS,
+    DRAM_CLK, DARM_CKE,
+    DRAM_ADDR,
+    DRAM_BA,
+    DRAM_CAS_N, DRAM_RAS_N,
+    DRAM_CS_N,  DRAM_WE_N,
+    DRAM_UDQM,  DRAM_LDQM,
+    DRAM_DQ,
+    GPIO,
+	 ARDUINO_IO
+);
+
+input         CLK, RESET;
+input  [8:0]  SW;
+input  [3:0]  KEY;
+output [7:0]  HEX0, HEX1, HEX2, HEX3, HEX4, HEX5;
+output [9:0]  LEDR;
+output        PS2_CLK, PS2_DAT;
+output [3:0]  VGA_R, VGA_G, VGA_B;
+output        VGA_HS, VGA_VS;
+output        DRAM_CLK, DARM_CKE;
+output [12:0] DRAM_ADDR;
+output [1:0]  DRAM_BA;
+output        DRAM_CAS_N, DRAM_RAS_N;
+output        DRAM_CS_N,  DRAM_WE_N;
+output        DRAM_UDQM,  DRAM_LDQM;
+input  [15:0] DRAM_DQ;
+
+inout  [35:0] GPIO;
+inout  [15:0] ARDUINO_IO;
+
+wire ENABLE, ENABLE_KEY, ENABLE_BCK;
+wire KEY1, KEY2;
+wire LATCH, DATA_OUT;
+wire [63:0] DATA_32;
+
+assign HEX0 = 8'b11111111;
+assign HEX1 = 8'b11111111;
+assign HEX2 = 8'b11111111;
+assign HEX3 = 8'b11111111;
+assign HEX4 = 8'b11111111;
+assign HEX5 = 8'b11111111;
+
+EN_GEN    i1_0(.CLK(CLK), .RESET(RESET), .ENABLE(ENABLE), .ENABLE_KEY(ENABLE_KEY), .ENABLE_BCK(ENABLE_BCK));
+KEY_GEN   i2_0(.CLK(CLK), .ENABLE_KEY(ENABLE_KEY), .KEY(KEY[0]), .KEY_UP(KEY1));
+KEY_GEN   i2_1(.CLK(CLK), .ENABLE_KEY(ENABLE_KEY), .KEY(KEY[1]), .KEY_UP(KEY2));
+LED_FLASH i3(.CLK(CLK), .ENABLE(ENABLE), .LEDR(LEDR));
+NOTE      i4(.CLK(CLK), .RESET(RESET), .ENABLE(ENABLE), .ENABLE_PWM(ENABLE_PWM), .GPIO(GPIO[34]));
+//I2S       i5(.CLK(CLK), .RESET(RESET),
+//             .LRCLK_IN(ARDUINO_IO[7]), .BCLK_IN(ARDUINO_IO[6]), .DOUT_IN(ARDUINO_IO[5]),
+//             .LRCLK(ARDUINO_IO[13]), .BCLK(ARDUINO_IO[12]), .DOUT(ARDUINO_IO[11]));
+
+I2S_SCP   i5(.BCLK(ARDUINO_IO[6]), .LRCLK(ARDUINO_IO[7]), .DIN(ARDUINO_IO[5]), .LATCH(LATCH), .DATA_32(DATA_32));
+I2S_PCS   i6(.CLK(CLK), .BCLK(ARDUINO_IO[6]), .LRCLK(ARDUINO_IO[7]), .DATA_OUT(DATA_OUT),
+             .LATCH(LATCH), .L_DATA32(DATA_32[63:32]), .R_DATA32(DATA_32[31:0]));
+
+assign ARDUINO_IO[11] = DATA_OUT;
+assign ARDUINO_IO[12] = ARDUINO_IO[6];
+assign ARDUINO_IO[13] = ARDUINO_IO[7];
+
+endmodule

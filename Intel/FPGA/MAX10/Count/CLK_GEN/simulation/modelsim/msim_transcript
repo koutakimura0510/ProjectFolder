@@ -1,0 +1,326 @@
+# do CLK_GEN_run_msim_rtl_verilog.do
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# vlib rtl_work
+# vmap work rtl_work
+# Model Technology ModelSim - Intel FPGA Edition vmap 2020.1 Lib Mapping Utility 2020.02 Feb 28 2020
+# vmap work rtl_work 
+# Copying /home/koutakimura/intelFPGA_lite/20.1/modelsim_ase/linuxaloem/../modelsim.ini to modelsim.ini
+# Modifying modelsim.ini
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 19:25:09 on Feb 03,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v 
+# -- Compiling module CLK_GEN
+# 
+# Top level modules:
+# 	CLK_GEN
+# End time: 19:25:09 on Feb 03,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 19:25:09 on Feb 03,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v 
+# -- Compiling module TEST_CLK_GEN
+# 
+# Top level modules:
+# 	TEST_CLK_GEN
+# End time: 19:25:09 on Feb 03,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs="+acc"  TEST_CLK_GEN
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs=""+acc"" TEST_CLK_GEN 
+# Start time: 19:25:09 on Feb 03,2021
+# Loading work.TEST_CLK_GEN
+# Loading work.CLK_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST_CLK_GEN/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v Line: 10
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v(10): [TFMPC] - Missing connection for port 'LEDR'.
+# 
+# add wave *
+# view structure
+# .main_pane.structure.interior.cs.body.struct
+# view signals
+# .main_pane.objects.interior.cs.body.tree
+# run -all
+# ** Note: $stop    : /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v(20)
+#    Time: 4040 ns  Iteration: 0  Instance: /TEST_CLK_GEN
+# Break in Module TEST_CLK_GEN at /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v line 20
+add wave -position insertpoint  \
+{sim:/TEST_CLK_GEN/GPIO[34]}
+add wave -position insertpoint  \
+sim:/TEST_CLK_GEN/i0/bclk_cnt
+add wave -position insertpoint  \
+sim:/TEST_CLK_GEN/i0/out_p
+add wave -position insertpoint  \
+sim:/TEST_CLK_GEN/i0/out_n
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST_CLK_GEN/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v Line: 10
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v(10): [TFMPC] - Missing connection for port 'LEDR'.
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 19:34:19 on Feb 03,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v 
+# -- Compiling module CLK_GEN
+# 
+# Top level modules:
+# 	CLK_GEN
+# End time: 19:34:19 on Feb 03,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+run
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.CLK_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST_CLK_GEN/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v Line: 10
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v(10): [TFMPC] - Missing connection for port 'LEDR'.
+add wave -position insertpoint  \
+sim:/TEST_CLK_GEN/i0/bclk
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST_CLK_GEN/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v Line: 10
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v(10): [TFMPC] - Missing connection for port 'LEDR'.
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 19:38:44 on Feb 03,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v 
+# -- Compiling module CLK_GEN
+# 
+# Top level modules:
+# 	CLK_GEN
+# End time: 19:38:44 on Feb 03,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.CLK_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST_CLK_GEN/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v Line: 10
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v(10): [TFMPC] - Missing connection for port 'LEDR'.
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST_CLK_GEN/i0/bclk'. 
+run
+run
+run
+run
+run
+run
+run
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 19:46:33 on Feb 03,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v 
+# -- Compiling module CLK_GEN
+# 
+# Top level modules:
+# 	CLK_GEN
+# End time: 19:46:33 on Feb 03,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.CLK_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST_CLK_GEN/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v Line: 10
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v(10): [TFMPC] - Missing connection for port 'LEDR'.
+add wave -position insertpoint  \
+sim:/TEST_CLK_GEN/i0/bclk
+run
+run
+run
+run
+run
+run
+run
+run
+run
+add wave -position insertpoint  \
+sim:/TEST_CLK_GEN/i0/bclk_cnt
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 19:50:59 on Feb 03,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v 
+# -- Compiling module CLK_GEN
+# 
+# Top level modules:
+# 	CLK_GEN
+# End time: 19:50:59 on Feb 03,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.CLK_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST_CLK_GEN/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v Line: 10
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v(10): [TFMPC] - Missing connection for port 'LEDR'.
+run
+run
+add wave -position insertpoint  \
+sim:/TEST_CLK_GEN/i0/cnt_n
+add wave -position insertpoint  \
+sim:/TEST_CLK_GEN/i0/cnt_p
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST_CLK_GEN/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v Line: 10
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v(10): [TFMPC] - Missing connection for port 'LEDR'.
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 19:57:37 on Feb 03,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v 
+# -- Compiling module CLK_GEN
+# 
+# Top level modules:
+# 	CLK_GEN
+# End time: 19:57:37 on Feb 03,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.CLK_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST_CLK_GEN/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v Line: 10
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v(10): [TFMPC] - Missing connection for port 'LEDR'.
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 19:59:13 on Feb 03,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v 
+# -- Compiling module CLK_GEN
+# 
+# Top level modules:
+# 	CLK_GEN
+# End time: 19:59:13 on Feb 03,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.CLK_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST_CLK_GEN/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v Line: 10
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v(10): [TFMPC] - Missing connection for port 'LEDR'.
+add wave -position insertpoint  \
+sim:/TEST_CLK_GEN/i0/ENABLE
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 20:03:17 on Feb 03,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v 
+# -- Compiling module CLK_GEN
+# 
+# Top level modules:
+# 	CLK_GEN
+# End time: 20:03:17 on Feb 03,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.CLK_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST_CLK_GEN/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v Line: 10
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v(10): [TFMPC] - Missing connection for port 'LEDR'.
+# Warning in wave window restart: (vish-4014) No objects found matching '/TEST_CLK_GEN/i0/ENABLE'. 
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 20:06:34 on Feb 03,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v 
+# -- Compiling module CLK_GEN
+# 
+# Top level modules:
+# 	CLK_GEN
+# End time: 20:06:34 on Feb 03,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+add wave -position insertpoint  \
+sim:/TEST_CLK_GEN/i0/bclk_cnt
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.CLK_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST_CLK_GEN/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v Line: 10
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v(10): [TFMPC] - Missing connection for port 'LEDR'.
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 20:08:22 on Feb 03,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v 
+# -- Compiling module CLK_GEN
+# 
+# Top level modules:
+# 	CLK_GEN
+# End time: 20:08:22 on Feb 03,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.CLK_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST_CLK_GEN/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v Line: 10
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v(10): [TFMPC] - Missing connection for port 'LEDR'.
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 20:09:44 on Feb 03,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v 
+# -- Compiling module CLK_GEN
+# 
+# Top level modules:
+# 	CLK_GEN
+# End time: 20:09:44 on Feb 03,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.CLK_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST_CLK_GEN/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v Line: 10
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v(10): [TFMPC] - Missing connection for port 'LEDR'.
+run
+run
+vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 20:49:03 on Feb 03,2021
+# vlog -reportprogress 300 -work work /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v 
+# -- Compiling module CLK_GEN
+# 
+# Top level modules:
+# 	CLK_GEN
+# End time: 20:49:03 on Feb 03,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.CLK_GEN
+# ** Warning: (vsim-2685) [TFMPC] - Too few port connections for 'i0'.  Expected 4, found 3.
+#    Time: 0 ps  Iteration: 0  Instance: /TEST_CLK_GEN/i0 File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v Line: 10
+# ** Warning: (vsim-3722) /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v(10): [TFMPC] - Missing connection for port 'LEDR'.
+add wave -position insertpoint  \
+sim:/TEST_CLK_GEN/i0/lrclk
+run
+# End time: 20:55:18 on Feb 03,2021, Elapsed time: 1:30:09
+# Errors: 0, Warnings: 2

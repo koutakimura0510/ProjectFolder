@@ -1,0 +1,42 @@
+module SEQUENCER(CLK, RESET, KEY, current_state);
+input CLK, RESET, SW;
+
+output [1:0] current_state;
+
+parameter CLOCK_SET = 2'b000001,	// time set
+			 CLOCK24   = 2'b000010,	// now time
+           
+reg [5:0] next_state, current_state;
+
+always @(current_state or SW)
+        case (current_state)                    //次の段階
+            CLOCK_SET : if (SW == 1'b1)        //時刻
+                        next_state <= CLOCK24;  //時間
+                    else
+                        next_state <= CLOCK_SET;//時刻
+            CLOCK24 : if (SW == 1'b1)
+                        next_state <= ARARM;    //アラームに行く
+                    else
+                        next_state <= CLOCK24;  //時間に行く
+            ARARM : if (SW == 1'b1)
+                        next_state <= TSTOP;    //タイムストップに行く
+                    else
+                        next_state <= ARARM;    //アラームに行く
+            TSTOP : if (SW == 1'b1)
+                        next_state <= KITCHEN;  //キッチンタイマーに行く
+                    else
+                        next_state <= TSTOP;    //タイムストップに行く
+            KITCHEN : if (SW == 1'b1)
+                        next_state <= ORIGNAL;  //オリジナルに行く
+                    else
+                        next_state <= CLOCK_SET;//時刻に行く
+       
+            default : next_state <= CLOCK_SET;  //ありえない所に行ったら時刻に行く
+        endcase
+        
+always @(posedge CLK or negedge RESET)          
+        if (RESET == 1'b0)                      
+                current_state <= CLOCK_SET;     
+        else
+                current_state <= next_state;    
+endmodule            

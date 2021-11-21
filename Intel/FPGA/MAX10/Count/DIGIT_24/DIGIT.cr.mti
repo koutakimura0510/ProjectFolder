@@ -1,0 +1,92 @@
+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module DIGIT_24
+
+Top level modules:
+	DIGIT_24
+
+} {} {}} /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DECODER.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DECODER.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module DECODER
+
+Top level modules:
+	DECODER
+
+} {} {}} /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SERECTOR.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SERECTOR.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module SERECTOR
+
+Top level modules:
+	SERECTOR
+
+} {} {}} /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/ENABLE_GENERATE.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/ENABLE_GENERATE.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module ENABLE_GENERATE
+
+Top level modules:
+	ENABLE_GENERATE
+
+} {} {}} /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SEQUENCER.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SEQUENCER.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module SEQUENCER
+
+Top level modules:
+	SEQUENCER
+
+} {} {}} /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24_sim.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24_sim.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module DIGIT_24_sim
+
+Top level modules:
+	DIGIT_24_sim
+
+} {} {}} /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/TSET.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/TSET.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module TSET
+
+Top level modules:
+	TSET
+
+} {} {}} /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/ALARMSET.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/ALARMSET.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module ALARMSET
+
+Top level modules:
+	ALARMSET
+
+} {} {}} /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/BUZZER.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/BUZZER.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module BUZZER
+
+Top level modules:
+	BUZZER
+
+} {} {}} /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SW_GEN.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SW_GEN.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module SW_GEN
+
+Top level modules:
+	SW_GEN
+
+} {} {}} /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/CNT60.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/CNT60.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module CNT60
+
+Top level modules:
+	CNT60
+
+} {} {}} /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/AL_MOVE.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/AL_MOVE.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module AL_MOVE
+
+Top level modules:
+	AL_MOVE
+
+} {} {}} /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/CNT24.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/CNT24.v
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module CNT24
+
+Top level modules:
+	CNT24
+
+} {} {}}

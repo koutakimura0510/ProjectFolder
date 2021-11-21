@@ -1,0 +1,261 @@
+m255
+K4
+z2
+!s11f vlog 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/simulation/modelsim
+vDRAW_GEN
+Z1 !s110 1615598902
+!i10b 1
+!s100 116NC9AjjXSlnKYGQ=blU3
+Z2 !s11b Dg1SIo80bB@j0V0VzS_@n1
+I^c8jl^elJ5_PSiFh9Z9XW0
+Z3 VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1613895588
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/DRAW_GEN.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/DRAW_GEN.v
+!i122 5
+L0 4 42
+Z4 OV;L;2020.1;71
+r1
+!s85 0
+31
+Z5 !s108 1615598902.000000
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/DRAW_GEN.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/DRAW_GEN.v|
+!i113 1
+Z6 o-vlog01compat -work work
+Z7 !s92 -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK
+Z8 tCvgOpt 0
+n@d@r@a@w_@g@e@n
+vFF
+R1
+!i10b 1
+!s100 ^c`AMVJoiRoCE:<cN?PX[0
+R2
+IJOmnCYK:No_58Zc2dR<PX2
+R3
+R0
+w1614394875
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/FF.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/FF.v
+!i122 4
+L0 1 14
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/FF.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/FF.v|
+!i113 1
+R6
+R7
+R8
+n@f@f
+vHVSYNC_GEN
+R1
+!i10b 1
+!s100 :nLZH]bTzoC:[EA2jGmQa2
+R2
+I>T=bN<`TE:bXl6:=IQlSH2
+R3
+R0
+w1615598278
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/HVSYNC_GEN.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/HVSYNC_GEN.v
+!i122 8
+L0 17 91
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/HVSYNC_GEN.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/HVSYNC_GEN.v|
+!i113 1
+R6
+R7
+R8
+n@h@v@s@y@n@c_@g@e@n
+vI2S
+R1
+!i10b 1
+!s100 ^ZFf8nkM7QW_B<S7nMZg=1
+R2
+I847k0Y[K;>FBa]zn;gFSI2
+R3
+R0
+Z9 w1614395805
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/I2S.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/I2S.v
+!i122 3
+L0 5 42
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/I2S.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/I2S.v|
+!i113 1
+R6
+R7
+R8
+n@i2@s
+vI2S_OUT
+R1
+!i10b 1
+!s100 B@G9=EbR:kY=Wec;0RQj^0
+R2
+I1R>]jc6Zb@ih56b=I[PMe3
+R3
+R0
+R9
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/I2S_OUT.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/I2S_OUT.v
+!i122 2
+L0 1 33
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/I2S_OUT.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/I2S_OUT.v|
+!i113 1
+R6
+R7
+R8
+n@i2@s_@o@u@t
+vRC_FILTER
+R1
+!i10b 1
+!s100 PVADgFiAHQdk5D:BkAV4j3
+R2
+ICefB4CGaQNe1Gf?1MVh9?0
+R3
+R0
+R9
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/RC_FILTER.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/RC_FILTER.v
+!i122 1
+L0 9 20
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/RC_FILTER.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/RC_FILTER.v|
+!i113 1
+R6
+R7
+R8
+n@r@c_@f@i@l@t@e@r
+vSPI2
+R1
+!i10b 1
+!s100 ;FRMignNo5Km:Q8Hnoe;n0
+R2
+IQI9:Uk;1cke48DdQWbnH;0
+R3
+R0
+w1615598731
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/SPI/SPI2.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/SPI/SPI2.v
+!i122 0
+L0 6 114
+R4
+r1
+!s85 0
+31
+!s108 1615598901.000000
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/SPI/SPI2.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/SPI|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/SPI/SPI2.v|
+!i113 1
+R6
+!s92 -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/SPI
+R8
+n@s@p@i2
+vTEST
+R1
+!i10b 1
+!s100 5EMf6BLf0VSHKBDJ=z@hd0
+R2
+I]=9O`aL:mW^zme?cK0T<e0
+R3
+R0
+w1613877513
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TEST.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TEST.v
+!i122 9
+L0 5 28
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TEST.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TEST.v|
+!i113 1
+R6
+R7
+R8
+n@t@e@s@t
+vTFT_DOTCLK
+R1
+!i10b 1
+!s100 EjLC4S?HQ]4l?B>XmC4ld1
+R2
+I7ni8UzlcJaGQJbEZRi7JN3
+R3
+R0
+w1615598854
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v
+!i122 6
+L0 15 248
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_DOTCLK.v|
+!i113 1
+R6
+R7
+R8
+n@t@f@t_@d@o@t@c@l@k
+vTFT_INIT
+R1
+!i10b 1
+!s100 d:OLU;KI_Um;Y83TF`DhX0
+R2
+INROY3D82i=UED0WLb@BLP1
+R3
+R0
+w1613896345
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_INIT.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_INIT.v
+!i122 7
+L0 1 248
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_INIT.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/TFT/TFT_DOTCLK/TFT_INIT.v|
+!i113 1
+R6
+R7
+R8
+n@t@f@t_@i@n@i@t

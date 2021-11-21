@@ -1,0 +1,11 @@
+`timescale 1ns / 1ns
+
+module TEST_LED_BLINK;
+
+reg CLK = 1'b0, RESET;
+wire [9:0] LEDR;
+
+parameter SIM_SEC1_MAX = 4;
+parameter CYCLE = 20;
+
+LED_BLINK #(.SEC1_MAX(SIM_SEC_

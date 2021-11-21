@@ -1,0 +1,171 @@
+# do DIGIT_24_run_msim_rtl_verilog.do
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# vlib rtl_work
+# vmap work rtl_work
+# Model Technology ModelSim - Intel FPGA Edition vmap 2020.1 Lib Mapping Utility 2020.02 Feb 28 2020
+# vmap work rtl_work 
+# Copying /home/koutakimura/intelFPGA_lite/20.1/modelsim_ase/linuxaloem/../modelsim.ini to modelsim.ini
+# Modifying modelsim.ini
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24 {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 09:19:31 on Jan 27,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24.v 
+# -- Compiling module DIGIT_24
+# 
+# Top level modules:
+# 	DIGIT_24
+# End time: 09:19:31 on Jan 27,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24 {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/ENABLE_GENERATE.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 09:19:31 on Jan 27,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/ENABLE_GENERATE.v 
+# -- Compiling module ENABLE_GENERATE
+# 
+# Top level modules:
+# 	ENABLE_GENERATE
+# End time: 09:19:31 on Jan 27,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24 {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/CNT60.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 09:19:31 on Jan 27,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/CNT60.v 
+# -- Compiling module CNT60
+# 
+# Top level modules:
+# 	CNT60
+# End time: 09:19:31 on Jan 27,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24 {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DECODER.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 09:19:31 on Jan 27,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DECODER.v 
+# -- Compiling module DECODER
+# 
+# Top level modules:
+# 	DECODER
+# End time: 09:19:31 on Jan 27,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24 {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/CNT24.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 09:19:31 on Jan 27,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/CNT24.v 
+# -- Compiling module CNT24
+# 
+# Top level modules:
+# 	CNT24
+# End time: 09:19:32 on Jan 27,2021, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24 {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SERECTOR.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 09:19:32 on Jan 27,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SERECTOR.v 
+# -- Compiling module SERECTOR
+# 
+# Top level modules:
+# 	SERECTOR
+# End time: 09:19:32 on Jan 27,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24 {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/TSET.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 09:19:32 on Jan 27,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/TSET.v 
+# -- Compiling module TSET
+# 
+# Top level modules:
+# 	TSET
+# End time: 09:19:32 on Jan 27,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24 {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SEQUENCER.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 09:19:32 on Jan 27,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SEQUENCER.v 
+# -- Compiling module SEQUENCER
+# 
+# Top level modules:
+# 	SEQUENCER
+# End time: 09:19:32 on Jan 27,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24 {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SW_GEN.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 09:19:32 on Jan 27,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/SW_GEN.v 
+# -- Compiling module SW_GEN
+# 
+# Top level modules:
+# 	SW_GEN
+# End time: 09:19:32 on Jan 27,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24 {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/ALARMSET.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 09:19:32 on Jan 27,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/ALARMSET.v 
+# -- Compiling module ALARMSET
+# 
+# Top level modules:
+# 	ALARMSET
+# End time: 09:19:32 on Jan 27,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24 {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/AL_MOVE.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 09:19:32 on Jan 27,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/AL_MOVE.v 
+# -- Compiling module AL_MOVE
+# 
+# Top level modules:
+# 	AL_MOVE
+# End time: 09:19:32 on Jan 27,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24 {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/BUZZER.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 09:19:32 on Jan 27,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/BUZZER.v 
+# -- Compiling module BUZZER
+# 
+# Top level modules:
+# 	BUZZER
+# End time: 09:19:32 on Jan 27,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vlog -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24 {/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24_sim.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 09:19:32 on Jan 27,2021
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24" /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24_sim.v 
+# -- Compiling module DIGIT_24_sim
+# 
+# Top level modules:
+# 	DIGIT_24_sim
+# End time: 09:19:32 on Jan 27,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs="+acc"  DIGIT_24_sim
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L fiftyfivenm_ver -L rtl_work -L work -voptargs=""+acc"" DIGIT_24_sim 
+# Start time: 09:19:32 on Jan 27,2021
+# Loading work.DIGIT_24_sim
+# Loading work.ENABLE_GENERATE
+# Loading work.BUZZER
+# 
+# add wave *
+# Unable to lock WLF file "vsim.wlf". Retrying 1 times, errno 11
+# Unable to lock WLF file "vsim.wlf". Retrying 2 times, errno 11
+# Unable to lock WLF file "vsim.wlf". Retrying 3 times, errno 11
+# Cannot lock WLF file: "vsim.wlf"
+#           errno 11: Resource temporarily unavailable.
+# ** Warning: (vsim-WLF-5000) WLF file currently in use: vsim.wlf
+#           File in use by: koutakimura  Hostname: koutakimura-MB-K700  ProcessID: 11159
+#           Attempting to use alternate WLF file "./wlftOjDMn8".
+# ** Warning: (vsim-WLF-5001) Could not open WLF file: vsim.wlf
+#           Using alternate file: ./wlftOjDMn8
+# view structure
+# .main_pane.structure.interior.cs.body.struct
+# view signals
+# .main_pane.objects.interior.cs.body.tree
+# run -all
+# ** Note: $stop    : /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24_sim.v(46)
+#    Time: 1660 ns  Iteration: 0  Instance: /DIGIT_24_sim
+# Break in Module DIGIT_24_sim at /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/DIGIT_24/DIGIT_24_sim.v line 46
+# End time: 09:21:03 on Jan 27,2021, Elapsed time: 0:01:31
+# Errors: 0, Warnings: 2

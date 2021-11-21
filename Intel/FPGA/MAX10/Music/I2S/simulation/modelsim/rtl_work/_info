@@ -1,0 +1,85 @@
+m255
+K4
+z2
+!s11f vlog 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/simulation/modelsim
+vFF
+Z1 !s110 1612594756
+!i10b 1
+!s100 ^c`AMVJoiRoCE:<cN?PX[0
+Z2 !s11b Dg1SIo80bB@j0V0VzS_@n1
+IDcPG;@kPELBKTLWz^>C:@3
+Z3 VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1612593471
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/FF.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/FF.v
+!i122 0
+L0 1 14
+Z4 OV;L;2020.1;71
+r1
+!s85 0
+31
+Z5 !s108 1612594756.000000
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/FF.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/FF.v|
+!i113 1
+Z6 o-vlog01compat -work work
+Z7 !s92 -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S
+Z8 tCvgOpt 0
+n@f@f
+vI2S
+!s110 1612600293
+!i10b 1
+!s100 ;V?G>4hnlN540>4U>O?cT3
+R2
+IXEjfi3jN:O>;UoBO_KH9C3
+R3
+R0
+w1612600266
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/I2S.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/I2S.v
+!i122 5
+L0 14 93
+R4
+r1
+!s85 0
+31
+!s108 1612600293.000000
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/I2S.v|
+!s90 -reportprogress|300|-work|work|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/I2S.v|
+!i113 1
+o-work work
+R8
+n@i2@s
+vSIM
+R1
+!i10b 1
+!s100 _9B=LEPA5<SI>UkEd_^]N0
+R2
+IO5dhJHXbIY?Q6_:Ck;l?61
+R3
+R0
+w1612594732
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/SIM.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/SIM.v
+!i122 2
+L0 2 36
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/SIM.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/I2S/SIM.v|
+!i113 1
+R6
+R7
+R8
+n@s@i@m

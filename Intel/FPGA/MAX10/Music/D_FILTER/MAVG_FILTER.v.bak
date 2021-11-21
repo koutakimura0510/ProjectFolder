@@ -1,0 +1,25 @@
+module MAVG_FILTER (
+    input CLK, RESET, ENABLE,
+    input [31:0] IDATA,
+    output [31:0] ODATA
+);
+
+reg [33:0] data[0:3];
+reg [31:0] ODATA;
+
+always @(posedge CLK) begin
+    if (RESET == 1'b1) begin
+        data[0] <= 0;
+        data[1] <= 0;
+        data[2] <= 0;
+        data[3] <= 0;
+    end else if (ENABLE == 1'b1) begin
+        data[0] <= {{2{IDATA[31]}}, IDATA};
+        data[1] <= data[0];
+        data[2] <= data[1];
+        data[3] <= data[2];
+        ODATA <= (data[0] + data[1] + data[2] + data[3]) >> 2;
+    end
+end
+
+endmodule

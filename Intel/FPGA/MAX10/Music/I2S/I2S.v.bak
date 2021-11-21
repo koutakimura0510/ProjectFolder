@@ -1,0 +1,8 @@
+module (
+	CLK, RESET, ARDUINO_IO
+);
+
+input CLK, RESET;
+inout ARDUINO_IO;
+
+endmodule

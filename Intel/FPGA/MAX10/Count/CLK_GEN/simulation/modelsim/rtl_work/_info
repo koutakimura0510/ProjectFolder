@@ -1,0 +1,60 @@
+m255
+K4
+z2
+!s11f vlog 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/simulation/modelsim
+vCLK_GEN
+!s110 1612352943
+!i10b 1
+!s100 5ZH=a^FW>>^h=iAiWP6<j3
+Z1 !s11b Dg1SIo80bB@j0V0VzS_@n1
+IbV0OijVf<UaKL3VN=51=G2
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1612352916
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v
+!i122 12
+L0 1 99
+Z3 OV;L;2020.1;71
+r1
+!s85 0
+31
+!s108 1612352943.000000
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v|
+!s90 -reportprogress|300|-work|work|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/CLK_GEN.v|
+!i113 1
+o-work work
+Z4 tCvgOpt 0
+n@c@l@k_@g@e@n
+vTEST_CLK_GEN
+!s110 1612347909
+!i10b 1
+!s100 JIhCg;D3DIPUICQbzh7V>1
+R1
+IVHaP_jO]mBUK`UlD?S46^3
+R2
+R0
+w1612226189
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v
+!i122 1
+L0 3 21
+R3
+r1
+!s85 0
+31
+!s108 1612347909.000000
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN/TEST_CLK_GEN.v|
+!i113 1
+o-vlog01compat -work work
+!s92 -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/CLK_GEN
+R4
+n@t@e@s@t_@c@l@k_@g@e@n

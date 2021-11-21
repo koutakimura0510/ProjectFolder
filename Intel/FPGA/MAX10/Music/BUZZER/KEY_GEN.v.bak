@@ -1,0 +1,32 @@
+/**---------------------------------
+ * スイッチのチャタリング除去回路
+ *----------------------------------*/
+module KEY_GEN(
+	input CLK, ENABLE_KEY, KEY,
+	output KEY_UP
+);
+
+reg [1:0] META;
+reg [2:0] SFT;
+reg [1:0] EDGE;
+
+wire CHATTA, KEY_UP;
+
+always @(posedge CLK) begin
+	META <= {META[0], ~KEY};
+end
+
+always @(posedge CLK) begin
+	if (ENABLE == 1'b1)
+		SFT <= {SFT[1:0], META[1]};
+end
+
+assign CHATTA = &SFT;
+
+always @(posedge CLK) begin
+	EDGE <= {EDGE[0], CHATTA};
+end
+
+assign KEY_UP = EDGE[0] & ~EDGE[1];
+
+endmodule

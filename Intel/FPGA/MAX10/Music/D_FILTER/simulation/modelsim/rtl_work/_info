@@ -1,0 +1,209 @@
+m255
+K4
+z2
+!s11f vlog 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/simulation/modelsim
+vD_FILTER
+Z1 !s110 1613192016
+!i10b 1
+!s100 Ho82Y:KJ8FTF8^<N_8zi[2
+Z2 !s11b Dg1SIo80bB@j0V0VzS_@n1
+IgDn>>YamZV9D4ANMZfJ;d0
+Z3 VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1613043129
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/D_FILTER.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/D_FILTER.v
+!i122 5
+L0 18 90
+Z4 OV;L;2020.1;71
+r1
+!s85 0
+31
+Z5 !s108 1613192016.000000
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/D_FILTER.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/D_FILTER.v|
+!i113 1
+Z6 o-vlog01compat -work work
+Z7 !s92 -vlog01compat -work work +incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER
+Z8 tCvgOpt 0
+n@d_@f@i@l@t@e@r
+vDECODER
+R1
+!i10b 1
+!s100 3R`CYWNX1H4SZkhH:`E8a2
+R2
+Iz2<[kI2M`1@T;A7o4SbUE2
+R3
+R0
+w1613033369
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/DECODER.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/DECODER.v
+!i122 6
+Z9 L0 1 14
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/DECODER.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/DECODER.v|
+!i113 1
+R6
+R7
+R8
+n@d@e@c@o@d@e@r
+vFF
+R1
+!i10b 1
+!s100 ^c`AMVJoiRoCE:<cN?PX[0
+R2
+I@AXlgVF]2W_3^d41e0goD3
+R3
+R0
+w1612603831
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/FF.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/FF.v
+!i122 4
+R9
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/FF.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/FF.v|
+!i113 1
+R6
+R7
+R8
+n@f@f
+vI2S
+R1
+!i10b 1
+!s100 mY7RX2EfH64:D`WPHH`Tf2
+R2
+I;:z6CK5JeTa6ZIz9nFQYo2
+R3
+R0
+w1613127429
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/I2S.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/I2S.v
+!i122 3
+L0 5 56
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/I2S.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/I2S.v|
+!i113 1
+R6
+R7
+R8
+n@i2@s
+vI2S_OUT
+R1
+!i10b 1
+!s100 WD>F833Ee^@2@1TVJX8D=2
+R2
+IM5N;JiH^0BDZ1z>YU[S:?3
+R3
+R0
+w1612612256
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/I2S_OUT.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/I2S_OUT.v
+!i122 2
+L0 1 33
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/I2S_OUT.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/I2S_OUT.v|
+!i113 1
+R6
+R7
+R8
+n@i2@s_@o@u@t
+vRC_FILTER
+R1
+!i10b 1
+!s100 N4QLVhEEbY??P_lHEQ9fh1
+R2
+I<H5mmG<m3GGL4zXV1feoR0
+R3
+R0
+w1613179670
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/RC_FILTER.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/RC_FILTER.v
+!i122 1
+L0 9 20
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/RC_FILTER.v|
+!s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/RC_FILTER.v|
+!i113 1
+R6
+R7
+R8
+n@r@c_@f@i@l@t@e@r
+vSPI
+!s110 1613209231
+!i10b 1
+!s100 HlNAeQ:DnWk4kS7B9XfEf1
+R2
+IZG;aL6Gf<[DkHkliE>S[81
+R3
+R0
+w1613209220
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v
+!i122 30
+L0 10 80
+R4
+r1
+!s85 0
+31
+!s108 1613209231.000000
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v|
+!s90 -reportprogress|300|-work|work|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/SPI.v|
+!i113 1
+Z10 o-work work
+R8
+n@s@p@i
+vTEST
+!s110 1613203156
+!i10b 1
+!s100 K4B[hFN1hYcL<K29AciX63
+R2
+IG:FAA>5NgMInf_d6QS3dA0
+R3
+R0
+w1613203148
+8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v
+F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v
+!i122 22
+L0 6 48
+R4
+r1
+!s85 0
+31
+!s108 1613203156.000000
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v|
+!s90 -reportprogress|300|-work|work|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Music/D_FILTER/TEST.v|
+!i113 1
+R10
+R8
+n@t@e@s@t

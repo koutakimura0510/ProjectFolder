@@ -1,0 +1,58 @@
+m255
+K4
+z2
+!s11f vlog 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/BUZZER
+vBUZZER
+Z1 !s110 1611884823
+!i10b 1
+!s100 Q1Y`g5Y^khN`5m7IoRmgo3
+Z2 !s11b Dg1SIo80bB@j0V0VzS_@n1
+IamJm<11BzMfOf:<:H6Hif2
+Z3 VDg1SIo80bB@j0V0VzS_@n1
+R0
+Z4 w1611884285
+Z5 8/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/BUZZER/simulation/modelsim/BUZZER.vo
+Z6 F/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/BUZZER/simulation/modelsim/BUZZER.vo
+!i122 0
+L0 32 3389
+Z7 OV;L;2020.1;71
+r1
+!s85 0
+31
+Z8 !s108 1611884823.000000
+!s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/BUZZER/simulation/modelsim/BUZZER.vo|
+Z9 !s90 -reportprogress|300|-work|work|-stats=none|/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/BUZZER/simulation/modelsim/BUZZER.vo|
+!i113 1
+Z10 o-work work
+Z11 tCvgOpt 0
+n@b@u@z@z@e@r
+vhard_block
+R1
+!i10b 1
+!s100 N7zC;EliCdYQU?k^FgQ9Z1
+R2
+I8RE8V]:=]hJi1`oQOk]RI1
+R3
+R0
+R4
+R5
+R6
+!i122 0
+L0 3422 45
+R7
+r1
+!s85 0
+31
+R8
+Z12 !s107 /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/BUZZER/simulation/modelsim/BUZZER.vo|
+R9
+!i113 1
+R10
+R11

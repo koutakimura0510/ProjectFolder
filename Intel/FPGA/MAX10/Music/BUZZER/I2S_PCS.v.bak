@@ -1,0 +1,40 @@
+/**---------------------------------------------------
+ * Parallel to Serial
+ *----------------------------------------------------*/
+module moduleName (
+    CLK, BCLK, LRCLK, DATA_OUT, LATCH, L_DATA32, R_DATA32
+);
+
+input CLK;
+inout BCLK, LRCLK;
+output reg DATA_OUT;
+output reg LATCH;
+
+input [31:0] L_DATA32, R_DATA32;
+
+reg prev_clock_lr;
+reg prev_clock_bit;
+reg [8:0] cnt;
+reg [64:0] tmp_lr_data65;
+
+always @(negedge CLK) begin
+    if (prev_clock_bit == 1'b1 && BCLK == 1'b0) begin
+        DATA_OUT <= tmp_lr_data65[64];
+        tmp_lr_data65 <= tmp_lr_data65 << 1;
+        cnt <= cnt + 9'b1;
+    end else if (prev_clock_bit == 1'b0 && BCLK == 1'b1) begin
+        if (prev_clock_lr == 1'b1 && LRCLK == 1'b0) begin
+            tmp_lr_data65[64:33] <= L_DATA32[31:0];
+            tmp_lr_data65[32:1]  <= R_DATA32[31:0];
+            LATCH <= 1'b1;
+            cnt <= 9'b0;
+        end
+        if (cnt == 9'b1) begin
+            LATCH <= 1'b0;
+        end
+        prev_clock_lr <= LRCLK;
+    end
+    prev_clock_bit <= BCLK;
+end
+
+endmodule

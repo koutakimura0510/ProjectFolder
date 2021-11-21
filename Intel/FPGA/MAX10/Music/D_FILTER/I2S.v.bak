@@ -1,0 +1,82 @@
+/*
+ *
+ */
+
+module I2S(
+	input CLK, RESET, LRCLK, BCLK, DIN,
+	output SOUND_DATA
+);
+
+reg bclk_last, lrclk_last;
+reg [31:0] datai, datao;
+reg [31:0] datar, datal;
+reg [7:0] bcount;
+
+//* BCLK取得
+always @(posedge CLK) begin
+	bclk_last <= BCLK;
+end
+
+//* LRCLKの立ち上がりと立ち下がりを判定しBCLKの回数をカウントする
+always @(posedge CLK) begin
+	if (RESET == 1'b1) begin
+		bcount <= 0;
+		lrclk_last <= 0;
+	end else if (~bclk_last & BCLK) begin
+		if (lrclk_last != LRCLK) begin
+			bcount <= 0;
+			lrclk_last <= LRCLK;
+		end else begin
+			bcount <= bcount + 1;
+			lrclk_last <= LRCLK;
+		end
+	end
+end
+
+//* I2Sの規格に従い、1_BCLK位相がずれた状態でデータを取り込む。データ取込み
+always @(posedge CLK) begin
+	if (RESET == 1'b1) begin
+		datai <= 0;
+	end else if (~bclk_last & BCLK) begin
+		if (bcount == 31) begin
+			datai <= {datai[30:0], DIN};
+		end else begin
+			datai <= {datai[30:0], DIN};
+		end
+	end
+end
+
+//* 取り込んだデータを、Lデータ・Rデータ別々に保存する
+always @(posedge CLK) begin
+	if (RESET == 1'b1) begin
+		datal <= 0;
+		datar <= 0;
+	end else if (~bclk_last & BCLK && bcount == 0) begin
+		if (~lrclk_ix) begin
+			datar <= datai;
+		end else begin
+			datal <= datai;
+		end
+	end
+end
+
+//* 保存したデータを出力する
+always @(posedge CLK) begin
+	if (RESET == 1'b1) begin
+		datao <= 0;
+	end else if (~bclk_last & BCLK) begin
+		if (bcount > 31) begin
+			datao <= 0;
+		end else if (bcount != 31) begin
+			datao <= {datao[30:0], datao[31]};
+		end else if (~LRCLK) begin
+			datao <= datal;
+		end else begin
+			datao <= datar;
+		end
+	end else if (bclk_last & ~BCLK) begin
+		SOUND_DATA <= datao[31];
+	end
+end
+
+endmodule

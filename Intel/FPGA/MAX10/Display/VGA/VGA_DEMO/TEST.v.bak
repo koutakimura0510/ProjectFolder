@@ -1,0 +1,36 @@
+/*
+ * SPI通信テストベンチ
+ */
+
+`timescale 1ns / 1ps
+module TEST;
+
+reg reset, clk;
+wire [3:0] r, g, b;
+wire hsync, vsync;
+
+D_FILTER i0(
+    .CLK(clk),
+    .RESET(reset),
+    .VGA_R(r),
+    .VGA_G(g),
+    .VGA_B(b),
+    .VGA_HS(hsync),
+    .VGA_VS(vsync)
+);
+
+parameter CYCLE    = 5;    //clkの周期
+
+always #(CYCLE) clk = ~clk;
+
+initial begin
+    #0;
+    reset = 1;
+    #(CYCLE);
+    reset = 0;
+
+    #(CYCLE * 2000);
+    $finish;
+end
+
+endmodule

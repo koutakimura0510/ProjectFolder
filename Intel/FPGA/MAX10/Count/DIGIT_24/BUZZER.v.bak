@@ -1,0 +1,14 @@
+module BUZZER(CLK, ENABLE, KEY, GPIO)
+input ENABLE;
+input [1:0] KEY;
+output GPIO;
+reg GPIO;
+
+
+always @(posedge CLK)
+begin
+	if (ENABLE == 1'b1 && (KEY[0] == 1'b1 || KEY[1] == 1'b1))
+		GPIO <= ~GPIO;
+end
+
+endmodule

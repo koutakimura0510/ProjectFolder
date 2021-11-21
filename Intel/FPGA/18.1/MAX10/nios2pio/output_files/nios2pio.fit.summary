@@ -1,0 +1,18 @@
+Fitter Status : Successful - Fri Jan 29 08:18:15 2021
+Quartus Prime Version : 18.1.0 Build 625 09/12/2018 SJ Lite Edition
+Revision Name : nios2pio
+Top-level Entity Name : nios2pio
+Family : MAX 10
+Device : 10M50DAF484C6GES
+Timing Models : Preliminary
+Total logic elements : 3,191 / 49,760 ( 6 % )
+    Total combinational functions : 2,846 / 49,760 ( 6 % )
+    Dedicated logic registers : 1,887 / 49,760 ( 4 % )
+Total registers : 1887
+Total pins : 164 / 360 ( 46 % )
+Total virtual pins : 0
+Total memory bits : 128,512 / 1,677,312 ( 8 % )
+Embedded Multiplier 9-bit elements : 6 / 288 ( 2 % )
+Total PLLs : 0 / 4 ( 0 % )
+UFM blocks : 0 / 1 ( 0 % )
+ADC blocks : 0 / 2 ( 0 % )

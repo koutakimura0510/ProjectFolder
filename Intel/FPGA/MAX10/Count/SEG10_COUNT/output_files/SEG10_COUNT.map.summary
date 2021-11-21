@@ -1,0 +1,16 @@
+Analysis & Synthesis Status : Successful - Sun Jan 24 17:24:33 2021
+Quartus Prime Version : 20.1.1 Build 720 11/11/2020 SJ Lite Edition
+Revision Name : SEG10_COUNT
+Top-level Entity Name : SEG10_COUNT
+Family : MAX 10
+Total logic elements : 61
+    Total combinational functions : 61
+    Dedicated logic registers : 33
+Total registers : 33
+Total pins : 18
+Total virtual pins : 0
+Total memory bits : 0
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 0
+UFM blocks : 0
+ADC blocks : 0

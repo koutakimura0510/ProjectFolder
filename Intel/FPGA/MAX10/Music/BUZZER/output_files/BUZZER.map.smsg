@@ -1,0 +1,1 @@
+Warning (10268): Verilog HDL information at I2S_SCP.v(17): always construct contains both blocking and non-blocking assignments File: /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/BUZZER/I2S_SCP.v Line: 17
