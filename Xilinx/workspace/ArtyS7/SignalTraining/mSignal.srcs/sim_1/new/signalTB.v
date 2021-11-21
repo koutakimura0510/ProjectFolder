@@ -26,6 +26,7 @@ reg  sw, reset, clk;
 
 parameter CYCLE = 20;
 parameter SIM_MAX = 4;
+parameter SIM_BLINK = 1;
 parameter LOOP = 5;
 integer i;
 

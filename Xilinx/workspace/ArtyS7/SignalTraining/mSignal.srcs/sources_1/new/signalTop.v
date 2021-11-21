@@ -45,11 +45,11 @@ reg [2:0]  lamp_state; // LEDの状態遷移を管理
 reg [5:0]  lamp_flash; // 点灯パターン保存
 
 wire ENABLE;           // 10hz周期のenable信号
-wire ENABLEkhz;        // LED点滅enable信号
+wire EN_BLINK;         // blink信号
 wire STATE_START;      // 状態開始フラグ信号
 
 assign ENABLE    = ((tmp_count[23:0] == (pCLKFreqDiv10 - 1)) && (STATE_START == 1'd1)) ? 1'd1 : 1'd0;
-assign ENABLEkhz = ((tmp_count[20:0] == (1200000 - 1)) && (STATE_START == 1'd1)) ? 1'd1 : 1'd0;
+assign EN_BLINK  = (tmp_count >= ((pCLKFreqDiv10 / 2) - 1)) ? 1'b0 : 1'b1;
 reg state_start;  assign STATE_START = state_start;
 
 
@@ -102,48 +102,53 @@ always @(posedge iCLK) begin
 end
 
 // ランプ点灯パターン・時間切替
-always @(lamp_flash or lamp_state or state_time or ENABLEkhz) begin
-    case (lamp_state)
-    lpsCbWrKeep: begin
+always @(posedge iCLK) begin
+    if (iRST == 1'b1) begin
         lamp_flash <= 6'b100010;
         state_time <= lpctCbWrKeep;
-    end
+    end else begin
+        case (lamp_state)
+        lpsCbWrKeep: begin
+            lamp_flash <= 6'b100010;
+            state_time <= lpctCbWrKeep;
+        end
 
-    lpsCbWrPass: begin
-        lamp_flash <= 6'b100010;
-        state_time <= lpctCbWrPass;
-    end
+        lpsCbWrPass: begin
+            lamp_flash <= 6'b100010;
+            state_time <= lpctCbWrPass;
+        end
 
-    lpsCyWr: begin
-        lamp_flash <= 6'b010010;
-        state_time <= lpctCyWr;
-    end
+        lpsCyWr: begin
+            lamp_flash <= 6'b010010;
+            state_time <= lpctCyWr;
+        end
 
-    lpsCrWrInter: begin
-        lamp_flash <= 6'b001010;
-        state_time <= lpctCrWr;
-    end
+        lpsCrWrInter: begin
+            lamp_flash <= 6'b001010;
+            state_time <= lpctCrWr;
+        end
 
-    lpsCrWb: begin
-        lamp_flash <= 6'b001100;
-        state_time <= lpctCrWb;
-    end
+        lpsCrWb: begin
+            lamp_flash <= 6'b001100;
+            state_time <= lpctCrWb;
+        end
 
-    lpsCrWbBlink: begin
-        lamp_flash <= (ENABLEkhz == 1'b1) ? 6'b000100 ^ lamp_flash : lamp_flash;
-        state_time <= lpctCrWbBlink;
-    end
+        lpsCrWbBlink: begin
+            lamp_flash[2] <= (EN_BLINK == 1'b1) ? lamp_flash[2] ^ 1'd1 : lamp_flash[2];
+            state_time <= lpctCrWbBlink;
+        end
 
-    lpsCrWrTurn: begin
-        lamp_flash <= 6'b001010;
-        state_time <= 7'd2;
-    end
+        lpsCrWrTurn: begin
+            lamp_flash <= 6'b001010;
+            state_time <= 7'd2;
+        end
 
-    default: begin
-        lamp_flash <= 6'b100010;
-        state_time <= 7'd0;
+        default: begin
+            lamp_flash <= 6'b100010;
+            state_time <= 7'd0;
+        end
+        endcase
     end
-    endcase
 end
 
 // ランプ点灯デコーダー
