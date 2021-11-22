@@ -1,5 +1,5 @@
 <h1>【Zynq TohoProject Game】</h1>
-![demo](https://github.com/koutakimura0510/ProjectFolder/blob/master/gif/tohoFF.gif)
+![result](https://github.com/koutakimura0510/ProjectFolder/blob/master/gif/tohoFF.gif?raw=true)
 </br>
 </br>
 
