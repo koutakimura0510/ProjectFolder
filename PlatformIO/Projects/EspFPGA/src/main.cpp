@@ -13,11 +13,11 @@
  * @retval 
  */
 int i2c_write(byte cmd, byte data) {
-  Wire.beginTransmission(LCD_ADRRESS);
-  Wire.write(cmd);
-  Wire.write(data);
+	Wire.beginTransmission(LCD_ADRRESS);
+	Wire.write(cmd);
+	Wire.write(data);
 
-  return Wire.endTransmission();
+	return Wire.endTransmission();
 }
 
 
@@ -88,20 +88,21 @@ void ssd1306_init(void)
 }
 
 void setup() {
-  pinMode(4, OUTPUT);
-  digitalWrite(4, HIGH);
-  Serial.begin(115200);
-  Serial.println("start0");
-  Wire.begin();
-  Wire.setClock(400000);
-  ssd1306_init();
+	pinMode(4, OUTPUT);
+	digitalWrite(4, HIGH);
+	Serial.begin(115200);
+	Serial.println("start0");
+	Wire.begin();
+	Wire.setClock(400000);
+	ssd1306_init();
 }
 
 void loop() {
-  for (uint32_t i = 0; i < DISPLAY_SIZE; i++)
-  {
-    i2c_write(WR_BYTE, 0x01);
-  }
-
-  lcd_clear();
+	for (uint32_t i = 0; i < DISPLAY_SIZE; i++)
+	{
+		i2c_write(WR_BYTE, 0x01);
+	}
+	delay(1000);
+	lcd_clear();
+	delay(1000);
 }
