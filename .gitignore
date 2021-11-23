@@ -87,10 +87,6 @@ Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.srcs/*
 !Xilinx/workspace/Arty_z7_20/HDMI/HDMI_VGA/HDMI_DMA.srcs/sources_1
 
 # ArtyS7
-<<<<<<< HEAD
-=======
-Xilinx/workspace/ArtyS7/Led/*
->>>>>>> 95d2385a2d325807f3b04d4e5a057a275eed2c3b
 Xilinx/workspace/ArtyS7/SignalTraining/*
 
 
