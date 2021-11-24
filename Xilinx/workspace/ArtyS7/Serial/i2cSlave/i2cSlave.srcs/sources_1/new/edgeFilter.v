@@ -39,7 +39,7 @@ always @(posedge iCLK) begin
 end
 
 // 比較器、High Low信号が3点一致したら1を出力
-assign chatta = (sft[0] == sft[1] == sft[2]) ? 1'd1 : 1'd0;
+assign chatta = (sft[0] == sft[1] && sft[1] == sft[2]) ? 1'd1 : 1'd0;
 
 
 // 非同期信号をシステムクロックに同期させて出力
