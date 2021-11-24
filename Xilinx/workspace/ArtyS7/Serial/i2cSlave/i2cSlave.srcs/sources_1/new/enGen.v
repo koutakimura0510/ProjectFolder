@@ -9,20 +9,18 @@
  */
 module enGen
 (
-    parameter pCLK = 100000000
+parameter pSysClk = 100000000,  // System CLK
+parameter pDynClk = 500000      // ダイナミック点灯5ms Enable信号生成
 )(
-input 			iRST,		// System Reset
-input 			iCLK,		// System Clock
+input 			iRST,		    // System Reset
+input 			iCLK,		    // System Clock
 output          enKhz
 );
 
-parameter SEG_CNT = (500000 - 1);       // ダイナミック点灯5ms Enable信号生成
+reg [26:0] tmp_count;           // System Clk Counter
 
-// enable信号の生成
-reg [26:0] tmp_count;
-
-assign enable = (tmp_count[26:0] == (pCLK - 1)) ? 1'b1 : 1'b0;
-assign enKhz  = (tmp_count[18:0] == SEG_CNT) ? 1'b1 : 1'b0;
+assign enable = (tmp_count[26:0] == (pCLK    - 1)) ? 1'b1 : 1'b0;
+assign enKhz  = (tmp_count[18:0] == (pDynClk - 1)) ? 1'b1 : 1'b0;
 
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin

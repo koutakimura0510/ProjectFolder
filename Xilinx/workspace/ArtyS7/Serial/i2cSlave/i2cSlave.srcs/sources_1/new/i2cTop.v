@@ -13,20 +13,21 @@
  */
 module i2cTop
 (
-	parameter pCLK = 100000000
+parameter pSysClk = 100000000,	// System Clk 100MHz
+parameter pDynClk = 500000
 )(
-inout 			ioSCL,		// ESP32 SCL
-inout 			ioSDA,		// ESP32 SDA
+inout 			ioSCL,			// ESP32 SCL
+inout 			ioSDA,			// ESP32 SDA
 // input 			iEnable,	// Control 0:Disconnect I2C-Bus
-input 			iRST,		// System Reset
-input 			iCLK,		// System Clock
-output [6:0]    oSEG,       // Pmod SSD 7seg digit
-output          oSEL        // 0. 1digit 1. 2ditit
+input 			iRST,			// System Reset
+input 			iCLK,			// System Clock
+output [6:0]    oSEG,       	// Pmod SSD 7seg digit
+output          oSEL        	// 0. 1digit 1. 2ditit
 );
 
 // I2C信号接続
-wire oscl, osda;      // ノイズ除去を行ったI2C信号
-wire [7:0] i2cByte; // パラレル変換を行ったI2Cデータ
+wire ffscl, ffsda;    	// ノイズ除去を行ったI2C信号
+wire [7:0] i2cByte; 	// パラレル変換を行ったI2Cデータ
 
 // 7seg信号接続
 wire [3:0] selSeg;
@@ -41,10 +42,12 @@ initial begin
 end
 
 // module
-enGen           #(.pCLK(pCLK)) engen(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz));
-edgeFilter      sclFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSCL), .oSerial(oscl));
-edgeFilter      sdaFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSDA), .oSerial(osda));
-i2cSampling     i2c(.iCLK(iCLK), .iRST(iRST), .iSCL(oscl), .iSDA(osda), .i2cByte(i2cByte));
+enGen           #(.pSysClk(pSysClk), .pDynClk(pDynClk)) 
+				engen(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz));
+// i2cDir			dir(.iCLK(iCLK), .iRST(iRST), .ioSCL(iosclA), .ioSDA(iosdaA));
+edgeFilter      sclFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSCL), .oSerial(ffscl));
+edgeFilter      sdaFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSDA), .oSerial(ffsda));
+i2cSampling     i2c(.iCLK(iCLK), .iRST(iRST), .iSCL(ffscl), .iSDA(ffsda), .i2cByte(i2cByte));
 pmodDynamic     dynamic(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz), .i2cByte(i2cByte), .selSeg(selSeg), .saSeg(saSeg));
 pmodSeg         seg(.iCLK(iCLK), .iRST(iRST), .selSeg(selSeg), saSeg(saSeg) .oSEG(oSEG), .oSEL(oSEL));
 
