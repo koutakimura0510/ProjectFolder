@@ -30,16 +30,16 @@ localparam [3:0]
 	SclDataByte	= 4'd8,
 	SclAck	 	= 4'd9;
 
+// i2cシリアルデータ操作
+reg [7:0] i2cbyte;	assign i2cByte = i2cbyte;	// パラレル出力用
+reg [7:0] sftSel;	// パラレル変換用にシリアルデータを保存するシフトレジスタ
+reg [3:0] sclCnt;	// sdaの受信回数カウント
 
 // i2c状態管理
 reg [1:0] sftScl;	// sclの状態を管理を行うシフトレジスタ
 reg [1:0] sftSda;	// sdaの状態を管理を行うシフトレジスタ
 reg [2:0] i2cState;	// start stopシーケンサ管理
 
-// i2cシリアルデータ操作
-reg [7:0] sftSel;	// パラレル変換用にシリアルデータを保存するシフトレジスタ
-reg [7:0] i2cByte;	// パラレル出力用
-reg [3:0] sclCnt;	// sdaの受信回数カウント
 wire sclEdge;		// sclの立ち上がり検出
 wire discon;		// stop condition
 
@@ -105,9 +105,9 @@ end
 // 8bitシリアルデータをパラレルレジスタに保存
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
-		i2cByte <= 8'd0;
+		i2cbyte <= 8'd0;
 	end else if (sclEdge == 1'b1 && sclCnt == SclDataByte) begin
-		i2cByte <= sftSel;
+		i2cbyte <= sftSel;
 	end
 end
 

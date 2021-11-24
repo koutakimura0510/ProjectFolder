@@ -12,7 +12,7 @@ module pmodSeg
 input  iCLK,
 input  iRST,
 input  [3:0] selSeg,
-input  saSeg;
+input  saSeg,
 output [6:0] oSEG,
 output oSEL
 );

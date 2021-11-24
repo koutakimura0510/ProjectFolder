@@ -12,12 +12,12 @@
  * 2. 0~Fを1秒間隔で送信される
  */
 module i2cTop
-(
+#(
 parameter pSysClk = 100000000,	// System Clk 100MHz
 parameter pDynClk = 500000
 )(
-inout 			ioSCL,			// ESP32 SCL
-inout 			ioSDA,			// ESP32 SDA
+input 			ioSCL,			// ESP32 SCL
+input 			ioSDA,			// ESP32 SDA
 // input 			iEnable,	// Control 0:Disconnect I2C-Bus
 input 			iRST,			// System Reset
 input 			iCLK,			// System Clock
@@ -36,10 +36,10 @@ wire saSeg;
 // ダイナミック点灯用enable信号
 wire enKhz;
 
-initial begin
-	ioSCL = 1'bz;
-	ioSDA = 1'bz;
-end
+// initial begin
+// 	ioSCL = 1'bz;
+// 	ioSDA = 1'bz;
+// end
 
 // module
 enGen           #(.pSysClk(pSysClk), .pDynClk(pDynClk)) 
@@ -48,6 +48,6 @@ edgeFilter      sclFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSCL), .oSerial(ffscl)
 edgeFilter      sdaFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSDA), .oSerial(ffsda));
 i2cSampling     i2c(.iCLK(iCLK), .iRST(iRST), .iSCL(ffscl), .iSDA(ffsda), .i2cByte(i2cByte));
 pmodDynamic     dynamic(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz), .i2cByte(i2cByte), .selSeg(selSeg), .saSeg(saSeg));
-pmodSeg         seg(.iCLK(iCLK), .iRST(iRST), .selSeg(selSeg), saSeg(saSeg) .oSEG(oSEG), .oSEL(oSEL));
+pmodSeg         seg(.iCLK(iCLK), .iRST(iRST), .selSeg(selSeg), .saSeg(saSeg), .oSEG(oSEG), .oSEL(oSEL));
 
 endmodule

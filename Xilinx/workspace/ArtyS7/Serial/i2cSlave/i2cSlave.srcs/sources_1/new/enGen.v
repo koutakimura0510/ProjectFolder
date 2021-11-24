@@ -8,7 +8,7 @@
  * enable信号生成
  */
 module enGen
-(
+#(
 parameter pSysClk = 100000000,  // System CLK
 parameter pDynClk = 500000      // ダイナミック点灯5ms Enable信号生成
 )(
@@ -19,7 +19,7 @@ output          enKhz
 
 reg [26:0] tmp_count;           // System Clk Counter
 
-assign enable = (tmp_count[26:0] == (pCLK    - 1)) ? 1'b1 : 1'b0;
+assign enable = (tmp_count[26:0] == (pSysClk - 1)) ? 1'b1 : 1'b0;
 assign enKhz  = (tmp_count[18:0] == (pDynClk - 1)) ? 1'b1 : 1'b0;
 
 always @(posedge iCLK) begin

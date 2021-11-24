@@ -15,10 +15,10 @@ input  		iSerial,
 output 		oSerial
 );
 
-reg oSerial;
+reg osel;			assign oSerial = osel;
 reg [1:0] meta;		// メタ・ステーブル対策
 reg [2:0] sft;		// ノイズ除去用フィルタ
-wire chatta;		// 3点一致検出用信号
+wire filter;		// 3点一致検出用信号
 
 // 2段フリップフロップで受信
 always @(posedge iCLK) begin
@@ -39,17 +39,17 @@ always @(posedge iCLK) begin
 end
 
 // 比較器、High Low信号が3点一致したら1を出力
-assign chatta = (sft[0] == sft[1] && sft[1] == sft[2]) ? 1'd1 : 1'd0;
+assign filter = (sft[0] == sft[1] && sft[1] == sft[2]) ? 1'd1 : 1'd0;
 
 
 // 非同期信号をシステムクロックに同期させて出力
 // リセットがかからなければ前回の出力状態を維持する
 always @(posedge iCLK) begin
 	if (iRST == 1'd1) begin
-		oSerial <= 1'd0;
+		osel <= 1'd0;
 	end else begin
-		if (chata == 1'd1) begin
-			oSerial <= sft[2];
+		if (filter == 1'd1) begin
+			osel <= sft[2];
 		end
 	end
 end
