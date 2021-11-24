@@ -13,6 +13,8 @@
  */
 module i2cTop
 (
+	parameter pCLK = 100000000
+)(
 inout 			ioSCL,		// ESP32 SCL
 inout 			ioSDA,		// ESP32 SDA
 // input 			iEnable,	// Control 0:Disconnect I2C-Bus
@@ -23,7 +25,7 @@ output          oSEL        // 0. 1digit 1. 2ditit
 );
 
 // I2C信号接続
-wire scl, sda;      // ノイズ除去を行ったI2C信号
+wire oscl, osda;      // ノイズ除去を行ったI2C信号
 wire [7:0] i2cByte; // パラレル変換を行ったI2Cデータ
 
 // 7seg信号接続
@@ -33,12 +35,16 @@ wire saSeg;
 // ダイナミック点灯用enable信号
 wire enKhz;
 
+initial begin
+	ioSCL = 1'bz;
+	ioSDA = 1'bz;
+end
 
 // module
-enGen           engen(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz));
-edgeFilter      sclFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSCL), .oSerial(scl));
-edgeFilter      sdaFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSDA), .oSerial(sda));
-i2cSampling     i2c(.iCLK(iCLK), .iRST(iRST), .iSCL(scl), .iSDA(sda), .i2cByte(i2cByte));
+enGen           #(.pCLK(pCLK)) engen(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz));
+edgeFilter      sclFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSCL), .oSerial(oscl));
+edgeFilter      sdaFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSDA), .oSerial(osda));
+i2cSampling     i2c(.iCLK(iCLK), .iRST(iRST), .iSCL(oscl), .iSDA(osda), .i2cByte(i2cByte));
 pmodDynamic     dynamic(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz), .i2cByte(i2cByte), .selSeg(selSeg), .saSeg(saSeg));
 pmodSeg         seg(.iCLK(iCLK), .iRST(iRST), .selSeg(selSeg), saSeg(saSeg) .oSEG(oSEG), .oSEL(oSEL));
 

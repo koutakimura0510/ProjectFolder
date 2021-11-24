@@ -7,6 +7,7 @@
  * -
  * I2C通信サンプリング回路
  * シリアルデータをパラレルデータに変換し1byteデータとして出力する
+ * 受信データは8bit固定長とする
  */
 module i2cSampling
 (
@@ -25,7 +26,8 @@ localparam [2:0]
 localparam [3:0] 
 	SclCnt 		= 4'd1,
 	SclNull 	= 4'd0,
-	SclMax	 	= 4'd7;
+	SclDataByte	= 4'd8,
+	SclAck	 	= 4'd9;
 
 
 // i2c状態管理
@@ -68,21 +70,13 @@ end
 // iSCLのエッジ検出
 assign sclEdge = (sftScl == 2'b01) ? 1'b1 : 1'b0;
 
-// sdaシリアルデータ保存
-always @(posedge iCLK) begin
-	if (iRST == 1'b1) begin
-		sftSel <= 8'd0;
-	end else if (sclEdge == 1'b1) begin
-		sftSel <= {sftSel[6:0], iSDA};
-	end
-end
-
 // sclの立ち上がりエッジで受信回数をカウント
+// ackまでカウントしたらクリア
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
 		sclCnt <= SclNull;
 	end else if (sclEdge == 1'b1) begin
-		if (sclCnt == SclMax) begin
+		if (sclCnt == SclDataByte) begin
 			sclCnt <= SclNull;
 		end else begin
 			sclCnt <= sclCnt + SclCnt;
@@ -90,11 +84,20 @@ always @(posedge iCLK) begin
 	end
 end
 
+// sdaシリアルデータ保存
+always @(posedge iCLK) begin
+	if (iRST == 1'b1) begin
+		sftSel <= 8'd0;
+	end else if (sclEdge == 1'b1 && sclCnt != SclDataByte) begin
+		sftSel <= {sftSel[6:0], iSDA};
+	end
+end
+
 // シリアルデータをパラレルレジスタに保存
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
 		i2cByte <= 8'd0;
-	end else if (sclEdge == 1'b1) begin
+	end else if (sclEdge == 1'b1 && sclCnt == SclDataByte) begin
 		i2cByte <= sftSel;
 	end
 end
