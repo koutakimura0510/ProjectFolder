@@ -1,10 +1,8 @@
 #include <Arduino.h>
 #include <stdint.h>
 #include <Wire.h>
-// #include <ssd1306.h>
 #include "ssd1306.h"
 
-// uint8_t fpga_address = 0xaa;
 
 /**
  * @brief  I2C送信関数
@@ -13,8 +11,8 @@
  * @retval 
  */
 int i2c_write(byte cmd, byte data) {
-	Wire.beginTransmission(LCD_ADRRESS);
-	Wire.write(cmd);
+	// Wire.beginTransmission(0x3c);
+	// Wire.write(cmd);
 	Wire.write(data);
 
 	return Wire.endTransmission();
@@ -77,11 +75,11 @@ void ssd1306_init(void)
 		DISPLAY_ON,
 	};
 
-	delay(30);
+	delay(300);
 
 	for (uint8_t i = 0; i < NUM(initial_table); i++ ) {
 		i2c_write(CMD_BYTE, initial_table[i]);
-		delay(1);
+		delay(10);
 	}
 
 	lcd_clear();
@@ -90,21 +88,30 @@ void ssd1306_init(void)
 void setup() {
 	pinMode(25, OUTPUT);
 	digitalWrite(25, HIGH);
-	Serial.begin(115200);
-	Serial.println("start0");
+	// Serial.begin(115200);
+	// Serial.println("start0");
 	Wire.begin();
 	Wire.setClock(400000);
-	ssd1306_init();
+	// ssd1306_init();
 }
 
 void loop() {
-	for (uint32_t i = 0; i < DISPLAY_SIZE; i++)
+	static uint32_t data = 0;
+	static uint32_t led = 0;
+
+	i2c_write(WR_BYTE, data);
+	digitalWrite(25, led);
+	delay(1000);
+
+	if (led == 0)
 	{
-		i2c_write(WR_BYTE, 0x01);
+		led = 1;
+	} else {
+		led = 0;
 	}
-	digitalWrite(25, HIGH);
-	delay(1000);
-	lcd_clear();
-	digitalWrite(25, LOW);
-	delay(1000);
+	data++;
+	data &= 0x0f;
+	
+	// lcd_clear();
+	// Serial.println("start0");
 }

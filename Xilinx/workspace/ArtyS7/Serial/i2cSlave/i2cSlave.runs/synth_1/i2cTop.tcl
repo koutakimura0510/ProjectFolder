@@ -70,6 +70,7 @@ proc create_report { reportName command } {
   }
 }
 OPTRACE "synth_1" START { ROLLUP_AUTO }
+set_param chipscope.maxJobs 3
 OPTRACE "Creating in-memory project" START { }
 create_project -in_memory -part xc7s50csga324-1
 
@@ -86,7 +87,14 @@ set_property ip_output_repo /home/koutakimura/workspace/ProjectFolder/Xilinx/wor
 set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
-read_verilog -library xil_defaultlib /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/i2cTop.v
+read_verilog -library xil_defaultlib {
+  /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/edgeFilter.v
+  /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/enGen.v
+  /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/i2cSampling.v
+  /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/pmodDynamic.v
+  /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/pmodSeg.v
+  /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/i2cTop.v
+}
 OPTRACE "Adding files" END { }
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the
