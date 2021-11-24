@@ -57,12 +57,14 @@ always @(posedge iCLK) begin
 end
 
 // start stop condition検出
+// 基本sclがHighの間はsdaは変化しないため
+// High中にclkが変化したらconditionの検出とみなす
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
 		i2cState <= disConnect;
 	end else begin
 		case (i2cState)
-			disConnect: 	i2cState <= (sftScl == 2'b11 && sftSda == 2'b00) ? startCondition : disConnect;
+			disConnect: 	i2cState <= (sftScl == 2'b11 && sftSda == 2'b10) ? startCondition : disConnect;
 			startCondition:	i2cState <= (sftScl == 2'b11 && sftSda == 2'b01) ? disConnect : startCondition;
 			default:		i2cState <= disConnect;
 		endcase
