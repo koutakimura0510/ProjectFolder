@@ -88,8 +88,8 @@ void ssd1306_init(void)
 }
 
 void setup() {
-	pinMode(4, OUTPUT);
-	digitalWrite(4, HIGH);
+	pinMode(25, OUTPUT);
+	digitalWrite(25, HIGH);
 	Serial.begin(115200);
 	Serial.println("start0");
 	Wire.begin();
@@ -102,7 +102,9 @@ void loop() {
 	{
 		i2c_write(WR_BYTE, 0x01);
 	}
+	digitalWrite(25, HIGH);
 	delay(1000);
 	lcd_clear();
+	digitalWrite(25, LOW);
 	delay(1000);
 }
