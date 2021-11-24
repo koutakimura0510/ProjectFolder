@@ -41,6 +41,7 @@ reg [7:0] sftSel;	// パラレル変換用にシリアルデータを保存す�
 reg [7:0] i2cByte;	// パラレル出力用
 reg [3:0] sclCnt;	// sdaの受信回数カウント
 wire sclEdge;		// sclの立ち上がり検出
+wire discon;		// stop condition
 
 
 
@@ -63,10 +64,13 @@ always @(posedge iCLK) begin
 		case (i2cState)
 			disConnect: 	i2cState <= (sftScl == 2'b11 && sftSda == 2'b00) ? startCondition : disConnect;
 			startCondition:	i2cState <= (sftScl == 2'b11 && sftSda == 2'b01) ? disConnect : startCondition;
-			default:		disConnect;
+			default:		i2cState <= disConnect;
 		endcase
 	end
 end
+
+// start conditionを検出したらcnt開始
+assign discon = (i2cState == disConnect) ? 1'b0 : 1'b1;
 
 // iSCLのエッジ検出
 assign sclEdge = (sftScl == 2'b01) ? 1'b1 : 1'b0;
@@ -75,6 +79,8 @@ assign sclEdge = (sftScl == 2'b01) ? 1'b1 : 1'b0;
 // ackまでカウントしたらクリア
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
+		sclCnt <= SclNull;
+	end else if (discon == 1'b0) begin
 		sclCnt <= SclNull;
 	end else if (sclEdge == 1'b1) begin
 		if (sclCnt == SclDataByte) begin
