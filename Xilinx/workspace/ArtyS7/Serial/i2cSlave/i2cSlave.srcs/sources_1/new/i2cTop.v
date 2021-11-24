@@ -22,7 +22,7 @@ inout 			ioSDA,			// ESP32 SDA
 input 			iRST,			// System Reset
 input 			iCLK,			// System Clock
 output [6:0]    oSEG,       	// Pmod SSD 7seg digit
-output          oSEL        	// 0. 1digit 1. 2ditit
+output          oSEL        	// 0. 1digit 1. 2digit
 );
 
 // I2C信号接続
@@ -44,7 +44,6 @@ end
 // module
 enGen           #(.pSysClk(pSysClk), .pDynClk(pDynClk)) 
 				engen(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz));
-// i2cDir			dir(.iCLK(iCLK), .iRST(iRST), .ioSCL(iosclA), .ioSDA(iosdaA));
 edgeFilter      sclFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSCL), .oSerial(ffscl));
 edgeFilter      sdaFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSDA), .oSerial(ffsda));
 i2cSampling     i2c(.iCLK(iCLK), .iRST(iRST), .iSCL(ffscl), .iSDA(ffsda), .i2cByte(i2cByte));

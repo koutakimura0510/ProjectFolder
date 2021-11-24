@@ -5,9 +5,10 @@
  * Build  Vivado20.2
  * Borad  ArtyS7
  * -
- * I2C通信サンプリング回路
- * シリアルデータをパラレルデータに変換し1byteデータとして出力する
- * 受信データは8bit固定長とする
+ * I2C通信サンプリング回路、仕様は下記の通りである
+ * 1. シリアルデータをパラレルデータに変換し1byteデータとして出力する
+ * 2. 受信データは8bit固定長とし、ACKの返送は行わない
+ * 3. 書き込み専用とし、read信号は受け付けない(CPUがmasterでFPGAのデータを読み込む場面が想定できないため)
  */
 module i2cSampling
 (
@@ -19,7 +20,7 @@ output [7:0] i2cByte
 );
 
 localparam [2:0] 
-	disConnect 		= 3'd0,		// マスタがSCLがHIGHの間にSDAをLOWでStartシーケンス
+	disConnect 		= 3'd0,		// マスタのSCLがHIGHの間にSDAをLOWでStartシーケンス
 	startCondition 	= 3'd1,		// SCLがHIGHの間にSDAをHIGHでStopシーケンス
 	stopCondition 	= 3'd2;
 
@@ -84,7 +85,7 @@ always @(posedge iCLK) begin
 	end
 end
 
-// sdaシリアルデータ保存
+// sdaシリアルデータ保存、ack信号時はデータを保存しない
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
 		sftSel <= 8'd0;
@@ -93,7 +94,7 @@ always @(posedge iCLK) begin
 	end
 end
 
-// シリアルデータをパラレルレジスタに保存
+// 8bitシリアルデータをパラレルレジスタに保存
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
 		i2cByte <= 8'd0;
