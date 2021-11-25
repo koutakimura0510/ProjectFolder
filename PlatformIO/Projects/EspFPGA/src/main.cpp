@@ -19,7 +19,7 @@ void setup() {
 void loop() {
 	static uint8_t data = 0;
 
-	delay(1000);
+	delay(100);
 	i2c_write(WR_BYTE, data);
 	led_blink(1000, LED_PIN);
 	data++;
