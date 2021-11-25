@@ -7,9 +7,8 @@
  * -
  * I2C Slave処理
  * MasterのESP32からI2C通信でデータを受信し、受信データをシリアル->パラレル変換を行い7セグに表示する
- * サンプルとして送信されるデータは下記の通りである
- * 1. address 3F + wbit
- * 2. 0~Fを1秒間隔で送信される
+ * -
+ * グリッチ対策として組み合わせ回路の出力をDFFに受けてから外部に出力するようにする
  */
 module i2cTop
 #(
@@ -39,11 +38,16 @@ wire enKhz;
 // module
 enGen           #(.pSysClk(pSysClk), .pDynClk(pDynClk)) 
 				engen(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz));
+
+// エッジ検出
 edgeFilter      sclFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSCL), .oSerial(ffscl));
 edgeFilter      sdaFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSDA), .oSerial(ffsda));
+
+// シリアル->パラレル変換
 i2cSampling     i2c(.iCLK(iCLK), .iRST(iRST), .iSCL(ffscl), .iSDA(ffsda), .i2cByte(i2cByte));
+
+// パラレル変換したデータを4bitずつに分けて7セグに表示
 pmodDynamic     dynamic(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz), .i2cByte(i2cByte), .selSeg(selSeg), .saSeg(saSeg));
 pmodSeg         seg(.iCLK(iCLK), .iRST(iRST), .selSeg(selSeg), .saSeg(saSeg), .oSEG(oSEG), .oSEL(oSEL));
-
 
 endmodule
