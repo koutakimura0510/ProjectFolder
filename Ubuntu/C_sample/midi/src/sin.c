@@ -153,7 +153,7 @@ int main(int argc, char **argv)
 		// fprintf(fp, "sin[%d:%d] <= ", (8*i)+7, 8*i);
 		// fprintf(fp, "8'd%d;", (uint16_t)sine);
 		fprintf(fp, "sinRom[%d] = ", i);
-		fprintf(fp, "%d'd%d;", shift, (uint16_t)sine);
+		fprintf(fp, "16'd%d;", (uint16_t)sine);
 		fprintf(fp, "\n    ");
 	}
 	fprintf(fp, "end");
