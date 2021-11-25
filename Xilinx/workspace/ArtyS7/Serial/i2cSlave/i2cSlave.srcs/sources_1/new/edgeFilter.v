@@ -16,6 +16,8 @@ output 		oSerial
 );
 
 reg osel;			assign oSerial = osel;
+
+// 非同期信号処理
 reg [1:0] meta;		// メタ・ステーブル対策
 reg [2:0] sft;		// ノイズ除去用フィルタ
 wire filter;		// 3点一致検出用信号
