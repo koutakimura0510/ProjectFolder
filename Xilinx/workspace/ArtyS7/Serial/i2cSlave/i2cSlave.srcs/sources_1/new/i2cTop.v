@@ -37,6 +37,9 @@ wire saSeg;
 // ダイナミック点灯用enable信号
 wire enKhz;
 
+assign oSCLF = ffscl;
+assign oSDAF = ffsda;
+
 // Enable信号生成
 enGen           #(.pSysClk(pSysClk), .pDynClk(pDynClk)) 
 				engen(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz));
