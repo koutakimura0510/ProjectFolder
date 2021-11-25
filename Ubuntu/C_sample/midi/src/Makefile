@@ -1,5 +1,5 @@
 # data_midi_printf.c --- ./program .midのファイルパス >> 出力先のファイルパス.txt
-# get_midi_program_Change.c  --- ./program midファイルを解析したデータが記載されているtxtファイルのパス
+# get_midi_musical.c  --- ./program midファイルを解析したデータが記載されているtxtファイルのパス
 
 
 CC 	  = gcc

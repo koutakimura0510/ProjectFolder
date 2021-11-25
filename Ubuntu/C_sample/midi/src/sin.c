@@ -2,6 +2,19 @@
  * Ubuntu LTS 20.04 kimura
  * 分解能に応じた音階の整数部と小数部、sin波形のデータテーブルを出力するプログラム
  * プログラム実行時、2の乗数倍の分解能を求められるので数値を入力し計算を行う
+ * 
+ * piano_pwm.xlseファイル参照
+ * 
+ * 計算方法
+ * 中央のラ = 440Hzは69番目の位置
+ * 128個の整数と少数の配列の69番目を参照し、sinテーブルの参照するインデックスを求める
+ * 
+ * integer pos += integer[69]
+ * decimal pos += decimal[69]
+ * sin pos      = (integer pos + (decimal pos >> bitshift)) & (bit - 1) // 8bitなら 0xffで&を取り 3bitシフト
+ * pwm duty     = sin index[sin pos]
+ * 
+ * 参照したsinテーブルの値に応じて、タイマのpwmのデューティ比を変更することで指定の音階が鳴る
  * -------------------------------------------------*/
 
 
@@ -14,9 +27,9 @@
 #include <stdint.h>
 #include <math.h>
 
-#define LOOP 128		//使用する音階数
-#define DIV  1000000	//固定少数
-#define INTERRUPT	31.25
+#define LOOP 		128		// 使用する音階数
+#define DIV  		1000000	// 固定少数
+#define INTERRUPT	31.25	// 周期31.25us -> 32kHz
 
 
 /**-------------------------------------------------
@@ -25,11 +38,11 @@
 int main(int argc, char **argv)
 {
 	FILE *fp;
-	double sound;	//#を含めた音階の上り幅
-	double onkai = 440;	//基本音階
+	double sound;			// #を含めた音階の上り幅
+	double onkai = 440;		// 基本音階
 	double decimal[LOOP];
 	double integer[LOOP];
-	uint8_t line = 0;
+	uint8_t line = 0;		// 改行文字処理
 	double pwm, volt, n, clk, sine, sinclk;
 	uint32_t d = 1;
 	uint32_t shift;
@@ -48,7 +61,7 @@ int main(int argc, char **argv)
 
 	d <<= shift;
 
-	pwm = d;
+	pwm = d;		// 分解能を保存
 	volt = pwm / 2;
 	n    = pwm - 1;
 	clk  = 1 / ((INTERRUPT * pwm) / DIV);
@@ -129,13 +142,18 @@ int main(int argc, char **argv)
 	/**-------------------------------------------------
 	 * verilogのsinカーブ初期化を出力
 	 * -------------------------------------------------*/
+
+	fprintf(fp, "\n");
+	fprintf(fp, "reg[%d:0] sinRom[0:%d];\n", shift-1, pwm-1);
 	fprintf(fp, "initial begin\n    ");
 
 	for (uint32_t i = 0; i < pwm; i++) {
 		sine = (sin(6.283185307 * (sinclk * (double)i)) * volt) + volt;
 
-		fprintf(fp, "sin[%d:%d] <= ", (8*i)+7, 8*i);
-		fprintf(fp, "8'd%d;", (uint16_t)sine);
+		// fprintf(fp, "sin[%d:%d] <= ", (8*i)+7, 8*i);
+		// fprintf(fp, "8'd%d;", (uint16_t)sine);
+		fprintf(fp, "sinRom[%d] = ", i);
+		fprintf(fp, "%d'd%d;", shift, (uint16_t)sine);
 		fprintf(fp, "\n    ");
 	}
 	fprintf(fp, "end");
