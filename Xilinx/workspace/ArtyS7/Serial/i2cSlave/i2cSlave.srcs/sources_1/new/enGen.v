@@ -22,6 +22,9 @@ reg [26:0] tmp_count;           // System Clk Counter
 assign enable = (tmp_count[26:0] == (pSysClk - 1)) ? 1'b1 : 1'b0;
 assign enKhz  = (tmp_count[18:0] == (pDynClk - 1)) ? 1'b1 : 1'b0;
 
+/*
+ * System CLKの周期でカウント
+ */
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         tmp_count <= 27'd0;

@@ -74,6 +74,7 @@ always @(posedge iCLK) begin
 end
 
 // start conditionを検出したらcnt開始
+// 回路を増やす可能性があるため、wireを利用している
 assign discon = (i2cState == disConnect) ? 1'b0 : 1'b1;
 
 // iSCLのエッジ検出

@@ -35,18 +35,18 @@ wire saSeg;
 // ダイナミック点灯用enable信号
 wire enKhz;
 
-// module
+// Enable信号生成
 enGen           #(.pSysClk(pSysClk), .pDynClk(pDynClk)) 
 				engen(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz));
 
-// エッジ検出
+// I2Cフィルタ回路
 edgeFilter      sclFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSCL), .oSerial(ffscl));
 edgeFilter      sdaFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSDA), .oSerial(ffsda));
 
-// シリアル->パラレル変換
+// 8bitシリアル->1byteパラレル変換
 i2cSampling     i2c(.iCLK(iCLK), .iRST(iRST), .iSCL(ffscl), .iSDA(ffsda), .i2cByte(i2cByte));
 
-// パラレル変換したデータを4bitずつに分けて7セグに表示
+// パラレル変換したデータを4bitずつに分けて2桁7セグに表示
 pmodDynamic     dynamic(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz), .i2cByte(i2cByte), .selSeg(selSeg), .saSeg(saSeg));
 pmodSeg         seg(.iCLK(iCLK), .iRST(iRST), .selSeg(selSeg), .saSeg(saSeg), .oSEG(oSEG), .oSEL(oSEL));
 
