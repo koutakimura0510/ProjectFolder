@@ -33,7 +33,7 @@ end
 
 // チャタリング除去
 always @(posedge iCLK) begin
-	if (iRST == 1'd0) begin
+	if (iRST == 1'd1) begin
 		sft <= 3'd0;
 	end else begin
 		sft <= {sft[1:0], meta[1]};

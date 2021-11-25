@@ -21,7 +21,9 @@ input 			ioSDA,			// ESP32 SDA
 input 			iRST,			// System Reset
 input 			iCLK,			// System Clock
 output [6:0]    oSEG,       	// Pmod SSD 7seg digit
-output          oSEL        	// 0. 1digit 1. 2digit
+output          oSEL,        	// 0. 1digit 1. 2digit
+output			oSCLF,			// fpga scl
+output			oSDAF			// fpga sda
 );
 
 // I2C信号接続

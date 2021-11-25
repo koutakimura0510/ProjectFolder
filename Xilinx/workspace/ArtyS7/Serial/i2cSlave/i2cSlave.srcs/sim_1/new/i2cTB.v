@@ -30,7 +30,7 @@ parameter DynMax        = 2;                // seg sel dynamic flash time
 integer i, main;
 
 
-i2c_top #(.pSysClk(SimMax), .pDynClk(DynMax))
+i2cTop #(.pSysClk(SimMax), .pDynClk(DynMax))
 i0(
 .ioSCL(ioSCL),
 .ioSDA(ioSDA),
@@ -55,8 +55,8 @@ end
  */
 task startCondition();
 begin
-    ioSDA = 1'b0;   #(sclCycle)
-    ioSCL = 1'b0;   #(sclCycle)
+    ioSDA = 1'b0;   #(sclCycle);
+    ioSCL = 1'b0;   #(sclCycle);
 end
 endtask
 
@@ -65,8 +65,8 @@ endtask
  */
 task stopCondition();
 begin
-    ioSCL = 1'b1;   #(sclCycle)
-    ioSDA = 1'b1;   #(sclCycle)
+    ioSCL = 1'b1;   #(sclCycle);
+    ioSDA = 1'b1;   #(sclCycle);
 end
 endtask
 
@@ -78,7 +78,7 @@ task i2cSendSingle(
     input [7:0] data  // byte
 );
 begin
-    ioSDA = data & 8'h80; #(sclCycle)
+    ioSDA = data; #(sclCycle);
 
     // (立上り + 立下り) = 2clk
     // 1byte + ack      = 9clk
@@ -87,10 +87,10 @@ begin
         ioSCL = ~ioSCL;
 
         if (i & 1'b1) begin
-            data  = data << 8'd1;
-            ioSDA = data & 8'h80;
+            data  = data >> 8'd1;
+            ioSDA = data;
         end
-        #(sclCycle / 2)
+        #(sclCycle / 2);
     end
 end
 endtask
@@ -103,16 +103,16 @@ task i2cSendContinue(
     input [7:0] data
 );
 begin
-    ioSDA = data & 8'h80; #(sclCycle / 2)
+    ioSDA = data; #(sclCycle / 2);
 
     for (i = 0; i < 18; i = i + 1) begin
         ioSCL = ~ioSCL;
 
         if (i & 1'b1) begin
-            data  = data << 8'd1;
-            ioSDA = data & 8'h80;
+            data  = data >> 8'd1;
+            ioSDA = data;
         end
-        #(sclCycle / 2)
+        #(sclCycle / 2);
     end
     ioSCL = 1'b0;
 end
@@ -124,8 +124,8 @@ endtask
  * まずA側masterを行い、次にB側masterの処理を行う
  */
 initial begin
-    iRST    = 1'b1;     #(rstCycle)
-    iRST    = 1'b0;     #(rstCycle)
+    iRST    = 1'b1;     #(rstCycle);
+    iRST    = 1'b0;     #(rstCycle);
 
     for (main = 0; main < sendCnt; main = main + 1) begin
         startCondition();
@@ -139,7 +139,7 @@ initial begin
     end
     stopCondition();
 
-    #(CYCLE * 4 * 100);
+    #(sysCycle * 8);
     $stop;
 end
 

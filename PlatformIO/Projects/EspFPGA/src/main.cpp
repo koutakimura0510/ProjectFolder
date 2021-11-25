@@ -11,7 +11,7 @@ void setup() {
 	digitalWrite(LED_PIN, HIGH);
 	// Serial.begin(115200);
 	// Serial.println("start0");
-	Wire.begin();
+	Wire.begin(21, 22);
 	Wire.setClock(400000);
 	// ssd1306_init();
 }
@@ -21,7 +21,7 @@ void loop() {
 
 	delay(1000);
 	i2c_write(WR_BYTE, data);
-	led_blink(1000, LED_PIN)
+	led_blink(1000, LED_PIN);
 	data++;
 	data &= 0xff;
 }
