@@ -36,11 +36,6 @@ wire saSeg;
 // ダイナミック点灯用enable信号
 wire enKhz;
 
-// initial begin
-// 	ioSCL = 1'bz;
-// 	ioSDA = 1'bz;
-// end
-
 // module
 enGen           #(.pSysClk(pSysClk), .pDynClk(pDynClk)) 
 				engen(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz));
@@ -49,5 +44,6 @@ edgeFilter      sdaFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSDA), .oSerial(ffsda)
 i2cSampling     i2c(.iCLK(iCLK), .iRST(iRST), .iSCL(ffscl), .iSDA(ffsda), .i2cByte(i2cByte));
 pmodDynamic     dynamic(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz), .i2cByte(i2cByte), .selSeg(selSeg), .saSeg(saSeg));
 pmodSeg         seg(.iCLK(iCLK), .iRST(iRST), .selSeg(selSeg), .saSeg(saSeg), .oSEG(oSEG), .oSEL(oSEL));
+
 
 endmodule
