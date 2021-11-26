@@ -38,6 +38,7 @@ reg [7:0] sftSel;	// パラレル変換用にシリアルデータを保存す�
 reg [1:0] sftScl;	// sclの状態を管理を行うシフトレジスタ
 reg [1:0] sftSda;	// sdaの状態を管理を行うシフトレジスタ
 reg [2:0] i2cState;	// start stopシーケンサ管理
+reg getByte;		// アドレスバイトは必要ないため、データバイト部分のみパラレル変換を行うための制御信号
 wire sclEdge;		// sclの立ち上がり検出
 wire discon;		// stop condition
 
@@ -102,15 +103,6 @@ always @(posedge iCLK) begin
 	end
 end
 
-// 8bitシリアルデータをパラレルレジスタに保存
-always @(posedge iCLK) begin
-	if (iRST == 1'b1) begin
-		i2cbyte <= 8'd0;
-	end else if (psclEdge == 1'b1 && sclcnt == SclDataByte) begin
-		i2cbyte <= sftSel;
-	end
-end
-
 // SCLのカウント数で判定を行いinoutのackのenable信号を出す
 // ack部分のsclの立下りでinputに切り替える
 always @(posedge iCLK) begin
@@ -124,6 +116,30 @@ always @(posedge iCLK) begin
 		end else begin
 			sclack <= 1'b0;
 		end
+	end
+end
+
+// パラレル変換制御信号制御
+always @(posedge iCLK) begin
+	if (iRST == 1'b1) begin
+		getByte <= 1'b0;
+	end else if (discon == 1'b0) begin
+		getByte <= 1'b0;
+	end else if (psclEdge == 1'b1 && sclcnt == SclDataByte) begin
+		if (getByte == 1'b1) begin
+			getByte <= 1'b0;
+		end else begin
+			getByte <= 1'b1;
+		end
+	end
+end
+
+// 8bitシリアルデータをパラレルレジスタに保存
+always @(posedge iCLK) begin
+	if (iRST == 1'b1) begin
+		i2cbyte <= 8'd0;
+	end else if (psclEdge == 1'b1 && sclcnt == SclDataByte && getByte == 1'b1) begin
+		i2cbyte <= sftSel;
 	end
 end
 
