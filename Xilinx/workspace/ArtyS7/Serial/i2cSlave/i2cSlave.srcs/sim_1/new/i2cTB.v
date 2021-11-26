@@ -17,6 +17,10 @@ reg iCLK    = 0;
 reg iRST    = 0;
 wire [6:0] oSEG;
 wire oSEL;
+wire ioscl, iosda;
+
+assign ioscl = ioSCL;
+assign iosda = ioSDA;
 
 // タイミング定数
 parameter sysCycle      = 10;               // system-clkの速度
@@ -32,8 +36,8 @@ integer i, main;
 
 i2cTop #(.pSysClk(SimMax), .pDynClk(DynMax))
 i0(
-.ioSCL(ioSCL),
-.ioSDA(ioSDA),
+.ioSCL(ioscl),
+.ioSDA(iosda),
 .iRST(iRST), 
 .iCLK(iCLK),
 .oSEG(oSEG),
@@ -88,7 +92,12 @@ begin
 
         if (i & 1'b1) begin
             data  = data >> 8'd1;
-            ioSDA = data;
+            if (15 == i || 16 == i) begin
+                #(sysCycle * 4);
+                ioSDA = 1'bz;
+            end else begin
+                ioSDA = data;
+            end
         end
         #(sclCycle / 2);
     end
