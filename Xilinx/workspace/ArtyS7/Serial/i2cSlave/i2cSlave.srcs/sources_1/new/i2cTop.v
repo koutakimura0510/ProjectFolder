@@ -15,7 +15,7 @@ module i2cTop
 parameter pSysClk = 100000000,	// System Clk 100MHz
 parameter pDynClk = 500000
 )(
-inout 			ioSCL,			// ESP32 SCL
+input 			ioSCL,			// ESP32 SCL
 inout 			ioSDA,			// ESP32 SDA
 // input 			iEnable,	// Control 0:Disconnect I2C-Bus
 input 			iRST,			// System Reset
@@ -38,8 +38,8 @@ wire saSeg;
 // ダイナミック点灯用enable信号
 wire enKhz;
 
-assign oSCLF = ffscl;
-assign oSDAF = ffsda;
+assign oSCLF = 1'b1;
+assign oSDAF = 1'b1;
 
 // Enable信号生成
 enGen           #(.pSysClk(pSysClk), .pDynClk(pDynClk)) 
