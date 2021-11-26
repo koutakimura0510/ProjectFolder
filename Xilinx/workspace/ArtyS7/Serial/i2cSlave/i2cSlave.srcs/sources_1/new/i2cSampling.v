@@ -12,10 +12,11 @@
  */
 module i2cSampling
 (
-input  iCLK,
-input  iRST,
 input  iSCL,
 input  iSDA,
+input  iCLK,
+input  iRST,
+output sclAck,
 output [7:0] i2cByte
 );
 
@@ -30,18 +31,13 @@ localparam [3:0]
 	SclDataByte	= 4'd8,
 	SclAck	 	= 4'd9;
 
-// パラレル出力用
-reg [7:0] i2cbyte;	assign i2cByte = i2cbyte;
-
-// i2cシリアルデータ操作
+reg sclack;			assign sclAck  = sclack;
+reg [7:0] i2cbyte;	assign i2cByte = i2cbyte;	// パラレルデータ出力
+reg [3:0] sclcnt;	// sclの受信回数カウント
 reg [7:0] sftSel;	// パラレル変換用にシリアルデータを保存するシフトレジスタ
-reg [3:0] sclCnt;	// sdaの受信回数カウント
-
-// i2c状態管理
 reg [1:0] sftScl;	// sclの状態を管理を行うシフトレジスタ
 reg [1:0] sftSda;	// sdaの状態を管理を行うシフトレジスタ
 reg [2:0] i2cState;	// start stopシーケンサ管理
-
 wire sclEdge;		// sclの立ち上がり検出
 wire discon;		// stop condition
 
@@ -77,21 +73,22 @@ end
 // 回路を増やす可能性があるため、wireを利用している
 assign discon = (i2cState == disConnect) ? 1'b0 : 1'b1;
 
-// iSCLのエッジ検出
-assign sclEdge = (sftScl == 2'b01) ? 1'b1 : 1'b0;
+// iSCLの立ち上がりと立下りエッジ検出
+assign psclEdge = (sftScl == 2'b01) ? 1'b1 : 1'b0;
+assign nsclEdge = (sftScl == 2'b10) ? 1'b1 : 1'b0;
 
 // sclの立ち上がりエッジで受信回数をカウント
 // ackまでカウントしたらクリア
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
-		sclCnt <= SclNull;
+		sclcnt <= SclNull;
 	end else if (discon == 1'b0) begin
-		sclCnt <= SclNull;
-	end else if (sclEdge == 1'b1) begin
-		if (sclCnt == SclDataByte) begin
-			sclCnt <= SclNull;
+		sclcnt <= SclNull;
+	end else if (psclEdge == 1'b1) begin
+		if (sclcnt == SclDataByte) begin
+			sclcnt <= SclNull;
 		end else begin
-			sclCnt <= sclCnt + SclCnt;
+			sclcnt <= sclcnt + sclcnt;
 		end
 	end
 end
@@ -100,7 +97,7 @@ end
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
 		sftSel <= 8'd0;
-	end else if (sclEdge == 1'b1) begin
+	end else if (psclEdge == 1'b1) begin
 		sftSel <= {sftSel[6:0], iSDA};
 	end
 end
@@ -109,8 +106,24 @@ end
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
 		i2cbyte <= 8'd0;
-	end else if (sclEdge == 1'b1 && sclCnt == SclDataByte) begin
+	end else if (psclEdge == 1'b1 && sclcnt == SclDataByte) begin
 		i2cbyte <= sftSel;
+	end
+end
+
+// SCLのカウント数で判定を行いinoutのackのenable信号を出す
+// ack部分のsclの立下りでinputに切り替える
+always @(posedge iCLK) begin
+	if (iRST == 1'b1) begin
+		sclack <= 1'd0;
+	end else if (discon == 1'b0) begin
+		sclack <= 1'b0;
+	end else if (nsclEdge == 1'b1) begin
+		if (sclcnt == SclDataByte) begin
+			sclack <= 1'b1;
+		end else begin
+			sclack <= 1'b0;
+		end
 	end
 end
 

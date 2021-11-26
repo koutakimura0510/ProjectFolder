@@ -9,13 +9,16 @@
  */
 module edgeFilter
 (
+inout  		ioSerial,
+input		ioDir,		// 双方向対応を行うかbitで指定 1.true 0.false
 input  		iCLK,
 input  		iRST,
-input  		iSerial,
+input 		sclAck,
 output 		oSerial
 );
 
 reg osel;			assign oSerial = osel;
+assign ioSerial = (sclAck == 1'b1 && ioDir == 1'b1) ? 1'b0 : 1'bz;
 
 // 非同期信号処理
 reg [1:0] meta;		// メタ・ステーブル対策
@@ -26,8 +29,10 @@ wire filter;		// 3点一致検出用信号
 always @(posedge iCLK) begin
 	if (iRST == 1'd1) begin
 		meta <= 2'd0;
+	end else if (sclAck == 1'b1 && ioDir == 1'b1) begin
+		meta <= {meta[0], 1'b0};
 	end else begin
-		meta <= {meta[0], iSerial};
+		meta <= {meta[0], ioSerial};
 	end
 end
 

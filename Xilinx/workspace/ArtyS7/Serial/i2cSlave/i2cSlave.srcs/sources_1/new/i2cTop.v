@@ -15,8 +15,8 @@ module i2cTop
 parameter pSysClk = 100000000,	// System Clk 100MHz
 parameter pDynClk = 500000
 )(
-input 			ioSCL,			// ESP32 SCL
-input 			ioSDA,			// ESP32 SDA
+inout 			ioSCL,			// ESP32 SCL
+inout 			ioSDA,			// ESP32 SDA
 // input 			iEnable,	// Control 0:Disconnect I2C-Bus
 input 			iRST,			// System Reset
 input 			iCLK,			// System Clock
@@ -29,6 +29,7 @@ output			oSDAF			// fpga sda
 // I2C信号接続
 wire ffscl, ffsda;    	// ノイズ除去を行ったI2C信号
 wire [7:0] i2cByte; 	// パラレル変換を行ったI2Cデータ
+wire sclAck;			// ACK判定用のenable信号
 
 // 7seg信号接続
 wire [3:0] selSeg;
@@ -44,12 +45,12 @@ assign oSDAF = ffsda;
 enGen           #(.pSysClk(pSysClk), .pDynClk(pDynClk)) 
 				engen(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz));
 
-// I2Cフィルタ回路
-edgeFilter      sclFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSCL), .oSerial(ffscl));
-edgeFilter      sdaFF(.iCLK(iCLK), .iRST(iRST), .iSerial(ioSDA), .oSerial(ffsda));
+// I2Cフィルタ回路、ノイズ除去とSystemClkに同期させたI2Cを出力
+edgeFilter      sclFF(.ioSerial(ioSCL), .ioDir(1'b0), .iCLK(iCLK), .iRST(iRST), .sclAck(sclAck), .oSerial(ffscl));
+edgeFilter      sdaFF(.ioSerial(ioSDA), .ioDir(1'b1), .iCLK(iCLK), .iRST(iRST), .sclAck(sclAck), .oSerial(ffsda));
 
-// 8bitシリアル->1byteパラレル変換
-i2cSampling     i2c(.iCLK(iCLK), .iRST(iRST), .iSCL(ffscl), .iSDA(ffsda), .i2cByte(i2cByte));
+// 8bitシリアル->1byteパラレル変換、ackのenable信号を出力
+i2cSampling     i2c(.iSCL(ffscl), .iSDA(ffsda), .iCLK(iCLK), .iRST(iRST), .sclAck(sclAck), .i2cByte(i2cByte));
 
 // パラレル変換したデータを4bitずつに分けて2桁7セグに表示
 pmodDynamic     dynamic(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz), .i2cByte(i2cByte), .selSeg(selSeg), .saSeg(saSeg));
