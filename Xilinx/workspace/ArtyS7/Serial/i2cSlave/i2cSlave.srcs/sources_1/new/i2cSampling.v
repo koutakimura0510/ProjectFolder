@@ -31,7 +31,7 @@ localparam [3:0]
 	SclDataByte	= 4'd8,
 	SclAck	 	= 4'd9;
 
-reg sclack;			assign sclAck  = sclack;
+reg sclack;			assign sclAck  = sclack;	// inout切替信号出力
 reg [7:0] i2cbyte;	assign i2cByte = i2cbyte;	// パラレルデータ出力
 reg [3:0] sclcnt;	// sclの受信回数カウント
 reg [7:0] sftSel;	// パラレル変換用にシリアルデータを保存するシフトレジスタ
