@@ -26,7 +26,7 @@ localparam [2:0]
 	stopCondition 	= 3'd2;
 
 localparam [3:0] 
-	SclCnt 		= 4'd1,
+	SclCntUp	= 4'd1,
 	SclNull 	= 4'd0,
 	SclDataByte	= 4'd8,
 	SclAck	 	= 4'd9;
@@ -39,9 +39,9 @@ reg [1:0] sftScl;	// sclの状態を管理を行うシフトレジスタ
 reg [1:0] sftSda;	// sdaの状態を管理を行うシフトレジスタ
 reg [2:0] i2cState;	// start stopシーケンサ管理
 reg getByte;		// アドレスバイトは必要ないため、データバイト部分のみパラレル変換を行うための制御信号
-wire sclEdge;		// sclの立ち上がり検出
+wire psclEdge;
+wire nsclEdge;
 wire discon;		// stop condition
-
 
 
 // 現在のI2Cの状態を確認するためシフトレジスタにクロックのデータを保存する
@@ -72,9 +72,9 @@ end
 
 // start conditionを検出したらcnt開始
 // 回路を増やす可能性があるため、wireを利用している
-assign discon = (i2cState == disConnect) ? 1'b0 : 1'b1;
+assign discon 	= (i2cState == disConnect) ? 1'b0 : 1'b1;
 
-// iSCLの立ち上がりと立下りエッジ検出
+// iSCLのエッジ検出
 assign psclEdge = (sftScl == 2'b01) ? 1'b1 : 1'b0;
 assign nsclEdge = (sftScl == 2'b10) ? 1'b1 : 1'b0;
 
@@ -89,7 +89,7 @@ always @(posedge iCLK) begin
 		if (sclcnt == SclDataByte) begin
 			sclcnt <= SclNull;
 		end else begin
-			sclcnt <= sclcnt + sclcnt;
+			sclcnt <= sclcnt + SclCntUp;
 		end
 	end
 end
