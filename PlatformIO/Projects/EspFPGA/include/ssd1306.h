@@ -122,12 +122,11 @@ void ssd1306_init(void);
  */
 int i2c_write(byte cmd, byte data)
 {
-	Wire.beginTransmission(data);
+	Wire.beginTransmission(0x3c);
 	// Wire.write(cmd);
-	// Wire.write(data);
+	Wire.write(data);
 
 	return Wire.endTransmission();
-	// return 0;
 }
 
 
