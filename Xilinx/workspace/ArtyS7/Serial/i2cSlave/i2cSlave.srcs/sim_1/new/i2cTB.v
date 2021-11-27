@@ -32,8 +32,9 @@ parameter sclCycle      = (sysCycle * 16);  // sclの速度
 parameter sendCnt       = 5;
 
 // enable信号
-parameter SimMax        = 8;                // enable
-parameter DynMax        = 2;                // seg sel dynamic flash test
+parameter SimMax        = 10;               // enable
+parameter SetMax        = 3;                // enable
+parameter DynMax        = 4;                // seg sel dynamic flash test
 parameter Scl400Max     = 2;                // scl400khz test
 
 // for 変数
@@ -42,6 +43,7 @@ integer i, main;
 // top module 結合
 i2cTop #(
 .pSysClk(SimMax),
+.pSetClk(SetMax),
 .pDynClk(DynMax),
 .pSclClk(Scl400Max)
 )
