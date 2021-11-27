@@ -47,7 +47,7 @@ always @(posedge iCLK) begin
 		sclCnt <= SclNull;
 	end else if (iEnable == 1'b0) begin
 		sclCnt <= SclNull;
-	end else if (enClk == 1'b1) begin
+	end else if (enClk == 1'b1 && ioSclf == 1'b1) begin
 		if (sclCnt == SclDataByte) begin
 			sclCnt <= SclNull;
 		end else begin

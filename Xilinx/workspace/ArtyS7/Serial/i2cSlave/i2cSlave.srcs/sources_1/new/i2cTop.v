@@ -22,7 +22,7 @@ parameter pSetClk = 100000,
 parameter pDynClk = 500000,
 parameter pSclClk = 125
 )(
-inout 			ioSCL,			// ESP32 SCL
+input 			ioSCL,			// ESP32 SCL
 inout 			ioSDA,			// ESP32 SDA
 inout			ioSCLF,			// fpga scl
 inout			ioSDAF,			// fpga sda
@@ -50,7 +50,7 @@ wire en400Khz;					// i2c400khz
 
 
 // Enable信号生成
-enGen           #(.pSysClk(pSysClk), pSetClk(pSetClk), .pDynClk(pDynClk), .pSclClk(pSclClk)) 
+enGen           #(.pSysClk(pSysClk), .pSetClk(pSetClk), .pDynClk(pDynClk), .pSclClk(pSclClk)) 
 				engen(.iCLK(iCLK), .iRST(iRST), .enSet(enSet), .enKhz(enKhz), .en400Khz(en400Khz));
 
 // I2Cフィルタ回路、ノイズ除去とSystemClkに同期させたI2Cの信号を出力、inoutのACK送信も行う

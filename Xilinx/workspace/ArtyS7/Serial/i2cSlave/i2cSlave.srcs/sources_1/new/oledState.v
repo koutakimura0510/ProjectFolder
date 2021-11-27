@@ -12,7 +12,7 @@
  * -
  * 電源投入から300ms経過後、初期設定データと送信開始Enable信号を出力する
  */
-module i2cSampling
+module oledState
 (
 input  		iCLK,
 input  		iRST,
@@ -33,7 +33,7 @@ localparam[4:0]
 
 localparam [4:0] 
 	wTimeCntUp	    = 5'd1,
-	wTimeNull 	    = 5'd0,
+	wTimeNull 	    = 5'd0;
 
 reg powerOnEnable;         assign oledEnable = powerOnEnable;
 
