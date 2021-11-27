@@ -12,14 +12,14 @@ void setup() {
 	// Serial.begin(115200);
 	// Serial.println("start0");
 	Wire.begin(21, 22);
-	Wire.setClock(400000);
+	Wire.setClock(800000);
 	// ssd1306_init();
 }
 
 void loop() {
 	static uint8_t data = 0;
 
-	delay(100);
+	delay(10);
 	i2c_write(WR_BYTE, data);
 	led_blink(1000, LED_PIN);
 	data++;
