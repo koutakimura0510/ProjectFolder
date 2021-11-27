@@ -53,6 +53,7 @@
 *.str
 *.sdb
 *.svtype
+*.txt
 *.type
 *.tree
 *.tdf

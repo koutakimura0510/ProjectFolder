@@ -142,7 +142,7 @@ int main(int argc, char **argv)
 	// verilogのsinカーブ初期化を出力
 	// Rom version
 	fprintf(fp, "\n");
-	fprintf(fp, "reg[15:0] sinRom[0:%d];\n", pwm-1);
+	fprintf(fp, "reg[15:0] sinRom[0:%d];\n", (int)(pwm-1));
 	fprintf(fp, "initial begin\n    ");
 
 	for (uint32_t i = 0; i < pwm; i++) {
@@ -159,7 +159,7 @@ int main(int argc, char **argv)
 	// BRAM version
 	fprintf(fp, "\n");
 	fprintf(fp, "\n");
-	fprintf(fp, " (* ram_style = ""BLOCK"" *) reg[15:0] sinBram[0:%d];\n", pwm-1);
+	fprintf(fp, "(* ram_style = \"BLOCK\" *) reg[15:0] sinBram[0:%d];\n", (int)(pwm-1));
 	fprintf(fp, "initial begin\n    ");
 
 	for (uint32_t i = 0; i < pwm; i++) {
