@@ -11,33 +11,45 @@
  */
 module i2cTB;
 
-reg ioSCL   = 1;
+reg ioSCL   = 1;    
 reg ioSDA   = 1;
 reg iCLK    = 0;
 reg iRST    = 0;
 wire [6:0] oSEG;
 wire oSEL;
 wire ioscl, iosda;
+wire iosclf, iosdaf;
 
-assign ioscl = ioSCL;
-assign iosda = ioSDA;
+assign ioscl    = ioSCL;
+assign iosda    = ioSDA;
 
 // タイミング定数
 parameter sysCycle      = 10;               // system-clkの速度
 parameter rstCycle      = (sysCycle * 4);   // reset timing
 parameter sclCycle      = (sysCycle * 16);  // sclの速度
+
+// demoデータ送信回数
 parameter sendCnt       = 5;
+
+// enable信号
 parameter SimMax        = 8;                // enable
-parameter DynMax        = 2;                // seg sel dynamic flash time
+parameter DynMax        = 2;                // seg sel dynamic flash test
+parameter Scl400Max     = 2;                // scl400khz test
 
 // for 変数
 integer i, main;
 
-
-i2cTop #(.pSysClk(SimMax), .pDynClk(DynMax))
+// top module 結合
+i2cTop #(
+.pSysClk(SimMax),
+.pDynClk(DynMax),
+.pSclClk(Scl400Max)
+)
 i0(
 .ioSCL(ioscl),
 .ioSDA(iosda),
+.ioSCLF(iosclf),
+.ioSDAF(iosdaf),
 .iRST(iRST), 
 .iCLK(iCLK),
 .oSEG(oSEG),
