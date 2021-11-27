@@ -37,7 +37,11 @@ output          oSEL        	// 0. 1digit 1. 2digit
 wire ffscl, ffsda;    			// ノイズ除去を行ったI2C信号
 wire [7:0] i2cByte; 			// パラレル変換を行ったI2Cデータ
 wire sclAck;					// ACK判定用のenable信号
-wire oledEnable;				// 0. discon 1. start
+
+// OLED信号
+wire oledEnable;				// 電源投入時、待機時間完了
+wire initComplete;				// 初期設定完了、完了後受信データを送信可能
+wire sendComplete;				// 1byte送信完了時High
 
 // 7seg信号接続
 wire [3:0] selSeg;
@@ -66,6 +70,6 @@ pmodSeg         seg(.iCLK(iCLK), .iRST(iRST), .selSeg(selSeg), .saSeg(saSeg), .o
 
 // oled ssd1306操作
 oledState		ssd1306(.iCLK(iCLK), .iRST(iRST), .enSet(enSet), .oledEnable(oledEnable));
-i2cMaster		oled(.ioSCLF(ioSCLF), .ioSDAF(ioSDAF), .iCLK(iCLK), .iRST(iRST), .enClk(en400Khz), .iEnable(oledEnable));
+i2cMaster		oled(.ioSCLF(ioSCLF), .ioSDAF(ioSDAF), .iCLK(iCLK), .iRST(iRST), .enClk(en400Khz), .iEnable(oledEnable), .oEnable(sendComplete));
 
 endmodule

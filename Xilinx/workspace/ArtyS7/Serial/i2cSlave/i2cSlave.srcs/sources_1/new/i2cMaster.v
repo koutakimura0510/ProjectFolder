@@ -14,11 +14,11 @@ inout  			ioSDAF,
 input  			iCLK,
 input  			iRST,
 input 			enClk,			// scl enable信号
-input			iEnable			// 0. discon 1. start
+input			iEnable,		// 0. discon 1. start
 // input [7:0]		recData[0:7],	// 送信データ
 // input [7:0]		recLength,		// 送信データ数
 // input [31:0]	waitTime,		// データ送信後の待機時間、デバイスによっては初期設定時の待機時間があるため設けた
-// output			mEnable			// 送信完了Enable信号
+output			oEnable			// 送信完了Enable信号
 );
 
 // i2c状態遷移
@@ -34,8 +34,9 @@ localparam [3:0]
 	SclAck	 	= 4'd9;
 
 // i2c信号生成
-reg ioSclf;		assign ioSCLF = ioSclf;
-reg ioSdaf;		assign ioSDAF = ioSdaf;
+reg ioSclf;		assign ioSCLF  = ioSclf;
+reg ioSdaf;		assign ioSDAF  = ioSdaf;
+reg oenable;	assign oEnable = oenable;
 
 // scl送信回数カウント変数
 reg [3:0] sclCnt;
@@ -74,8 +75,12 @@ always @(posedge iCLK) begin
 		ioSdaf <= 1'b1;
 	end else if (iEnable == 1'b0) begin
 		ioSdaf <= 1'b1;
-	end else begin
-		ioSdaf <= ~ioSdaf;
+	end else if (enClk == 1'b1) begin
+		if (sclCnt == SclDataByte) begin
+			ioSdaf <= 1'bz;
+		end else begin
+			ioSdaf <= ~ioSdaf;
+		end
 	end
 end
 

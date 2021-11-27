@@ -16,8 +16,9 @@ module oledState
 (
 input  		iCLK,
 input  		iRST,
-input       enSet,      // 設定時の待機時間計測用、1ms enable信号
-output		oledEnable  // oledデータ送受信開始
+input       enSet,          // 設定時の待機時間計測用、1ms enable信号
+output		oledEnable,     // 起動待機時間完了、oledデータ送受信開始信号
+output      initComplate    // 初期設定データ送信完了信号
 );
 
 // 待機時間に関するパラメーター一覧
@@ -35,13 +36,51 @@ localparam [4:0]
 	wTimeCntUp	    = 5'd1,
 	wTimeNull 	    = 5'd0;
 
-reg powerOnEnable;         assign oledEnable = powerOnEnable;
+localparam [7:0]
+    SCAN_DIRECTION      = 0xC8,	    // 反転表示
+    SET_COM_PIN         = 0xda,	    //
+    PIN_HARD            = 0x12,	    // 0だと間隔が広がる
+    CONTRAST_SET        = 0x81,
+    CONTRAST_VALUE      = 0xff,	    // 最大255
+    CHARGE_PUMP         = 0x8d,
+    SER_SEGMENT_REMAP   = 0xa1,
+    ENABLE_CHARGE_PUMP  = 0x14,
+    DISPLAY_ON          = 0xaf,
+    SET_DISPLAY_CLOCK   = 0xd5,
+    OSCILLATOR_RATIO    = 0xf0,	    // クロックを設定0x00~0xf0
+    SET_PERIOD          = 0xd9,
+    SET_DCLK            = 0xff,	    // Dクロックを設定0x00~0xff
+    SET_VCOMH           = 0xdb,
+    VCOMH_LEVEL         = 0x30;	    // 電圧発生回路の設定
+
+reg powerOnEnable;          assign oledEnable = powerOnEnable;
+reg complate;               assign initComplat = complate;
 
 // 待機時間管理
 reg [4:0] wTimeCnt;     // 待機時間カウント値保存
 reg [1:0] wTimeState;   // 待機時間の切り替え状態管理
 reg [4:0] wTime;        // 設定の待機時間保存
 
+// 初期設定コマンド
+(* ram_style = "BLOCK" *) reg [7:0] oledCmd [0:15];
+
+initial begin
+    oledCmd[ 0] = CONTRAST_SET;
+    oledCmd[ 1] = CONTRAST_VALUE;
+    oledCmd[ 2] = SER_SEGMENT_REMAP;
+    oledCmd[ 3] = CHARGE_PUMP;
+    oledCmd[ 4] = ENABLE_CHARGE_PUMP;
+    oledCmd[ 5] = SCAN_DIRECTION;
+    oledCmd[ 6] = SET_COM_PIN;
+    oledCmd[ 7] = PIN_HARD;
+    oledCmd[ 8] = SET_DISPLAY_CLOCK;
+    oledCmd[ 9] = OSCILLATOR_RATIO;
+    oledCmd[10] = SET_PERIOD;
+    oledCmd[11] = SET_DCLK;
+    oledCmd[12] = SET_VCOMH;
+    oledCmd[13] = VCOMH_LEVEL;
+    oledCmd[14] = DISPLAY_ON;
+end
 
 // 待機時間計測カウンタ
 always @(posedge iCLK) begin
