@@ -86,7 +86,7 @@ localparam [7:0]
 
 localparam [3:0]
     initCmdMax          = 4'd15,
-    clearCmdWd          = 4'd9;
+    clearCmdWd          = 4'd9,
     clearCmdMax         = 4'd10;
 
 
