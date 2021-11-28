@@ -2,8 +2,8 @@
 # Vivado v2020.2 (64-bit)
 # SW Build 3064766 on Wed Nov 18 09:12:47 MST 2020
 # IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
-# Start of session at: Sat Nov 27 20:01:49 2021
-# Process ID: 135549
+# Start of session at: Sun Nov 28 19:45:19 2021
+# Process ID: 38198
 # Current directory: /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.runs/synth_1
 # Command line: vivado -log i2cTop.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source i2cTop.tcl
 # Log file: /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.runs/synth_1/i2cTop.vds
@@ -17,9 +17,9 @@ INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7s50'
 INFO: [Device 21-403] Loading part xc7s50csga324-1
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 135565
+INFO: [Synth 8-7075] Helper process launched with PID 38215
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 2392.844 ; gain = 0.000 ; free physical = 21591 ; free virtual = 28095
+Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 2392.844 ; gain = 0.000 ; free physical = 23031 ; free virtual = 28594
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-6157] synthesizing module 'i2cTop' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/i2cTop.v:18]
 	Parameter pSysClk bound to: 100000000 - type: integer 
@@ -34,6 +34,7 @@ INFO: [Synth 8-6157] synthesizing module 'enGen' [/home/koutakimura/workspace/Pr
 INFO: [Synth 8-6155] done synthesizing module 'enGen' (1#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/enGen.v:10]
 INFO: [Synth 8-6157] synthesizing module 'edgeFilter' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/edgeFilter.v:10]
 INFO: [Synth 8-6155] done synthesizing module 'edgeFilter' (2#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/edgeFilter.v:10]
+WARNING: [Synth 8-6104] Input port 'ioSCL' has an internal driver [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/i2cTop.v:67]
 INFO: [Synth 8-6157] synthesizing module 'i2cSampling' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/i2cSampling.v:13]
 	Parameter disConnect bound to: 3'b000 
 	Parameter startCondition bound to: 3'b001 
@@ -57,6 +58,42 @@ INFO: [Synth 8-6157] synthesizing module 'oledState' [/home/koutakimura/workspac
 	Parameter finishOnTime bound to: 5'b00000 
 	Parameter wTimeCntUp bound to: 5'b00001 
 	Parameter wTimeNull bound to: 5'b00000 
+	Parameter sendStateWait bound to: 2'b00 
+	Parameter sendStateOn bound to: 2'b01 
+	Parameter sendStateBridge bound to: 2'b10 
+	Parameter SCAN_DIRECTION bound to: 8'b11001000 
+	Parameter SET_COM_PIN bound to: 8'b11011010 
+	Parameter PIN_HARD bound to: 8'b00010010 
+	Parameter CONTRAST_SET bound to: 8'b10000001 
+	Parameter CONTRAST_VALUE bound to: 8'b11111111 
+	Parameter CHARGE_PUMP bound to: 8'b10001101 
+	Parameter SER_SEGMENT_REMAP bound to: 8'b10100001 
+	Parameter ENABLE_CHARGE_PUMP bound to: 8'b00010100 
+	Parameter DISPLAY_ON bound to: 8'b10101111 
+	Parameter SET_DISPLAY_CLOCK bound to: 8'b11010101 
+	Parameter OSCILLATOR_RATIO bound to: 8'b11110000 
+	Parameter SET_PERIOD bound to: 8'b11011001 
+	Parameter SET_DCLK bound to: 8'b11111111 
+	Parameter SET_VCOMH bound to: 8'b11011011 
+	Parameter VCOMH_LEVEL bound to: 8'b00110000 
+	Parameter SCROLL_STOP bound to: 8'b00101110 
+	Parameter MEMORY_MODE bound to: 8'b00100000 
+	Parameter HORIZONTAL_MODE bound to: 8'b00000000 
+	Parameter COLUMN_ADDRESS bound to: 8'b00100001 
+	Parameter COLUMN_START bound to: 8'b00000000 
+	Parameter COLUMN_END bound to: 8'b01111111 
+	Parameter PAGE_ADDRESS bound to: 8'b00100010 
+	Parameter PAGE_START bound to: 8'b00000000 
+	Parameter PAGE_END bound to: 8'b00000111 
+	Parameter CLEAR_DISP bound to: 8'b00000000 
+	Parameter initCmdMax bound to: 4'b1111 
+	Parameter clearCmdMax bound to: 4'b1010 
+	Parameter cmdMode bound to: 1'b0 
+	Parameter clearMode bound to: 1'b1 
+INFO: [Synth 8-226] default block is never used [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/oledState.v:262]
+INFO: [Synth 8-226] default block is never used [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/oledState.v:285]
+INFO: [Synth 8-226] default block is never used [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/oledState.v:306]
+INFO: [Synth 8-226] default block is never used [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/oledState.v:328]
 INFO: [Synth 8-6155] done synthesizing module 'oledState' (6#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/oledState.v:15]
 INFO: [Synth 8-6157] synthesizing module 'i2cMaster' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/i2cMaster.v:10]
 	Parameter disConnect bound to: 3'b000 
@@ -65,22 +102,22 @@ INFO: [Synth 8-6157] synthesizing module 'i2cMaster' [/home/koutakimura/workspac
 	Parameter SclCntUp bound to: 4'b0001 
 	Parameter SclNull bound to: 4'b0000 
 	Parameter SclDataByte bound to: 4'b1000 
-	Parameter SclAck bound to: 4'b1001 
+	Parameter SclAck bound to: 4'b0111 
 INFO: [Synth 8-6155] done synthesizing module 'i2cMaster' (7#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/i2cMaster.v:10]
 INFO: [Synth 8-6155] done synthesizing module 'i2cTop' (8#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/i2cTop.v:18]
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 2392.844 ; gain = 0.000 ; free physical = 21813 ; free virtual = 28318
+Finished RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 2392.844 ; gain = 0.000 ; free physical = 23772 ; free virtual = 29344
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 2392.844 ; gain = 0.000 ; free physical = 22307 ; free virtual = 28812
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 2392.844 ; gain = 0.000 ; free physical = 23807 ; free virtual = 29380
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 2392.844 ; gain = 0.000 ; free physical = 22307 ; free virtual = 28812
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 2392.844 ; gain = 0.000 ; free physical = 23807 ; free virtual = 29380
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2392.844 ; gain = 0.000 ; free physical = 22300 ; free virtual = 28805
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2392.844 ; gain = 0.000 ; free physical = 23800 ; free virtual = 29372
 INFO: [Project 1-570] Preparing netlist for logic optimization
 
 Processing XDC Constraints
@@ -91,29 +128,30 @@ INFO: [Project 1-236] Implementation specific constraints were found while readi
 Resolution: To avoid this warning, move constraints listed in [.Xil/i2cTop_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2497.520 ; gain = 0.000 ; free physical = 22277 ; free virtual = 28782
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2500.488 ; gain = 0.000 ; free physical = 23701 ; free virtual = 29287
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 2497.520 ; gain = 0.000 ; free physical = 22277 ; free virtual = 28782
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2500.488 ; gain = 0.000 ; free physical = 23701 ; free virtual = 29287
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 2497.520 ; gain = 104.676 ; free physical = 22341 ; free virtual = 28846
+Finished Constraint Validation : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 2500.488 ; gain = 107.645 ; free physical = 23763 ; free virtual = 29348
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
 ---------------------------------------------------------------------------------
 Loading part: xc7s50csga324-1
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 2497.520 ; gain = 104.676 ; free physical = 22341 ; free virtual = 28846
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 2500.488 ; gain = 107.645 ; free physical = 23763 ; free virtual = 29348
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 2497.520 ; gain = 104.676 ; free physical = 22341 ; free virtual = 28846
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 2500.488 ; gain = 107.645 ; free physical = 23765 ; free virtual = 29351
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-802] inferred FSM for state register 'i2cState_reg' in module 'i2cSampling'
 INFO: [Synth 8-802] inferred FSM for state register 'wTimeState_reg' in module 'oledState'
+INFO: [Synth 8-802] inferred FSM for state register 'i2cState_reg' in module 'i2cMaster'
 ---------------------------------------------------------------------------------------------------
                    State |                     New Encoding |                Previous Encoding 
 ---------------------------------------------------------------------------------------------------
@@ -129,29 +167,45 @@ INFO: [Synth 8-3354] encoded FSM with state register 'i2cState_reg' using encodi
          finishOnTimeSet |                              100 |                               10
 ---------------------------------------------------------------------------------------------------
 INFO: [Synth 8-3354] encoded FSM with state register 'wTimeState_reg' using encoding 'one-hot' in module 'oledState'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+              disConnect |                               00 |                              000
+          startCondition |                               01 |                              001
+           stopCondition |                               10 |                              010
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'i2cState_reg' using encoding 'sequential' in module 'i2cMaster'
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 2497.520 ; gain = 104.676 ; free physical = 22331 ; free virtual = 28837
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:07 ; elapsed = 00:00:09 . Memory (MB): peak = 2500.488 ; gain = 107.645 ; free physical = 23752 ; free virtual = 29341
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start RTL Component Statistics 
 ---------------------------------------------------------------------------------
 Detailed RTL Component Info : 
 +---Adders : 
+	   2 Input    8 Bit       Adders := 1     
 	   2 Input    5 Bit       Adders := 1     
-	   2 Input    4 Bit       Adders := 1     
+	   2 Input    4 Bit       Adders := 4     
 +---Registers : 
-	                8 Bit    Registers := 2     
+	                8 Bit    Registers := 4     
 	                7 Bit    Registers := 1     
 	                5 Bit    Registers := 2     
-	                4 Bit    Registers := 2     
+	                4 Bit    Registers := 5     
 	                3 Bit    Registers := 2     
-	                2 Bit    Registers := 4     
-	                1 Bit    Registers := 9     
+	                2 Bit    Registers := 5     
+	                1 Bit    Registers := 11    
 +---Muxes : 
-	   2 Input    4 Bit        Muxes := 2     
+	   2 Input    8 Bit        Muxes := 1     
+	   3 Input    8 Bit        Muxes := 1     
+	   2 Input    4 Bit        Muxes := 3     
+	   3 Input    4 Bit        Muxes := 1     
 	   3 Input    3 Bit        Muxes := 1     
-	   2 Input    2 Bit        Muxes := 2     
-	   2 Input    1 Bit        Muxes := 14    
+	   2 Input    2 Bit        Muxes := 5     
+	   5 Input    2 Bit        Muxes := 1     
+	   3 Input    2 Bit        Muxes := 1     
+	   2 Input    1 Bit        Muxes := 21    
+	   3 Input    1 Bit        Muxes := 7     
+	   4 Input    1 Bit        Muxes := 1     
 ---------------------------------------------------------------------------------
 Finished RTL Component Statistics 
 ---------------------------------------------------------------------------------
@@ -168,25 +222,40 @@ Finished Part Resource Summary
 Start Cross Boundary and Area Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 2497.520 ; gain = 104.676 ; free physical = 22321 ; free virtual = 28830
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 2500.488 ; gain = 107.645 ; free physical = 23734 ; free virtual = 29332
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+ROM: Preliminary Mapping	Report
++------------+------------+---------------+----------------+
+|Module Name | RTL Object | Depth x Width | Implemented As | 
++------------+------------+---------------+----------------+
+|oledState   | p_0_out    | 16x8          | LUT            | 
+|oledState   | p_0_out    | 16x8          | LUT            | 
++------------+------------+---------------+----------------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:11 ; elapsed = 00:00:13 . Memory (MB): peak = 2497.520 ; gain = 104.676 ; free physical = 22201 ; free virtual = 28711
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 2500.488 ; gain = 107.645 ; free physical = 23609 ; free virtual = 29214
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:00:11 ; elapsed = 00:00:13 . Memory (MB): peak = 2497.520 ; gain = 104.676 ; free physical = 22199 ; free virtual = 28708
+Finished Timing Optimization : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 2500.488 ; gain = 107.645 ; free physical = 23605 ; free virtual = 29210
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Technology Mapping
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:00:11 ; elapsed = 00:00:13 . Memory (MB): peak = 2497.520 ; gain = 104.676 ; free physical = 22198 ; free virtual = 28708
+Finished Technology Mapping : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 2500.488 ; gain = 107.645 ; free physical = 23605 ; free virtual = 29211
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -204,37 +273,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:00:13 ; elapsed = 00:00:15 . Memory (MB): peak = 2497.520 ; gain = 104.676 ; free physical = 22199 ; free virtual = 28708
+Finished IO Insertion : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2500.488 ; gain = 107.645 ; free physical = 23605 ; free virtual = 29210
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:00:13 ; elapsed = 00:00:15 . Memory (MB): peak = 2497.520 ; gain = 104.676 ; free physical = 22199 ; free virtual = 28708
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2500.488 ; gain = 107.645 ; free physical = 23605 ; free virtual = 29210
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:13 ; elapsed = 00:00:15 . Memory (MB): peak = 2497.520 ; gain = 104.676 ; free physical = 22202 ; free virtual = 28711
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2500.488 ; gain = 107.645 ; free physical = 23605 ; free virtual = 29210
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:00:13 ; elapsed = 00:00:15 . Memory (MB): peak = 2497.520 ; gain = 104.676 ; free physical = 22201 ; free virtual = 28711
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2500.488 ; gain = 107.645 ; free physical = 23605 ; free virtual = 29210
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:13 ; elapsed = 00:00:15 . Memory (MB): peak = 2497.520 ; gain = 104.676 ; free physical = 22201 ; free virtual = 28710
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2500.488 ; gain = 107.645 ; free physical = 23605 ; free virtual = 29210
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:00:13 ; elapsed = 00:00:15 . Memory (MB): peak = 2497.520 ; gain = 104.676 ; free physical = 22200 ; free virtual = 28710
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2500.488 ; gain = 107.645 ; free physical = 23605 ; free virtual = 29210
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -252,39 +321,39 @@ Report Cell Usage:
 +------+-------+------+
 |1     |BUFG   |     1|
 |2     |CARRY4 |     7|
-|3     |LUT1   |     4|
-|4     |LUT2   |     6|
-|5     |LUT3   |    12|
-|6     |LUT4   |    20|
-|7     |LUT5   |     6|
-|8     |LUT6   |    30|
-|9     |FDRE   |    84|
-|10    |FDSE   |     7|
+|3     |LUT1   |     5|
+|4     |LUT2   |     9|
+|5     |LUT3   |    10|
+|6     |LUT4   |    28|
+|7     |LUT5   |    36|
+|8     |LUT6   |    18|
+|9     |FDRE   |    97|
+|10    |FDSE   |     9|
 |11    |IBUF   |     3|
-|12    |IOBUF  |     1|
-|13    |OBUF   |    10|
+|12    |IOBUF  |     2|
+|13    |OBUF   |     9|
 +------+-------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:00:13 ; elapsed = 00:00:15 . Memory (MB): peak = 2497.520 ; gain = 104.676 ; free physical = 22200 ; free virtual = 28709
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2500.488 ; gain = 107.645 ; free physical = 23605 ; free virtual = 29210
 ---------------------------------------------------------------------------------
 Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:00:12 ; elapsed = 00:00:13 . Memory (MB): peak = 2497.520 ; gain = 0.000 ; free physical = 22253 ; free virtual = 28762
-Synthesis Optimization Complete : Time (s): cpu = 00:00:13 ; elapsed = 00:00:15 . Memory (MB): peak = 2497.520 ; gain = 104.676 ; free physical = 22253 ; free virtual = 28762
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:13 ; elapsed = 00:00:14 . Memory (MB): peak = 2500.488 ; gain = 0.000 ; free physical = 23657 ; free virtual = 29262
+Synthesis Optimization Complete : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2500.488 ; gain = 107.645 ; free physical = 23657 ; free virtual = 29262
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2497.520 ; gain = 0.000 ; free physical = 22340 ; free virtual = 28849
-INFO: [Netlist 29-17] Analyzing 8 Unisim elements for replacement
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2500.488 ; gain = 0.000 ; free physical = 23738 ; free virtual = 29346
+INFO: [Netlist 29-17] Analyzing 9 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 2497.520 ; gain = 0.000 ; free physical = 22285 ; free virtual = 28794
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 2500.488 ; gain = 0.000 ; free physical = 23683 ; free virtual = 29291
 INFO: [Project 1-111] Unisim Transformation Summary:
-  A total of 1 instances were transformed.
-  IOBUF => IOBUF (IBUF, OBUFT): 1 instance 
+  A total of 2 instances were transformed.
+  IOBUF => IOBUF (IBUF, OBUFT): 2 instances
 
 INFO: [Common 17-83] Releasing license: Synthesis
-36 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+42 Infos, 1 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:00:19 ; elapsed = 00:00:17 . Memory (MB): peak = 2497.520 ; gain = 104.844 ; free physical = 22428 ; free virtual = 28937
+synth_design: Time (s): cpu = 00:00:20 ; elapsed = 00:00:18 . Memory (MB): peak = 2500.488 ; gain = 107.812 ; free physical = 23827 ; free virtual = 29435
 INFO: [Common 17-1381] The checkpoint '/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.runs/synth_1/i2cTop.dcp' has been generated.
 INFO: [runtcl-4] Executing : report_utilization -file i2cTop_utilization_synth.rpt -pb i2cTop_utilization_synth.pb
-INFO: [Common 17-206] Exiting Vivado at Sat Nov 27 20:02:14 2021...
+INFO: [Common 17-206] Exiting Vivado at Sun Nov 28 19:45:45 2021...

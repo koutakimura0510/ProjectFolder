@@ -24,7 +24,7 @@ parameter pSclClk = 125
 )(
 input 			ioSCL,			// ESP32 SCL
 inout 			ioSDA,			// ESP32 SDA
-inout			ioSCLF,			// fpga scl
+output			ioSCLF,			// fpga scl
 inout			ioSDAF,			// fpga sda
 // input 			iEnable,	// Control 0:Disconnect I2C-Bus
 input 			iRST,			// System Reset
@@ -40,13 +40,14 @@ wire [7:0] i2cByte; 			// パラレル変換を行ったI2Cデータ
 wire sclAck;					// ACK判定用のenable信号
 
 // I2C master信号
-wire [7:0] iLength;				// slaveに送信するデータの回数
+wire [ 7:0] iLength;			// slaveに送信するデータの回数
+wire [23:0] sendByte;			// アドレス・コマンド・データバイトを含んだ送信データ
 wire sendComplete;				// 1byte送信完了時High
 
 // OLED信号
 wire oledPowerOn;				// 電源投入してから待機時間完了後High
 wire initComplete;				// 初期設定完了後High
-wire [7:0] sendByte;			// 送信データ
+wire [15:0] oledSetByte;		// コマンド用の送信データ
 // wire clearSW;					// 表示消去sw
 
 // 7seg信号
@@ -77,12 +78,17 @@ pmodSeg         seg(.iCLK(iCLK), .iRST(iRST), .selSeg(selSeg), .saSeg(saSeg), .o
 // oled ssd1306操作
 oledState		ssd1306(.iCLK(iCLK), .iRST(iRST),
 						.enSet(enSet), .sendComplete(sendComplete), .clear(iClearSW),
-						.sendByte(sendByte), .oledPowerOn(oledPowerOn), .initComplate(initComplate));
+						.sendByte(oledSetByte), .oledPowerOn(oledPowerOn), .initComplete(initComplete));
 
 // masterの送信データ制御モジュール
+sendByteState	send(.iCLK(iCLK), .iRST(iRST), .sendComplete(sendComplete), .initComplete(initComplete),
+					.iAddress(8'h78), .iByteA(oledSetByte), .iByteB({8'h40, i2cByte}), .oSendByte(sendByte));
 
+// oledデータ送信
 i2cMaster		oled(.ioSCLF(ioSCLF), .ioSDAF(ioSDAF), .iCLK(iCLK), .iRST(iRST),
-					.enClk(en400Khz), .iEnable(oledPowerOn), .iLength(8'd3),
+					.enClk(en400Khz), .iEnable(oledPowerOn), .sendByte(sendByte), .iLength(8'd3),
 					.oEnable(sendComplete));
+
+// のちのちフレームバッファ構造にしなければならない
 
 endmodule

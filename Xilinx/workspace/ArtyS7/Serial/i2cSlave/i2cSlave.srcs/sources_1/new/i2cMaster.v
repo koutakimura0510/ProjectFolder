@@ -9,13 +9,13 @@
  */
 module i2cMaster
 (
-inout  			ioSCLF,
+output 			ioSCLF,
 inout  			ioSDAF,
 input  			iCLK,
 input  			iRST,
 input 			enClk,			// 100 / 400 / 800khz enable信号
 input			iEnable,		// 0. discon 1. start
-// input [7:0]		recData[0:7],	// 送信データ
+input [23:0]	sendByte,		// 送信データ address + cmd + data byte
 input [7:0]		iLength,		// 送信データ数
 // input [31:0]	waitTime,		// データ送信後の待機時間、デバイスによっては初期設定時の待機時間があるため設けた
 output			oEnable			// 送信完了Enable信号
@@ -199,8 +199,8 @@ always @(posedge iCLK) begin
 			end
 
 			stopCondition: begin
-				if (enClk == 1'b1) begin
-					ioSdaf <= 1'b1; // 遅れて11nisuru
+				if (ioSclf == 1'b1 && enClk == 1'b1) begin
+					ioSdaf <= 1'b1;
 				end
 			end
 
@@ -220,7 +220,7 @@ end
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
 		oenable <= 1'b0;
-	end else if (sclCnt == SclDataByte) begin
+	end else if (sclCnt == SclDataByte && iLength == mLength) begin
 		oenable <= 1'b1;
 	end else begin
 		oenable <= 1'b0;

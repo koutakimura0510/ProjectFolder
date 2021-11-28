@@ -19,7 +19,7 @@ input  		    iRST,
 input           enSet,          // 設定時の待機時間計測用、1ms enable信号
 input           sendComplete,   // masterがデータを送信完了したらHigh
 input           clear,          // 表示クリア信号
-output [7:0]    sendByte,       // 送信データ
+output [15:0]   sendByte,       // cmd + 送信データ
 output		    oledPowerOn,    // 起動待機時間完了、oledデータ送受信開始信号
 output          initComplate    // 初期設定データ送信完了信号
 );
@@ -80,10 +80,13 @@ localparam [7:0]
     PAGE_ADDRESS        = 8'h22,        // ページ操作レジスタのアドレス
     PAGE_START          = 8'h00,        // 開始ページ
     PAGE_END            = 8'h07,        // 終了ページ
-    CLEAR_DISP          = 8'h00;        // 消去コマンド
+    CLEAR_DISP          = 8'h00,        // 消去コマンド
+    CMD_BYTE            = 8'h00,        // 設定コマンド
+    WR_BYTE             = 8'h40;        // 書き込みコマンド
 
 localparam [3:0]
     initCmdMax          = 4'd15,
+    clearCmdWd          = 4'd9;
     clearCmdMax         = 4'd10;
 
 
@@ -102,7 +105,7 @@ localparam
 // output制御信号
 reg powerOnEnable;          assign oledPowerOn = powerOnEnable;  // 起動時間経過後High
 reg complate;               assign initComplate = complate;      // 指定モードのコマンド発行後High
-reg [7:0] sendbyte;         assign sendByte = sendbyte;
+reg [15:0] sendbyte;        assign sendByte = sendbyte;
 
 // 配列rp
 reg [3:0] initCmdRp;    // 初期設定コマンド配列参照用
@@ -323,19 +326,19 @@ end
 // 送信データの制御
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
-        sendbyte <= 8'd0;
+        sendbyte <= 16'd0;
     end else begin
         case (oledMode)
             cmdMode:   begin
-                sendbyte <= oledCmdBuff[initCmdRp];
+                sendbyte <= {CMD_BYTE, oledCmdBuff[initCmdRp]};
             end
 
             clearMode: begin
-                sendbyte <= oledClearBuff[clearCmdRp];
+                sendbyte <= (clearCmdRp == clearCmdWd) ? {WR_BYTE, CLEAR_DISP} : {CMD_BYTE, oledClearBuff[clearCmdRp]};
             end
 
             default: begin
-                sendbyte <= 8'd0;
+                sendbyte <= 16'd0;
             end
         endcase
     end

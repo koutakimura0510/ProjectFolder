@@ -3,6 +3,8 @@ set_property src_info {type:XDC file:1 line:9 export:INPUT save:INPUT read:READ}
 set_property -dict { PACKAGE_PIN R2    IOSTANDARD SSTL135 } [get_ports { iCLK }]; #IO_L12P_T1_MRCC_34 Sch=ddr3_clk[200] 100MHZ
 set_property src_info {type:XDC file:1 line:13 export:INPUT save:INPUT read:READ} [current_design]
 set_property -dict { PACKAGE_PIN H14   IOSTANDARD LVCMOS33 } [get_ports { iRST }]; #IO_L20N_T3_A19_15 Sch=sw[0]
+set_property src_info {type:XDC file:1 line:14 export:INPUT save:INPUT read:READ} [current_design]
+set_property -dict { PACKAGE_PIN H18   IOSTANDARD LVCMOS33 } [get_ports { iClearSW }]; #IO_L21P_T3_DQS_15 Sch=sw[1]
 set_property src_info {type:XDC file:1 line:39 export:INPUT save:INPUT read:READ} [current_design]
 set_property -dict { PACKAGE_PIN L17   IOSTANDARD LVCMOS33 } [get_ports { oSEG[0] }]; #IO_L4P_T0_D04_14 Sch=ja_p[1]
 set_property src_info {type:XDC file:1 line:40 export:INPUT save:INPUT read:READ} [current_design]
