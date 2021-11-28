@@ -44,6 +44,15 @@ localparam [4:0]
 
 
 //----------------------------------------------------------
+// 制御コマンド更新を管理する状態制御定数
+//----------------------------------------------------------
+localparam [1:0]
+    sendStateWait   = 2'd0,
+    sendStateOn     = 2'd1,
+    sendStateBridge = 2'd2;
+
+
+//----------------------------------------------------------
 // oledコマンドリスト
 //----------------------------------------------------------
 localparam [7:0]
@@ -92,7 +101,7 @@ localparam
 
 // output制御信号
 reg powerOnEnable;          assign oledPowerOn = powerOnEnable;  // 起動時間経過後High
-reg complate;               assign initComplat = complate;      // 指定モードのコマンド発行後High
+reg complate;               assign initComplate = complate;      // 指定モードのコマンド発行後High
 reg [7:0] sendbyte;         assign sendByte = sendbyte;
 
 // 配列rp
@@ -106,6 +115,9 @@ reg oledMode;
 reg [4:0] wTimeCnt;     // 待機時間カウント値保存
 reg [1:0] wTimeState;   // 待機時間の切り替え状態管理
 reg [4:0] wTime;        // 設定の待機時間保存
+
+// コマンド配列参照用rpの更新方法制御変数
+reg [1:0] sendState;
 
 // 初期設定コマンド配列
 (* ram_style = "BLOCK" *) reg [7:0] oledCmdBuff [0:15];
@@ -125,6 +137,7 @@ initial begin
     oledCmdBuff[12] = SET_VCOMH;
     oledCmdBuff[13] = VCOMH_LEVEL;
     oledCmdBuff[14] = DISPLAY_ON;
+    oledCmdBuff[15] = DISPLAY_ON;
 end
 
 // クリアコマンド配列
@@ -140,6 +153,7 @@ initial begin
     oledClearBuff[ 7] = PAGE_START;
     oledClearBuff[ 8] = PAGE_END;
     oledClearBuff[ 9] = CLEAR_DISP;
+    oledClearBuff[10] = CLEAR_DISP;
 end
 
 
@@ -192,6 +206,31 @@ end
 // 状態制御信号回路
 //----------------------------------------------------------
 
+// rp更新ステートマシンの制御
+always @(posedge iCLK) begin
+    if (iRST == 1'b1) begin
+        sendState <= sendStateWait;
+    end else begin
+        case (sendState)
+            sendStateWait: begin
+                sendState <= (sendComplete == 1'b1) ? sendStateOn : sendStateWait;
+            end
+
+            sendStateOn: begin
+                sendState <= sendStateBridge;
+            end
+
+            sendStateBridge: begin
+                sendState <= (sendComplete == 1'b0) ? sendStateWait : sendStateBridge;
+            end
+
+            default: begin
+                sendState <= sendStateWait;
+            end
+        endcase
+    end
+end
+
 // 起動待機時間完了enable信号の設定
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
@@ -208,7 +247,7 @@ end
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         initCmdRp <= 4'd0;
-    end else if (sendComplete == 1'b1) begin
+    end else if (sendState == sendStateOn) begin
         if (initCmdRp != initCmdMax) begin
             initCmdRp <= initCmdRp + 4'd1;
         end
@@ -226,7 +265,7 @@ always @(posedge iCLK) begin
             end
 
             clearMode: begin
-                if (clearCmdRp != clearCmdMax && sendComplete == 1'b1) begin
+                if (clearCmdRp != clearCmdMax && sendState == sendStateOn) begin
                     clearCmdRp <= clearCmdRp + 4'd1;
                 end
             end

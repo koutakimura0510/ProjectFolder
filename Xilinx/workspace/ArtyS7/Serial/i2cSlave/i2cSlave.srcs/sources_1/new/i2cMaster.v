@@ -13,14 +13,17 @@ inout  			ioSCLF,
 inout  			ioSDAF,
 input  			iCLK,
 input  			iRST,
-input 			enClk,			// scl enable信号
+input 			enClk,			// 100 / 400 / 800khz enable信号
 input			iEnable,		// 0. discon 1. start
 // input [7:0]		recData[0:7],	// 送信データ
-// input [7:0]		recLength,		// 送信データ数
+input [7:0]		iLength,		// 送信データ数
 // input [31:0]	waitTime,		// データ送信後の待機時間、デバイスによっては初期設定時の待機時間があるため設けた
 output			oEnable			// 送信完了Enable信号
 );
 
+//----------------------------------------------------------
+// I2C制御パラメータリスト
+//----------------------------------------------------------
 // i2c状態遷移
 localparam [2:0] 
 	disConnect 		= 3'd0,		// マスタのSCLがHIGHの間にSDAをLOWでStartシーケンス
@@ -31,31 +34,113 @@ localparam [3:0]
 	SclCntUp	= 4'd1,
 	SclNull 	= 4'd0,
 	SclDataByte	= 4'd8,
-	SclAck	 	= 4'd9;
+	SclAck	 	= 4'd7;
 
+
+//----------------------------------------------------------
+// 変数宣言
+//----------------------------------------------------------
 // i2c信号生成
 reg ioSclf;		assign ioSCLF  = ioSclf;
 reg ioSdaf;		assign ioSDAF  = ioSdaf;
 reg oenable;	assign oEnable = oenable;
 
-// scl送信回数カウント変数
-reg [3:0] sclCnt;
+// i2c状態遷移管理変数
+reg [2:0] i2cState;
+
+// scl送信回数
+reg [3:0] sclCnt;	// sclの立上り回数
+reg [7:0] mLength;	// (module)1byte送信回数
 
 //----------------------------------------------------------
-// I2C動作回路
+// I2Cステートマシン制御
 //----------------------------------------------------------
-// scl送信回数カウント変数
+
+// i2cステートマシン管理
+always @(posedge iCLK) begin
+	if (iRST == 1'b1) begin
+		i2cState <= disConnect;
+	end else if (iEnable == 1'b0) begin
+		i2cState <= disConnect;
+	end else begin
+		case (i2cState)
+			disConnect: begin
+				i2cState <= (ioSclf == 1'b0 && ioSdaf == 1'b0) ? startCondition : disConnect;
+			end
+
+			startCondition: begin
+				i2cState <= (iLength == mLength) ? stopCondition : startCondition;
+			end
+
+			stopCondition: begin
+				i2cState <= (ioSclf == 1'b1 && ioSdaf == 1'b1) ? disConnect : stopCondition;
+			end
+
+			default: begin
+				i2cState <= disConnect;
+			end
+		endcase
+	end
+end
+
+
+//----------------------------------------------------------
+// I2C クロック生成
+//----------------------------------------------------------
+
+// sclの立上り回数をカウント
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
 		sclCnt <= SclNull;
 	end else if (iEnable == 1'b0) begin
 		sclCnt <= SclNull;
 	end else if (enClk == 1'b1 && ioSclf == 1'b1) begin
-		if (sclCnt == SclDataByte) begin
-			sclCnt <= SclNull;
-		end else begin
-			sclCnt <= sclCnt + SclCntUp;
-		end
+		case (i2cState)
+			disConnect: begin
+				sclCnt <= SclNull;
+			end
+
+			startCondition: begin
+				sclCnt <= (sclCnt == SclDataByte) ? SclNull : sclCnt + SclCntUp;
+			end
+
+			stopCondition: begin
+				sclCnt <= SclNull;
+			end
+
+			default: begin
+				sclCnt <= SclNull;
+			end
+		endcase
+	end
+end
+
+// i2cのデータ送信回数をカウント
+always @(posedge iCLK) begin
+	if (iRST == 1'b1) begin
+		mLength <= 8'd0;
+	end else if (iEnable == 1'b0) begin
+		mLength <= 8'd0;
+	end else if (enClk == 1'b1 && ioSclf == 1'b1) begin
+		case (i2cState)
+			disConnect: begin
+				mLength <= 8'd0;
+			end
+
+			startCondition: begin
+				if (sclCnt == SclDataByte) begin
+					mLength <= mLength + 8'd1;
+				end
+			end
+
+			stopCondition: begin
+				mLength <= 8'd0;
+			end
+
+			default: begin
+				mLength <= 8'd0;
+			end
+		endcase
 	end
 end
 
@@ -67,7 +152,23 @@ always @(posedge iCLK) begin
 	end else if (iEnable == 1'b0) begin
 		ioSclf <= 1'b1;
 	end else if (enClk == 1'b1) begin
-		ioSclf <= ~ioSclf;
+		case (i2cState)
+			disConnect: begin
+				ioSclf <= (ioSdaf == 1'b0) ? 1'b0 : 1'b1;
+			end
+
+			startCondition: begin
+				ioSclf <= ~ioSclf;
+			end
+
+			stopCondition: begin
+				ioSclf <= 1'b1;
+			end
+
+			default: begin
+				ioSclf <= 1'b1;
+			end
+		endcase
 	end
 end
 
@@ -79,18 +180,40 @@ always @(posedge iCLK) begin
 		ioSdaf <= 1'b1;
 	end else if (iEnable == 1'b0) begin
 		ioSdaf <= 1'b1;
-	end else if (enClk == 1'b1) begin
-		if (sclCnt == SclDataByte) begin
-			ioSdaf <= 1'bz;
-		end else begin
-			ioSdaf <= ~ioSdaf;
-		end
+	end else begin
+		case (i2cState)
+			disConnect: begin
+				if (enClk == 1'b1) begin
+					ioSdaf <= 1'b0;
+				end
+			end
+
+			startCondition: begin
+				if (iLength == mLength) begin
+					ioSdaf <= 1'b0;
+				end else if (sclCnt == SclDataByte) begin
+					ioSdaf <= 1'bz;
+				end else begin
+					ioSdaf <= 1'b0; //byte data
+				end
+			end
+
+			stopCondition: begin
+				if (enClk == 1'b1) begin
+					ioSdaf <= 1'b1; // 遅れて11nisuru
+				end
+			end
+
+			default: begin
+				ioSdaf <= 1'b1;
+			end
+		endcase
 	end
 end
 
 
 //----------------------------------------------------------
-// 送信シーケンス処理回路
+// 送信シーケンス処理
 //----------------------------------------------------------
 
 // バイトデータ送信時にenable信号を出力

@@ -34,25 +34,28 @@ output [6:0]    oSEG,       	// Pmod SSD 7seg digit
 output          oSEL        	// 0. 1digit 1. 2digit
 );
 
-// I2C信号接続
+// I2C slave信号
 wire ffscl, ffsda;    			// ノイズ除去を行ったI2C信号
 wire [7:0] i2cByte; 			// パラレル変換を行ったI2Cデータ
 wire sclAck;					// ACK判定用のenable信号
 
-// OLED信号
-wire oledPowerOn;				// 電源投入時、待機時間完了
-wire initComplete;				// 初期設定完了、完了後受信データを送信可能
+// I2C master信号
+wire [7:0] iLength;				// slaveに送信するデータの回数
 wire sendComplete;				// 1byte送信完了時High
+
+// OLED信号
+wire oledPowerOn;				// 電源投入してから待機時間完了後High
+wire initComplete;				// 初期設定完了後High
 wire [7:0] sendByte;			// 送信データ
 // wire clearSW;					// 表示消去sw
 
-// 7seg信号接続
+// 7seg信号
 wire [3:0] selSeg;
 wire saSeg;
 
 // enable信号
-wire enSet;						// device setting
-wire enKhz;						// dynamic flash
+wire enSet;						// device setting 1ms
+wire enKhz;						// dynamic flash 5ms
 wire en400Khz;					// i2c400khz
 
 
@@ -72,13 +75,14 @@ pmodDynamic     dynamic(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz), .i2cByte(i2cByt
 pmodSeg         seg(.iCLK(iCLK), .iRST(iRST), .selSeg(selSeg), .saSeg(saSeg), .oSEG(oSEG), .oSEL(oSEL));
 
 // oled ssd1306操作
-oledState		ssd1306(.iCLK(iCLK), .iRST(iRST), // system制御
-						.enSet(enSet), .sendComplete(sendComplete), .oledMode(iClearSW),	// input
-						.sendByte(sendByte), .oledPowerOn(oledPowerOn), .initComplate(initComplate));	// output
+oledState		ssd1306(.iCLK(iCLK), .iRST(iRST),
+						.enSet(enSet), .sendComplete(sendComplete), .clear(iClearSW),
+						.sendByte(sendByte), .oledPowerOn(oledPowerOn), .initComplate(initComplate));
 
 // masterの送信データ制御モジュール
 
 i2cMaster		oled(.ioSCLF(ioSCLF), .ioSDAF(ioSDAF), .iCLK(iCLK), .iRST(iRST),
-					.enClk(en400Khz), .iEnable(oledPowerOn), .oEnable(sendComplete));
+					.enClk(en400Khz), .iEnable(oledPowerOn), .iLength(8'd3),
+					.oEnable(sendComplete));
 
 endmodule
