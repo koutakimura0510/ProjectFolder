@@ -41,7 +41,9 @@ reg oenable;	assign oEnable = oenable;
 // scl送信回数カウント変数
 reg [3:0] sclCnt;
 
-
+//----------------------------------------------------------
+// I2C動作回路
+//----------------------------------------------------------
 // scl送信回数カウント変数
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
@@ -70,6 +72,8 @@ always @(posedge iCLK) begin
 end
 
 // sda送信
+// 0 ~ 7clkは通常の1byteデータ送信
+// 8clkはACK受信のためハイ・インピーダンスにする
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
 		ioSdaf <= 1'b1;
@@ -83,5 +87,22 @@ always @(posedge iCLK) begin
 		end
 	end
 end
+
+
+//----------------------------------------------------------
+// 送信シーケンス処理回路
+//----------------------------------------------------------
+
+// バイトデータ送信時にenable信号を出力
+always @(posedge iCLK) begin
+	if (iRST == 1'b1) begin
+		oenable <= 1'b0;
+	end else if (sclCnt == SclDataByte) begin
+		oenable <= 1'b1;
+	end else begin
+		oenable <= 1'b0;
+	end
+end
+
 
 endmodule
