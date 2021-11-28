@@ -11,10 +11,11 @@
  */
 module i2cTB;
 
-reg ioSCL   = 1;    
-reg ioSDA   = 1;
-reg iCLK    = 0;
-reg iRST    = 0;
+reg ioSCL       = 1;    
+reg ioSDA       = 1;
+reg iCLK        = 0;
+reg iRST        = 0;
+reg iClearSW    = 0;
 wire [6:0] oSEG;
 wire oSEL;
 wire ioscl, iosda;
@@ -54,6 +55,7 @@ i0(
 .ioSDAF(iosdaf),
 .iRST(iRST), 
 .iCLK(iCLK),
+.iClearSW(iClearSW),
 .oSEG(oSEG),
 .oSEL(oSEL)
 );
