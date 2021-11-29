@@ -12,7 +12,7 @@ module sendByteState
 input 			iCLK,
 input 			iRST,
 input 			sendComplete,	// データ送信完了時High
-input 			initComplete,	// oled設定コマンド送信完了次High
+input 			initComplete,	// oled設定コマンド送信完了時High
 input  [ 7:0]	iAddress,		// 送信先のデバイスのアドレス
 input  [15:0]	iByteA,			// oled send data bytes A
 input  [15:0]	iByteB,			// slave send data bytes B

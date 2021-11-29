@@ -52,6 +52,9 @@ reg [2:0] i2cState;
 reg [3:0] sclCnt;	// sclの立上り回数
 reg [7:0] mLength;	// (module)1byte送信回数
 
+// sda送信データ参照rp
+reg [31:0] sdaRp;
+
 //----------------------------------------------------------
 // I2Cステートマシン制御
 //----------------------------------------------------------
@@ -172,6 +175,32 @@ always @(posedge iCLK) begin
 	end
 end
 
+// sda送信用sendByteのbit位置参照rpの更新
+always @(posedge iCLK) begin
+	if (iRST == 1'b1) begin
+		sdaRp <= 32'd0;
+	end else if (enClk == 1'b1 && ioSclf == 1'b1) begin
+		case (i2cState)
+			disConnect: begin
+				sdaRp <= (iLength << 3) - 1'b1;
+			end
+
+			startCondition: begin
+				sdaRp <= sdaRp - 1'b1;
+			end
+
+			stopCondition: begin
+				sdaRp <= 32'd0;
+			end
+
+			default: begin
+				sdaRp <= 32'd0;
+			end
+		endcase
+	end
+end
+
+
 // sda送信
 // 0 ~ 7clkは通常の1byteデータ送信
 // 8clkはACK受信のためハイ・インピーダンスにする
@@ -189,12 +218,12 @@ always @(posedge iCLK) begin
 			end
 
 			startCondition: begin
-				if (iLength == mLength) begin
+				if (iLength == mLength) begin // 指定バイト送信時、stop conditionに備えてlowにする
 					ioSdaf <= 1'b0;
 				end else if (sclCnt == SclDataByte) begin
 					ioSdaf <= 1'bz;
 				end else begin
-					ioSdaf <= 1'b0; //byte data
+					ioSdaf <= sendByte[sdaRp]; //byte data
 				end
 			end
 
