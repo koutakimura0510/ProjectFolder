@@ -94,6 +94,7 @@ read_verilog -library xil_defaultlib {
   /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/oledState.v
   /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/pmodDynamic.v
   /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/pmodSeg.v
+  /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/sendByteState.v
   /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/ArtyS7/Serial/i2cSlave/i2cSlave.srcs/sources_1/new/i2cTop.v
 }
 OPTRACE "Adding files" END { }

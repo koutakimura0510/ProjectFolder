@@ -251,7 +251,7 @@ end
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
 		oenable <= 1'b0;
-	end else if (sclCnt == SclDataByte && iLength == mLength) begin
+	end else if (sclCnt == SclNull && iLength == mLength) begin
 		oenable <= 1'b1;
 	end else begin
 		oenable <= 1'b0;
