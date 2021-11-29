@@ -89,6 +89,28 @@ i2cMaster		oled(.ioSCLF(ioSCLF), .ioSDAF(ioSDAF), .iCLK(iCLK), .iRST(iRST),
 					.enClk(en400Khz), .iEnable(oledPowerOn), .sendByte(sendByte), .iLength(8'd3),
 					.oEnable(sendComplete));
 
-// のちのちフレームバッファ構造にしなければならない
+// TODO
+// OLEDの表示方法が現在は直接送信のため、後々フレームバッファ構造にしなければならない（ダブルかトリプル）
+//
+// 【拡張】
+// 受信データをFIFOに保存するmoduleの追加
+// 文字コードを取り扱うBRAMの追加
+// 1バイト表示データをoledのセグメント表示形式に変換するmoduleの追加
+// セグメント形式に変換したデータをフレームバッファに挿入するmoduleの追加
+// i2cMasterに上記の変更を適応
+// コマンドバイト時は3byte送信だが、データバイト時は連続送信が可能なため対応
+// 
+// 【更に拡張】
+// フレームバッファ領域をDRAMに保存するためのMIGを作成する
+// FPGAがDRAMと自由にアクセスできるRTLを記述する
+// HDMI出力可能にする
+// HDMI出力に音源データを乗せる
+// 
+// 【更に更に拡張】
+// ZynqではなくMicroblazeの使用を検討する。
+// Zynq $7000 / Spartan7 $3000~4500 Artix $4000~6000
+// 
+// 値段だけでなく機能の追加のしやすさなど、様々な仕様を検討の上決定する事
+
 
 endmodule
