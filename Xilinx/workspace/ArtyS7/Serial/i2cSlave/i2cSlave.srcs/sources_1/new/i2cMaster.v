@@ -186,7 +186,9 @@ always @(posedge iCLK) begin
 			end
 
 			startCondition: begin
-				sdaRp <= sdaRp - 1'b1;
+				if (sclCnt != SclDataByte) begin
+					sdaRp <= sdaRp - 1'b1;
+				end
 			end
 
 			stopCondition: begin
