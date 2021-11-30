@@ -33,10 +33,6 @@ output          wTimeEnable     // 待機時間完了Enable信号
 //----------------------------------------------------------
 // 待機時間に関するパラメーターリスト
 //----------------------------------------------------------
-localparam [1:0]
-    powerOnTimeSet  = 2'd0,
-    cmdOnTimeSet    = 2'd1;
-
 localparam[5:0]
     powerOnTime     = 6'd45,
     cmdOnTime       = 6'd10;
@@ -83,44 +79,29 @@ localparam [7:0]
     PAGE_ADDRESS        = 8'h22,        // ページ操作レジスタのアドレス
     PAGE_START          = 8'h00,        // 開始ページ
     PAGE_END            = 8'h07,        // 終了ページ
-    CLEAR_DISP          = 8'h00,        // 消去コマンド
+    CLEAR_DISP          = 8'h00,        // 消去コマンドではない
     CMD_BYTE            = 8'h00,        // 設定コマンド
     WR_BYTE             = 8'h40;        // 書き込みコマンド
 
-localparam [3:0]
-    initCmdMax          = 4'd15,
-    clearCmdWd          = 4'd9,
-    clearCmdMax         = 4'd10;
-
-
-//----------------------------------------------------------
-// 送信データ制御モードリスト
-//----------------------------------------------------------
-localparam
-    cmdMode            = 1'b0,
-    clearMode          = 1'b1;
-
+localparam [4:0]
+    initCmdMax          = 5'd23;
 
 //----------------------------------------------------------
 // 変数宣言
 //----------------------------------------------------------
 
 // output制御信号
-reg powerOnEnable;          assign oledPowerOn = powerOnEnable;  // 起動時間経過後High
-reg complate;               assign initComplete = complate;      // 指定モードのコマンド発行後High
-reg [15:0] sendbyte;        assign sendByte = sendbyte;
-reg wEnable;                assign wTimeEnable = wEnable;
+reg powerOnEnable;          assign oledPowerOn  = powerOnEnable;    // 起動時間経過後High
+reg complate;               assign initComplete = complate;         // 指定モードのコマンド発行後High
+reg [15:0] sendbyte;        assign sendByte     = sendbyte;         // 設定時のコマンドバイトとデータバイト16bit
+reg wEnable;                assign wTimeEnable  = wEnable;          // 待機時間完了時High
 
 // 配列rp
 reg [3:0] initCmdRp;    // 初期設定コマンド配列参照用
-reg [3:0] clearCmdRp;   // クリアコマンド配列参照用
 
-// oledのデータ送信モード管理
-reg oledMode;
 
 // 待機時間管理
 reg [5:0] wTimeCnt;     // 待機時間カウント値保存
-reg [1:0] wTimeState;   // 待機時間の切り替え状態管理
 reg [5:0] wTime;        // 設定の待機時間保存
 
 // コマンド配列参照用rpの更新方法制御変数
@@ -144,23 +125,14 @@ initial begin
     oledCmdBuff[12] = SET_VCOMH;
     oledCmdBuff[13] = VCOMH_LEVEL;
     oledCmdBuff[14] = DISPLAY_ON;
-    oledCmdBuff[15] = DISPLAY_ON;
-end
-
-// クリアコマンド配列
-(* ram_style = "BLOCK" *) reg [7:0] oledClearBuff [0:10];
-initial begin
-    oledClearBuff[ 0] = SCROLL_STOP;
-    oledClearBuff[ 1] = MEMORY_MODE;
-    oledClearBuff[ 2] = HORIZONTAL_MODE;
-    oledClearBuff[ 3] = COLUMN_ADDRESS;
-    oledClearBuff[ 4] = COLUMN_START;
-    oledClearBuff[ 5] = COLUMN_END;
-    oledClearBuff[ 6] = PAGE_ADDRESS;
-    oledClearBuff[ 7] = PAGE_START;
-    oledClearBuff[ 8] = PAGE_END;
-    oledClearBuff[ 9] = CLEAR_DISP;
-    oledClearBuff[10] = CLEAR_DISP;
+    oledCmdBuff[15] = MEMORY_MODE;
+    oledCmdBuff[16] = HORIZONTAL_MODE;
+    oledCmdBuff[17] = COLUMN_ADDRESS;
+    oledCmdBuff[18] = COLUMN_START;
+    oledCmdBuff[19] = COLUMN_END;
+    oledCmdBuff[20] = PAGE_ADDRESS;
+    oledCmdBuff[21] = PAGE_START;
+    oledCmdBuff[22] = PAGE_END;
 end
 
 
@@ -183,16 +155,8 @@ always @(posedge iCLK) begin
     end
 end
 
-// 待機状態の設定
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
-        wTimeState <= powerOnTimeSet;
-    end else if (enSet == 1'b1 && wTimeCnt == wTime) begin
-        wTimeState <= cmdOnTimeSet;
-    end
-end
-
 // 待機時間の設定
+// 電源投入時間が完了したら、コマンド操作の時間に切り替える
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         wTime <= powerOnTime;
@@ -202,33 +166,38 @@ always @(posedge iCLK) begin
 end
 
 // 待機時間完了Enable信号の出力
+// oled初期設定時や起動時の各コマンド送信時に、
+// 一定の待ち時間が必要なためEnable信号で判定を行うようにした。
+// 全ての設定データ送信後は常にighを維持し、待機時間を設けないようにする。
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         wEnable <= 1'b0;
-    end else if (wTimeCnt == wTime)begin
+    end else if (wTimeCnt == wTime || complate == 1'b1) begin
         wEnable <= 1'b1;
     end else begin
         wEnable <= 1'b0;
     end
 end
 
-// 起動待機時間完了enable信号の設定
+// oledに電源投入時に300ms程待機時間が必要なため、
+// 起動待機時間完了enable信号を設けた。
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         powerOnEnable <= 1'b0;
-    end else if (enSet == 1'b1) begin
-        case (wTimeState)
-            powerOnTimeSet: powerOnEnable <= 1'b0;
-            default:        powerOnEnable <= 1'b1;
-        endcase
+    end else if (enSet == 1'b1 && wTimeCnt == wTime) begin
+        powerOnEnable <= 1'b1;
     end
 end
 
+
 //----------------------------------------------------------
-// 状態制御信号回路
+// 起動時コマンド送信の状態制御
 //----------------------------------------------------------
 
 // rp更新ステートマシンの制御
+// 指定バイト送信完了のEnable信号の立ち上がり時に配列参照用Rpの更新を行いたい。
+// 立ち上がり判定用にシフトレジスタを用意しても良かったが、容量がもったいなく感じた。
+// そのため、立ち上がりのHigh判定用と立下りのLow判定用のモードのほかに、一度だけ実行されるRp更新用のモードを設けた
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         sendState <= sendStateWait;
@@ -254,6 +223,7 @@ always @(posedge iCLK) begin
 end
 
 // 初期設定配列のrp更新
+// Rp更新モードの時だけレジスタの値を変更する
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         initCmdRp <= 4'd0;
@@ -264,90 +234,21 @@ always @(posedge iCLK) begin
     end
 end
 
-// クリアコマンド配列のrp更新
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
-        clearCmdRp <= 4'd0;
-    end else begin
-        case (oledMode)
-            cmdMode: begin
-                clearCmdRp <= 4'd0;
-            end
-
-            clearMode: begin
-                if (clearCmdRp != clearCmdMax && sendState == sendStateOn) begin
-                    clearCmdRp <= clearCmdRp + 4'd1;
-                end
-            end
-
-            default: begin
-                clearCmdRp <= 4'd0;
-            end
-        endcase
-    end
-end
-
-// コマンド送信モードの制御
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
-        oledMode <= cmdMode;
-    end else begin
-        case (oledMode)
-            cmdMode: begin
-                oledMode <= (initCmdRp == initCmdMax && clear == 1'b1) ? clearMode : cmdMode;
-            end
-
-            clearMode: begin
-                oledMode <= (clearCmdMax == clearCmdMax) ? cmdMode : clearMode;
-            end
-
-            default: begin
-                oledMode <= cmdMode;
-            end
-        endcase
-    end
-end
-
 // 全コマンドデータ送信完了信号の出力
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         complate <= 1'd0;
     end else begin
-        case (oledMode)
-            cmdMode: begin
-                complate <= (initCmdRp == initCmdMax) ? 1'b1 : 1'b0;
-            end
-
-            clearMode: begin
-                complate <= (clearCmdMax == clearCmdRp) ? 1'b1 : 1'b0;
-            end
-
-            default: begin
-                complate <= 1'b0;
-            end
-        endcase
+        complate <= (initCmdRp == initCmdMax) ? 1'b1 : 1'b0;
     end
 end
-
 
 // 送信データの制御
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         sendbyte <= 16'd0;
     end else begin
-        case (oledMode)
-            cmdMode:   begin
-                sendbyte <= {CMD_BYTE, oledCmdBuff[initCmdRp]};
-            end
-
-            clearMode: begin
-                sendbyte <= (clearCmdRp == clearCmdWd) ? {WR_BYTE, CLEAR_DISP} : {CMD_BYTE, oledClearBuff[clearCmdRp]};
-            end
-
-            default: begin
-                sendbyte <= 16'd0;
-            end
-        endcase
+        sendbyte <= {CMD_BYTE, oledCmdBuff[initCmdRp]};
     end
 end
 
