@@ -46,7 +46,7 @@ localparam [6:0]
 //----------------------------------------------------------
 // i2c信号生成
 reg ioSclf;		assign ioSCLF  = ioSclf;
-reg ioSdaf;		assign ioSDAF  = ioSdaf;
+reg ioSdaf;		assign ioSDAF  = (ioSdaf == 1'bz) ? 1'bz : ioSdaf;
 reg oenable;	assign oEnable = oenable;
 
 // i2c状態遷移管理変数
