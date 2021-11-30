@@ -28,7 +28,7 @@ reg [26:0] tmp_count;           // System Clk Counter
 assign enable   = (tmp_count[26:0] == (pSysClk - 1)) ? 1'b1 : 1'b0;
 assign enSet    = (tmp_count[16:0] == (pSetClk - 1)) ? 1'b1 : 1'b0;
 assign enKhz    = (tmp_count[18:0] == (pDynClk - 1)) ? 1'b1 : 1'b0;
-assign en400Khz = (tmp_count[ 5:0] == (pSclClk - 1)) ? 1'b1 : 1'b0;
+assign en400Khz = (tmp_count[ 6:0] == (pSclClk - 1)) ? 1'b1 : 1'b0;
 
 //System CLKの周期でカウント
 always @(posedge iCLK) begin

@@ -9,8 +9,12 @@
  * -
  * 使用したOLED
  * https://akizukidenshi.com/catalog/g/gP-12031/
+ * datasheet -> https://akizukidenshi.com/download/ds/solomon/ssd1306.pdf
  * -
  * 電源投入から300ms経過後、初期設定データと送信開始Enable信号を出力する
+ * start condition sda low  scl low  = min 600ns order 1.4MHz
+ * stop condition  scl high sda high = min 600ns order 1.4MHz
+ * stop IDLE       sda high keep     = min 1.3us order 700kHz
  */
 module oledState
 (

@@ -20,7 +20,7 @@ module i2cTop
 parameter pSysClk = 100000000,	// System Clk 100MHz
 parameter pSetClk = 100000,
 parameter pDynClk = 500000,
-parameter pSclClk = 125			// 400kHz
+parameter pSclClk = 125			// 125 -> 400kHz, 63 -> 800kHz
 )(
 input 			ioSCL,			// ESP32 SCL
 inout 			ioSDA,			// ESP32 SDA

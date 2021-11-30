@@ -31,11 +31,15 @@ localparam [2:0]
 	stopCondition 	= 3'd2;
 
 localparam [3:0] 
-	SclCntUp	= 4'd1,
-	SclNull 	= 4'd0,
-	SclDataByte	= 4'd8,
-	SclAck	 	= 4'd7;
+	SclCntUp		= 4'd1,
+	SclNull 		= 4'd0,
+	SclDataByte		= 4'd8,
+	SclAck	 		= 4'd7;
 
+localparam [6:0]
+	delayCntUp 		= 7'd1,
+	delayCntClear	= 7'd0,
+	delayCntMax		= 7'd2; // 63clk -> 600ns
 
 //----------------------------------------------------------
 // 変数宣言
@@ -54,6 +58,9 @@ reg [7:0] mLength;	// (module)1byte送信回数
 
 // sda送信データ参照rp
 reg [31:0] sdaRp;
+
+// sda出力データ遅延カウンタ
+reg [6:0]  sdaDelayCnt;
 
 //----------------------------------------------------------
 // I2Cステートマシン制御
@@ -203,6 +210,20 @@ always @(posedge iCLK) begin
 end
 
 
+// sda送信データの変化遅延タイミング生成回路
+// sclの立下りから最低300nsSdaの状態を保持する必要があるため
+// 遅延用カウンタを設ける
+always @(posedge iCLK) begin
+	if (iRST == 1'b1) begin
+		sdaDelayCnt <= delayCntClear;
+	end else if (ioSclf == 1'b0) begin
+		sdaDelayCnt <= sdaDelayCnt + delayCntUp;
+	end else begin
+		sdaDelayCnt <= delayCntClear;
+	end
+end
+
+
 // sda送信
 // 0 ~ 7clkは通常の1byteデータ送信
 // 8clkはACK受信のためハイ・インピーダンスにする
@@ -220,12 +241,14 @@ always @(posedge iCLK) begin
 			end
 
 			startCondition: begin
-				if (iLength == mLength) begin // 指定バイト送信時、stop conditionに備えてlowにする
-					ioSdaf <= 1'b0;
-				end else if (sclCnt == SclDataByte) begin
-					ioSdaf <= 1'bz;
-				end else begin
-					ioSdaf <= sendByte[sdaRp]; //byte data
+				if (sdaDelayCnt == delayCntMax) begin
+					if (iLength == mLength) begin // 指定バイト送信時、stop conditionに備えてlowにする
+						ioSdaf <= 1'b0;
+					end else if (sclCnt == SclDataByte) begin
+						ioSdaf <= 1'bz;
+					end else begin
+						ioSdaf <= sendByte[sdaRp]; //byte data
+					end
 				end
 			end
 
@@ -251,7 +274,7 @@ end
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
 		oenable <= 1'b0;
-	end else if (sclCnt == SclNull && iLength == mLength) begin
+	end else if (sclCnt == SclDataByte && iLength == mLength) begin
 		oenable <= 1'b1;
 	end else begin
 		oenable <= 1'b0;
