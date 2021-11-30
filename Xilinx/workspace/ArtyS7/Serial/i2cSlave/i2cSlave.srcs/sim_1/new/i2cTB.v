@@ -27,16 +27,16 @@ assign iosda    = ioSDA;
 // タイミング定数
 parameter sysCycle      = 2;                // system-clkの速度
 parameter rstCycle      = (sysCycle * 4);   // reset timing
-parameter sclCycle      = (sysCycle * 16);  // slave処理のsclの速度
+parameter sclCycle      = (sysCycle * 128);  // slave処理のsclの速度
 
 // demoデータ送信回数
 parameter sendCnt       = 5;
 
 // enable信号
-parameter SimMax        = 30;               // enable
-parameter SetMax        = 8;               // enable
+parameter SimMax        = 250;               // enable
+parameter SetMax        = 50;                // enable
 parameter DynMax        = 26;               // seg sel dynamic flash test
-parameter Scl400Max     = 22;                // scl 400khz test
+parameter Scl400Max     = 128;               // scl 400khz test
 
 // for 変数
 integer i, main;

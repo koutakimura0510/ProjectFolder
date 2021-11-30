@@ -47,6 +47,7 @@ wire sendComplete;				// 1byte送信完了時High
 // OLED信号
 wire oledPowerOn;				// 電源投入してから待機時間完了後High
 wire initComplete;				// 初期設定完了後High
+wire wTimeEnable;				// 待機時間完了Enable
 wire [15:0] oledSetByte;		// コマンド用の送信データ
 // wire clearSW;					// 表示消去sw
 
@@ -78,15 +79,15 @@ pmodSeg         seg(.iCLK(iCLK), .iRST(iRST), .selSeg(selSeg), .saSeg(saSeg), .o
 // oled ssd1306操作
 oledState		ssd1306(.iCLK(iCLK), .iRST(iRST),
 						.enSet(enSet), .sendComplete(sendComplete), .clear(iClearSW),
-						.sendByte(oledSetByte), .oledPowerOn(oledPowerOn), .initComplete(initComplete));
+						.sendByte(oledSetByte), .oledPowerOn(oledPowerOn), .initComplete(initComplete), .wTimeEnable(wTimeEnable));
 
 // masterの送信データ制御モジュール
 sendByteState	send(.iCLK(iCLK), .iRST(iRST), .sendComplete(sendComplete), .initComplete(initComplete),
-					.iAddress(8'h78), .iByteA(oledSetByte), .iByteB({8'h40, i2cByte}), .oSendByte(sendByte));
+					.iAddress(8'h78), .iByteA(oledSetByte), .iByteB({8'h40, 8'hff}), .oSendByte(sendByte));
 
 // oledデータ送信
 i2cMaster		oled(.ioSCLF(ioSCLF), .ioSDAF(ioSDAF), .iCLK(iCLK), .iRST(iRST),
-					.enClk(en400Khz), .iEnable(oledPowerOn), .sendByte(sendByte), .iLength(8'd3),
+					.enClk(en400Khz), .iEnable(oledPowerOn), .wTimeEnable(wTimeEnable), .sendByte(sendByte), .iLength(8'd3),
 					.oEnable(sendComplete));
 
 // TODO

@@ -15,6 +15,7 @@ input  			iCLK,
 input  			iRST,
 input 			enClk,			// 100 / 400 / 800khz enable信号
 input			iEnable,		// 0. discon 1. start
+input			wTimeEnable,	// 待機時間完了Enable信号
 input [23:0]	sendByte,		// 送信データ address + cmd + data byte
 input [7:0]		iLength,		// 送信データ数
 // input [31:0]	waitTime,		// データ送信後の待機時間、デバイスによっては初期設定時の待機時間があるため設けた
@@ -39,14 +40,14 @@ localparam [3:0]
 localparam [6:0]
 	delayCntUp 		= 7'd1,
 	delayCntClear	= 7'd0,
-	delayCntMax		= 7'd2; // 63clk -> 600ns
+	delayCntMax		= 7'd45; // 63clk -> 600ns
 
 //----------------------------------------------------------
 // 変数宣言
 //----------------------------------------------------------
 // i2c信号生成
 reg ioSclf;		assign ioSCLF  = ioSclf;
-reg ioSdaf;		assign ioSDAF  = (ioSdaf == 1'bx) ? 1'bz : ioSdaf;
+reg ioSdaf;		assign ioSDAF  = ioSdaf;
 reg oenable;	assign oEnable = oenable;
 
 // i2c状態遷移管理変数
@@ -235,7 +236,7 @@ always @(posedge iCLK) begin
 	end else begin
 		case (i2cState)
 			disConnect: begin
-				if (enClk == 1'b1) begin
+				if (wTimeEnable == 1'b1) begin
 					ioSdaf <= 1'b0;
 				end
 			end
@@ -245,7 +246,7 @@ always @(posedge iCLK) begin
 					if (iLength == mLength) begin // 指定バイト送信時、stop conditionに備えてlowにする
 						ioSdaf <= 1'b0;
 					end else if (sclCnt == SclDataByte) begin
-						ioSdaf <= 1'bx;
+						ioSdaf <= 1'bz;
 					end else begin
 						ioSdaf <= sendByte[sdaRp]; //byte data
 					end
@@ -253,13 +254,17 @@ always @(posedge iCLK) begin
 			end
 
 			stopCondition: begin
-				if (ioSclf == 1'b1 && enClk == 1'b1) begin
-					ioSdaf <= 1'b1;
+				if (ioSclf == 1'b1) begin
+					if (enClk == 1'b1) begin
+						ioSdaf <= 1'b1;
+					end
+				end else begin
+					ioSdaf <= 1'b0;
 				end
 			end
 
 			default: begin
-				ioSdaf <= 1'b1;
+				ioSdaf <= 1'b0;
 			end
 		endcase
 	end
@@ -274,7 +279,7 @@ end
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
 		oenable <= 1'b0;
-	end else if (sclCnt == SclDataByte && iLength == mLength) begin
+	end else if (sclCnt == SclNull && iLength == mLength) begin
 		oenable <= 1'b1;
 	end else begin
 		oenable <= 1'b0;

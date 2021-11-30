@@ -25,7 +25,8 @@ input           sendComplete,   // masterがデータを送信完了したらHig
 input           clear,          // 表示クリア信号
 output [15:0]   sendByte,       // cmd + 送信データ
 output		    oledPowerOn,    // 起動待機時間完了、oledデータ送受信開始信号
-output          initComplete    // 初期設定データ送信完了信号
+output          initComplete,   // 初期設定データ送信完了信号
+output          wTimeEnable     // 待機時間完了Enable信号
 );
 
 
@@ -34,13 +35,11 @@ output          initComplete    // 初期設定データ送信完了信号
 //----------------------------------------------------------
 localparam [1:0]
     powerOnTimeSet  = 2'd0,
-    cmdOnTimeSet    = 2'd1,
-    finishOnTimeSet = 2'd2;
+    cmdOnTimeSet    = 2'd1;
 
 localparam[5:0]
     powerOnTime     = 6'd45,
-    cmdOnTime       = 6'd10,
-    finishOnTime    = 6'd0;
+    cmdOnTime       = 6'd10;
 
 localparam [5:0] 
 	wTimeCntUp	    = 6'd1,
@@ -110,6 +109,7 @@ localparam
 reg powerOnEnable;          assign oledPowerOn = powerOnEnable;  // 起動時間経過後High
 reg complate;               assign initComplete = complate;      // 指定モードのコマンド発行後High
 reg [15:0] sendbyte;        assign sendByte = sendbyte;
+reg wEnable;                assign wTimeEnable = wEnable;
 
 // 配列rp
 reg [3:0] initCmdRp;    // 初期設定コマンド配列参照用
@@ -172,6 +172,8 @@ end
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         wTimeCnt <= wTimeNull;
+    end else if (sendComplete == 1'b1) begin
+        wTimeCnt <= wTimeNull;
     end else if (enSet == 1'b1) begin
         if (wTimeCnt == wTime) begin
             wTimeCnt <= wTimeNull;
@@ -186,12 +188,7 @@ always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         wTimeState <= powerOnTimeSet;
     end else if (enSet == 1'b1 && wTimeCnt == wTime) begin
-        case (wTimeState)
-            powerOnTimeSet:     wTimeState <= cmdOnTimeSet;
-            cmdOnTimeSet:       wTimeState <= (initCmdRp == initCmdMax) ? finishOnTimeSet : cmdOnTimeSet;
-            finishOnTimeSet:    wTimeState <= finishOnTimeSet;
-            default:            wTimeState <= powerOnTimeSet;
-        endcase
+        wTimeState <= cmdOnTimeSet;
     end
 end
 
@@ -200,12 +197,18 @@ always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         wTime <= powerOnTime;
     end else if (enSet == 1'b1 && wTimeCnt == wTime) begin
-        case (wTimeState)
-            powerOnTimeSet:     wTime <= cmdOnTime;
-            cmdOnTimeSet:       wTime <= (initCmdRp == initCmdMax) ? finishOnTime : cmdOnTime;
-            finishOnTimeSet:    wTime <= finishOnTime;
-            default:            wTime <= powerOnTime;
-        endcase
+        wTime <= cmdOnTime;
+    end
+end
+
+// 待機時間完了Enable信号の出力
+always @(posedge iCLK) begin
+    if (iRST == 1'b1) begin
+        wEnable <= 1'b0;
+    end else if (wTimeCnt == wTime)begin
+        wEnable <= 1'b1;
+    end else begin
+        wEnable <= 1'b0;
     end
 end
 
@@ -295,7 +298,7 @@ always @(posedge iCLK) begin
             end
 
             clearMode: begin
-                oledMode <= (clearCmdMax == initCmdMax) ? cmdMode : clearMode;
+                oledMode <= (clearCmdMax == clearCmdMax) ? cmdMode : clearMode;
             end
 
             default: begin
