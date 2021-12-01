@@ -22,13 +22,17 @@ input  		    iCLK,
 input  		    iRST,
 input           enSet,          // 設定時の待機時間計測用、1ms enable信号
 input           sendComplete,   // masterがデータを送信完了したらHigh
-input           clear,          // 表示クリア信号
 output [15:0]   sendByte,       // cmd + 送信データ
 output		    oledPowerOn,    // 起動待機時間完了、oledデータ送受信開始信号
 output          initComplete,   // 初期設定データ送信完了信号
 output          wTimeEnable     // 待機時間完了Enable信号
 );
 
+// output制御信号
+reg powerOnEnable;          assign oledPowerOn  = powerOnEnable;    // 起動時間経過後High
+reg complate;               assign initComplete = complate;         // 指定モードのコマンド発行後High
+reg [15:0] sendbyte;        assign sendByte     = sendbyte;         // 設定時のコマンドバイトとデータバイト16bit
+reg wEnable;                assign wTimeEnable  = wEnable;          // 待機時間完了時High
 
 //----------------------------------------------------------
 // 待機時間に関するパラメーターリスト
@@ -41,6 +45,10 @@ localparam [5:0]
 	wTimeCntUp	    = 6'd1,
 	wTimeNull 	    = 6'd0;
 
+// 待機時間管理
+reg [5:0] wTimeCnt;     // 待機時間カウント値保存
+reg [5:0] wTime;        // 設定の待機時間保存
+
 
 //----------------------------------------------------------
 // 制御コマンド更新を管理する状態制御定数
@@ -50,12 +58,15 @@ localparam [1:0]
     sendStateOn     = 2'd1,
     sendStateBridge = 2'd2;
 
+// コマンド配列参照用rpの更新方法制御変数
+reg [1:0] sendState;
+
 
 //----------------------------------------------------------
 // oledコマンドリスト
 //----------------------------------------------------------
 localparam [7:0]
-    SCAN_DIRECTION      = 8'hC8,	    // 反転表示
+    SCAN_DIRECTION      = 8'hC8,	    // 反転表示コマンド、通常だと上下が逆のため設定
     SET_COM_PIN         = 8'hda,	    // hardware config
     PIN_HARD            = 8'h12,	    // 0だと間隔が広がる
     CONTRAST_SET        = 8'h81,        // 明るさ調整
@@ -64,51 +75,34 @@ localparam [7:0]
     SER_SEGMENT_REMAP   = 8'ha1,        // remap情報の設定
     ENABLE_CHARGE_PUMP  = 8'h14,        // チャージポンプの設定
     DISPLAY_ON          = 8'haf,        // 表示開始
-    SET_DISPLAY_CLOCK   = 8'hd5,        // レジスタのアドレス
+    SET_DISPLAY_CLOCK   = 8'hd5,        // 表示速度設定用CLKのレジスタのアドレス
     OSCILLATOR_RATIO    = 8'hf0,	    // クロックを設定0x00~0xf0
-    SET_PERIOD          = 8'hd9,        // レジスタのアドレス
+    SET_PERIOD          = 8'hd9,        // 液晶同期に必要なDCLKのレジスタのアドレス
     SET_DCLK            = 8'hff,	    // Dクロックを設定0x00~0xff
     SET_VCOMH           = 8'hdb,        // 電圧発生回路操作レジスタのアドレス
     VCOMH_LEVEL         = 8'h30,	    // 電圧発生回路の設定
-    SCROLL_STOP         = 8'h2e,        // スクロールの停止コマンド
     MEMORY_MODE         = 8'h20,        // メモリー操作モード
     HORIZONTAL_MODE     = 8'h00,        // 横画面操作モード
-    COLUMN_ADDRESS      = 8'h21,        // 座標操作レジスタのアドレス
-    COLUMN_START        = 8'h00,        // 開始座標
-    COLUMN_END          = 8'h7f,        // 終了座標
-    PAGE_ADDRESS        = 8'h22,        // ページ操作レジスタのアドレス
-    PAGE_START          = 8'h00,        // 開始ページ
-    PAGE_END            = 8'h07,        // 終了ページ
-    CLEAR_DISP          = 8'h00,        // 消去コマンドではない
-    CMD_BYTE            = 8'h00,        // 設定コマンド
-    WR_BYTE             = 8'h40;        // 書き込みコマンド
+    COLUMN_ADDRESS      = 8'h21,        // 書き込み座標操作レジスタのアドレス
+    COLUMN_START        = 8'h00,        // 横ラインの書き込み開始座標
+    COLUMN_END          = 8'h7f,        // 横ラインの書き込み終了座標
+    PAGE_ADDRESS        = 8'h22,        // 書き込みページ操作レジスタのアドレス
+    PAGE_START          = 8'h00,        // 縦ラインの0~7開始ページ
+    PAGE_END            = 8'h07,        // 縦ラインの0~7終了ページ
+    CMD_BYTE            = 8'h00,        // 設定コマンド送信
+    WR_BYTE             = 8'h40,        // 書き込みバイト送信
+    DUMMY               = 8'h00;        // ダミーデータ
 
+// 初期化配列の最大値
 localparam [4:0]
     initCmdMax          = 5'd23;
 
-//----------------------------------------------------------
-// 変数宣言
-//----------------------------------------------------------
+// 配列参照rp
+reg [4:0] initCmdRp;    // 初期設定コマンド配列参照用
 
-// output制御信号
-reg powerOnEnable;          assign oledPowerOn  = powerOnEnable;    // 起動時間経過後High
-reg complate;               assign initComplete = complate;         // 指定モードのコマンド発行後High
-reg [15:0] sendbyte;        assign sendByte     = sendbyte;         // 設定時のコマンドバイトとデータバイト16bit
-reg wEnable;                assign wTimeEnable  = wEnable;          // 待機時間完了時High
-
-// 配列rp
-reg [3:0] initCmdRp;    // 初期設定コマンド配列参照用
-
-
-// 待機時間管理
-reg [5:0] wTimeCnt;     // 待機時間カウント値保存
-reg [5:0] wTime;        // 設定の待機時間保存
-
-// コマンド配列参照用rpの更新方法制御変数
-reg [1:0] sendState;
 
 // 初期設定コマンド配列
-(* ram_style = "BLOCK" *) reg [7:0] oledCmdBuff [0:15];
+(* ram_style = "BLOCK" *) reg [7:0] oledCmdBuff [0:22];
 initial begin
     oledCmdBuff[ 0] = CONTRAST_SET;
     oledCmdBuff[ 1] = CONTRAST_VALUE;
@@ -133,6 +127,7 @@ initial begin
     oledCmdBuff[20] = PAGE_ADDRESS;
     oledCmdBuff[21] = PAGE_START;
     oledCmdBuff[22] = PAGE_END;
+    oledCmdBuff[23] = DUMMY;
 end
 
 
