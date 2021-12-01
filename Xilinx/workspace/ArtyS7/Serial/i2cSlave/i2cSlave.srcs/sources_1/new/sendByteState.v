@@ -38,4 +38,6 @@ always @(posedge iCLK) begin
 	end
 end
 
+// TODO フレームバッファ構造にしたら、送信データの配列長をoutputする処理追加
+
 endmodule
