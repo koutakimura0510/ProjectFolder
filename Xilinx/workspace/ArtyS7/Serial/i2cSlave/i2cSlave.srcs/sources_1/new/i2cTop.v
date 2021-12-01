@@ -77,17 +77,24 @@ pmodDynamic     dynamic(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz), .i2cByte(i2cByt
 pmodSeg         seg(.iCLK(iCLK), .iRST(iRST), .selSeg(selSeg), .saSeg(saSeg), .oSEG(oSEG), .oSEL(oSEL));
 
 // oled ssd1306操作
-oledState		ssd1306(.iCLK(iCLK), .iRST(iRST),
-						.enSet(enSet), .sendComplete(sendComplete), .clear(iClearSW),
+oledState		ssd1306(.iCLK(iCLK), .iRST(iRST), .enSet(enSet), .sendComplete(sendComplete),
 						.sendByte(oledSetByte), .oledPowerOn(oledPowerOn), .initComplete(initComplete), .wTimeEnable(wTimeEnable));
 
+// fifo
+
+// byte -> Dot change
+
+// dot -> fbuf
+
+// 
+
 // masterの送信データ制御モジュール
-sendByteState	send(.iCLK(iCLK), .iRST(iRST), .sendComplete(sendComplete), .initComplete(initComplete),
+sendByteState	send(.iCLK(iCLK), .iRST(iRST), .sendComplete(sendComplete), .initComplete(initComplete), .iClearSW(iClearSW),
 					.iAddress(8'h78), .iByteA(oledSetByte), .iByteB({8'h40, 8'hff}), .oSendByte(sendByte));
 
 // oledデータ送信
 i2cMaster		oled(.ioSCLF(ioSCLF), .ioSDAF(ioSDAF), .iCLK(iCLK), .iRST(iRST),
-					.enClk(en400Khz), .iEnable(oledPowerOn), .wTimeEnable(wTimeEnable), .sendByte(sendByte), .iLength(8'd3),
+					.enClk(en400Khz), .iEnable(oledPowerOn), .wTimeEnable(wTimeEnable), .sendByte(sendByte), .iLength(32'd3),
 					.oEnable(sendComplete));
 
 // TODO

@@ -6,6 +6,7 @@
  * Borad  ArtyS7
  * -
  * I2C Master処理 8bit固定長
+ * 
  */
 module i2cMaster
 (
@@ -17,7 +18,7 @@ input 			enClk,			// 100 / 400 / 800khz enable信号
 input			iEnable,		// 0. discon 1. start
 input			wTimeEnable,	// 待機時間完了Enable信号
 input [23:0]	sendByte,		// 送信データ address + cmd + data byte
-input [7:0]		iLength,		// 送信データ数
+input [31:0]	iLength,		// 送信データ配列長
 // input [31:0]	waitTime,		// データ送信後の待機時間、デバイスによっては初期設定時の待機時間があるため設けた
 output			oEnable			// 送信完了Enable信号
 );
@@ -25,6 +26,7 @@ output			oEnable			// 送信完了Enable信号
 //----------------------------------------------------------
 // I2C制御パラメータリスト
 //----------------------------------------------------------
+
 // i2c状態遷移
 localparam [2:0] 
 	disConnect 		= 3'd0,		// マスタのSCLがHIGHの間にSDAをLOWでStartシーケンス
@@ -55,7 +57,7 @@ reg [2:0] i2cState;
 
 // scl送信回数
 reg [3:0] sclCnt;	// sclの立上り回数
-reg [7:0] mLength;	// (module)1byte送信回数
+reg [31:0] mLength;	// 1byte送信回数カウント
 
 // sda送信データ参照rp
 reg [31:0] sdaRp;
@@ -129,27 +131,27 @@ end
 // i2cのデータ送信回数をカウント
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
-		mLength <= 8'd0;
+		mLength <= 32'd0;
 	end else if (iEnable == 1'b0) begin
-		mLength <= 8'd0;
+		mLength <= 32'd0;
 	end else if (enClk == 1'b1 && ioSclf == 1'b1) begin
 		case (i2cState)
 			disConnect: begin
-				mLength <= 8'd0;
+				mLength <= 32'd0;
 			end
 
 			startCondition: begin
 				if (sclCnt == SclDataByte) begin
-					mLength <= mLength + 8'd1;
+					mLength <= mLength + 32'd1;
 				end
 			end
 
 			stopCondition: begin
-				mLength <= 8'd0;
+				mLength <= 32'd0;
 			end
 
 			default: begin
-				mLength <= 8'd0;
+				mLength <= 32'd0;
 			end
 		endcase
 	end
