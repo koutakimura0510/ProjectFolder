@@ -13,6 +13,7 @@ input 			iCLK,
 input 			iRST,
 input 			sendComplete,	// データ送信完了時High
 input 			initComplete,	// oled設定コマンド送信完了時High
+input 			iClearSW,		// 表示クリアデータ送信用SW
 input  [ 7:0]	iAddress,		// 送信先のデバイスのアドレス
 input  [15:0]	iByteA,			// oled send data bytes A
 input  [15:0]	iByteB,			// slave send data bytes B
@@ -28,6 +29,8 @@ reg [23:0] obyte;		assign oSendByte = obyte;
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
 		obyte <= 24'd0;
+	end else if (iClearSW == 1'b1) begin
+		obyte <= {iAddress, 8'h00};
 	end else if (initComplete == 1'b1) begin
 		obyte <= {iAddress, iByteB};
 	end else begin
