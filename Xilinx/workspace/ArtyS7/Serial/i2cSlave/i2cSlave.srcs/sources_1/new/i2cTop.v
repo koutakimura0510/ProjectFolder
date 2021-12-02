@@ -40,13 +40,13 @@ wire [7:0] i2cByte; 			// パラレル変換を行ったI2Cデータ
 wire sclAck;					// ACK判定用のenable信号
 
 // I2C master信号
-wire [ 7:0] iLength;			// slaveに送信するデータの回数
+wire [31:0] ioLength;			// slaveに送信するデータの回数
 wire [23:0] sendByte;			// アドレス・コマンド・データバイトを含んだ送信データ
-wire sendComplete;				// 1byte送信完了時High
+wire oLengthEnable;				// 指定配列長送信完了時 High
 
 // OLED信号
-wire oledPowerOn;				// 電源投入してから待機時間完了後High
-wire initComplete;				// 初期設定完了後High
+wire oledPowerValid;			// 電源投入してから待機時間完了後High
+wire oledCmdValid;				// 初期設定完了後High
 wire wTimeEnable;				// 待機時間完了Enable
 wire [15:0] oledSetByte;		// コマンド用の送信データ
 // wire clearSW;					// 表示消去sw
@@ -77,25 +77,17 @@ pmodDynamic     dynamic(.iCLK(iCLK), .iRST(iRST), .enKhz(enKhz), .i2cByte(i2cByt
 pmodSeg         seg(.iCLK(iCLK), .iRST(iRST), .selSeg(selSeg), .saSeg(saSeg), .oSEG(oSEG), .oSEL(oSEL));
 
 // oled ssd1306操作
-oledState		ssd1306(.iCLK(iCLK), .iRST(iRST), .enSet(enSet), .sendComplete(sendComplete),
-						.sendByte(oledSetByte), .oledPowerOn(oledPowerOn), .initComplete(initComplete), .wTimeEnable(wTimeEnable));
-
-// fifo
-
-// byte -> Dot change
-
-// dot -> fbuf
-
-// 
+oledState		ssd1306(.iCLK(iCLK), .iRST(iRST), .enSet(enSet), .iLE(oLengthEnable),
+						.sendByte(oledSetByte), .oOledPV(oledPowerValid), .oOledCV(oledCmdValid), .wTimeEnable(wTimeEnable));
 
 // masterの送信データ制御モジュール
-sendByteState	send(.iCLK(iCLK), .iRST(iRST), .sendComplete(sendComplete), .initComplete(initComplete), .iClearSW(iClearSW),
-					.iAddress(8'h78), .iByteA(oledSetByte), .iByteB({8'h40, 8'hff}), .oSendByte(sendByte));
+sendByteState	send(.iCLK(iCLK), .iRST(iRST), .iLE(oLengthEnable), .iOledCV(oledCmdValid), .iClearSW(iClearSW),
+					.iAddress(8'h78), .iByteA(oledSetByte), .iByteB({8'h40, 8'hff}), .oSendByte(sendByte), .oLength(ioLength));
 
 // oledデータ送信
 i2cMaster		oled(.ioSCLF(ioSCLF), .ioSDAF(ioSDAF), .iCLK(iCLK), .iRST(iRST),
-					.enClk(en400Khz), .iEnable(oledPowerOn), .wTimeEnable(wTimeEnable), .sendByte(sendByte), .iLength(32'd3),
-					.oEnable(sendComplete));
+					.enClk(en400Khz), .iEnable(oledPowerValid), .wTimeEnable(wTimeEnable), .sendByte(sendByte), .iLength(ioLength),
+					.oLE(oLengthEnable), oBE());
 
 // TODO
 // OLEDの表示方法が現在は直接送信のため、後々フレームバッファ構造にしなければならない（ダブルかトリプル）

@@ -20,7 +20,8 @@ input			wTimeEnable,	// 待機時間完了Enable信号
 input [23:0]	sendByte,		// 送信データ address + cmd + data byte
 input [31:0]	iLength,		// 送信データ配列長
 // input [31:0]	waitTime,		// データ送信後の待機時間、デバイスによっては初期設定時の待機時間があるため設けた
-output			oEnable			// 送信完了Enable信号
+output			oLE,			// 指定配列長送信完了信号 	output Length Enable
+output			oBE				// １バイト送信完了信号		output Byte Enable
 );
 
 //----------------------------------------------------------
@@ -50,7 +51,7 @@ localparam [6:0]
 // i2c信号生成
 reg ioSclf;		assign ioSCLF  = ioSclf;
 reg ioSdaf;		assign ioSDAF  = ioSdaf;
-reg oenable;	assign oEnable = oenable;
+reg ole;		assign oLE	   = ole;
 
 // i2c状態遷移管理変数
 reg [2:0] i2cState;
@@ -192,12 +193,17 @@ always @(posedge iCLK) begin
 	end else if (enClk == 1'b1 && ioSclf == 1'b1) begin
 		case (i2cState)
 			disConnect: begin
-				sdaRp <= (iLength << 3) - 1'b1;
+				// sdaRp <= (iLength << 3) - 1'b1;
+				sdaRp <= 32'd23;
 			end
 
 			startCondition: begin
 				if (sclCnt != SclDataByte) begin
-					sdaRp <= sdaRp - 1'b1;
+					if (sdaRp == 32'd0) begin
+						sdaRp <= 32'd7;
+					end else begin
+						sdaRp <= sdaRp - 1'b1;
+					end
 				end
 			end
 
@@ -280,11 +286,11 @@ end
 // バイトデータ送信時にenable信号を出力
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
-		oenable <= 1'b0;
+		ole <= 1'b0;
 	end else if (sclCnt == SclNull && iLength == mLength) begin
-		oenable <= 1'b1;
+		ole <= 1'b1;
 	end else begin
-		oenable <= 1'b0;
+		ole <= 1'b0;
 	end
 end
 

@@ -21,16 +21,16 @@ module oledState
 input  		    iCLK,
 input  		    iRST,
 input           enSet,          // 設定時の待機時間計測用、1ms enable信号
-input           sendComplete,   // masterがデータを送信完了したらHigh
+input           iLE,            // masterがデータを送信完了したらHigh
 output [15:0]   sendByte,       // cmd + 送信データ
-output		    oledPowerOn,    // 起動待機時間完了、oledデータ送受信開始信号
-output          initComplete,   // 初期設定データ送信完了信号
+output		    oOledPV,        // 起動待機時間完了、oledデータ送受信開始信号 oled power valid
+output          oOledCV,        // 初期設定データ送信完了信号 oled cmd valid
 output          wTimeEnable     // 待機時間完了Enable信号
 );
 
 // output制御信号
 reg powerOnEnable;          assign oledPowerOn  = powerOnEnable;    // 起動時間経過後High
-reg complate;               assign initComplete = complate;         // 指定モードのコマンド発行後High
+reg o_oledcv;               assign oOledCV      = o_oledcv;         // 指定モードのコマンド発行後High
 reg [15:0] sendbyte;        assign sendByte     = sendbyte;         // 設定時のコマンドバイトとデータバイト16bit
 reg wEnable;                assign wTimeEnable  = wEnable;          // 待機時間完了時High
 
@@ -38,7 +38,7 @@ reg wEnable;                assign wTimeEnable  = wEnable;          // 待機時
 // 待機時間に関するパラメーターリスト
 //----------------------------------------------------------
 localparam[5:0]
-    powerOnTime     = 6'd45,
+    powerOnTime     = 6'd63,
     cmdOnTime       = 6'd10;
 
 localparam [5:0] 
@@ -95,14 +95,20 @@ localparam [7:0]
 
 // 初期化配列の最大値
 localparam [4:0]
-    initCmdMax          = 5'd23;
+    initCmdMax          = 5'd15;
 
-// 配列参照rp
 reg [4:0] initCmdRp;    // 初期設定コマンド配列参照用
 
 
+// 書き込み座標指定配列の最大値
+localparam [3:0]
+    writeCmdMax         = 4'd8;
+
+reg [3:0] writeCmdRp;
+
+
 // 初期設定コマンド配列
-(* ram_style = "BLOCK" *) reg [7:0] oledCmdBuff [0:22];
+(* ram_style = "BLOCK" *) reg [7:0] oledCmdBuff [0:15];
 initial begin
     oledCmdBuff[ 0] = CONTRAST_SET;
     oledCmdBuff[ 1] = CONTRAST_VALUE;
@@ -119,15 +125,21 @@ initial begin
     oledCmdBuff[12] = SET_VCOMH;
     oledCmdBuff[13] = VCOMH_LEVEL;
     oledCmdBuff[14] = DISPLAY_ON;
-    oledCmdBuff[15] = MEMORY_MODE;
-    oledCmdBuff[16] = HORIZONTAL_MODE;
-    oledCmdBuff[17] = COLUMN_ADDRESS;
-    oledCmdBuff[18] = COLUMN_START;
-    oledCmdBuff[19] = COLUMN_END;
-    oledCmdBuff[20] = PAGE_ADDRESS;
-    oledCmdBuff[21] = PAGE_START;
-    oledCmdBuff[22] = PAGE_END;
-    oledCmdBuff[23] = DUMMY;
+    oledCmdBuff[15] = DUMMY;
+end
+
+// 初期設定コマンド配列
+(* ram_style = "BLOCK" *) reg [7:0] oledWriteBuff [0:8];
+initial begin
+    oledWriteBuff[0] = MEMORY_MODE;
+    oledWriteBuff[1] = HORIZONTAL_MODE;
+    oledWriteBuff[2] = COLUMN_ADDRESS;
+    oledWriteBuff[3] = COLUMN_START;
+    oledWriteBuff[4] = COLUMN_END;
+    oledWriteBuff[5] = PAGE_ADDRESS;
+    oledWriteBuff[6] = PAGE_START;
+    oledWriteBuff[7] = PAGE_END;
+    oledWriteBuff[8] = DUMMY;
 end
 
 
@@ -139,7 +151,7 @@ end
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         wTimeCnt <= wTimeNull;
-    end else if (sendComplete == 1'b1) begin
+    end else if (iLE == 1'b1) begin
         wTimeCnt <= wTimeNull;
     end else if (enSet == 1'b1) begin
         if (wTimeCnt == wTime) begin
@@ -167,7 +179,7 @@ end
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         wEnable <= 1'b0;
-    end else if (wTimeCnt == wTime || complate == 1'b1) begin
+    end else if (wTimeCnt == wTime) begin
         wEnable <= 1'b1;
     end else begin
         wEnable <= 1'b0;
@@ -199,7 +211,7 @@ always @(posedge iCLK) begin
     end else begin
         case (sendState)
             sendStateWait: begin
-                sendState <= (sendComplete == 1'b1) ? sendStateOn : sendStateWait;
+                sendState <= (iLE == 1'b1) ? sendStateOn : sendStateWait;
             end
 
             sendStateOn: begin
@@ -207,7 +219,7 @@ always @(posedge iCLK) begin
             end
 
             sendStateBridge: begin
-                sendState <= (sendComplete == 1'b0) ? sendStateWait : sendStateBridge;
+                sendState <= (iLE == 1'b0) ? sendStateWait : sendStateBridge;
             end
 
             default: begin
@@ -221,10 +233,23 @@ end
 // Rp更新モードの時だけレジスタの値を変更する
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
-        initCmdRp <= 4'd0;
+        initCmdRp <= 5'd0;
     end else if (sendState == sendStateOn) begin
         if (initCmdRp != initCmdMax) begin
-            initCmdRp <= initCmdRp + 4'd1;
+            initCmdRp <= initCmdRp + 5'd1;
+        end
+    end
+end
+
+// 書き込み配列のrp更新
+always @(posedge iCLK) begin
+    if (iRST == 1'b1) begin
+        writeCmdRp <= 4'd0;
+    end else if (sendState == sendStateOn && initCmdRp == initCmdMax) begin
+        if (writeCmdRp == writeCmdMax) begin
+            writeCmdRp <= 4'd0;
+        end else begin
+            writeCmdRp <= writeCmdRp + 4'd1;
         end
     end
 end
@@ -232,9 +257,9 @@ end
 // 全コマンドデータ送信完了信号の出力
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
-        complate <= 1'd0;
+        o_oledcv <= 1'd0;
     end else begin
-        complate <= (initCmdRp == initCmdMax) ? 1'b1 : 1'b0;
+        o_oledcv <= (initCmdRp == initCmdMax && writeCmdRp == writeCmdMax) ? 1'b1 : 1'b0;
     end
 end
 
@@ -242,8 +267,10 @@ end
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         sendbyte <= 16'd0;
-    end else begin
+    end else if (initCmdRp != initCmdMax) begin
         sendbyte <= {CMD_BYTE, oledCmdBuff[initCmdRp]};
+    end else begin
+        sendbyte <= {CMD_BYTE, oledWriteBuff[writeCmdRp]};
     end
 end
 
