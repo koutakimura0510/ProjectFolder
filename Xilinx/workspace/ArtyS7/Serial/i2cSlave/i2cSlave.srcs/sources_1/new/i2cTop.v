@@ -41,14 +41,15 @@ wire sclAck;					// ACK判定用のenable信号
 
 // I2C master信号
 wire [31:0] ioLength;			// slaveに送信するデータの回数
-wire [23:0] sendByte;			// アドレス・コマンド・データバイトを含んだ送信データ
+wire [ 7:0] sendByte;			// アドレス・コマンド・データバイトを含んだ送信データ
 wire oLengthEnable;				// 指定配列長送信完了時 High
+wire oByteEnable;				// 1byteデータ送信完了時 High
 
 // OLED信号
 wire oledPowerValid;			// 電源投入してから待機時間完了後High
 wire oledCmdValid;				// 初期設定完了後High
 wire wTimeEnable;				// 待機時間完了Enable
-wire [15:0] oledSetByte;		// コマンド用の送信データ
+wire [7:0] oledSetByte;			// コマンド用の送信データ
 // wire clearSW;					// 表示消去sw
 
 // 7seg信号
@@ -78,16 +79,20 @@ pmodSeg         seg(.iCLK(iCLK), .iRST(iRST), .selSeg(selSeg), .saSeg(saSeg), .o
 
 // oled ssd1306操作
 oledState		ssd1306(.iCLK(iCLK), .iRST(iRST), .enSet(enSet), .iLE(oLengthEnable),
-						.sendByte(oledSetByte), .oOledPV(oledPowerValid), .oOledCV(oledCmdValid), .wTimeEnable(wTimeEnable));
+						.oOledPV(oledPowerValid), .oOledCV(oledCmdValid), .wTimeEnable(wTimeEnable),
+						.sendByte(oledSetByte));
 
 // masterの送信データ制御モジュール
-sendByteState	send(.iCLK(iCLK), .iRST(iRST), .iLE(oLengthEnable), .iOledCV(oledCmdValid), .iClearSW(iClearSW),
-					.iAddress(8'h78), .iByteA(oledSetByte), .iByteB({8'h40, 8'hff}), .oSendByte(sendByte), .oLength(ioLength));
+sendByteState	send(.iCLK(iCLK), .iRST(iRST), .iSCL(en400Khz),
+					.iLE(oLengthEnable), .iBE(oByteEnable), .iOledCV(oledCmdValid), .iClearSW(iClearSW),
+					.iAddress(8'h78), .iByteA(oledSetByte), .iByteB(8'hff), 
+					.oSendByte(sendByte), .oLength(ioLength));
 
 // oledデータ送信
 i2cMaster		oled(.ioSCLF(ioSCLF), .ioSDAF(ioSDAF), .iCLK(iCLK), .iRST(iRST),
-					.enClk(en400Khz), .iEnable(oledPowerValid), .wTimeEnable(wTimeEnable), .sendByte(sendByte), .iLength(ioLength),
-					.oLE(oLengthEnable), oBE());
+					.enClk(en400Khz), .iEnable(oledPowerValid), .wTimeEnable(wTimeEnable),
+					.sendByte(sendByte), .iLength(ioLength),
+					.oLE(oLengthEnable), .oBE(oByteEnable));
 
 // TODO
 // OLEDの表示方法が現在は直接送信のため、後々フレームバッファ構造にしなければならない（ダブルかトリプル）

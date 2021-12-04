@@ -17,7 +17,7 @@ input  			iRST,
 input 			enClk,			// 100 / 400 / 800khz enable信号
 input			iEnable,		// 0. discon 1. start
 input			wTimeEnable,	// 待機時間完了Enable信号
-input [23:0]	sendByte,		// 送信データ address + cmd + data byte
+input [ 7:0]	sendByte,		// 送信データ address + cmd + data byte
 input [31:0]	iLength,		// 送信データ配列長
 // input [31:0]	waitTime,		// データ送信後の待機時間、デバイスによっては初期設定時の待機時間があるため設けた
 output			oLE,			// 指定配列長送信完了信号 	output Length Enable
@@ -49,9 +49,10 @@ localparam [6:0]
 // 変数宣言
 //----------------------------------------------------------
 // i2c信号生成
-reg ioSclf;		assign ioSCLF  = ioSclf;
-reg ioSdaf;		assign ioSDAF  = ioSdaf;
-reg ole;		assign oLE	   = ole;
+reg ioSclf;		assign ioSCLF  	= ioSclf;
+reg ioSdaf;		assign ioSDAF  	= ioSdaf;
+reg ole;		assign oLE	   	= ole;
+reg obe;		assign oBE		= obe;
 
 // i2c状態遷移管理変数
 reg [2:0] i2cState;
@@ -61,7 +62,7 @@ reg [3:0] sclCnt;	// sclの立上り回数
 reg [31:0] mLength;	// 1byte送信回数カウント
 
 // sda送信データ参照rp
-reg [31:0] sdaRp;
+reg [3:0] sdaRp;
 
 // sda出力データ遅延カウンタ
 reg [6:0]  sdaDelayCnt;
@@ -78,21 +79,10 @@ always @(posedge iCLK) begin
 		i2cState <= disConnect;
 	end else begin
 		case (i2cState)
-			disConnect: begin
-				i2cState <= (ioSclf == 1'b0 && ioSdaf == 1'b0) ? startCondition : disConnect;
-			end
-
-			startCondition: begin
-				i2cState <= (iLength == mLength) ? stopCondition : startCondition;
-			end
-
-			stopCondition: begin
-				i2cState <= (ioSclf == 1'b1 && ioSdaf == 1'b1) ? disConnect : stopCondition;
-			end
-
-			default: begin
-				i2cState <= disConnect;
-			end
+			disConnect: 	i2cState <= (ioSclf == 1'b0 && ioSdaf == 1'b0) ? startCondition : disConnect;
+			startCondition: i2cState <= (iLength == mLength) ? stopCondition : startCondition;
+			stopCondition: 	i2cState <= (ioSclf == 1'b1 && ioSdaf == 1'b1) ? disConnect : stopCondition;
+			default: 		i2cState <= disConnect;
 		endcase
 	end
 end
@@ -110,21 +100,10 @@ always @(posedge iCLK) begin
 		sclCnt <= SclNull;
 	end else if (enClk == 1'b1 && ioSclf == 1'b1) begin
 		case (i2cState)
-			disConnect: begin
-				sclCnt <= SclNull;
-			end
-
-			startCondition: begin
-				sclCnt <= (sclCnt == SclDataByte) ? SclNull : sclCnt + SclCntUp;
-			end
-
-			stopCondition: begin
-				sclCnt <= SclNull;
-			end
-
-			default: begin
-				sclCnt <= SclNull;
-			end
+			disConnect: 	sclCnt <= SclNull;
+			startCondition: sclCnt <= (sclCnt == SclDataByte) ? SclNull : sclCnt + SclCntUp;
+			stopCondition: 	sclCnt <= SclNull;
+			default: 		sclCnt <= SclNull;
 		endcase
 	end
 end
@@ -137,23 +116,10 @@ always @(posedge iCLK) begin
 		mLength <= 32'd0;
 	end else if (enClk == 1'b1 && ioSclf == 1'b1) begin
 		case (i2cState)
-			disConnect: begin
-				mLength <= 32'd0;
-			end
-
-			startCondition: begin
-				if (sclCnt == SclDataByte) begin
-					mLength <= mLength + 32'd1;
-				end
-			end
-
-			stopCondition: begin
-				mLength <= 32'd0;
-			end
-
-			default: begin
-				mLength <= 32'd0;
-			end
+			disConnect: 	mLength <= 32'd0;
+			startCondition: mLength <= (sclCnt == SclDataByte) ? mLength + 32'd1 : mLength;
+			stopCondition: 	mLength <= 32'd0;
+			default: 		mLength <= 32'd0;
 		endcase
 	end
 end
@@ -167,21 +133,10 @@ always @(posedge iCLK) begin
 		ioSclf <= 1'b1;
 	end else if (enClk == 1'b1) begin
 		case (i2cState)
-			disConnect: begin
-				ioSclf <= (ioSdaf == 1'b0) ? 1'b0 : 1'b1;
-			end
-
-			startCondition: begin
-				ioSclf <= ~ioSclf;
-			end
-
-			stopCondition: begin
-				ioSclf <= 1'b1;
-			end
-
-			default: begin
-				ioSclf <= 1'b1;
-			end
+			disConnect: 	ioSclf <= (ioSdaf == 1'b0) ? 1'b0 : 1'b1;
+			startCondition: ioSclf <= ~ioSclf;
+			stopCondition: 	ioSclf <= 1'b1;
+			default: 		ioSclf <= 1'b1;
 		endcase
 	end
 end
@@ -189,31 +144,13 @@ end
 // sda送信用sendByteのbit位置参照rpの更新
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
-		sdaRp <= 32'd0;
+		sdaRp <= 4'd0;
 	end else if (enClk == 1'b1 && ioSclf == 1'b1) begin
 		case (i2cState)
-			disConnect: begin
-				// sdaRp <= (iLength << 3) - 1'b1;
-				sdaRp <= 32'd23;
-			end
-
-			startCondition: begin
-				if (sclCnt != SclDataByte) begin
-					if (sdaRp == 32'd0) begin
-						sdaRp <= 32'd7;
-					end else begin
-						sdaRp <= sdaRp - 1'b1;
-					end
-				end
-			end
-
-			stopCondition: begin
-				sdaRp <= 32'd0;
-			end
-
-			default: begin
-				sdaRp <= 32'd0;
-			end
+			disConnect: 	sdaRp <= 4'd7;
+			startCondition: sdaRp <= (sdaRp == SclNull || sclCnt == SclDataByte) ? 4'd7 : sdaRp - 1'b1;
+			stopCondition: 	sdaRp <= 4'd7;
+			default: 		sdaRp <= 4'd7;
 		endcase
 	end
 end
@@ -283,7 +220,7 @@ end
 // 送信シーケンス処理
 //----------------------------------------------------------
 
-// バイトデータ送信時にenable信号を出力
+// 全バイトデータ送信時にenable信号を出力
 always @(posedge iCLK) begin
 	if (iRST == 1'b1) begin
 		ole <= 1'b0;
@@ -294,5 +231,15 @@ always @(posedge iCLK) begin
 	end
 end
 
+// 1byteデータ送信時にenable信号を出力
+always @(posedge iCLK) begin
+	if (iRST == 1'b1) begin
+		obe <= 1'b0;
+	end else if (sclCnt == SclDataByte && enClk == 1'b1 && ioSclf == 1'b0) begin
+		obe <= 1'b1;
+	end else begin
+		obe <= 1'b0;
+	end
+end
 
 endmodule

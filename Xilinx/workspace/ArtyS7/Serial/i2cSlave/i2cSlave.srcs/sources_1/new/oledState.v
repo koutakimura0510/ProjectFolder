@@ -22,16 +22,16 @@ input  		    iCLK,
 input  		    iRST,
 input           enSet,          // 設定時の待機時間計測用、1ms enable信号
 input           iLE,            // masterがデータを送信完了したらHigh
-output [15:0]   sendByte,       // cmd + 送信データ
 output		    oOledPV,        // 起動待機時間完了、oledデータ送受信開始信号 oled power valid
 output          oOledCV,        // 初期設定データ送信完了信号 oled cmd valid
-output          wTimeEnable     // 待機時間完了Enable信号
+output          wTimeEnable,    // 待機時間完了Enable信号
+output [7:0]    sendByte        // 送信データ
 );
 
 // output制御信号
-reg powerOnEnable;          assign oledPowerOn  = powerOnEnable;    // 起動時間経過後High
+reg powerOnEnable;          assign oOledPV      = powerOnEnable;    // 起動時間経過後High
 reg o_oledcv;               assign oOledCV      = o_oledcv;         // 指定モードのコマンド発行後High
-reg [15:0] sendbyte;        assign sendByte     = sendbyte;         // 設定時のコマンドバイトとデータバイト16bit
+reg [7:0] sendbyte;         assign sendByte     = sendbyte;         // 設定時のコマンドバイトとデータバイト16bit
 reg wEnable;                assign wTimeEnable  = wEnable;          // 待機時間完了時High
 
 //----------------------------------------------------------
@@ -89,8 +89,6 @@ localparam [7:0]
     PAGE_ADDRESS        = 8'h22,        // 書き込みページ操作レジスタのアドレス
     PAGE_START          = 8'h00,        // 縦ラインの0~7開始ページ
     PAGE_END            = 8'h07,        // 縦ラインの0~7終了ページ
-    CMD_BYTE            = 8'h00,        // 設定コマンド送信
-    WR_BYTE             = 8'h40,        // 書き込みバイト送信
     DUMMY               = 8'h00;        // ダミーデータ
 
 // 初期化配列の最大値
@@ -266,11 +264,11 @@ end
 // 送信データの制御
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
-        sendbyte <= 16'd0;
+        sendbyte <= 8'd0;
     end else if (initCmdRp != initCmdMax) begin
-        sendbyte <= {CMD_BYTE, oledCmdBuff[initCmdRp]};
+        sendbyte <= oledCmdBuff[initCmdRp];
     end else begin
-        sendbyte <= {CMD_BYTE, oledWriteBuff[writeCmdRp]};
+        sendbyte <= oledWriteBuff[writeCmdRp];
     end
 end
 
