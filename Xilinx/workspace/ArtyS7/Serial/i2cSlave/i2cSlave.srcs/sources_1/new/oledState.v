@@ -208,21 +208,10 @@ always @(posedge iCLK) begin
         sendState <= sendStateWait;
     end else begin
         case (sendState)
-            sendStateWait: begin
-                sendState <= (iLE == 1'b1) ? sendStateOn : sendStateWait;
-            end
-
-            sendStateOn: begin
-                sendState <= sendStateBridge;
-            end
-
-            sendStateBridge: begin
-                sendState <= (iLE == 1'b0) ? sendStateWait : sendStateBridge;
-            end
-
-            default: begin
-                sendState <= sendStateWait;
-            end
+            sendStateWait:      sendState <= (iLE == 1'b1) ? sendStateOn : sendStateWait;
+            sendStateOn:        sendState <= sendStateBridge;
+            sendStateBridge:    sendState <= (iLE == 1'b0) ? sendStateWait : sendStateBridge;
+            default:            sendState <= sendStateWait;
         endcase
     end
 end

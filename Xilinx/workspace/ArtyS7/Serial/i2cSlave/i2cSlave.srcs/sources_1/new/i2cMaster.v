@@ -25,28 +25,7 @@ output			oBE				// １バイト送信完了信号		output Byte Enable
 );
 
 //----------------------------------------------------------
-// I2C制御パラメータリスト
-//----------------------------------------------------------
-
-// i2c状態遷移
-localparam [2:0] 
-	disConnect 		= 3'd0,		// マスタのSCLがHIGHの間にSDAをLOWでStartシーケンス
-	startCondition 	= 3'd1,		// SCLがHIGHの間にSDAをHIGHでStopシーケンス
-	stopCondition 	= 3'd2;
-
-localparam [3:0] 
-	SclCntUp		= 4'd1,
-	SclNull 		= 4'd0,
-	SclDataByte		= 4'd8,
-	SclAck	 		= 4'd7;
-
-localparam [6:0]
-	delayCntUp 		= 7'd1,
-	delayCntClear	= 7'd0,
-	delayCntMax		= 7'd45; // 63clk -> 600ns
-
-//----------------------------------------------------------
-// 変数宣言
+// Port接続
 //----------------------------------------------------------
 // i2c信号生成
 reg ioSclf;		assign ioSCLF  	= ioSclf;
@@ -54,17 +33,40 @@ reg ioSdaf;		assign ioSDAF  	= ioSdaf;
 reg ole;		assign oLE	   	= ole;
 reg obe;		assign oBE		= obe;
 
-// i2c状態遷移管理変数
-reg [2:0] i2cState;
 
+//----------------------------------------------------------
+// i2c状態遷移
+//----------------------------------------------------------
+localparam [2:0] 
+	disConnect 		= 3'd0,		// マスタのSCLがHIGHの間にSDAをLOWでStartシーケンス
+	startCondition 	= 3'd1,		// SCLがHIGHの間にSDAをHIGHでStopシーケンス
+	stopCondition 	= 3'd2;
+
+reg [2:0] i2cState;	// i2c状態遷移管理変数
+
+
+//----------------------------------------------------------
 // scl送信回数
+//----------------------------------------------------------
+localparam [3:0] 
+	SclCntUp		= 4'd1,
+	SclNull 		= 4'd0,
+	SclDataByte		= 4'd8,
+	SclAck	 		= 4'd7;
+
 reg [3:0] sclCnt;	// sclの立上り回数
 reg [31:0] mLength;	// 1byte送信回数カウント
+reg [3:0] sdaRp;	// sda送信データ参照rp
 
-// sda送信データ参照rp
-reg [3:0] sdaRp;
 
+//----------------------------------------------------------
 // sda出力データ遅延カウンタ
+//----------------------------------------------------------
+localparam [6:0]
+	delayCntUp 		= 7'd1,
+	delayCntClear	= 7'd0,
+	delayCntMax		= 7'd35; // 35clk -> 300ns
+
 reg [6:0]  sdaDelayCnt;
 
 //----------------------------------------------------------

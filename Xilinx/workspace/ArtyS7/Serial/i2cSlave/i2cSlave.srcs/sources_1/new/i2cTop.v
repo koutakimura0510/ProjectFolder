@@ -85,7 +85,7 @@ oledState		ssd1306(.iCLK(iCLK), .iRST(iRST), .enSet(enSet), .iLE(oLengthEnable),
 // masterの送信データ制御モジュール
 sendByteState	send(.iCLK(iCLK), .iRST(iRST), .iSCL(en400Khz),
 					.iLE(oLengthEnable), .iBE(oByteEnable), .iOledCV(oledCmdValid), .iClearSW(iClearSW),
-					.iAddress(8'h78), .iByteA(oledSetByte), .iByteB(8'hff), 
+					.iAddress(8'h78), .iByteA(oledSetByte), .iByteB(8'hff & {8{iClearSW}}), 
 					.oSendByte(sendByte), .oLength(ioLength));
 
 // oledデータ送信
