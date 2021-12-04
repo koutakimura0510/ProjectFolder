@@ -10,6 +10,14 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include "FONT.H"
+
+
+//----------------------------------------------------------
+// 配列長取得マクロ
+//----------------------------------------------------------
+#define NUM(ary) (sizeof(ary)/sizeof(ary[0]))
+
 
 //----------------------------------------------------------
 // 作成ファイル名
@@ -22,14 +30,20 @@ const char *name = "font6.dat";
 //----------------------------------------------------------
 int main(void)
 {
-    FILE *fp;
-
-	fp = fopen(name, "w");
+    FILE *fp = fopen(name, "w");
 
 	if (fp == NULL) {
 		printf("File %s open error\r\n", name);
 		return 1;
 	}
+
+    for (uint32_t i = 0; i < NUM(fontdata6); i++) 
+    {
+        for (uint32_t j = 0; j < FONT6_W; j++)
+        {
+            fprintf(fp, "%02x\n", fontdata6[i][j]);
+        }
+    }
 
 	fclose(fp);
 
