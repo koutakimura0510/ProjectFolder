@@ -71,10 +71,9 @@
 *.xdbg
 
 # 管理しないプロジェクト ArtyZ7
-Xilinx/workspace/IP/*
-Xilinx/workspace/Sample/*
-Xilinx/workspace/net_test/*
-Xilinx/workspace/Arty_z7_20/AXI/*
+# Xilinx/workspace/IP/*
+# Xilinx/workspace/Sample/*
+# Xilinx/workspace/Arty_z7_20/AXI/*
 
 # Toho Gameのみ対応する
 Xilinx/workspace/Arty_z7_20/HDMI/*
