@@ -179,6 +179,8 @@ set_property -dict { PACKAGE_PIN J13   IOSTANDARD LVCMOS33 } [get_ports { ioSDA 
 #set_property -dict { PACKAGE_PIN L14   IOSTANDARD LVCMOS33 } [get_ports { qspi_dq[2] }]; #IO_L2P_T0_D02_14 Sch=qspi_dq[2]
 #set_property -dict { PACKAGE_PIN M15   IOSTANDARD LVCMOS33 } [get_ports { qspi_dq[3] }]; #IO_L2N_T0_D03_14 Sch=qspi_dq[3]
 
+# set_property -dict { PACKAGE_PIN K2   IOSTANDARD SSTL135 } [get_ports { ddr3_dq[0] }]; #IO_L2N_T0_D03_14 Sch=qspi_dq[3]
+
 ## Configuration options, can be used for all designs
 set_property BITSTREAM.CONFIG.CONFIGRATE 50 [current_design]
 set_property CONFIG_VOLTAGE 3.3 [current_design]

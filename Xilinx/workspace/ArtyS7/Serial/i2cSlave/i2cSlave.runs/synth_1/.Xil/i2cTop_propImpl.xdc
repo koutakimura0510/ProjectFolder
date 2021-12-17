@@ -29,3 +29,5 @@ set_property src_info {type:XDC file:1 line:167 export:INPUT save:INPUT read:REA
 set_property -dict { PACKAGE_PIN J14   IOSTANDARD LVCMOS33 } [get_ports { ioSCL }]; #IO_L24N_T3_RS0_15 Sch=ck_scl
 set_property src_info {type:XDC file:1 line:168 export:INPUT save:INPUT read:READ} [current_design]
 set_property -dict { PACKAGE_PIN J13   IOSTANDARD LVCMOS33 } [get_ports { ioSDA }]; #IO_L24P_T3_RS1_15 Sch=ck_sda
+set_property src_info {type:XDC file:1 line:182 export:INPUT save:INPUT read:READ} [current_design]
+set_property -dict { PACKAGE_PIN K2   IOSTANDARD SSTL135 } [get_ports { ddr3_dq[0] }]; #IO_L2N_T0_D03_14 Sch=qspi_dq[3]

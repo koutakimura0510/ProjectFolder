@@ -82,6 +82,13 @@ oledState		ssd1306(.iCLK(iCLK), .iRST(iRST), .enSet(enSet), .iLE(oLengthEnable),
 						.oOledPV(oledPowerValid), .oOledCV(oledCmdValid), .wTimeEnable(wTimeEnable),
 						.sendByte(oledSetByte));
 
+// byte -> 文字コード変換
+
+
+// 文字コード -> bit変換
+// bit frame buffer save out
+
+
 // masterの送信データ制御モジュール
 sendByteState	send(.iCLK(iCLK), .iRST(iRST), .iSCL(en400Khz),
 					.iLE(oLengthEnable), .iBE(oByteEnable), .iOledCV(oledCmdValid), .iClearSW(iClearSW),
