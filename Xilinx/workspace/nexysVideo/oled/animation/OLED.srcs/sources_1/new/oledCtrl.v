@@ -1,65 +1,60 @@
 /*
- * Create 2021/11/27
+ * Create 2021/12/17
  * Author koutakimura
  * Editor VSCode ver1.62.7
  * Build  Vivado20.2
- * Borad  ArtyS7
+ * Borad  Nexys Video
  * -
- * oled ssd1306の状態遷移を管理
- * -
- * 使用したOLED
- * https://akizukidenshi.com/catalog/g/gP-12031/
- * datasheet -> https://akizukidenshi.com/download/ds/solomon/ssd1306.pdf
- * -
- * 電源投入から300ms経過後、初期設定データと送信開始Enable信号を出力する
- * start condition sda low  scl low  = min 600ns order 1.4MHz
- * stop condition  scl high sda high = min 600ns order 1.4MHz
- * stop IDLE       sda high keep     = min 1.3us order 700kHz
+ * 評価基板付属のOLED SSD1306コントロールモジュール
  */
-module oledState
+module oledCtrl
 (
-input  		    iCLK,
-input  		    iRST,
-input           enSet,          // 設定時の待機時間計測用、1ms enable信号
-input           iLE,            // masterがデータを送信完了したらHigh
-output		    oOledPV,        // 起動待機時間完了、oledデータ送受信開始信号 oled power valid
-output          oOledCV,        // 初期設定データ送信完了信号 oled cmd valid
-output          wTimeEnable,    // 待機時間完了Enable信号
-output [7:0]    sendByte        // 送信データ
+    // system clk, rst sw
+    input           iCLK,
+    input           iRST,
+
+    // system oled
+    output          oOledDC,
+    output          oOledRes,
+    output          oOledScl,
+    output          oOledSda,
+    output          oOledVbat,
+    output          oOledVdd
 );
 
-// output制御信号
-reg powerOnEnable;          assign oOledPV      = powerOnEnable;    // 起動時間経過後High
-reg o_oledcv;               assign oOledCV      = o_oledcv;         // 指定モードのコマンド発行後High
-reg [7:0] sendbyte;         assign sendByte     = sendbyte;         // 設定時のコマンドバイトとデータバイト16bit
-reg wEnable;                assign wTimeEnable  = wEnable;          // 待機時間完了時High
+reg oled_dc;                assign oOledDC      = oled_dc;
+reg oled_res;               assign oOledRes     = oled_res;
+reg oled_scl;               assign oOledScl     = oled_scl;
+reg oled_sda;               assign oOledSda     = oled_sda;
+reg oled_vbat;              assign oOledVbat    = oled_vbat;
+reg oled_vdd;               assign oOledVdd     = oled_vdd;
 
 //----------------------------------------------------------
 // 待機時間に関するパラメーターリスト
 //----------------------------------------------------------
 localparam[5:0]
-    powerOnTime     = 6'd63,
-    cmdOnTime       = 6'd5;
+    POWER_ON_TIME     = 6'd63,
+    CMD_ON_TIME       = 6'd10;
 
 localparam [5:0] 
-	wTimeCntUp	    = 6'd1,
-	wTimeNull 	    = 6'd0;
+	WTIME_CNTUP	    = 6'd1,
+	WTIME_NULL 	    = 6'd0;
 
 // 待機時間管理
-reg [5:0] wTimeCnt;     // 待機時間カウント値保存
-reg [5:0] wTime;        // 設定の待機時間保存
+reg [5:0] wtime_cnt;     // 待機時間カウント値保存
+reg [5:0] wtime_max;        // 設定の待機時間保存
 
 
 //----------------------------------------------------------
 // 制御コマンド更新を管理する状態制御定数
 //----------------------------------------------------------
 localparam [1:0]
-    sendStateWait   = 2'd0,
-    sendStateOn     = 2'd1,
-    sendStateBridge = 2'd2;
+    SEND_STATE_WAIT   = 2'd0,
+    SEND_STATE_ON     = 2'd1,
+    SEND_STATE_BRIDGE = 2'd2;
 
 // コマンド配列参照用rpの更新方法制御変数
-reg [1:0] sendState;
+reg [1:0] send_state;
 
 
 //----------------------------------------------------------
@@ -93,52 +88,52 @@ localparam [7:0]
 
 // 初期化配列の最大値
 localparam [4:0]
-    initCmdMax          = 5'd16;
+    INIT_CMDMAX          = 5'd16;
 
-reg [4:0] initCmdRp;    // 初期設定コマンド配列参照用
+reg [4:0] init_cmd_rp;    // 初期設定コマンド配列参照用
 
 
 // 書き込み座標指定配列の最大値
 localparam [3:0]
-    writeCmdMax         = 4'd9;
+    WRITE_CMDMAX         = 4'd9;
 
-reg [3:0] writeCmdRp;
+reg [3:0] write_cmd_rp;
 
 
 // 初期設定コマンド配列
-(* ram_style = "BLOCK" *) reg [7:0] oledCmdBuff [0:16];
+(* ram_style = "BLOCK" *) reg [7:0] oled_init_rom [0:16];
 initial begin
-    oledCmdBuff[ 0] = DISPLAY_OFF;
-    oledCmdBuff[ 1] = CHARGE_PUMP;
-    oledCmdBuff[ 2] = ENABLE_CHARGE_PUMP;
-    oledCmdBuff[ 3] = SET_PERIOD;
-    oledCmdBuff[ 4] = SET_DCLK;
-    oledCmdBuff[ 5] = SET_VCOMH;
-    oledCmdBuff[ 6] = VCOMH_LEVEL;
-    oledCmdBuff[ 7] = SET_COM_PIN;
-    oledCmdBuff[ 8] = PIN_HARD;
-    oledCmdBuff[ 9] = CONTRAST_SET;
-    oledCmdBuff[10] = CONTRAST_VALUE;
-    oledCmdBuff[11] = SER_SEGMENT_REMAP;
-    oledCmdBuff[12] = SCAN_DIRECTION;
-    oledCmdBuff[13] = SET_DISPLAY_CLOCK;
-    oledCmdBuff[14] = OSCILLATOR_RATIO;
-    oledCmdBuff[15] = DISPLAY_ON;
-    oledCmdBuff[16] = DUMMY;
+    oled_init_rom[ 0] = DISPLAY_OFF;
+    oled_init_rom[ 1] = CHARGE_PUMP;
+    oled_init_rom[ 2] = ENABLE_CHARGE_PUMP;
+    oled_init_rom[ 3] = SET_PERIOD;
+    oled_init_rom[ 4] = SET_DCLK;
+    oled_init_rom[ 5] = SET_VCOMH;
+    oled_init_rom[ 6] = VCOMH_LEVEL;
+    oled_init_rom[ 7] = SET_COM_PIN;
+    oled_init_rom[ 8] = PIN_HARD;
+    oled_init_rom[ 9] = CONTRAST_SET;
+    oled_init_rom[10] = CONTRAST_VALUE;
+    oled_init_rom[11] = SER_SEGMENT_REMAP;
+    oled_init_rom[12] = SCAN_DIRECTION;
+    oled_init_rom[13] = SET_DISPLAY_CLOCK;
+    oled_init_rom[14] = OSCILLATOR_RATIO;
+    oled_init_rom[15] = DISPLAY_ON;
+    oled_init_rom[16] = DUMMY;
 end
 
 // 初期設定コマンド配列
-(* ram_style = "BLOCK" *) reg [7:0] oledWriteBuff [0:8];
+(* ram_style = "BLOCK" *) reg [7:0] oled_cmd_rom [0:8];
 initial begin
-    oledWriteBuff[0] = MEMORY_MODE;
-    oledWriteBuff[1] = HORIZONTAL_MODE;
-    oledWriteBuff[2] = COLUMN_ADDRESS;
-    oledWriteBuff[3] = COLUMN_START;
-    oledWriteBuff[4] = COLUMN_END;
-    oledWriteBuff[5] = PAGE_ADDRESS;
-    oledWriteBuff[6] = PAGE_START;
-    oledWriteBuff[7] = PAGE_END;
-    oledWriteBuff[8] = DUMMY;
+    oled_cmd_rom[0] = MEMORY_MODE;
+    oled_cmd_rom[1] = HORIZONTAL_MODE;
+    oled_cmd_rom[2] = COLUMN_ADDRESS;
+    oled_cmd_rom[3] = COLUMN_START;
+    oled_cmd_rom[4] = COLUMN_END;
+    oled_cmd_rom[5] = PAGE_ADDRESS;
+    oled_cmd_rom[6] = PAGE_START;
+    oled_cmd_rom[7] = PAGE_END;
+    oled_cmd_rom[8] = DUMMY;
 end
 
 
@@ -149,14 +144,14 @@ end
 // 待機時間計測カウンタ
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
-        wTimeCnt <= wTimeNull;
+        wtime_cnt <= WTIME_NULL;
     end else if (iLE == 1'b1) begin
-        wTimeCnt <= wTimeNull;
+        wtime_cnt <= WTIME_NULL;
     end else if (enSet == 1'b1) begin
-        if (wTimeCnt == wTime) begin
-            wTimeCnt <= wTimeNull;
+        if (wtime_cnt == wtime_max) begin
+            wtime_cnt <= WTIME_NULL;
         end else begin
-            wTimeCnt <= wTimeCnt + wTimeCntUp;
+            wtime_cnt <= wtime_cnt + WTIME_CNTUP;
         end
     end
 end
@@ -165,9 +160,9 @@ end
 // 電源投入時間が完了したら、コマンド操作の時間に切り替える
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
-        wTime <= powerOnTime;
-    end else if (enSet == 1'b1 && wTimeCnt == wTime) begin
-        wTime <= cmdOnTime;
+        wtime_max <= POWER_ON_TIME;
+    end else if (enSet == 1'b1 && wtime_cnt == wtime_max) begin
+        wtime_max <= CMD_ON_TIME;
     end
 end
 
@@ -178,7 +173,7 @@ end
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         wEnable <= 1'b0;
-    end else if (wTimeCnt == wTime) begin
+    end else if (wtime_cnt == wtime_max) begin
         wEnable <= 1'b1;
     end else begin
         wEnable <= 1'b0;
@@ -190,7 +185,7 @@ end
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         powerOnEnable <= 1'b0;
-    end else if (enSet == 1'b1 && wTimeCnt == wTime) begin
+    end else if (enSet == 1'b1 && wtime_cnt == wtime_max) begin
         powerOnEnable <= 1'b1;
     end
 end
@@ -206,13 +201,13 @@ end
 // そのため、立ち上がりのHigh判定用と立下りのLow判定用のモードのほかに、一度だけ実行されるRp更新用のモードを設けた
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
-        sendState <= sendStateWait;
+        send_state <= SEND_STATE_WAIT;
     end else begin
-        case (sendState)
-            sendStateWait:      sendState <= (iLE == 1'b1) ? sendStateOn : sendStateWait;
-            sendStateOn:        sendState <= sendStateBridge;
-            sendStateBridge:    sendState <= (iLE == 1'b0) ? sendStateWait : sendStateBridge;
-            default:            sendState <= sendStateWait;
+        case (send_state)
+            SEND_STATE_WAIT:    send_state <= (iLE == 1'b1) ? SEND_STATE_ON : SEND_STATE_WAIT;
+            SEND_STATE_ON:      send_state <= SEND_STATE_BRIDGE;
+            SEND_STATE_BRIDGE:  send_state <= (iLE == 1'b0) ? SEND_STATE_WAIT : SEND_STATE_BRIDGE;
+            default:            send_state <= SEND_STATE_WAIT;
         endcase
     end
 end
@@ -221,10 +216,10 @@ end
 // Rp更新モードの時だけレジスタの値を変更する
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
-        initCmdRp <= 5'd0;
-    end else if (sendState == sendStateOn) begin
-        if (initCmdRp != initCmdMax) begin
-            initCmdRp <= initCmdRp + 5'd1;
+        init_cmd_rp <= 5'd0;
+    end else if (send_state == SEND_STATE_ON) begin
+        if (init_cmd_rp != INIT_CMDMAX) begin
+            init_cmd_rp <= init_cmd_rp + 5'd1;
         end
     end
 end
@@ -232,12 +227,12 @@ end
 // 書き込み配列のrp更新
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
-        writeCmdRp <= 4'd0;
-    end else if (sendState == sendStateOn && initCmdRp == initCmdMax) begin
-        if (writeCmdRp == writeCmdMax) begin
-            writeCmdRp <= 4'd0;
+        write_cmd_rp <= 4'd0;
+    end else if (send_state == SEND_STATE_ON && init_cmd_rp == INIT_CMDMAX) begin
+        if (write_cmd_rp == WRITE_CMDMAX) begin
+            write_cmd_rp <= 4'd0;
         end else begin
-            writeCmdRp <= writeCmdRp + 4'd1;
+            write_cmd_rp <= write_cmd_rp + 4'd1;
         end
     end
 end
@@ -247,18 +242,18 @@ always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         o_oledcv <= 1'd0;
     end else begin
-        o_oledcv <= (initCmdRp == initCmdMax && writeCmdRp == writeCmdMax) ? 1'b1 : 1'b0;
+        o_oledcv <= (init_cmd_rp == INIT_CMDMAX && write_cmd_rp == WRITE_CMDMAX) ? 1'b1 : 1'b0;
     end
 end
 
 // 送信データの制御
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
-        sendbyte <= 8'd0;
-    end else if (initCmdRp != initCmdMax) begin
-        sendbyte <= oledCmdBuff[initCmdRp];
+        sendbyte <= oled_init_rom[init_cmd_rp];
+    end else if (init_cmd_rp != INIT_CMDMAX) begin
+        sendbyte <= oled_init_rom[init_cmd_rp];
     end else begin
-        sendbyte <= oledWriteBuff[writeCmdRp];
+        sendbyte <= oled_cmd_rom[write_cmd_rp];
     end
 end
 
