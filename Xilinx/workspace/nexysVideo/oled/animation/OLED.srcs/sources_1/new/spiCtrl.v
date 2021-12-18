@@ -18,25 +18,31 @@ module spiCtrl
 
     // system spi
     input           iEnable,    // 0. disconnect 1. active
-    input  [7:0]    iSnedByte,
-    output          sendValid,
+    input  [7:0]    iSendByte,
+    output          oSendValid,
     output          oOledScl,
     output          oOledSda
 );
 
 // シリアルデータ制御信号
-reg oled_scl;       assign oOledScl  = oled_scl;
-reg oled_sda;       assign oOledSda  = oled_sda;
-reg send_valid;     assign sendValid = send_valid;
+reg oled_scl;       assign oOledScl   = oled_scl;
+reg oled_sda;       assign oOledSda   = oled_sda;
+reg send_valid;     assign oSendValid = send_valid;
 
 
 //----------------------------------------------------------
 // scl発生用に関するパラメータリスト
 //----------------------------------------------------------
 localparam ENABLE_CNT = SCK_SPEED - 1;
-
 reg enable_cnt[15:0];   // sck発生分周カウンター とりあえず65536分周可能
 wire clk_enable;        // パラメータの値カウント時の発生enable信号
+
+
+//----------------------------------------------------------
+// spi通信の信号管理
+//----------------------------------------------------------
+reg [7:0] send_byte;    // 送信データ受信レジスタ
+reg [3:0] sck_cnt;      // sckの立上り回数をカウント 最大8カウント
 
 
 //----------------------------------------------------------
@@ -58,10 +64,6 @@ assign clk_enable = (ENABLE_CNT == enable_cnt) ? 1'b1 : 1'b0;
 //----------------------------------------------------------
 // spi通信の信号管理
 //----------------------------------------------------------
-reg [7:0] send_byte;    // 送信データ受信レジスタ
-reg [3:0] sck_cnt;      // sckの立上り回数をカウント 最大8カウント
-
-
 // sckの立上り回数をカウント
 // 1byte送信時にHIGH
 always @(posedge iCLK) begin
