@@ -50,7 +50,7 @@ oledRp #(
     .oAddrInit(init_addr),
     .oAddrCmd(cmd_addr),
     .oInitEnable(init_enable),
-    .oCmdEnable(cmd_enable),
+    .oCmdEnable(cmd_enable)
 );
 
 oledInit #(
