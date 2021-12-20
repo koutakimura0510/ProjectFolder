@@ -11,7 +11,12 @@
  * input output端子は小文字・大文字を組み合わせたものを
  */
 module top
-(
+#(
+    parameter PDIVCLK       = 100000,
+    parameter PDIVSCK       = 250,
+    parameter DISPLAY_WIDTH = 128,
+    parameter DISPLAY_PAGE  = 4
+)(
     // system clk, rst sw
     input           iCLK,
     input           iRST,
@@ -21,18 +26,46 @@ module top
     input           iBtnD,
     input           iBtnU,
 
-    // system led
-    output [7:0]    oLED,
-
     // system oled
-    output          oOledDC,
-    output          oOledRes,
     output          oOledScl,
     output          oOledSda,
+    output          oOledDC,
+    output          oOledRes,
     output          oOledVbat,
-    output          oOledVdd
+    output          oOledVdd,
+
+    // system led
+    output [7:0]    oLED
 );
 
-assign oLED = 8'haa;
+assign rst = ~iRST;
+wire [1:0] oled_state;
+reg  [7:0] led;         assign oLED = led;
+
+always @(posedge iCLK) begin
+    if (rst == 1'b1) begin
+        led <= 8'hff;
+    end else begin
+        led <= {6'd0, oled_state};
+    end
+end
+
+oledTop #(
+    .PDIVCLK(PDIVCLK),
+    .PDIVSCK(PDIVSCK),
+    .DISPLAY_WIDTH(DISPLAY_WIDTH),
+    .DISPLAY_PAGE(DISPLAY_PAGE)
+) OLED_TOP (
+    .iCLK(iCLK),
+    .iRST(rst),
+    .oOledScl(oOledScl),
+    .oOledSda(oOledSda),
+    .oOledDC(oOledDC),
+    .oOledRes(oOledRes),
+    .oOledVbat(oOledVbat),
+    .oOledVdd(oOledVdd),
+    .oSetEnable(oled_state)
+);
+
 
 endmodule

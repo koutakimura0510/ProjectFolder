@@ -13,16 +13,18 @@ parameter ADDR_WIDTH = 17       // 初期化Romサイズ
 )(
 input 			iCLK,		    // System Clock
 input [4:0]     iAddr,          // バッファ参照アドレス
-output          oData           // 出力データ
+output [7:0]    oData           // 出力データ
 );
+
+reg [7:0] odata;        assign oData = odata;
 
 //----------------------------------------------------------
 // oled初期化コマンドリスト
 //----------------------------------------------------------
 localparam [7:0]
-    SCAN_DIRECTION      = 8'hC0,	    // 反転表示コマンド、通常だと上下が逆のため設定
+    SCAN_DIRECTION      = 8'hC8,	    // 反転表示コマンド、通常だと上下が逆のため設定
     SET_COM_PIN         = 8'hda,	    // hardware config
-    PIN_HARD            = 8'h12,	    // 0だと間隔が広がる
+    PIN_HARD            = 8'h00,	    // 0だと間隔が広がる
     CONTRAST_SET        = 8'h81,        // 明るさ調整
     CONTRAST_VALUE      = 8'hff,	    // 最大255
     CHARGE_PUMP         = 8'h8d,        // 電圧設定
@@ -41,7 +43,7 @@ localparam [7:0]
 localparam LENGTH = 2**ADDR_WIDTH;
 
 // 初期設定コマンド配列
-reg [7:0] oled_init_rom [LENGTH-1:0];
+(* ram_style = "BLOCK" *) reg [7:0] oled_init_rom [LENGTH-1:0];
 
 initial begin
     oled_init_rom[ 0] = DISPLAY_OFF;
@@ -64,7 +66,7 @@ initial begin
 end
 
 always @(posedge iCLK) begin
-    oData <= oled_init_rom[iAddr];
+    odata <= oled_init_rom[iAddr];
 end
 
 endmodule

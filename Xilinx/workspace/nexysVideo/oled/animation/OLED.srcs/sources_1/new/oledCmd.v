@@ -13,8 +13,10 @@ parameter ADDR_WIDTH = 9        // 初期化Romサイズ
 )(
 input 			iCLK,		    // System Clock
 input [3:0]     iAddr,          // バッファ参照アドレス
-output          oData           // 出力データ
+output [7:0]    oData           // 出力データ
 );
+
+reg [7:0] odata;    assign oData = odata;
 
 //----------------------------------------------------------
 // oled書き込み座標更新リスト
@@ -26,14 +28,14 @@ localparam [7:0]
     COLUMN_START        = 8'h00,        // 横ラインの書き込み開始座標
     COLUMN_END          = 8'h7f,        // 横ラインの書き込み終了座標
     PAGE_ADDRESS        = 8'h22,        // 書き込みページ操作レジスタのアドレス
-    PAGE_START          = 8'h00,        // 縦ラインの0~7開始ページ
-    PAGE_END            = 8'h07,        // 縦ラインの0~7終了ページ
+    PAGE_START          = 8'h00,        // 縦ラインの0~3開始ページ
+    PAGE_END            = 8'h03,        // 縦ラインの0~3終了ページ
     DUMMY               = 8'h00;        // ダミーデータ
 
 localparam LENGTH = 2**ADDR_WIDTH;
 
 // 初期設定コマンド配列
-reg [7:0] oled_cmd_rom [LENGTH-1:0];
+(* ram_style = "BLOCK" *) reg [7:0] oled_cmd_rom [LENGTH-1:0];
 
 initial begin
     oled_cmd_rom[0] = MEMORY_MODE;
@@ -48,7 +50,7 @@ initial begin
 end
 
 always @(posedge iCLK) begin
-    oData <= oled_cmd_rom[iAddr];
+    odata <= oled_cmd_rom[iAddr];
 end
 
 endmodule
