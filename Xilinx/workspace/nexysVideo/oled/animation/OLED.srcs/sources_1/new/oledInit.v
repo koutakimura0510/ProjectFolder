@@ -22,13 +22,13 @@ reg [7:0] odata;        assign oData = odata;
 // oled初期化コマンドリスト
 //----------------------------------------------------------
 localparam [7:0]
-    SCAN_DIRECTION      = 8'hC8,	    // 反転表示コマンド、通常だと上下が逆のため設定
+    SCAN_DIRECTION      = 8'hC0,	    // 画面の上下の向き設定 c0 通常描画 / c8反転描画
     SET_COM_PIN         = 8'hda,	    // hardware config
-    PIN_HARD            = 8'h00,	    // 0だと間隔が広がる
+    PIN_HARD            = 8'h12,	    // 描画の間隔
     CONTRAST_SET        = 8'h81,        // 明るさ調整
     CONTRAST_VALUE      = 8'hff,	    // 最大255
     CHARGE_PUMP         = 8'h8d,        // 電圧設定
-    SER_SEGMENT_REMAP   = 8'ha1,        // remap情報の設定
+    SER_SEGMENT_REMAP   = 8'ha0,        // 描画の方向設定 a0左->右 / a1右->左
     ENABLE_CHARGE_PUMP  = 8'h14,        // チャージポンプの設定
     DISPLAY_OFF         = 8'hae,        // 表示停止
     DISPLAY_ON          = 8'haf,        // 表示開始

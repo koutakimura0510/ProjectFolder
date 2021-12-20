@@ -22,14 +22,14 @@ reg [7:0] odata;    assign oData = odata;
 // oled書き込み座標更新リスト
 //----------------------------------------------------------
 localparam [7:0]
-    MEMORY_MODE         = 8'h20,        // メモリー操作モード
-    HORIZONTAL_MODE     = 8'h00,        // 横画面操作モード
+    MEMORY_MODE         = 8'h20,        // 描画時の一更新方法設定
+    HORIZONTAL_MODE     = 8'h00,        // 描画時アドレス自動更新モード,0地点からページ末端まで自動インクリメントする
     COLUMN_ADDRESS      = 8'h21,        // 書き込み座標操作レジスタのアドレス
     COLUMN_START        = 8'h00,        // 横ラインの書き込み開始座標
     COLUMN_END          = 8'h7f,        // 横ラインの書き込み終了座標
     PAGE_ADDRESS        = 8'h22,        // 書き込みページ操作レジスタのアドレス
     PAGE_START          = 8'h00,        // 縦ラインの0~3開始ページ
-    PAGE_END            = 8'h03,        // 縦ラインの0~3終了ページ
+    PAGE_END            = 8'h07,        // 縦ラインの0~3終了ページ
     DUMMY               = 8'h00;        // ダミーデータ
 
 localparam LENGTH = 2**ADDR_WIDTH;

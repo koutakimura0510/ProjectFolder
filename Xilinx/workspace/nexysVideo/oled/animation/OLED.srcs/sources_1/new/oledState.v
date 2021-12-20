@@ -32,15 +32,14 @@ module oledState
     output          oDrawEnable,
     output          oSpiStart,      // spi送信開始時High
 
-    // oled制御信号
-    output          oOledDC,
+    // oled初期時制御信号
     output          oOledRes,
     output          oOledVbat,
     output          oOledVdd
 );
 
 // localparam WIDTH = (DISPLAY_WIDTH - 1);
-localparam DISPLAY_SIZE = ((DISPLAY_WIDTH * DISPLAY_PAGE)  - 1);
+localparam DISPLAY_SIZE = ((DISPLAY_WIDTH * DISPLAY_PAGE) - 1);
 
 
 //----------------------------------------------------------
@@ -49,7 +48,6 @@ localparam DISPLAY_SIZE = ((DISPLAY_WIDTH * DISPLAY_PAGE)  - 1);
 reg [7:0] senddata;     assign oSendData    = senddata;
 reg spi_start  = 0;     assign oSpiStart    = spi_start;
 reg draw_start = 0;     assign oDrawEnable  = draw_start;
-reg oled_dc    = 0;     assign oOledDC      = oled_dc;
 reg oled_res   = 1;     assign oOledRes     = oled_res;
 reg oled_vbat  = 1;     assign oOledVbat    = oled_vbat;
 reg oled_vdd   = 1;     assign oOledVdd     = oled_vdd;
@@ -57,41 +55,41 @@ reg oled_vdd   = 1;     assign oOledVdd     = oled_vdd;
 //----------------------------------------------------------
 // 制御信号ステートマシン
 //----------------------------------------------------------
-localparam [2:0]
+localparam
     VDD_ON      = 0,
     DISP_OFF    = 1,
     RES_ON      = 2,
     RES_OFF     = 3,
     VBAT_SEND   = 4,
     VBAT_ON     = 5,
-    DISP_ON     = 6;
+    DISP_ON     = 6,
+    WAIT        = 7;
 
 reg [2:0] oled_state = VDD_ON;
 
 //----------------------------------------------------------
 // 送信データステートマシン
 //----------------------------------------------------------
-localparam [2:0]
+localparam
     IDLE = 0,
     INIT = 1,
     CMD  = 2,
-    WAIT = 3,
-    DISP = 4;
+    DISP = 3,
+    CLEAR = 4;
 
-reg [2:0] state = IDLE;
+reg [3:0] state = IDLE;
 
 
 //----------------------------------------------------------
 // 開始ページからの送信回数をカウント
 //----------------------------------------------------------
-reg [9:0] send_count;
+reg [10:0] send_count;
 
 
 //----------------------------------------------------------
 // D/C portのHighLow切り替え時間計測
 //----------------------------------------------------------
 reg [8:0] wait_time;
-reg [3:0] wait_count;
 
 
 //----------------------------------------------------------
@@ -164,6 +162,7 @@ always @(posedge iCLK) begin
                 if (iWaitEnable == 1'b1) begin
                     if (wait_time == 9'd300) begin
                         spi_start  <= 1'b1;
+                        wait_time  <= 0;
                         oled_state <= DISP_ON;
                     end else begin
                         wait_time  <= wait_time + 1'b1;
@@ -173,7 +172,25 @@ always @(posedge iCLK) begin
             end
 
             DISP_ON:  begin
-                spi_start  <= (state == WAIT && iSpiValid == 1'b1) ? 1'b0 : 1'b1;
+                if (iSpiValid == 1'b1 && iInitEnable == 1'b1) begin
+                    spi_start <= 1'b0;
+                    oled_state <= WAIT;
+                end else begin
+                    spi_start <= 1'b1;
+                    oled_state <= DISP_ON;
+                end
+            end
+
+            WAIT: begin
+                if (iWaitEnable == 1'b1) begin
+                    if (wait_time == 9'd10) begin
+                        wait_time  <= 0;
+                        oled_state <= DISP_ON;
+                    end else begin
+                        wait_time  <= wait_time + 1'b1;
+                        oled_state <= WAIT;
+                    end
+                end
             end
 
             default:  begin
@@ -192,8 +209,6 @@ always @(posedge iCLK) begin
         state       <= IDLE;
         senddata    <= iInitData;
         send_count  <= 0;
-        wait_count  <= 0;
-        oled_dc     <= 0;
     end else begin
         case (state)
             IDLE: begin
@@ -209,7 +224,7 @@ always @(posedge iCLK) begin
 
             CMD: begin
                 if (iCmdEnable == 1'b1) begin
-                    state      <= WAIT;
+                    state      <= DISP;
                     senddata   <= iDispData;
                     draw_start <= 1'b1;
                 end else begin
@@ -219,34 +234,35 @@ always @(posedge iCLK) begin
                 end
             end
 
-            WAIT: begin
-                if (wait_count == 4'd15) begin
-                    if (draw_start == 1'b1) begin
-                        state <= DISP;
-                        oled_dc <= 1'b1;
-                    end else begin
-                        state <= CMD;
-                        oled_dc <= 1'b0;
-                    end
-                    wait_count <= 0;
-                end else begin
-                    wait_count <= wait_count + 1'b1;
-                end
-            end
-
             DISP: begin
                 if (DISPLAY_SIZE == send_count) begin
                     if (iSpiValid == 1'b1) begin
-                        state      <= WAIT;
+                        state      <= CLEAR;
                         send_count <= 0;
-                        draw_start <= 1'b0;
+                        // draw_start <= 1'b0;
                     end
                     senddata   <= iCmdData;
                 end else begin
                     if (iSpiValid == 1'b1) begin
-                        send_count <= send_count + 10'd1;
+                        send_count <= send_count + 1'b1;
                     end
                     senddata  <= iDispData;
+                end
+            end
+
+            CLEAR: begin
+                if (DISPLAY_SIZE == send_count) begin
+                    if (iSpiValid == 1'b1) begin
+                        state      <= DISP;
+                        send_count <= 0;
+                        // draw_start <= 1'b0;
+                    end
+                    senddata   <= iCmdData;
+                end else begin
+                    if (iSpiValid == 1'b1) begin
+                        send_count <= send_count + 1'b1;
+                    end
+                    senddata  <= 0;
                 end
             end
 

@@ -17,11 +17,13 @@ module spiCtrl
 
     // system spi
     input           iEnable,        // 0. disconnect 1. active
+    input           iDrawStart,     // 0. cmd send   1. data send
     input  [7:0]    iSendByte,
     output          oAddrValid,     // romのアドレス更新信号
     output          oSpiValid,      // データ送信完了時High
     output          oOledScl,
-    output          oOledSda
+    output          oOledSda,
+    output          oOledDC
 );
 
 // シリアルデータ制御信号
@@ -29,6 +31,7 @@ reg oled_scl;       assign oOledScl   = oled_scl;
 reg oled_sda;       assign oOledSda   = oled_sda;
 reg spi_valid;      assign oSpiValid  = spi_valid;
 reg addr_valid;     assign oAddrValid = addr_valid;
+reg oled_dc = 0;    assign oOledDC    = oled_dc;
 
 
 //----------------------------------------------------------
@@ -45,11 +48,12 @@ localparam [2:0]
     IDLE = 0,
     HOLD = 1;
 
-localparam HOLD_TIME = 4;
+localparam HOLD_TIME_SDA = 10;
+localparam HOLD_TIME_DC  = 16;
 
 reg [7:0] send_byte;     // 送信データ受信レジスタ
 reg [3:0] sck_cnt;       // sckの立上り回数をカウント 最大8カウント
-reg [2:0] hold_time;     // sda hold
+reg [5:0] hold_time;     // sda hold
 reg [1:0] hold_state = IDLE;
 
 
@@ -145,7 +149,7 @@ always @(posedge iCLK) begin
             end
 
             HOLD: begin
-                if (hold_time == HOLD_TIME) begin
+                if (hold_time == HOLD_TIME_DC) begin
                     hold_time <= 0;
                     hold_state <= IDLE;
                 end else begin
@@ -162,6 +166,14 @@ always @(posedge iCLK) begin
     end
 end
 
+always @(posedge iCLK) begin
+    if (iRST == 1'b1) begin
+        oled_dc <= 1'b0;
+    end else if (hold_time == HOLD_TIME_DC && sck_cnt == 0) begin
+        oled_dc <= iDrawStart;
+    end
+end
+
 // 送信バイトデータの取り込み
 // 1bitずつ送信するため、sck_cntの開始時に新規データで上書きする
 always @(posedge iCLK) begin
@@ -169,7 +181,7 @@ always @(posedge iCLK) begin
         send_byte <= iSendByte;
     end else if (iEnable == 1'b0 || spi_valid == 1'b1) begin
         send_byte <= iSendByte;
-    end else if (hold_time == HOLD_TIME) begin
+    end else if (hold_time == HOLD_TIME_SDA) begin
         send_byte <= {send_byte[6:0], 1'b1};
     end
 end
@@ -181,7 +193,7 @@ always @(posedge iCLK) begin
         oled_sda <= send_byte[7];
     end else if (iEnable == 1'b0) begin
         oled_sda <= send_byte[7];
-    end else if (hold_time == HOLD_TIME) begin
+    end else if (hold_time == HOLD_TIME_SDA) begin
         oled_sda <= send_byte[7];
     end
 end

@@ -26,10 +26,10 @@ wire    vdd;
 wire [7:0] led;
 
 top #(
-    .PDIVCLK(20),
-    .PDIVSCK(10),
+    .PDIVCLK(80),
+    .PDIVSCK(60),
     .DISPLAY_WIDTH(10),
-    .DISPLAY_PAGE(1)
+    .DISPLAY_PAGE(2)
 ) TOP (
     .iCLK(iCLK),
     .iRST(iRST),

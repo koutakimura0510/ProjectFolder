@@ -13,9 +13,9 @@
 module top
 #(
     parameter PDIVCLK       = 100000,
-    parameter PDIVSCK       = 250,
+    parameter PDIVSCK       = 125,
     parameter DISPLAY_WIDTH = 128,
-    parameter DISPLAY_PAGE  = 4
+    parameter DISPLAY_PAGE  = 8
 )(
     // system clk, rst sw
     input           iCLK,

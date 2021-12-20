@@ -134,7 +134,6 @@ oledState #(
     .oSendData(senddata),
     .oDrawEnable(draw_start),
     .oSpiStart(spi_start),
-    .oOledDC(oOledDC),
     .oOledRes(oOledRes),
     .oOledVbat(oOledVbat),
     .oOledVdd(oOledVdd)
@@ -150,11 +149,13 @@ spiCtrl #(
     .iCLK(iCLK),
     .iRST(iRST),
     .iEnable(spi_start),
+    .iDrawStart(draw_start),
     .iSendByte(senddata),
     .oAddrValid(addr_ok),
     .oSpiValid(spi_ok),
     .oOledScl(oOledScl),
-    .oOledSda(oOledSda)
+    .oOledSda(oOledSda),
+    .oOledDC(oOledDC)
 );
 
 
