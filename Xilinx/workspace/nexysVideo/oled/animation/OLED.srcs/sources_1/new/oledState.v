@@ -5,31 +5,21 @@
  * Build  Vivado20.2
  * Borad  Nexys Video
  * -
- * oledの送信データ制御
+ * oledの起動シーケンス制御
  */
 module oledState
-#(
-    parameter DISPLAY_WIDTH  = 128, // 横のドット数
-    parameter DISPLAY_PAGE   = 4    // OLEDのページ数
-)
 (
     input 			iCLK,		    // System Clock
     input 			iRST,		    // System Reset
 
     // 状態制御信号
-    input           iInitEnable,    // 初期化完了時High
-    input           iCmdEnable,     // コマンド完了時High
     input           iSpiValid,      // 1byteデータ送信時High
     input           iWaitEnable,    // 遅延Enable信号
 
     // data
     input [7:0]     iInitData,      // 初期化データ
-    input [7:0]     iCmdData,       // コマンドデータ
-    input [7:0]     iDispData,      // 表示データ
-    output [7:0]    oSendData,      // 送信データ
 
     // ディスプレイ描画時High　コマンド送信時Low
-    output          oDrawEnable,
     output          oSpiStart,      // spi送信開始時High
 
     // oled初期時制御信号
@@ -38,19 +28,15 @@ module oledState
     output          oOledVdd
 );
 
-// localparam WIDTH = (DISPLAY_WIDTH - 1);
-localparam DISPLAY_SIZE = ((DISPLAY_WIDTH * DISPLAY_PAGE) - 1);
-
 
 //----------------------------------------------------------
 // 制御データ送信
 //----------------------------------------------------------
-reg [7:0] senddata;     assign oSendData    = senddata;
 reg spi_start  = 0;     assign oSpiStart    = spi_start;
-reg draw_start = 0;     assign oDrawEnable  = draw_start;
 reg oled_res   = 1;     assign oOledRes     = oled_res;
 reg oled_vbat  = 1;     assign oOledVbat    = oled_vbat;
 reg oled_vdd   = 1;     assign oOledVdd     = oled_vdd;
+
 
 //----------------------------------------------------------
 // 制御信号ステートマシン
@@ -62,28 +48,9 @@ localparam
     RES_OFF     = 3,
     VBAT_SEND   = 4,
     VBAT_ON     = 5,
-    DISP_ON     = 6,
-    WAIT        = 7;
+    DISP_ON     = 6;
 
 reg [2:0] oled_state = VDD_ON;
-
-//----------------------------------------------------------
-// 送信データステートマシン
-//----------------------------------------------------------
-localparam
-    IDLE = 0,
-    INIT = 1,
-    CMD  = 2,
-    DISP = 3,
-    CLEAR = 4;
-
-reg [3:0] state = IDLE;
-
-
-//----------------------------------------------------------
-// 開始ページからの送信回数をカウント
-//----------------------------------------------------------
-reg [10:0] send_count;
 
 
 //----------------------------------------------------------
@@ -117,8 +84,8 @@ always @(posedge iCLK) begin
             VDD_ON: begin
                 oled_vdd   <= 1'b0;
                 if (iWaitEnable == 1'b1) begin
-                    oled_state <= DISP_OFF;
                     spi_start  <= 1'b1;
+                    oled_state <= DISP_OFF;
                 end else begin
                     oled_state <= VDD_ON;
                 end
@@ -126,8 +93,8 @@ always @(posedge iCLK) begin
 
             DISP_OFF: begin
                 if (iSpiValid == 1'b1) begin
-                    oled_state <= RES_ON;
                     spi_start  <= 1'b0;
+                    oled_state <= RES_ON;
                 end else begin
                     oled_state <= DISP_OFF;
                 end
@@ -135,14 +102,18 @@ always @(posedge iCLK) begin
 
             RES_ON: begin
                 oled_res   <= 1'b0;
-                oled_state <= (iWaitEnable == 1'b1) ? RES_OFF : RES_ON;
+                if (iWaitEnable == 1'b1) begin
+                    oled_state <= RES_OFF;
+                end else begin
+                    oled_state <= RES_ON;
+                end
             end
 
             RES_OFF: begin
                 oled_res <= 1'b1;
                 if (iWaitEnable == 1'b1) begin
-                    oled_state <= VBAT_SEND;
                     spi_start  <= 1'b1;
+                    oled_state <= VBAT_SEND;
                 end else begin
                     oled_state <= RES_OFF;
                 end
@@ -161,7 +132,6 @@ always @(posedge iCLK) begin
                 oled_vbat <= 1'b0;
                 if (iWaitEnable == 1'b1) begin
                     if (wait_time == 9'd300) begin
-                        spi_start  <= 1'b1;
                         wait_time  <= 0;
                         oled_state <= DISP_ON;
                     end else begin
@@ -172,103 +142,11 @@ always @(posedge iCLK) begin
             end
 
             DISP_ON:  begin
-                if (iSpiValid == 1'b1 && iInitEnable == 1'b1) begin
-                    spi_start <= 1'b0;
-                    oled_state <= WAIT;
-                end else begin
-                    spi_start <= 1'b1;
-                    oled_state <= DISP_ON;
-                end
-            end
-
-            WAIT: begin
-                if (iWaitEnable == 1'b1) begin
-                    if (wait_time == 9'd10) begin
-                        wait_time  <= 0;
-                        oled_state <= DISP_ON;
-                    end else begin
-                        wait_time  <= wait_time + 1'b1;
-                        oled_state <= WAIT;
-                    end
-                end
+                spi_start <= 1'b1;
             end
 
             default:  begin
                 oled_state <= VDD_ON;
-            end
-        endcase
-    end
-end
-
-
-//----------------------------------------------------------
-// 送信データステートマシン
-//----------------------------------------------------------
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
-        state       <= IDLE;
-        senddata    <= iInitData;
-        send_count  <= 0;
-    end else begin
-        case (state)
-            IDLE: begin
-                state    <= INIT;
-                senddata <= iInitData;
-                draw_start <= 1'b0;
-            end
-
-            INIT: begin
-                state    <= (iInitEnable == 1'b1) ? CMD : INIT;
-                senddata <= iInitData;
-            end
-
-            CMD: begin
-                if (iCmdEnable == 1'b1) begin
-                    state      <= DISP;
-                    senddata   <= iDispData;
-                    draw_start <= 1'b1;
-                end else begin
-                    state      <= CMD;
-                    senddata   <= iCmdData;
-                    draw_start <= 1'b0;
-                end
-            end
-
-            DISP: begin
-                if (DISPLAY_SIZE == send_count) begin
-                    if (iSpiValid == 1'b1) begin
-                        state      <= CLEAR;
-                        send_count <= 0;
-                        // draw_start <= 1'b0;
-                    end
-                    senddata   <= iCmdData;
-                end else begin
-                    if (iSpiValid == 1'b1) begin
-                        send_count <= send_count + 1'b1;
-                    end
-                    senddata  <= iDispData;
-                end
-            end
-
-            CLEAR: begin
-                if (DISPLAY_SIZE == send_count) begin
-                    if (iSpiValid == 1'b1) begin
-                        state      <= DISP;
-                        send_count <= 0;
-                        // draw_start <= 1'b0;
-                    end
-                    senddata   <= iCmdData;
-                end else begin
-                    if (iSpiValid == 1'b1) begin
-                        send_count <= send_count + 1'b1;
-                    end
-                    senddata  <= 0;
-                end
-            end
-
-            default: begin
-                state    <= IDLE;
-                senddata <= iInitData;
             end
         endcase
     end

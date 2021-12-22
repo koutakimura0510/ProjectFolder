@@ -2,8 +2,8 @@
 # Vivado v2020.2 (64-bit)
 # SW Build 3064766 on Wed Nov 18 09:12:47 MST 2020
 # IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
-# Start of session at: Mon Dec 20 21:18:28 2021
-# Process ID: 451566
+# Start of session at: Wed Dec 22 19:50:27 2021
+# Process ID: 243698
 # Current directory: /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.runs/synth_1
 # Command line: vivado -log top.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source top.tcl
 # Log file: /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.runs/synth_1/top.vds
@@ -17,20 +17,20 @@ INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a200
 INFO: [Device 21-403] Loading part xc7a200tsbg484-1
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 451584
+INFO: [Synth 8-7075] Helper process launched with PID 243715
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 2392.840 ; gain = 0.000 ; free physical = 20245 ; free virtual = 26309
+Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 2392.840 ; gain = 0.000 ; free physical = 19313 ; free virtual = 25556
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-6157] synthesizing module 'top' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/top.v:13]
 	Parameter PDIVCLK bound to: 100000 - type: integer 
 	Parameter PDIVSCK bound to: 125 - type: integer 
 	Parameter DISPLAY_WIDTH bound to: 128 - type: integer 
-	Parameter DISPLAY_PAGE bound to: 8 - type: integer 
+	Parameter DISPLAY_HEIGHT bound to: 4 - type: integer 
 INFO: [Synth 8-6157] synthesizing module 'oledTop' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledTop.v:10]
 	Parameter PDIVCLK bound to: 100000 - type: integer 
 	Parameter PDIVSCK bound to: 125 - type: integer 
 	Parameter DISPLAY_WIDTH bound to: 128 - type: integer 
-	Parameter DISPLAY_PAGE bound to: 8 - type: integer 
+	Parameter DISPLAY_HEIGHT bound to: 4 - type: integer 
 	Parameter INIT_CMDMAX bound to: 17 - type: integer 
 	Parameter WRITE_CMDMAX bound to: 9 - type: integer 
 INFO: [Synth 8-6157] synthesizing module 'oledRp' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledRp.v:10]
@@ -43,7 +43,7 @@ INFO: [Synth 8-6157] synthesizing module 'oledInit' [/home/koutakimura/workspace
 	Parameter ADDR_WIDTH bound to: 17 - type: integer 
 	Parameter SCAN_DIRECTION bound to: 8'b11000000 
 	Parameter SET_COM_PIN bound to: 8'b11011010 
-	Parameter PIN_HARD bound to: 8'b00010010 
+	Parameter PIN_HARD bound to: 8'b00000000 
 	Parameter CONTRAST_SET bound to: 8'b10000001 
 	Parameter CONTRAST_VALUE bound to: 8'b11111111 
 	Parameter CHARGE_PUMP bound to: 8'b10001101 
@@ -62,6 +62,7 @@ INFO: [Synth 8-6157] synthesizing module 'oledInit' [/home/koutakimura/workspace
 INFO: [Synth 8-6155] done synthesizing module 'oledInit' (2#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledInit.v:10]
 INFO: [Synth 8-6157] synthesizing module 'oledCmd' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledCmd.v:10]
 	Parameter ADDR_WIDTH bound to: 9 - type: integer 
+	Parameter PAGE bound to: 3 - type: integer 
 	Parameter MEMORY_MODE bound to: 8'b00100000 
 	Parameter HORIZONTAL_MODE bound to: 8'b00000000 
 	Parameter COLUMN_ADDRESS bound to: 8'b00100001 
@@ -69,18 +70,34 @@ INFO: [Synth 8-6157] synthesizing module 'oledCmd' [/home/koutakimura/workspace/
 	Parameter COLUMN_END bound to: 8'b01111111 
 	Parameter PAGE_ADDRESS bound to: 8'b00100010 
 	Parameter PAGE_START bound to: 8'b00000000 
-	Parameter PAGE_END bound to: 8'b00000111 
+	Parameter PAGE_END bound to: 3 - type: integer 
 	Parameter DUMMY bound to: 8'b00000000 
 	Parameter LENGTH bound to: 512 - type: integer 
 INFO: [Synth 8-6155] done synthesizing module 'oledCmd' (3#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledCmd.v:10]
+INFO: [Synth 8-6157] synthesizing module 'oledDisp' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledDisp.v:10]
+	Parameter DISPLAY_WIDTH bound to: 128 - type: integer 
+	Parameter DISPLAY_HEIGHT bound to: 4 - type: integer 
+	Parameter STR1 bound to:   OLED.Project   - type: string 
+	Parameter str1len bound to: 16 - type: integer 
+	Parameter STR2 bound to:  Author  Kimura  - type: string 
+	Parameter str2len bound to: 16 - type: integer 
+	Parameter STR3 bound to:  -~-~-~-~-~-~-~  - type: string 
+	Parameter str3len bound to: 16 - type: integer 
+	Parameter STR4 bound to:  2021 - 12 - 22  - type: string 
+	Parameter str4len bound to: 16 - type: integer 
+	Parameter DATA_WIDTH bound to: 8 - type: integer 
+	Parameter ADDR_WIDTH bound to: 1024 - type: integer 
+	Parameter FILENAME bound to: charLib.dat - type: string 
+	Parameter DISP_SIZE bound to: 512 - type: integer 
+	Parameter DISP_LEN bound to: 511 - type: integer 
+INFO: [Synth 8-3876] $readmem data file 'charLib.dat' is read successfully [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledDisp.v:55]
+INFO: [Synth 8-226] default block is never used [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledDisp.v:117]
+INFO: [Synth 8-6155] done synthesizing module 'oledDisp' (4#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledDisp.v:10]
 INFO: [Synth 8-6157] synthesizing module 'oledTime' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledTime.v:10]
 	Parameter PDIVCLK bound to: 100000 - type: integer 
 	Parameter COUNT_ORDER bound to: 99999 - type: integer 
-INFO: [Synth 8-6155] done synthesizing module 'oledTime' (4#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledTime.v:10]
+INFO: [Synth 8-6155] done synthesizing module 'oledTime' (5#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledTime.v:10]
 INFO: [Synth 8-6157] synthesizing module 'oledState' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledState.v:10]
-	Parameter DISPLAY_WIDTH bound to: 128 - type: integer 
-	Parameter DISPLAY_PAGE bound to: 8 - type: integer 
-	Parameter DISPLAY_SIZE bound to: 1023 - type: integer 
 	Parameter VDD_ON bound to: 0 - type: integer 
 	Parameter DISP_OFF bound to: 1 - type: integer 
 	Parameter RES_ON bound to: 2 - type: integer 
@@ -88,14 +105,9 @@ INFO: [Synth 8-6157] synthesizing module 'oledState' [/home/koutakimura/workspac
 	Parameter VBAT_SEND bound to: 4 - type: integer 
 	Parameter VBAT_ON bound to: 5 - type: integer 
 	Parameter DISP_ON bound to: 6 - type: integer 
-	Parameter WAIT bound to: 7 - type: integer 
-	Parameter IDLE bound to: 0 - type: integer 
-	Parameter INIT bound to: 32'sb00000000000000000000000000000001 
-	Parameter CMD bound to: 2 - type: integer 
-	Parameter DISP bound to: 3 - type: integer 
-	Parameter CLEAR bound to: 4 - type: integer 
-INFO: [Synth 8-226] default block is never used [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledState.v:116]
-INFO: [Synth 8-6155] done synthesizing module 'oledState' (5#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledState.v:10]
+INFO: [Synth 8-6155] done synthesizing module 'oledState' (6#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledState.v:10]
+INFO: [Synth 8-6157] synthesizing module 'oledSend' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledSend.v:10]
+INFO: [Synth 8-6155] done synthesizing module 'oledSend' (7#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledSend.v:10]
 INFO: [Synth 8-6157] synthesizing module 'spiCtrl' [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/spiCtrl.v:10]
 	Parameter PDIVSCK bound to: 125 - type: integer 
 	Parameter ENABLE_CNT bound to: 124 - type: integer 
@@ -103,22 +115,22 @@ INFO: [Synth 8-6157] synthesizing module 'spiCtrl' [/home/koutakimura/workspace/
 	Parameter HOLD bound to: 3'b001 
 	Parameter HOLD_TIME_SDA bound to: 10 - type: integer 
 	Parameter HOLD_TIME_DC bound to: 16 - type: integer 
-INFO: [Synth 8-6155] done synthesizing module 'spiCtrl' (6#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/spiCtrl.v:10]
-INFO: [Synth 8-6155] done synthesizing module 'oledTop' (7#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledTop.v:10]
-INFO: [Synth 8-6155] done synthesizing module 'top' (8#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/top.v:13]
+INFO: [Synth 8-6155] done synthesizing module 'spiCtrl' (8#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/spiCtrl.v:10]
+INFO: [Synth 8-6155] done synthesizing module 'oledTop' (9#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledTop.v:10]
+INFO: [Synth 8-6155] done synthesizing module 'top' (10#1) [/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/top.v:13]
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 2392.840 ; gain = 0.000 ; free physical = 21012 ; free virtual = 27078
+Finished RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 2392.840 ; gain = 0.000 ; free physical = 20065 ; free virtual = 26309
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 2392.840 ; gain = 0.000 ; free physical = 21014 ; free virtual = 27080
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 2392.840 ; gain = 0.000 ; free physical = 20095 ; free virtual = 26339
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 2392.840 ; gain = 0.000 ; free physical = 21013 ; free virtual = 27078
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 2392.840 ; gain = 0.000 ; free physical = 20095 ; free virtual = 26339
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2392.840 ; gain = 0.000 ; free physical = 20999 ; free virtual = 27064
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2392.840 ; gain = 0.000 ; free physical = 20088 ; free virtual = 26332
 INFO: [Project 1-570] Preparing netlist for logic optimization
 
 Processing XDC Constraints
@@ -129,51 +141,39 @@ INFO: [Project 1-236] Implementation specific constraints were found while readi
 Resolution: To avoid this warning, move constraints listed in [.Xil/top_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2557.453 ; gain = 0.000 ; free physical = 20922 ; free virtual = 26987
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2555.391 ; gain = 0.000 ; free physical = 20000 ; free virtual = 26243
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2557.453 ; gain = 0.000 ; free physical = 20922 ; free virtual = 26987
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2555.391 ; gain = 0.000 ; free physical = 20000 ; free virtual = 26243
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 2557.453 ; gain = 164.613 ; free physical = 20995 ; free virtual = 27056
+Finished Constraint Validation : Time (s): cpu = 00:00:07 ; elapsed = 00:00:09 . Memory (MB): peak = 2555.391 ; gain = 162.551 ; free physical = 20070 ; free virtual = 26313
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
 ---------------------------------------------------------------------------------
 Loading part: xc7a200tsbg484-1
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 2557.453 ; gain = 164.613 ; free physical = 20995 ; free virtual = 27056
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:07 ; elapsed = 00:00:09 . Memory (MB): peak = 2555.391 ; gain = 162.551 ; free physical = 20070 ; free virtual = 26313
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 2557.453 ; gain = 164.613 ; free physical = 20995 ; free virtual = 27056
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:07 ; elapsed = 00:00:09 . Memory (MB): peak = 2555.391 ; gain = 162.551 ; free physical = 20070 ; free virtual = 26313
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-802] inferred FSM for state register 'oled_state_reg' in module 'oledState'
-INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'oledState'
 INFO: [Synth 8-802] inferred FSM for state register 'hold_state_reg' in module 'spiCtrl'
 ---------------------------------------------------------------------------------------------------
                    State |                     New Encoding |                Previous Encoding 
 ---------------------------------------------------------------------------------------------------
-                    IDLE |                              000 |                             0000
-                    INIT |                              001 |                             0001
-                     CMD |                              010 |                             0010
-                    DISP |                              011 |                             0011
-                   CLEAR |                              100 |                             0100
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'state_reg' using encoding 'sequential' in module 'oledState'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                  VDD_ON |                         00000001 |                              000
-                DISP_OFF |                         00000010 |                              001
-                  RES_ON |                         00000100 |                              010
-                 RES_OFF |                         00001000 |                              011
-               VBAT_SEND |                         00010000 |                              100
-                 VBAT_ON |                         00100000 |                              101
-                 DISP_ON |                         01000000 |                              110
-                    WAIT |                         10000000 |                              111
+                  VDD_ON |                          0000001 |                              000
+                DISP_OFF |                          0000010 |                              001
+                  RES_ON |                          0000100 |                              010
+                 RES_OFF |                          0001000 |                              011
+               VBAT_SEND |                          0010000 |                              100
+                 VBAT_ON |                          0100000 |                              101
+                 DISP_ON |                          1000000 |                              110
 ---------------------------------------------------------------------------------------------------
 INFO: [Synth 8-3354] encoded FSM with state register 'oled_state_reg' using encoding 'one-hot' in module 'oledState'
 ---------------------------------------------------------------------------------------------------
@@ -184,43 +184,48 @@ INFO: [Synth 8-3354] encoded FSM with state register 'oled_state_reg' using enco
 ---------------------------------------------------------------------------------------------------
 INFO: [Synth 8-3354] encoded FSM with state register 'hold_state_reg' using encoding 'sequential' in module 'spiCtrl'
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 2557.453 ; gain = 164.613 ; free physical = 20985 ; free virtual = 27048
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 2555.391 ; gain = 162.551 ; free physical = 20060 ; free virtual = 26305
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start RTL Component Statistics 
 ---------------------------------------------------------------------------------
 Detailed RTL Component Info : 
 +---Adders : 
-	   2 Input   11 Bit       Adders := 1     
+	   2 Input   10 Bit       Adders := 2     
 	   2 Input    9 Bit       Adders := 1     
 	   2 Input    6 Bit       Adders := 1     
 	   2 Input    5 Bit       Adders := 1     
-	   2 Input    4 Bit       Adders := 2     
+	   2 Input    4 Bit       Adders := 3     
+	   2 Input    3 Bit       Adders := 1     
+	   2 Input    2 Bit       Adders := 1     
 +---Registers : 
-	               11 Bit    Registers := 1     
+	               10 Bit    Registers := 1     
 	                9 Bit    Registers := 1     
-	                8 Bit    Registers := 5     
+	                8 Bit    Registers := 6     
 	                6 Bit    Registers := 1     
 	                5 Bit    Registers := 1     
-	                4 Bit    Registers := 2     
-	                1 Bit    Registers := 10    
+	                4 Bit    Registers := 3     
+	                3 Bit    Registers := 1     
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 9     
++---RAMs : 
+	               4K Bit	(512 X 8 bit)          RAMs := 1     
 +---ROMs : 
 	                    ROMs := 2     
 +---Muxes : 
-	   2 Input   11 Bit        Muxes := 1     
-	   2 Input    9 Bit        Muxes := 2     
-	   8 Input    9 Bit        Muxes := 1     
-	   2 Input    8 Bit        Muxes := 14    
-	   5 Input    8 Bit        Muxes := 1     
-	   8 Input    8 Bit        Muxes := 1     
+	   4 Input   10 Bit        Muxes := 1     
+	   2 Input    9 Bit        Muxes := 1     
+	   2 Input    8 Bit        Muxes := 6     
+	   7 Input    7 Bit        Muxes := 1     
+	   2 Input    7 Bit        Muxes := 6     
 	   2 Input    6 Bit        Muxes := 1     
 	   2 Input    5 Bit        Muxes := 1     
-	   2 Input    4 Bit        Muxes := 1     
-	   5 Input    3 Bit        Muxes := 1     
-	   2 Input    3 Bit        Muxes := 2     
-	   2 Input    1 Bit        Muxes := 15    
-	   5 Input    1 Bit        Muxes := 4     
-	   8 Input    1 Bit        Muxes := 5     
+	   2 Input    4 Bit        Muxes := 3     
+	   2 Input    3 Bit        Muxes := 1     
+	   2 Input    2 Bit        Muxes := 1     
+	   2 Input    1 Bit        Muxes := 10    
+	   7 Input    1 Bit        Muxes := 5     
+	   4 Input    1 Bit        Muxes := 1     
 ---------------------------------------------------------------------------------
 Finished RTL Component Statistics 
 ---------------------------------------------------------------------------------
@@ -237,27 +242,66 @@ Finished Part Resource Summary
 Start Cross Boundary and Area Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2557.453 ; gain = 164.613 ; free physical = 20971 ; free virtual = 27036
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:10 ; elapsed = 00:00:12 . Memory (MB): peak = 2555.391 ; gain = 162.551 ; free physical = 20043 ; free virtual = 26291
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+ROM: Preliminary Mapping	Report
++------------+------------+---------------+----------------+
+|Module Name | RTL Object | Depth x Width | Implemented As | 
++------------+------------+---------------+----------------+
+|oledDisp    | p_0_out    | 1024x8        | LUT            | 
+|top         | p_0_out    | 1024x8        | LUT            | 
++------------+------------+---------------+----------------+
+
+
+Block RAM: Preliminary Mapping	Report (see note below)
++------------+--------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name | RTL Object                     | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++------------+--------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|top         | OLED_TOP/OLED_DISP/frame_1_reg | 512 x 8(READ_FIRST)    | W |   | 512 x 8(WRITE_FIRST)   |   | R | Port A and B     | 1      | 0      | 
++------------+--------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+Note: The table above is a preliminary report that shows the Block RAMs at the current stage of the synthesis flow. Some Block RAMs may be reimplemented as non Block RAM primitives later in the synthesis flow. Multiple instantiated Block RAMs are reported only once. 
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:12 ; elapsed = 00:00:14 . Memory (MB): peak = 2557.453 ; gain = 164.613 ; free physical = 20850 ; free virtual = 26916
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:14 ; elapsed = 00:00:16 . Memory (MB): peak = 2555.391 ; gain = 162.551 ; free physical = 19923 ; free virtual = 26171
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:00:13 ; elapsed = 00:00:14 . Memory (MB): peak = 2557.453 ; gain = 164.613 ; free physical = 20845 ; free virtual = 26911
+Finished Timing Optimization : Time (s): cpu = 00:00:14 ; elapsed = 00:00:16 . Memory (MB): peak = 2555.391 ; gain = 162.551 ; free physical = 19919 ; free virtual = 26167
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Final Mapping	Report
++------------+--------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name | RTL Object                     | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++------------+--------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|top         | OLED_TOP/OLED_DISP/frame_1_reg | 512 x 8(READ_FIRST)    | W |   | 512 x 8(WRITE_FIRST)   |   | R | Port A and B     | 1      | 0      | 
++------------+--------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Technology Mapping
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-7052] The timing for the instance OLED_TOP/OLED_INIT/odata_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
 INFO: [Synth 8-7052] The timing for the instance OLED_TOP/OLED_CMD/odata_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance OLED_TOP/OLED_DISP/frame_1_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:00:13 ; elapsed = 00:00:14 . Memory (MB): peak = 2557.453 ; gain = 164.613 ; free physical = 20844 ; free virtual = 26910
+Finished Technology Mapping : Time (s): cpu = 00:00:14 ; elapsed = 00:00:16 . Memory (MB): peak = 2555.391 ; gain = 162.551 ; free physical = 19919 ; free virtual = 26167
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -275,37 +319,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 2557.453 ; gain = 164.613 ; free physical = 20845 ; free virtual = 26910
+Finished IO Insertion : Time (s): cpu = 00:00:16 ; elapsed = 00:00:18 . Memory (MB): peak = 2555.391 ; gain = 162.551 ; free physical = 19919 ; free virtual = 26167
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 2557.453 ; gain = 164.613 ; free physical = 20845 ; free virtual = 26910
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:16 ; elapsed = 00:00:18 . Memory (MB): peak = 2555.391 ; gain = 162.551 ; free physical = 19919 ; free virtual = 26167
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 2557.453 ; gain = 164.613 ; free physical = 20845 ; free virtual = 26910
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:16 ; elapsed = 00:00:18 . Memory (MB): peak = 2555.391 ; gain = 162.551 ; free physical = 19919 ; free virtual = 26167
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 2557.453 ; gain = 164.613 ; free physical = 20845 ; free virtual = 26910
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:16 ; elapsed = 00:00:18 . Memory (MB): peak = 2555.391 ; gain = 162.551 ; free physical = 19919 ; free virtual = 26167
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 2557.453 ; gain = 164.613 ; free physical = 20845 ; free virtual = 26910
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:16 ; elapsed = 00:00:18 . Memory (MB): peak = 2555.391 ; gain = 162.551 ; free physical = 19919 ; free virtual = 26167
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 2557.453 ; gain = 164.613 ; free physical = 20845 ; free virtual = 26910
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:16 ; elapsed = 00:00:18 . Memory (MB): peak = 2555.391 ; gain = 162.551 ; free physical = 19919 ; free virtual = 26167
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -323,38 +367,40 @@ Report Cell Usage:
 +------+---------+------+
 |1     |BUFG     |     1|
 |2     |CARRY4   |    11|
-|3     |LUT1     |     4|
-|4     |LUT2     |    22|
-|5     |LUT3     |    13|
+|3     |LUT1     |     5|
+|4     |LUT2     |    26|
+|5     |LUT3     |    14|
 |6     |LUT4     |    27|
-|7     |LUT5     |    38|
-|8     |LUT6     |    37|
-|9     |RAMB18E1 |     2|
-|11    |FDRE     |   117|
-|12    |FDSE     |     4|
-|13    |IBUF     |     2|
-|14    |OBUF     |    14|
+|7     |LUT5     |    44|
+|8     |LUT6     |   121|
+|9     |MUXF7    |    42|
+|10    |MUXF8    |    21|
+|11    |RAMB18E1 |     3|
+|14    |FDRE     |   129|
+|15    |FDSE     |     4|
+|16    |IBUF     |     2|
+|17    |OBUF     |    14|
 +------+---------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 2557.453 ; gain = 164.613 ; free physical = 20845 ; free virtual = 26910
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:16 ; elapsed = 00:00:18 . Memory (MB): peak = 2555.391 ; gain = 162.551 ; free physical = 19919 ; free virtual = 26167
 ---------------------------------------------------------------------------------
 Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:00:13 ; elapsed = 00:00:14 . Memory (MB): peak = 2557.453 ; gain = 0.000 ; free physical = 20899 ; free virtual = 26964
-Synthesis Optimization Complete : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 2557.453 ; gain = 164.613 ; free physical = 20899 ; free virtual = 26964
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 2555.391 ; gain = 0.000 ; free physical = 19970 ; free virtual = 26219
+Synthesis Optimization Complete : Time (s): cpu = 00:00:17 ; elapsed = 00:00:18 . Memory (MB): peak = 2555.391 ; gain = 162.551 ; free physical = 19970 ; free virtual = 26219
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2557.453 ; gain = 0.000 ; free physical = 20983 ; free virtual = 27049
-INFO: [Netlist 29-17] Analyzing 13 Unisim elements for replacement
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 2555.391 ; gain = 0.000 ; free physical = 20054 ; free virtual = 26303
+INFO: [Netlist 29-17] Analyzing 77 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2557.453 ; gain = 0.000 ; free physical = 20928 ; free virtual = 26994
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2555.391 ; gain = 0.000 ; free physical = 20000 ; free virtual = 26248
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
 INFO: [Common 17-83] Releasing license: Synthesis
-40 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+44 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:00:21 ; elapsed = 00:00:19 . Memory (MB): peak = 2557.453 ; gain = 164.781 ; free physical = 21071 ; free virtual = 27137
+synth_design: Time (s): cpu = 00:00:23 ; elapsed = 00:00:21 . Memory (MB): peak = 2555.391 ; gain = 162.719 ; free physical = 20142 ; free virtual = 26390
 INFO: [Common 17-1381] The checkpoint '/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.runs/synth_1/top.dcp' has been generated.
 INFO: [runtcl-4] Executing : report_utilization -file top_utilization_synth.rpt -pb top_utilization_synth.pb
-INFO: [Common 17-206] Exiting Vivado at Mon Dec 20 21:18:55 2021...
+INFO: [Common 17-206] Exiting Vivado at Wed Dec 22 19:50:56 2021...

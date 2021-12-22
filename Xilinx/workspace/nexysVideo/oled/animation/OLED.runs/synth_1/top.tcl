@@ -72,6 +72,8 @@ proc create_report { reportName command } {
 OPTRACE "synth_1" START { ROLLUP_AUTO }
 set_param chipscope.maxJobs 3
 set_param xicom.use_bs_reader 1
+set_msg_config -id {Synth 8-256} -limit 10000
+set_msg_config -id {Synth 8-638} -limit 10000
 OPTRACE "Creating in-memory project" START { }
 create_project -in_memory -part xc7a200tsbg484-1
 
@@ -90,8 +92,10 @@ OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
 read_verilog -library xil_defaultlib {
   /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledCmd.v
+  /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledDisp.v
   /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledInit.v
   /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledRp.v
+  /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledSend.v
   /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledState.v
   /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledTime.v
   /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/oled/animation/OLED.srcs/sources_1/new/oledTop.v

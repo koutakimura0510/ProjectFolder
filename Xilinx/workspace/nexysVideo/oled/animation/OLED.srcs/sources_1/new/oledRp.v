@@ -15,7 +15,6 @@ module oledRp
     input 			iCLK,		    // System Clock
     input 			iRST,		    // System Reset
     input           iEnable,        // 1byteデータ送信完了時High
-    input           iDrawStart,     // ディスプレイ描画
     output [4:0]    oAddrInit,      // 初期設定配列参照アドレス
     output [3:0]    oAddrCmd,       // 座標更新配列参照アドレス
     output          oInitEnable,    // 初期化完了時High
@@ -56,8 +55,8 @@ always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         cmd_rp <= 0;
     end else if (iEnable == 1'b1 && init_rp == INIT_LENGTH) begin
-        if (cmd_rp == WRITE_LENGTH || iDrawStart == 1'b1) begin
-            cmd_rp <= 4'd0;
+        if (cmd_rp == WRITE_LENGTH) begin
+            cmd_rp <= WRITE_LENGTH;
         end else begin
             cmd_rp <= cmd_rp + 4'd1;
         end

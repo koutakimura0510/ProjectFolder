@@ -12,7 +12,7 @@ module oledTop
     parameter PDIVCLK       = 100000,
     parameter PDIVSCK       = 250,
     parameter DISPLAY_WIDTH = 128,
-    parameter DISPLAY_PAGE  = 4
+    parameter DISPLAY_HEIGHT = 4
 )(
     // system clk, rst sw
     input           iCLK,
@@ -31,7 +31,6 @@ module oledTop
 );
 
 
-
 //----------------------------------------------------------
 // アドレス参照制御信号
 //----------------------------------------------------------
@@ -40,12 +39,18 @@ localparam INIT_CMDMAX  = 17;
 localparam WRITE_CMDMAX = 9;
 
 wire [4:0] init_addr;   // 初期化配列参照
-wire [7:0] init_data;   // 初期化送信データ
 wire [3:0] cmd_addr;    // コマンド配列参照
+wire [7:0] init_data;   // 初期化送信データ
 wire [7:0] cmd_data;    // コマンド送信データ
 wire init_enable;       // 初期化完了時High
 wire cmd_enable;        // コマンド送信時High
-wire draw_start;        // ディスプレイ描画開始
+
+
+//----------------------------------------------------------
+// 描画データ
+//----------------------------------------------------------
+wire [7:0] disp_data;
+
 
 //----------------------------------------------------------
 // spi通信制御信号
@@ -79,7 +84,6 @@ oledRp #(
     .iCLK(iCLK),
     .iRST(iRST),
     .iEnable(addr_ok),
-    .iDrawStart(draw_start),
     .oAddrInit(init_addr),
     .oAddrCmd(cmd_addr),
     .oInitEnable(init_enable),
@@ -95,16 +99,29 @@ oledInit #(
 );
 
 oledCmd #(
-    .ADDR_WIDTH(WRITE_CMDMAX)
+    .ADDR_WIDTH(WRITE_CMDMAX),
+    .PAGE(3)
 ) OLED_CMD (
     .iCLK(iCLK),
     .iAddr(cmd_addr),
     .oData(cmd_data)
 );
 
+oledDisp #(
+    .DISPLAY_WIDTH(DISPLAY_WIDTH),
+    .DISPLAY_HEIGHT(DISPLAY_HEIGHT)
+) OLED_DISP (
+    .iCLK(iCLK),
+    .iRST(iRST),
+    .iSpiValid(spi_ok),
+    .iInitEnable(init_enable),
+    .iCmdEnable(cmd_enable),
+    .oData(disp_data)
+);
+
 
 //----------------------------------------------------------
-// OLEDの制御に必要な遅延時間の生成
+// OLEDの起動シーケンスに必要な遅延時間の生成
 //----------------------------------------------------------
 oledTime #(
     .PDIVCLK(PDIVCLK)
@@ -116,27 +133,35 @@ oledTime #(
 
 
 //----------------------------------------------------------
-// OLEDの送信データコントロール
+// OLEDの起動シーケンス制御
 //----------------------------------------------------------
-oledState #(
-    .DISPLAY_WIDTH(DISPLAY_WIDTH),
-    .DISPLAY_PAGE(DISPLAY_PAGE)
-) OLED_STATE (
+oledState OLED_STATE
+(
     .iCLK(iCLK),
     .iRST(iRST),
-    .iInitEnable(init_enable),
-    .iCmdEnable(cmd_enable),
     .iSpiValid(spi_ok),
     .iWaitEnable(wait_ok),
     .iInitData(init_data),
-    .iCmdData(cmd_data),
-    .iDispData(8'hff),
-    .oSendData(senddata),
-    .oDrawEnable(draw_start),
     .oSpiStart(spi_start),
     .oOledRes(oOledRes),
     .oOledVbat(oOledVbat),
     .oOledVdd(oOledVdd)
+);
+
+
+//----------------------------------------------------------
+// OLEDの送信データコントロール
+//----------------------------------------------------------
+oledSend OLED_SEND
+(
+    .iCLK(iCLK),
+    .iRST(iRST),
+    .iInitEnable(init_enable),
+    .iCmdEnable(cmd_enable),
+    .iInitData(init_data),
+    .iCmdData(cmd_data),
+    .iDispData(disp_data),
+    .oSendData(senddata)
 );
 
 
@@ -149,7 +174,7 @@ spiCtrl #(
     .iCLK(iCLK),
     .iRST(iRST),
     .iEnable(spi_start),
-    .iDrawStart(draw_start),
+    .iDrawStart(cmd_enable),
     .iSendByte(senddata),
     .oAddrValid(addr_ok),
     .oSpiValid(spi_ok),

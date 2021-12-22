@@ -9,7 +9,8 @@
  */
 module oledCmd
 #(
-parameter ADDR_WIDTH = 9        // 初期化Romサイズ
+parameter ADDR_WIDTH = 9,       // 初期化Romサイズ
+parameter PAGE       = 3        // 終了ページ
 )(
 input 			iCLK,		    // System Clock
 input [3:0]     iAddr,          // バッファ参照アドレス
@@ -19,7 +20,10 @@ output [7:0]    oData           // 出力データ
 reg [7:0] odata;    assign oData = odata;
 
 //----------------------------------------------------------
-// oled書き込み座標更新リスト
+// oled書き込み方法パラメータ
+//
+// HORIZONTAL_MODE時に開始・終了の座標とページを設定すると、
+// 設定範囲内で書き込み座標を自動更新してくれる
 //----------------------------------------------------------
 localparam [7:0]
     MEMORY_MODE         = 8'h20,        // 描画時の一更新方法設定
@@ -28,8 +32,8 @@ localparam [7:0]
     COLUMN_START        = 8'h00,        // 横ラインの書き込み開始座標
     COLUMN_END          = 8'h7f,        // 横ラインの書き込み終了座標
     PAGE_ADDRESS        = 8'h22,        // 書き込みページ操作レジスタのアドレス
-    PAGE_START          = 8'h00,        // 縦ラインの0~3開始ページ
-    PAGE_END            = 8'h07,        // 縦ラインの0~3終了ページ
+    PAGE_START          = 8'h00,        // 縦ラインの開始ページ
+    PAGE_END            = PAGE,         // 縦ラインの終了ページ
     DUMMY               = 8'h00;        // ダミーデータ
 
 localparam LENGTH = 2**ADDR_WIDTH;

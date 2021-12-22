@@ -29,7 +29,7 @@ top #(
     .PDIVCLK(80),
     .PDIVSCK(60),
     .DISPLAY_WIDTH(10),
-    .DISPLAY_PAGE(2)
+    .DISPLAY_HEIGHT(4)
 ) TOP (
     .iCLK(iCLK),
     .iRST(iRST),

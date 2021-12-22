@@ -27,11 +27,11 @@ module spiCtrl
 );
 
 // シリアルデータ制御信号
-reg oled_scl;       assign oOledScl   = oled_scl;
-reg oled_sda;       assign oOledSda   = oled_sda;
-reg spi_valid;      assign oSpiValid  = spi_valid;
-reg addr_valid;     assign oAddrValid = addr_valid;
-reg oled_dc = 0;    assign oOledDC    = oled_dc;
+reg oled_scl;                       assign oOledScl   = oled_scl;
+reg oled_sda;                       assign oOledSda   = oled_sda;
+reg spi_valid;                      assign oSpiValid  = spi_valid;
+reg addr_valid;                     assign oAddrValid = addr_valid;
+reg oled_dc = 0;                    assign oOledDC    = oled_dc;
 
 
 //----------------------------------------------------------
@@ -166,6 +166,7 @@ always @(posedge iCLK) begin
     end
 end
 
+// d/c portの設定
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         oled_dc <= 1'b0;
@@ -191,9 +192,7 @@ end
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         oled_sda <= send_byte[7];
-    end else if (iEnable == 1'b0) begin
-        oled_sda <= send_byte[7];
-    end else if (hold_time == HOLD_TIME_SDA) begin
+    end else if (hold_time == HOLD_TIME_SDA && iEnable == 1'b1) begin
         oled_sda <= send_byte[7];
     end
 end

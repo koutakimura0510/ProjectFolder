@@ -115,6 +115,8 @@ proc step_failed { step } {
 OPTRACE "impl_1" END { }
 }
 
+set_msg_config -id {Synth 8-256} -limit 10000
+set_msg_config -id {Synth 8-638} -limit 10000
 
 OPTRACE "impl_1" START { ROLLUP_1 }
 OPTRACE "Phase: Init Design" START { ROLLUP_AUTO }

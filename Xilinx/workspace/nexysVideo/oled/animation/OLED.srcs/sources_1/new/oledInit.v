@@ -24,7 +24,7 @@ reg [7:0] odata;        assign oData = odata;
 localparam [7:0]
     SCAN_DIRECTION      = 8'hC0,	    // 画面の上下の向き設定 c0 通常描画 / c8反転描画
     SET_COM_PIN         = 8'hda,	    // hardware config
-    PIN_HARD            = 8'h12,	    // 描画の間隔
+    PIN_HARD            = 8'h00,	    // 描画ドットの間隔、ページ数によって調整する
     CONTRAST_SET        = 8'h81,        // 明るさ調整
     CONTRAST_VALUE      = 8'hff,	    // 最大255
     CHARGE_PUMP         = 8'h8d,        // 電圧設定

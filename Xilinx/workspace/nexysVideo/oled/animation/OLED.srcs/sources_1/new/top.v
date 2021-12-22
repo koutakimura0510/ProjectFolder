@@ -15,7 +15,7 @@ module top
     parameter PDIVCLK       = 100000,
     parameter PDIVSCK       = 125,
     parameter DISPLAY_WIDTH = 128,
-    parameter DISPLAY_PAGE  = 8
+    parameter DISPLAY_HEIGHT = 4
 )(
     // system clk, rst sw
     input           iCLK,
@@ -54,7 +54,7 @@ oledTop #(
     .PDIVCLK(PDIVCLK),
     .PDIVSCK(PDIVSCK),
     .DISPLAY_WIDTH(DISPLAY_WIDTH),
-    .DISPLAY_PAGE(DISPLAY_PAGE)
+    .DISPLAY_HEIGHT(DISPLAY_HEIGHT)
 ) OLED_TOP (
     .iCLK(iCLK),
     .iRST(rst),
