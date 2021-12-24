@@ -11,7 +11,7 @@
 
 module tb;
 
-parameter CYCLE = 2;
+parameter CYCLE = 10;
 
 reg iCLK    = 0;
 reg iRST    = 1;
@@ -23,22 +23,22 @@ wire [2:0] oHDMI_P;
 wire [7:0] oLED;
 
 main #(
-    .H_DISPLAY(640),
-    .H_BACK(48),
-    .H_FRONT(16),
-    .H_SYNC(96),
-    .V_DISPLAY(480),
-    .V_TOP(31),
-    .V_BOTTOM(11),
+    .H_DISPLAY(30),
+    .H_BACK(6),
+    .H_FRONT(6),
+    .H_SYNC(6),
+    .V_DISPLAY(15),
+    .V_TOP(5),
+    .V_BOTTOM(5),
     .V_SYNC(2)
 ) MAIN (
     .iCLK(iCLK),
     .iRST(iRST),
     .iBTNC(iBTNC),
-    .oHDMI_CLK_N(oHDMI_CLK_N),
-    .oHDMI_CLK_P(oHDMI_CLK_P),
-    .oHDMI_N(oHDMI_N),
-    .oHDMI_P(oHDMI_P),
+    .oHDMI_CLK_n(oHDMI_CLK_N),
+    .oHDMI_CLK_p(oHDMI_CLK_P),
+    .oHDMI_n(oHDMI_N),
+    .oHDMI_p(oHDMI_P),
     .oLED(oLED)
 );
 

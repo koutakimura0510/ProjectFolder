@@ -23,20 +23,20 @@ module main
     input           iCLK,           // system clk
     input           iRST,           // system rst
     input           iBTNC,          // user push sw
-    output          oHDMI_CLK_N,    // hdmi clk negedge
-    output          oHDMI_CLK_P,    // hdmi clk posedge
-    output [2:0]    oHDMI_N,        // TMDS Channel Serial Data posedge
-    output [2:0]    oHDMI_P,        // TMDS Channel Serial Data negedge
+    output          oHDMI_CLK_n,    // hdmi clk negedge
+    output          oHDMI_CLK_p,    // hdmi clk posedge
+    output [2:0]    oHDMI_n,        // TMDS Channel Serial Data posedge
+    output [2:0]    oHDMI_p,        // TMDS Channel Serial Data negedge
     output [7:0]    oLED            // user led
 );
 
-// 負論理なので反転
+// 負論理なので反転、clk wiz用リセット
 assign rst = ~iRST;
 
 // tmds制御信号
-wire [7:0] oVideoB, oVideoG, oVideoR;           // video RGB
+wire [7:0] oVB, oVG, oVR;                       // video RGB
 wire [9:0] oTmdsParaB, oTmdsParaG, oTmdsParaR;  // tmdsパラレル信号
-wire oTmdsSeriCH0, oTmdsSeriCH0, oTmdsSeriCH0;  // tmdsシリアル信号
+wire oTmdsSeriCH0, oTmdsSeriCH1, oTmdsSeriCH2;  // tmdsシリアル信号
 
 // pll 制御信号
 wire o_clk_250;     // pll clk 250MHz
@@ -50,12 +50,18 @@ wire oVDE;
 wire [9:0] oHPOS;
 wire [9:0] oVPOS;
 
+assign oLED = {8'h00, locked, ~rst};
+
+
+//----------------------------------------------------------
+// モジュール接続
+//----------------------------------------------------------
 clk_wiz_0 CLK_GEN (
-    .clk_in1(iCLK),
+    .clk_out1(o_clk_25),
+    .clk_out2(o_clk_250),
     .reset(rst),
-    .clk_out1(o_clk_250),
-    .clk_out2(o_clk_25),
-    .locked(locked)
+    .locked(locked),
+    .clk_in1(iCLK)
 );
 
 hvsyncGen #(
@@ -68,7 +74,7 @@ hvsyncGen #(
     .V_BOTTOM(V_BOTTOM),
     .V_SYNC(V_SYNC)
 ) HVSYNC_GEN (
-    .iCLK(iCLK),
+    .iCLK(o_clk_25),
     .iRST(rst),
     .oHSYNC(oHSYNC),
     .oVSYNC(oVSYNC),
@@ -77,20 +83,27 @@ hvsyncGen #(
     .oVPOS(oVPOS)
 );
 
-rgbGen RGB_GEN(.iCLK(o_clk_25), .iRST(rst), .iHPOS(oHPOS), .iVPOS(oVPOS), .oBLUE(oVideoB), .oGREEN(oVideoG), .oRED(oVideoR));
+rgbGen RGB_GEN(
+    .iCLK(o_clk_25),
+    .iRST(rst),
+    .iHPOS(oHPOS),
+    .iVPOS(oVPOS),
+    .oBLUE(oVB),
+    .oGREEN(oVG),
+    .oRED(oVR)
+);
 
-tmdsEncoderDvi   TMDS_ENCODER_B(.iCLK(o_clk_25), .iRST(rst), .iVideoData(oVideoB), .iCD(2'b00),            .iVDE(oVDE), .oTmdsPara(oTmdsParaB));
-tmdsEncoderDvi   TMDS_ENCODER_G(.iCLK(o_clk_25), .iRST(rst), .iVideoData(oVideoG), .iCD(2'b00),            .iVDE(oVDE), .oTmdsPara(oTmdsParaG));
-tmdsEncoderDvi   TMDS_ENCODER_R(.iCLK(o_clk_25), .iRST(rst), .iVideoData(oVideoR), .iCD({oVSYNC, oHSYNC}), .iVDE(oVDE), .oTmdsPara(oTmdsParaR));
+tmdsEncoderDvi   TMDS_ENCODER_B(.iCLK(o_clk_25), .iRST(rst), .iVD(oVB), .iCD({oVSYNC, oHSYNC}), .iVDE(oVDE), .oTmdsPara(oTmdsParaB));
+tmdsEncoderDvi   TMDS_ENCODER_G(.iCLK(o_clk_25), .iRST(rst), .iVD(oVG), .iCD(2'b00),            .iVDE(oVDE), .oTmdsPara(oTmdsParaG));
+tmdsEncoderDvi   TMDS_ENCODER_R(.iCLK(o_clk_25), .iRST(rst), .iVD(oVR), .iCD(2'b00),            .iVDE(oVDE), .oTmdsPara(oTmdsParaR));
 
 tmdsSerialize TMDS_B(.iCLK(o_clk_250), .iRST(rst), .iTmdsPara(oTmdsParaB), .oTmdsSeri(oTmdsSeriCH0));
 tmdsSerialize TMDS_G(.iCLK(o_clk_250), .iRST(rst), .iTmdsPara(oTmdsParaG), .oTmdsSeri(oTmdsSeriCH1));
 tmdsSerialize TMDS_R(.iCLK(o_clk_250), .iRST(rst), .iTmdsPara(oTmdsParaR), .oTmdsSeri(oTmdsSeriCH2));
 
-tmdsDecoder TMDS_DECODER_CH0(.iCLK(o_clk_250), .iRST(rst), .iTmdsSeri(oTmdsSeriCH0), .oHDMI_N(oHDMI_N[0]), .oHDMI_P(oHDMI_P[0]));
-tmdsDecoder TMDS_DECODER_CH1(.iCLK(o_clk_250), .iRST(rst), .iTmdsSeri(oTmdsSeriCH1), .oHDMI_N(oHDMI_N[1]), .oHDMI_P(oHDMI_P[1]));
-tmdsDecoder TMDS_DECODER_CH2(.iCLK(o_clk_250), .iRST(rst), .iTmdsSeri(oTmdsSeriCH2), .oHDMI_N(oHDMI_N[2]), .oHDMI_P(oHDMI_P[2]));
-tmdsDecoder TMDS_DECODER_CH3(.iCLK(o_clk_250), .iRST(rst), .iTmdsSeri(o_clk_25), .oHDMI_N(oHDMI_CLK_N), .oHDMI_P(oHDMI_CLK_P));
-
+tmdsDecoder TMDS_DECODER_CH0(.iTmdsSeri(oTmdsSeriCH0), .oHDMI_n(oHDMI_n[0]),  .oHDMI_p(oHDMI_p[0]));
+tmdsDecoder TMDS_DECODER_CH1(.iTmdsSeri(oTmdsSeriCH1), .oHDMI_n(oHDMI_n[1]),  .oHDMI_p(oHDMI_p[1]));
+tmdsDecoder TMDS_DECODER_CH2(.iTmdsSeri(oTmdsSeriCH2), .oHDMI_n(oHDMI_n[2]),  .oHDMI_p(oHDMI_p[2]));
+tmdsDecoder TMDS_DECODER_CH3(.iTmdsSeri(o_clk_25),     .oHDMI_n(oHDMI_CLK_n), .oHDMI_p(oHDMI_CLK_p));
 
 endmodule
