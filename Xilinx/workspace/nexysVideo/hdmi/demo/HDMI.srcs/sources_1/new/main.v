@@ -22,7 +22,11 @@ module main
 (
     input           iCLK,           // system clk
     input           iRST,           // system rst
-    input           iBTNC,          // user push sw
+    input           iBTNC,          // user push sw center
+    input           iBTND,          // user push sw down
+    input           iBTNL,          // user push sw left
+    input           iBTNR,          // user push sw right
+    input           iBTNU,          // user push sw up
     output          oHDMI_CLK_n,    // hdmi clk negedge
     output          oHDMI_CLK_p,    // hdmi clk posedge
     output [2:0]    oHDMI_n,        // TMDS Channel Serial Data posedge
@@ -50,7 +54,11 @@ wire oVDE;
 wire [9:0] oHPOS;
 wire [9:0] oVPOS;
 
-assign oLED = {8'h00, locked, ~rst};
+// user sw 負論理なので反転
+assign iBtnCDLRU = {~iBTNC, ~iBTND, ~iBTNL, ~iBTNR, ~iBTNU};
+
+// 操作状況をLEDで確認
+assign oLED = {1'b0, iBtnCDLRU, locked, ~rst};
 
 
 //----------------------------------------------------------
@@ -93,6 +101,10 @@ rgbGen RGB_GEN(
     .oRED(oVR)
 );
 
+
+//----------------------------------------------------------
+// HDMI信号
+//----------------------------------------------------------
 tmdsEncoderDvi   TMDS_ENCODER_B(.iCLK(o_clk_25), .iRST(rst), .iVD(oVB), .iCD({oVSYNC, oHSYNC}), .iVDE(oVDE), .oTmdsPara(oTmdsParaB));
 tmdsEncoderDvi   TMDS_ENCODER_G(.iCLK(o_clk_25), .iRST(rst), .iVD(oVG), .iCD(2'b00),            .iVDE(oVDE), .oTmdsPara(oTmdsParaG));
 tmdsEncoderDvi   TMDS_ENCODER_R(.iCLK(o_clk_25), .iRST(rst), .iVD(oVR), .iCD(2'b00),            .iVDE(oVDE), .oTmdsPara(oTmdsParaR));
