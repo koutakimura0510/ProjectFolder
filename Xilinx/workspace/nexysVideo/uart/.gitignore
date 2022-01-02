@@ -1,0 +1,13 @@
+#
+# プロジェクト名に応じて変更を行い自身で書いたソースコードのみ管理されるようにする
+#
+
+HDMI.cache
+HDMI.gen
+HDMI.hw
+HDMI.ip_user_files
+HDMI.runs
+HDMI.sim
+.Xil
+work
+ip

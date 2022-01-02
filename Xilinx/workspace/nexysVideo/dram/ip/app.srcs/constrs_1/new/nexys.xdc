@@ -18,7 +18,15 @@ set_property -dict { PACKAGE_PIN D22 IOSTANDARD LVCMOS12 } [get_ports { iBtnD }]
 #set_property -dict { PACKAGE_PIN C22 IOSTANDARD LVCMOS12 } [get_ports { btnl }]; #IO_L20P_T3_16 Sch=btnl
 #set_property -dict { PACKAGE_PIN D14 IOSTANDARD LVCMOS12 } [get_ports { btnr }]; #IO_L6P_T0_16 Sch=btnr
 set_property -dict { PACKAGE_PIN F15 IOSTANDARD LVCMOS12 } [get_ports { iBtnU }]; #IO_0_16 Sch=btnu
-set_property -dict { PACKAGE_PIN G4  IOSTANDARD LVCMOS12 } [get_ports { iRST }]; #IO_L12N_T1_MRCC_35 Sch=cpu_resetn
+set_property -dict { PACKAGE_PIN G4  IOSTANDARD LVCMOS15 } [get_ports { iRST }]; #IO_L12N_T1_MRCC_35 Sch=cpu_resetn
+
+# OLED Display
+set_property -dict { PACKAGE_PIN W22   IOSTANDARD LVCMOS33 } [get_ports { oOledDC   }]; #IO_L7N_T1_D10_14 Sch=oled_dc
+set_property -dict { PACKAGE_PIN U21   IOSTANDARD LVCMOS33 } [get_ports { oOledRes  }]; #IO_L4N_T0_D05_14 Sch=oled_res
+set_property -dict { PACKAGE_PIN W21   IOSTANDARD LVCMOS33 } [get_ports { oOledScl  }]; #IO_L7P_T1_D09_14 Sch=oled_sclk
+set_property -dict { PACKAGE_PIN Y22   IOSTANDARD LVCMOS33 } [get_ports { oOledSda  }]; #IO_L9N_T1_DQS_D13_14 Sch=oled_sdin
+set_property -dict { PACKAGE_PIN P20   IOSTANDARD LVCMOS33 } [get_ports { oOledVbat }]; #IO_0_14 Sch=oled_vbat
+set_property -dict { PACKAGE_PIN V22   IOSTANDARD LVCMOS33 } [get_ports { oOledVdd  }]; #IO_L3N_T0_DQS_EMCCLK_14 Sch=oled_vdd
 
 ## DDR3 Port MIGを使用したらvivado上でDDRメモリのxdcファイルが生成されるため記述しない
 # set_property -dict { PACKAGE_PIN M2   IOSTANDARD SSTL15         } [get_ports { oDDR3_ADDR[0] }]; #IO_L16N_T2_35 Sch=ddr3_addr[0]

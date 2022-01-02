@@ -7,8 +7,8 @@
  * -
  * MIG制御用コントローラ
  */
-module ddr3Top #(
-    parameter ADDR_WIDTH = 28,
+module migController #(
+    parameter ADDR_WIDTH = 29,
     parameter DATA_WIDTH = 128,
     parameter MASK_WIDTH = 16
 )(
@@ -84,8 +84,8 @@ assign oRdData = iAppRdData;
 //----------------------------------------------------------
 // MIG IP 操作データ出力
 //----------------------------------------------------------
-reg app_addr;                           assign oAppAddr     = app_addr;
-reg app_cmd;                            assign oAppCmd      = app_cmd;
+reg [ADDR_WIDTH-1:0] app_addr;          assign oAppAddr     = app_addr;
+reg [2:0] app_cmd;                      assign oAppCmd      = app_cmd;
 reg app_enable;                         assign oAppEnable   = app_enable;
 reg [DATA_WIDTH-1:0] app_wdf_data;      assign oAppWdfData  = app_wdf_data;
 reg app_wdf_wren;                       assign oAppWdfEnd   = app_wdf_wren;
