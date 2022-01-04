@@ -168,11 +168,11 @@ localparam BANK = 3'b000;
 localparam ROW  = 15'b000000011000000;
 localparam COL  = 10'b0000000000;
 
-ddr3Controller #(
+ddr3Bridge #(
     .ADDR_WIDTH(29),
     .DATA_WIDTH(128),
     .MASK_WIDTH(16)
-) DDR3_CONTROLLER (
+) DDR3_BRIDGE (
     .iCLK               (iCLK),
     .iRST               (rst),
     .ioDDR3_DQ          (ddr3_dq),
