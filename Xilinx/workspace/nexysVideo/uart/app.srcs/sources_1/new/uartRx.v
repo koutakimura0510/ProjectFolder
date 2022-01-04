@@ -6,17 +6,19 @@
  * Borad  Nexys Video
  * -
  * UART送信モジュール
+ * ホスト側のRXに送信するため、RXというモジュール名にしている
  */
-module uartTx #(
+module uartRx #(
     parameter UART_CLK_SPEED = 868  // 100MHz / 115200bps
 )(
     input           iCLK,
     input           iRST,
     input           iEnable,        // 1. uart connect / 0. discon
     input [7:0]     iSendData,      // 送信データ
-    output          oUartTX,        // 送信bit
+    output          oUartRX,        // 送信bit
     output          oReady          // 送信中Low 受付可能High
 );
+
 
 //----------------------------------------------------------
 // uart ステートマシン、送信回数定数
@@ -25,7 +27,8 @@ localparam IDLE     = 0;
 localparam START    = 1;
 localparam SEND     = 2;
 localparam STOP     = 3;
-localparam MAX_SEND = 9;
+localparam MAX_SEND = 8;
+
 
 //----------------------------------------------------------
 // 変数宣言・信号接続
@@ -79,7 +82,7 @@ end
 // 送信ステートマシン管理
 //----------------------------------------------------------
 always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
+    if (iRST == 1'b1 || iEnable == 1'b0) begin
         state <= IDLE;
     end else begin
         case (state)
@@ -97,7 +100,7 @@ end
 // Uart送信クロックの生成
 //----------------------------------------------------------
 always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
+    if (iRST == 1'b1 || iEnable == 1'b0) begin
         o_uart_tx <= 1'b1;
     end else begin
         case (state)
@@ -115,8 +118,8 @@ always @(posedge iCLK) begin
 
             SEND: begin
                 if (enable == 1'b1) begin
-                    o_uart_tx <= i_send_data[7];
-                    i_send_data <= {i_send_data[6:0], 1'b1};
+                    o_uart_tx <= i_send_data[0];
+                    i_send_data <= {1'b1, i_send_data[7:1]};
                 end
             end
 
