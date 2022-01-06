@@ -9,7 +9,8 @@
 ## 1. 概要
 評価ボード付属のOLEDのデモプレイを管理する。</br>
 </br>
-![](res/IMG_3552.jpg)
+![IMG_3552](https://user-images.githubusercontent.com/42769426/148335520-384ec327-5f5d-440b-b3ed-d9b9eb201661.jpg)
+<!-- ![](res/IMG_3552.jpg) -->
 </br>
 
 ## 2. コーディング規則
