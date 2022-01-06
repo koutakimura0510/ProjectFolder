@@ -24,7 +24,7 @@ reg [7:0] red;
 reg [7:0] green;
 reg [7:0] blue;
 
-assign oRGB = {8'hff, red, green, blue};
+assign oARGB = {8'h00, red, green, blue};
 
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
