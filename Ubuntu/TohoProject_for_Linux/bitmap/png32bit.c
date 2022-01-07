@@ -67,6 +67,7 @@ FILE *fp;
 char dir_path[256] = "./raw/";
 char filename[256];
 char raw[] = ".raw";
+char dat[] = ".dat";
 uint8_t color[BUFFER_SIZE];
 
 
@@ -89,6 +90,7 @@ void error_fprintf(const char *s, int line)
 int system_init(char *path)
 {
 	uint32_t count = 0;
+	uint32_t file_type;
 
 	/* 解析ファイルのエラーチェック */
 	if (!path) {
@@ -126,9 +128,19 @@ int system_init(char *path)
 		count++;
 	}
 
+	fprintf(stderr, "\n");
+	fprintf(stderr, "作成するファイルの拡張子を選択して下さい。\n");
+	fprintf(stderr, "0 = raw, 1 = dat\n");
+	scanf("%d", &file_type);
+
 	/* ファイル名と出力先のパスを生成 */
 	strcat(dir_path, filename);
-	strcat(dir_path, raw);
+
+	if (file_type == 0) {
+		strcat(dir_path, raw);
+	} else {
+		strcat(dir_path, dat);
+	}
 
 	/* ファイルのオープンとエラーチェック */
 	fp = fopen(dir_path, "wb");
@@ -188,7 +200,7 @@ uint32_t rgb_generate(uint32_t alpha, uint32_t red, uint32_t green, uint32_t blu
  */
 void pixel_generate(void)
 {
-	uint32_t pixel_wid, pixel_hei, type;
+	uint32_t pixel_wid, pixel_hei, type, memory_type;
 	uint8_t *p;
 
 	/* 指定した画像データのアドレスと情報取得 */
@@ -216,6 +228,10 @@ void pixel_generate(void)
 	fprintf(stderr, "RGBの生成タイプを指定して下さい。\n");
 	fprintf(stderr, "0 = RBG, 1 = RGB\n");
 	scanf("%d", &type);
+	fprintf(stderr, "\n");
+	fprintf(stderr, "データの保存先を選択して下さい。\n");
+	fprintf(stderr, "0 = Flash Memory, 1 = Block RAM\n");
+	scanf("%d", &memory_type);
 
 	if ((pixel_hei == 0) || (image->h < pixel_hei))
 	{
@@ -267,7 +283,12 @@ void pixel_generate(void)
 					pixel = rgb_generate(color[z + 3], color[z], color[z + 1], color[z + 2], type);
 				}
 				// fprintf(stderr, "ID = %4d, マップチップの切り取り位置 = %4d, color = 0x%08x\n", id_cnt, z / fmt->BytesPerPixel, pixel);
-				fprintf(fp, "0x%08x,", pixel);
+
+				if (memory_type == 1) {
+					fprintf(fp, "%08x\n", pixel);
+				} else {
+					fprintf(fp, "0x%08x,", pixel);
+				}
 			}
 			fprintf(stderr, "ID = %3d,  マップチップのサイズ = %4d\n", id_cnt, wpos / fmt->BytesPerPixel);
 
