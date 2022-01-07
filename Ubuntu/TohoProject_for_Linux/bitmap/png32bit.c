@@ -293,7 +293,9 @@ void pixel_generate(void)
 			fprintf(stderr, "ID = %3d,  マップチップのサイズ = %4d\n", id_cnt, wpos / fmt->BytesPerPixel);
 
 			/* マップチップデータの切り取りが終了したら改行する */
-			fprintf(fp, "\n");
+			if (memory_type == 0) {
+				fprintf(fp, "\n");
+			}
 		}
 	}
 

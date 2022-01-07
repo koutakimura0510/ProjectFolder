@@ -22,16 +22,20 @@ module userPos
 reg [9:0] xpos;       assign oUXS = xpos;
 reg [9:0] ypos;       assign oUYS = ypos; 
 assign oUXE = xpos + 32;
-assign oUYE = ypos + 32;
+assign oUYE = ypos + 48;
 
 // ユーザーx座標の生成
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         xpos <= 0;
     end else if (iBtn[1] == 1'b1) begin
-        xpos <= xpos + 1'b1;
+        if (xpos < 608) begin
+            xpos <= xpos + 1'b1;
+        end
     end else if (iBtn[2] == 1'b1) begin
-        xpos <= xpos - 1'b1;
+        if (xpos != 0) begin
+            xpos <= xpos - 1'b1;
+        end
     end
 end
 
@@ -41,9 +45,13 @@ always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         ypos <= 0;
     end else if (iBtn[3] == 1'b1) begin
-        ypos <= ypos + 1'b1;
+        if (ypos < 432) begin
+            ypos <= ypos + 1'b1;
+        end
     end else if (iBtn[0] == 1'b1) begin
-        ypos <= ypos - 1'b1;
+        if (ypos != 0) begin
+            ypos <= ypos - 1'b1;
+        end
     end
 end
 

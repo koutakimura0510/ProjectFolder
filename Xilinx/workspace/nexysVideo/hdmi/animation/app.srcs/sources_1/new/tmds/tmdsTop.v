@@ -28,18 +28,18 @@ wire oTmdsSeriCH0, oTmdsSeriCH1, oTmdsSeriCH2;  // tmdsシリアル信号
 //----------------------------------------------------------
 // HDMI信号
 //----------------------------------------------------------
-tmdsEncoderDvi   TMDS_ENCODER_B(.iCLK(o_clk_25), .iRST(iRST), .iVD(iVRGB[ 7: 0]), .iCD({iVSYNC, iHSYNC}), .iVDE(iVDE), .oTmdsPara(oTmdsParaB));
-tmdsEncoderDvi   TMDS_ENCODER_G(.iCLK(o_clk_25), .iRST(iRST), .iVD(iVRGB[15: 8]), .iCD(2'b00),            .iVDE(iVDE), .oTmdsPara(oTmdsParaG));
-tmdsEncoderDvi   TMDS_ENCODER_R(.iCLK(o_clk_25), .iRST(iRST), .iVD(iVRGB[23:16]), .iCD(2'b00),            .iVDE(iVDE), .oTmdsPara(oTmdsParaR));
+tmdsEncoderDvi   TMDS_ENCODER_B(.iCLK(iTmdsCLK), .iRST(iRST), .iVD(iVRGB[ 7: 0]), .iCD({iVSYNC, iHSYNC}), .iVDE(iVDE), .oTmdsPara(oTmdsParaB));
+tmdsEncoderDvi   TMDS_ENCODER_G(.iCLK(iTmdsCLK), .iRST(iRST), .iVD(iVRGB[15: 8]), .iCD(2'b00),            .iVDE(iVDE), .oTmdsPara(oTmdsParaG));
+tmdsEncoderDvi   TMDS_ENCODER_R(.iCLK(iTmdsCLK), .iRST(iRST), .iVD(iVRGB[23:16]), .iCD(2'b00),            .iVDE(iVDE), .oTmdsPara(oTmdsParaR));
 
-tmdsSerialize TMDS_B(.iCLK(o_clk_250), .iRST(iRST), .iTmdsPara(oTmdsParaB), .oTmdsSeri(oTmdsSeriCH0));
-tmdsSerialize TMDS_G(.iCLK(o_clk_250), .iRST(iRST), .iTmdsPara(oTmdsParaG), .oTmdsSeri(oTmdsSeriCH1));
-tmdsSerialize TMDS_R(.iCLK(o_clk_250), .iRST(iRST), .iTmdsPara(oTmdsParaR), .oTmdsSeri(oTmdsSeriCH2));
+tmdsSerialize TMDS_B(.iCLK(iTmdsOverCLK), .iRST(iRST), .iTmdsPara(oTmdsParaB), .oTmdsSeri(oTmdsSeriCH0));
+tmdsSerialize TMDS_G(.iCLK(iTmdsOverCLK), .iRST(iRST), .iTmdsPara(oTmdsParaG), .oTmdsSeri(oTmdsSeriCH1));
+tmdsSerialize TMDS_R(.iCLK(iTmdsOverCLK), .iRST(iRST), .iTmdsPara(oTmdsParaR), .oTmdsSeri(oTmdsSeriCH2));
 
 tmdsDecoder TMDS_DECODER_CH0(.iTmdsSeri(oTmdsSeriCH0), .oHDMI_n(oHDMI_n[0]),  .oHDMI_p(oHDMI_p[0]));
 tmdsDecoder TMDS_DECODER_CH1(.iTmdsSeri(oTmdsSeriCH1), .oHDMI_n(oHDMI_n[1]),  .oHDMI_p(oHDMI_p[1]));
 tmdsDecoder TMDS_DECODER_CH2(.iTmdsSeri(oTmdsSeriCH2), .oHDMI_n(oHDMI_n[2]),  .oHDMI_p(oHDMI_p[2]));
-tmdsDecoder TMDS_DECODER_CH3(.iTmdsSeri(o_clk_25),     .oHDMI_n(oHDMI_CLK_n), .oHDMI_p(oHDMI_CLK_p));
+tmdsDecoder TMDS_DECODER_CH3(.iTmdsSeri(iTmdsCLK),     .oHDMI_n(oHDMI_CLK_n), .oHDMI_p(oHDMI_CLK_p));
 
 
 endmodule
