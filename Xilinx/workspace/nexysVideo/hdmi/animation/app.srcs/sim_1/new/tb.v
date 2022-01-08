@@ -21,6 +21,12 @@ wire oHDMI_CLK_P;
 wire [2:0] oHDMI_N;
 wire [2:0] oHDMI_P;
 wire [7:0] oLED;
+wire oOledScl;
+wire oOledSda;
+wire oOledDC;
+wire oOledRes;
+wire oOledVbat;
+wire oOledVdd;
 
 main #(
     .H_DISPLAY  (40),
@@ -30,7 +36,10 @@ main #(
     .V_DISPLAY  (10),
     .V_TOP      (2),
     .V_BOTTOM   (2),
-    .V_SYNC     (2)
+    .V_SYNC     (2),
+    .SYS_CLK    (6),
+    .KEY_CLK    (4),
+    .CLK_1MS    (2)
     // .H_DISPLAY  (640),
     // .H_BACK     (48),
     // .H_FRONT    (16),
@@ -47,7 +56,13 @@ main #(
     .oHDMI_CLK_p    (oHDMI_CLK_P),
     .oHDMI_n        (oHDMI_N),
     .oHDMI_p        (oHDMI_P),
-    .oLED           (oLED)
+    .oLED           (oLED),
+    .oOledScl       (oOledScl),
+    .oOledSda       (oOledSda),
+    .oOledDC        (oOledDC),
+    .oOledRes       (oOledRes),
+    .oOledVbat      (oOledVbat),
+    .oOledVdd       (oOledVdd)
 );
 
 always begin
@@ -60,8 +75,9 @@ initial begin
     #(CYCLE * 2);
     iRST = 1;
     #(CYCLE * 20 * 4);
-    iBTN = 5'b00010;
+    iBTN = 5'b10100;
     #(CYCLE * 100 * 4);
+    iBTN = 5'b10110;
     $stop;
 end
 

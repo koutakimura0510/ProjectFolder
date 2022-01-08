@@ -18,7 +18,10 @@ module main
     parameter V_DISPLAY       = 480,
     parameter V_TOP           =  31,
     parameter V_BOTTOM        =  11,
-    parameter V_SYNC          =   2 
+    parameter V_SYNC          =   2,
+    parameter SYS_CLK         = 25000000,
+    parameter KEY_CLK         = 125000,
+    parameter CLK_1MS         = 25000
 )
 (
     input           iCLK,           // system clk
@@ -28,7 +31,14 @@ module main
     output          oHDMI_CLK_p,    // hdmi clk posedge
     output [2:0]    oHDMI_n,        // TMDS Channel Serial Data posedge
     output [2:0]    oHDMI_p,        // TMDS Channel Serial Data negedge
-    output [7:0]    oLED            // user led
+    output [7:0]    oLED,           // user led
+
+    output          oOledScl,
+    output          oOledSda,
+    output          oOledDC,
+    output          oOledRes,
+    output          oOledVbat,
+    output          oOledVdd
 );
 
 // 負論理なので反転、clk wiz用リセット
@@ -100,7 +110,11 @@ hvsyncGen #(
 //----------------------------------------------------------
 // システムEnable信号生成
 //----------------------------------------------------------
-enGen EN_GEN (
+enGen #(
+    .SYS_CLK(SYS_CLK),
+    .KEY_CLK(KEY_CLK),
+    .CLK_1MS(CLK_1MS)
+) EN_GEN (
     .iCLK       (o_clk_25),
     .iRST       (user_rst),
     .oEn5ms     (oEn5ms),
@@ -128,10 +142,17 @@ rgbTop RGB_TOP(
     .iCLK       (o_clk_25),
     .iRST       (user_rst),
     .iBtn       (oBtn),
+    .iEn1Ms     (oEn1ms),
     .iHPOS      (oHPOS),
     .iVPOS      (oVPOS),
     .iVDE       (oVDE),
-    .oVRGB      (oVRGB)
+    .oVRGB      (oVRGB),
+    .oOledScl   (oOledScl),
+    .oOledSda   (oOledSda),
+    .oOledDC    (oOledDC),
+    .oOledRes   (oOledRes),
+    .oOledVbat  (oOledVbat),
+    .oOledVdd   (oOledVdd)
 );
 
 

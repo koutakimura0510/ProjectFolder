@@ -11,6 +11,7 @@ module dotRom
 (
     input           iCLK,       // system clk
     input  [15:0]   iAddr,      // address
+    input           iEnable,    // 1. Dot Data Output 0. 0x00 output
     output [31:0]   oDotData    // dot data
 );
 
@@ -26,7 +27,7 @@ localparam BUFF_SIZE = (LENGTH - 1);
 //----------------------------------------------------------
 // 描画ドットデータの初期化
 //----------------------------------------------------------
-reg [31:0] dout;   assign oDotData = dout;
+reg [31:0] dout;   assign oDotData = (iEnable == 1'b1) ? dout : 32'h00000000;
 (* ram_style = "BLOCK" *) reg [31:0] memory [0:BUFF_SIZE];
 
 initial begin

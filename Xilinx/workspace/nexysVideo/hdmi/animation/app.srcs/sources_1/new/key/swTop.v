@@ -21,7 +21,7 @@ module swTop (
 //----------------------------------------------------------
 localparam KEY_START_TIME = 14;
 localparam KEY_END_TIME   = 1;
-localparam KEY_COMP_TIME  = 2;
+localparam KEY_COMP_TIME  = 3;
 
 
 wire oBtnC, oBtnD, oBtnL, oBtnR, oBtnU;

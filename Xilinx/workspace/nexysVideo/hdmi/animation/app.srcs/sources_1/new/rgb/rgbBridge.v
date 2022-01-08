@@ -14,9 +14,9 @@ module rgbBridge (
     output [23:0]   oVRGB           // video rgb
 );
 
-wire [7:0] oVR = (iUserARGB[23:16] == 0) ? (iForeARGB[23:16] == 0) ? iBackARGB[23:16] : iForeARGB[23:16] : iUserARGB[23:16];
-wire [7:0] oVG = (iUserARGB[15: 8] == 0) ? (iForeARGB[15: 8] == 0) ? iBackARGB[15: 8] : iForeARGB[15: 8] : iUserARGB[15: 8];
-wire [7:0] oVB = (iUserARGB[ 7: 0] == 0) ? (iForeARGB[ 7: 0] == 0) ? iBackARGB[ 7: 0] : iForeARGB[ 7: 0] : iUserARGB[ 7: 0];
+wire [7:0] oVR = (iUserARGB[31:24] == 0 && iUserARGB[23:16] == 0) ? (iForeARGB[23:16] == 0) ? iBackARGB[23:16] : iForeARGB[23:16] : iUserARGB[23:16];
+wire [7:0] oVG = (iUserARGB[31:24] == 0 && iUserARGB[15: 8] == 0) ? (iForeARGB[15: 8] == 0) ? iBackARGB[15: 8] : iForeARGB[15: 8] : iUserARGB[15: 8];
+wire [7:0] oVB = (iUserARGB[31:24] == 0 && iUserARGB[ 7: 0] == 0) ? (iForeARGB[ 7: 0] == 0) ? iBackARGB[ 7: 0] : iForeARGB[ 7: 0] : iUserARGB[ 7: 0];
 
 //----------------------------------------------------------
 // 色データ出力

@@ -11,12 +11,35 @@ module userPos
 (
     input           iCLK,       // system clk
     input           iRST,       // system rst
-    input  [4:0]    iBtn,       // bit -> CDLRU
+    input  [4:0]    iBtn,       // bit -> 4.C 3.D 2.L 1.R 0.U
+    input           iEn1Ms,
+    input  [9:0]    iStartX,    // 開始x座標
+    input  [9:0]    iStartY,    // 開始y座標
     output [9:0]    oUXS,       // user xpos start   
     output [9:0]    oUYS,       // user ypos start
     output [9:0]    oUXE,       // user xpos end
     output [9:0]    oUYE        // user ypos end
 );
+
+//----------------------------------------------------------
+// X移動方向ステートマシン
+//----------------------------------------------------------
+localparam IDOL   = 0;
+localparam LEFT   = 1;
+localparam RIGHT  = 2;
+localparam DOUBLE = 3;
+
+//----------------------------------------------------------
+// ジャンプ動作ステートマシン
+//----------------------------------------------------------
+localparam JUMP   = 1;
+localparam FALL   = 2;
+
+//----------------------------------------------------------
+// ジャンプ基礎値
+//----------------------------------------------------------
+localparam JUMP_COUNT = 50;
+localparam JUMP_SPEED = 1;
 
 // ユーザー座標データ出力
 reg [9:0] xpos;       assign oUXS = xpos;
@@ -24,35 +47,150 @@ reg [9:0] ypos;       assign oUYS = ypos;
 assign oUXE = xpos + 32;
 assign oUYE = ypos + 48;
 
+// キー入力ステートマシン
+reg [1:0] x_state, old_x;
+reg [1:0] y_state, old_y;
+
+// ジャンプステータス
+reg [5:0] jump_count;
+reg [3:0] jump_speed;
+wire [3:0] jump_comp;
+
+
+//----------------------------------------------------------
+// 左右キーの座標更新ステートマシン
+// 右キーを押している間に左キーを押した場合、キャラクターは左に移動する
+// 左キーを押している間に右キーを押した場合、キャラクターは右に移動する
+//----------------------------------------------------------
+always @(posedge iCLK) begin
+    if (iRST == 1'b1) begin
+        x_state <= IDOL;
+    end else begin
+        case ({iBtn[1], iBtn[2]})
+            0:       x_state <= IDOL; 
+            1:       x_state <= LEFT;
+            2:       x_state <= RIGHT;
+            3:       x_state <= DOUBLE;
+            default: x_state <= IDOL;
+        endcase
+    end
+end
+
+
+//----------------------------------------------------------
 // ユーザーx座標の生成
+// 現在押している方向を保存しておき、
+// 左右キーが同時押された場合反対に進むようにする
+//----------------------------------------------------------
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
-        xpos <= 0;
-    end else if (iBtn[1] == 1'b1) begin
-        if (xpos < 608) begin
-            xpos <= xpos + 1'b1;
-        end
-    end else if (iBtn[2] == 1'b1) begin
-        if (xpos != 0) begin
-            xpos <= xpos - 1'b1;
-        end
+        xpos  <= iStartX;
+        old_x <= 0;
+    end else begin
+        case (x_state)
+            IDOL: begin
+                xpos <= xpos;
+            end
+
+            RIGHT: begin
+                xpos  <= (xpos < 608) ? xpos + 1'b1 : xpos;
+                old_x <= RIGHT;
+            end
+
+            LEFT: begin
+                xpos  <= (xpos != 0) ? xpos - 1'b1 : xpos;
+                old_x <= LEFT;
+            end
+
+            DOUBLE: begin
+                if (old_x == RIGHT) begin
+                    xpos <= (xpos != 0) ? xpos - 1'b1 : xpos;
+                end else begin
+                    xpos <= (xpos < 608) ? xpos + 1'b1 : xpos;
+                end
+            end
+
+            default: begin 
+                old_x <= IDOL;
+            end
+        endcase
     end
 end
 
 
-// ユーザーy座標の生成
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
-        ypos <= 0;
-    end else if (iBtn[3] == 1'b1) begin
-        if (ypos < 432) begin
-            ypos <= ypos + 1'b1;
-        end
-    end else if (iBtn[0] == 1'b1) begin
-        if (ypos != 0) begin
-            ypos <= ypos - 1'b1;
-        end
+//----------------------------------------------------------
+// ジャンプ動作座標更新
+//----------------------------------------------------------
+
+//----------------------------------------------------------
+// ジャンプの上昇下降スピード管理、現在のジャンプカウント値に応じて速度を変更
+//----------------------------------------------------------
+function [3:0] getJumpCompare (
+    input [5:0] jump_count
+);
+begin
+    if (30 <= jump_count && jump_count <= 50) begin
+        getJumpCompare = 3;
+    end else if (19 <= jump_count && jump_count <= 29) begin
+        getJumpCompare = 5;
+    end else if (8 <= jump_count && jump_count <= 18) begin
+        getJumpCompare = 7;
+    end else if (4 <= jump_count && jump_count <= 7) begin
+        getJumpCompare = 10;
+    end else if (0 < jump_count && jump_count <= 3) begin
+        getJumpCompare = 12;
+    end else begin
+        getJumpCompare = 12;
     end
 end
+endfunction
 
+assign jump_comp = (getJumpCompare(jump_count));
+
+always @(posedge iCLK) begin
+    if (iRST == 1'b1) begin
+        ypos    <= iStartY;
+        y_state <= IDOL;
+        jump_speed <= 0;
+    end else begin
+        case (y_state)
+            IDOL: begin
+                if (iBtn[4] == 1'b1) begin
+                    y_state    <= JUMP;
+                    jump_count <= JUMP_COUNT;
+                    jump_speed <= 0;
+                end
+            end
+
+            JUMP: begin
+                if (jump_count == 0) begin
+                    y_state    <= FALL;
+                    jump_speed <= 0;
+                end else if (jump_speed == jump_comp) begin
+                    jump_count <= jump_count - 1'b1;
+                    ypos       <= ypos - 1'b1;
+                    jump_speed <= 0;
+                end else if (iEn1Ms == 1'b1) begin
+                    jump_speed <= jump_speed + 1'b1;
+                end
+            end
+
+            FALL: begin
+                if (jump_count == JUMP_COUNT) begin
+                    y_state <= IDOL;
+                end else if (jump_speed == jump_comp) begin
+                    jump_count <= jump_count + 1'b1;
+                    ypos       <= ypos + 1'b1;
+                    jump_speed <= 0;
+                end else if (iEn1Ms == 1'b1) begin
+                    jump_speed <= jump_speed + 1'b1;
+                end
+            end
+
+            default: begin
+                y_state <= IDOL;
+            end
+        endcase
+    end
+end
 endmodule

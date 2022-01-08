@@ -1,19 +1,16 @@
 //----------------------------------------------------------
 // Enable信号生成モジュール
 //----------------------------------------------------------
-module enGen (
+module enGen #(
+    parameter SYS_CLK = 25000000,
+    parameter KEY_CLK = 125000,
+    parameter CLK_1MS = 25000
+)(
     input   iCLK, 
     input   iRST,
     output  oEn5ms,
     output  oEn1ms
 );
-
-localparam SYS_CLK = 25000000;
-localparam KEY_CLK = 125000;
-localparam CLK_1MS = 25000;
-// localparam SYS_CLK = 16;
-// localparam KEY_CLK = 6;
-// localparam CLK_1MS = 2;
 
 reg [24:0] tmp_count;
 

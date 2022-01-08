@@ -20,11 +20,21 @@ module rgbGen(
     output [31:0]   oARGB           // 出力画素
 );
 
-reg [7:0] red, green, blue;     assign oARGB = {8'h00, red, green, blue};
+reg [7:0] alpha, red, green, blue;     assign oARGB = {alpha, red, green, blue};
 wire [ 9:0] xstart = iXS;
 wire [ 9:0] xend   = (iXE - 1);
 wire [ 9:0] ystart = iYS;
 wire [ 9:0] yend   = (iYE);
+
+always @(posedge iCLK) begin
+    if (iRST == 1'b1) begin
+        alpha <= iARGB[31:24];
+    end else if (xstart <= iHPOS && iHPOS < xend && ystart <= iVPOS && iVPOS < yend) begin
+        alpha <= iARGB[31:24];
+    end else begin
+        alpha <= 0;
+    end
+end
 
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
