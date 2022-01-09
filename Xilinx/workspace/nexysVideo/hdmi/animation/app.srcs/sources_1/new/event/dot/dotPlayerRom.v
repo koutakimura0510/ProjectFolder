@@ -7,7 +7,7 @@
  * -
  * キャラクターのドット画像データRom
  */
-module dotRom
+module dotPlayerRom
 (
     input           iCLK,       // system clk
     input  [15:0]   iAddr,      // address

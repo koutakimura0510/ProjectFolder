@@ -37,9 +37,6 @@ wire [31:0] oForeARGB;      // ForeGround ARGB 前景
 wire [31:0] oUserARGB;      // UserGround ARGB ユーザー
 wire [31:0] oDotData;
 
-// アドレスデータ
-wire [15:0] oAddr;
-wire oEnable;
 
 //----------------------------------------------------------
 // ユーザー座標データ生成
@@ -58,9 +55,9 @@ userPos USER_POS (
 );
 
 //----------------------------------------------------------
-// アドレスの生成
+// プレイヤーのドットデータ生成
 //----------------------------------------------------------
-dotAddr DOT_ADDR (
+dotPlayerTop DOT_PLAYER_TOP (
     .iCLK       (iCLK),
     .iRST       (iRST),
     .iUXS       (oUXS),
@@ -69,14 +66,6 @@ dotAddr DOT_ADDR (
     .iUYE       (oUYE),
     .iHPOS      (iHPOS),
     .iVPOS      (iVPOS),
-    .oAddr      (oAddr),
-    .oEnable    (oEnable)
-);
-
-dotRom DOT_ROM (
-    .iCLK       (iCLK),
-    .iAddr      (oAddr),
-    .iEnable    (oEnable),
     .oDotData   (oDotData)
 );
 

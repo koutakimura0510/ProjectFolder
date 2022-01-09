@@ -5,9 +5,10 @@
  * Build  Vivado20.2
  * Borad  Nexys Video
  * 
+ * プレイヤーのドット作成トップモジュール
  * 現在のユーザーの位置からキャラクター描画用のドット保存Rom参照アドレスを生成する
  */
-module dotAddr (
+module dotPlayerTop (
     input           iCLK,   // ディスプレイ描画clk
     input           iRST,   // system rst
     input  [ 9:0]   iUXS,
@@ -16,22 +17,27 @@ module dotAddr (
     input  [ 9:0]   iUYE,
     input  [ 9:0]   iHPOS,
     input  [ 9:0]   iVPOS,
-    output [15:0]   oAddr,
-    output          oEnable // アドレスを参照して描画データを出力する時にHigh
+    output [31:0]   oDotData
 );
 
-reg [15:0] iAddr;   assign oAddr = iAddr;
-assign oEnable = (iUXS <= iHPOS && iHPOS < iUXE && iUYS <= iVPOS && iVPOS < iUYE) ? 1'b1 : 1'b0;
+reg [15:0] iAddr;
+assign iEnable = (iUXS <= iHPOS && iHPOS < iUXE && iUYS <= iVPOS && iVPOS < iUYE) ? 1'b1 : 1'b0;
 
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         iAddr <= 0;
     end else if (480 < iVPOS) begin
         iAddr <= 0;
-    end else if (iUXS <= iHPOS && iHPOS < iUXE && iUYS <= iVPOS && iVPOS < iUYE) begin
+    end else if (iEnable == 1'b1) begin
         iAddr <= iAddr + 1'b1;
     end
 end
 
+dotRom DOT_ROM (
+    .iCLK       (iCLK),
+    .iAddr      (iAddr),
+    .iEnable    (iEnable),
+    .oDotData   (oDotData)
+);
 
 endmodule

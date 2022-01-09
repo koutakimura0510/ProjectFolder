@@ -32,8 +32,8 @@ localparam DOUBLE = 3;
 //----------------------------------------------------------
 // ジャンプ動作ステートマシン
 //----------------------------------------------------------
-localparam JUMP   = 1;
-localparam FALL   = 2;
+localparam JUMP   = 1;  // 上昇
+localparam FALL   = 2;  // 落下
 
 //----------------------------------------------------------
 // x軸の移動速度基礎値
@@ -63,10 +63,11 @@ reg [3:0] x_speed;
 reg [3:0] x_comp;
 
 // ジャンプステータス
-reg [1:0] jump_count;   // ジャンプの回数
-reg [5:0] jump_height;  // ジャンプ中の高さ
-reg [3:0] jump_speed;   // ジャンプの速度
-wire [3:0] jump_comp;   // 速度値
+reg [1:0] jump_count;      // ジャンプの回数
+reg [9:0] jump_height;     // ジャンプ中の高さ
+reg [3:0] jump_speed;      // ジャンプの速度
+reg jump_key_toggle;       // ジャンプ中に再度ジャンプボタンを押した際の判定処理
+wire [3:0] jump_comp;      // 速度値
 wire [1:0] jump_max_count; // 最大ジャンプ回数
 
 
@@ -135,7 +136,7 @@ always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         xpos  <= iStartX;
         old_x <= 0;
-    end else if (x_speed == x_comp) begin
+    end else if (x_speed == KEY_END_TIME && iEn1Ms == 1'b1) begin
         case (x_state)
             IDOL: begin
                 old_x <= IDOL;
@@ -189,7 +190,7 @@ begin
     end else if (0 < jump_height && jump_height <= 3) begin
         getJumpCompare = 12;
     end else begin
-        getJumpCompare = 12;
+        getJumpCompare = 3;
     end
 end
 endfunction
@@ -197,6 +198,35 @@ endfunction
 assign jump_comp = (getJumpCompare(jump_height));
 assign jump_max_count = 2;
 
+
+//----------------------------------------------------------
+// 通常2回ジャンプ動作
+// キーを押す -> ジャンプ
+// キーを離す -> ジャンプ待機完了
+// キーを押す -> 2回目ジャンプ
+// キーを離す -> ジャンプ待機完了
+// 
+// 押しっぱなし状態で連続でジャンプを行わないようにした
+//----------------------------------------------------------
+always @(posedge iCLK) begin
+    if (iRST == 1'b1) begin
+        jump_key_toggle <= 0;
+    end else if (iBtn[4] == 1'b1) begin
+        jump_key_toggle <= 1;
+    end else begin
+        jump_key_toggle <= 0;
+    end
+end
+
+
+//----------------------------------------------------------
+// なるべく山なりなジャンプ動作にしたつもりである
+// 1pixel単位で当たり判定を行うため増分値は1固定する。
+// そのため座標の更新スピードを調整することで、速度のアニメーションを再現している
+//----------------------------------------------------------
+
+// TODO 二回ジャンプステートを追加する
+// それぞれのレジスタごとに回路を分ける
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         ypos    <= iStartY;
@@ -206,34 +236,33 @@ always @(posedge iCLK) begin
     end else begin
         case (y_state)
             IDOL: begin
-                if (iBtn[4] == 1'b1) begin
-                    y_state    <= JUMP;
+                if (jump_key_toggle == 1'b0 && iBtn[4] == 1'b1) begin
+                    y_state     <= JUMP;
                     jump_height <= JUMP_HEIGHT;
-                    jump_speed <= 0;
-                    jump_count <= 1;
+                    jump_speed  <= 0;
+                    jump_count  <= 1;
                 end
             end
 
             JUMP: begin
-                if (iBtn[4] == 1'b1 && jump_count < jump_max_count) begin
-                    y_state     <= JUMP;
-                    jump_count  <= 2;
-                    jump_height <= JUMP_HEIGHT;
-                    jump_speed  <= 0;
-                end else if (jump_height == 0) begin
-                    y_state    <= FALL;
-                    jump_speed <= 0;
-                end else if (jump_speed == jump_comp) begin
-                    jump_height <= jump_height - 1'b1;
-                    ypos       <= ypos - 1'b1;
-                    jump_speed <= 0;
-                end else if (iEn1Ms == 1'b1) begin
-                    jump_speed <= jump_speed + 1'b1;
+                if (iBtn[4] == 1'b1) begin
+                    if (jump_height == 0) begin
+                        y_state     <= FALL;
+                        jump_speed  <= 0;
+                    end else if (jump_speed == jump_comp) begin
+                        jump_height <= jump_height - 1'b1;
+                        ypos        <= ypos - 1'b1;
+                        jump_speed  <= 0;
+                    end else if (iEn1Ms == 1'b1) begin
+                        jump_speed  <= jump_speed + 1'b1;
+                    end
+                end else begin
+                    y_state <= FALL;
                 end
             end
 
             FALL: begin
-                if (iBtn[4] == 1'b1 && jump_count < jump_max_count) begin
+                if (jump_key_toggle == 1'b0 && iBtn[4] == 1'b1 && jump_count < jump_max_count) begin
                     y_state     <= JUMP;
                     jump_count  <= 2;
                     jump_height <= JUMP_HEIGHT;
@@ -242,10 +271,10 @@ always @(posedge iCLK) begin
                     y_state <= IDOL;
                 end else if (jump_speed == jump_comp) begin
                     jump_height <= jump_height + 1'b1;
-                    ypos       <= ypos + 1'b1;
-                    jump_speed <= 0;
+                    ypos        <= ypos + 1'b1;
+                    jump_speed  <= 0;
                 end else if (iEn1Ms == 1'b1) begin
-                    jump_speed <= jump_speed + 1'b1;
+                    jump_speed  <= jump_speed + 1'b1;
                 end
             end
 
