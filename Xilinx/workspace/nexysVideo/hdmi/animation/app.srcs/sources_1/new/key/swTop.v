@@ -12,7 +12,6 @@ module swTop (
     input           iRST,
     input  [4:0]    iBtn,   // bit列 -> CDLRU
     input           iEnMs,  // チャタリング除去用enable信号
-    input           iEn1Ms, // 1msEnable信号
     output [4:0]    oBtn    // bit列 -> CDLRU
 );
 

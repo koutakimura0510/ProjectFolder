@@ -130,7 +130,6 @@ swTop SW_TOP (
     .iRST       (user_rst),
     .iBtn       (iBtn),
     .iEnMs      (oEn5ms),
-    .iEn1Ms     (oEn1ms),
     .oBtn       (oBtn)
 );
 
