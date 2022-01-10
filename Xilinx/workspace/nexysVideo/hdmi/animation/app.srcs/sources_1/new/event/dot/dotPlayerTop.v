@@ -17,7 +17,7 @@ module dotPlayerTop (
     input  [ 9:0]   iUYE,
     input  [ 9:0]   iHPOS,
     input  [ 9:0]   iVPOS,
-    output [31:0]   oDotData
+    output [31:0]   oPlayerDot
 );
 
 reg [15:0] iAddr;
@@ -33,11 +33,11 @@ always @(posedge iCLK) begin
     end
 end
 
-dotRom DOT_ROM (
+dotPlayerRom DOT_PLAYER_ROM (
     .iCLK       (iCLK),
     .iAddr      (iAddr),
     .iEnable    (iEnable),
-    .oDotData   (oDotData)
+    .oPlayerDot (oPlayerDot)
 );
 
 endmodule

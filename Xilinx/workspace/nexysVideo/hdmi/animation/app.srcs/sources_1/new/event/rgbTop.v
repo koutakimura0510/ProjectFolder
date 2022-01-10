@@ -35,8 +35,27 @@ wire [ 9:0] oUYE;
 wire [31:0] oBackARGB;      // BackGround ARGB 背景
 wire [31:0] oForeARGB;      // ForeGround ARGB 前景
 wire [31:0] oUserARGB;      // UserGround ARGB ユーザー
-wire [31:0] oDotData;
+wire [31:0] oPlayerDot;
+wire [31:0] oFieldDot;
 
+// mapchip ID
+wire [ 7:0] oFieldNumber;
+
+
+//----------------------------------------------------------
+// フィールドのドットデータ生成
+//----------------------------------------------------------
+dotFieldTop DOT_FIELD_TOP (
+    .iCLK           (iCLK),
+    .iRST           (iRST),
+    .iVDE           (iVDE),
+    .iUXS           (oUXS),
+    .iUYS           (oUYS),
+    .iHPOS          (iHPOS),
+    .iVPOS          (iVPOS),
+    .oFieldDot      (oFieldDot),
+    .oFieldNumber   (oFieldNumber)
+);
 
 //----------------------------------------------------------
 // ユーザー座標データ生成
@@ -66,7 +85,7 @@ dotPlayerTop DOT_PLAYER_TOP (
     .iUYE       (oUYE),
     .iHPOS      (iHPOS),
     .iVPOS      (iVPOS),
-    .oDotData   (oDotData)
+    .oPlayerDot (oPlayerDot)
 );
 
 
@@ -74,8 +93,8 @@ dotPlayerTop DOT_PLAYER_TOP (
 // 描画データ生成
 //----------------------------------------------------------
 rgbGen BACK_GROUND(.iCLK(iCLK), .iRST(iRST), .iHPOS(iHPOS), .iVPOS(iVPOS), .iXS(0),    .iXE(640),  .iYS(0),    .iYE(480),  .iARGB(32'hffffffff), .oARGB(oBackARGB));
-rgbGen FORE_GROUND(.iCLK(iCLK), .iRST(iRST), .iHPOS(iHPOS), .iVPOS(iVPOS), .iXS(0),    .iXE(640),  .iYS(448),  .iYE(480),  .iARGB(32'hff006400), .oARGB(oForeARGB));
-rgbGen USER_GROUND(.iCLK(iCLK), .iRST(iRST), .iHPOS(iHPOS), .iVPOS(iVPOS), .iXS(oUXS), .iXE(oUXE), .iYS(oUYS), .iYE(oUYE), .iARGB(oDotData), .oARGB(oUserARGB));
+rgbGen FORE_GROUND(.iCLK(iCLK), .iRST(iRST), .iHPOS(iHPOS), .iVPOS(iVPOS), .iXS(0),    .iXE(640),  .iYS(0),    .iYE(480),  .iARGB(oFieldDot),  .oARGB(oForeARGB));
+rgbGen USER_GROUND(.iCLK(iCLK), .iRST(iRST), .iHPOS(iHPOS), .iVPOS(iVPOS), .iXS(oUXS), .iXE(oUXE), .iYS(oUYS), .iYE(oUYE), .iARGB(oPlayerDot), .oARGB(oUserARGB));
 
 rgbBridge RGB_BRIDGE (
     .iBackARGB      (oBackARGB),
@@ -94,18 +113,18 @@ oledTop #(
     .DISPLAY_HEIGHT (4),
     .BIT_LENGTH     (95)
 ) OLED_TOP (
-    .iCLK        (iCLK),
-    .iRST        (iRST),
-    .oOledScl    (oOledScl),
-    .oOledSda    (oOledSda),
-    .oOledDC     (oOledDC),
-    .oOledRes    (oOledRes),
-    .oOledVbat   (oOledVbat),
-    .oOledVdd    (oOledVdd),
-    .iDispLine1  ({"XPOS =  ", 8'd0, 2'd0, oUXS, 2'd0, oUXE}),
-    .iDispLine2  ({"YPOS =  ", 8'd0, 2'd0, oUYS, 2'd0, oUYE}),
-    .iDispLine3  ({"        ", 0}),
-    .iDispLine4  ({"        ", 0})
+    .iCLK           (iCLK),
+    .iRST           (iRST),
+    .oOledScl       (oOledScl),
+    .oOledSda       (oOledSda),
+    .oOledDC        (oOledDC),
+    .oOledRes       (oOledRes),
+    .oOledVbat      (oOledVbat),
+    .oOledVdd       (oOledVdd),
+    .iDispLine1     ({"XPOS =  ", 8'd0, 2'd0, oUXS, 2'd0, oUXE}),
+    .iDispLine2     ({"YPOS =  ", 8'd0, 2'd0, oUYS, 2'd0, oUYE}),
+    .iDispLine3     ({"        ", 0}),
+    .iDispLine4     ({"        ", 0})
 );
 
 endmodule

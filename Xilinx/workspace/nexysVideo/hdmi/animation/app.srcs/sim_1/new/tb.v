@@ -29,11 +29,11 @@ wire oOledVbat;
 wire oOledVdd;
 
 main #(
-    .H_DISPLAY  (40),
+    .H_DISPLAY  (80),
     .H_BACK     (2),
     .H_FRONT    (2),
     .H_SYNC     (2),
-    .V_DISPLAY  (10),
+    .V_DISPLAY  (480),
     .V_TOP      (2),
     .V_BOTTOM   (2),
     .V_SYNC     (2),

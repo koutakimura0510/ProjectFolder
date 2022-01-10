@@ -25,11 +25,12 @@ wire [ 9:0] xstart = iXS;
 wire [ 9:0] xend   = (iXE - 1);
 wire [ 9:0] ystart = iYS;
 wire [ 9:0] yend   = (iYE);
+assign enable = (xstart <= iHPOS && iHPOS < xend && ystart <= iVPOS && iVPOS < yend) ? 1'b1 : 1'b0;
 
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         alpha <= iARGB[31:24];
-    end else if (xstart <= iHPOS && iHPOS < xend && ystart <= iVPOS && iVPOS < yend) begin
+    end else if (enable == 1'b1) begin
         alpha <= iARGB[31:24];
     end else begin
         alpha <= 0;
@@ -39,7 +40,7 @@ end
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         red <= iARGB[23:16];
-    end else if (xstart <= iHPOS && iHPOS < xend && ystart <= iVPOS && iVPOS < yend) begin
+    end else if (enable == 1'b1) begin
         red <= iARGB[23:16];
     end else begin
         red <= 0;
@@ -49,7 +50,7 @@ end
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         green <= iARGB[15:8];
-    end else if (xstart <= iHPOS && iHPOS < xend && ystart <= iVPOS && iVPOS < yend) begin
+    end else if (enable == 1'b1) begin
         green <= iARGB[15:8];
     end else begin
         green <= 0;
@@ -59,7 +60,7 @@ end
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         blue <= iARGB[7:0];
-    end else if (xstart <= iHPOS && iHPOS < xend && ystart <= iVPOS && iVPOS < yend) begin
+    end else if (enable == 1'b1) begin
         blue <= iARGB[7:0];
     end else begin
         blue <= 0;
