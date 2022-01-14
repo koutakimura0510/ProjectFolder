@@ -10,25 +10,28 @@
 module swTop (
     input           iCLK, 
     input           iRST,
-    input  [4:0]    iBtn,   // bit列 -> CDLRU
+    input  [5:0]    iBtn,   // bit列 -> LRBADU
     input           iEnMs,  // チャタリング除去用enable信号
-    output [4:0]    oBtn    // bit列 -> CDLRU
+    output [5:0]    oBtn    // bit列 -> ABDLRU
 );
 
-wire oBtnC, oBtnD, oBtnL, oBtnR, oBtnU;
-wire [4:0] bit_check;  assign bit_check = {oBtnC, oBtnD, oBtnL, oBtnR, oBtnU};
-reg  [4:0] key_now;    assign oBtn = key_now;
+`include "../include/parameter.vh"
+
+wire oBtnA, oBtnB, oBtnD, oBtnL, oBtnR, oBtnU;
+wire [5:0] bit_check;  assign bit_check = {oBtnA, oBtnR, oBtnL, oBtnU, oBtnD, oBtnB};
+reg  [5:0] key_now;    assign oBtn = key_now;
 reg  key_up;
 
 
 //----------------------------------------------------------
 // 各キーの立上りbit取得
 //----------------------------------------------------------
-swGen SW_U(.iCLK(iCLK), .iEnable(iEnMs), .iBtn(iBtn[0]), .oBtn(oBtnU));
-swGen SW_R(.iCLK(iCLK), .iEnable(iEnMs), .iBtn(iBtn[1]), .oBtn(oBtnR));
-swGen SW_L(.iCLK(iCLK), .iEnable(iEnMs), .iBtn(iBtn[2]), .oBtn(oBtnL));
-swGen SW_D(.iCLK(iCLK), .iEnable(iEnMs), .iBtn(iBtn[3]), .oBtn(oBtnD));
-swGen SW_C(.iCLK(iCLK), .iEnable(iEnMs), .iBtn(iBtn[4]), .oBtn(oBtnC));
+swGen SW_GEN_B(.iCLK(iCLK), .iEnable(iEnMs), .iBtn(iBtn[SW_B]),     .oBtn(oBtnB));
+swGen SW_GEN_D(.iCLK(iCLK), .iEnable(iEnMs), .iBtn(iBtn[SW_DOWN]),  .oBtn(oBtnD));
+swGen SW_GEN_U(.iCLK(iCLK), .iEnable(iEnMs), .iBtn(iBtn[SW_UP]),    .oBtn(oBtnU));
+swGen SW_GEN_L(.iCLK(iCLK), .iEnable(iEnMs), .iBtn(iBtn[SW_LEFT]),  .oBtn(oBtnL));
+swGen SW_GEN_R(.iCLK(iCLK), .iEnable(iEnMs), .iBtn(iBtn[SW_RIGHT]), .oBtn(oBtnR));
+swGen SW_GEN_A(.iCLK(iCLK), .iEnable(iEnMs), .iBtn(iBtn[SW_A]),     .oBtn(oBtnA));
 
 
 //----------------------------------------------------------

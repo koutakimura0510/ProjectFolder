@@ -10,7 +10,7 @@
 module rgbTop (
     input           iCLK,   // ディスプレイ描画clk
     input           iRST,   // system rst
-    input  [ 4:0]   iBtn,
+    input  [ 5:0]   iBtn,
     input           iEn1Ms,
     input  [ 9:0]   iHPOS,
     input  [ 9:0]   iVPOS,
@@ -30,6 +30,8 @@ wire [ 9:0] oUXS;
 wire [ 9:0] oUYS;
 wire [ 9:0] oUXE;
 wire [ 9:0] oUYE;
+wire [15:0] oFXS;
+wire [15:0] oFYS;
 
 // 色データ
 wire [31:0] oBackARGB;      // BackGround ARGB 背景
@@ -39,7 +41,8 @@ wire [31:0] oPlayerDot;
 wire [31:0] oFieldDot;
 
 // mapchip ID
-wire [ 7:0] oFieldNumber;
+wire [15:0] oMapWidth;
+wire [ 3:0] oMapDirect;
 
 
 //----------------------------------------------------------
@@ -51,26 +54,33 @@ dotFieldTop DOT_FIELD_TOP (
     .iVDE           (iVDE),
     .iUXS           (oUXS),
     .iUYS           (oUYS),
+    .iFXS           (oFXS),
+    .iFYS           (oFYS),
     .iHPOS          (iHPOS),
     .iVPOS          (iVPOS),
     .oFieldDot      (oFieldDot),
-    .oFieldNumber   (oFieldNumber)
+    .oMapWidth      (oMapWidth),
+    .oMapDirect     (oMapDirect)
 );
 
 //----------------------------------------------------------
 // ユーザー座標データ生成
 //----------------------------------------------------------
 userPos USER_POS (
-    .iCLK       (iCLK),
-    .iRST       (iRST),
-    .iBtn       (iBtn),
-    .iEn1Ms     (iEn1Ms),
-    .iStartX    (0),
-    .iStartY    (400),
-    .oUXS       (oUXS),
-    .oUYS       (oUYS),
-    .oUXE       (oUXE),
-    .oUYE       (oUYE)
+    .iCLK           (iCLK),
+    .iRST           (iRST),
+    .iBtn           (iBtn),
+    .iEn1Ms         (iEn1Ms),
+    .iStartX        (0),
+    .iStartY        (416),
+    .oUXS           (oUXS),
+    .oUYS           (oUYS),
+    .oUXE           (oUXE),
+    .oUYE           (oUYE),
+    .oFXS           (oFXS),
+    .oFYS           (oFYS),
+    .iMapWidth      (oMapWidth),
+    .iMapDirect     (oMapDirect)
 );
 
 //----------------------------------------------------------
@@ -121,9 +131,9 @@ oledTop #(
     .oOledRes       (oOledRes),
     .oOledVbat      (oOledVbat),
     .oOledVdd       (oOledVdd),
-    .iDispLine1     ({"XPOS =  ", 8'd0, 2'd0, oUXS, 2'd0, oUXE}),
-    .iDispLine2     ({"YPOS =  ", 8'd0, 2'd0, oUYS, 2'd0, oUYE}),
-    .iDispLine3     ({"        ", 0}),
+    .iDispLine1     ({"XPOS =  ", 8'd0, 2'd0, oUXS, 2'd0, oFXS}),
+    .iDispLine2     ({"YPOS =  ", 8'd0, 2'd0, oUYS, 2'd0, oFYS}),
+    .iDispLine3     ({"        ", 3'd0, oMapDirect[3], 3'd0, oMapDirect[2], 3'd0, oMapDirect[1], 3'd0, oMapDirect[0]}),
     .iDispLine4     ({"        ", 0})
 );
 

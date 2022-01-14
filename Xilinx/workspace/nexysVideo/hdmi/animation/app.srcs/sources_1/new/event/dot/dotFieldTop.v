@@ -8,52 +8,74 @@
  * フィールドのドット作成トップモジュール
  * 現在のユーザーの位置からキャラクター描画用のドット保存Rom参照アドレスを生成する
  */
+
 module dotFieldTop (
     input           iCLK,   // ディスプレイ描画clk
     input           iRST,   // system rst
     input           iVDE,
     input  [ 9:0]   iUXS,
     input  [ 9:0]   iUYS,
+    input  [15:0]   iFXS,
+    input  [15:0]   iFYS,
     input  [ 9:0]   iHPOS,
     input  [ 9:0]   iVPOS,
     output [31:0]   oFieldDot,
-    output [ 7:0]   oFieldNumber
+    output [15:0]   oMapWidth,
+    output [ 3:0]   oMapDirect
 );
 
-
-//----------------------------------------------------------
-// 描画ドット参照
-// マップチップの大きさが1マス32x32
-//----------------------------------------------------------
-localparam MAPCHIP_MAX_WIDTH = 6'd32;       // 1チップ最大横幅
-localparam MAPCHIP_MAX_SIZE  = 11'd1024;    // 1チップの容量 32 x 32
-localparam MAPCHIP_MASK      = (MAPCHIP_MAX_WIDTH-1);
-
+`include "../../include/parameter.vh"
 
 //----------------------------------------------------------
 // フィールドID参照
 //----------------------------------------------------------
-(* use_dsp48 ="value" *) wire [31:0] field_id_number;    // mapchip ID保存
+wire [31:0] field_id_number;    // mapchip ID保存
 wire [ 7:0] o_field_number;     // mapchip ID出力
+wire [15:0] o_map_width;
 wire [18:0] field_addr;         // mapchip addr
 wire [31:0] mapchip_addr;
 wire [ 4:0] waddr, haddr;
-wire [15:0] oMapWidth;
+wire [11:0] fxpos = iFXS >> 5;
+wire [11:0] fypos = iFYS >> 5;
 
+assign oMapWidth       = o_map_width;
 assign field_addr      = (o_field_number == 0) ? 0 : o_field_number * MAPCHIP_MAX_SIZE;
-assign field_id_number = (iHPOS >> 5) + ((iVPOS >> 5) * oMapWidth) + 16'd2;
-assign waddr           = iHPOS[4:0];    // 横ドットアドレス
-assign haddr           = iVPOS[4:0];    // 縦ドットアドレス
+assign field_id_number = (iHPOS >> 5) + ((iVPOS >> 5) * o_map_width) + 16'd2;
+assign waddr           = getAddr(iHPOS[4:0], iFXS[4:0]);
+assign haddr           = getAddr(iVPOS[4:0], iFYS[4:0]);
 assign mapchip_addr    = (haddr * MAPCHIP_MAX_WIDTH) + waddr + field_addr;
 assign oFieldNumber    = o_field_number;
+
+
+//----------------------------------------------------------
+// 現在位置に対応したドットアドレスの取得
+// フィールドアニメーション座標に応じてマップチップデータ生成用のアドレス取得方法を変更する
+//----------------------------------------------------------
+function [4:0] getAddr (
+    input [4:0] hvpos,      // hsync or vsync
+    input [4:0] fpos        // field pos
+);
+begin
+    if (fpos == 0) begin
+        getAddr = hvpos[4:0];
+    end else begin
+        getAddr = hvpos + fpos;   
+    end
+end
+endfunction
+
 
 // フィールド番号取得
 dotFieldRom DOT_FIELD_ROM (
     .iCLK           (iCLK),
     .iAddr          (field_id_number),
+    .iUXS           (iUXS),
+    .iUYS           (iUYS),
     .oFieldNumber   (o_field_number),
-    .oMapWidth      (oMapWidth)
+    .oMapWidth      (o_map_width),
+    .oMapDirect     (oMapDirect)
 );
+
 
 // Bitmapデータ取得
 dotFieldTextureRom DOT_FIELD_TEXTURE_ROM (

@@ -7,19 +7,26 @@
  * -
  * ユーザーの描画座標データ生成
  */
+
 module userPos
 (
     input           iCLK,       // system clk
     input           iRST,       // system rst
-    input  [4:0]    iBtn,       // bit -> 4.C 3.D 2.L 1.R 0.U
+    input  [ 5:0]   iBtn,
     input           iEn1Ms,
-    input  [9:0]    iStartX,    // 開始x座標
-    input  [9:0]    iStartY,    // 開始y座標
-    output [9:0]    oUXS,       // user xpos start   
-    output [9:0]    oUYS,       // user ypos start
-    output [9:0]    oUXE,       // user xpos end
-    output [9:0]    oUYE        // user ypos end
+    input  [ 9:0]   iStartX,    // 開始x座標
+    input  [ 9:0]   iStartY,    // 開始y座標
+    output [ 9:0]   oUXS,       // user xpos start   
+    output [ 9:0]   oUYS,       // user ypos start
+    output [ 9:0]   oUXE,       // user xpos end
+    output [ 9:0]   oUYE,       // user ypos end
+    output [15:0]   oFXS,       // field user xpos
+    output [15:0]   oFYS,       // field user ypos
+    input  [15:0]   iMapWidth,
+    input  [ 3:0]   iMapDirect  // bit列 上[3] 下[2] 左[1] 右[0]
 );
+
+`include "../include/parameter.vh"
 
 //----------------------------------------------------------
 // X移動方向ステートマシン
@@ -49,10 +56,12 @@ localparam JUMP_HEIGHT = 50;
 localparam JUMP_SPEED = 1;
 
 // ユーザー座標データ出力
-reg [9:0] xpos;       assign oUXS = xpos;
-reg [9:0] ypos;       assign oUYS = ypos; 
-assign oUXE = xpos + 32;
-assign oUYE = ypos + 48;
+reg [ 9:0] xpos;    assign oUXS = xpos;
+reg [ 9:0] ypos;    assign oUYS = ypos; 
+reg [15:0] fxpos;   assign oFXS = fxpos;
+reg [15:0] fypos;   assign oFYS = fypos;
+assign oUXE = xpos + MAPCHIP_USER_WIDTH;
+assign oUYE = ypos + MAPCHIP_USER_HEIGHT;
 
 // キー入力ステートマシン
 reg [1:0] x_state, old_x;
@@ -63,13 +72,14 @@ reg [3:0] x_speed;
 reg [3:0] x_comp;
 
 // ジャンプステータス
-reg [1:0] jump_count;      // ジャンプの回数
-reg [9:0] jump_height;     // ジャンプ中の高さ
-reg [3:0] jump_speed;      // ジャンプの速度
-reg jump_key_toggle;       // ジャンプ中に再度ジャンプボタンを押した際の判定処理
-wire [3:0] jump_comp;      // 速度値
-wire [1:0] jump_max_count; // 最大ジャンプ回数
-
+reg  [ 1:0] jump_count;      // ジャンプの回数
+reg  [ 9:0] jump_height;     // ジャンプ中の高さ
+reg  [ 3:0] jump_speed;      // ジャンプの速度
+reg  jump_key_toggle;       // ジャンプ中に再度ジャンプボタンを押した際の判定処理
+wire [ 3:0] jump_comp;      // 速度値
+wire [ 1:0] jump_max_count; // 最大ジャンプ回数
+wire [11:0] wire_fxpos = fxpos >> 5; 
+wire [11:0] wire_fypos = fypos >> 5; 
 
 //----------------------------------------------------------
 // 左右キーの座標更新ステートマシン
@@ -80,7 +90,7 @@ always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         x_state <= IDOL;
     end else begin
-        case ({iBtn[1], iBtn[2]})
+        case ({iBtn[SW_RIGHT], iBtn[SW_LEFT]})
             0:       x_state <= IDOL; 
             1:       x_state <= LEFT;
             2:       x_state <= RIGHT;
@@ -97,7 +107,7 @@ end
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         x_speed <= KEY_START_TIME;
-    end else if ((iBtn[1] | iBtn[2]) == 1'b1) begin
+    end else if ((iBtn[SW_RIGHT] | iBtn[SW_LEFT]) == 1'b1) begin
         if (iEn1Ms == 1'b1) begin
             if (x_speed == KEY_END_TIME) begin
                 x_speed <= x_comp;
@@ -117,7 +127,7 @@ end
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         x_comp <= KEY_START_TIME;
-    end else if ((iBtn[1] | iBtn[2]) == 1'b1) begin
+    end else if ((iBtn[SW_RIGHT] | iBtn[SW_LEFT]) == 1'b1) begin
         if (x_speed == KEY_END_TIME && x_comp != KEY_COMP_TIME && iEn1Ms == 1'b1) begin
             x_comp <= x_comp - 1'b1;
         end
@@ -129,8 +139,7 @@ end
 
 //----------------------------------------------------------
 // ユーザーx座標の生成
-// 現在押している方向を保存しておき、
-// 左右キーが同時押された場合反対に進むようにする
+// 現在押している方向を保存しておき、左右キーが同時押された場合反対に進むようにする
 //----------------------------------------------------------
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
@@ -143,20 +152,44 @@ always @(posedge iCLK) begin
             end
 
             RIGHT: begin
-                xpos  <= (xpos < 608) ? xpos + 1'b1 : xpos;
+                if (iMapDirect[1] == 1) begin
+                    if (iMapWidth < (H_CHIP_NUMBER + wire_fxpos) || xpos < H_DISP_HALF)  begin
+                        xpos  <= xpos + 1'b1;
+                    end else begin
+                        fxpos <= fxpos + 1'b1;
+                    end
+                end
                 old_x <= RIGHT;
             end
 
             LEFT: begin
-                xpos  <= (xpos != 0) ? xpos - 1'b1 : xpos;
+                if (iMapDirect[0] == 1) begin
+                    if ((H_CHIP_NUMBER + wire_fxpos) < iMapWidth || H_DISP_HALF <= xpos)  begin
+                        xpos  <= xpos - 1'b1;
+                    end else begin
+                        fxpos <= fxpos - 1'b1;
+                    end
+                end
                 old_x <= LEFT;
             end
 
             DOUBLE: begin
                 if (old_x == RIGHT) begin
-                    xpos <= (xpos != 0) ? xpos - 1'b1 : xpos;
+                    if (iMapDirect[0] == 1) begin
+                        if ((H_CHIP_NUMBER + wire_fxpos) < iMapWidth || H_DISP_HALF <= xpos)  begin
+                            xpos  <= xpos - 1'b1;
+                        end else begin
+                            fxpos <= fxpos - 1'b1;
+                        end
+                    end
                 end else begin
-                    xpos <= (xpos < 608) ? xpos + 1'b1 : xpos;
+                    if (iMapDirect[1] == 1) begin
+                        if (iMapWidth < (H_CHIP_NUMBER + wire_fxpos) || xpos < H_DISP_HALF)  begin
+                            xpos  <= xpos + 1'b1;
+                        end else begin
+                            fxpos <= fxpos + 1'b1;
+                        end
+                    end
                 end
             end
 
@@ -211,7 +244,7 @@ assign jump_max_count = 2;
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         jump_key_toggle <= 0;
-    end else if (iBtn[4] == 1'b1) begin
+    end else if (iBtn[SW_A] == 1'b1) begin
         jump_key_toggle <= 1;
     end else begin
         jump_key_toggle <= 0;
@@ -236,16 +269,21 @@ always @(posedge iCLK) begin
     end else begin
         case (y_state)
             IDOL: begin
-                if (jump_key_toggle == 1'b0 && iBtn[4] == 1'b1) begin
+                if (jump_key_toggle == 1'b0 && iBtn[SW_A] == 1'b1) begin
                     y_state     <= JUMP;
                     jump_height <= JUMP_HEIGHT;
+                    jump_speed  <= 0;
+                    jump_count  <= 1;
+                end else if (iMapDirect[2] == 1'b1) begin
+                    y_state <= FALL;
+                    jump_height <= 30;
                     jump_speed  <= 0;
                     jump_count  <= 1;
                 end
             end
 
             JUMP: begin
-                if (iBtn[4] == 1'b1) begin
+                if (iBtn[SW_A] == 1'b1) begin
                     if (jump_height == 0) begin
                         y_state     <= FALL;
                         jump_speed  <= 0;
@@ -262,15 +300,15 @@ always @(posedge iCLK) begin
             end
 
             FALL: begin
-                if (jump_key_toggle == 1'b0 && iBtn[4] == 1'b1 && jump_count < jump_max_count) begin
+                if (jump_key_toggle == 1'b0 && iBtn[SW_A] == 1'b1 && jump_count < jump_max_count) begin
                     y_state     <= JUMP;
                     jump_count  <= 2;
                     jump_height <= JUMP_HEIGHT;
                     jump_speed  <= 0;
-                end else if (jump_height == JUMP_HEIGHT) begin
+                end else if (iMapDirect[2] == 1'b0) begin
                     y_state <= IDOL;
                 end else if (jump_speed == jump_comp) begin
-                    jump_height <= jump_height + 1'b1;
+                    jump_height <= (jump_height == JUMP_HEIGHT) ? JUMP_HEIGHT : jump_height + 1'b1;
                     ypos        <= ypos + 1'b1;
                     jump_speed  <= 0;
                 end else if (iEn1Ms == 1'b1) begin

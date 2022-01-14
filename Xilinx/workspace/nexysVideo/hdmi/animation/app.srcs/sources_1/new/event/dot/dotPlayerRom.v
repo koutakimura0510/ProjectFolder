@@ -19,8 +19,8 @@ module dotPlayerRom
 //----------------------------------------------------------
 // 定数値
 //----------------------------------------------------------
-localparam FILENAME  = "remi1.dat";
-localparam LENGTH    = (6144);
+localparam FILENAME  = "remi1_32x32.dat";
+localparam LENGTH    = (32 * 32 * 4);
 localparam BUFF_SIZE = (LENGTH - 1);
 
 

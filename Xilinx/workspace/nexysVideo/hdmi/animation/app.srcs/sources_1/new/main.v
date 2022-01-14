@@ -26,7 +26,7 @@ module main
 (
     input           iCLK,           // system clk
     input           iRST,           // system rst
-    input  [4:0]    iBtn,           // user push sw
+    input  [5:0]    iBtn,           // user push sw
     output          oHDMI_CLK_n,    // hdmi clk negedge
     output          oHDMI_CLK_p,    // hdmi clk posedge
     output [2:0]    oHDMI_n,        // TMDS Channel Serial Data posedge
@@ -49,7 +49,7 @@ wire oEn5ms;
 wire oEn1ms;
 
 // sw
-wire [ 4:0] oBtn;
+wire [ 5:0] oBtn;
 
 // tmds制御信号
 wire [23:0] oVRGB;                              // video RGB
@@ -69,7 +69,7 @@ wire [ 9:0] oVPOS;
 
 
 // 操作状況をLEDで確認
-assign oLED = {1'b0, iBtn, locked, ~rst};
+assign oLED = {~iBtn, locked, ~rst};
 
 
 //----------------------------------------------------------
@@ -128,7 +128,7 @@ enGen #(
 swTop SW_TOP (
     .iCLK       (o_clk_25),
     .iRST       (user_rst),
-    .iBtn       (iBtn),
+    .iBtn       (~iBtn),
     .iEnMs      (oEn5ms),
     .oBtn       (oBtn)
 );
