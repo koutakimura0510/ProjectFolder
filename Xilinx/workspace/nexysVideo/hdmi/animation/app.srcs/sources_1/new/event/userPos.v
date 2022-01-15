@@ -164,7 +164,7 @@ always @(posedge iCLK) begin
 
             LEFT: begin
                 if (iMapDirect[0] == 1) begin
-                    if ((H_CHIP_NUMBER + wire_fxpos) < iMapWidth || H_DISP_HALF <= xpos)  begin
+                    if (fxpos == 0 || H_DISP_HALF <= xpos) begin
                         xpos  <= xpos - 1'b1;
                     end else begin
                         fxpos <= fxpos - 1'b1;
@@ -176,7 +176,7 @@ always @(posedge iCLK) begin
             DOUBLE: begin
                 if (old_x == RIGHT) begin
                     if (iMapDirect[0] == 1) begin
-                        if ((H_CHIP_NUMBER + wire_fxpos) < iMapWidth || H_DISP_HALF <= xpos)  begin
+                        if (fxpos == 0 || H_DISP_HALF <= xpos)  begin
                             xpos  <= xpos - 1'b1;
                         end else begin
                             fxpos <= fxpos - 1'b1;

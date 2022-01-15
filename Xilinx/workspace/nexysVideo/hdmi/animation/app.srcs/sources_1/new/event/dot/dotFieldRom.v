@@ -14,6 +14,8 @@ module dotFieldRom
     input  [31:0]   iAddr,          // address
     input  [ 9:0]   iUXS,
     input  [ 9:0]   iUYS,
+    input  [15:0]   iFXS,
+    input  [15:0]   iFYS,
     output [ 7:0]   oFieldNumber,   // フィールド番号
     output [15:0]   oMapWidth,
     output [ 3:0]   oMapDirect      // 当たり判定Bit
@@ -41,25 +43,34 @@ reg [15:0] o_map_width = 0;     assign oMapWidth    = o_map_width;
 // 現在位置から上下左右のマップIDを取得するための計算を行う
 // 次にRAMを参照し移動可能な0以外のIDだったら0,移動可能であれば1を立てる
 //----------------------------------------------------------
+
+// 画面サイズ
+wire [20:0] x_map_size = (o_map_width - 1'b1) << 5;
+// wire [20:0] y_map_size = (o_map_width - 1'b1) << 5;
+
+// 移動幅の合計座標
+wire [16:0] xpos = iUXS + iFXS;
+wire [16:0] ypos = iUYS + iFYS;
+
 // 上移動時左右端判定
-wire [24:0] up_lr       = (((iUYS - 1'b1) >> 5) * o_map_width) + 2;
-wire [31:0] up_pos_l    = (iUYS == 0) ? 0 : (iUXS >> 5) + up_lr;
-wire [31:0] up_pos_r    = (iUYS == 0) ? 0 : ((iUXS + USER_X_DIRECT) >> 5) + up_lr;
+wire [24:0] up_lr       = (((ypos - 1'b1) >> 5) * o_map_width) + 2;
+wire [31:0] up_pos_l    = (ypos == 0) ? 0 : (xpos >> 5) + up_lr;
+wire [31:0] up_pos_r    = (ypos == 0) ? 0 : ((xpos + USER_X_DIRECT) >> 5) + up_lr;
 
 // 下移動時左右端判定
-wire [24:0] down_lr     = (((iUYS + MAPCHIP_USER_HEIGHT) >> 5) * o_map_width) + 2;
-wire [31:0] down_pos_l  = (iUYS >= USER_HEIGHT_END) ? 0 : (iUXS >> 5) + down_lr;
-wire [31:0] down_pos_r  = (iUYS >= USER_HEIGHT_END) ? 0 : ((iUXS + USER_X_DIRECT) >> 5) + down_lr;
+wire [24:0] down_lr     = (((ypos + MAPCHIP_USER_HEIGHT) >> 5) * o_map_width) + 2;
+wire [31:0] down_pos_l  = (ypos >= USER_HEIGHT_END) ? 0 : (xpos >> 5) + down_lr;
+wire [31:0] down_pos_r  = (ypos >= USER_HEIGHT_END) ? 0 : ((xpos + USER_X_DIRECT) >> 5) + down_lr;
 
 // 左右移動時上端判定
-wire [24:0] rl_up        = ((iUYS >> 5) * o_map_width) + 2; 
-wire [31:0] right_pos_up = (iUXS >= USER_WIDTH_END) ? 0 : ((iUXS + MAPCHIP_USER_WIDTH) >> 5) + rl_up;
-wire [31:0] left_pos_up  = (iUXS == 0) ? 0 : ((iUXS - 1'b1) >> 5) + rl_up;
+wire [24:0] rl_up        = ((ypos >> 5) * o_map_width) + 2; 
+wire [31:0] right_pos_up = (xpos >= x_map_size) ? 0 : ((xpos + MAPCHIP_USER_WIDTH) >> 5) + rl_up;
+wire [31:0] left_pos_up  = (xpos == 0) ? 0 : ((xpos - 1'b1) >> 5) + rl_up;
 
 // 左右移動時下端判定
-wire [24:0] rl_down        = (((iUYS + USER_Y_DIRECT) >> 5) * o_map_width) + 2; 
-wire [31:0] right_pos_down = (iUXS >= USER_WIDTH_END) ? 0 : ((iUXS + MAPCHIP_USER_WIDTH) >> 5) + rl_down;
-wire [31:0] left_pos_down  = (iUXS == 0) ? 0 : ((iUXS - 1'b1) >> 5) + rl_down;
+wire [24:0] rl_down        = (((ypos + USER_Y_DIRECT) >> 5) * o_map_width) + 2; 
+wire [31:0] right_pos_down = (xpos >= x_map_size) ? 0 : ((xpos + MAPCHIP_USER_WIDTH) >> 5) + rl_down;
+wire [31:0] left_pos_down  = (xpos == 0) ? 0 : ((xpos - 1'b1) >> 5) + rl_down;
 
 
 reg dir_ul;

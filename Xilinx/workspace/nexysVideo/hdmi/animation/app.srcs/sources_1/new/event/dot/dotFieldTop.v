@@ -35,12 +35,12 @@ wire [15:0] o_map_width;
 wire [18:0] field_addr;         // mapchip addr
 wire [31:0] mapchip_addr;
 wire [ 4:0] waddr, haddr;
-wire [11:0] fxpos = iFXS >> 5;
-wire [11:0] fypos = iFYS >> 5;
+// wire [11:0] fxpos = iFXS >> 5;
+// wire [11:0] fypos = iFYS >> 5;
 
 assign oMapWidth       = o_map_width;
 assign field_addr      = (o_field_number == 0) ? 0 : o_field_number * MAPCHIP_MAX_SIZE;
-assign field_id_number = (iHPOS >> 5) + ((iVPOS >> 5) * o_map_width) + 16'd2;
+assign field_id_number = ((iHPOS + iFXS) >> 5) + (((iVPOS + iFYS) >> 5) * o_map_width) + 16'd2;
 assign waddr           = getAddr(iHPOS[4:0], iFXS[4:0]);
 assign haddr           = getAddr(iVPOS[4:0], iFYS[4:0]);
 assign mapchip_addr    = (haddr * MAPCHIP_MAX_WIDTH) + waddr + field_addr;
@@ -71,6 +71,8 @@ dotFieldRom DOT_FIELD_ROM (
     .iAddr          (field_id_number),
     .iUXS           (iUXS),
     .iUYS           (iUYS),
+    .iFXS           (iFXS),
+    .iFYS           (iFYS),
     .oFieldNumber   (o_field_number),
     .oMapWidth      (o_map_width),
     .oMapDirect     (oMapDirect)

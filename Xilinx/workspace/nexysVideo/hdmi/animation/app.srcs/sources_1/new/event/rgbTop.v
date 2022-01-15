@@ -131,8 +131,8 @@ oledTop #(
     .oOledRes       (oOledRes),
     .oOledVbat      (oOledVbat),
     .oOledVdd       (oOledVdd),
-    .iDispLine1     ({"XPOS =  ", 8'd0, 2'd0, oUXS, 2'd0, oFXS}),
-    .iDispLine2     ({"YPOS =  ", 8'd0, 2'd0, oUYS, 2'd0, oFYS}),
+    .iDispLine1     ({"XPOS =  ", 4'd0, 2'd0, oUXS, oFXS}),
+    .iDispLine2     ({"YPOS =  ", 4'd0, 2'd0, oUYS, oFYS}),
     .iDispLine3     ({"        ", 3'd0, oMapDirect[3], 3'd0, oMapDirect[2], 3'd0, oMapDirect[1], 3'd0, oMapDirect[0]}),
     .iDispLine4     ({"        ", 0})
 );
