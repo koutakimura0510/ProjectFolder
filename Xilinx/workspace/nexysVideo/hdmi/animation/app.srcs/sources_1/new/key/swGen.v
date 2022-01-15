@@ -11,7 +11,7 @@ module swGen (
 reg [1:0] meta;
 reg [2:0] sft;
 reg [1:0] pedge;
-wire chatta;
+// wire chatta;
 
 always @(posedge iCLK) begin
 	meta <= {meta[0], iBtn};
@@ -23,12 +23,13 @@ always @(posedge iCLK) begin
     end
 end
 
-assign chatta = &sft;
+assign oBtn = &sft; // 3bitで1出力
+// assign chatta = &sft;
 
-always @(posedge iCLK) begin
-	pedge <= {pedge[0], chatta};
-end
+// always @(posedge iCLK) begin
+// 	pedge <= {pedge[0], chatta};
+// end
 	
-assign oBtn = pedge[0] & ~pedge[1];
+// assign oBtn = pedge[0] & ~pedge[1];
 
 endmodule
