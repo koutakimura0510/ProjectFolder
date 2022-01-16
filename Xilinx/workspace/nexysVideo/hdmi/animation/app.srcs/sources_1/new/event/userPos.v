@@ -64,22 +64,23 @@ assign oUXE = xpos + MAPCHIP_USER_WIDTH;
 assign oUYE = ypos + MAPCHIP_USER_HEIGHT;
 
 // キー入力ステートマシン
-reg [1:0] x_state, old_x;
-reg [1:0] y_state, old_y;
+reg [1:0] now_xdir, next_xdir;
+reg [1:0] now_ydir, next_ydir;
 
 // 横移動速度
 reg [3:0] x_speed;
 reg [3:0] x_comp;
 
 // ジャンプステータス
-reg  [ 1:0] jump_count;      // ジャンプの回数
-reg  [ 9:0] jump_height;     // ジャンプ中の高さ
-reg  [ 3:0] jump_speed;      // ジャンプの速度
+reg  [ 1:0] jump_count;     // ジャンプの回数
+reg  [ 9:0] jump_height;    // ジャンプ中の高さ
+reg  [ 3:0] jump_speed;     // ジャンプの速度
 reg  jump_key_toggle;       // ジャンプ中に再度ジャンプボタンを押した際の判定処理
 wire [ 3:0] jump_comp;      // 速度値
 wire [ 1:0] jump_max_count; // 最大ジャンプ回数
 wire [11:0] wire_fxpos = fxpos >> 5; 
 wire [11:0] wire_fypos = fypos >> 5; 
+
 
 //----------------------------------------------------------
 // 左右キーの座標更新ステートマシン
@@ -88,14 +89,33 @@ wire [11:0] wire_fypos = fypos >> 5;
 //----------------------------------------------------------
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
-        x_state <= IDOL;
+        now_xdir  <= IDOL;
+        next_xdir <= IDOL;
     end else begin
         case ({iBtn[SW_RIGHT], iBtn[SW_LEFT]})
-            0:       x_state <= IDOL; 
-            1:       x_state <= LEFT;
-            2:       x_state <= RIGHT;
-            3:       x_state <= DOUBLE;
-            default: x_state <= IDOL;
+            0: begin
+                now_xdir  <= IDOL;
+                next_xdir <= IDOL;
+            end
+
+            1: begin 
+                now_xdir  <= LEFT;
+                next_xdir <= LEFT;
+            end
+
+            2: begin 
+                now_xdir  <= RIGHT;
+                next_xdir <= RIGHT;
+            end
+
+            3: begin
+                now_xdir <= (next_xdir == RIGHT) ? LEFT : RIGHT;
+            end
+
+            default: begin
+                now_xdir  <= IDOL;
+                next_xdir <= IDOL;
+            end
         endcase
     end
 end
@@ -144,13 +164,9 @@ end
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         xpos  <= iStartX;
-        old_x <= 0;
+        fxpos <= 0;
     end else if (x_speed == KEY_END_TIME && iEn1Ms == 1'b1) begin
-        case (x_state)
-            IDOL: begin
-                old_x <= IDOL;
-            end
-
+        case (now_xdir)
             RIGHT: begin
                 if (iMapDirect[1] == 1) begin
                     if (iMapWidth < (H_CHIP_NUMBER + wire_fxpos) || xpos < H_DISP_HALF)  begin
@@ -159,7 +175,6 @@ always @(posedge iCLK) begin
                         fxpos <= fxpos + 1'b1;
                     end
                 end
-                old_x <= RIGHT;
             end
 
             LEFT: begin
@@ -170,31 +185,10 @@ always @(posedge iCLK) begin
                         fxpos <= fxpos - 1'b1;
                     end
                 end
-                old_x <= LEFT;
-            end
-
-            DOUBLE: begin
-                if (old_x == RIGHT) begin
-                    if (iMapDirect[0] == 1) begin
-                        if (fxpos == 0 || H_DISP_HALF <= xpos)  begin
-                            xpos  <= xpos - 1'b1;
-                        end else begin
-                            fxpos <= fxpos - 1'b1;
-                        end
-                    end
-                end else begin
-                    if (iMapDirect[1] == 1) begin
-                        if (iMapWidth < (H_CHIP_NUMBER + wire_fxpos) || xpos < H_DISP_HALF)  begin
-                            xpos  <= xpos + 1'b1;
-                        end else begin
-                            fxpos <= fxpos + 1'b1;
-                        end
-                    end
-                end
             end
 
             default: begin 
-                old_x <= IDOL;
+                xpos <= xpos;
             end
         endcase
     end
@@ -263,19 +257,19 @@ end
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin
         ypos    <= iStartY;
-        y_state <= IDOL;
+        now_ydir <= IDOL;
         jump_speed <= 0;
         jump_count <= 0;
     end else begin
-        case (y_state)
+        case (now_ydir)
             IDOL: begin
                 if (jump_key_toggle == 1'b0 && iBtn[SW_A] == 1'b1) begin
-                    y_state     <= JUMP;
+                    now_ydir    <= JUMP;
                     jump_height <= JUMP_HEIGHT;
                     jump_speed  <= 0;
                     jump_count  <= 1;
                 end else if (iMapDirect[2] == 1'b1) begin
-                    y_state <= FALL;
+                    now_ydir <= FALL;
                     jump_height <= 30;
                     jump_speed  <= 0;
                     jump_count  <= 1;
@@ -285,7 +279,7 @@ always @(posedge iCLK) begin
             JUMP: begin
                 if (iBtn[SW_A] == 1'b1) begin
                     if (jump_height == 0) begin
-                        y_state     <= FALL;
+                        now_ydir    <= FALL;
                         jump_speed  <= 0;
                     end else if (jump_speed == jump_comp) begin
                         jump_height <= jump_height - 1'b1;
@@ -295,18 +289,18 @@ always @(posedge iCLK) begin
                         jump_speed  <= jump_speed + 1'b1;
                     end
                 end else begin
-                    y_state <= FALL;
+                    now_ydir <= FALL;
                 end
             end
 
             FALL: begin
                 if (jump_key_toggle == 1'b0 && iBtn[SW_A] == 1'b1 && jump_count < jump_max_count) begin
-                    y_state     <= JUMP;
+                    now_ydir    <= JUMP;
                     jump_count  <= 2;
                     jump_height <= JUMP_HEIGHT;
                     jump_speed  <= 0;
                 end else if (iMapDirect[2] == 1'b0) begin
-                    y_state <= IDOL;
+                    now_ydir <= IDOL;
                 end else if (jump_speed == jump_comp) begin
                     jump_height <= (jump_height == JUMP_HEIGHT) ? JUMP_HEIGHT : jump_height + 1'b1;
                     ypos        <= ypos + 1'b1;
@@ -317,7 +311,7 @@ always @(posedge iCLK) begin
             end
 
             default: begin
-                y_state <= IDOL;
+                now_ydir <= IDOL;
             end
         endcase
     end
