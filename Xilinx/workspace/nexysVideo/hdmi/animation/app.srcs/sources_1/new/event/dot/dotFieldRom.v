@@ -73,6 +73,9 @@ wire [31:0] right_pos_down = (xpos >= x_map_size) ? 0 : ((xpos + MAPCHIP_USER_WI
 wire [31:0] left_pos_down  = (xpos == 0) ? 0 : ((xpos - 1'b1) >> 5) + rl_down;
 
 
+//----------------------------------------------------------
+// キャラクターの座標に応じて、四隅の当たり判定を取得
+//----------------------------------------------------------
 reg dir_ul;
 reg dir_ur;
 reg dir_dl;

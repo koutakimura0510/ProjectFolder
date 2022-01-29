@@ -14,14 +14,16 @@ module userPos
     input           iRST,       // system rst
     input  [ 5:0]   iBtn,
     input           iEn1Ms,
-    input  [ 9:0]   iStartX,    // 開始x座標
-    input  [ 9:0]   iStartY,    // 開始y座標
-    output [ 9:0]   oUXS,       // user xpos start   
-    output [ 9:0]   oUYS,       // user ypos start
-    output [ 9:0]   oUXE,       // user xpos end
-    output [ 9:0]   oUYE,       // user ypos end
+    input  [ 9:0]   iStartX,    // 描画開始開始x座標
+    input  [ 9:0]   iStartY,    // 描画開始開始y座標
+    output [ 9:0]   oUXS,       // ユーザーの左上端のx座標
+    output [ 9:0]   oUYS,       // ユーザーの左上端のy座標
+    output [ 9:0]   oUXE,       // ユーザーの右上端のx座標
+    output [ 9:0]   oUYE,       // ユーザーの右下端のy座標
     output [15:0]   oFXS,       // field user xpos
     output [15:0]   oFYS,       // field user ypos
+    output [ 1:0]   oDirX,      // 現在のキャラクターの横方向の向き
+    output [ 1:0]   oDirY,      // 現在のキャラクターの縦方向の向き
     input  [15:0]   iMapWidth,
     input  [ 3:0]   iMapDirect  // bit列 上[3] 下[2] 左[1] 右[0]
 );
@@ -63,9 +65,9 @@ reg [15:0] fypos;   assign oFYS = fypos;
 assign oUXE = xpos + MAPCHIP_USER_WIDTH;
 assign oUYE = ypos + MAPCHIP_USER_HEIGHT;
 
-// キー入力ステートマシン
-reg [1:0] now_xdir, next_xdir;
-reg [1:0] now_ydir, next_ydir;
+// キャラクターの向き
+reg [1:0] now_xdir, next_xdir;  assign oDirX = now_xdir;
+reg [1:0] now_ydir, next_ydir;  assign oDirY = now_ydir;
 
 // 横移動速度
 reg [3:0] x_speed;
@@ -150,6 +152,8 @@ always @(posedge iCLK) begin
     end else if ((iBtn[SW_RIGHT] | iBtn[SW_LEFT]) == 1'b1) begin
         if (x_speed == KEY_END_TIME && x_comp != KEY_COMP_TIME && iEn1Ms == 1'b1) begin
             x_comp <= x_comp - 1'b1;
+        end else begin
+            x_comp <= x_comp;
         end
     end else begin
         x_comp <= KEY_START_TIME;

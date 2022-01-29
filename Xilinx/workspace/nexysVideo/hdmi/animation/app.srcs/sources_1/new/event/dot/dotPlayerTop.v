@@ -17,11 +17,34 @@ module dotPlayerTop (
     input  [ 9:0]   iUYE,
     input  [ 9:0]   iHPOS,
     input  [ 9:0]   iVPOS,
+    input  [ 1:0]   iDirX,
+    input  [ 1:0]   iDirY,
     output [31:0]   oPlayerDot
 );
 
+//----------------------------------------------------------
+// X移動方向ステートマシン
+//----------------------------------------------------------
+localparam IDOL   = 0;
+localparam LEFT   = 1;
+localparam RIGHT  = 2;
+
+//----------------------------------------------------------
+// ジャンプ動作ステートマシン
+//----------------------------------------------------------
+localparam JUMP   = 1;  // 上昇
+localparam FALL   = 2;  // 落下
+
 reg [15:0] iAddr;
 assign iEnable = (iUXS <= iHPOS && iHPOS < iUXE && iUYS <= iVPOS && iVPOS < iUYE) ? 1'b1 : 1'b0;
+
+always @*
+begin
+    case (iDirX)
+    begin
+        
+    end
+end
 
 always @(posedge iCLK) begin
     if (iRST == 1'b1) begin

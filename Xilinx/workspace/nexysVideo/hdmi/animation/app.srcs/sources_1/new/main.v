@@ -18,10 +18,7 @@ module main
     parameter V_DISPLAY       = 480,
     parameter V_TOP           =  31,
     parameter V_BOTTOM        =  11,
-    parameter V_SYNC          =   2,
-    parameter SYS_CLK         = 25000000,
-    parameter KEY_CLK         = 125000,
-    parameter CLK_1MS         = 25000
+    parameter V_SYNC          =   2
 )
 (
     input           iCLK,           // system clk
@@ -43,10 +40,6 @@ module main
 
 // 負論理なので反転、clk wiz用リセット
 assign rst = ~iRST;
-
-// 一定周期enable信号
-wire oEn5ms;
-wire oEn1ms;
 
 // sw
 wire [ 5:0] oBtn;
@@ -108,28 +101,12 @@ hvsyncGen #(
 
 
 //----------------------------------------------------------
-// システムEnable信号生成
-//----------------------------------------------------------
-enGen #(
-    .SYS_CLK(SYS_CLK),
-    .KEY_CLK(KEY_CLK),
-    .CLK_1MS(CLK_1MS)
-) EN_GEN (
-    .iCLK       (o_clk_25),
-    .iRST       (user_rst),
-    .oEn5ms     (oEn5ms),
-    .oEn1ms     (oEn1ms)
-);
-
-
-//----------------------------------------------------------
 // キー入力生成
 //----------------------------------------------------------
 swTop SW_TOP (
     .iCLK       (o_clk_25),
     .iRST       (user_rst),
     .iBtn       (~iBtn),
-    .iEnMs      (oEn5ms),
     .oBtn       (oBtn)
 );
 
@@ -141,7 +118,6 @@ rgbTop RGB_TOP(
     .iCLK       (o_clk_25),
     .iRST       (user_rst),
     .iBtn       (oBtn),
-    .iEn1Ms     (oEn1ms),
     .iHPOS      (oHPOS),
     .iVPOS      (oVPOS),
     .iVDE       (oVDE),

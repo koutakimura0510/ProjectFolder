@@ -18,6 +18,21 @@ parameter V_CHIP_NUMBER   = (V_DISPLAY >> 5);
 parameter H_DISP_HALF     = (H_DISPLAY >> 1);   // アニメーション用に画面サイズの半分の値を指定
 parameter V_DISP_HALF     = (V_DISPLAY >> 1);
 
+
+parameter H_BACK          =  48; // horizontal left border (back porch)
+parameter H_FRONT         =  16; // horizontal right border (front porch)
+parameter H_SYNC          =  96; // horizontal sync width
+parameter V_TOP           =  31; // vertical top border
+parameter V_BOTTOM        =  11; // vertical bottom border
+parameter V_SYNC          =   2; // vertical sync # lines
+parameter H_SYNC_START    = H_DISPLAY + H_FRONT;
+parameter H_SYNC_END      = H_DISPLAY + H_FRONT + H_SYNC - 1;
+parameter H_MAX           = H_DISPLAY + H_BACK + H_FRONT + H_SYNC - 1;
+parameter V_SYNC_START    = V_DISPLAY + V_BOTTOM;
+parameter V_SYNC_END      = V_DISPLAY + V_BOTTOM + V_SYNC - 1;
+parameter V_MAX           = V_DISPLAY + V_TOP + V_BOTTOM + V_SYNC - 1;
+
+
 //----------------------------------------------------------
 // 描画ドット参照
 // マップチップの大きさが1マス32x32
