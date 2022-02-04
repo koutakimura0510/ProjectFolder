@@ -73,13 +73,14 @@ wire [31:0] down_pos_l  = (ypos >= USER_HEIGHT_END) ? 0 : (xpos >> 5) + down_lr;
 wire [31:0] down_pos_r  = (ypos >= USER_HEIGHT_END) ? 0 : ((xpos + USER_X_DIRECT) >> 5) + down_lr;
 
 // 左右移動時上端判定
-wire [24:0] rl_up        = ((ypos >> 5) * o_map_width) + 2; 
+wire [11:0] rlupy        = (ypos >> 5);
+(* use_dsp48 = "yes" *) wire [27:0] rl_up = (rlupy * o_map_width) + 2; 
 wire [31:0] right_pos_up = (xpos >= x_map_size) ? 0 : ((xpos + MAPCHIP_USER_WIDTH) >> 5) + rl_up;
 wire [31:0] left_pos_up  = (xpos == 0) ? 0 : ((xpos - 1'b1) >> 5) + rl_up;
 
 // 左右移動時下端判定
-wire [15:0] ry = (ypos + USER_Y_DIRECT) >> 5;
-(* use_dsp48 = "yes" *) wire [31:0] rl_down = (ry * o_map_width) + 2; 
+wire [15:0] rly = (ypos + USER_Y_DIRECT) >> 5;
+(* use_dsp48 = "yes" *) wire [31:0] rl_down = (rly * o_map_width) + 2; 
 wire [31:0] right_pos_down = (xpos >= x_map_size) ? 0 : ((xpos + MAPCHIP_USER_WIDTH) >> 5) + rl_down;
 wire [31:0] left_pos_down  = (xpos == 0) ? 0 : ((xpos - 1'b1) >> 5) + rl_down;
 
