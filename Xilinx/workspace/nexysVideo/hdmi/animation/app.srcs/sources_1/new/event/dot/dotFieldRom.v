@@ -61,12 +61,14 @@ wire [16:0] ypos = iUYS + iFYS;
 // wire [9:0] a, b;
 // (* use_dsp48 = "yes" *) wire [19:0] c;
 // assign c = $signed(a) * $signed(b);
-wire [24:0] up_lr       = (((ypos - 1'b1) >> 5) * o_map_width) + 2;
+wire [11:0] uy = (ypos - 1'b1) >> 5;
+(* use_dsp48 = "yes" *) wire [27:0] up_lr = ((uy * o_map_width) + 2;
 wire [31:0] up_pos_l    = (ypos == 0) ? 0 : (xpos >> 5) + up_lr;
 wire [31:0] up_pos_r    = (ypos == 0) ? 0 : ((xpos + USER_X_DIRECT) >> 5) + up_lr;
 
 // 下移動時左右端判定
-wire [24:0] down_lr     = (((ypos + MAPCHIP_USER_HEIGHT) >> 5) * o_map_width) + 2;
+wire [15:0] dy = (ypos + MAPCHIP_USER_HEIGHT) >> 5;
+(* use_dsp48 = "yes" *) wire [31:0] down_lr     = (dy * o_map_width) + 2;
 wire [31:0] down_pos_l  = (ypos >= USER_HEIGHT_END) ? 0 : (xpos >> 5) + down_lr;
 wire [31:0] down_pos_r  = (ypos >= USER_HEIGHT_END) ? 0 : ((xpos + USER_X_DIRECT) >> 5) + down_lr;
 
@@ -76,7 +78,8 @@ wire [31:0] right_pos_up = (xpos >= x_map_size) ? 0 : ((xpos + MAPCHIP_USER_WIDT
 wire [31:0] left_pos_up  = (xpos == 0) ? 0 : ((xpos - 1'b1) >> 5) + rl_up;
 
 // 左右移動時下端判定
-wire [24:0] rl_down        = (((ypos + USER_Y_DIRECT) >> 5) * o_map_width) + 2; 
+wire [15:0] ry = (ypos + USER_Y_DIRECT) >> 5;
+(* use_dsp48 = "yes" *) wire [31:0] rl_down = (ry * o_map_width) + 2; 
 wire [31:0] right_pos_down = (xpos >= x_map_size) ? 0 : ((xpos + MAPCHIP_USER_WIDTH) >> 5) + rl_down;
 wire [31:0] left_pos_down  = (xpos == 0) ? 0 : ((xpos - 1'b1) >> 5) + rl_down;
 
