@@ -53,6 +53,14 @@ wire [16:0] xpos = iUXS + iFXS;
 wire [16:0] ypos = iUYS + iFYS;
 
 // 上移動時左右端判定
+// (* use_dsp48 = "yes" *)
+// 乗算DSPを使用する場合、必ず出力のbit幅を合わせること下記に例を示す
+// 計算元の変数が各10bitだった時、出力は20bitにする
+// また符号付きの場合、明示的にキャストしなければならない
+//
+// wire [9:0] a, b;
+// (* use_dsp48 = "yes" *) wire [19:0] c;
+// assign c = $signed(a) * $signed(b);
 wire [24:0] up_lr       = (((ypos - 1'b1) >> 5) * o_map_width) + 2;
 wire [31:0] up_pos_l    = (ypos == 0) ? 0 : (xpos >> 5) + up_lr;
 wire [31:0] up_pos_r    = (ypos == 0) ? 0 : ((xpos + USER_X_DIRECT) >> 5) + up_lr;
