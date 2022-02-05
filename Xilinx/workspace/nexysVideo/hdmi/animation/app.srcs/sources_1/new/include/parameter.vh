@@ -40,7 +40,7 @@ parameter V_MAX           = V_DISPLAY + V_TOP + V_BOTTOM + V_SYNC - 1;
 parameter MAPCHIP_MAX_WIDTH = 6'd32;       // 1チップ最大横幅
 parameter MAPCHIP_MAX_SIZE  = 11'd1024;    // 1チップの容量 32 x 32
 parameter MAPCHIP_MASK      = (MAPCHIP_MAX_WIDTH-1);
-
+parameter MAPCHIP_ADDR      = MAPCHIP_MAX_WIDTH - 1;
 
 //----------------------------------------------------------
 // キャラクターのサイズと移動可能量

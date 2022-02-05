@@ -29,25 +29,25 @@ wire oOledVbat;
 wire oOledVdd;
 
 main #(
-    .H_DISPLAY  (80),
-    .H_BACK     (2),
-    .H_FRONT    (2),
-    .H_SYNC     (2),
-    .V_DISPLAY  (480),
-    .V_TOP      (2),
-    .V_BOTTOM   (2),
-    .V_SYNC     (2),
-    .SYS_CLK    (6),
-    .KEY_CLK    (4),
-    .CLK_1MS    (2)
-    // .H_DISPLAY  (640),
-    // .H_BACK     (48),
-    // .H_FRONT    (16),
-    // .H_SYNC     (96),
+    // .H_DISPLAY  (80),
+    // .H_BACK     (2),
+    // .H_FRONT    (2),
+    // .H_SYNC     (2),
     // .V_DISPLAY  (480),
-    // .V_TOP      (31),
-    // .V_BOTTOM   (11),
-    // .V_SYNC     (2)
+    // .V_TOP      (2),
+    // .V_BOTTOM   (2),
+    // .V_SYNC     (2),
+    // .SYS_CLK    (6),
+    // .KEY_CLK    (4),
+    // .CLK_1MS    (2)
+    .H_DISPLAY  (640),
+    .H_BACK     (48),
+    .H_FRONT    (16),
+    .H_SYNC     (96),
+    .V_DISPLAY  (480),
+    .V_TOP      (31),
+    .V_BOTTOM   (11),
+    .V_SYNC     (2)
 ) MAIN (
     .iCLK           (iCLK),
     .iRST           (iRST),

@@ -79,7 +79,10 @@ userPos USER_POS (
 //----------------------------------------------------------
 // プレイヤーのドットデータ生成
 //----------------------------------------------------------
-dotPlayerTop DOT_PLAYER_TOP (
+dotPlayerTop #(
+    .VMAX(480),
+    .CHIP_WIDTH(32)
+) DOT_PLAYER_TOP (
     .iCLK(iCLK), .iRST(iRST),
     .iUXS(oUXS), .iUXE(oUXE), .iUYS(oUYS), .iUYE(oUYE),
     .iHPOS(iHPOS), .iVPOS(iVPOS),

@@ -27,7 +27,7 @@ localparam BUFF_SIZE = (LENGTH - 1);
 //----------------------------------------------------------
 // 描画ドットデータの初期化
 //----------------------------------------------------------
-reg [31:0] dout;   assign oPlayerDot = (iEnable == 1'b1) ? dout : 32'h00000000;
+reg [31:0] dout;   assign oPlayerDot = dout;
 (* ram_style = "BLOCK" *) reg [31:0] memory [0:BUFF_SIZE];
 
 initial begin
@@ -35,7 +35,8 @@ initial begin
 end
 
 always @(posedge iCLK) begin
-    dout <= memory[iAddr];
+    if (iEnable) dout <= memory[iAddr];
+    else dout <= 32'h00000000;
 end
 
 endmodule
