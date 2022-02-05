@@ -32,8 +32,8 @@ module ddr3Controller #(
     output                  oDDR3_CKE,
     output [ 1:0]           oDDR3_DM,
     output                  oDDR3_ODT,
-    input                   iWEnable,           // user write enable
-    input                   iREnable,           // user read enable
+    input                   iWEnable,           // user write enable data書き込み時 high
+    input                   iREnable,           // user read enable data読み込み時high
     input  [DATA_WIDTH-1:0] iWdData,            // write data
     input  [ADDR_WIDTH-1:0] iAddr,              // access addr 28:0固定 / 27-25:Bank / 24-10:Row / 9-0:Col
     input  [MASK_WIDTH-1:0] iMask,              // write mask

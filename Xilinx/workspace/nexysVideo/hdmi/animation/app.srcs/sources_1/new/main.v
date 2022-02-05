@@ -132,12 +132,9 @@ swTop SW_TOP (
 //----------------------------------------------------------
 // RGBデータ
 //----------------------------------------------------------
-rgbTop #(
-    .ADDR_WIDTH(29),
-    .DATA_WIDTH(128),
-    .MASK_WIDTH(16)
-) RGB_TOP (
-    .iCLK           (o_clk_25),
+gameDataTop GAME_DATA_TOP (
+    .iDispCLK       (o_clk_25),
+    .iCLK           (iCLK),
     .iRST           (user_rst),
     .iBtn           (oBtn),
     .iHPOS          (oHPOS),

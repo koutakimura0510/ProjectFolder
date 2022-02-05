@@ -14,17 +14,14 @@
 // 3.1フレームの描画が終了したら、次に出力するフレームバッファのチャンネルを切り替える
 // 4.1~3を繰り返す。
 //----------------------------------------------------------
-module rgbTop #(
-    parameter ADDR_WIDTH = 29,
-    parameter DATA_WIDTH = 128,
-    parameter MASK_WIDTH = 16
-)(
-    input           iCLK,   // ディスプレイ描画clk
-    input           iRST,   // system rst
+module rgbTop (
+    input           iDispCLK,   // ディスプレイ描画clk vgaの場合25MHz
+    input           iCLK,       // system clk
+    input           iRST,       // system rst
     input  [ 5:0]   iBtn,
     input  [ 9:0]   iHPOS,
     input  [ 9:0]   iVPOS,
-    input           iVDE,   // video enable
+    input           iVDE,       // video enable
     output [23:0]   oVRGB,
     inout  [15:0]   ioDDR3_DQ,
     inout  [ 1:0]   ioDDR3_DQS_N,
@@ -78,6 +75,7 @@ enGen #(
 ) RGB_1MS_GEN (
     .iCLK(iCLK), .iRST(iRST), .oEnable(oEn1ms)
 );
+
 
 //----------------------------------------------------------
 // フィールドのドットデータ生成
