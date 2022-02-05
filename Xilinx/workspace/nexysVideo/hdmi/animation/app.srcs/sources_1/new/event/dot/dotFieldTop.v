@@ -32,15 +32,18 @@ module dotFieldTop (
 wire [31:0] field_id_number;    // mapchip ID保存
 wire [ 7:0] o_field_number;     // mapchip ID出力
 wire [15:0] o_map_width;
-wire [18:0] field_addr;         // mapchip addr
+(* use_dsp48 = "yes" *) wire [19:0] field_addr; // mapchip addr
 wire [31:0] mapchip_addr;
 wire [ 4:0] waddr, haddr;
 // wire [11:0] fxpos = iFXS >> 5;
 // wire [11:0] fypos = iFYS >> 5;
 
+wire   [10:0] vp = (iVPOS + iFYS) >> 5;
+(* use_dsp48 = "yes" *) wire [26:0] vp_width = vp * o_map_width;
+
 assign oMapWidth       = o_map_width;
 assign field_addr      = (o_field_number == 0) ? 0 : o_field_number * MAPCHIP_MAX_SIZE;
-assign field_id_number = ((iHPOS + iFXS) >> 5) + (((iVPOS + iFYS) >> 5) * o_map_width) + 16'd2;
+assign field_id_number = ((iHPOS + iFXS) >> 5) + vp_width + 16'd2;
 assign waddr           = getAddr(iHPOS[4:0], iFXS[4:0]);
 assign haddr           = getAddr(iVPOS[4:0], iFYS[4:0]);
 assign mapchip_addr    = (haddr * MAPCHIP_MAX_WIDTH) + waddr + field_addr;

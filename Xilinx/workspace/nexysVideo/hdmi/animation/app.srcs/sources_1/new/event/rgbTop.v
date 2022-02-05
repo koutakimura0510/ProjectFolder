@@ -1,13 +1,24 @@
-/*
- * Create 2021/1/6
- * Author koutakimura
- * Editor VSCode ver1.62.7
- * Build  Vivado20.2
- * Borad  Nexys Video
- * 
- * RGB生成Topモジュール
- */
-module rgbTop (
+//----------------------------------------------------------
+// Create 2021/1/6
+// Author koutakimura
+// Editor VSCode ver1.62.7
+// Build  Vivado20.2
+// Borad  Nexys Video
+// -
+// RGB生成Topモジュール
+// 
+// RGBデータと、あとで拡張予定のsoundデータの生成を行う
+// 基本的な処理の流れとしては、フレームバッファはトリプルとして
+// 1.順次HVSyncのタイミングに応じて、指定フレームバッファ内のpixelデータを出力
+// 2.出力中に空いているフレームバッファに、次回の1フレームデータを保存
+// 3.1フレームの描画が終了したら、次に出力するフレームバッファのチャンネルを切り替える
+// 4.1~3を繰り返す。
+//----------------------------------------------------------
+module rgbTop #(
+    parameter ADDR_WIDTH = 29,
+    parameter DATA_WIDTH = 128,
+    parameter MASK_WIDTH = 16
+)(
     input           iCLK,   // ディスプレイ描画clk
     input           iRST,   // system rst
     input  [ 5:0]   iBtn,
@@ -15,6 +26,20 @@ module rgbTop (
     input  [ 9:0]   iVPOS,
     input           iVDE,   // video enable
     output [23:0]   oVRGB,
+    inout  [15:0]   ioDDR3_DQ,
+    inout  [ 1:0]   ioDDR3_DQS_N,
+    inout  [ 1:0]   ioDDR3_DQS_P,
+    output [14:0]   oDDR3_ADDR,
+    output [ 2:0]   oDDR3_BA,
+    output          oDDR3_RAS,
+    output          oDDR3_CAS,
+    output          oDDR3_WE,
+    output          oDDR3_RESET,
+    output          oDDR3_CLK_P,
+    output          oDDR3_CLK_N,
+    output          oDDR3_CKE,
+    output [ 1:0]   oDDR3_DM,
+    output          oDDR3_ODT,
     output          oOledScl,
     output          oOledSda,
     output          oOledDC,

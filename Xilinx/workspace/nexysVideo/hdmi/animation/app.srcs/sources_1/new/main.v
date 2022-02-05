@@ -30,6 +30,24 @@ module main
     output [2:0]    oHDMI_p,        // TMDS Channel Serial Data negedge
     output [7:0]    oLED,           // user led
 
+    // ddr3 port
+    // Vivado MIG生成機能使用
+    inout  [15:0]   ddr3_dq,
+    inout  [ 1:0]   ddr3_dqs_n,
+    inout  [ 1:0]   ddr3_dqs_p,
+    output [14:0]   ddr3_addr,
+    output [ 2:0]   ddr3_ba,
+    output          ddr3_ras_n,
+    output          ddr3_cas_n,
+    output          ddr3_we_n,
+    output          ddr3_reset_n,
+    output [0:0]    ddr3_ck_p,
+    output [0:0]    ddr3_ck_n,
+    output [0:0]    ddr3_cke,
+    output [1:0]    ddr3_dm,
+    output [0:0]    ddr3_odt,
+
+    // 評価ボード上oled
     output          oOledScl,
     output          oOledSda,
     output          oOledDC,
@@ -114,20 +132,38 @@ swTop SW_TOP (
 //----------------------------------------------------------
 // RGBデータ
 //----------------------------------------------------------
-rgbTop RGB_TOP(
-    .iCLK       (o_clk_25),
-    .iRST       (user_rst),
-    .iBtn       (oBtn),
-    .iHPOS      (oHPOS),
-    .iVPOS      (oVPOS),
-    .iVDE       (oVDE),
-    .oVRGB      (oVRGB),
-    .oOledScl   (oOledScl),
-    .oOledSda   (oOledSda),
-    .oOledDC    (oOledDC),
-    .oOledRes   (oOledRes),
-    .oOledVbat  (oOledVbat),
-    .oOledVdd   (oOledVdd)
+rgbTop #(
+    .ADDR_WIDTH(29),
+    .DATA_WIDTH(128),
+    .MASK_WIDTH(16)
+) RGB_TOP (
+    .iCLK           (o_clk_25),
+    .iRST           (user_rst),
+    .iBtn           (oBtn),
+    .iHPOS          (oHPOS),
+    .iVPOS          (oVPOS),
+    .iVDE           (oVDE),
+    .oVRGB          (oVRGB),
+    .ioDDR3_DQ      (ddr3_dq),
+    .ioDDR3_DQS_N   (ddr3_dqs_n),
+    .ioDDR3_DQS_P   (ddr3_dqs_p),
+    .oDDR3_ADDR     (ddr3_addr),
+    .oDDR3_BA       (ddr3_ba),
+    .oDDR3_RAS      (ddr3_ras_n),
+    .oDDR3_CAS      (ddr3_cas_n),
+    .oDDR3_WE       (ddr3_we_n),
+    .oDDR3_RESET    (ddr3_reset_n),
+    .oDDR3_CLK_P    (ddr3_ck_p),
+    .oDDR3_CLK_N    (ddr3_ck_n),
+    .oDDR3_CKE      (ddr3_cke),
+    .oDDR3_DM       (ddr3_dm),
+    .oDDR3_ODT      (ddr3_odt),
+    .oOledScl       (oOledScl),
+    .oOledSda       (oOledSda),
+    .oOledDC        (oOledDC),
+    .oOledRes       (oOledRes),
+    .oOledVbat      (oOledVbat),
+    .oOledVdd       (oOledVdd)
 );
 
 

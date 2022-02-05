@@ -62,7 +62,7 @@ wire [16:0] ypos = iUYS + iFYS;
 // (* use_dsp48 = "yes" *) wire [19:0] c;
 // assign c = $signed(a) * $signed(b);
 wire [11:0] uy = (ypos - 1'b1) >> 5;
-(* use_dsp48 = "yes" *) wire [27:0] up_lr = ((uy * o_map_width) + 2;
+(* use_dsp48 = "yes" *) wire [27:0] up_lr = (uy * o_map_width) + 2;
 wire [31:0] up_pos_l    = (ypos == 0) ? 0 : (xpos >> 5) + up_lr;
 wire [31:0] up_pos_r    = (ypos == 0) ? 0 : ((xpos + USER_X_DIRECT) >> 5) + up_lr;
 
