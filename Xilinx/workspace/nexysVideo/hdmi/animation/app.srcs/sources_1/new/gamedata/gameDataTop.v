@@ -81,38 +81,30 @@ enGen #(
 // DDRメモリ操作
 //----------------------------------------------------------
 ddr3Bridge #(
-    .ADDR_WIDTH(29),
-    .DATA_WIDTH(128),
-    .MASK_WIDTH(16)
+    // ddr parameter            Bram fifo parameter
+    .pDramAddrWidth (29),       .pBuffDepth     (256),
+    .pDramDataWidth (128),      .pBitDepth      (32)
+    .pDramMaskWidth (16),
 ) DDR3_BRIDGE (
-    .iCLK(iCLK),
-    .iRST(iRST),
-    .ioDDR3_DQ(ioDDR3_DQ),
-    .ioDDR3_DQS_N(ioDDR3_DQS_N),
-    .ioDDR3_DQS_P(ioDDR3_DQS_P),
-    .oDDR3_ADDR(oDDR3_ADDR),
-    .oDDR3_BA(oDDR3_BA),
-    .oDDR3_RAS(oDDR3_RAS),
-    .oDDR3_CAS(oDDR3_CAS),
-    .oDDR3_WE(oDDR3_WE),
-    .oDDR3_RESET(oDDR3_RESET),
-    .oDDR3_CLK_P(oDDR3_CLK_P),
-    .oDDR3_CLK_N(oDDR3_CLK_N),
-    .oDDR3_CKE(oDDR3_CKE),
-    .oDDR3_DM(oDDR3_DM),
-    .oDDR3_ODT(oDDR3_ODT),
-    .iWEnable(iWEnable),
-    .iREnable(iREnable),
-    .iWdData(iWdData),
-    .iAddr(iAddr),
-    .iMask(iMask),
-    .oRdData(oRdData),
-    .oRdDataValid(oRdDataValid),
-    .oReady(oReady),
-    .oWdReady(oWdReady),
-    .oInitCalibComplete(oInitCalibComplete),
-    .oUiCLK(oUiCLK),
-    .oUiRST(oUiRST)
+    // DDR port                             hand shake
+    .ioDDR3_DQ          (ioDDR3_DQ),        .iWEnable           (iWEnable),
+    .ioDDR3_DQS_N       (ioDDR3_DQS_N),     .iREnable           (iREnable),
+    .ioDDR3_DQS_P       (ioDDR3_DQS_P),     .iWdData            (iWdData),
+    .oDDR3_ADDR         (oDDR3_ADDR),       .iAddr              (iAddr),
+    .oDDR3_BA           (oDDR3_BA),         .iMask              (16'h0000),
+    .oDDR3_RAS          (oDDR3_RAS),        .oRdData            (oRdData),
+    .oDDR3_CAS          (oDDR3_CAS),        .oRdDataValid       (oRdDataValid),
+    .oDDR3_WE           (oDDR3_WE),         .oReady             (oReady),
+    .oDDR3_RESET        (oDDR3_RESET),      .oWdReady           (oWdReady),
+    .oDDR3_CLK_P        (oDDR3_CLK_P),      .oInitCalibComplete (oInitCalibComplete),
+    .oDDR3_CLK_N        (oDDR3_CLK_N),
+    .oDDR3_CKE          (oDDR3_CKE),
+    .oDDR3_DM           (oDDR3_DM),
+    .oDDR3_ODT          (oDDR3_ODT),
+
+    // user interface clk rst
+    .iCLK               (iCLK),             .iRST               (iRST),
+    .oUiCLK             (wUiCLK),           .oUiRST             (wUiRST)
 );
 
 

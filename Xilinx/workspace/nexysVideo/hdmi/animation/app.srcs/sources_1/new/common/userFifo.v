@@ -9,30 +9,27 @@
 // このFIFOを使用する上位モジュール内でインターフェースを制御することとする
 //----------------------------------------------------------
 module userFifo #(
-    parameter BUFF_SIZE   = 256,    // FIFO BRAMのサイズ指定
-    parameter BIT_WIDTH   = 32,     // bitサイズ
-    parameter ADDR_LENGTH = 16      // addr size
+    parameter pBuffDepth = 256,    // FIFO BRAMのサイズ指定
+    parameter pBitWidth  = 32,     // bitサイズ
+    parameter pAddrWidth = 16      // addr size
 )(
-    input                       iCLK,
-    input   [BIT_WIDTH-1:0]     iWD,    // write data
-    input   [ADDR_LENGTH-1:0]   iWA,    // write addr
-    input                       iWE,    // write enable
-    output  [BIT_WIDTH-1:0]     oRD,    // read data
-    input   [ADDR_LENGTH-1:0]   iRA     // read address
+    input                      iCLK,
+    input   [pBitWidth-1:0]    iWD,    // write data
+    input   [pAddrWidth-1:0]   iWA,    // write addr
+    input                      iWE,    // write enable
+    output  [pBitWidth-1:0]    oRD,    // read data
+    input   [pAddrWidth-1:0]   iRA     // read address
 );
 
-(* ram_style = "block" *) reg [BIT_WIDTH-1:0] fifo [0:2**BUFF_SIZE-1];
-reg [BIT_WIDTH-1:0] rd;     assign oRD = rd;
+localparam [pAddrWidth-1:0] pDepth = pBuffDepth - 1;
 
-// 書き込みポート
+(* ram_style = "block" *) reg [pBitWidth-1:0] fifo [0:2**pDepth];
+reg [pBitWidth-1:0] rd;     assign oRD = rd;
+
+// rwポート
 always @(posedge iCLK)
 begin
     if (iWE) fifo[iWA] <= iWD;
-end
-
-// 読み込みポート
-always @(posedge iCLK)
-begin
     rd <= fifo[iRA];
 end
 

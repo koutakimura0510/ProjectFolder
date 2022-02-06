@@ -12,9 +12,9 @@
  * Col  1024
  */
 module ddr3Controller #(
-    parameter ADDR_WIDTH = 29,
-    parameter DATA_WIDTH = 128,
-    parameter MASK_WIDTH = 16
+    parameter pDramAddrWidth = 29,
+    parameter pDramDataWidth = 128,
+    parameter pDramMaskWidth = 16
 )(
     input                   iCLK,           // system clk
     input                   iRST,           // reset High
@@ -34,10 +34,10 @@ module ddr3Controller #(
     output                  oDDR3_ODT,
     input                   iWEnable,           // user write enable data書き込み時 high
     input                   iREnable,           // user read enable data読み込み時high
-    input  [DATA_WIDTH-1:0] iWdData,            // write data
-    input  [ADDR_WIDTH-1:0] iAddr,              // access addr 28:0固定 / 27-25:Bank / 24-10:Row / 9-0:Col
-    input  [MASK_WIDTH-1:0] iMask,              // write mask
-    output [DATA_WIDTH-1:0] oRdData,            // read data
+    input  [pDramDataWidth-1:0] iWdData,            // write data
+    input  [pDramAddrWidth-1:0] iAddr,              // access addr 28:0固定 / 27-25:Bank / 24-10:Row / 9-0:Col
+    input  [pDramMaskWidth-1:0] iMask,              // write mask
+    output [pDramDataWidth-1:0] oRdData,            // read data
     output                  oRdDataValid,       // 読み込みデータ出力時High
     output                  oReady,             // MIG 動作可能時High
     output                  oWdReady,           // 書き込み 可能時High
@@ -52,13 +52,13 @@ wire ui_clk;
 wire ui_clk_sync_rst;
 
 // mig signal 
-wire [ADDR_WIDTH-1:0] o_app_addr;
+wire [pDramAddrWidth-1:0] o_app_addr;
 wire [2:0] o_app_cmd;
 wire o_app_enable;
-wire [DATA_WIDTH-1:0] o_app_wdf_data;
+wire [pDramDataWidth-1:0] o_app_wdf_data;
 wire o_app_wdf_wren;
-wire [MASK_WIDTH-1:0] o_app_wdf_mask;
-wire [DATA_WIDTH-1:0] i_app_rd_data;
+wire [pDramMaskWidth-1:0] o_app_wdf_mask;
+wire [pDramDataWidth-1:0] i_app_rd_data;
 
 
 // MIG Hand Shake
@@ -87,9 +87,9 @@ clk_wiz_1 DDR3_CLK (
 );
 
 migController #(
-    .ADDR_WIDTH(ADDR_WIDTH),
-    .DATA_WIDTH(DATA_WIDTH),
-    .MASK_WIDTH(MASK_WIDTH)
+    .pDramAddrWidth(pDramAddrWidth),
+    .pDramDataWidth(pDramDataWidth),
+    .pDramMaskWidth(pDramMaskWidth)
 ) MIG_CONTROLLER (
     .iCLK                   (ui_clk),
     .iRST                   (ui_clk_sync_rst),

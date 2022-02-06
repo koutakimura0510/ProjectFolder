@@ -7,17 +7,22 @@
 // -
 // FIFO <-> DDR3メモリコントローラ ブリッジモジュール
 // 
-// 受信データと送信データをそれぞれ保存しておくFIFOを用意し、
-// DDR3メモリの送受信データの管理を行う。
+// 受信データと送信データをそれぞれ保存しておくFIFOを用意し、DDR3メモリの送受信データの管理を行う。
 // 受信・送信ともにEmpty Full信号で制御を行う。
-// 
-// FIFOは2系統のCLKで動作する。システムクロックとDDRモジュールから生成されるユーザーインターフェースCLKの2つ。
-// 非同期で動作するモジュール間を結合、動作させるため、ブリッジモジュールを作成した。
+//
+// 受信・送信用それぞれ用意しておく、read writeに必要な要素はデータとアドレスなので
+// それぞれ下記のバッファが必要である
+// 読み込みデータ保存FIFO
+// 読み込みアドレス保存FIFO
+// 書き込みデータ保存FIFO
+// 書き込みアドレス保存FIFOが必要である
 //----------------------------------------------------------
 module ddr3Bridge #(
-    parameter ADDR_WIDTH = 29,
-    parameter DATA_WIDTH = 128,
-    parameter MASK_WIDTH = 16
+    parameter pDramAddrWidth = 29,
+    parameter pDramDataWidth = 128,
+    parameter pDramMaskWidth = 16,
+    parameter pBuffDepth     = 16,          // bram length
+    parameter pBitDepth      = 32           // data bit
 )(
     input                   iCLK,           // system clk
     input                   iRST,           // reset High
@@ -39,72 +44,106 @@ module ddr3Bridge #(
     output                  oDDR3_ODT,
 
     // インターフェース制御信号一覧
-    input  [DATA_WIDTH-1:0] iWD,                // WriteData
-    input  [ADDR_WIDTH-1:0] iWA,                // Write Addr 28:0固定 / 27-25:Bank / 24-10:Row / 9-0:Col
-    input  [MASK_WIDTH-1:0] iMask,              // write mask 1を立てることでその範囲は書き込まないようにできる 基本0
-    input                   iWE,                // write enable信号
-    output                  oWFLL,              // write fifo full signal
-    output [DATA_WIDTH-1:0] oRD,                // Read Data
-    input  [ADDR_WIDTH-1:0] iRA,                // Read Addr 28:0固定 / 27-25:Bank / 24-10:Row / 9-0:Col
-    output                  oRDV,               // 有効データ出力時High Read Data Valid
-    output                  oRFLL,              // read fifo full signal
-    output                  oUICLK,             // user clk 100mhz
-    output                  oUIRST,             // user rst Active High
+    input  [pDramDataWidth-1:0] iWD,                // WriteData
+    input  [pDramAddrWidth-1:0] iWA,                // Write Addr 28:0固定 / 27-25:Bank / 24-10:Row / 9-0:Col
+    input  [pDramMaskWidth-1:0] iMask,              // write mask 1を立てることでその範囲は書き込まないようにできる 基本0
+    input                       iWE,                // write enable信号
+    output                      oWFLL,              // write fifo full signal
+    output [pDramDataWidth-1:0] oRD,                // Read Data
+    input  [pDramAddrWidth-1:0] iRA,                // Read Addr 28:0固定 / 27-25:Bank / 24-10:Row / 9-0:Col
+    output                      oRVD,               // 有効データ出力時High Read Valid Data
+    output                      oRFLL,              // read fifo full signal
+    output                      oUICLK,             // user clk 100mhz
+    output                      oUIRST,             // user rst Active High
 );
 
-// 非同期fifo制御
-// 受信・送信用それぞれ用意しておく、read writeに必要なデータはデータとアドレスなので
-// それぞれ下記のバッファが必要である
-// 読み込みデータ保存FIFO
-// 読み込みアドレス保存FIFO
-// 書き込みデータ保存FIFO
-// 書き込みアドレス保存FIFOが必要である
-//
-// 例えば書き込みデータが残っている場合は、iWEnable信号はこのモジュール内で生成することができる
-// 上の階層のモジュールはEMPとFull信号のみ確認すればよいだけなので、制御しやすくなる
-// このモジュール内で流れてくるデータを制御すればよい
+////////////////////////////////////////////////////////////
+wire wUiCLK;    assign oUICLK = wUiCLK;
+wire wUiRST;    assign oUIRST = wUiRST;
 
-wire ui_clk;    assign oUICLK = ui_clk;
-wire ui_rst;    assign oUIRST = ui_rst;
+////////////////////////////////////////////////////////////
+//----------------------------------------------------------
+// 読み込みデータ・アドレス保存バッファ
+// 読み込みデータとアドレス参照のインデックスは一致していなければならない
+//----------------------------------------------------------
+fifoController #(
+    .pBuffDepth (pBuffDepth),
+    .pBitWidth  (pBitDepth)
+) FIFO_READ_DATA (
+    // write side           read side
+    .iCLK   (wUiCLK),       .iRST   (wUiRST),
+    .iWD    (),             .oRD    (),
+    .iWE    (),             .iRE    (),
+    .oFLL   (),             .oEMP   (),
+                            .oRVD   ()
+);
 
+fifoController #(
+    .pBuffDepth (pBuffDepth),
+    .pBitWidth  (pBitDepth)
+) FIFO_READ_ADDR (
+    // write side           read side
+    .iCLK   (wUiCLK),       .iRST   (wUiRST),
+    .iWD    (),             .oRD    (),
+    .iWE    (),             .iRE    (),
+    .oFLL   (),             .oEMP   (),
+                            .oRVD   ()
+);
+
+////////////////////////////////////////////////////////////
+//----------------------------------------------------------
+// 書き込みデータ・アドレス保存バッファ
+// 書き込みデータとアドレス参照のインデックスは一致していなければならない
+//----------------------------------------------------------
+fifoController #(
+    .pBuffDepth (pBuffDepth),
+    .pBitWidth  (pBitDepth)
+) FIFO_WRITE_DATA (
+    // write side           read side
+    .iCLK   (wUiCLK),       .iRST   (wUiRST),
+    .iWD    (),             .oRD    (),
+    .iWE    (),             .iRE    (),
+    .oFLL   (),             .oEMP   (),
+                            .oRVD   ()
+);
+
+fifoController #(
+    .pBuffDepth (pBuffDepth),
+    .pBitWidth  (pBitDepth)
+) FIFO_WRITE_ADDR (
+    // write side           read side
+    .iCLK   (wUiCLK),       .iRST   (wUiRST),
+    .iWD    (),             .oRD    (),
+    .iWE    (),             .iRE    (),
+    .oFLL   (),             .oEMP   (),
+                            .oRVD   ()
+);
+
+////////////////////////////////////////////////////////////
 ddr3Controller #(
-    .ADDR_WIDTH(ADDR_WIDTH),
-    .DATA_WIDTH(DATA_WIDTH),
-    .MASK_WIDTH(MASK_WIDTH)
+    .pDramAddrWidth(pDramAddrWidth),
+    .pDramDataWidth(pDramDataWidth),
+    .pDramMaskWidth(pDramMaskWidth)
 ) DDR3_CONTROLLER (
-    .iCLK               (iCLK),
-    .iRST               (iRST),
-    .ioDDR3_DQ          (ioDDR3_DQ),
-    .ioDDR3_DQS_N       (ioDDR3_DQS_N),
-    .ioDDR3_DQS_P       (ioDDR3_DQS_P),
-    .oDDR3_ADDR         (oDDR3_ADDR),
-    .oDDR3_BA           (oDDR3_BA),
-    .oDDR3_RAS          (oDDR3_RAS),
-    .oDDR3_CAS          (oDDR3_CAS),
-    .oDDR3_WE           (oDDR3_WE),
-    .oDDR3_RESET        (oDDR3_RESET),
-    .oDDR3_CLK_P        (oDDR3_CLK_P),
+    // DDR port                             hand shake
+    .ioDDR3_DQ          (ioDDR3_DQ),        .iWEnable           (iWEnable),
+    .ioDDR3_DQS_N       (ioDDR3_DQS_N),     .iREnable           (iREnable),
+    .ioDDR3_DQS_P       (ioDDR3_DQS_P),     .iWdData            (iWdData),
+    .oDDR3_ADDR         (oDDR3_ADDR),       .iAddr              (iAddr),
+    .oDDR3_BA           (oDDR3_BA),         .iMask              (16'h0000),
+    .oDDR3_RAS          (oDDR3_RAS),        .oRdData            (oRdData),
+    .oDDR3_CAS          (oDDR3_CAS),        .oRdDataValid       (oRdDataValid),
+    .oDDR3_WE           (oDDR3_WE),         .oReady             (oReady),
+    .oDDR3_RESET        (oDDR3_RESET),      .oWdReady           (oWdReady),
+    .oDDR3_CLK_P        (oDDR3_CLK_P),      .oInitCalibComplete (oInitCalibComplete),
     .oDDR3_CLK_N        (oDDR3_CLK_N),
     .oDDR3_CKE          (oDDR3_CKE),
     .oDDR3_DM           (oDDR3_DM),
     .oDDR3_ODT          (oDDR3_ODT),
-    .iWEnable           (iWEnable),
-    .iREnable           (iREnable),
-    .iWdData            (iWdData),
-    .iAddr              (iAddr),
-    .iMask              (16'h0000),
-    .oRdData            (oRdData),
-    .oRdDataValid       (oRdDataValid),
-    .oReady             (oReady),
-    .oWdReady           (oWdReady),
-    .oInitCalibComplete (oInitCalibComplete),
-    .oUiCLK             (ui_clk),
-    .oUiRST             (ui_rst)
-);
 
-always @*
-begin
-    
-end
+    // user interface clk rst
+    .iCLK               (iCLK),             .iRST               (iRST),
+    .oUiCLK             (wUiCLK),           .oUiRST             (wUiRST)
+);
 
 endmodule

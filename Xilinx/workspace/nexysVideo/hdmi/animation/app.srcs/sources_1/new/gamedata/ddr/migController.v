@@ -8,9 +8,9 @@
  * MIG制御用コントローラ
  */
 module migController #(
-    parameter ADDR_WIDTH = 29,
-    parameter DATA_WIDTH = 128,
-    parameter MASK_WIDTH = 16
+    parameter pDramAddrWidth = 29,
+    parameter pDramDataWidth = 128,
+    parameter pDramMaskWidth = 16
 )(
     input                   iCLK,
     input                   iRST,
@@ -18,10 +18,10 @@ module migController #(
     // user design signals
     input                   iWEnable,
     input                   iREnable,
-    input  [ADDR_WIDTH-1:0] iAddr,
-    input  [DATA_WIDTH-1:0] iWdData,
-    input  [MASK_WIDTH-1:0] iMask,
-    output [DATA_WIDTH-1:0] oRdData,
+    input  [pDramAddrWidth-1:0] iAddr,
+    input  [pDramDataWidth-1:0] iWdData,
+    input  [pDramMaskWidth-1:0] iMask,
+    output [pDramDataWidth-1:0] oRdData,
 
     // Mig Signals Bridge
     output                  oRdDataValid,
@@ -30,13 +30,13 @@ module migController #(
     output                  oInitCalibComplete,
 
     // Mig Signals
-    output [ADDR_WIDTH-1:0] oAppAddr,
+    output [pDramAddrWidth-1:0] oAppAddr,
     output [ 2:0]           oAppCmd,
     output                  oAppEnable,
-    output [DATA_WIDTH-1:0] oAppWdfData,
+    output [pDramDataWidth-1:0] oAppWdfData,
     output                  oAppWdfWren,
-    output [MASK_WIDTH-1:0] oAppWdfMask,
-    input  [DATA_WIDTH-1:0] iAppRdData,
+    output [pDramMaskWidth-1:0] oAppWdfMask,
+    input  [pDramDataWidth-1:0] iAppRdData,
     input                   iAppRdDataValid,
     input                   iAppReady,
     input                   iAppWdfReady,
@@ -84,12 +84,12 @@ assign oRdData = iAppRdData;
 //----------------------------------------------------------
 // MIG IP 操作データ出力
 //----------------------------------------------------------
-reg [ADDR_WIDTH-1:0] app_addr;          assign oAppAddr     = app_addr;
+reg [pDramAddrWidth-1:0] app_addr;          assign oAppAddr     = app_addr;
 reg [2:0] app_cmd;                      assign oAppCmd      = app_cmd;
 reg app_enable;                         assign oAppEnable   = app_enable;
-reg [DATA_WIDTH-1:0] app_wdf_data;      assign oAppWdfData  = app_wdf_data;
+reg [pDramDataWidth-1:0] app_wdf_data;      assign oAppWdfData  = app_wdf_data;
 reg app_wdf_wren;                       assign oAppWdfEnd   = app_wdf_wren;
-reg [MASK_WIDTH-1:0] app_wdf_mask;      assign oAppWdfMask  = app_wdf_mask;
+reg [pDramMaskWidth-1:0] app_wdf_mask;      assign oAppWdfMask  = app_wdf_mask;
 reg [2:0] mig_state;
 
 
