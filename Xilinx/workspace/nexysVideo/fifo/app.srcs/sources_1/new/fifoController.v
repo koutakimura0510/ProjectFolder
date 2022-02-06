@@ -13,7 +13,7 @@ module fifoController #(
     parameter pBitWidth   = 32      // bitサイズ
 )(
     input                       iCLK,
-    input                       iRST,
+    input                       iRST,   // Active High
     input   [pBitWidth-1:0]     iWD,    // write data
     input                       iWE,    // write enable 有効データ書き込み
     output                      oFLL,   // 最大書き込み時High
@@ -38,9 +38,9 @@ localparam [pAddrWidth-1:0] pAddrMask = pBuffDepth - 1;
 // oEMP 書き込みと読み込みのアドレスが一致している、または超えそうな場合High
 // oRVD Empty状態ではなく読み込みEnable信号を受信した場合High
 //----------------------------------------------------------
-reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {rFLL, rEMP, rRVD};
-reg qFLL, qEMP, qRVD;
+reg qFLL, qEMP, qRVD;    assign {oFLL, oEMP, oRVD} = {qFLL, qEMP, qRVD};
 reg [pAddrWidth-1:0] qWPs, qRPs;    // 現在のwrポインタの一つ手前のインデックス参照
+reg [pAddrWidth-1:0] rORP;
 reg [pAddrWidth-1:0] rWA, rRA;      // 現在参照中のwrポインタ
 reg qWE, qRE, qRst;
 
@@ -49,7 +49,7 @@ always @(posedge iCLK)
 begin
     if (qRst)       rWA <= 0;
     else if (!qWE)  rWA <= rWA;
-    else            rWA <= (rWA + 1'b1) & pAddrMask;
+    else            rWA <= rWA + 1'b1;
 end
 
 // read pointer
@@ -57,26 +57,26 @@ always @(posedge iCLK)
 begin
     if (qRst)      rRA <= 0;
     else if (!qRE) rRA <= rRA;
-    else           rRA <= (rRA + 1'b1) & pAddrMask;
+    else           rRA <= rRA + 1'b1;
 end
 
-// hand shake
+// 前回のrpが更新されていたら新規データを出力できる状態と判断する
 always @(posedge iCLK)
 begin
-    if (qRst)   {rFLL, rEMP, rRVD} <= {1'b1, 1'b1, 1'b0};
-    else        {rFLL, rEMP, rRVD} <= {qFLL, qEMP, qRVD};
+    if (qRst)   rORP <= 0;
+    else        rORP <= rRA;
 end
 
 always @*
 begin
     qRst <= iRST;
-    qWE  <= iWE & (~rFLL);
-    qRE  <= iRE & (~rEMP);
+    qWE  <= iWE & (~qFLL);
+    qRE  <= iRE & (~qEMP);
     qWPs <= rWA - 1'b1;
     qRPs <= rRA - 1'b1;
     qFLL <= (qRPs == rWA) ? 1'b1 : 1'b0;
     qEMP <= (rWA == rRA || qWPs == rRA) ? 1'b1 : 1'b0;
-    qRVD <= (rWA == rRA || qWPs == rRA) ? 1'b0 : (~qEMP);
+    qRVD <= (rRA == rORP) ? 1'b0 : 1'b1;
 end
 
 ////////////////////////////////////////////////////////////

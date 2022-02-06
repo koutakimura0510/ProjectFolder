@@ -22,18 +22,17 @@ module main (
 ////////////////////////////////////////////////////////////
 localparam pWidth = 8;
 
+
+////////////////////////////////////////////////////////////
+//----------------------------------------------------------
+// FIFOを利用する場合は、Full Empty信号を利用して、
+// インターフェース回路やWRENABLEを制御する
+//----------------------------------------------------------
 reg  [pWidth-1:0] iWD;
 wire [pWidth-1:0] oRD;
 wire oRVD;
 reg qWE, qRE;
 
-reg delay;
-
-always @(posedge iCLK)
-begin
-    if (iRST)   delay <= 1'b0;
-    else        delay <= ~delay;
-end
 
 fifoController #(
     .pBuffDepth (8),
@@ -55,7 +54,7 @@ end
 always @(posedge iCLK)
 begin
     if (iRST)       iWD <= 0;
-    else if (oFLL)  iWD <= iWD;
+    else if (!qWE)  iWD <= iWD;
     else            iWD <= (iWD + 1'b1) & 255;
 end
 ////////////////////////////////////////////////////////////
@@ -65,7 +64,7 @@ reg [7:0] rled;
 always @(posedge iCLK)
 begin
     if (iRST)       rled <= 0;
-    else if (!oRVD) rled <= 8'hff;
+    else if (!oRVD) rled <= 0;
     else            rled <= oRD;
 end
 
