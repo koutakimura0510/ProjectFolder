@@ -6,7 +6,9 @@
 // Borad  Nexys Video
 // -
 // FIFOコントロールモジュール
-// このモジュールを使用する上位モジュールとのやりとりを簡易的なものにする目的がある
+// この回路を使用する上位モジュールでは下記の内容でデータのやり取りを行う
+// 1.書き込み時はoFLLのみ確認すれば良い
+// 2.読み込み時はoEMPとoRDVを確認すれば良い
 //----------------------------------------------------------
 module fifoController #(
     parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
@@ -23,8 +25,10 @@ module fifoController #(
     output                      oEMP    // バッファ空時High
 );
 
+//----------------------------------------------------------
 // buffer sizeによってアドレスレジスタのサイズを自動変換するため、
 // bit幅を取得し指定する
+//----------------------------------------------------------
 localparam pAddrWidth  = fBitWidth(pBuffDepth);
 localparam [pAddrWidth-1:0] pAddrMask = pBuffDepth - 1;
 
@@ -40,8 +44,8 @@ localparam [pAddrWidth-1:0] pAddrMask = pBuffDepth - 1;
 //----------------------------------------------------------
 reg qFLL, qEMP, qRVD;    assign {oFLL, oEMP, oRVD} = {qFLL, qEMP, qRVD};
 reg [pAddrWidth-1:0] qWPs, qRPs;    // 現在のwrポインタの一つ手前のインデックス参照
-reg [pAddrWidth-1:0] rORP;
 reg [pAddrWidth-1:0] rWA, rRA;      // 現在参照中のwrポインタ
+reg [pAddrWidth-1:0] rORP;
 reg qWE, qRE, qRst;
 
 // write pointer

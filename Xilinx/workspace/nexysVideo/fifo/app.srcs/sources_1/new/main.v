@@ -20,7 +20,28 @@ module main (
 );
 
 ////////////////////////////////////////////////////////////
-localparam pWidth = 8;
+//----------------------------------------------------------
+// デモ動作用のステートマシン
+//----------------------------------------------------------
+reg [3:0] state;
+
+always @(posedge iCLK)
+begin
+    if (iRST) begin
+        state <= 0;
+    end
+    else
+    begin
+        case (state)
+        0: state <= (~oFLL) ? 1 : 0;
+        1: state <= (~oFLL) ? 2 : 1;
+        2: state <= (~oFLL) ? 3 : 2;
+        3: state <= (~oFLL) ? 4 : 3;
+        4: state <= (~oFLL) ? 0 : 4;
+        default state <= 0;
+        endcase
+    end
+end
 
 
 ////////////////////////////////////////////////////////////
@@ -28,16 +49,17 @@ localparam pWidth = 8;
 // FIFOを利用する場合は、Full Empty信号を利用して、
 // インターフェース回路やWRENABLEを制御する
 //----------------------------------------------------------
+localparam pWidth = 8;
 reg  [pWidth-1:0] iWD;
 wire [pWidth-1:0] oRD;
 wire oRVD;
 reg qWE, qRE;
 
-
 fifoController #(
     .pBuffDepth (8),
     .pBitWidth  (pWidth)
 ) FIFO_CONTROLLER (
+    // write side       read side
     .iCLK   (iCLK),     .iRST   (iRST),
     .iWD    (iWD),      .oRD    (oRD),
     .iWE    (qWE),      .iRE    (qRE),
@@ -47,7 +69,7 @@ fifoController #(
 
 always @*
 begin
-    qWE <= (~oFLL);
+    qWE <= (~oFLL) && (state == 4);
     qRE <= (~oEMP);
 end
 
