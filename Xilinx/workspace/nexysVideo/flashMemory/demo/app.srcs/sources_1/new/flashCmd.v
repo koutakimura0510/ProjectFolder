@@ -44,7 +44,7 @@ module flashCmd (
 // .256byte書き込み
 // .WIPレジスタに0が入力されるまで待機
 // .CS High
-//
+// .書き込み終了後WRDIコマンド発行しDisable
 //
 // [Read]
 // 連続で1セクタ読み込み可能
@@ -53,6 +53,10 @@ module flashCmd (
 // 128MB -> 24bit -> 24bitコマンド使用
 // 256MB -> 25bit -> 32bitコマンド使用
 //----------------------------------------------------------
+
+//---------------------------------------------------------------------------
+// Winbond W25Q256　レジスタマップ
+//---------------------------------------------------------------------------
 localparam CMD_REMS  = 8'h90;   // デバイスのIDを取得、Cmd + Null24bit address + 2byte Null data
 localparam CMD_RDID  = 8'h9f;   // JEDEC Manufacturer ID and JEDEC CF1
 localparam CMD_READ  = 8'h03;   // Read 3 byte address
@@ -61,6 +65,8 @@ localparam CMD_WREN  = 8'h06;   // Write Enable
 localparam CMD_WRDI  = 8'h04;   // Write Disable
 localparam CMD_P4E   = 8'h20;   // Parameter 4-KB Sector Erase 3byte Address
 localparam CMD_4P4E  = 8'h21;   // Parameter 4-KB Sector Erase 4byte Address
+localparam CMD_BE    = 8'hD8;   // Parameter 64-KB Block Erase 3byte Address
+localparam CMD_4BE   = 8'hDC;   // Parameter 64-KB Block Erase 4byte Address
 localparam CMD_P8E   = 8'h40;   // 全消去
 localparam CMD_BE    = 8'h60;   // Bulk Erase
 localparam CMD_PP    = 8'h02;   // Page Program 3byte Address
