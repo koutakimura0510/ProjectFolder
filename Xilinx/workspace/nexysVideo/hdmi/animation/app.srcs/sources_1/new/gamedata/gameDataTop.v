@@ -83,7 +83,7 @@ enGen #(
 ddr3Bridge #(
     // ddr parameter            Bram fifo parameter
     .pDramAddrWidth (29),       .pBuffDepth     (256),
-    .pDramDataWidth (128),      .pBitDepth      (32)
+    .pDramDataWidth (128),      .pBitDepth      (128)
     .pDramMaskWidth (16),
 ) DDR3_BRIDGE (
     // DDR port                             hand shake

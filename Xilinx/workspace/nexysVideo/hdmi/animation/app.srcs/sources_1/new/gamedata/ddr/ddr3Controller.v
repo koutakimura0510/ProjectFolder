@@ -16,34 +16,34 @@ module ddr3Controller #(
     parameter pDramDataWidth = 128,
     parameter pDramMaskWidth = 16
 )(
-    input                   iCLK,           // system clk
-    input                   iRST,           // reset High
-    inout  [15:0]           ioDDR3_DQ,
-    inout  [ 1:0]           ioDDR3_DQS_N,
-    inout  [ 1:0]           ioDDR3_DQS_P,
-    output [14:0]           oDDR3_ADDR,
-    output [ 2:0]           oDDR3_BA,
-    output                  oDDR3_RAS,
-    output                  oDDR3_CAS,
-    output                  oDDR3_WE,
-    output                  oDDR3_RESET,
-    output                  oDDR3_CLK_P,
-    output                  oDDR3_CLK_N,
-    output                  oDDR3_CKE,
-    output [ 1:0]           oDDR3_DM,
-    output                  oDDR3_ODT,
-    input                   iWEnable,           // user write enable data書き込み時 high
-    input                   iREnable,           // user read enable data読み込み時high
+    input                       iCLK,           // system clk
+    input                       iRST,           // reset High
+    inout  [15:0]               ioDDR3_DQ,
+    inout  [ 1:0]               ioDDR3_DQS_N,
+    inout  [ 1:0]               ioDDR3_DQS_P,
+    output [14:0]               oDDR3_ADDR,
+    output [ 2:0]               oDDR3_BA,
+    output                      oDDR3_RAS,
+    output                      oDDR3_CAS,
+    output                      oDDR3_WE,
+    output                      oDDR3_RESET,
+    output                      oDDR3_CLK_P,
+    output                      oDDR3_CLK_N,
+    output                      oDDR3_CKE,
+    output [ 1:0]               oDDR3_DM,
+    output                      oDDR3_ODT,
+    input                       iWEnable,           // user write enable data書き込み時 high
+    input                       iREnable,           // user read enable data読み込み時high
     input  [pDramDataWidth-1:0] iWdData,            // write data
     input  [pDramAddrWidth-1:0] iAddr,              // access addr 28:0固定 / 27-25:Bank / 24-10:Row / 9-0:Col
     input  [pDramMaskWidth-1:0] iMask,              // write mask
     output [pDramDataWidth-1:0] oRdData,            // read data
-    output                  oRdDataValid,       // 読み込みデータ出力時High
-    output                  oReady,             // MIG 動作可能時High
-    output                  oWdReady,           // 書き込み 可能時High
-    output                  oInitCalibComplete, // 初期化完了時High
-    output                  oUiCLK,
-    output                  oUiRST
+    output                      oRdDataValid,       // 読み込みデータ出力時High
+    output                      oReady,             // 読み込み可能時High
+    output                      oWdReady,           // 書き込み可能時High
+    output                      oInitCalibComplete, // 初期化完了時High
+    output                      oUiCLK,
+    output                      oUiRST
 );
 
 
