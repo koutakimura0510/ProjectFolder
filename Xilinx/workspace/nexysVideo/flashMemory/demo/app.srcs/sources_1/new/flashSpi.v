@@ -6,6 +6,8 @@
  * Borad  Nexys Video
  * 
  * フラッシュメモリ専用SPIモジュール
+ *
+ * ver2. Bit幅を変更可能にしなければならない
  */
 module flashSpi #(
     parameter PDIVSCK = 250 // systemclk 100MHz / 250 = 400kHz
