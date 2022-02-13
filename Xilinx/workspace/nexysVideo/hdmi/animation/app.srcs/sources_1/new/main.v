@@ -56,41 +56,18 @@ module main
     output          oOledVdd
 );
 
-// 負論理なので反転、clk wiz用リセット
-assign rst = ~iRST;
-
-// sw
-wire [ 5:0] oBtn;
-
-// tmds制御信号
-wire [23:0] oVRGB;                              // video RGB
-
-// pll 制御信号
-wire o_clk_250;     // pll clk 250MHz
-wire o_clk_25;      // pll clk 25MHz
+//----------------------------------------------------------
+// ピクセルクロック生成
+//----------------------------------------------------------
+wire o_clk_250;
+wire o_clk_25;
 wire locked;
+wire rst = ~iRST;   // 負論理なので反転、clk wiz用リセット
 wire user_rst = ~locked;
 
-// video timing制御信号
-wire oHSYNC;
-wire oVSYNC;
-wire oVDE;
-wire [ 9:0] oHPOS;
-wire [ 9:0] oVPOS;
-
-
-// 操作状況をLEDで確認
-// assign oLED = {~iBtn, locked, ~rst};
-
-
-//----------------------------------------------------------
-// モジュール接続
-//----------------------------------------------------------
 clk_wiz_0 CLK_GEN (
-    .clk_out1   (o_clk_25),
-    .clk_out2   (o_clk_250),
-    .reset      (rst),
-    .locked     (locked),
+    .clk_out1   (o_clk_25),     .clk_out2   (o_clk_250),
+    .reset      (rst),          .locked     (locked),
     .clk_in1    (iCLK)
 );
 
@@ -98,40 +75,40 @@ clk_wiz_0 CLK_GEN (
 //----------------------------------------------------------
 // ディスプレイ制御信号生成
 //----------------------------------------------------------
+wire [ 9:0] oHPOS, oVPOS;
+wire oHSYNC, oVSYNC;
+wire oVDE, oFVDE;
+
 hvsyncGen #(
-    .H_DISPLAY  (H_DISPLAY),
-    .H_BACK     (H_BACK),
-    .H_FRONT    (H_FRONT),
-    .H_SYNC     (H_SYNC),
-    .V_DISPLAY  (V_DISPLAY),
-    .V_TOP      (V_TOP),
-    .V_BOTTOM   (V_BOTTOM),
-    .V_SYNC     (V_SYNC)
+    // hrizontal                vertical
+    .H_DISPLAY  (H_DISPLAY),    .V_DISPLAY  (V_DISPLAY),
+    .H_BACK     (H_BACK),       .V_TOP      (V_TOP),
+    .H_FRONT    (H_FRONT),      .V_BOTTOM   (V_BOTTOM),
+    .H_SYNC     (H_SYNC),       .V_SYNC     (V_SYNC)
 ) HVSYNC_GEN (
-    .iCLK       (o_clk_25),
-    .iRST       (user_rst),
-    .oHSYNC     (oHSYNC),
-    .oVSYNC     (oVSYNC),
-    .oVDE       (oVDE),
-    .oHPOS      (oHPOS),
-    .oVPOS      (oVPOS)
+    .iCLK       (o_clk_25),     .iRST       (user_rst),
+    .oHSYNC     (oHSYNC),       .oVSYNC     (oVSYNC),
+    .oHPOS      (oHPOS),        .oVPOS      (oVPOS)
+    .oVDE       (oVDE),         .iFVDE      (oFVDE)
 );
 
 
 //----------------------------------------------------------
 // キー入力生成
 //----------------------------------------------------------
+wire [ 5:0] oBtn;
+
 swTop SW_TOP (
-    .iCLK       (o_clk_25),
-    .iRST       (user_rst),
-    .iBtn       (~iBtn),
-    .oBtn       (oBtn)
+    .iCLK       (o_clk_25),     .iRST       (user_rst),
+    .iBtn       (~iBtn),        .oBtn       (oBtn)
 );
 
 
 //----------------------------------------------------------
 // RGBデータ
 //----------------------------------------------------------
+wire [23:0] oVRGB;
+
 gameDataTop # (
     .pDramAddrWidth (29),       .pBuffDepth     (8),
     .pDramDataWidth (128),      .pBitDepth      (32),
@@ -142,7 +119,10 @@ gameDataTop # (
     .iRST           (user_rst),
     .iBtn           (oBtn),
     .iVDE           (oVDE),
+    .iFVDE          (oFVDE),
     .oVRGB          (oVRGB),
+
+    // ddr side
     .ioDDR3_DQ      (ddr3_dq),
     .ioDDR3_DQS_N   (ddr3_dqs_n),
     .ioDDR3_DQS_P   (ddr3_dqs_p),
@@ -157,6 +137,8 @@ gameDataTop # (
     .oDDR3_CKE      (ddr3_cke),
     .oDDR3_DM       (ddr3_dm),
     .oDDR3_ODT      (ddr3_odt),
+
+    // oled side
     .oOledScl       (oOledScl),
     .oOledSda       (oOledSda),
     .oOledDC        (oOledDC),

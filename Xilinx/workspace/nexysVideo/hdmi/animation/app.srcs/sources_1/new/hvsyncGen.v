@@ -23,10 +23,10 @@ module hvsyncGen
     output          oHSYNC,         // horizontal area 水平同期信号
     output          oVSYNC,         // vertical area 垂直同期信号
     output          oVDE,           // video data enable 描画エリア時High
+    output          oFVDE,          // fast video enable oVDEより1clk早くHigh
     output [9:0]    oHPOS,
     output [9:0]    oVPOS
 );
-
 
 // declarations for TV-simulator sync parameters
 // horizontal constants
@@ -38,62 +38,86 @@ localparam V_SYNC_START    = V_DISPLAY + V_BOTTOM;
 localparam V_SYNC_END      = V_DISPLAY + V_BOTTOM + V_SYNC - 1;
 localparam V_MAX           = V_DISPLAY + V_TOP + V_BOTTOM + V_SYNC - 1;
 
-
-// 信号出力
-reg [9:0] hpos;         assign oHPOS    = hpos;
-reg [9:0] vpos;         assign oVPOS    = vpos;
-reg hsync;              assign oHSYNC   = hsync;
-reg vsync;              assign oVSYNC   = vsync;
-assign oVDE = (hpos < H_DISPLAY && vpos < V_DISPLAY) ? 1'b1 : 1'b0;
-
-
+////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // 水平同期カウンター、信号動作
 //----------------------------------------------------------
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
-        hpos <= 0;
-    end else if (hpos == H_MAX) begin
-        hpos <= 0;
-    end else begin
-        hpos <= hpos + 1'b1;
-    end
+reg [9:0] rHriz;        assign oHPOS    = rHriz;
+reg rHsync;             assign oHSYNC   = rHsync;
+reg qHmatch, qHrange;
+
+always @(posedge iCLK)
+begin
+    if (iRST)         rHriz <= 0;
+    else if (qHmatch) rHriz <= 0;
+    else              rHriz <= rHriz + 1'b1;
 end
 
 always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
-        hsync <= 0;
-    end else if (H_SYNC_START <= hpos && hpos <= H_SYNC_END) begin
-        hsync <= 1'b1;
-    end else begin
-        hsync <= 1'b0;
-    end
+    if (iRST)           rHsync <= 0;
+    else if (qHrange)   rHsync <= 1'b1;
+    else                rHsync <= 1'b0;
 end
 
+always @*
+begin
+    qHmatch <= (rHriz == H_MAX)
+    qHrange <= (H_SYNC_START <= rHriz && rHriz <= H_SYNC_END);
+end
 
- //----------------------------------------------------------
- // 垂直同期カウンター、信号動作
- //----------------------------------------------------------
+////////////////////////////////////////////////////////////
+//----------------------------------------------------------
+// 垂直同期カウンター、信号動作
+//----------------------------------------------------------
+reg [9:0] rVert;        assign oVPOS    = rVert;
+reg oVsync;             assign oVSYNC   = oVsync;
+reg qVmatch, qVrange;
+
+always @(posedge iCLK) 
+begin
+    if (iRST)           rVert <= 0;
+    else if (qHmatch)   rVert <= (qVmatch) ? 0 : rVert + 1;
+    else                rVert <= rVert;
+end
+
+always @(posedge iCLK) 
+begin
+    if (iRST)           oVsync <= 0;
+    else if (qVrange)   oVsync <= 1'b1;
+    else                oVsync <= 1'b0;
+end
+
+always @*
+begin
+    qVmatch <= (rVert == V_MAX)
+    qVrange <= (V_SYNC_START <= rVert && rVert <= V_SYNC_END);
+end
+
+assign oVDE  = (rHriz < H_DISPLAY && rVert < V_DISPLAY) ? 1'b1 : 1'b0;
+
+////////////////////////////////////////////////////////////
+//----------------------------------------------------------
+// fast video timing
+//----------------------------------------------------------
+reg [9:0] rFHriz, rFVert;     assign oFVDE = (rFHriz < H_DISPLAY && rFVert < V_DISPLAY) ? 1'b1 : 1'b0;
+reg qFHmatch, qFVmatch;
+
 always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
-        vpos <= 0;
-    end else if (hpos == H_MAX) begin
-        if (vpos == V_MAX) begin
-            vpos <= 0;
-        end else begin
-            vpos <= vpos + 1;
-        end
-    end
+    if (iRST)           rFHriz <= 1;
+    else if (qFHmatch)  rFHriz <= 0;
+    else                rFHriz <= rFHriz + 1'b1;
 end
 
 always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
-        vsync <= 0;
-    end else if (V_SYNC_START <= vpos && vpos <= V_SYNC_END) begin
-        vsync <= 1'b1;
-    end else begin
-        vsync <= 1'b0;
-    end
+    if (iRST)           rFVert <= 0;
+    else if (qFHmatch)  rFVert <= (qFVmacth) ? 0 : rFVert + 1;
+    else                rFVert <= rFVert;
+end
+
+always @*
+begin
+    qFHmatch <= (rFHriz == H_MAX);
+    qFVmacth <= (rFVert == V_MAX);
 end
 
 endmodule
