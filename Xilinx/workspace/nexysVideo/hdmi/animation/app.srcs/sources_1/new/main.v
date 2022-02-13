@@ -141,8 +141,6 @@ gameDataTop # (
     .iCLK           (iCLK),
     .iRST           (user_rst),
     .iBtn           (oBtn),
-    .iHPOS          (oHPOS),
-    .iVPOS          (oVPOS),
     .iVDE           (oVDE),
     .oVRGB          (oVRGB),
     .ioDDR3_DQ      (ddr3_dq),

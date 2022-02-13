@@ -25,8 +25,6 @@ module gameDataTop # (
     input           iCLK,       // system clk
     input           iRST,       // system rst
     input  [ 5:0]   iBtn,
-    inout  [ 9:0]   iHPOS,
-    inout  [ 9:0]   iVPOS,
     input           iVDE,       // video enable High->Lowの変化を確認しフレームバッファのchを切り替える
     output [23:0]   oVRGB,      // video rgb
     // output [31:0] oVSound,    // video sound data
@@ -55,15 +53,16 @@ module gameDataTop # (
     output [7:0]    oLED
 );
 
-assign oVRGB = 24'h222222;
 
+//----------------------------------------------------------
+// gameDataTop内を動作させるクロックとリセット信号
+//----------------------------------------------------------
 wire oUiCLK, oUiRST;
-wire [pBitDepth-1:0] iWD;
-wire [pBitDepth-1:0] iWA;
-wire [pDramMaskWidth-1:0] iMask;
-wire iWE;
-wire oWFLL;
 
+
+//----------------------------------------------------------
+// DDRメモリの読み込みデータを保存しピクセルクロックのタイミングで出力
+//----------------------------------------------------------
 wire [pBitDepth-1:0] oRD;
 wire oRDEMP;
 wire oRVD;
@@ -71,93 +70,38 @@ wire iRDE;
 wire [pBitDepth-1:0] iRA;
 wire iRAE;
 wire oRAFLL;
-
 wire oCal;  // ddr calibration
-wire oEn1ms;
+assign oVRGB = 24'h222222;
 
+// TODO dual port ram 作成
 
-////////////////////////////////////////////////////////////
-// debug
-wire [pBitDepth-1:0] oDebugReadData;
-wire [pBitDepth-1:0] oDebugWriteData;
-wire oDebugVD;
-reg [pBitDepth-1:0] wdata;
-reg [pBitDepth-1:0] waddr;
-reg [pBitDepth-1:0] raddr;
-reg [pBitDepth-1:0] db_read;
-
-////////////////////////////////////////////////////////////
-localparam BANK = 3'b000;
-localparam ROW  = 15'b000000011000000;
-localparam COL  = 10'b0000000000;
-
-assign iWD   = wdata;
-assign iWA   = waddr;
-assign iMask = 0;
 assign iRDE  = (~oRDEMP) & oCal;
-assign iWE   = (~oWFLL) & oCal;
 assign iRAE  = (~oRAFLL) & oCal;
-// assign iRDE  = (~oRDEMP);
-// assign iWE   = (~oWFLL);
-// assign iRAE  = (~oRAFLL);
 assign iRA   = raddr;
 
 
 //----------------------------------------------------------
-// enable信号生成
+// ピクセルデータ生成
 //----------------------------------------------------------
-enGen #(
-    .SYS_CLK(1000)
-) RGB_1MS_GEN (
-    .iCLK(oUiCLK), .iRST(oUiRST), .oEnable(oEn1ms)
+localparam pRgbWidth = 32;
+
+wire oWFLL;
+wire [pRgbWidth-1:0] wPixelWD;      // pixel data
+wire [pDramAddrWidth-1:0] wPixelWA; // write addr
+reg qPixelWE;                       // write enable
+
+rgbTop #(
+    .pDramAddrWidth (pDramAddrWidth),
+    .pRgbWidth      (pRgbWidth)
+) RGB_TOP (
+
 );
-
-
-////////////////////////////////////////////////////////////
-// debug
-reg qCntEn;
-
-always @(posedge oUiCLK)
-begin
-    if (oUiRST) wdata      <= 0;
-    else if (qCntEn) wdata <= wdata + 1'b1;
-    else wdata             <= wdata;
-end
-
-always @(posedge oUiCLK)
-begin
-    if (oUiRST) waddr      <= 0;
-    else if (qCntEn) waddr <= waddr + 4'd8;
-    else waddr             <= waddr;
-end
 
 always @*
 begin
-    qCntEn <= oEn1ms & oCal & (~oWFLL);
+    qPixelWE <= (~oWFLL);
 end
 
-always @(posedge oUiCLK)
-begin
-    if (oUiRST) db_read <= 0;
-    else if (oRVD && (oRD != 0)) db_read <= oRD;
-    else db_read <= db_read;
-end
-
-always @(posedge oUiCLK)
-begin
-    if (oUiRST) raddr <= 0;
-    else if (iRAE && (raddr < waddr)) raddr <= raddr + 4'd8;
-    else raddr <= raddr;
-end
-
-reg [pBitDepth-1:0] debug;
-
-always @(posedge oUiCLK)
-begin
-    if (oUiRST) debug <= 0;
-    else if (oDebugVD && (oDebugReadData != 0)) debug <= oDebugReadData;
-    else debug <= debug;
-end
 
 //----------------------------------------------------------
 // DDRメモリ操作
@@ -178,10 +122,10 @@ ddr3Bridge #(
     .oDDR3_DM           (oDDR3_DM),     .oDDR3_ODT          (oDDR3_ODT),
 
     // data hand shake                  read pixel data
-    .iWD                (iWD),          .oRD                (oRD),
-    .iWA                (iWA),          .oRDEMP             (oRDEMP),
-    .iMask              (iMask),        .oRVD               (oRVD),
-    .iWE                (iWE),          .iRDE               (iRDE),
+    .iWD                (wPixelWD),     .oRD                (oRD),
+    .iWA                (wPixelWA),     .oRDEMP             (oRDEMP),
+    .iMask              (16'd0),        .oRVD               (oRVD),
+    .iWE                (qPixelWE),     .iRDE               (iRDE),
     .oWFLL              (oWFLL),        
                                         // read ddr side
                                         .iRA                (iRA),
@@ -191,12 +135,7 @@ ddr3Bridge #(
     // user interface clk rst
     .iCLK               (iDispCLK),     .iRST           (iRST),
     .oUiCLK             (oUiCLK),       .oUiRST         (oUiRST),
-    .oInitCalibComplete (oCal),
-
-    // debug
-    .oDebugReadData     (oDebugReadData),
-    .oDebugWriteData    (oDebugWriteData),
-    .oDebugVD           (oDebugVD)
+    .oInitCalibComplete (oCal)
 );
 
 //----------------------------------------------------------
@@ -217,10 +156,10 @@ oledTop #(
     .oOledRes       (oOledRes),
     .oOledVbat      (oOledVbat),
     .oOledVdd       (oOledVdd),
-    .iDispLine1     ({32'd0, oDebugWriteData}),
-    .iDispLine2     ({db_read, debug}),
-    .iDispLine3     ({32'd0, waddr}),
-    .iDispLine4     ({32'd0, raddr})
+    .iDispLine1     ({64'd0}),
+    .iDispLine2     ({64'd0}),
+    .iDispLine3     ({64'd0}),
+    .iDispLine4     ({64'd0})
     // 95
     // .iDispLine1     ({"XPOS =  ", 4'd0, 2'd0, oUXS, oFXS}),
     // .iDispLine2     ({"YPOS =  ", 4'd0, 2'd0, oUYS, oFYS}),
@@ -228,6 +167,6 @@ oledTop #(
     // .iDispLine4     ({"        ", 0})
 );
 
-assign oLED = {oDebugVD, oRVD, oRDEMP, oWFLL, oRAFLL, 1'b0, oCal, ~oUiRST};
+assign oLED = {1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, oCal, ~oUiRST};
 
 endmodule

@@ -65,13 +65,7 @@ module ddr3Bridge #(
     // user clk
     output                      oUiCLK,             // user clk 100mhz
     output                      oUiRST,             // user rst Active High
-
     output                      oInitCalibComplete,
-
-    // debug data
-    output [pBitDepth-1:0] oDebugReadData,
-    output [pBitDepth-1:0] oDebugWriteData,
-    output oDebugVD
 );
 
 ////////////////////////////////////////////////////////////
@@ -79,29 +73,23 @@ wire wUiCLK;    assign oUiCLK = wUiCLK;
 wire wUiRST;    assign oUiRST = wUiRST;
 
 
-// ddr memory 
-wire oReady, oWdReady;
-wire [pDramDataWidth-1:0] oRdData;
-wire oRdDataValid;
-
 // wr state
 reg rFifoRE, rFifoWE;
+
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // 読み込みデータ・アドレス保存バッファ
 // 読み込みデータとアドレス参照のインデックスは一致していなければならない
 //----------------------------------------------------------
-wire [pBitDepth-1:0] wFifoRad;
+wire [pDramDataWidth-1:0] oRdData;  // ddrの読み込み時のデータ
+wire oRdDataValid;                  // ddrデータ読み込み時High
+wire [pBitDepth-1:0] wFifoRad;      // 読み込みアドレスをddrに出力
 wire wRaVd;
 wire wRaEmp;
 wire wRdFll, wRaFll;
 reg  qArEMP;
 reg  qRaED;
-
-// debug
-assign oDebugReadData = oRdData[31:0];
-assign oDebugVD = oRdDataValid;
 
 fifoController #(
     .pBuffDepth (pBuffDepth),
@@ -145,8 +133,6 @@ wire oRwdVD, oRwaVD;    // データ出力時High
 wire wWdEmp, wWaEmp;
 wire [pBitDepth-1:0] wFifoWd;
 wire [pBitDepth-1:0] wFifoAd;
-
-assign oDebugWriteData = wFifoWd;
 
 fifoController #(
     .pBuffDepth (pBuffDepth),
@@ -203,6 +189,7 @@ localparam [2:0]
     pReadAhead  = 3,
     pReadWait   = 4;
 
+wire oReady, oWdReady;
 reg [2:0] rAheadState;          // 優先度切り替えステートマシン
 reg rWready, rRready;           // 同期ready
 reg [pBitDepth-1:0] rWd;        // 書き込み時のデータ
