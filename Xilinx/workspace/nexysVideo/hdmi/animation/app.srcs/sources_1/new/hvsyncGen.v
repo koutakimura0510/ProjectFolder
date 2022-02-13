@@ -61,7 +61,7 @@ end
 
 always @*
 begin
-    qHmatch <= (rHriz == H_MAX)
+    qHmatch <= (rHriz == H_MAX);
     qHrange <= (H_SYNC_START <= rHriz && rHriz <= H_SYNC_END);
 end
 
@@ -89,7 +89,7 @@ end
 
 always @*
 begin
-    qVmatch <= (rVert == V_MAX)
+    qVmatch <= (rVert == V_MAX);
     qVrange <= (V_SYNC_START <= rVert && rVert <= V_SYNC_END);
 end
 

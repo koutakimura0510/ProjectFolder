@@ -88,7 +88,7 @@ hvsyncGen #(
 ) HVSYNC_GEN (
     .iCLK       (o_clk_25),     .iRST       (user_rst),
     .oHSYNC     (oHSYNC),       .oVSYNC     (oVSYNC),
-    .oHPOS      (oHPOS),        .oVPOS      (oVPOS)
+    .oHPOS      (oHPOS),        .oVPOS      (oVPOS),
     .oVDE       (oVDE),         .iFVDE      (oFVDE)
 );
 
