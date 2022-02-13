@@ -90,12 +90,12 @@ wire [pRgbWidth-1:0] wPixelWD;      // pixel data
 wire [pDramAddrWidth-1:0] wPixelWA; // write addr
 reg qPixelWE;                       // write enable
 
-rgbTop #(
-    .pDramAddrWidth (pDramAddrWidth),
-    .pRgbWidth      (pRgbWidth)
-) RGB_TOP (
+// rgbTop #(
+//     .pDramAddrWidth (pDramAddrWidth),
+//     .pRgbWidth      (pRgbWidth)
+// ) RGB_TOP (
 
-);
+// );
 
 always @*
 begin

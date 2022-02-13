@@ -65,7 +65,7 @@ module ddr3Bridge #(
     // user clk
     output                      oUiCLK,             // user clk 100mhz
     output                      oUiRST,             // user rst Active High
-    output                      oInitCalibComplete,
+    output                      oInitCalibComplete
 );
 
 ////////////////////////////////////////////////////////////

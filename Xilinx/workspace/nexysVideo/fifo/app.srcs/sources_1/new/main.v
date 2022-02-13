@@ -19,15 +19,34 @@ module main (
     output [7:0]    oLED
 );
 
+
+////////////////////////////////////////////////////////////
+//----------------------------------------------------------
+// 非同期クロックの生成
+//----------------------------------------------------------
+wire oCLKA;     // 100mhz
+wire oCLKB;     // 25mhz
+wire locked;
+
+clk_wiz_0 CLK_GEN (
+    .clk_out1   (oCLKA),
+    .clk_out2   (oCLKB),
+    .reset      (iRST),
+    .locked     (locked),
+    .clk_in1    (iCLK)
+);
+
+wire rst = ~locked;
+
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // デモ動作用のステートマシン
 //----------------------------------------------------------
 reg [3:0] state;
 
-always @(posedge iCLK)
+always @(posedge oCLKB)
 begin
-    if (iRST) begin
+    if (rst) begin
         state <= 0;
     end
     else
@@ -46,21 +65,22 @@ end
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
-// FIFOを利用する場合は、Full Empty信号を利用して、
-// インターフェース回路やWRENABLEを制御する
+// Dual port ram
 //----------------------------------------------------------
 localparam pWidth = 8;
+
 reg  [pWidth-1:0] iWD;
 wire [pWidth-1:0] oRD;
 wire oRVD;
 reg qWE, qRE;
 
-fifoController #(
-    .pBuffDepth (16),
+fifoDualController #(
+    .pBuffDepth (8),
     .pBitWidth  (pWidth)
-) FIFO_CONTROLLER (
+) FIFO_DUAL_CONTROLLER (
     // write side       read side
-    .iCLK   (iCLK),     .iRST   (iRST),
+    .iCLKA  (oCLKA),    .iCLKB  (oCLKB),
+                        .iRST   (rst),
     .iWD    (iWD),      .oRD    (oRD),
     .iWE    (qWE),      .iRE    (qRE),
                         .oRVD   (oRVD),
@@ -73,9 +93,9 @@ begin
     qRE <= (~oEMP);
 end
 
-always @(posedge iCLK)
+always @(posedge oCLKA)
 begin
-    if (iRST)       iWD <= 0;
+    if (rst)        iWD <= 0;
     else if (!qWE)  iWD <= iWD;
     else            iWD <= (iWD + 1'b1) & 255;
 end
@@ -83,13 +103,50 @@ end
 
 reg [7:0] rled;
 
-always @(posedge iCLK)
+always @(posedge oCLKB)
 begin
-    if (iRST)       rled <= 0;
+    if (rst)        rled <= 0;
     else if (!oRVD) rled <= 0;
     else            rled <= oRD;
 end
 
 assign oLED = rled;
+
+
+////////////////////////////////////////////////////////////
+//----------------------------------------------------------
+// FIFOを利用する場合は、Full Empty信号を利用して、
+// インターフェース回路やWRENABLEを制御する
+//----------------------------------------------------------
+// reg  [pWidth-1:0] iWD;
+// wire [pWidth-1:0] oRD;
+// wire oRVD;
+// reg qWE, qRE;
+
+// fifoController #(
+//     .pBuffDepth (16),
+//     .pBitWidth  (pWidth)
+// ) FIFO_CONTROLLER (
+//     // write side       read side
+//     .iCLK   (iCLK),     .iRST   (iRST),
+//     .iWD    (iWD),      .oRD    (oRD),
+//     .iWE    (qWE),      .iRE    (qRE),
+//                         .oRVD   (oRVD),
+//     .oFLL   (oFLL),     .oEMP   (oEMP)
+// );
+
+// always @*
+// begin
+//     qWE <= (~oFLL) && (state == 4);
+//     qRE <= (~oEMP);
+// end
+
+// always @(posedge iCLK)
+// begin
+//     if (iRST)       iWD <= 0;
+//     else if (!qWE)  iWD <= iWD;
+//     else            iWD <= (iWD + 1'b1) & 255;
+// end
+////////////////////////////////////////////////////////////
 
 endmodule
