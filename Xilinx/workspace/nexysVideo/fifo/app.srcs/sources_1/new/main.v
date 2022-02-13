@@ -56,7 +56,7 @@ wire oRVD;
 reg qWE, qRE;
 
 fifoController #(
-    .pBuffDepth (8),
+    .pBuffDepth (16),
     .pBitWidth  (pWidth)
 ) FIFO_CONTROLLER (
     // write side       read side

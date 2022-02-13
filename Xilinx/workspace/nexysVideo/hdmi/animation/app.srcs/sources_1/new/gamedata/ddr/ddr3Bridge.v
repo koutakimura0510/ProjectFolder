@@ -45,37 +45,44 @@ module ddr3Bridge #(
 
     // インターフェース制御信号一覧
     // write side
-    input  [pDramDataWidth-1:0] iWD,                // WriteData
-    input  [pDramAddrWidth-1:0] iWA,                // Write Addr 28:0固定 / 27-25:Bank / 24-10:Row / 9-0:Col
+    input  [pBitDepth-1:0]      iWD,                     // WriteData
+    input  [pBitDepth-1:0]      iWA,                // Write Addr 28:0固定 / 27-25:Bank / 24-10:Row / 9-0:Col
     input  [pDramMaskWidth-1:0] iMask,              // write mask 1を立てることでその範囲は書き込まないようにできる 基本0
     input                       iWE,                // write enable信号
     output                      oWFLL,              // write fifo full signal
 
     // read data side
-    output [pDramDataWidth-1:0] oRD,                // Pixel Read Data
+    output [pBitDepth-1:0]      oRD,                // Pixel Read Data
     output                      oRDEMP,             // read fifo empty signal
     output                      oRVD,               // 有効データ出力時High Read Valid Data
     input                       iRDE,               // read enable
-    output                      oRDFLL,             // read data fifo fll
 
     // read addr side
-    input  [pDramAddrWidth-1:0] iRA,                // Read Addr 28:0固定 / 27-25:Bank / 24-10:Row / 9-0:Col
+    input  [pBitDepth-1:0]      iRA,                // Read Addr 28:0固定 / 27-25:Bank / 24-10:Row / 9-0:Col
     input                       iRAE,               // read addr enable
     output                      oRAFLL,             // read fifo full signal
 
     // user clk
-    output                      oUICLK,             // user clk 100mhz
-    output                      oUIRST,             // user rst Active High
+    output                      oUiCLK,             // user clk 100mhz
+    output                      oUiRST,             // user rst Active High
+
+    output                      oInitCalibComplete,
+
+    // debug data
+    output [pBitDepth-1:0] oDebugReadData,
+    output [pBitDepth-1:0] oDebugWriteData,
+    output oDebugVD
 );
 
 ////////////////////////////////////////////////////////////
-wire wUiCLK;    assign oUICLK = wUiCLK;
-wire wUiRST;    assign oUIRST = wUiRST;
+wire wUiCLK;    assign oUiCLK = wUiCLK;
+wire wUiRST;    assign oUiRST = wUiRST;
 
 
 // ddr memory 
 wire oReady, oWdReady;
-wire oRdData, oRdDataValid;
+wire [pDramDataWidth-1:0] oRdData;
+wire oRdDataValid;
 
 // wr state
 reg rFifoRE, rFifoWE;
@@ -85,11 +92,16 @@ reg rFifoRE, rFifoWE;
 // 読み込みデータ・アドレス保存バッファ
 // 読み込みデータとアドレス参照のインデックスは一致していなければならない
 //----------------------------------------------------------
-wire wRAD, wRaVd;
+wire [pBitDepth-1:0] wFifoRad;
+wire wRaVd;
 wire wRaEmp;
 wire wRdFll, wRaFll;
-reg  qArReady;
+reg  qArEMP;
 reg  qRaED;
+
+// debug
+assign oDebugReadData = oRdData[31:0];
+assign oDebugVD = oRdDataValid;
 
 fifoController #(
     .pBuffDepth (pBuffDepth),
@@ -97,7 +109,7 @@ fifoController #(
 ) FIFO_READ_DATA (
     // write side           read side
     .iCLK   (wUiCLK),       .iRST   (wUiRST),
-    .iWD    (oRdData),      .oRD    (oRD),
+    .iWD    (oRdData[31:0]),.oRD    (oRD),
     .iWE    (oRdDataValid), .iRE    (iRDE),
     .oFLL   (wRdFll),       .oEMP   (oRDEMP),
                             .oRVD   (oRVD)
@@ -109,7 +121,7 @@ fifoController #(
 ) FIFO_READ_ADDR (
     // write side           read side
     .iCLK   (wUiCLK),       .iRST   (wUiRST),
-    .iWD    (iRA),          .oRD    (wRAD),
+    .iWD    (iRA),          .oRD    (wFifoRad),
     .iWE    (iRAE),         .iRE    (qRaED),
     .oFLL   (oRAFLL),       .oEMP   (wRaEmp),
                             .oRVD   (wRaVd)
@@ -117,8 +129,8 @@ fifoController #(
 
 always @*
 begin
-    qRaED       <= rFifoRE;   // read start
-    qArReady    <= (~wRaEmp) & wRaVd; // ddr enable ready
+    qRaED  <= rFifoRE & (~wRdFll); // read start
+    qArEMP <= (~wRaEmp);   // ddr enable ready
 end
 
 ////////////////////////////////////////////////////////////
@@ -128,10 +140,13 @@ end
 //----------------------------------------------------------
 wire wWdFll, wWaFll;    assign oWFLL = wWdFll | wWaFll;
 reg  qWE, qWED;         // write read enable
-reg  qwReady;           // ddr write enable
+reg  qwReady, qwEMP;    // ddr write enable
 wire oRwdVD, oRwaVD;    // データ出力時High
 wire wWdEmp, wWaEmp;
-wire [pBitDepth-1:0] wFifoWd, wFifoAd;
+wire [pBitDepth-1:0] wFifoWd;
+wire [pBitDepth-1:0] wFifoAd;
+
+assign oDebugWriteData = wFifoWd;
 
 fifoController #(
     .pBuffDepth (pBuffDepth),
@@ -161,79 +176,116 @@ always @*
 begin
     qWE      <= iWE;
     qWED     <= rFifoWE;
-    qwReady  <= (~wWdEmp) & (~wWaEmp) & oRwdVD & oRwaVD;
+    qwReady  <= oRwdVD & oRwaVD;
+    qwEMP    <= (~wWdEmp) & (~wWaEmp);
 end
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // 書き込みと読み込みの優先度を交互に切り替える回路
-// データと同期させるため、FIFOのready信号を受信し、ステートマシン内で
-// クロックと同期したDDRモジュールに接続するready信号を生成する
+// write read どちらかのempty信号受信時に、FIFO読み込みのEnableを起動する。
+// 起動後、データ出力Valid Dataの信号と同期してEnableをOFFにし、DDRモジュールにデータを出力する
+//
+// pIdleAhead
+// 書き込みコマンド発行時->次回読み込み優先モードに移行
+// 書き込みコマンド発行時->次回書き込み優先モードに移行
+// 
+// pWriteAhead
+// 前回は読み込みコマンド発行のため、ReadReady信号の終了まで待機する
+// 
+// pReadAhead
+// 前回は書き込みコマンド発行のため、Write Read Ready信号の終了まで待機する
 //----------------------------------------------------------
-localparam [0:0] 
-    pWriteAhead = 0,
-    pReadAhead  = 1;
+localparam [2:0] 
+    pIdleAhead  = 0,
+    pWriteAhead = 1,
+    pWriteWait  = 2,
+    pReadAhead  = 3,
+    pReadWait   = 4;
 
-reg rWRahead;                   // 優先度切り替えステートマシン
+reg [2:0] rAheadState;          // 優先度切り替えステートマシン
 reg rWready, rRready;           // 同期ready
-reg [pBitDepth-1:0] rWd, rWa;   // データとアドレス
+reg [pBitDepth-1:0] rWd;        // 書き込み時のデータ
+reg [pBitDepth-1:0] rWa;        // 書き込み、読み込み時のアドレス
 
-always @(posedge iCLK)
+always @(posedge wUiCLK)
 begin
-    if (iRST)
+    if (wUiRST)
     begin
-        rWRahead           <= pWriteAhead;
+        rAheadState        <= pWriteAhead;
         {rFifoWE, rFifoRE} <= 2'b00;
         {rWready, rRready} <= 2'b00;
         {rWd, rWa}         <= 0;
-    end
-    else
-    begin
-        case (rWRahead)
-        pWriteAhead:
-        begin
-            if (oWdReady)
-            begin
-                rWRahead <= pReadAhead;
-                
-            end
-            else if (oReady)
-            begin
-                rWRahead <= pWriteAhead;
-
-            end
-            else
-            begin
-                rWRahead <= pWriteAhead;
-
-            end
-        end
-
-        pReadAhead:
-        begin
-            if (oReady)
-            begin
-                rWRahead           <= (qArReady) ? pWriteAhead : pReadAhead;
-                {rFifoWE, rFifoRE} <= 2'b01;
-                rWa <= wRAD;
-            end
-            else if (oWdReady)
-            begin
-                rWRahead           <= (qwReady) ? pReadAhead : pWriteAhead;
-                {rFifoWE, rFifoRE} <= 2'b10;
-                {rWd, rWa}         <= {wFifoWd, wFifoAd};
-            end
-            else
-            begin
-                rWRahead <= pReadAhead;
-                {rFifoWE, rFifoRE} <= 2'b00;
-                {rWd, rWa}         <= 0;
+    end else begin
+        case (rAheadState)
+        pIdleAhead: begin
+            if (oWdReady && oReady) begin
+                if (qwEMP) begin
+                    rAheadState        <= (qwReady) ? pReadAhead : pIdleAhead;
+                    {rFifoWE, rFifoRE} <= (qwReady) ? 2'b00 : 2'b10;
+                    {rWready, rRready} <= {qwReady, 1'b0};
+                    {rWd, rWa}         <= {wFifoWd, wFifoAd};
+                end else if (qArEMP) begin
+                    rAheadState        <= (wRaVd) ? pWriteAhead : pIdleAhead;
+                    {rFifoWE, rFifoRE} <= (wRaVd) ? 2'b00 : 2'b01;
+                    {rWready, rRready} <= {1'b0, wRaVd};
+                    {rWd, rWa}         <= {wFifoWd, wFifoRad};
+                end else begin
+                    rAheadState        <= pIdleAhead;
+                    {rFifoWE, rFifoRE} <= 2'b00;
+                    {rWready, rRready} <= 2'b00;
+                    {rWd, rWa}         <= 0;
+                end
             end
         end
 
-        default:
-        begin
-            rWRahead <= pWriteAhead;
+        pWriteAhead: begin
+            if (oReady) begin
+                if (qwEMP) begin
+                    rAheadState        <= (qwReady) ? pReadAhead : pWriteAhead;
+                    {rFifoWE, rFifoRE} <= (qwReady) ? 2'b00 : 2'b10;
+                    {rWready, rRready} <= {qwReady, 1'b0};
+                    {rWd, rWa}         <= {wFifoWd, wFifoAd};
+                end else if (qArEMP) begin
+                    rAheadState        <= pWriteAhead;
+                    {rFifoWE, rFifoRE} <= (wRaVd) ? 2'b00 : 2'b01;
+                    {rWready, rRready} <= {1'b0, wRaVd};
+                    {rWd, rWa}         <= {wFifoWd, wFifoRad};
+                end else begin
+                    rAheadState        <= pWriteAhead;
+                    {rFifoWE, rFifoRE} <= 2'b00;
+                    {rWready, rRready} <= 2'b00;
+                    {rWd, rWa}         <= 0;
+                end
+            end
+        end
+
+        pReadAhead: begin
+            if (oWdReady && oReady) begin
+                if (qArEMP) begin
+                    rAheadState        <= (wRaVd) ? pWriteAhead : pReadAhead;
+                    {rFifoWE, rFifoRE} <= (wRaVd) ? 2'b00 : 2'b01;
+                    {rWready, rRready} <= {1'b0, wRaVd};
+                    {rWd, rWa}         <= {wFifoWd, wFifoRad};
+                end else if (qwEMP) begin
+                    rAheadState        <= pReadAhead;
+                    {rFifoWE, rFifoRE} <= (qwReady) ? 2'b00 : 2'b10;
+                    {rWready, rRready} <= {qwReady, 1'b0};
+                    {rWd, rWa}         <= {wFifoWd, wFifoAd};
+                end else begin
+                    rAheadState        <= pReadAhead;
+                    {rFifoWE, rFifoRE} <= 2'b00;
+                    {rWready, rRready} <= 2'b00;
+                    {rWd, rWa}         <= 0;
+                end
+            end
+        end
+
+        default: begin
+            rAheadState <= pWriteAhead;
+            {rFifoWE, rFifoRE} <= 2'b00;
+            {rWready, rRready} <= 2'b00;
+            {rWd, rWa}         <= 0;
         end
         endcase
     end
@@ -241,16 +293,18 @@ end
 
 
 ////////////////////////////////////////////////////////////
+wire [pDramDataWidth-1:0] iWdData = {96'd0, rWd};
+
 ddr3Controller #(
     .pDramAddrWidth(pDramAddrWidth),
     .pDramDataWidth(pDramDataWidth),
     .pDramMaskWidth(pDramMaskWidth)
 ) DDR3_CONTROLLER (
     // DDR port                             hand shake
-    .ioDDR3_DQ          (ioDDR3_DQ),        .iWEnable           (rFifoWE),
-    .ioDDR3_DQS_N       (ioDDR3_DQS_N),     .iREnable           (rFifoRE),
-    .ioDDR3_DQS_P       (ioDDR3_DQS_P),     .iWdData            (rWd),
-    .oDDR3_ADDR         (oDDR3_ADDR),       .iAddr              (rWa),
+    .ioDDR3_DQ          (ioDDR3_DQ),        .iWEnable           (rWready),
+    .ioDDR3_DQS_N       (ioDDR3_DQS_N),     .iREnable           (rRready),
+    .ioDDR3_DQS_P       (ioDDR3_DQS_P),     .iWdData            (iWdData),
+    .oDDR3_ADDR         (oDDR3_ADDR),       .iAddr              (rWa[28:0]),
     .oDDR3_BA           (oDDR3_BA),         .iMask              (16'h0000),
     .oDDR3_RAS          (oDDR3_RAS),        .oRdData            (oRdData),
     .oDDR3_CAS          (oDDR3_CAS),        .oRdDataValid       (oRdDataValid),

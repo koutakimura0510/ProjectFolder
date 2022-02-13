@@ -14,11 +14,19 @@
 // 3.1フレームの描画が終了したら、次に出力するフレームバッファのチャンネルを切り替える
 // 4.1~3を繰り返す。
 //----------------------------------------------------------
-module gameDataTop (
+module gameDataTop # (
+    parameter pDramAddrWidth = 29,
+    parameter pDramDataWidth = 128,
+    parameter pDramMaskWidth = 16,
+    parameter pBuffDepth     = 16,          // bram length
+    parameter pBitDepth      = 32           // data bit
+)(
     input           iDispCLK,   // ディスプレイ描画clk vgaの場合25MHz
     input           iCLK,       // system clk
     input           iRST,       // system rst
     input  [ 5:0]   iBtn,
+    inout  [ 9:0]   iHPOS,
+    inout  [ 9:0]   iVPOS,
     input           iVDE,       // video enable High->Lowの変化を確認しフレームバッファのchを切り替える
     output [23:0]   oVRGB,      // video rgb
     // output [31:0] oVSound,    // video sound data
@@ -43,141 +51,183 @@ module gameDataTop (
     output          oOledDC,
     output          oOledRes,
     output          oOledVbat,
-    output          oOledVdd
+    output          oOledVdd,
+    output [7:0]    oLED
 );
 
-// 1ms enable
+assign oVRGB = 24'h222222;
+
+wire oUiCLK, oUiRST;
+wire [pBitDepth-1:0] iWD;
+wire [pBitDepth-1:0] iWA;
+wire [pDramMaskWidth-1:0] iMask;
+wire iWE;
+wire oWFLL;
+
+wire [pBitDepth-1:0] oRD;
+wire oRDEMP;
+wire oRVD;
+wire iRDE;
+wire [pBitDepth-1:0] iRA;
+wire iRAE;
+wire oRAFLL;
+
+wire oCal;  // ddr calibration
 wire oEn1ms;
 
-// ユーザー座標データ
-wire [ 9:0] oUXS, oUXE;
-wire [ 9:0] oUYS, oUYE;
-wire [15:0] oFXS, oFYS;
 
-// 色データ
-wire [31:0] oBackARGB;      // BackGround ARGB 背景
-wire [31:0] oForeARGB;      // ForeGround ARGB 前景
-wire [31:0] oUserARGB;      // UserGround ARGB ユーザー
-wire [31:0] oPlayerDot;
-wire [31:0] oFieldDot;
+////////////////////////////////////////////////////////////
+// debug
+wire [pBitDepth-1:0] oDebugReadData;
+wire [pBitDepth-1:0] oDebugWriteData;
+wire oDebugVD;
+reg [pBitDepth-1:0] wdata;
+reg [pBitDepth-1:0] waddr;
+reg [pBitDepth-1:0] raddr;
+reg [pBitDepth-1:0] db_read;
 
-// mapchip ID
-wire [15:0] oMapWidth;
-wire [ 3:0] oMapDirect;
+////////////////////////////////////////////////////////////
+localparam BANK = 3'b000;
+localparam ROW  = 15'b000000011000000;
+localparam COL  = 10'b0000000000;
 
-// キャラクターの向き
-wire [ 1:0] oDirX, oDirY;
+assign iWD   = wdata;
+assign iWA   = waddr;
+assign iMask = 0;
+assign iRDE  = (~oRDEMP) & oCal;
+assign iWE   = (~oWFLL) & oCal;
+assign iRAE  = (~oRAFLL) & oCal;
+// assign iRDE  = (~oRDEMP);
+// assign iWE   = (~oWFLL);
+// assign iRAE  = (~oRAFLL);
+assign iRA   = raddr;
+
 
 //----------------------------------------------------------
 // enable信号生成
 //----------------------------------------------------------
 enGen #(
-    .SYS_CLK(25000)
+    .SYS_CLK(1000)
 ) RGB_1MS_GEN (
-    .iCLK(iCLK), .iRST(iRST), .oEnable(oEn1ms)
+    .iCLK(oUiCLK), .iRST(oUiRST), .oEnable(oEn1ms)
 );
+
+
+////////////////////////////////////////////////////////////
+// debug
+reg qCntEn;
+
+always @(posedge oUiCLK)
+begin
+    if (oUiRST) wdata      <= 0;
+    else if (qCntEn) wdata <= wdata + 1'b1;
+    else wdata             <= wdata;
+end
+
+always @(posedge oUiCLK)
+begin
+    if (oUiRST) waddr      <= 0;
+    else if (qCntEn) waddr <= waddr + 4'd8;
+    else waddr             <= waddr;
+end
+
+always @*
+begin
+    qCntEn <= oEn1ms & oCal & (~oWFLL);
+end
+
+always @(posedge oUiCLK)
+begin
+    if (oUiRST) db_read <= 0;
+    else if (oRVD && (oRD != 0)) db_read <= oRD;
+    else db_read <= db_read;
+end
+
+always @(posedge oUiCLK)
+begin
+    if (oUiRST) raddr <= 0;
+    else if (iRAE && (raddr < waddr)) raddr <= raddr + 4'd8;
+    else raddr <= raddr;
+end
+
+reg [pBitDepth-1:0] debug;
+
+always @(posedge oUiCLK)
+begin
+    if (oUiRST) debug <= 0;
+    else if (oDebugVD && (oDebugReadData != 0)) debug <= oDebugReadData;
+    else debug <= debug;
+end
 
 //----------------------------------------------------------
 // DDRメモリ操作
 //----------------------------------------------------------
 ddr3Bridge #(
-    // ddr parameter            Bram fifo parameter
-    .pDramAddrWidth (29),       .pBuffDepth     (256),
-    .pDramDataWidth (128),      .pBitDepth      (128)
-    .pDramMaskWidth (16),
+    // ddr parameter                    Bram fifo parameter
+    .pDramAddrWidth (pDramAddrWidth),   .pBuffDepth     (pBuffDepth),
+    .pDramDataWidth (pDramDataWidth),   .pBitDepth      (pBitDepth),
+    .pDramMaskWidth (pDramMaskWidth)
 ) DDR3_BRIDGE (
-    // DDR port                             hand shake
-    .ioDDR3_DQ          (ioDDR3_DQ),        .iWEnable           (iWEnable),
-    .ioDDR3_DQS_N       (ioDDR3_DQS_N),     .iREnable           (iREnable),
-    .ioDDR3_DQS_P       (ioDDR3_DQS_P),     .iWdData            (iWdData),
-    .oDDR3_ADDR         (oDDR3_ADDR),       .iAddr              (iAddr),
-    .oDDR3_BA           (oDDR3_BA),         .iMask              (16'h0000),
-    .oDDR3_RAS          (oDDR3_RAS),        .oRdData            (oRdData),
-    .oDDR3_CAS          (oDDR3_CAS),        .oRdDataValid       (oRdDataValid),
-    .oDDR3_WE           (oDDR3_WE),         .oReady             (oReady),
-    .oDDR3_RESET        (oDDR3_RESET),      .oWdReady           (oWdReady),
-    .oDDR3_CLK_P        (oDDR3_CLK_P),      .oInitCalibComplete (oInitCalibComplete),
-    .oDDR3_CLK_N        (oDDR3_CLK_N),
-    .oDDR3_CKE          (oDDR3_CKE),
-    .oDDR3_DM           (oDDR3_DM),
-    .oDDR3_ODT          (oDDR3_ODT),
+    // DDR port                             
+    .ioDDR3_DQ          (ioDDR3_DQ),    .ioDDR3_DQS_N       (ioDDR3_DQS_N),
+    .ioDDR3_DQS_P       (ioDDR3_DQS_P), .oDDR3_ADDR         (oDDR3_ADDR),
+    .oDDR3_BA           (oDDR3_BA),     .oDDR3_RAS          (oDDR3_RAS),
+    .oDDR3_CAS          (oDDR3_CAS),    .oDDR3_WE           (oDDR3_WE),
+    .oDDR3_RESET        (oDDR3_RESET),  .oDDR3_CLK_P        (oDDR3_CLK_P),
+    .oDDR3_CLK_N        (oDDR3_CLK_N),  .oDDR3_CKE          (oDDR3_CKE),
+    .oDDR3_DM           (oDDR3_DM),     .oDDR3_ODT          (oDDR3_ODT),
+
+    // data hand shake                  read pixel data
+    .iWD                (iWD),          .oRD                (oRD),
+    .iWA                (iWA),          .oRDEMP             (oRDEMP),
+    .iMask              (iMask),        .oRVD               (oRVD),
+    .iWE                (iWE),          .iRDE               (iRDE),
+    .oWFLL              (oWFLL),        
+                                        // read ddr side
+                                        .iRA                (iRA),
+                                        .iRAE               (iRAE),
+                                        .oRAFLL             (oRAFLL),
 
     // user interface clk rst
-    .iCLK               (iCLK),             .iRST               (iRST),
-    .oUiCLK             (wUiCLK),           .oUiRST             (wUiRST)
-);
+    .iCLK               (iDispCLK),     .iRST           (iRST),
+    .oUiCLK             (oUiCLK),       .oUiRST         (oUiRST),
+    .oInitCalibComplete (oCal),
 
-
-//----------------------------------------------------------
-// フィールドのドットデータ生成
-//----------------------------------------------------------
-dotFieldTop DOT_FIELD_TOP (
-    .iCLK(iCLK),   .iRST(iRST),
-    .iVDE(iVDE),   .iUXS(oUXS), .iUYS(oUYS), .iFXS(oFXS), .iFYS(oFYS),
-    .iHPOS(iHPOS), .iVPOS(iVPOS),
-    .oFieldDot(oFieldDot), .oMapWidth(oMapWidth), .oMapDirect(oMapDirect)
-);
-
-//----------------------------------------------------------
-// ユーザー座標データ生成
-//----------------------------------------------------------
-userPos USER_POS (
-    .iCLK(iCLK), .iRST(iRST),
-    .iBtn(iBtn), .iEn1Ms(oEn1ms),
-    .iStartX(0), .iStartY(416),
-    .oUXS(oUXS), .oUYS(oUYS), .oUXE(oUXE), .oUYE(oUYE), .oFXS(oFXS), .oFYS(oFYS),
-    .oDirX(oDirX), .oDirY(oDirY),
-    .iMapWidth(oMapWidth), .iMapDirect(oMapDirect)
-);
-
-//----------------------------------------------------------
-// プレイヤーのドットデータ生成
-//----------------------------------------------------------
-dotPlayerTop #(
-    .VMAX(480),
-    .CHIP_WIDTH(32)
-) DOT_PLAYER_TOP (
-    .iCLK(iCLK), .iRST(iRST),
-    .iUXS(oUXS), .iUXE(oUXE), .iUYS(oUYS), .iUYE(oUYE),
-    .iHPOS(iHPOS), .iVPOS(iVPOS),
-    .iDirX(oDirX), .iDirY(oDirY),
-    .oPlayerDot(oPlayerDot)
-);
-
-
-//----------------------------------------------------------
-// 描画データ生成
-//----------------------------------------------------------
-rgbGen BACK_GROUND(.iCLK(iCLK), .iRST(iRST), .iHPOS(iHPOS), .iVPOS(iVPOS), .iXS(0),    .iXE(640),  .iYS(0),    .iYE(480),  .iARGB(32'hffffffff), .oARGB(oBackARGB));
-rgbGen FORE_GROUND(.iCLK(iCLK), .iRST(iRST), .iHPOS(iHPOS), .iVPOS(iVPOS), .iXS(0),    .iXE(640),  .iYS(0),    .iYE(480),  .iARGB(oFieldDot),  .oARGB(oForeARGB));
-rgbGen USER_GROUND(.iCLK(iCLK), .iRST(iRST), .iHPOS(iHPOS), .iVPOS(iVPOS), .iXS(oUXS), .iXE(oUXE), .iYS(oUYS), .iYE(oUYE), .iARGB(oPlayerDot), .oARGB(oUserARGB));
-
-rgbBridge RGB_BRIDGE (
-    .iBackARGB(oBackARGB), .iForeARGB(oForeARGB), .iUserARGB(oUserARGB), .oVRGB(oVRGB)
+    // debug
+    .oDebugReadData     (oDebugReadData),
+    .oDebugWriteData    (oDebugWriteData),
+    .oDebugVD           (oDebugVD)
 );
 
 //----------------------------------------------------------
 // デバッグ用に値表示
 //----------------------------------------------------------
 oledTop #(
-    .PDIVCLK        (25000),
-    .PDIVSCK        (32),
+    .PDIVCLK        (100000),
+    .PDIVSCK        (128),
     .DISPLAY_WIDTH  (128),
     .DISPLAY_HEIGHT (4),
-    .BIT_LENGTH     (95)
+    .BIT_LENGTH     (64)
 ) OLED_TOP (
-    .iCLK           (iCLK),
-    .iRST           (iRST),
+    .iCLK           (oUiCLK),
+    .iRST           (oUiRST),
     .oOledScl       (oOledScl),
     .oOledSda       (oOledSda),
     .oOledDC        (oOledDC),
     .oOledRes       (oOledRes),
     .oOledVbat      (oOledVbat),
     .oOledVdd       (oOledVdd),
-    .iDispLine1     ({"XPOS =  ", 4'd0, 2'd0, oUXS, oFXS}),
-    .iDispLine2     ({"YPOS =  ", 4'd0, 2'd0, oUYS, oFYS}),
-    .iDispLine3     ({"        ", 3'd0, oMapDirect[3], 3'd0, oMapDirect[2], 3'd0, oMapDirect[1], 3'd0, oMapDirect[0]}),
-    .iDispLine4     ({"        ", 0})
+    .iDispLine1     ({32'd0, oDebugWriteData}),
+    .iDispLine2     ({db_read, debug}),
+    .iDispLine3     ({32'd0, waddr}),
+    .iDispLine4     ({32'd0, raddr})
+    // 95
+    // .iDispLine1     ({"XPOS =  ", 4'd0, 2'd0, oUXS, oFXS}),
+    // .iDispLine2     ({"YPOS =  ", 4'd0, 2'd0, oUYS, oFYS}),
+    // .iDispLine3     ({"        ", 3'd0, oMapDirect[3], 3'd0, oMapDirect[2], 3'd0, oMapDirect[1], 3'd0, oMapDirect[0]}),
+    // .iDispLine4     ({"        ", 0})
 );
+
+assign oLED = {oDebugVD, oRVD, oRDEMP, oWFLL, oRAFLL, 1'b0, oCal, ~oUiRST};
 
 endmodule

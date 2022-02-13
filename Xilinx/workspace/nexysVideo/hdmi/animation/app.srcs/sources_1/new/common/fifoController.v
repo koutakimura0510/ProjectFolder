@@ -32,6 +32,9 @@ module fifoController #(
 localparam pAddrWidth  = fBitWidth(pBuffDepth);
 localparam [pAddrWidth-1:0] pAddrMask = pBuffDepth - 1;
 
+// initial begin
+//     $display("############### FIFO Controller ###############");
+// end
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
@@ -53,7 +56,7 @@ always @(posedge iCLK)
 begin
     if (qRst)       rWA <= 0;
     else if (!qWE)  rWA <= rWA;
-    else            rWA <= rWA + 1'b1;
+    else            rWA <= (rWA + 1'b1) & pAddrMask;
 end
 
 // read pointer
@@ -61,7 +64,7 @@ always @(posedge iCLK)
 begin
     if (qRst)      rRA <= 0;
     else if (!qRE) rRA <= rRA;
-    else           rRA <= rRA + 1'b1;
+    else           rRA <= (rRA + 1'b1) & pAddrMask;
 end
 
 // 前回のrpが更新されていたら新規データを出力できる状態と判断する
@@ -76,8 +79,8 @@ begin
     qRst <= iRST;
     qWE  <= iWE & (~qFLL);
     qRE  <= iRE & (~qEMP);
-    qWPs <= rWA - 1'b1;
-    qRPs <= rRA - 1'b1;
+    qWPs <= (rWA - 1'b1) & pAddrMask;
+    qRPs <= (rRA - 1'b1) & pAddrMask;
     qFLL <= (qRPs == rWA) ? 1'b1 : 1'b0;
     qEMP <= (rWA == rRA || qWPs == rRA) ? 1'b1 : 1'b0;
     qRVD <= (rRA == rORP) ? 1'b0 : 1'b1;
@@ -118,12 +121,12 @@ function[  7:0]	fBitWidth;
     for (i = 0; i < 32; i = i+1 )
         if (iVAL[i]) 
         begin
-            fBitWidth = i;
+            fBitWidth = i + 1;
         end
     
-    if (fBitWidth == 0) begin
-        fBitWidth = 1;
-    end
+    // if (fBitWidth == 0) begin
+    //     fBitWidth = 1;
+    // end
     end
 endfunction
 ////////////////////////////////////////////////////////////

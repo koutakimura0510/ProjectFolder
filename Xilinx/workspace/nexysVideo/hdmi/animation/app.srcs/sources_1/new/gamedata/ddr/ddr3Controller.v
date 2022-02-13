@@ -16,8 +16,6 @@ module ddr3Controller #(
     parameter pDramDataWidth = 128,
     parameter pDramMaskWidth = 16
 )(
-    input                       iCLK,           // system clk
-    input                       iRST,           // reset High
     inout  [15:0]               ioDDR3_DQ,
     inout  [ 1:0]               ioDDR3_DQS_N,
     inout  [ 1:0]               ioDDR3_DQS_P,
@@ -41,9 +39,11 @@ module ddr3Controller #(
     output                      oRdDataValid,       // 読み込みデータ出力時High
     output                      oReady,             // 読み込み可能時High
     output                      oWdReady,           // 書き込み可能時High
-    output                      oInitCalibComplete, // 初期化完了時High
+    input                       iCLK,               // system clk
+    input                       iRST,               // reset High
     output                      oUiCLK,
-    output                      oUiRST
+    output                      oUiRST,
+    output                      oInitCalibComplete // 初期化完了時High
 );
 
 

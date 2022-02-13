@@ -80,7 +80,7 @@ wire [ 9:0] oVPOS;
 
 
 // 操作状況をLEDで確認
-assign oLED = {~iBtn, locked, ~rst};
+// assign oLED = {~iBtn, locked, ~rst};
 
 
 //----------------------------------------------------------
@@ -132,7 +132,11 @@ swTop SW_TOP (
 //----------------------------------------------------------
 // RGBデータ
 //----------------------------------------------------------
-gameDataTop GAME_DATA_TOP (
+gameDataTop # (
+    .pDramAddrWidth (29),       .pBuffDepth     (8),
+    .pDramDataWidth (128),      .pBitDepth      (32),
+    .pDramMaskWidth (16)
+) GAME_DATA_TOP (
     .iDispCLK       (o_clk_25),
     .iCLK           (iCLK),
     .iRST           (user_rst),
@@ -160,7 +164,8 @@ gameDataTop GAME_DATA_TOP (
     .oOledDC        (oOledDC),
     .oOledRes       (oOledRes),
     .oOledVbat      (oOledVbat),
-    .oOledVdd       (oOledVdd)
+    .oOledVdd       (oOledVdd),
+    .oLED           (oLED)
 );
 
 

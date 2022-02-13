@@ -153,7 +153,10 @@ endfunction
 wire [BIT_LENGTH:0] disp_data = getDispData(line, iDispLine1, iDispLine2, iDispLine3, iDispLine4);
 wire [9:0] ascii      = ((8'hff & ({disp_data, BIT_LINK} >> ((STR_LEN - str_count) << 3))) << 3) + addr_index;  // ascii文字部分を抽出、128bitに対して96bitのデータを受信するためbit連結で128bitとして帳尻を合わせている
 wire [9:0] dec        = (4'hf & (disp_data >> ((STR_LEN - str_count) << 2)));                   // 16進数部分の4bit抽出
-wire [9:0] dot_addr   = (str_count < 8) ? ascii : ((dec + getAscii(dec)) << 3) + addr_index;    // アドレス計算を行う
+wire [9:0] dot_addr   = ((dec + getAscii(dec)) << 3) + addr_index;    // アドレス計算を行う
+
+// ascii文字利用時使用
+// wire [9:0] dot_addr   = (str_count < 8) ? ascii : ((dec + getAscii(dec)) << 3) + addr_index;    // アドレス計算を行う
 
 
 //----------------------------------------------------------
