@@ -26,6 +26,7 @@ module gameDataTop # (
     input           iRST,       // system rst
     input  [ 5:0]   iBtn,
     input           iVDE,       // video enable High->Lowの変化を確認しフレームバッファのchを切り替える
+    input           iFVDE,      // fast video enable, 通常のvdeよりも1クロック早くHigh
     output [23:0]   oVRGB,      // video rgb
     // output [31:0] oVSound,    // video sound data
     inout  [15:0]   ioDDR3_DQ,
@@ -55,37 +56,71 @@ module gameDataTop # (
 
 
 //----------------------------------------------------------
-// gameDataTop内を動作させるクロックとリセット信号
+// gameDataTop内を動作させるクロック・リセット信号、初期化完了のキャリブレーション信号
 //----------------------------------------------------------
 wire oUiCLK, oUiRST;
+wire oCal;
 
 
 //----------------------------------------------------------
 // DDRメモリの読み込みデータを保存しピクセルクロックのタイミングで出力
 //----------------------------------------------------------
-wire [pBitDepth-1:0] oRD;
-wire oRDEMP;
-wire oRVD;
-wire iRDE;
-wire [pBitDepth-1:0] iRA;
-wire iRAE;
-wire oRAFLL;
-wire oCal;  // ddr calibration
-assign oVRGB = 24'h222222;
 
-// TODO dual port ram 作成
+////////////////////////////////////////////////////////////
+// 読み込みフレームバッファのアドレス生成
 
-assign iRDE  = (~oRDEMP) & oCal;
-assign iRAE  = (~oRAFLL) & oCal;
-assign iRA   = raddr;
+// ddr side
+wire [pBitDepth-1:0] wDdrRA;
+wire wDdrRaE;
+wire wDdrRaFLL;
 
+assign wDdrRaE  = (~oRAFLL) & oCal;
+assign wDdrRA   = 0;
+
+////////////////////////////////////////////////////////////
+//----------------------------------------------------------
+// 非同期FIFO
+// ディスプレイクロック(dclk)とアプリケーション側のクロック(aclk)で動作する
+// FPSの向上の為、dclkの周期で必ず画素データがFIFOに存在していなければならない
+// 同期信号とタイミングを合わせるため、oFVDEを使用し、oVDEがONになるより1CLK早くデータを出力する
+//----------------------------------------------------------
+// top module side
+wire [31:0] qVRGB;      assign oVRGB = qVRGB[23:0];
+
+//ddr side
+wire [pBitDepth-1:0] wDdrRD;
+wire wDdrRdEMP;
+wire wDdrRVD;
+reg  qDdrRDE;
+
+// fifo side
+wire wDualFll;
+
+fifoDualController #(
+    .pBuffDepth (512),
+    .pBitWidth  (32)
+) PIXEL_FIFO_DUAL_CONTROLLER (
+    // write side       read side
+    .iCLKA  (oUiCLK),   .iCLKB  (iDispCLK),
+    .iRST   (oUiRST),
+    .iWD    (wDdrRD),   .oRD    (qVRGB),
+    .iWE    (wDdrRVD),  .iRE    (iFVDE),
+    .oFLL   (wDualFll), .oRVD   (oRVD),
+                        .oEMP   ()
+);
+
+always @*
+begin
+    qDdrRDE <= (~wDdrRdEMP) & (~wDualFll) & oCal;
+end
 
 //----------------------------------------------------------
 // ピクセルデータ生成
+// TODO 書き込むエリアのデータを読みこんでおき、アルファ値を結合する
 //----------------------------------------------------------
 localparam pRgbWidth = 32;
 
-wire oWFLL;
+wire wWFLL;
 wire [pRgbWidth-1:0] wPixelWD;      // pixel data
 wire [pDramAddrWidth-1:0] wPixelWA; // write addr
 reg qPixelWE;                       // write enable
@@ -99,7 +134,7 @@ reg qPixelWE;                       // write enable
 
 always @*
 begin
-    qPixelWE <= (~oWFLL);
+    qPixelWE <= (~wWFLL);
 end
 
 
@@ -122,15 +157,15 @@ ddr3Bridge #(
     .oDDR3_DM           (oDDR3_DM),     .oDDR3_ODT          (oDDR3_ODT),
 
     // data hand shake                  read pixel data
-    .iWD                (wPixelWD),     .oRD                (oRD),
-    .iWA                (wPixelWA),     .oRDEMP             (oRDEMP),
-    .iMask              (16'd0),        .oRVD               (oRVD),
-    .iWE                (qPixelWE),     .iRDE               (iRDE),
-    .oWFLL              (oWFLL),        
+    .iWD                (wPixelWD),     .oRD                (wDdrRD),
+    .iWA                (wPixelWA),     .oRDEMP             (wDdrRdEMP),
+    .iMask              (16'd0),        .oRVD               (wDdrRVD),
+    .iWE                (qPixelWE),     .iRDE               (qDdrRDE),
+    .oWFLL              (wWFLL),        
                                         // read ddr side
-                                        .iRA                (iRA),
-                                        .iRAE               (iRAE),
-                                        .oRAFLL             (oRAFLL),
+                                        .iRA                (wDdrRA),
+                                        .iRAE               (wDdrRaE),
+                                        .oRAFLL             (wDdrRaFLL),
 
     // user interface clk rst
     .iCLK               (iDispCLK),     .iRST           (iRST),
