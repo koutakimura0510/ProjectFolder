@@ -7,25 +7,6 @@
 // -
 // デュアルポートFIFO コントロールモジュール
 //----------------------------------------------------------
-    // "editor.rulers": [80],  // 80列目に線を引く
-    // "editor.tokenColorCustomizations": {    // エディターの文字色の変更
-    //     "textMateRules": [
-    //         {
-    //             "scope":"comment",
-    //             "settings": {
-    //                 "foreground": "#74e791",
-    //                 // "fontStyle": "bold"
-    //             }
-    //         }
-    //     ],
-
-    //     // "numbers": "#e67920",
-    //     // "keywords": "#FF0000",
-    //     "types": "#e67920",
-    //     "variables": "#e67920",
-    //     "strings": "#4897ff",
-    //     "functions": "#ffffff"
-    // },
 module fifoDualController #(
     parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
     parameter pBitWidth   = 32      // bitサイズ
