@@ -5,17 +5,11 @@
 // Build  Vivado20.2
 // Borad  Nexys Video
 // -
-// FIFO <-> DDR3メモリコントローラ ブリッジモジュール
+// User Interface module <-> DDR3 Memory Controller Bridge module
 // 
-// 受信データと送信データをそれぞれ保存しておくFIFOを用意し、DDR3メモリの送受信データの管理を行う。
-// 受信・送信ともにEmpty Full信号で制御を行う。
-//
-// 受信・送信用それぞれ用意しておく、read writeに必要な要素はデータとアドレスなので
-// それぞれ下記のバッファが必要である
-// 読み込みデータ保存FIFO
-// 読み込みアドレス保存FIFO
-// 書き込みデータ保存FIFO
-// 書き込みアドレス保存FIFOが必要である
+// ユーザーインタフェースとDDR3メモリの送受信データの管理を行う。
+// RW sideはそれぞれ独立していて、RWのHand.Shakeを利用し、上位モジュールがこのモジュールの動作を管理する
+// 
 //----------------------------------------------------------
 module ddr3Bridge #(
     parameter pDramAddrWidth = 29,
@@ -45,8 +39,8 @@ module ddr3Bridge #(
 
     // インターフェース制御信号一覧
     // write side
-    input  [pBitDepth-1:0]      iWD,                     // WriteData
-    input  [pBitDepth-1:0]      iWA,                // Write Addr 28:0固定 / 27-25:Bank / 24-10:Row / 9-0:Col
+    input  [pBitDepth-1:0]      iWD,                // WriteData
+    input  [pBitDepth-1:0]      iWA,                // Write Addr [28]:0固定 / [27-25]:Bank / [24-10]:Row / [9-3]:Col / [2:0]:0固定
     input  [pDramMaskWidth-1:0] iMask,              // write mask 1を立てることでその範囲は書き込まないようにできる 基本0
     input                       iWE,                // write enable信号
     output                      oWFLL,              // write fifo full signal
@@ -58,7 +52,7 @@ module ddr3Bridge #(
     input                       iRDE,               // read enable
 
     // read addr side
-    input  [pBitDepth-1:0]      iRA,                // Read Addr 28:0固定 / 27-25:Bank / 24-10:Row / 9-0:Col
+    input  [pBitDepth-1:0]      iRA,                // Read Addr [28]:0固定 / [27-25]:Bank / [24-10]:Row / [9-3]:Col / [2:0]:0固定
     input                       iRAE,               // read addr enable
     output                      oRAFLL,             // read fifo full signal
 

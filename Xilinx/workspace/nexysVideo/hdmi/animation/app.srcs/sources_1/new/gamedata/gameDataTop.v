@@ -74,6 +74,10 @@ wire [pBitDepth-1:0] wDdrRA;
 wire wDdrRaE;
 wire wDdrRaFLL;
 
+//
+// iFVDEのタイミングでkのモジュール内でカウントする
+//
+
 assign wDdrRaE  = (~oRAFLL) & oCal;
 assign wDdrRA   = 0;
 
@@ -82,10 +86,10 @@ assign wDdrRA   = 0;
 // 非同期FIFO
 // ディスプレイクロック(dclk)とアプリケーション側のクロック(aclk)で動作する
 // FPSの向上の為、dclkの周期で必ず画素データがFIFOに存在していなければならない
-// 同期信号とタイミングを合わせるため、oFVDEを使用し、oVDEがONになるより1CLK早くデータを出力する
+// 画素データ出力とタイミングを合わせるため、iFVDEを使用し、iVDEがONになるより1CLK早くデータを出力する
 //----------------------------------------------------------
 // top module side
-wire [31:0] qVRGB;      assign oVRGB = qVRGB[23:0];
+wire [31:0] qVRGB;      assign oVRGB = qVRGB[23:0];     // alpha値は必要でないので送信しない
 
 //ddr side
 wire [pBitDepth-1:0] wDdrRD;
@@ -156,13 +160,13 @@ ddr3Bridge #(
     .oDDR3_CLK_N        (oDDR3_CLK_N),  .oDDR3_CKE          (oDDR3_CKE),
     .oDDR3_DM           (oDDR3_DM),     .oDDR3_ODT          (oDDR3_ODT),
 
-    // data hand shake                  read pixel data
+    // write data side                  read pixel data
     .iWD                (wPixelWD),     .oRD                (wDdrRD),
     .iWA                (wPixelWA),     .oRDEMP             (wDdrRdEMP),
     .iMask              (16'd0),        .oRVD               (wDdrRVD),
     .iWE                (qPixelWE),     .iRDE               (qDdrRDE),
     .oWFLL              (wWFLL),        
-                                        // read ddr side
+                                        // read ddr address side
                                         .iRA                (wDdrRA),
                                         .iRAE               (wDdrRaE),
                                         .oRAFLL             (wDdrRaFLL),
