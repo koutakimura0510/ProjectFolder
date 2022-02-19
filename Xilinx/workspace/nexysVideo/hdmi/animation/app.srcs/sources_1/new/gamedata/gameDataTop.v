@@ -27,6 +27,7 @@ module gameDataTop # (
     input  [ 5:0]   iBtn,
     input           iVDE,       // video enable High->Lowの変化を確認しフレームバッファのchを切り替える
     input           iFVDE,      // fast video enable, 通常のvdeよりも1クロック早くHigh
+    input           iFLE,       // frame end enable
     output [23:0]   oVRGB,      // video rgb
     // output [31:0] oVSound,    // video sound data
     inout  [15:0]   ioDDR3_DQ,
@@ -55,6 +56,10 @@ module gameDataTop # (
 );
 
 
+////////////////////////////////////////////////////////////
+`include "./frame/framePara.vh"
+
+
 //----------------------------------------------------------
 // gameDataTop内を動作させるクロック・リセット信号、初期化完了のキャリブレーション信号
 //----------------------------------------------------------
@@ -62,24 +67,74 @@ wire oUiCLK, oUiRST;
 wire oCal;
 
 
+////////////////////////////////////////////////////////////
 //----------------------------------------------------------
-// DDRメモリの読み込みデータを保存しピクセルクロックのタイミングで出力
+// フレームバッファの書き込みと読み込みエリアの切り替え制御モジュール
 //----------------------------------------------------------
+// state side
+wire [pBitState-1:0] wRS, wWS;
+wire wFbufReadStart;
+
+// read fbuf side
+wire wRFE;  // read frae enable
+
+frameStateRW #(
+    .pBitLengthState    (pBitState)
+) FRAME_STATE_RW (
+    .iCLK   (oUiCLK),   .iRST   (oUiRST),
+    .iRE    (wRFE),     .iWE    (),         // fbuf change enable
+    .oRS    (wRS),      .oWS    (wWS),      // state machine
+    .oRE    (wFbufReadStart)
+);
 
 ////////////////////////////////////////////////////////////
+//----------------------------------------------------------
 // 読み込みフレームバッファのアドレス生成
-
+//----------------------------------------------------------
 // ddr side
 wire [pBitDepth-1:0] wDdrRA;
-wire wDdrRaE;
+wire qDdrRaE;
 wire wDdrRaFLL;
 
-//
-// iFVDEのタイミングでkのモジュール内でカウントする
-//
+frameBufferRead #(
+    .pAddrWidth         (pBitDepth),
+    .pBitLengthState    (pBitState)
+) FRAME_BUFFER_READ (
+    .iCLK       (oUiCLK),   .iRST       (oUiRST),
+    .iDdrRaE    (qDdrRaE),  .iRS        (wWS),
+    .oAddr      (wDdrRA),   .oRE        (wRFE)
+);
 
-assign wDdrRaE  = (~oRAFLL) & oCal;
-assign wDdrRA   = 0;
+always @*
+begin
+    qDdrRaE <= (~oRAFLL) & oCal & wFbufReadStart;
+end
+
+////////////////////////////////////////////////////////////
+//----------------------------------------------------------
+// ピクセルデータ生成
+// TODO 書き込むエリアのデータを読みこんでおき、アルファ値を結合する
+// TODO 1フレーム領域書き込んだらenabe信号を出す
+//----------------------------------------------------------
+localparam pRgbWidth = 32;
+
+wire wWFLL;
+wire [pRgbWidth-1:0] wPixelWD;      // pixel data
+wire [pDramAddrWidth-1:0] wPixelWA; // write addr
+reg qPixelWE;                       // write enable
+
+// rgbTop #(
+//     .pDramAddrWidth (pDramAddrWidth),
+//     .pRgbWidth      (pRgbWidth)
+// ) RGB_TOP (
+
+// );
+
+always @*
+begin
+    qPixelWE <= (~wWFLL);
+end
+
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
@@ -118,29 +173,6 @@ begin
     qDdrRDE <= (~wDdrRdEMP) & (~wDualFll) & oCal;
 end
 
-//----------------------------------------------------------
-// ピクセルデータ生成
-// TODO 書き込むエリアのデータを読みこんでおき、アルファ値を結合する
-//----------------------------------------------------------
-localparam pRgbWidth = 32;
-
-wire wWFLL;
-wire [pRgbWidth-1:0] wPixelWD;      // pixel data
-wire [pDramAddrWidth-1:0] wPixelWA; // write addr
-reg qPixelWE;                       // write enable
-
-// rgbTop #(
-//     .pDramAddrWidth (pDramAddrWidth),
-//     .pRgbWidth      (pRgbWidth)
-// ) RGB_TOP (
-
-// );
-
-always @*
-begin
-    qPixelWE <= (~wWFLL);
-end
-
 
 //----------------------------------------------------------
 // DDRメモリ操作
@@ -168,7 +200,7 @@ ddr3Bridge #(
     .oWFLL              (wWFLL),        
                                         // read ddr address side
                                         .iRA                (wDdrRA),
-                                        .iRAE               (wDdrRaE),
+                                        .iRAE               (qDdrRaE),
                                         .oRAFLL             (wDdrRaFLL),
 
     // user interface clk rst

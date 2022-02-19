@@ -9,7 +9,8 @@
 // 
 // ユーザーインタフェースとDDR3メモリの送受信データの管理を行う。
 // RW sideはそれぞれ独立していて、RWのHand.Shakeを利用し、上位モジュールがこのモジュールの動作を管理する
-// 
+// RWアドレスを指定するiWAとiRAは本来であればpDramAddrWidthのサイズだが、
+// モジュール内で確保しているFIFOのBitsizeが32bitなため、32bitで定義している
 //----------------------------------------------------------
 module ddr3Bridge #(
     parameter pDramAddrWidth = 29,

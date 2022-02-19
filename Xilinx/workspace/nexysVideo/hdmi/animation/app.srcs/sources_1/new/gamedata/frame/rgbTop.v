@@ -18,6 +18,10 @@ module rgbTop # (
     input                       
 );
 
+////////////////////////////////////////////////////////////
+`include "framePara.vh"
+
+
 always @(posedge oUiCLK)
 begin
     if (oUiRST) wdata      <= 0;
