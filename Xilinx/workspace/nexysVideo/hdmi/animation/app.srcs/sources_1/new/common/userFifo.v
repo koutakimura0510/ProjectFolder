@@ -29,8 +29,8 @@ reg [pBitWidth-1:0] rd;     assign oRD = rd;
 // rwポート
 always @(posedge iCLK)
 begin
-    if (iWE) fifo[iWA] <= iWD;
     rd <= fifo[iRA];
+    if (iWE) fifo[iWA] <= iWD;
 end
 
 endmodule

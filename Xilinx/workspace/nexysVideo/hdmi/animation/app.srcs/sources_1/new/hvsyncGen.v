@@ -25,7 +25,8 @@ module hvsyncGen
     output          oVDE,           // video data enable 描画エリア時High
     output          oFVDE,          // fast video enable oVDEより1clk早くHigh
     output [9:0]    oHPOS,
-    output [9:0]    oVPOS
+    output [9:0]    oVPOS,
+    output          oFE             // frame end
 );
 
 // declarations for TV-simulator sync parameters
@@ -71,7 +72,7 @@ end
 //----------------------------------------------------------
 reg [9:0] rVert;        assign oVPOS    = rVert;
 reg oVsync;             assign oVSYNC   = oVsync;
-reg qVmatch, qVrange;
+reg qVmatch, qVrange, qFE;
 
 always @(posedge iCLK) 
 begin
@@ -91,9 +92,11 @@ always @*
 begin
     qVmatch <= (rVert == V_MAX);
     qVrange <= (V_SYNC_START <= rVert && rVert <= V_SYNC_END);
+    qFE     <= (qVmatch & qHmatch);
 end
 
 assign oVDE  = (rHriz < H_DISPLAY && rVert < V_DISPLAY) ? 1'b1 : 1'b0;
+assign oFE   = qFE;
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
@@ -110,14 +113,14 @@ end
 
 always @(posedge iCLK) begin
     if (iRST)           rFVert <= 0;
-    else if (qFHmatch)  rFVert <= (qFVmacth) ? 0 : rFVert + 1;
+    else if (qFHmatch)  rFVert <= (qFVmatch) ? 0 : rFVert + 1;
     else                rFVert <= rFVert;
 end
 
 always @*
 begin
     qFHmatch <= (rFHriz == H_MAX);
-    qFVmacth <= (rFVert == V_MAX);
+    qFVmatch <= (rFVert == V_MAX);
 end
 
 endmodule

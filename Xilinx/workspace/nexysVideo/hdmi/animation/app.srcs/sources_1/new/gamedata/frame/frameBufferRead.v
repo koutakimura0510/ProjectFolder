@@ -8,8 +8,10 @@
 // DDRメモリに確保しているフレームバッファ領域にアクセスするためのアドレスを生成するモジュール
 //----------------------------------------------------------
 module frameBufferRead # (
-    parameter pAddrWidth = 32,           // address
-    parameter pBitLengthState = 2
+    parameter pHDisplay         = 640,
+    parameter pVDisplay         = 480,
+    parameter pAddrWidth        = 32,           // address
+    parameter pBitLengthState   = 2
 )(
     input                           iCLK,       // system clk
     input                           iRST,       // system rst
@@ -19,10 +21,9 @@ module frameBufferRead # (
     output                          oRE
 );
 
-
 ////////////////////////////////////////////////////////////
-`include "framePara.vh"
 `include "../include/commonAddr.vh"
+localparam pDdrFbufSize = (pHDisplay * pVDisplay);
 
 
 ////////////////////////////////////////////////////////////
@@ -36,13 +37,14 @@ reg [20:0] rAddrCnt;
 always @(posedge iCLK)
 begin
     if (iRST)           rAddrCnt <= 21'd0;
-    else if (iDdrRaE)   rAddrCnt <= (qRE) ? 21'd0 : rAddrCnt + 1'b1;
+    else if (qRE)       rAddrCnt <= 21'd0;
+    else if (iDdrRaE)   rAddrCnt <= rAddrCnt + 1'b1;
     else                rAddrCnt <= rAddrCnt;
 end
 
 always @*
 begin
-    qRE <= (DDR_FBUF_SIZE == rAddrCnt);
+    qRE <= (pDdrFbufSize == rAddrCnt);
 end
 
 
@@ -59,6 +61,7 @@ begin
         FBUF_AREA_1 : rNextAddr <= DDR_ADDR_FBUF_2;
         FBUF_AREA_2 : rNextAddr <= DDR_ADDR_FBUF_3;
         FBUF_AREA_3 : rNextAddr <= DDR_ADDR_FBUF_1;
+        default     : rNextAddr <= DDR_ADDR_FBUF_1;
     endcase
 end
 
@@ -71,7 +74,7 @@ reg [pAddrWidth-1:0] rFramAddr;     assign oAddr = rFramAddr;
 
 always @(posedge iCLK)
 begin
-    if (iRS == IDOL)    rFramAddr <= DDR_ADDR_FBUF_1;
+    if (iRST)           rFramAddr <= DDR_ADDR_FBUF_1;
     else if (qRE)       rFramAddr <= rNextAddr;
     else if (iDdrRaE)   rFramAddr <= rFramAddr + 4'd8;
     else                rFramAddr <= rFramAddr;

@@ -24,6 +24,7 @@ module main
     input           iCLK,           // system clk
     input           iRST,           // system rst
     input  [5:0]    iBtn,           // user push sw
+    input  [7:0]    iSW,
     output          oHDMI_CLK_n,    // hdmi clk negedge
     output          oHDMI_CLK_p,    // hdmi clk posedge
     output [2:0]    oHDMI_n,        // TMDS Channel Serial Data posedge
@@ -77,7 +78,7 @@ clk_wiz_0 CLK_GEN (
 //----------------------------------------------------------
 wire [ 9:0] oHPOS, oVPOS;
 wire oHSYNC, oVSYNC;
-wire oVDE, oFVDE;
+wire oVDE, oFVDE, oFE;
 
 hvsyncGen #(
     // hrizontal                vertical
@@ -89,7 +90,8 @@ hvsyncGen #(
     .iCLK       (o_clk_25),     .iRST       (user_rst),
     .oHSYNC     (oHSYNC),       .oVSYNC     (oVSYNC),
     .oHPOS      (oHPOS),        .oVPOS      (oVPOS),
-    .oVDE       (oVDE),         .iFVDE      (oFVDE)
+    .oVDE       (oVDE),         .oFVDE      (oFVDE),
+                                .oFE        (oFE)
 );
 
 
@@ -110,16 +112,19 @@ swTop SW_TOP (
 wire [23:0] oVRGB;
 
 gameDataTop # (
-    .pDramAddrWidth (29),       .pBuffDepth     (8),
-    .pDramDataWidth (128),      .pBitDepth      (32),
+    .pHDisplay      (H_DISPLAY),    .pVDisplay      (V_DISPLAY),
+    .pDramAddrWidth (29),           .pBuffDepth     (8),
+    .pDramDataWidth (128),          .pBitDepth      (32),
     .pDramMaskWidth (16)
 ) GAME_DATA_TOP (
     .iDispCLK       (o_clk_25),
     .iCLK           (iCLK),
     .iRST           (user_rst),
     .iBtn           (oBtn),
+    .iSW            (iSW),
     .iVDE           (oVDE),
     .iFVDE          (oFVDE),
+    .iFE            (oFE),
     .oVRGB          (oVRGB),
 
     // ddr side

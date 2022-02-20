@@ -15,6 +15,8 @@
 // 4.1~3を繰り返す。
 //----------------------------------------------------------
 module gameDataTop # (
+    parameter pHDisplay      = 640,
+    parameter pVDisplay      = 480,
     parameter pDramAddrWidth = 29,
     parameter pDramDataWidth = 128,
     parameter pDramMaskWidth = 16,
@@ -25,9 +27,10 @@ module gameDataTop # (
     input           iCLK,       // system clk
     input           iRST,       // system rst
     input  [ 5:0]   iBtn,
+    input  [ 7:0]   iSW,
     input           iVDE,       // video enable High->Lowの変化を確認しフレームバッファのchを切り替える
     input           iFVDE,      // fast video enable, 通常のvdeよりも1クロック早くHigh
-    input           iFLE,       // frame end enable
+    input           iFE,        // frame end
     output [23:0]   oVRGB,      // video rgb
     // output [31:0] oVSound,    // video sound data
     inout  [15:0]   ioDDR3_DQ,
@@ -57,7 +60,7 @@ module gameDataTop # (
 
 
 ////////////////////////////////////////////////////////////
-`include "./frame/framePara.vh"
+`include "./include/commonAddr.vh"
 
 
 //----------------------------------------------------------
@@ -72,18 +75,19 @@ wire oCal;
 // フレームバッファの書き込みと読み込みエリアの切り替え制御モジュール
 //----------------------------------------------------------
 // state side
-wire [pBitState-1:0] wRS, wWS;
+wire [1:0] wRS, wWS;
 wire wFbufReadStart;
 
 // read fbuf side
 wire wRFE;  // read frae enable
+wire wWFE;  // write frae enable
 
 frameStateRW #(
-    .pBitLengthState    (pBitState)
+    .pBitLengthState    (2)
 ) FRAME_STATE_RW (
-    .iCLK   (oUiCLK),   .iRST   (oUiRST),
-    .iRE    (wRFE),     .iWE    (),         // fbuf change enable
-    .oRS    (wRS),      .oWS    (wWS),      // state machine
+    .iCLK   (oUiCLK),           .iRST   (oUiRST),
+    .iRE    (wRFE),             .iWE    (wWFE),     // fbuf change enable
+    .oRS    (wRS),              .oWS    (wWS),      // state machine
     .oRE    (wFbufReadStart)
 );
 
@@ -92,22 +96,24 @@ frameStateRW #(
 // 読み込みフレームバッファのアドレス生成
 //----------------------------------------------------------
 // ddr side
-wire [pBitDepth-1:0] wDdrRA;
-wire qDdrRaE;
+wire [pDramAddrWidth-1:0] wDdrRA;
 wire wDdrRaFLL;
+reg  qDdrRaE;
 
 frameBufferRead #(
-    .pAddrWidth         (pBitDepth),
-    .pBitLengthState    (pBitState)
+    .pHDisplay          (pHDisplay),    
+    .pVDisplay          (pVDisplay),
+    .pAddrWidth         (pDramAddrWidth),
+    .pBitLengthState    (2)
 ) FRAME_BUFFER_READ (
     .iCLK       (oUiCLK),   .iRST       (oUiRST),
-    .iDdrRaE    (qDdrRaE),  .iRS        (wWS),
+    .iDdrRaE    (qDdrRaE),  .iRS        (wRS),
     .oAddr      (wDdrRA),   .oRE        (wRFE)
 );
 
 always @*
 begin
-    qDdrRaE <= (~oRAFLL) & oCal & wFbufReadStart;
+    qDdrRaE <= (~wDdrRaFLL) & oCal & wFbufReadStart;
 end
 
 ////////////////////////////////////////////////////////////
@@ -116,23 +122,27 @@ end
 // TODO 書き込むエリアのデータを読みこんでおき、アルファ値を結合する
 // TODO 1フレーム領域書き込んだらenabe信号を出す
 //----------------------------------------------------------
-localparam pRgbWidth = 32;
-
 wire wWFLL;
-wire [pRgbWidth-1:0] wPixelWD;      // pixel data
+wire [pBitDepth-1:0] wPixelWD; // pixel data
 wire [pDramAddrWidth-1:0] wPixelWA; // write addr
-reg qPixelWE;                       // write enable
+reg qPixelWE;                  // write enable
 
-// rgbTop #(
-//     .pDramAddrWidth (pDramAddrWidth),
-//     .pRgbWidth      (pRgbWidth)
-// ) RGB_TOP (
-
-// );
+pixelTop #(
+    .pHDisplay          (pHDisplay),    
+    .pVDisplay          (pVDisplay),
+    .pAddrWidth         (pDramAddrWidth),
+    .pBitWidth          (pBitDepth),
+    .pBitLengthState    (2)
+) PIXEL_TOP (
+    .iCLK   (oUiCLK),   .iRST   (oUiRST),
+    .iWS    (wWS),      .iDdrWE (qPixelWE),
+    .oPixel (wPixelWD), .oAddr  (wPixelWA),
+    .oWE    (wWFE)
+);
 
 always @*
 begin
-    qPixelWE <= (~wWFLL);
+    qPixelWE <= ((~wWFLL) & oCal) && (wWS != IDOL);
 end
 
 
@@ -144,7 +154,8 @@ end
 // 画素データ出力とタイミングを合わせるため、iFVDEを使用し、iVDEがONになるより1CLK早くデータを出力する
 //----------------------------------------------------------
 // top module side
-wire [31:0] qVRGB;      assign oVRGB = qVRGB[23:0];     // alpha値は必要でないので送信しない
+reg  [pBitDepth-1:0] rPixel;       assign oVRGB = rPixel;     // alpha値は必要でないので送信しない
+wire [pBitDepth-1:0] wVRGB;
 
 //ddr side
 wire [pBitDepth-1:0] wDdrRD;
@@ -154,22 +165,43 @@ reg  qDdrRDE;
 
 // fifo side
 wire wDualFll;
+reg  qRst;
+
+// pixel read start
+reg rFS, qFS;
+
+always @(posedge oUiCLK)
+begin
+    if (oUiRST)             rFS <= 0;
+    else if (oCal & iFE)    rFS <= 1'b1;
+    else                    rFS <= rFS;
+end
+
+// pixel data save
+always @(posedge iDispCLK)
+begin
+    if (iRST)       rPixel <= 0;
+    else if (oRVD)  rPixel <= wVRGB;
+    else            rPixel <= rPixel;
+end
 
 fifoDualController #(
-    .pBuffDepth (512),
-    .pBitWidth  (32)
+    .pBuffDepth (8),
+    .pBitWidth  (pBitDepth)
 ) PIXEL_FIFO_DUAL_CONTROLLER (
     // write side       read side
     .iCLKA  (oUiCLK),   .iCLKB  (iDispCLK),
-    .iRST   (oUiRST),
-    .iWD    (wDdrRD),   .oRD    (qVRGB),
-    .iWE    (wDdrRVD),  .iRE    (iFVDE),
+    .iRST   (qRst),
+    .iWD    (wDdrRD),   .oRD    (wVRGB),
+    .iWE    (wDdrRVD),  .iRE    (qFS),
     .oFLL   (wDualFll), .oRVD   (oRVD),
                         .oEMP   ()
 );
 
 always @*
 begin
+    qRst    <= (oUiRST | iRST);
+    qFS     <= rFS & iFVDE;
     qDdrRDE <= (~wDdrRdEMP) & (~wDualFll) & oCal;
 end
 
@@ -209,9 +241,6 @@ ddr3Bridge #(
     .oInitCalibComplete (oCal)
 );
 
-//----------------------------------------------------------
-// デバッグ用に値表示
-//----------------------------------------------------------
 oledTop #(
     .PDIVCLK        (100000),
     .PDIVSCK        (128),
@@ -227,10 +256,10 @@ oledTop #(
     .oOledRes       (oOledRes),
     .oOledVbat      (oOledVbat),
     .oOledVdd       (oOledVdd),
-    .iDispLine1     ({64'd0}),
-    .iDispLine2     ({64'd0}),
-    .iDispLine3     ({64'd0}),
-    .iDispLine4     ({64'd0})
+    .iDispLine1     (0),
+    .iDispLine2     (0),
+    .iDispLine3     (wPixelWA),
+    .iDispLine4     (wDdrRA)
     // 95
     // .iDispLine1     ({"XPOS =  ", 4'd0, 2'd0, oUXS, oFXS}),
     // .iDispLine2     ({"YPOS =  ", 4'd0, 2'd0, oUYS, oFYS}),

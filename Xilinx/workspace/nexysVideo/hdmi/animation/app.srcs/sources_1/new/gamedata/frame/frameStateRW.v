@@ -9,7 +9,7 @@
 //----------------------------------------------------------
 
 module frameStateRW #(
-    pBitLengthState = 2;
+    pBitLengthState = 2
 )(
     input                           iCLK,       // system clk
     input                           iRST,       // system rst
@@ -22,14 +22,15 @@ module frameStateRW #(
 
 
 ////////////////////////////////////////////////////////////
-`include "framePara.vh"
+`include "../include/commonAddr.vh"
 
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // RW共通変数
 //----------------------------------------------------------
-reg [pBitLengthState-1:0] rWState, rRState;
+reg [pBitLengthState-1:0] rWState;      assign oWS = rWState;
+reg [pBitLengthState-1:0] rRState;      assign oRS = rRState;
 
 
 ////////////////////////////////////////////////////////////
@@ -54,6 +55,7 @@ begin
     end
     else
     begin
+        case (rWState)
         IDOL: begin
             if (iRE)    rWState <= rRState;
             else        rWState <= IDOL;
@@ -99,6 +101,7 @@ end
 // readフレームバッファ切り替えステートマシン
 // フレームバッファを切り替える条件は下記とする
 // 
+// 最初の1フレーム目は IDOL 状態とし読み込みは開始しない
 // 60FPS動作のため、読み込みバッファ切替時に切替先の書き込みが完了していなければならない
 // 書き込みが完了している前提なので、バッファ切り替えの際のエラー処理などを施していない
 // Readステートマシン側は1フレーム読み込み完了時にアクセスするアドレス先を切り替えるだけにする
@@ -114,11 +117,34 @@ begin
     else
     begin
         case (rRState)
-            IDOL:           rRState <= (iWE) ? FBUF_AREA_1 : IDOL;
-            FBUF_AREA_1:    rRState <= (iRE) ? FBUF_AREA_2 : FBUF_AREA_1;
-            FBUF_AREA_2:    rRState <= (iRE) ? FBUF_AREA_3 : FBUF_AREA_2;
-            FBUF_AREA_3:    rRState <= (iRE) ? FBUF_AREA_1 : FBUF_AREA_3;
-            default:        rRState <= IDOL;
+            IDOL:
+            begin
+                if (iWE)    rRState <= FBUF_AREA_1;
+                else        rRState <= IDOL;
+            end
+
+            FBUF_AREA_1:
+            begin
+                if (iRE)    rRState <= (rWState == FBUF_AREA_2) ? FBUF_AREA_1 : FBUF_AREA_2;
+                else        rRState <= FBUF_AREA_1;
+            end
+
+            FBUF_AREA_2:
+            begin
+                if (iRE)    rRState <= (rWState == FBUF_AREA_3) ? FBUF_AREA_2 : FBUF_AREA_3;
+                else        rRState <= FBUF_AREA_2;
+            end
+
+            FBUF_AREA_3:
+            begin
+                if (iRE)    rRState <= (rWState == FBUF_AREA_1) ? FBUF_AREA_3 : FBUF_AREA_1;
+                else        rRState <= FBUF_AREA_3;
+            end
+
+            default:
+            begin
+                rRState <= IDOL;
+            end
         endcase
     end
 end
