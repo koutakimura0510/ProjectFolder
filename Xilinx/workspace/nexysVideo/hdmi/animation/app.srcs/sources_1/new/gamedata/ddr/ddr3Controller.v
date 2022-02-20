@@ -116,61 +116,61 @@ migController #(
     .iInitCalibComplete     (i_initcalibcomplete)
 );
 
-migDemo MIG_DEMO (
-    .oData      (i_app_rd_data),    .oCal       (i_initcalibcomplete),
-    .iAppEN     (o_app_enable),     .iWE        (o_app_wdf_wren),
-    .oWRDY      (i_app_wdf_ready),  .oRDV       (i_app_rd_data_valid),
-    .oRRDY      (i_app_ready),
-    .iCLK       (o_DDR3_100mhz),    .iRST       (iRST & ~locked),
-    .oUiCLK     (ui_clk),           .oUiRST     (ui_clk_sync_rst)
-);
-
-// mig_7series_0 MIG (
-//     //DDR3 port
-//     .ddr3_addr              (oDDR3_ADDR),
-//     .ddr3_ba                (oDDR3_BA),
-//     .ddr3_cas_n             (oDDR3_CAS),
-//     .ddr3_ck_n              (oDDR3_CLK_N),
-//     .ddr3_ck_p              (oDDR3_CLK_P),
-//     .ddr3_cke               (oDDR3_CKE),
-//     .ddr3_ras_n             (oDDR3_RAS),
-//     .ddr3_reset_n           (oDDR3_RESET),
-//     .ddr3_we_n              (oDDR3_WE),
-//     .ddr3_dq                (ioDDR3_DQ),
-//     .ddr3_dqs_n             (ioDDR3_DQS_N),
-//     .ddr3_dqs_p             (ioDDR3_DQS_P),
-//     .ddr3_dm                (oDDR3_DM),
-//     .ddr3_odt               (oDDR3_ODT),
-//     .init_calib_complete    (i_initcalibcomplete),          // output init_calib_complete High Out
-
-//     // Application interface ports
-//     .app_addr                       (o_app_addr),           // input [28:0]		addr[28:3] / Bank[2:0]
-//     .app_cmd                        (o_app_cmd),            // input [2:0]		Write 000 / Read 001
-//     .app_en                         (o_app_enable),         // input			ユーザー側がapp_cmd有効時にHighにする
-//     .app_wdf_data                   (o_app_wdf_data),       // input [127:0]	書き込みデータ 16bit x 8byte
-//     .app_wdf_end                    (o_app_wdf_wren),       // input			下記のwrite enable信号と同期させる
-//     .app_wdf_wren                   (o_app_wdf_wren),       // input			write enable
-//     .app_wdf_rdy                    (i_app_wdf_ready),      // output			データ書き込み可能時High
-//     .app_wdf_mask                   (o_app_wdf_mask),       // input [15:0]		各bitに1が立っていたら対応したbyteは書き込まれない
-//     .app_rd_data                    (i_app_rd_data),        // output [127:0]	読み込みデータ 16bit x 8byte
-//     .app_rd_data_end                (),                     // output			最後のデータ出力時High
-//     .app_rd_data_valid              (i_app_rd_data_valid),  // output			読み込みデータ出力開始時High
-//     .app_rdy                        (i_app_ready),          // output			データ読み込み可能時High
-//     .app_sr_req                     (1'b0),                 // input			
-//     .app_ref_req                    (1'b0),                 // input			
-//     .app_zq_req                     (1'b0),                 // input			
-//     .app_sr_active                  (),                     // output			
-//     .app_ref_ack                    (),                     // output			
-//     .app_zq_ack                     (),                     // output			
-//     .ui_clk                         (ui_clk),               // output			MIGと同期のユーザーインターフェースCLK
-//     .ui_clk_sync_rst                (ui_clk_sync_rst),      // output			ユーザーインターフェースリセット信号
-//     .device_temp                    (),
-//     // System Clock Ports 100MHz
-//     .sys_clk_i                      (o_DDR3_100mhz),
-
-//     // Reference Clock Ports 200MHz rst Active Low
-//     .clk_ref_i                      (o_DDR3_200mhz),
-//     .sys_rst                        (iRST & ~locked)               // input sys_rst
+// migDemo MIG_DEMO (
+//     .oData      (i_app_rd_data),    .oCal       (i_initcalibcomplete),
+//     .iAppEN     (o_app_enable),     .iWE        (o_app_wdf_wren),
+//     .oWRDY      (i_app_wdf_ready),  .oRDV       (i_app_rd_data_valid),
+//     .oRRDY      (i_app_ready),
+//     .iCLK       (o_DDR3_100mhz),    .iRST       (iRST & ~locked),
+//     .oUiCLK     (ui_clk),           .oUiRST     (ui_clk_sync_rst)
 // );
+
+mig_7series_0 MIG (
+    //DDR3 port
+    .ddr3_addr              (oDDR3_ADDR),
+    .ddr3_ba                (oDDR3_BA),
+    .ddr3_cas_n             (oDDR3_CAS),
+    .ddr3_ck_n              (oDDR3_CLK_N),
+    .ddr3_ck_p              (oDDR3_CLK_P),
+    .ddr3_cke               (oDDR3_CKE),
+    .ddr3_ras_n             (oDDR3_RAS),
+    .ddr3_reset_n           (oDDR3_RESET),
+    .ddr3_we_n              (oDDR3_WE),
+    .ddr3_dq                (ioDDR3_DQ),
+    .ddr3_dqs_n             (ioDDR3_DQS_N),
+    .ddr3_dqs_p             (ioDDR3_DQS_P),
+    .ddr3_dm                (oDDR3_DM),
+    .ddr3_odt               (oDDR3_ODT),
+    .init_calib_complete    (i_initcalibcomplete),          // output init_calib_complete High Out
+
+    // Application interface ports
+    .app_addr                       (o_app_addr),           // input [28:0]		addr[28:3] / Bank[2:0]
+    .app_cmd                        (o_app_cmd),            // input [2:0]		Write 000 / Read 001
+    .app_en                         (o_app_enable),         // input			ユーザー側がapp_cmd有効時にHighにする
+    .app_wdf_data                   (o_app_wdf_data),       // input [127:0]	書き込みデータ 16bit x 8byte
+    .app_wdf_end                    (o_app_wdf_wren),       // input			下記のwrite enable信号と同期させる
+    .app_wdf_wren                   (o_app_wdf_wren),       // input			write enable
+    .app_wdf_rdy                    (i_app_wdf_ready),      // output			データ書き込み可能時High
+    .app_wdf_mask                   (o_app_wdf_mask),       // input [15:0]		各bitに1が立っていたら対応したbyteは書き込まれない
+    .app_rd_data                    (i_app_rd_data),        // output [127:0]	読み込みデータ 16bit x 8byte
+    .app_rd_data_end                (),                     // output			最後のデータ出力時High
+    .app_rd_data_valid              (i_app_rd_data_valid),  // output			読み込みデータ出力開始時High
+    .app_rdy                        (i_app_ready),          // output			データ読み込み可能時High
+    .app_sr_req                     (1'b0),                 // input			
+    .app_ref_req                    (1'b0),                 // input			
+    .app_zq_req                     (1'b0),                 // input			
+    .app_sr_active                  (),                     // output			
+    .app_ref_ack                    (),                     // output			
+    .app_zq_ack                     (),                     // output			
+    .ui_clk                         (ui_clk),               // output			MIGと同期のユーザーインターフェースCLK
+    .ui_clk_sync_rst                (ui_clk_sync_rst),      // output			ユーザーインターフェースリセット信号
+    .device_temp                    (),
+    // System Clock Ports 100MHz
+    .sys_clk_i                      (o_DDR3_100mhz),
+
+    // Reference Clock Ports 200MHz rst Active Low
+    .clk_ref_i                      (o_DDR3_200mhz),
+    .sys_rst                        (iRST & ~locked)               // input sys_rst
+);
 
 endmodule
