@@ -48,6 +48,16 @@ begin
 end
 
 ////////////////////////////////////////////////////////////
-assign oData = (rRDV) ? 128'hffffffff_ffffffff_ffffffff_ffffffff : 0;
+reg [127:0] rDemoCnt; 
+
+always @(posedge iCLK)
+begin
+    if (iRST)       rDemoCnt <= 0;
+    else if (rRDV)  rDemoCnt <= rDemoCnt + 1'b1;
+    else            rDemoCnt <= rDemoCnt;
+end
+
+////////////////////////////////////////////////////////////
+assign oData = (rRDV) ? rDemoCnt : 0;
 
 endmodule

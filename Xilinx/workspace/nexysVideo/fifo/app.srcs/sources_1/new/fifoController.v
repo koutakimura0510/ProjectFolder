@@ -31,6 +31,7 @@ module fifoController #(
 //----------------------------------------------------------
 localparam pAddrWidth  = fBitWidth(pBuffDepth);
 localparam [pAddrWidth-1:0] pAddrMask = pBuffDepth - 1;
+localparam pRstDepth = pBuffDepth - 1;
 
 
 ////////////////////////////////////////////////////////////
@@ -42,12 +43,16 @@ localparam [pAddrWidth-1:0] pAddrMask = pBuffDepth - 1;
 // oEMP 書き込みと読み込みのアドレスが一致している、または超えそうな場合High
 // oRVD Empty状態ではなく読み込みEnable信号を受信した場合High
 //----------------------------------------------------------
-reg qFLL, qEMP, qRVD;    assign {oFLL, oEMP, oRVD} = {qFLL, qEMP, qRVD};
-reg [pAddrWidth-1:0] qWPs, qRPs;    // 現在のwrポインタの一つ手前のインデックス参照
+reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {rFLL, rEMP, rRVD};
+reg qFLL, qEMP, qRVD;
+reg [pAddrWidth-1:0] rWAb, rRAb;    // 現在のwrポインタの一つ手前のインデックス参照
+reg [pAddrWidth-1:0] qWAb, qRAb;
 reg [pAddrWidth-1:0] rWA, rRA;      // 現在参照中のwrポインタ
 reg [pAddrWidth-1:0] rORP;
 reg qWE, qRE, qRst;
 
+
+////////////////////////////////////////////////////////////
 // write pointer
 always @(posedge iCLK)
 begin
@@ -56,12 +61,27 @@ begin
     else            rWA <= (rWA + 1'b1) & pAddrMask;
 end
 
+always @(posedge iCLK)
+begin
+    if (qRst)       rWAb <= pRstDepth;
+    else if (qWAb)  rWAb <= rWAb;
+    else            rWAb <= rWA;
+end
+
+////////////////////////////////////////////////////////////
 // read pointer
 always @(posedge iCLK)
 begin
     if (qRst)      rRA <= 0;
     else if (!qRE) rRA <= rRA;
     else           rRA <= (rRA + 1'b1) & pAddrMask;
+end
+
+always @(posedge iCLK)
+begin
+    if (qRst)       rRAb <= pRstDepth;
+    else if (qRAb)  rRAb <= rRAb;
+    else            rRAb <= rRA;
 end
 
 // 前回のrpが更新されていたら新規データを出力できる状態と判断する
@@ -71,16 +91,39 @@ begin
     else        rORP <= rRA;
 end
 
+////////////////////////////////////////////////////////////
+always @(posedge iCLK)
+begin
+    if (qRst)       rFLL <= 1'b1;
+    else if (qFLL)  rFLL <= 1'b1;
+    else            rFLL <= 1'b0;
+end
+
+always @(posedge iCLK)
+begin
+    if (qRst)       rEMP <= 1'b1;
+    else if (qEMP)  rEMP <= 1'b1;
+    else            rEMP <= 1'b0;
+end
+
+always @(posedge iCLK)
+begin
+    if (qRst)       rRVD <= 1'b0;
+    else if (qRVD)  rRVD <= 1'b1;
+    else            rRVD <= 1'b0;
+end
+
+////////////////////////////////////////////////////////////
 always @*
 begin
+    qWAb <= (rWA - 1'b1) & pAddrMask;
+    qRAb <= (rRA - 1'b1) & pAddrMask;
     qRst <= iRST;
-    qWE  <= iWE & (~qFLL);
-    qRE  <= iRE & (~qEMP);
-    qWPs <= (rWA - 1'b1) & pAddrMask;
-    qRPs <= (rRA - 1'b1) & pAddrMask;
-    qFLL <= (qRPs == rWA) ? 1'b1 : 1'b0;
-    qEMP <= (rWA == rRA || qWPs == rRA) ? 1'b1 : 1'b0;
-    qRVD <= (rRA == rORP) ? 1'b0 : 1'b1;
+    qWE  <= iWE & (~rFLL);
+    qRE  <= iRE & (~rEMP);
+    qFLL <= (rWA == qRAb);
+    qEMP <= (rWA == rRA || qWAb == rRA) ? 1'b1 : 1'b0;
+    qRVD <= (rRA != rORP);
 end
 
 ////////////////////////////////////////////////////////////

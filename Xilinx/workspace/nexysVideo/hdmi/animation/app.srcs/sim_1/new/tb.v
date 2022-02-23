@@ -44,7 +44,7 @@ wire [ 1:0]           ddr3_dm;
 wire                  ddr3_odt;
 
 main #(
-    .H_DISPLAY  (9),
+    .H_DISPLAY  (4),
     .H_BACK     (2),
     .H_FRONT    (2),
     .H_SYNC     (2),

@@ -40,8 +40,9 @@ localparam [pAddrWidth-1:0] pAddrMask = pBuffDepth - 1;
 // oEMP 書き込みと読み込みのアドレスが一致している、または超えそうな場合High
 // oRVD Empty状態ではなく読み込みEnable信号を受信した場合High
 //----------------------------------------------------------
-reg qFLL, qEMP, qRVD;    assign {oFLL, oEMP, oRVD} = {qFLL, qEMP, qRVD};
-reg [pAddrWidth-1:0] qWPs, qRPs;    // 現在のwrポインタの一つ手前のインデックス参照
+reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {rFLL, rEMP, rRVD};
+reg qFLL, qEMP, qRVD;
+reg [pAddrWidth-1:0] rWAb, rRAb;    // R/W Address Back 現在のwrポインタの一つ手前のインデックス参照
 reg [pAddrWidth-1:0] rWA, rRA;      // 現在参照中のwrポインタ
 reg [pAddrWidth-1:0] rORP;
 reg qWE, qRE, qRst;
@@ -54,12 +55,24 @@ begin
     else            rWA <= (rWA + 1'b1) & pAddrMask;
 end
 
+always @(posedge iCLKA)
+begin
+    if (qRst)       rWAb <= 0;
+    else            rWAb <= (rWA - 1'b1) & pAddrMask;
+end
+
 // read pointer
 always @(posedge iCLKB)
 begin
     if (qRst)      rRA <= 0;
     else if (!qRE) rRA <= rRA;
     else           rRA <= (rRA + 1'b1) & pAddrMask;
+end
+
+always @(posedge iCLKB)
+begin
+    if (qRst)       rRAb <= 0;
+    else            rRAb <= (rRA - 1'b1) & pAddrMask;
 end
 
 // 前回のrpが更新されていたら新規データを出力できる状態と判断する
@@ -69,15 +82,39 @@ begin
     else        rORP <= rRA;
 end
 
+////////////////////////////////////////////////////////////
+always @(posedge iCLKA)
+begin
+    if (qRst)       rFLL <= 1'b0;
+    else if (qFLL)  rFLL <= 1'b1;
+    else            rFLL <= 1'b0;
+end
+
+always @(posedge iCLKA)
+begin
+    if (qRst)       rEMP <= 1'b0;
+    else if (qEMP)  rEMP <= 1'b1;
+    else            rEMP <= 1'b0;
+end
+
+always @(posedge iCLKB)
+begin
+    if (qRst)       rRVD <= 1'b0;
+    else if (qRVD)  rRVD <= 1'b1;
+    else            rRVD <= 1'b0;
+end
+
+////////////////////////////////////////////////////////////
+
 always @*
 begin
+    // rWAb <= (rWA - 1'b1) & pAddrMask;
+    // rRAb <= (rRA - 1'b1) & pAddrMask;
     qRst <= iRST;
-    qWE  <= iWE & (~qFLL);
-    qRE  <= iRE & (~qEMP);
-    qWPs <= (rWA - 1'b1) & pAddrMask;
-    qRPs <= (rRA - 1'b1) & pAddrMask;
-    qFLL <= (qRPs == rWA) ? 1'b1 : 1'b0;
-    qEMP <= (rWA == rRA || qWPs == rRA) ? 1'b1 : 1'b0;
+    qWE  <= iWE & (~rFLL);
+    qRE  <= iRE & (~rEMP);
+    qFLL <= (rRAb == rWA) ? 1'b1 : 1'b0;
+    qEMP <= (rWA == rRA || rWAb == rRA) ? 1'b1 : 1'b0;
     qRVD <= (rRA == rORP) ? 1'b0 : 1'b1;
 end
 

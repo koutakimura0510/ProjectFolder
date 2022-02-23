@@ -72,7 +72,7 @@ end
 //----------------------------------------------------------
 reg [9:0] rVert;        assign oVPOS    = rVert;
 reg oVsync;             assign oVSYNC   = oVsync;
-reg qVmatch, qVrange, qFE;
+reg qVmatch, qVrange;
 
 always @(posedge iCLK) 
 begin
@@ -92,11 +92,10 @@ always @*
 begin
     qVmatch <= (rVert == V_MAX);
     qVrange <= (V_SYNC_START <= rVert && rVert <= V_SYNC_END);
-    qFE     <= (qVmatch & qHmatch);
 end
 
 assign oVDE  = (rHriz < H_DISPLAY && rVert < V_DISPLAY) ? 1'b1 : 1'b0;
-assign oFE   = qFE;
+assign oFE   = qVmatch;
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
@@ -106,7 +105,7 @@ reg [9:0] rFHriz, rFVert;     assign oFVDE = (rFHriz < H_DISPLAY && rFVert < V_D
 reg qFHmatch, qFVmatch;
 
 always @(posedge iCLK) begin
-    if (iRST)           rFHriz <= 1;
+    if (iRST)           rFHriz <= 2;
     else if (qFHmatch)  rFHriz <= 0;
     else                rFHriz <= rFHriz + 1'b1;
 end
