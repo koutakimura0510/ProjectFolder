@@ -53,7 +53,7 @@ end
 ////////////////////////////////////////////////////////////
 // demo color gen
 reg [pBitWidth-1:0] rNextData;
-reg [5:0] rFpsCnt;
+reg [7:0] rFpsCnt;
 reg qFEN;
 
 always @(posedge iCLK)

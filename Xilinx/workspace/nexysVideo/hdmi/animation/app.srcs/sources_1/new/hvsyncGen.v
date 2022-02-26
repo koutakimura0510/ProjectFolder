@@ -95,17 +95,18 @@ begin
 end
 
 assign oVDE  = (rHriz < H_DISPLAY && rVert < V_DISPLAY) ? 1'b1 : 1'b0;
-assign oFE   = qVmatch;
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // fast video timing
+// 独自に作成した Dual Clk FIFO の性能上、Enable信号を入力してから最速で3CLK経過後データが出力されるため、
+// 3clk + 1clk 有効領域よりも早く DE信号を作成する
 //----------------------------------------------------------
 reg [9:0] rFHriz, rFVert;     assign oFVDE = (rFHriz < H_DISPLAY && rFVert < V_DISPLAY) ? 1'b1 : 1'b0;
 reg qFHmatch, qFVmatch;
 
 always @(posedge iCLK) begin
-    if (iRST)           rFHriz <= 2;
+    if (iRST)           rFHriz <= 4;
     else if (qFHmatch)  rFHriz <= 0;
     else                rFHriz <= rFHriz + 1'b1;
 end
@@ -121,5 +122,7 @@ begin
     qFHmatch <= (rFHriz == H_MAX);
     qFVmatch <= (rFVert == V_MAX);
 end
+
+assign oFE   = qFVmatch & qFHmatch;
 
 endmodule

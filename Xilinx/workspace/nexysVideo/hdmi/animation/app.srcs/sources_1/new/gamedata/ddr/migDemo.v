@@ -35,9 +35,9 @@ wire [31:0] wRD;            assign oData = {96'd0, wRD};
 reg qWE, qRE;
 
 fifoController #(
-    .pBuffDepth (16),
+    .pBuffDepth (8),
     .pBitWidth  (32)
-) FIFO_WRITE_ADDR (
+) FIFO_MIG_DEMO (
     // write side           read side
     .iCLK   (iCLK),         .iRST   (iRST),
     .iWD    (iData[31:0]),  .oRD    (wRD),

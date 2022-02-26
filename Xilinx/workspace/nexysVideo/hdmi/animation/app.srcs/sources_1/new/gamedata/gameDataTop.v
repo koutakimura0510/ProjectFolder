@@ -96,14 +96,14 @@ frameStateRW #(
 // 読み込みフレームバッファのアドレス生成
 //----------------------------------------------------------
 // ddr side
-wire [pDramAddrWidth-1:0] wDdrRA;
+wire [pBitDepth-1:0] wDdrRA;
 wire wDdrRaFLL;
 reg  qDdrRaE;
 
 frameBufferRead #(
-    .pHDisplay          (pHDisplay),    
+    .pHDisplay          (pHDisplay),
     .pVDisplay          (pVDisplay),
-    .pAddrWidth         (pDramAddrWidth),
+    .pAddrWidth         (pBitDepth),
     .pBitLengthState    (2)
 ) FRAME_BUFFER_READ (
     .iCLK       (oUiCLK),   .iRST       (oUiRST),
@@ -124,13 +124,13 @@ end
 //----------------------------------------------------------
 wire wWFLL;
 wire [pBitDepth-1:0] wPixelWD; // pixel data
-wire [pDramAddrWidth-1:0] wPixelWA; // write addr
+wire [pBitDepth-1:0] wPixelWA; // write addr
 reg qPixelWE;                  // write enable
 
 pixelTop #(
     .pHDisplay          (pHDisplay),    
     .pVDisplay          (pVDisplay),
-    .pAddrWidth         (pDramAddrWidth),
+    .pAddrWidth         (pBitDepth),
     .pBitWidth          (pBitDepth),
     .pBitLengthState    (2)
 ) PIXEL_TOP (
@@ -151,7 +151,7 @@ end
 // 非同期FIFO
 // ディスプレイクロック(dclk)とアプリケーション側のクロック(aclk)で動作する
 // FPSの向上の為、dclkの周期で必ず画素データがFIFOに存在していなければならない
-// 画素データ出力とタイミングを合わせるため、iFVDEを使用し、iVDEがONになるより1CLK早くデータを出力する
+// 画素データ出力とタイミングを合わせるため、iFVDEを使用し、iVDEがONになるより早くデータを出力する
 //----------------------------------------------------------
 // top module side
 reg  [pBitDepth-1:0] rPixel;       assign oVRGB = rPixel;     // alpha値は必要でないので送信しない
@@ -164,7 +164,7 @@ wire wDdrRVD;
 reg  qDdrRDE;
 
 // fifo side
-wire wDualFll;
+wire wDualFll, wRVD;
 reg  qRst;
 
 // pixel read start
@@ -181,12 +181,12 @@ end
 always @(posedge iDispCLK)
 begin
     if (iRST)       rPixel <= 0;
-    else if (oRVD)  rPixel <= wVRGB;
+    else if (wRVD)  rPixel <= wVRGB;
     else            rPixel <= rPixel;
 end
 
 fifoDualController #(
-    .pBuffDepth (8),
+    .pBuffDepth (pBuffDepth),
     .pBitWidth  (pBitDepth)
 ) PIXEL_FIFO_DUAL_CONTROLLER (
     // write side       read side
@@ -194,7 +194,7 @@ fifoDualController #(
     .iRST   (qRst),
     .iWD    (wDdrRD),   .oRD    (wVRGB),
     .iWE    (wDdrRVD),  .iRE    (qFS),
-    .oFLL   (wDualFll), .oRVD   (oRVD),
+    .oFLL   (wDualFll), .oRVD   (wRVD),
                         .oEMP   ()
 );
 
