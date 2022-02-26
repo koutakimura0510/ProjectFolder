@@ -42,37 +42,27 @@ localparam [pAddrWidth-1:0] pAddrMask = pBuffDepth - 1;
 //----------------------------------------------------------
 reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {rFLL, rEMP, rRVD};
 reg qFLL, qEMP, qRVD;
-reg [pAddrWidth-1:0] rWAb, rRAb;    // R/W Address Back 現在のwrポインタの一つ手前のインデックス参照
-reg [pAddrWidth-1:0] rWA, rRA;      // 現在参照中のwrポインタ
+reg [pAddrWidth-1:0] qWAb, qWAb2, qRAb, qRAb2, qRAb3;
+reg [pAddrWidth-1:0] rWA, rRA;
 reg [pAddrWidth-1:0] rORP;
+reg rWE, rRE;
 reg qWE, qRE, qRst;
 
+////////////////////////////////////////////////////////////
 // write pointer
 always @(posedge iCLKA)
 begin
     if (qRst)       rWA <= 0;
-    else if (!qWE)  rWA <= rWA;
+    else if (!rWE)  rWA <= rWA;
     else            rWA <= (rWA + 1'b1) & pAddrMask;
-end
-
-always @(posedge iCLKA)
-begin
-    if (qRst)       rWAb <= 0;
-    else            rWAb <= (rWA - 1'b1) & pAddrMask;
 end
 
 // read pointer
 always @(posedge iCLKB)
 begin
     if (qRst)      rRA <= 0;
-    else if (!qRE) rRA <= rRA;
+    else if (!rRE) rRA <= rRA;
     else           rRA <= (rRA + 1'b1) & pAddrMask;
-end
-
-always @(posedge iCLKB)
-begin
-    if (qRst)       rRAb <= 0;
-    else            rRAb <= (rRA - 1'b1) & pAddrMask;
 end
 
 // 前回のrpが更新されていたら新規データを出力できる状態と判断する
@@ -83,47 +73,48 @@ begin
 end
 
 ////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+// Hnad Shake信号、タイミング結合のためDFFに一度通す
 always @(posedge iCLKA)
 begin
-    if (qRst)       rFLL <= 1'b0;
-    else if (qFLL)  rFLL <= 1'b1;
-    else            rFLL <= 1'b0;
-end
-
-always @(posedge iCLKA)
-begin
-    if (qRst)       rEMP <= 1'b0;
-    else if (qEMP)  rEMP <= 1'b1;
-    else            rEMP <= 1'b0;
+    if (qRst)       {rFLL, rEMP} <= {1'b1, 1'b1};
+    else            {rFLL, rEMP} <= {qFLL, qEMP};
 end
 
 always @(posedge iCLKB)
 begin
-    if (qRst)       rRVD <= 1'b0;
-    else if (qRVD)  rRVD <= 1'b1;
-    else            rRVD <= 1'b0;
+    if (qRst)       {rRVD, rRE} <= 2'b00;
+    else            {rRVD, rRE} <= {qRVD, qRE};
 end
 
-////////////////////////////////////////////////////////////
+always @(posedge iCLKA)
+begin
+    if (qRst)       rWE <= 1'b0;
+    else            rWE <= qWE;
+end
 
+// DFFの段数により3clk遅延するため、3clk分のraポインタを先取りして計算しておく
 always @*
 begin
-    // rWAb <= (rWA - 1'b1) & pAddrMask;
-    // rRAb <= (rRA - 1'b1) & pAddrMask;
-    qRst <= iRST;
-    qWE  <= iWE & (~rFLL);
-    qRE  <= iRE & (~rEMP);
-    qFLL <= (rRAb == rWA) ? 1'b1 : 1'b0;
-    qEMP <= (rWA == rRA || rWAb == rRA) ? 1'b1 : 1'b0;
-    qRVD <= (rRA == rORP) ? 1'b0 : 1'b1;
+    qRst    <= iRST;
+    qWAb    <= (rWA - 1'b1) & pAddrMask;
+    qWAb2   <= (rWA - 2'd2) & pAddrMask;
+    qRAb    <= (rRA - 1'b1) & pAddrMask;
+    qRAb2   <= (rRA - 2'd2) & pAddrMask;
+    qRAb3   <= (rRA - 2'd3) & pAddrMask;
+    qFLL    <= (rWA == qRAb || rWA == qRAb2 || rWA == qRAb3);
+    qEMP    <= (rWA == rRA || qWAb2 == rRA || qWAb == rRA) ? 1'b1 : 1'b0;
+    qRVD    <= (rRA != rORP);
+    qWE     <= iWE;
+    qRE     <= iRE;
 end
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // FIFO動作
 //----------------------------------------------------------
-reg  [pBitWidth-1:0] qWD;
-wire [pBitWidth-1:0] qRD;    assign oRD = qRD;
+reg  [pBitWidth-1:0] rWD, rRD;      assign oRD = rRD;
+wire [pBitWidth-1:0] wRD;
 
 userFifoDual #(
     .pBuffDepth    (pBuffDepth),
@@ -132,14 +123,21 @@ userFifoDual #(
 ) USER_FIFO_DUAL (
     // write side       read side
     .iCLKA  (iCLKA),    .iCLKB  (iCLKB),
-    .iWD    (qWD),      .oRD    (qRD),
+    .iWD    (rWD),      .oRD    (wRD),
     .iWA    (rWA),      .iRA    (rRA),
-    .iWE    (qWE)
+    .iWE    (rWE)
 );
 
-always @*
+always @(posedge iCLKA)
 begin
-    qWD <= iWD;
+    if (qRst)       rWD  <= 0;
+    else            rWD  <= iWD;
+end
+
+always @(posedge iCLKB)
+begin
+    if (qRst)       rRD  <= 0;
+    else            rRD  <= wRD;
 end
 
 ////////////////////////////////////////////////////////////

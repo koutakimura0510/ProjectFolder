@@ -42,8 +42,13 @@ wire rst = ~locked;
 //----------------------------------------------------------
 // デモ動作用のステートマシン
 //----------------------------------------------------------
+localparam pWidth = 8;
+
 reg [3:0] state;
-wire oFLL;
+reg  [pWidth-1:0] iWD;
+wire [pWidth-1:0] oRD;
+wire oRVD, oEMP, oFLL;
+reg qWE, qRE;
 
 always @(posedge oCLKA)
 begin
@@ -68,64 +73,35 @@ end
 //----------------------------------------------------------
 // Dual port ram
 //----------------------------------------------------------
-localparam pWidth = 8;
-
-// reg  [pWidth-1:0] iWD;
-// wire [pWidth-1:0] oRD;
-// wire oRVD;
-// reg qWE, qRE;
-
-// fifoDualController #(
-//     .pBuffDepth (8),
-//     .pBitWidth  (pWidth)
-// ) FIFO_DUAL_CONTROLLER (
-//     // write side       read side
-//     .iCLKA  (oCLKA),    .iCLKB  (oCLKB),
-//                         .iRST   (rst),
-//     .iWD    (iWD),      .oRD    (oRD),
-//     .iWE    (qWE),      .iRE    (qRE),
-//                         .oRVD   (oRVD),
-//     .oFLL   (oFLL),     .oEMP   (oEMP)
-// );
-
-// always @*
-// begin
-//     qWE <= (~oFLL) && (state == 4);
-//     qRE <= (~oEMP);
-// end
-
-// always @(posedge oCLKA)
-// begin
-//     if (rst)        iWD <= 0;
-//     else if (!qWE)  iWD <= iWD;
-//     else            iWD <= (iWD + 1'b1) & 255;
-// end
-
-////////////////////////////////////////////////////////////
-//----------------------------------------------------------
-// FIFOを利用する場合は、Full Empty信号を利用して、
-// インターフェース回路やWRENABLEを制御する
-//----------------------------------------------------------
-reg  [pWidth-1:0] iWD;
-wire [pWidth-1:0] oRD;
-wire oRVD, oEMP;
-reg qWE, qRE;
-
-fifoController #(
+fifoDualController #(
     .pBuffDepth (8),
     .pBitWidth  (pWidth)
-) FIFO_CONTROLLER (
+) FIFO_DUAL_CONTROLLER (
     // write side       read side
-    .iCLK   (oCLKA),    .iRST   (rst),
+    .iCLKA  (oCLKA),    .iCLKB  (oCLKB),
+                        .iRST   (rst),
     .iWD    (iWD),      .oRD    (oRD),
     .iWE    (qWE),      .iRE    (qRE),
                         .oRVD   (oRVD),
     .oFLL   (oFLL),     .oEMP   (oEMP)
 );
 
+// single port ram
+// fifoController #(
+//     .pBuffDepth (8),
+//     .pBitWidth  (pWidth)
+// ) FIFO_CONTROLLER (
+//     // write side       read side
+//     .iCLK   (oCLKA),    .iRST   (rst),
+//     .iWD    (iWD),      .oRD    (oRD),
+//     .iWE    (qWE),      .iRE    (qRE),
+//                         .oRVD   (oRVD),
+//     .oFLL   (oFLL),     .oEMP   (oEMP)
+// );
+
 always @*
 begin
-    qWE <= (~oFLL) && (state == 4);
+    qWE <= (~oFLL);
     qRE <= (~oEMP);
 end
 
@@ -141,7 +117,7 @@ reg [7:0] rled;
 always @(posedge oCLKA)
 begin
     if (rst)        rled <= 0;
-    else if (!oRVD) rled <= 0;
+    else if (!oRVD) rled <= 255;
     else            rled <= oRD;
 end
 
