@@ -8,6 +8,7 @@
  * DDR3メモリ制御 ハンドシェイク信号デモ動作
  */
 module migDemo (
+    input  [127:0]  iData,
     output [127:0]  oData,
     output          oCal,
     input           iAppEN,
@@ -27,37 +28,29 @@ assign oUiCLK = iCLK;
 assign oUiRST = iRST;
 assign oCal   = ~iRST;
 
-////////////////////////////////////////////////////////////
-reg rWRDY;                  assign oWRDY = rWRDY;
 
-always @(posedge iCLK)
+wire wFLL;                  assign oWRDY = (~wFLL);
+wire wEMP;                  assign oRRDY = (~wEMP);
+wire [31:0] wRD;            assign oData = {96'd0, wRD};
+reg qWE, qRE;
+
+fifoController #(
+    .pBuffDepth (16),
+    .pBitWidth  (32)
+) FIFO_WRITE_ADDR (
+    // write side           read side
+    .iCLK   (iCLK),         .iRST   (iRST),
+    .iWD    (iData[31:0]),  .oRD    (wRD),
+    .iWE    (qWE),          .iRE    (qRE),
+    .oFLL   (wFLL),         .oEMP   (wEMP),
+                            .oRVD   (oRDV)
+);
+
+always @*
 begin
-    if (iRST)               rWRDY <= 1'b0;
-    else if (iAppEN && iWE) rWRDY <= 1'b0;
-    else                    rWRDY <= 1'b1;
+    qWE <= iAppEN & iWE;
+    qRE <= iAppEN & (~iWE);
 end
 
-////////////////////////////////////////////////////////////
-reg rRDV, rRRDY;                assign {oRDV, oRRDY} = {rRDV, rRRDY};
-
-always @(posedge iCLK)
-begin
-    if (iRST)                   {rRDV, rRRDY} <= {2'b01};
-    else if (iAppEN && !iWE)    {rRDV, rRRDY} <= {2'b10};
-    else                        {rRDV, rRRDY} <= {2'b01};
-end
-
-////////////////////////////////////////////////////////////
-reg [127:0] rDemoCnt; 
-
-always @(posedge iCLK)
-begin
-    if (iRST)       rDemoCnt <= 0;
-    else if (rRDV)  rDemoCnt <= rDemoCnt + 1'b1;
-    else            rDemoCnt <= rDemoCnt;
-end
-
-////////////////////////////////////////////////////////////
-assign oData = (rRDV) ? rDemoCnt : 0;
 
 endmodule
