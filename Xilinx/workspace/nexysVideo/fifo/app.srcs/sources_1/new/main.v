@@ -40,70 +40,28 @@ wire rst = ~locked;
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
-// デモ動作用のステートマシン
+// 1-stage
 //----------------------------------------------------------
 localparam pWidth = 8;
 
-reg [3:0] state;
 reg  [pWidth-1:0] iWD;
-wire [pWidth-1:0] oRD;
-wire oRVD, oEMP, oFLL;
-reg qWE, qRE;
+wire [pWidth-1:0] oRD, oDRD;
+wire oRVD,  oEMP,  oFLL;
+wire oDRVD, oDEMP, oDFLL;
+reg qWE, qRE, qDRE;
 
-always @(posedge oCLKA)
-begin
-    if (rst) begin
-        state <= 0;
-    end
-    else
-    begin
-        case (state)
-        0: state <= (~oFLL) ? 1 : 0;
-        1: state <= (~oFLL) ? 2 : 1;
-        2: state <= (~oFLL) ? 3 : 2;
-        3: state <= (~oFLL) ? 4 : 3;
-        4: state <= (~oFLL) ? 0 : 4;
-        default state <= 0;
-        endcase
-    end
-end
-
-
-////////////////////////////////////////////////////////////
-//----------------------------------------------------------
-// Dual port ram
-//----------------------------------------------------------
-fifoDualController #(
+// single port ram
+fifoController #(
     .pBuffDepth (8),
     .pBitWidth  (pWidth)
-) FIFO_DUAL_CONTROLLER (
+) FIFO_CONTROLLER (
     // write side       read side
-    .iCLKA  (oCLKA),    .iCLKB  (oCLKB),
-                        .iRST   (rst),
+    .iCLK   (oCLKA),    .iRST   (rst),
     .iWD    (iWD),      .oRD    (oRD),
     .iWE    (qWE),      .iRE    (qRE),
                         .oRVD   (oRVD),
     .oFLL   (oFLL),     .oEMP   (oEMP)
 );
-
-// single port ram
-// fifoController #(
-//     .pBuffDepth (8),
-//     .pBitWidth  (pWidth)
-// ) FIFO_CONTROLLER (
-//     // write side       read side
-//     .iCLK   (oCLKA),    .iRST   (rst),
-//     .iWD    (iWD),      .oRD    (oRD),
-//     .iWE    (qWE),      .iRE    (qRE),
-//                         .oRVD   (oRVD),
-//     .oFLL   (oFLL),     .oEMP   (oEMP)
-// );
-
-always @*
-begin
-    qWE <= (~oFLL);
-    qRE <= (~oEMP);
-end
 
 always @(posedge oCLKA)
 begin
@@ -111,14 +69,38 @@ begin
     else if (!qWE)  iWD <= iWD;
     else            iWD <= (iWD + 1'b1) & 255;
 end
+
+////////////////////////////////////////////////////////////
+
+// dual
+fifoDualController #(
+    .pBuffDepth (8),
+    .pBitWidth  (pWidth)
+) FIFO_DUAL_CONTROLLER (
+    // write side       read side
+    .iCLKA  (oCLKA),    .iCLKB  (oCLKB),
+                        .iRST   (rst),
+    .iWD    (oRD),      .oRD    (oDRD),
+    .iWE    (oRVD),     .iRE    (qDRE),
+                        .oRVD   (oDRVD),
+    .oFLL   (oDFLL),    .oEMP   (oDEMP)
+);
+
+always @*
+begin
+    qWE     <= (~oFLL);
+    qRE     <= (~oDFLL) & (~oEMP);
+    qDRE    <= (~oDEMP);
+end
+
 ////////////////////////////////////////////////////////////
 reg [7:0] rled;
 
-always @(posedge oCLKA)
+always @(posedge oCLKB)
 begin
-    if (rst)        rled <= 0;
-    else if (!oRVD) rled <= 255;
-    else            rled <= oRD;
+    if (rst)            rled <= 0;
+    else if (!oDRVD)    rled <= 255;
+    else                rled <= oDRD;
 end
 
 assign oLED = rled;

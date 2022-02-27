@@ -93,24 +93,24 @@ fifoController #(
     .pBuffDepth (pBuffDepth),
     .pBitWidth  (pBitDepth)
 ) FIFO_READ_DATA (
-    // write side           read side
-    .iCLK   (wUiCLK),       .iRST   (wUiRST),
-    .iWD    (oRdData[31:0]),.oRD    (oRD),
-    .iWE    (oRdDataValid), .iRE    (iRDE),
-    .oFLL   (wRdFll),       .oEMP   (oRDEMP),
-                            .oRVD   (oRVD)
+    // write side               read side
+    .iCLK   (wUiCLK),           .iRST   (wUiRST),
+    .iWD    (oRdData[31:0]),    .oRD    (oRD),
+    .iWE    (oRdDataValid),     .iRE    (iRDE),
+    .oFLL   (wRdFll),           .oEMP   (oRDEMP),
+                                .oRVD   (oRVD)
 );
 
 fifoController #(
     .pBuffDepth (pBuffDepth),
     .pBitWidth  (pBitDepth)
 ) FIFO_READ_ADDR (
-    // write side           read side
-    .iCLK   (wUiCLK),       .iRST   (wUiRST),
-    .iWD    (iRA),          .oRD    (wFifoRad),
-    .iWE    (iRAE),         .iRE    (qRaED),
-    .oFLL   (oRAFLL),       .oEMP   (wRaEmp),
-                            .oRVD   (wRaVd)
+    // write side               read side
+    .iCLK   (wUiCLK),           .iRST   (wUiRST),
+    .iWD    (iRA),              .oRD    (wFifoRad),
+    .iWE    (iRAE),             .iRE    (qRaED),
+    .oFLL   (oRAFLL),           .oEMP   (wRaEmp),
+                                .oRVD   (wRaVd)
 );
 
 always @*

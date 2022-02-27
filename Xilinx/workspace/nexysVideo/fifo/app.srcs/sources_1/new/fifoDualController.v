@@ -42,7 +42,7 @@ localparam [pAddrWidth-1:0] pAddrMask = pBuffDepth - 1;
 //----------------------------------------------------------
 reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {rFLL, rEMP, rRVD};
 reg qFLL, qEMP, qRVD;
-reg [pAddrWidth-1:0] qWAb, qWAb2, qRAb, qRAb2, qRAb3;
+reg [pAddrWidth-1:0] qWAb, qWAb2, qRAb, qRAb2, qRAb3, qRAb4;
 reg [pAddrWidth-1:0] rWA, rRA;
 reg [pAddrWidth-1:0] rORP;
 reg rWE, rRE;
@@ -102,7 +102,8 @@ begin
     qRAb    <= (rRA - 1'b1) & pAddrMask;
     qRAb2   <= (rRA - 2'd2) & pAddrMask;
     qRAb3   <= (rRA - 2'd3) & pAddrMask;
-    qFLL    <= (rWA == qRAb || rWA == qRAb2 || rWA == qRAb3);
+    qRAb4   <= (rRA - 3'd4) & pAddrMask;
+    qFLL    <= (rWA == qRAb || rWA == qRAb2 || rWA == qRAb3 || rWA == qRAb4);
     qEMP    <= (rWA == rRA || qWAb2 == rRA || qWAb == rRA) ? 1'b1 : 1'b0;
     qRVD    <= (rRA != rORP);
     qWE     <= iWE;

@@ -128,15 +128,16 @@ wire [pBitDepth-1:0] wPixelWA; // write addr
 reg qPixelWE;                  // write enable
 
 pixelTop #(
-    .pHDisplay          (pHDisplay),    
-    .pVDisplay          (pVDisplay),
-    .pAddrWidth         (pBitDepth),
-    .pBitWidth          (pBitDepth),
-    .pBitLengthState    (2)
+    .pHDisplay              (pHDisplay),    
+    .pVDisplay              (pVDisplay),
+    .pAddrWidth             (pBitDepth),
+    .pBitWidth              (pBitDepth),
+    .pBitLengthState        (2)
 ) PIXEL_TOP (
-    .iCLK   (oUiCLK),   .iRST   (oUiRST),
-    .iWS    (wWS),      .iDdrWE (qPixelWE),
-    .oPixel (wPixelWD), .oAddr  (wPixelWA),
+    .iSW    (iSW),
+    .iCLK   (oUiCLK),       .iRST   (oUiRST),
+    .iWS    (wWS),          .iDdrWE (qPixelWE),
+    .oPixel (wPixelWD),     .oAddr  (wPixelWA),
     .oWE    (wWFE)
 );
 
@@ -180,9 +181,9 @@ end
 // pixel data save
 always @(posedge iDispCLK)
 begin
-    if (iRST)       rPixel <= 0;
-    else if (wRVD)  rPixel <= wVRGB;
-    else            rPixel <= rPixel;
+    if (iRST)               rPixel <= 0;
+    else if (wRVD)          rPixel <= wVRGB;
+    else                    rPixel <= rPixel;
 end
 
 fifoDualController #(

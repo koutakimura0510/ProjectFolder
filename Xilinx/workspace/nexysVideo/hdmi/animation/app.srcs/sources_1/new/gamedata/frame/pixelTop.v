@@ -14,6 +14,7 @@ module pixelTop # (
     parameter       pBitWidth           = 32,
     parameter       pBitLengthState     = 2
 )(
+    input [ 7:0]                    iSW,
     input                           iCLK,       // user clk
     input                           iRST,       // system rst
     input  [pBitLengthState-1:0]    iWS,        // write buffer state
@@ -53,32 +54,51 @@ end
 ////////////////////////////////////////////////////////////
 // demo color gen
 reg [pBitWidth-1:0] rNextData;
-reg [7:0] rFpsCnt;
-reg qFEN;
 
 always @(posedge iCLK)
 begin
-    if (iRST)               rFpsCnt <= 0;
-    else if (qFEN && qWE)   rFpsCnt <= 0;
-    else if (qWE)           rFpsCnt <= rFpsCnt + 1'b1;
-    else                    rFpsCnt <= rFpsCnt;
-end
-
-always @(posedge iCLK)
-begin
-    case (iWS)
-        IDOL        : rNextData <= rNextData;
-        FBUF_AREA_1 : rNextData <= (qFEN && qWE) ? COLOR_GREEN : COLOR_BLUE;
-        FBUF_AREA_2 : rNextData <= (qFEN && qWE) ? COLOR_RED   : COLOR_GREEN;
-        FBUF_AREA_3 : rNextData <= (qFEN && qWE) ? COLOR_BLUE  : COLOR_RED;
-        default     : rNextData <= COLOR_RED;
+    if (iRST)
+    begin
+        rNextData <= COLOR_RED;
+    end
+    else if (!qWE)
+    begin
+        rNextData <= rNextData;
+    end
+    case (iSW)
+        8'h00       : rNextData <= COLOR_RED;
+        8'h01       : rNextData <= COLOR_BLUE;
+        8'h02       : rNextData <= COLOR_GREEN;
+        default     : rNextData <= rNextData;
     endcase
 end
 
-always @*
-begin
-    qFEN <= (rFpsCnt == 59);
-end
+// reg [7:0] rFpsCnt;
+// reg qFEN;
+
+// always @(posedge iCLK)
+// begin
+//     if (iRST)               rFpsCnt <= 0;
+//     else if (qFEN && qWE)   rFpsCnt <= 0;
+//     else if (qWE)           rFpsCnt <= rFpsCnt + 1'b1;
+//     else                    rFpsCnt <= rFpsCnt;
+// end
+
+// always @(posedge iCLK)
+// begin
+//     case (iWS)
+//         IDOL        : rNextData <= rNextData;
+//         FBUF_AREA_1 : rNextData <= (qFEN && qWE) ? COLOR_GREEN : COLOR_BLUE;
+//         FBUF_AREA_2 : rNextData <= (qFEN && qWE) ? COLOR_RED   : COLOR_GREEN;
+//         FBUF_AREA_3 : rNextData <= (qFEN && qWE) ? COLOR_BLUE  : COLOR_RED;
+//         default     : rNextData <= COLOR_RED;
+//     endcase
+// end
+
+// always @*
+// begin
+//     qFEN <= (rFpsCnt == 254);
+// end
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
@@ -104,11 +124,11 @@ reg [pAddrWidth-1:0] rNextAddr;
 always @(posedge iCLK)
 begin
     case (iWS)
-        IDOL        : rNextAddr <= rNextAddr;
-        FBUF_AREA_1 : rNextAddr <= DDR_ADDR_FBUF_2;
-        FBUF_AREA_2 : rNextAddr <= DDR_ADDR_FBUF_3;
-        FBUF_AREA_3 : rNextAddr <= DDR_ADDR_FBUF_1;
-        default     : rNextAddr <= DDR_ADDR_FBUF_1;
+        IDOL        :   rNextAddr <= rNextAddr;
+        FBUF_AREA_1 :   rNextAddr <= DDR_ADDR_FBUF_2;
+        FBUF_AREA_2 :   rNextAddr <= DDR_ADDR_FBUF_3;
+        FBUF_AREA_3 :   rNextAddr <= DDR_ADDR_FBUF_1;
+        default     :   rNextAddr <= DDR_ADDR_FBUF_1;
     endcase
 end
 
