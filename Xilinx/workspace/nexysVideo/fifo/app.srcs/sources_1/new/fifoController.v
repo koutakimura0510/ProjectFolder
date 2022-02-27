@@ -10,7 +10,11 @@
 // 1.書き込み時はoFLLのみ確認すれば良い
 // 2.読み込み時はoEMPとoRDVを確認すれば良い
 //
-// 2022/02/26 処理の流れが分かりにくいため、全体をパイプライン処理に更新
+// 2022/02/26
+// 処理の流れが分かりにくいため、全体をパイプライン処理に更新
+// RE Active時 3CLK後に RVD Assert データが出力される
+// 
+// TODO Enableから出力まで遅延が発生するため、moduleのパラメータで、入力データの遅延数などを指定しなければならない
 //----------------------------------------------------------
 module fifoController #(
     parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
@@ -47,9 +51,9 @@ localparam pRstDepth = pBuffDepth - 1;
 //----------------------------------------------------------
 reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {rFLL, rEMP, rRVD};
 reg qFLL, qEMP, qRVD;
-reg [pAddrWidth-1:0] qWAb, qWAb2, qRAb, qRAb2, qRAb3;
-reg [pAddrWidth-1:0] rWA, rRA;
-reg [pAddrWidth-1:0] rORP;
+reg [pAddrWidth-1:0] qWAb, qWAb2;
+reg [pAddrWidth-1:0] qRAb [3:0];
+reg [pAddrWidth-1:0] rWA, rRA, rORP;
 reg rWE, rRE;
 reg qWE, qRE, qRst;
 
@@ -93,16 +97,20 @@ begin
     else            {rWE, rRE}  <= {qWE, qRE};
 end
 
+integer i;
+
 // DFFの段数により3clk遅延するため、3clk分のraポインタを先取りして計算しておく
 always @*
 begin
+    for (i = 1; i < 5; i = i + 1)
+    begin
+        qRAb[i-1] <= (rRA - i) & pAddrMask;
+    end
+
     qWAb    <= (rWA - 1'b1) & pAddrMask;
     qWAb2   <= (rWA - 2'd2) & pAddrMask;
-    qRAb    <= (rRA - 1'b1) & pAddrMask;
-    qRAb2   <= (rRA - 2'd2) & pAddrMask;
-    qRAb3   <= (rRA - 2'd3) & pAddrMask;
     qRst    <= iRST;
-    qFLL    <= (rWA == qRAb || rWA == qRAb2 || rWA == qRAb3);
+    qFLL    <= (rWA == qRAb[0] || rWA == qRAb[1] || rWA == qRAb[2] || rWA == qRAb[3]);
     qEMP    <= (rWA == rRA || qWAb2 == rRA || qWAb == rRA) ? 1'b1 : 1'b0;
     qRVD    <= (rRA != rORP);
     qWE     <= iWE;

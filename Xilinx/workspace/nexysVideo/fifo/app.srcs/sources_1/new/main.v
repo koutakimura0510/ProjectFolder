@@ -45,34 +45,60 @@ wire rst = ~locked;
 localparam pWidth = 8;
 
 reg  [pWidth-1:0] iWD;
-wire [pWidth-1:0] oRD, oDRD;
-wire oRVD,  oEMP,  oFLL;
-wire oDRVD, oDEMP, oDFLL;
-reg qWE, qRE, qDRE;
+wire [pWidth-1:0] oRD1;
+wire oRVD1, oEMP1, oFLL1;
+reg qWE1, qRE1;
 
 // single port ram
 fifoController #(
     .pBuffDepth (8),
     .pBitWidth  (pWidth)
-) FIFO_CONTROLLER (
+) FIFO_STAGE_1 (
     // write side       read side
     .iCLK   (oCLKA),    .iRST   (rst),
-    .iWD    (iWD),      .oRD    (oRD),
-    .iWE    (qWE),      .iRE    (qRE),
-                        .oRVD   (oRVD),
-    .oFLL   (oFLL),     .oEMP   (oEMP)
+    .iWD    (iWD),      .oRD    (oRD1),
+    .iWE    (qWE1),     .iRE    (qRE1),
+                        .oRVD   (oRVD1),
+    .oFLL   (oFLL1),    .oEMP   (oEMP1)
 );
 
 always @(posedge oCLKA)
 begin
     if (rst)        iWD <= 0;
-    else if (!qWE)  iWD <= iWD;
+    else if (!qWE1)  iWD <= iWD;
     else            iWD <= (iWD + 1'b1) & 255;
 end
 
 ////////////////////////////////////////////////////////////
+//----------------------------------------------------------
+// 2-stage
+//----------------------------------------------------------
+wire [pWidth-1:0] oRD2;
+wire oRVD2, oEMP2, oFLL2;
+reg qRE2;
 
-// dual
+// single port ram
+fifoController #(
+    .pBuffDepth (8),
+    .pBitWidth  (pWidth)
+) FIFO_STAGE_2 (
+    // write side       read side
+    .iCLK   (oCLKA),    .iRST   (rst),
+    .iWD    (oRD1),     .oRD    (oRD2),
+    .iWE    (oRVD1),    .iRE    (qRE2),
+                        .oRVD   (oRVD2),
+    .oFLL   (oFLL2),    .oEMP   (oEMP2)
+);
+
+
+////////////////////////////////////////////////////////////
+//----------------------------------------------------------
+// 3-stage
+//----------------------------------------------------------
+wire [pWidth-1:0] oDRD;
+wire oDRVD, oDEMP, oDFLL;
+reg qDRE;
+
 fifoDualController #(
     .pBuffDepth (8),
     .pBitWidth  (pWidth)
@@ -80,17 +106,18 @@ fifoDualController #(
     // write side       read side
     .iCLKA  (oCLKA),    .iCLKB  (oCLKB),
                         .iRST   (rst),
-    .iWD    (oRD),      .oRD    (oDRD),
-    .iWE    (oRVD),     .iRE    (qDRE),
+    .iWD    (oRD2),     .oRD    (oDRD),
+    .iWE    (oRVD2),    .iRE    (qDRE),
                         .oRVD   (oDRVD),
     .oFLL   (oDFLL),    .oEMP   (oDEMP)
 );
 
 always @*
 begin
-    qWE     <= (~oFLL);
-    qRE     <= (~oDFLL) & (~oEMP);
-    qDRE    <= (~oDEMP);
+    qWE1     <= (~oFLL1);
+    qRE1     <= (~oFLL2) & (~oEMP1);
+    qRE2     <= (~oDFLL) & (~oEMP2);
+    qDRE     <= (~oDEMP);
 end
 
 ////////////////////////////////////////////////////////////
