@@ -32,8 +32,7 @@ module fifoController #(
 // bit幅を取得し指定する
 //----------------------------------------------------------
 localparam pAddrWidth  = fBitWidth(pBuffDepth);
-localparam [pAddrWidth-1:0] pAddrMask = pBuffDepth - 1;
-localparam pRstDepth = pBuffDepth - 1;
+localparam pAddrMax    = pBuffDepth - 1'b1;
 
 
 ////////////////////////////////////////////////////////////
@@ -48,7 +47,7 @@ localparam pRstDepth = pBuffDepth - 1;
 reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {rFLL, rEMP, rRVD};
 reg qFLL, qEMP, qRVD;
 reg [pAddrWidth-1:0] qWAb, qWAb2, qRAb, qRAb2, qRAb3;
-reg [pAddrWidth-1:0] rWA, rRA;
+reg [pAddrWidth-1:0] rWA, rWNA, rRA, rRBA;
 reg [pAddrWidth-1:0] rORP;
 reg rWE, rRE;
 reg qWE, qRE, qRst;
@@ -59,8 +58,15 @@ reg qWE, qRE, qRst;
 always @(posedge iCLK)
 begin
     if (qRst)       rWA <= 0;
-    else if (!rWE)  rWA <= rWA;
-    else            rWA <= (rWA + 1'b1) & pAddrMask;
+    else if (rWE)   rWA <= rWA + 1'b1;
+    else            rWA <= rWA;
+end
+
+always @(posedge iCLK)
+begin
+    if (qRst)       rWNA <= 1;
+    else if (rWE)   rWNA <= rWNA + 1'b1;
+    else            rWNA <= rWNA;
 end
 
 ////////////////////////////////////////////////////////////
@@ -68,8 +74,15 @@ end
 always @(posedge iCLK)
 begin
     if (qRst)      rRA <= 0;
-    else if (!rRE) rRA <= rRA;
-    else           rRA <= (rRA + 1'b1) & pAddrMask;
+    else if  (rRE) rRA <= rRA + 1'b1;
+    else           rRA <= rRA;
+end
+
+always @(posedge iCLK)
+begin
+    if (qRst)      rRBA <= pAddrMax;
+    else if  (rRE) rRBA <= rRA - 1'b1;
+    else           rRBA <= rRBA;
 end
 
 // 前回のrpが更新されていたら新規データを出力できる状態と判断する
@@ -96,11 +109,11 @@ end
 // DFFの段数により3clk遅延するため、3clk分のraポインタを先取りして計算しておく
 always @*
 begin
-    qWAb    <= (rWA - 1'b1) & pAddrMask;
-    qWAb2   <= (rWA - 2'd2) & pAddrMask;
-    qRAb    <= (rRA - 1'b1) & pAddrMask;
-    qRAb2   <= (rRA - 2'd2) & pAddrMask;
-    qRAb3   <= (rRA - 2'd3) & pAddrMask;
+    qWAb    <= rWA - 1'b1;
+    qWAb2   <= rWA - 2'd2;
+    qRAb    <= rRA - 1'b1;
+    qRAb2   <= rRA - 2'd2;
+    qRAb3   <= rRA - 2'd3;
     qRst    <= iRST;
     qFLL    <= (rWA == qRAb || rWA == qRAb2 || rWA == qRAb3);
     qEMP    <= (rWA == rRA || qWAb2 == rRA || qWAb == rRA) ? 1'b1 : 1'b0;
@@ -149,10 +162,17 @@ function[  7:0]	fBitWidth;
 
     begin
     // fBitWidth = 1;
-    for (i = 0; i < 32; i = i+1 )
-        if (iVAL[i]) 
+        for (i = 0; i < 32; i = i+1 )
         begin
-            fBitWidth = i+1;
+            if (iVAL[i]) 
+            begin
+                fBitWidth = i+1;
+            end
+        end
+
+        if (fBitWidth != 1)
+        begin
+            fBitWidth = fBitWidth - 1;
         end
     end
 endfunction
