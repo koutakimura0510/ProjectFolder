@@ -128,7 +128,7 @@ wire [pBitDepth-1:0] wPixelWA; // write addr
 reg qPixelWE;                  // write enable
 
 pixelTop #(
-    .pHDisplay              (pHDisplay),    
+    .pHDisplay              (pHDisplay),
     .pVDisplay              (pVDisplay),
     .pAddrWidth             (pBitDepth),
     .pBitWidth              (pBitDepth),
