@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ASCII"?>
+<systemproject:SystemProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sdkproject="http://www.xilinx.com/sdkproject" xmlns:systemproject="http://www.xilinx.com/systemproject" name="led_flash_system" platform="/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/nexysVideo/microblaze/mcs/app.vitis/main/export/main/main.xpfm" platformUID="xilinx:nexys_video::0.0(custom)" sysConfig="main" runtime="cpp" rootFSLocation="" linuxImage="" sysroot="">
+  <configuration name="Debug" id="com.xilinx.sdx.system.managedbuilder.debugConfiguration.1475865544">
+    <configBuildOptions xsi:type="systemproject:SystemOptions">
+      <applications name="led_flash" domainName="standalone_microblaze_I" domainPrettyName="standalone_microblaze_I" appBuildConfig="Debug"/>
+      <options xsi:type="sdkproject:SdkOptions" generateSdCard="true"/>
+    </configBuildOptions>
+    <lastBuildOptions xsi:type="systemproject:SystemOptions">
+      <applications name="led_flash" domainName="standalone_microblaze_I" domainPrettyName="standalone_microblaze_I" appBuildConfig="Debug"/>
+      <options xsi:type="sdkproject:SdkOptions" generateSdCard="true"/>
+    </lastBuildOptions>
+  </configuration>
+  <configuration name="Release" id="com.xilinx.sdx.system.managedbuilder.releaseConfiguration.1241881022">
+    <configBuildOptions xsi:type="systemproject:SystemOptions">
+      <applications name="led_flash" domainName="standalone_microblaze_I" domainPrettyName="standalone_microblaze_I" appBuildConfig="Release"/>
+      <options xsi:type="sdkproject:SdkOptions" generateSdCard="true"/>
+    </configBuildOptions>
+  </configuration>
+</systemproject:SystemProject>
