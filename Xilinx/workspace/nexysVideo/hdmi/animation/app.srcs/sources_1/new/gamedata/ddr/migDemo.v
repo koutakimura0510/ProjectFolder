@@ -28,29 +28,54 @@ assign oUiCLK = iCLK;
 assign oUiRST = iRST;
 assign oCal   = ~iRST;
 
+////////////////////////////////////////////////////////////
 
-wire wFLL;                  assign oWRDY = (~wFLL);
-wire wEMP;                  assign oRRDY = (~wEMP);
-wire [31:0] wRD;            assign oData = {96'd0, wRD};
-reg qWE, qRE;
+reg [  7:0] rWA, rRA;
+reg [127:0] rID [0:255];
+reg [127:0] rOD;                        assign oData = rOD;
+reg rWrdy, rRrdy, rRdv;                 assign {oWRDY, oRRDY, oRDV} = {rWrdy, rRrdy, rRdv};
+reg rCH;
 
-fifoController #(
-    .pBuffDepth (8),
-    .pBitWidth  (32)
-) FIFO_MIG_DEMO (
-    // write side           read side
-    .iCLK   (iCLK),         .iRST   (iRST),
-    .iWD    (iData[31:0]),  .oRD    (wRD),
-    .iWE    (qWE),          .iRE    (qRE),
-    .oFLL   (wFLL),         .oEMP   (wEMP),
-                            .oRVD   (oRDV)
-);
-
-always @*
+always @(posedge iCLK)
 begin
-    qWE <= iAppEN & iWE;
-    qRE <= iAppEN & (~iWE);
-end
+    if (iRST)
+    begin
+        {rWrdy, rRrdy, rRdv}    <= {1'b1, 1'b1, 1'b0};
+        rOD                     <= 128'd0;
+        {rWA, rRA}              <= {0, 0};
+        rCH                     <= 0;
+    end
+    else
+    begin
+        casex ({rCH, iAppEN, iWE})
+            'b000:
+            begin
+                {rWrdy, rRrdy, rRdv} <= {1'b1, 1'b1, 1'b0};
+            end
 
+            'b010:
+            begin
+                {rWrdy, rRrdy, rRdv} <= {1'b1, 1'b0, 1'b1};
+                rOD                  <= rID[rRA];
+                rRA                  <= rRA + 1'b1;
+                rCH                  <= 1'b1;
+            end
+
+            'b011:
+            begin
+                {rWrdy, rRrdy, rRdv} <= {1'b0, 1'b0, 1'b0};
+                rID[rWA]             <= iData;
+                rWA                  <= rWA + 1'b1;
+                rCH                  <= 1'b1;
+            end
+
+            default:
+            begin
+                {rWrdy, rRrdy, rRdv} <= {1'b1, 1'b1, 1'b0};
+                rCH                  <= 1'b0;
+            end
+        endcase
+    end
+end
 
 endmodule

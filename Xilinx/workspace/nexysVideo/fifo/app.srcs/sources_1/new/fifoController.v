@@ -36,8 +36,7 @@ module fifoController #(
 // bit幅を取得し指定する
 //----------------------------------------------------------
 localparam pAddrWidth  = fBitWidth(pBuffDepth);
-localparam [pAddrWidth-1:0] pAddrMask = pBuffDepth - 1;
-localparam pRstDepth = pBuffDepth - 1;
+localparam pAddrMax    = pBuffDepth - 1;
 
 
 ////////////////////////////////////////////////////////////
@@ -64,7 +63,7 @@ always @(posedge iCLK)
 begin
     if (qRst)       rWA <= 0;
     else if (!rWE)  rWA <= rWA;
-    else            rWA <= (rWA + 1'b1) & pAddrMask;
+    else            rWA <= rWA + 1'b1;
 end
 
 ////////////////////////////////////////////////////////////
@@ -73,7 +72,7 @@ always @(posedge iCLK)
 begin
     if (qRst)      rRA <= 0;
     else if (!rRE) rRA <= rRA;
-    else           rRA <= (rRA + 1'b1) & pAddrMask;
+    else           rRA <= rRA + 1'b1;
 end
 
 // 前回のrpが更新されていたら新規データを出力できる状態と判断する
@@ -104,11 +103,11 @@ always @*
 begin
     for (i = 1; i < 5; i = i + 1)
     begin
-        qRAb[i-1] <= (rRA - i) & pAddrMask;
+        qRAb[i-1] <= rRA - i;
     end
 
-    qWAb    <= (rWA - 1'b1) & pAddrMask;
-    qWAb2   <= (rWA - 2'd2) & pAddrMask;
+    qWAb    <= rWA - 1'b1;
+    qWAb2   <= rWA - 2'd2;
     qRst    <= iRST;
     qFLL    <= (rWA == qRAb[0] || rWA == qRAb[1] || rWA == qRAb[2] || rWA == qRAb[3]);
     qEMP    <= (rWA == rRA || qWAb2 == rRA || qWAb == rRA) ? 1'b1 : 1'b0;
@@ -157,10 +156,17 @@ function[  7:0]	fBitWidth;
 
     begin
     // fBitWidth = 1;
-    for (i = 0; i < 32; i = i+1 )
-        if (iVAL[i]) 
+        for (i = 0; i < 32; i = i+1 )
         begin
-            fBitWidth = i+1;
+            if (iVAL[i]) 
+            begin
+                fBitWidth = i+1;
+            end
+        end
+
+        if (fBitWidth != 1)
+        begin
+            fBitWidth = fBitWidth - 1;
         end
     end
 endfunction

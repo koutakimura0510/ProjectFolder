@@ -55,50 +55,50 @@ end
 // demo color gen
 reg [pBitWidth-1:0] rNextData;
 
-always @(posedge iCLK)
-begin
-    if (iRST)
-    begin
-        rNextData <= COLOR_RED;
-    end
-    else if (!qWE)
-    begin
-        rNextData <= rNextData;
-    end
-    case (iSW)
-        8'h00       : rNextData <= COLOR_RED;
-        8'h01       : rNextData <= COLOR_BLUE;
-        8'h02       : rNextData <= COLOR_GREEN;
-        default     : rNextData <= rNextData;
-    endcase
-end
-
-// reg [7:0] rFpsCnt;
-// reg qFEN;
-
 // always @(posedge iCLK)
 // begin
-//     if (iRST)               rFpsCnt <= 0;
-//     else if (qFEN && qWE)   rFpsCnt <= 0;
-//     else if (qWE)           rFpsCnt <= rFpsCnt + 1'b1;
-//     else                    rFpsCnt <= rFpsCnt;
-// end
-
-// always @(posedge iCLK)
-// begin
-//     case (iWS)
-//         IDOL        : rNextData <= rNextData;
-//         FBUF_AREA_1 : rNextData <= (qFEN && qWE) ? COLOR_GREEN : COLOR_BLUE;
-//         FBUF_AREA_2 : rNextData <= (qFEN && qWE) ? COLOR_RED   : COLOR_GREEN;
-//         FBUF_AREA_3 : rNextData <= (qFEN && qWE) ? COLOR_BLUE  : COLOR_RED;
-//         default     : rNextData <= COLOR_RED;
+//     if (iRST)
+//     begin
+//         rNextData <= COLOR_RED;
+//     end
+//     else if (!qWE)
+//     begin
+//         rNextData <= rNextData;
+//     end
+//     case (iSW)
+//         8'h00       : rNextData <= COLOR_RED;
+//         8'h01       : rNextData <= COLOR_BLUE;
+//         8'h02       : rNextData <= COLOR_GREEN;
+//         default     : rNextData <= rNextData;
 //     endcase
 // end
 
-// always @*
-// begin
-//     qFEN <= (rFpsCnt == 254);
-// end
+reg [7:0] rFpsCnt;
+reg qFEN;
+
+always @(posedge iCLK)
+begin
+    if (iRST)               rFpsCnt <= 0;
+    else if (qFEN && qWE)   rFpsCnt <= 0;
+    else if (qWE)           rFpsCnt <= rFpsCnt + 1'b1;
+    else                    rFpsCnt <= rFpsCnt;
+end
+
+always @(posedge iCLK)
+begin
+    case (iWS)
+        IDOL        : rNextData <= rNextData;
+        FBUF_AREA_1 : rNextData <= (qFEN && qWE) ? COLOR_GREEN : COLOR_BLUE;
+        FBUF_AREA_2 : rNextData <= (qFEN && qWE) ? COLOR_RED   : COLOR_GREEN;
+        FBUF_AREA_3 : rNextData <= (qFEN && qWE) ? COLOR_BLUE  : COLOR_RED;
+        default     : rNextData <= COLOR_RED;
+    endcase
+end
+
+always @*
+begin
+    qFEN <= (rFpsCnt == 1);
+end
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
@@ -110,6 +110,7 @@ always @(posedge iCLK)
 begin
     if (iRST)           rWD <= COLOR_RED;
     else if (qWE)       rWD <= rNextData;
+    else if (iDdrWE)    rWD <= rWD + 1'b1;
     else                rWD <= rWD;
 end
 

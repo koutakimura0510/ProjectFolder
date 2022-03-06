@@ -231,40 +231,44 @@ begin
         end
 
         pWriteAhead: begin
-            if (qwEMP & oWdReady) begin
-                rAheadState        <= (qwReady) ? pReadAhead : pWriteAhead;
-                {rFifoWE, rFifoRE} <= (qwReady) ? 2'b00 : 2'b10;
-                {rWready, rRready} <= {qwReady, 1'b0};
-                {rWd, rWa}         <= {wFifoWd, wFifoAd};
-            end else if (qArEMP & oReady) begin
-                rAheadState        <= pWriteAhead;
-                {rFifoWE, rFifoRE} <= (wRaVd) ? 2'b00 : 2'b01;
-                {rWready, rRready} <= {1'b0, wRaVd};
-                {rWd, rWa}         <= {wFifoWd, wFifoRad};
-            end else begin
-                rAheadState        <= pWriteAhead;
-                {rFifoWE, rFifoRE} <= 2'b00;
-                {rWready, rRready} <= 2'b00;
-                {rWd, rWa}         <= 0;
+            if (oWdReady & oReady) begin
+                if (qwEMP) begin
+                    rAheadState        <= (qwReady) ? pReadAhead : pWriteAhead;
+                    {rFifoWE, rFifoRE} <= (qwReady) ? 2'b00 : 2'b10;
+                    {rWready, rRready} <= {qwReady, 1'b0};
+                    {rWd, rWa}         <= {wFifoWd, wFifoAd};
+                end else if (qArEMP) begin
+                    rAheadState        <= pWriteAhead;
+                    {rFifoWE, rFifoRE} <= (wRaVd) ? 2'b00 : 2'b01;
+                    {rWready, rRready} <= {1'b0, wRaVd};
+                    {rWd, rWa}         <= {wFifoWd, wFifoRad};
+                end else begin
+                    rAheadState        <= pWriteAhead;
+                    {rFifoWE, rFifoRE} <= 2'b00;
+                    {rWready, rRready} <= 2'b00;
+                    {rWd, rWa}         <= 0;
+                end
             end
         end
 
         pReadAhead: begin
-            if (qArEMP & oReady) begin
-                rAheadState        <= (wRaVd) ? pWriteAhead : pReadAhead;
-                {rFifoWE, rFifoRE} <= (wRaVd) ? 2'b00 : 2'b01;
-                {rWready, rRready} <= {1'b0, wRaVd};
-                {rWd, rWa}         <= {wFifoWd, wFifoRad};
-            end else if (qwEMP & oWdReady) begin
-                rAheadState        <= pReadAhead;
-                {rFifoWE, rFifoRE} <= (qwReady) ? 2'b00 : 2'b10;
-                {rWready, rRready} <= {qwReady, 1'b0};
-                {rWd, rWa}         <= {wFifoWd, wFifoAd};
-            end else begin
-                rAheadState        <= pReadAhead;
-                {rFifoWE, rFifoRE} <= 2'b00;
-                {rWready, rRready} <= 2'b00;
-                {rWd, rWa}         <= 0;
+            if (oWdReady & oReady) begin
+                if (qArEMP) begin
+                    rAheadState        <= (wRaVd) ? pWriteAhead : pReadAhead;
+                    {rFifoWE, rFifoRE} <= (wRaVd) ? 2'b00 : 2'b01;
+                    {rWready, rRready} <= {1'b0, wRaVd};
+                    {rWd, rWa}         <= {wFifoWd, wFifoRad};
+                end else if (qwEMP) begin
+                    rAheadState        <= pReadAhead;
+                    {rFifoWE, rFifoRE} <= (qwReady) ? 2'b00 : 2'b10;
+                    {rWready, rRready} <= {qwReady, 1'b0};
+                    {rWd, rWa}         <= {wFifoWd, wFifoAd};
+                end else begin
+                    rAheadState        <= pReadAhead;
+                    {rFifoWE, rFifoRE} <= 2'b00;
+                    {rWready, rRready} <= 2'b00;
+                    {rWd, rWa}         <= 0;
+                end
             end
         end
 
@@ -286,7 +290,7 @@ ddr3Controller #(
     .pDramAddrWidth     (pDramAddrWidth),
     .pDramDataWidth     (pDramDataWidth),
     .pDramMaskWidth     (pDramMaskWidth),
-    .pDebug             ("off")
+    .pDebug             ("on")
 ) DDR3_CONTROLLER (
     // DDR port                             hand shake
     .ioDDR3_DQ          (ioDDR3_DQ),        .iWEnable           (rWready),

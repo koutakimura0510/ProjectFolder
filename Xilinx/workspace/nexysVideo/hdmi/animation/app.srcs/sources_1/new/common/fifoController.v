@@ -10,7 +10,11 @@
 // 1.書き込み時はoFLLのみ確認すれば良い
 // 2.読み込み時はoEMPとoRDVを確認すれば良い
 //
-// 2022/02/26 処理の流れが分かりにくいため、全体をパイプライン処理に更新
+// 2022/02/26
+// 処理の流れが分かりにくいため、全体をパイプライン処理に更新
+// RE Active時 3CLK後に RVD Assert データが出力される
+// 
+// TODO Enableから出力まで遅延が発生するため、moduleのパラメータで、入力データの遅延数などを指定しなければならない
 //----------------------------------------------------------
 module fifoController #(
     parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
@@ -32,7 +36,7 @@ module fifoController #(
 // bit幅を取得し指定する
 //----------------------------------------------------------
 localparam pAddrWidth  = fBitWidth(pBuffDepth);
-localparam pAddrMax    = pBuffDepth - 1'b1;
+localparam pAddrMax    = pBuffDepth - 1;
 
 
 ////////////////////////////////////////////////////////////
@@ -46,9 +50,9 @@ localparam pAddrMax    = pBuffDepth - 1'b1;
 //----------------------------------------------------------
 reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {rFLL, rEMP, rRVD};
 reg qFLL, qEMP, qRVD;
-reg [pAddrWidth-1:0] qWAb, qWAb2, qRAb, qRAb2, qRAb3;
-reg [pAddrWidth-1:0] rWA, rWNA, rRA, rRBA;
-reg [pAddrWidth-1:0] rORP;
+reg [pAddrWidth-1:0] qWAb, qWAb2;
+reg [pAddrWidth-1:0] qRAb [3:0];
+reg [pAddrWidth-1:0] rWA, rRA, rORP;
 reg rWE, rRE;
 reg qWE, qRE, qRst;
 
@@ -58,15 +62,8 @@ reg qWE, qRE, qRst;
 always @(posedge iCLK)
 begin
     if (qRst)       rWA <= 0;
-    else if (rWE)   rWA <= rWA + 1'b1;
-    else            rWA <= rWA;
-end
-
-always @(posedge iCLK)
-begin
-    if (qRst)       rWNA <= 1;
-    else if (rWE)   rWNA <= rWNA + 1'b1;
-    else            rWNA <= rWNA;
+    else if (!rWE)  rWA <= rWA;
+    else            rWA <= rWA + 1'b1;
 end
 
 ////////////////////////////////////////////////////////////
@@ -74,15 +71,8 @@ end
 always @(posedge iCLK)
 begin
     if (qRst)      rRA <= 0;
-    else if  (rRE) rRA <= rRA + 1'b1;
-    else           rRA <= rRA;
-end
-
-always @(posedge iCLK)
-begin
-    if (qRst)      rRBA <= pAddrMax;
-    else if  (rRE) rRBA <= rRA - 1'b1;
-    else           rRBA <= rRBA;
+    else if (!rRE) rRA <= rRA;
+    else           rRA <= rRA + 1'b1;
 end
 
 // 前回のrpが更新されていたら新規データを出力できる状態と判断する
@@ -106,16 +96,20 @@ begin
     else            {rWE, rRE}  <= {qWE, qRE};
 end
 
+integer i;
+
 // DFFの段数により3clk遅延するため、3clk分のraポインタを先取りして計算しておく
 always @*
 begin
+    for (i = 1; i < 5; i = i + 1)
+    begin
+        qRAb[i-1] <= rRA - i;
+    end
+
     qWAb    <= rWA - 1'b1;
     qWAb2   <= rWA - 2'd2;
-    qRAb    <= rRA - 1'b1;
-    qRAb2   <= rRA - 2'd2;
-    qRAb3   <= rRA - 2'd3;
     qRst    <= iRST;
-    qFLL    <= (rWA == qRAb || rWA == qRAb2 || rWA == qRAb3);
+    qFLL    <= (rWA == qRAb[0] || rWA == qRAb[1] || rWA == qRAb[2] || rWA == qRAb[3]);
     qEMP    <= (rWA == rRA || qWAb2 == rRA || qWAb == rRA) ? 1'b1 : 1'b0;
     qRVD    <= (rRA != rORP);
     qWE     <= iWE;
