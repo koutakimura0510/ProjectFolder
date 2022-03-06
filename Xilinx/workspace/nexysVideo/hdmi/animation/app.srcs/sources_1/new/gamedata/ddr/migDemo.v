@@ -42,7 +42,7 @@ begin
     begin
         {rWrdy, rRrdy, rRdv}    <= {1'b1, 1'b1, 1'b0};
         rOD                     <= 128'd0;
-        {rWA, rRA}              <= {0, 0};
+        {rWA, rRA}              <= {8'd0, 8'd0};
         rCH                     <= 0;
     end
     else

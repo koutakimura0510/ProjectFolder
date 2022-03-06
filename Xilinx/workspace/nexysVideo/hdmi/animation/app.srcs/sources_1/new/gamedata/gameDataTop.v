@@ -97,8 +97,8 @@ frameStateRW #(
 //----------------------------------------------------------
 // ddr side
 wire [pBitDepth-1:0] wDdrRA;
-wire wDdrRaFLL;
-reg  qDdrRaE;
+wire wDdrRready, wDualFll;
+reg  qDdrRvalid;
 
 frameBufferRead #(
     .pHDisplay          (pHDisplay),
@@ -106,14 +106,14 @@ frameBufferRead #(
     .pAddrWidth         (pBitDepth),
     .pBitLengthState    (2)
 ) FRAME_BUFFER_READ (
-    .iCLK       (oUiCLK),   .iRST       (oUiRST),
-    .iDdrRaE    (qDdrRaE),  .iRS        (wRS),
-    .oAddr      (wDdrRA),   .oRE        (wRFE)
+    .iCLK       (oUiCLK),       .iRST       (oUiRST),
+    .iDdrRaE    (qDdrRvalid),   .iRS        (wRS),
+    .oAddr      (wDdrRA),       .oRE        (wRFE)
 );
 
 always @*
 begin
-    qDdrRaE <= (~wDdrRaFLL) & oCal & wFbufReadStart;
+    qDdrRvalid <= (~wDualFll) & wDdrRready & oCal & wFbufReadStart;
 end
 
 ////////////////////////////////////////////////////////////
@@ -122,10 +122,10 @@ end
 // TODO 書き込むエリアのデータを読みこんでおき、アルファ値を結合する
 // TODO 1フレーム領域書き込んだらenabe信号を出す
 //----------------------------------------------------------
-wire wWFLL;
+wire wWready;
 wire [pBitDepth-1:0] wPixelWD; // pixel data
 wire [pBitDepth-1:0] wPixelWA; // write addr
-reg qPixelWE;                  // write enable
+reg  qPixelvalid;              // write enable
 
 pixelTop #(
     .pHDisplay              (pHDisplay),
@@ -136,14 +136,14 @@ pixelTop #(
 ) PIXEL_TOP (
     .iSW    (iSW),
     .iCLK   (oUiCLK),       .iRST   (oUiRST),
-    .iWS    (wWS),          .iDdrWE (qPixelWE),
+    .iWS    (wWS),          .iDdrWE (qPixelvalid),
     .oPixel (wPixelWD),     .oAddr  (wPixelWA),
     .oWE    (wWFE)
 );
 
 always @*
 begin
-    qPixelWE <= ((~wWFLL) & oCal) && (wWS != IDOL);
+    qPixelvalid <= (wWready & oCal) && (wWS != IDOL);
 end
 
 
@@ -160,12 +160,10 @@ wire [pBitDepth-1:0] wVRGB;
 
 //ddr side
 wire [pBitDepth-1:0] wDdrRD;
-wire wDdrRdEMP;
 wire wDdrRVD;
-reg  qDdrRDE;
 
 // fifo side
-wire wDualFll, wRVD;
+wire wRVD;
 reg  qRst;
 
 // pixel read start
@@ -203,7 +201,6 @@ always @*
 begin
     qRst    <= (oUiRST | iRST);
     qFS     <= rFS & iFVDE;
-    qDdrRDE <= (~wDdrRdEMP) & (~wDualFll) & oCal;
 end
 
 
@@ -227,14 +224,13 @@ ddr3Bridge #(
 
     // write data side                  read pixel data
     .iWD                (wPixelWD),     .oRD                (wDdrRD),
-    .iWA                (wPixelWA),     .oRDEMP             (wDdrRdEMP),
-    .iMask              (16'd0),        .oRVD               (wDdrRVD),
-    .iWE                (qPixelWE),     .iRDE               (qDdrRDE),
-    .oWFLL              (wWFLL),        
-                                        // read ddr address side
+    .iWA                (wPixelWA),     .oRVD               (wDdrRVD),
+    .iMask              (16'd0),
+    .iWvalid            (qPixelvalid),     
+    .oWready            (wWready),        
                                         .iRA                (wDdrRA),
-                                        .iRAE               (qDdrRaE),
-                                        .oRAFLL             (wDdrRaFLL),
+                                        .iRvalid            (qDdrRvalid),
+                                        .oRready            (wDdrRready),
 
     // user interface clk rst
     .iCLK               (iDispCLK),     .iRST           (iRST),
