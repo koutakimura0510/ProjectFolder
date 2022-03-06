@@ -67,6 +67,7 @@
 //----------------------------------------------------------
 // 割り込みアドレス
 //----------------------------------------------------------
+#define IRQ_PENDING (*(volatile unsigned int *) 0x80000034)
 #define IRQ_ACK     (*(volatile unsigned int *) 0x8000003C)
 #define IRQ_ENABLE  (*(volatile unsigned int *) 0x80000038)     //
 
@@ -75,12 +76,12 @@ static uint8_t led = 0;
 
 void int00(void)
 {
-//	microblaze_disable_interrupts();
+    xil_printf("interrupt %x\r\n", IRQ_PENDING);
 	IRQ_ACK = 0x00010000;       // 割り込み発生時 Highになるレジスタをクリア
+	xil_printf("interrupt %x\r\n", IRQ_PENDING);
     XIOModule_DiscreteWrite(&xio, 1, led);
     led++;
     IRQ_ENABLE = 0x00010000;    // 再度割り込み許可
-//	microblaze_enable_interrupts();
 }
 
 int main()
