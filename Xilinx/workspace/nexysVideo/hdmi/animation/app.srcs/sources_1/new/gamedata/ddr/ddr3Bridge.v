@@ -71,14 +71,7 @@ wire wUiRST;    assign oUiRST = wUiRST;
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // read / write 切り替えステートマシン
-// 1. DDRコントローラのReady信号がHighになるまで待機、writeコマンド発行
-// 2. DDRコントローラのReady信号がLowになるまで待機
-// 3. Lowを確認したら、処理完了を示すHighになるまで待機
-// 4. readコマンド発行
-// 5. DDRコントローラのReady信号がLowになるまで待機
-// 6. Lowを確認したら、処理完了を示すHighになるまで待機
-// 7. writeコマンド発行
-// 8. 2 ~ 8 を繰り返し
+// この検証でwrite readの速度が間に合わなければ、128bit対応にする
 //----------------------------------------------------------
 localparam [2:0]
     lpIDOL      = 0,
@@ -92,8 +85,6 @@ reg  rRready, rWready;              assign {oRready, oWready} = {rRready, rWread
 reg  [1:0] state;
 reg  qReady;
 
-
-// ready信号発効後に、valid信号受信を確認し、データの送信を管理しなければならない？
 always @(posedge wUiCLK)
 begin
     if (wUiRST)
