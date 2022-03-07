@@ -71,11 +71,21 @@ wire wUiRST;    assign oUiRST = wUiRST;
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // read / write 切り替えステートマシン
+// 1. DDRコントローラのReady信号がHighになるまで待機、writeコマンド発行
+// 2. DDRコントローラのReady信号がLowになるまで待機
+// 3. Lowを確認したら、処理完了を示すHighになるまで待機
+// 4. readコマンド発行
+// 5. DDRコントローラのReady信号がLowになるまで待機
+// 6. Lowを確認したら、処理完了を示すHighになるまで待機
+// 7. writeコマンド発行
+// 8. 2 ~ 8 を繰り返し
 //----------------------------------------------------------
-localparam [1:0]
-    lpIDOL  = 0,
-    lpREAD  = 1,
-    lpWRITE = 2;
+localparam [2:0]
+    lpIDOL      = 0,
+    lpWLow      = 1,
+    lpWHigh     = 2,
+    lpRLow      = 3,
+    lpRHigh     = 4;
 
 wire wRready, wWready;
 reg  rRready, rWready;              assign {oRready, oWready} = {rRready, rWready};
@@ -93,10 +103,12 @@ begin
     else
     begin
         casex (state)
-            lpIDOL:  {state, rRready, rWready} <= qReady ? {lpREAD,  2'b01}  : {lpIDOL,  2'b00};
-            lpREAD:  {state, rRready, rWready} <= qReady ? {lpWRITE, 2'b10}  : {lpREAD,  2'b00};
-            lpWRITE: {state, rRready, rWready} <= qReady ? {lpREAD,  2'b01}  : {lpWRITE, 2'b00};
-            default: {state, rRready, rWready} <= qReady ? {lpIDOL,  2'b00}  : {lpIDOL,  2'b00};
+            lpIDOL  : {state, rRready, rWready} <=  qReady ? {lpRLow,  2'b01}  : {lpIDOL,  2'b00};
+            lpWLow  : {state, rRready, rWready} <= !qReady ? {lpWHigh, 2'b00}  : {lpWLow,  2'b00};
+            lpWHigh : {state, rRready, rWready} <=  qReady ? {lpRLow,  2'b01}  : {lpWHigh, 2'b00};
+            lpRLow  : {state, rRready, rWready} <= !qReady ? {lpRHigh, 2'b00}  : {lpRLow,  2'b00};
+            lpRHigh : {state, rRready, rWready} <=  qReady ? {lpWLow,  2'b10}  : {lpRHigh, 2'b00};
+            default : {state, rRready, rWready} <=  qReady ? {lpIDOL,  2'b00}  : {lpIDOL,  2'b00};
         endcase
     end
 end
