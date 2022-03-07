@@ -80,7 +80,10 @@ localparam [1:0]
 wire wRready, wWready;
 reg  rRready, rWready;              assign {oRready, oWready} = {rRready, rWready};
 reg  [1:0] state;
+reg  qReady;
 
+
+// ready信号発効後に、valid信号受信を確認し、データの送信を管理しなければならない？
 always @(posedge wUiCLK)
 begin
     if (wUiRST)
@@ -90,14 +93,18 @@ begin
     else
     begin
         casex (state)
-            lpIDOL:  {state, rRready, rWready} <= (wRready & wWready) ? {lpREAD, 2'b01}  : {lpIDOL, 2'b00};
-            lpREAD:  {state, rRready, rWready} <= (wRready & wWready) ? {lpWRITE, 2'b10} : {lpREAD, 2'b00};
-            lpWRITE: {state, rRready, rWready} <= (wRready & wWready) ? {lpREAD, 2'b01}  : {lpWRITE, 2'b00};
-            default: {state, rRready, rWready} <= (wRready & wWready) ? {lpIDOL, 2'b00}  : {lpIDOL, 2'b00};
+            lpIDOL:  {state, rRready, rWready} <= qReady ? {lpREAD,  2'b01}  : {lpIDOL,  2'b00};
+            lpREAD:  {state, rRready, rWready} <= qReady ? {lpWRITE, 2'b10}  : {lpREAD,  2'b00};
+            lpWRITE: {state, rRready, rWready} <= qReady ? {lpREAD,  2'b01}  : {lpWRITE, 2'b00};
+            default: {state, rRready, rWready} <= qReady ? {lpIDOL,  2'b00}  : {lpIDOL,  2'b00};
         endcase
     end
 end
 
+always @*
+begin
+   qReady <= wRready & wWready;
+end
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
