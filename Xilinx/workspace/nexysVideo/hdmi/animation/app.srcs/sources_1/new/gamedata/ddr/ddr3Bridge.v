@@ -82,7 +82,7 @@ localparam [2:0]
 
 wire wRready, wWready;
 reg  rRready, rWready;              assign {oRready, oWready} = {rRready, rWready};
-reg  [1:0] state;
+reg  [2:0] state;
 reg  qReady;
 
 always @(posedge wUiCLK)
@@ -133,7 +133,7 @@ ddr3Controller #(
     .pDramAddrWidth     (pDramAddrWidth),
     .pDramDataWidth     (pDramDataWidth),
     .pDramMaskWidth     (pDramMaskWidth),
-    .pDebug             ("on")
+    .pDebug             ("off")
 ) DDR3_CONTROLLER (
     // DDR port                             hand shake
     .ioDDR3_DQ          (ioDDR3_DQ),        .iWEnable           (rDdrValid[0]),

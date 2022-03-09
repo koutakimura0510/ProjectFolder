@@ -110,7 +110,7 @@ always @(posedge iCLK)
 begin
     if (iRST)           rWD <= COLOR_RED;
     else if (qWE)       rWD <= rNextData;
-    else if (iDdrWE)    rWD <= rWD + 1'b1;
+    else if (iDdrWE)    rWD <= rWD;
     else                rWD <= rWD;
 end
 
