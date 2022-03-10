@@ -106,7 +106,7 @@ end
 
 always @*
 begin
-   qReady <= wRready & wWready;
+    qReady <= wRready & wWready;
 end
 
 ////////////////////////////////////////////////////////////

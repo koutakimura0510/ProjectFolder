@@ -74,7 +74,7 @@ reg [pBitWidth-1:0] rNextData;
 // end
 
 reg [7:0] rFpsCnt;
-reg qFEN;
+reg qFEN, qEn;
 
 always @(posedge iCLK)
 begin
@@ -88,9 +88,9 @@ always @(posedge iCLK)
 begin
     case (iWS)
         IDOL        : rNextData <= rNextData;
-        FBUF_AREA_1 : rNextData <= (qFEN && qWE) ? COLOR_GREEN : COLOR_BLUE;
-        FBUF_AREA_2 : rNextData <= (qFEN && qWE) ? COLOR_RED   : COLOR_GREEN;
-        FBUF_AREA_3 : rNextData <= (qFEN && qWE) ? COLOR_BLUE  : COLOR_RED;
+        FBUF_AREA_1 : rNextData <= qEn ? COLOR_GREEN : COLOR_BLUE;
+        FBUF_AREA_2 : rNextData <= qEn ? COLOR_RED   : COLOR_GREEN;
+        FBUF_AREA_3 : rNextData <= qEn ? COLOR_BLUE  : COLOR_RED;
         default     : rNextData <= COLOR_RED;
     endcase
 end
@@ -98,6 +98,8 @@ end
 always @*
 begin
     qFEN <= (rFpsCnt == 255);
+    // qEn  <= qFEN & qWE;
+    qEn  <= qWE;
 end
 
 ////////////////////////////////////////////////////////////
