@@ -21,7 +21,8 @@ module gameDataTop # (
     parameter pDramDataWidth = 128,
     parameter pDramMaskWidth = 16,
     parameter pBuffDepth     = 16,          // bram length
-    parameter pBitDepth      = 32           // data bit
+    parameter pBitDepth      = 32,          // data bit
+    parameter pDramDebug     = "off"
 )(
     input           iDispCLK,   // ディスプレイ描画clk vgaの場合25MHz
     input           iCLK,       // system clk
@@ -67,7 +68,6 @@ module gameDataTop # (
 // gameDataTop内を動作させるクロック・リセット信号、初期化完了のキャリブレーション信号
 //----------------------------------------------------------
 wire oUiCLK, oUiRST;
-wire oCal;
 
 
 ////////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ frameStateRW #(
 //----------------------------------------------------------
 // ddr side
 wire [pBitDepth-1:0] wDdrRA;
-wire wDdrRready, wDualFll;
+wire wDdrRready;
 reg  qDdrRvalid;
 
 frameBufferRead #(
@@ -113,7 +113,7 @@ frameBufferRead #(
 
 always @*
 begin
-    qDdrRvalid <= (~wDualFll) & wDdrRready & oCal & wFbufReadStart;
+    qDdrRvalid <= wDdrRready & wFbufReadStart;
 end
 
 ////////////////////////////////////////////////////////////
@@ -143,7 +143,7 @@ pixelTop #(
 
 always @*
 begin
-    qPixelvalid <= (wWready & oCal) && (wWS != IDOL);
+    qPixelvalid <= wWready & (wWS != IDOL);
 end
 
 
@@ -160,47 +160,46 @@ wire [pBitDepth-1:0] wVRGB;
 
 //ddr side
 wire [pBitDepth-1:0] wDdrRD;
-wire wDdrRVD;
+wire wDdrRVD, wDualFll;
 
 // fifo side
 wire wRVD;
-reg  qRst;
 
 // pixel read start
 reg rFS, qFS;
 
 always @(posedge oUiCLK)
 begin
-    if (oUiRST)             rFS <= 0;
-    else if (oCal & iFE)    rFS <= 1'b1;
-    else                    rFS <= rFS;
+    if (oUiRST)      rFS <= 0;
+    else if (iFE)    rFS <= 1'b1;
+    else             rFS <= rFS;
 end
 
 // pixel data save
+// 動作周波数が間に合っているか確認するため、wRVDのタイミングでなければ黒で塗りつぶす
 always @(posedge iDispCLK)
 begin
     if (iRST)               rPixel <= 0;
     else if (wRVD)          rPixel <= wVRGB;
-    else                    rPixel <= rPixel;
+    else                    rPixel <= 'hffffffff;
 end
 
 fifoDualController #(
     .pBuffDepth (pBuffDepth),
     .pBitWidth  (pBitDepth)
 ) PIXEL_FIFO_DUAL_CONTROLLER (
-    // write side       read side
-    .iCLKA  (oUiCLK),   .iCLKB  (iDispCLK),
-    .iRST   (qRst),
-    .iWD    (wDdrRD),   .oRD    (wVRGB),
-    .iWE    (wDdrRVD),  .iRE    (qFS),
-    .oFLL   (wDualFll), .oRVD   (wRVD),
-                        .oEMP   ()
+    // write side           read side
+    .iCLKA  (oUiCLK),       .iCLKB  (iDispCLK),
+    .iRST   (oUiRST),
+    .iWD    (wDdrRD),       .oRD    (wVRGB),
+    .iWE    (wDdrRVD),      .iRE    (qFS),
+    .oFLL   (wDualFll),     .oRVD   (wRVD),
+                            .oEMP   ()
 );
 
 always @*
 begin
-    qRst    <= (oUiRST | iRST);
-    qFS     <= rFS & iFVDE;
+    qFS <= rFS & iFVDE;
 end
 
 
@@ -211,7 +210,7 @@ ddr3Bridge #(
     // ddr parameter                    Bram fifo parameter
     .pDramAddrWidth (pDramAddrWidth),   .pBuffDepth     (pBuffDepth),
     .pDramDataWidth (pDramDataWidth),   .pBitDepth      (pBitDepth),
-    .pDramMaskWidth (pDramMaskWidth)
+    .pDramMaskWidth (pDramMaskWidth),   .pDramDebug     (pDramDebug)
 ) DDR3_BRIDGE (
     // DDR port                             
     .ioDDR3_DQ          (ioDDR3_DQ),    .ioDDR3_DQS_N       (ioDDR3_DQS_N),
@@ -225,17 +224,14 @@ ddr3Bridge #(
     // write data side                  read pixel data
     .iWD                (wPixelWD),     .oRD                (wDdrRD),
     .iWA                (wPixelWA),     .oRVD               (wDdrRVD),
-    .iMask              (16'd0),
-    .iWvalid            (qPixelvalid),     
+    .iMask              (16'd0),        .iRA                (wDdrRA),
+    .iWvalid            (qPixelvalid),  .iRvalid            (qDdrRvalid),
+    .iWFLL              (wDualFll),     .oRready            (wDdrRready),
     .oWready            (wWready),        
-                                        .iRA                (wDdrRA),
-                                        .iRvalid            (qDdrRvalid),
-                                        .oRready            (wDdrRready),
 
     // user interface clk rst
     .iCLK               (iDispCLK),     .iRST           (iRST),
-    .oUiCLK             (oUiCLK),       .oUiRST         (oUiRST),
-    .oInitCalibComplete (oCal)
+    .oUiCLK             (oUiCLK),       .oUiRST         (oUiRST)
 );
 
 oledTop #(
@@ -264,6 +260,6 @@ oledTop #(
     // .iDispLine4     ({"        ", 0})
 );
 
-assign oLED = {1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, oCal, ~oUiRST};
+assign oLED = {1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, ~oUiRST};
 
 endmodule

@@ -23,7 +23,8 @@ module frameBufferRead # (
 
 ////////////////////////////////////////////////////////////
 `include "../include/commonAddr.vh"
-localparam pDdrFbufSize = (pHDisplay * pVDisplay);
+localparam pDdrFbufSize  = (pHDisplay * pVDisplay) - 1;
+localparam pDdrFbufSize2 = (pHDisplay * pVDisplay) - 2;
 
 
 ////////////////////////////////////////////////////////////
@@ -31,7 +32,8 @@ localparam pDdrFbufSize = (pHDisplay * pVDisplay);
 // 画面サイズのアドレス送信回数をカウントする
 // 最大値カウント時 Enable ON
 //----------------------------------------------------------
-reg qRE;                assign oRE = qRE;
+reg qRE;
+reg qREn;               assign oRE = qREn;
 reg [20:0] rAddrCnt;
 
 always @(posedge iCLK)
@@ -44,7 +46,8 @@ end
 
 always @*
 begin
-    qRE <= (pDdrFbufSize == rAddrCnt);
+    qRE  <= (pDdrFbufSize  == rAddrCnt);
+    qREn <= (pDdrFbufSize2 == rAddrCnt);
 end
 
 

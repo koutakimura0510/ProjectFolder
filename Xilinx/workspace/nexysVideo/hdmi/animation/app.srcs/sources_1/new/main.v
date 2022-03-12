@@ -18,7 +18,9 @@ module main
     parameter V_DISPLAY       = 480,
     parameter V_TOP           =  31,
     parameter V_BOTTOM        =  11,
-    parameter V_SYNC          =   2
+    parameter V_SYNC          =   2,
+    parameter pDramDebug      = "off",
+    parameter pBuffDepth      = 256
 )
 (
     input           iCLK,           // system clk
@@ -113,9 +115,9 @@ wire [23:0] oVRGB;
 
 gameDataTop # (
     .pHDisplay      (H_DISPLAY),    .pVDisplay      (V_DISPLAY),
-    .pDramAddrWidth (29),           .pBuffDepth     (256),
+    .pDramAddrWidth (29),           .pBuffDepth     (pBuffDepth),
     .pDramDataWidth (128),          .pBitDepth      (32),
-    .pDramMaskWidth (16)
+    .pDramMaskWidth (16),           .pDramDebug     (pDramDebug)
 ) GAME_DATA_TOP (
     .iDispCLK       (o_clk_25),
     .iCLK           (iCLK),

@@ -123,6 +123,6 @@ begin
     qFVmatch <= (rFVert == V_MAX);
 end
 
-assign oFE   = qFVmatch & qFHmatch;
+assign oFE = qFVmatch & qFHmatch;
 
 endmodule

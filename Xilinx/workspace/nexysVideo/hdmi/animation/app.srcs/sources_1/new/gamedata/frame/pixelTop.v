@@ -26,7 +26,7 @@ module pixelTop # (
 
 ////////////////////////////////////////////////////////////
 `include "../include/commonAddr.vh"
-localparam pDdrFbufSize = (pHDisplay * pVDisplay);
+localparam pDdrFbufSize = (pHDisplay * pVDisplay) - 1;
 
 
 ////////////////////////////////////////////////////////////
@@ -52,54 +52,17 @@ end
 
 
 ////////////////////////////////////////////////////////////
-// demo color gen
 reg [pBitWidth-1:0] rNextData;
-
-// always @(posedge iCLK)
-// begin
-//     if (iRST)
-//     begin
-//         rNextData <= COLOR_RED;
-//     end
-//     else if (!qWE)
-//     begin
-//         rNextData <= rNextData;
-//     end
-//     case (iSW)
-//         8'h00       : rNextData <= COLOR_RED;
-//         8'h01       : rNextData <= COLOR_BLUE;
-//         8'h02       : rNextData <= COLOR_GREEN;
-//         default     : rNextData <= rNextData;
-//     endcase
-// end
-
-reg [7:0] rFpsCnt;
-reg qFEN, qEn;
-
-always @(posedge iCLK)
-begin
-    if (iRST)               rFpsCnt <= 0;
-    else if (qFEN && qWE)   rFpsCnt <= 0;
-    else if (qWE)           rFpsCnt <= rFpsCnt + 1'b1;
-    else                    rFpsCnt <= rFpsCnt;
-end
 
 always @(posedge iCLK)
 begin
     case (iWS)
         IDOL        : rNextData <= rNextData;
-        FBUF_AREA_1 : rNextData <= qEn ? COLOR_GREEN : COLOR_BLUE;
-        FBUF_AREA_2 : rNextData <= qEn ? COLOR_RED   : COLOR_GREEN;
-        FBUF_AREA_3 : rNextData <= qEn ? COLOR_BLUE  : COLOR_RED;
+        FBUF_AREA_1 : rNextData <= qWE ? COLOR_GREEN : COLOR_BLUE;
+        FBUF_AREA_2 : rNextData <= qWE ? COLOR_RED   : COLOR_GREEN;
+        FBUF_AREA_3 : rNextData <= qWE ? COLOR_BLUE  : COLOR_RED;
         default     : rNextData <= COLOR_RED;
     endcase
-end
-
-always @*
-begin
-    qFEN <= (rFpsCnt == 255);
-    // qEn  <= qFEN & qWE;
-    qEn  <= qWE;
 end
 
 ////////////////////////////////////////////////////////////

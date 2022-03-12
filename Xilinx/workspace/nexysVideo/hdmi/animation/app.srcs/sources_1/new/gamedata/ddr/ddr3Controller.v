@@ -15,7 +15,7 @@ module ddr3Controller #(
     parameter pDramAddrWidth = 29,
     parameter pDramDataWidth = 128,
     parameter pDramMaskWidth = 16,
-    parameter pDebug         = "off"
+    parameter pDramDebug     = "off"
 )(
     inout  [15:0]               ioDDR3_DQ,
     inout  [ 1:0]               ioDDR3_DQS_N,
@@ -43,49 +43,44 @@ module ddr3Controller #(
     input                       iCLK,               // system clk
     input                       iRST,               // reset High
     output                      oUiCLK,
-    output                      oUiRST,
-    output                      oInitCalibComplete // 初期化完了時High
+    output                      oUiRST
 );
 
 
-// user design
-wire ui_clk;
-wire ui_clk_sync_rst;
-
-// mig signal 
-wire [pDramAddrWidth-1:0] o_app_addr;
-wire [2:0] o_app_cmd;
-wire o_app_enable;
-wire [pDramDataWidth-1:0] o_app_wdf_data;
-wire o_app_wdf_wren;
-wire [pDramMaskWidth-1:0] o_app_wdf_mask;
-wire [pDramDataWidth-1:0] i_app_rd_data;
+////////////////////////////////////////////////////////////
+// User Interface clk
+wire wCal;
+wire ui_clk;                assign oUiCLK   = ui_clk;
+wire ui_clk_sync_rst;       assign oUiRST   = ui_clk_sync_rst & (~wCal);
 
 
+////////////////////////////////////////////////////////////
+//----------------------------------------------------------
+// MIG 設定の動作周波数の生成
+//----------------------------------------------------------
+wire o_DDR3_200mhz, o_DDR3_100mhz, locked;
+
+clk_wiz_1 DDR3_CLK (
+    .clk_out1(o_DDR3_200mhz),   .clk_out2(o_DDR3_100mhz),
+    .reset(iRST),               .locked(locked),
+    .clk_in1(iCLK)
+);
+
+
+////////////////////////////////////////////////////////////
 // MIG Hand Shake
 wire i_app_rd_data_valid;
 wire i_app_ready;
 wire i_app_wdf_ready;
-wire i_initcalibcomplete;
 
-
-// clk wiz
-wire o_DDR3_200mhz;
-wire o_DDR3_100mhz;
-wire locked;
-
-// user interface rst Active High
-assign oUiCLK = ui_clk;
-assign oUiRST = ui_clk_sync_rst;
-
-// migのCLK生成
-clk_wiz_1 DDR3_CLK (
-    .clk_out1(o_DDR3_200mhz),
-    .clk_out2(o_DDR3_100mhz),
-    .reset(iRST),
-    .locked(locked),
-    .clk_in1(iCLK)
-);
+// mig signal 
+wire [pDramAddrWidth-1:0] o_app_addr;
+wire [pDramDataWidth-1:0] o_app_wdf_data;
+wire [pDramMaskWidth-1:0] o_app_wdf_mask;
+wire [pDramDataWidth-1:0] i_app_rd_data;
+wire [2:0] o_app_cmd;
+wire o_app_enable;
+wire o_app_wdf_wren;
 
 migController #(
     .pDramAddrWidth(pDramAddrWidth),
@@ -103,7 +98,7 @@ migController #(
     .oRdDataValid           (oRdDataValid),
     .oReady                 (oReady),
     .oWdReady               (oWdReady),
-    .oInitCalibComplete     (oInitCalibComplete),
+    .oInitCalibComplete     (),
     .oAppAddr               (o_app_addr),
     .oAppCmd                (o_app_cmd),
     .oAppEnable             (o_app_enable),
@@ -114,15 +109,15 @@ migController #(
     .iAppRdDataValid        (i_app_rd_data_valid),
     .iAppReady              (i_app_ready),
     .iAppWdfReady           (i_app_wdf_ready),
-    .iInitCalibComplete     (i_initcalibcomplete)
+    .iInitCalibComplete     (wCal)
 );
 
 
 generate
-    if (pDebug == "on")
+    if (pDramDebug == "on")
         migDemo MIG_DEMO (
             .iData      (o_app_wdf_data),
-            .oData      (i_app_rd_data),    .oCal       (i_initcalibcomplete),
+            .oData      (i_app_rd_data),    .oCal       (wCal),
             .iAppEN     (o_app_enable),     .iWE        (o_app_wdf_wren),
             .oWRDY      (i_app_wdf_ready),  .oRDV       (i_app_rd_data_valid),
             .oRRDY      (i_app_ready),
@@ -132,21 +127,21 @@ generate
     else
         mig_7series_0 MIG (
             //DDR3 port
-            .ddr3_addr              (oDDR3_ADDR),
-            .ddr3_ba                (oDDR3_BA),
-            .ddr3_cas_n             (oDDR3_CAS),
-            .ddr3_ck_n              (oDDR3_CLK_N),
-            .ddr3_ck_p              (oDDR3_CLK_P),
-            .ddr3_cke               (oDDR3_CKE),
-            .ddr3_ras_n             (oDDR3_RAS),
-            .ddr3_reset_n           (oDDR3_RESET),
-            .ddr3_we_n              (oDDR3_WE),
-            .ddr3_dq                (ioDDR3_DQ),
-            .ddr3_dqs_n             (ioDDR3_DQS_N),
-            .ddr3_dqs_p             (ioDDR3_DQS_P),
-            .ddr3_dm                (oDDR3_DM),
-            .ddr3_odt               (oDDR3_ODT),
-            .init_calib_complete    (i_initcalibcomplete),          // output init_calib_complete High Out
+            .ddr3_addr                      (oDDR3_ADDR),
+            .ddr3_ba                        (oDDR3_BA),
+            .ddr3_cas_n                     (oDDR3_CAS),
+            .ddr3_ck_n                      (oDDR3_CLK_N),
+            .ddr3_ck_p                      (oDDR3_CLK_P),
+            .ddr3_cke                       (oDDR3_CKE),
+            .ddr3_ras_n                     (oDDR3_RAS),
+            .ddr3_reset_n                   (oDDR3_RESET),
+            .ddr3_we_n                      (oDDR3_WE),
+            .ddr3_dq                        (ioDDR3_DQ),
+            .ddr3_dqs_n                     (ioDDR3_DQS_N),
+            .ddr3_dqs_p                     (ioDDR3_DQS_P),
+            .ddr3_dm                        (oDDR3_DM),
+            .ddr3_odt                       (oDDR3_ODT),
+            .init_calib_complete            (wCal),          // output init_calib_complete High Out
 
             // Application interface ports
             .app_addr                       (o_app_addr),           // input [28:0]		addr[28:3] / Bank[2:0]

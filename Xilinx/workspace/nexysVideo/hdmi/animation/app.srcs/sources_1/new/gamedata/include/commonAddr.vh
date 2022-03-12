@@ -26,6 +26,6 @@ parameter COLOR_BLUE        = ~('hff4169e1);
 // フレームバッファ領域
 //----------------------------------------------------------
 // parameter DDR_FBUF_SIZE     = (640 * 480);
-parameter DDR_ADDR_FBUF_1   = 'd5000000;
-parameter DDR_ADDR_FBUF_2   = 'd10000000;
-parameter DDR_ADDR_FBUF_3   = 'd15000000;
+parameter DDR_ADDR_FBUF_1   = 2457600;
+parameter DDR_ADDR_FBUF_2   = 2457600 * 2;
+parameter DDR_ADDR_FBUF_3   = 2457600 * 3;

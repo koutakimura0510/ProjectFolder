@@ -44,14 +44,16 @@ wire [ 1:0]           ddr3_dm;
 wire                  ddr3_odt;
 
 main #(
-    .H_DISPLAY  (4),
+    .H_DISPLAY  (2),
     .H_BACK     (2),
     .H_FRONT    (2),
     .H_SYNC     (2),
-    .V_DISPLAY  (3),
+    .V_DISPLAY  (2),
     .V_TOP      (2),
     .V_BOTTOM   (2),
-    .V_SYNC     (2)
+    .V_SYNC     (2),
+    .pDramDebug ("on"),
+    .pBuffDepth (256)
     // .H_DISPLAY  (640),
     // .H_BACK     (48),
     // .H_FRONT    (16),

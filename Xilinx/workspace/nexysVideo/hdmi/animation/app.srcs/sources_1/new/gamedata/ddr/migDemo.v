@@ -30,11 +30,10 @@ assign oCal   = ~iRST;
 
 ////////////////////////////////////////////////////////////
 
-reg [  7:0] rWA, rRA;
-reg [127:0] rID [0:255];
+reg [  2:0] rWA, rRA;
+reg [127:0] rID [0:7];
 reg [127:0] rOD;                        assign oData = rOD;
 reg rWrdy, rRrdy, rRdv;                 assign {oWRDY, oRRDY, oRDV} = {rWrdy, rRrdy, rRdv};
-reg rCH;
 
 always @(posedge iCLK)
 begin
@@ -43,36 +42,32 @@ begin
         {rWrdy, rRrdy, rRdv}    <= {1'b1, 1'b1, 1'b0};
         rOD                     <= 128'd0;
         {rWA, rRA}              <= {8'd0, 8'd0};
-        rCH                     <= 0;
     end
     else
     begin
-        casex ({rCH, iAppEN, iWE})
-            'b000:
+        casex ({iAppEN, iWE})
+            'b00:
             begin
                 {rWrdy, rRrdy, rRdv} <= {1'b1, 1'b1, 1'b0};
             end
 
-            'b010:
+            'b10:
             begin
                 {rWrdy, rRrdy, rRdv} <= {1'b1, 1'b0, 1'b1};
                 rOD                  <= rID[rRA];
                 rRA                  <= rRA + 1'b1;
-                rCH                  <= 1'b1;
             end
 
-            'b011:
+            'b11:
             begin
-                {rWrdy, rRrdy, rRdv} <= {1'b0, 1'b0, 1'b0};
+                {rWrdy, rRrdy, rRdv} <= {1'b0, 1'b1, 1'b0};
                 rID[rWA]             <= iData;
                 rWA                  <= rWA + 1'b1;
-                rCH                  <= 1'b1;
             end
 
             default:
             begin
                 {rWrdy, rRrdy, rRdv} <= {1'b1, 1'b1, 1'b0};
-                rCH                  <= 1'b0;
             end
         endcase
     end
