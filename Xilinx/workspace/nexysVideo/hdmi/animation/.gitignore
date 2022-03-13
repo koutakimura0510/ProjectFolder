@@ -8,6 +8,7 @@ app.hw
 app.ip_user_files
 app.runs
 app.sim
+app.vitis
 .Xil
 work
 ip

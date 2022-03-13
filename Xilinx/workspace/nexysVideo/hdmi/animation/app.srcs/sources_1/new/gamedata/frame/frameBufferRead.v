@@ -33,7 +33,7 @@ localparam pDdrFbufSize2 = (pHDisplay * pVDisplay) - 2;
 // 最大値カウント時 Enable ON
 //----------------------------------------------------------
 reg qRE;
-reg qREn;               assign oRE = qREn;
+reg qREn;               assign oRE = qRE;
 reg [20:0] rAddrCnt;
 
 always @(posedge iCLK)

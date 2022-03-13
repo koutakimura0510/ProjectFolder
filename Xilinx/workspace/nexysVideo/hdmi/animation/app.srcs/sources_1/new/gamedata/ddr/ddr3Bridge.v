@@ -77,57 +77,77 @@ wire wUiRST;    assign oUiRST = wUiRST;
 wire wRready, wWready;
 wire oWEMP,   oREMP;
 reg  rRready, rWready, qRemp, qWemp;
+reg [2:0] rState;
 
 // always @(posedge wUiCLK)
 // begin
-//     casex ({wRready, wWready})
-//         'b00    : {rRready, rWready}  <= 2'b00;
-//         'b01    : {rRready, rWready}  <= {1'b0, qWemp};
-//         'b10    : {rRready, rWready}  <= {qRemp, 1'b0};
-//         'b11    : {rRready, rWready}  <= 2'b01;
-//         default : {rRready, rWready}  <= 2'b00;
-//     endcase
+//     if (wUiRST)
+//     begin
+//         rState    <= 0;
+//         rRready <= 1'b0;
+//         rWready <= 1'b0;
+//     end
+//     else if (rState == 2)
+//     begin
+//         case ({wRready, wWready})
+//             'b00    : {rRready, rWready}  <= 2'b00;
+//             'b01    : {rRready, rWready}  <= {1'b0, 1'b1};
+//             'b10    : {rRready, rWready}  <= {qRemp, 1'b0};
+//             'b11    : {rRready, rWready}  <= {1'b0, 1'b1};
+//             default : {rRready, rWready}  <= 2'b00;
+//         endcase
+//         rState <= 0;
+//     end else begin
+//         rState <= rState + 1'b1;
+//         rRready <= 1'b0;
+//         rWready <= 1'b0;
+//     end
 // end
-reg [1:0] state;
-
 always @(posedge wUiCLK)
 begin
     if (wUiRST)
     begin
-        {state, rRready, rWready}  <= 4'd0;
+        rWready <= 1'b0;
+        rRready <= 1'b0;
+        rState  <= 0;
     end
+    else if (rState == 0)
+    begin
+        if (wWready & wRready)
+        begin
+            rWready <= 1'b1;
+            rRready <= 1'b0;
+            rState  <= 1'b1;
+        end
+        else
+        begin
+            rWready <= 1'b0;
+            rRready <= 1'b0;
+            rState  <= 0;
+        end
+    end 
     else
     begin
-        casex ({state, wRready, wWready})
-            'b00_00     : {state, rRready, rWready}  <= {2'b00, 1'b0, 1'b0};
-            'b00_01     : {state, rRready, rWready}  <= {2'b01, 1'b0, qWemp};
-            'b00_10     : {state, rRready, rWready}  <= {qRemp, 1'b0};
-            'b00_11     : {state, rRready, rWready}  <= {2'b11, 1'b0, 1'b1};
-
-            'b01_00     : {state, rRready, rWready}  <= {2'b00, 1'b0, 1'b0};
-            'b01_01     : {state, rRready, rWready}  <= {2'b01, 1'b0, 1'b0};
-            'b01_10     : {state, rRready, rWready}  <= {2'b10, 1'b1, 1'b0};
-            'b01_11     : {state, rRready, rWready}  <= {2'b11, 1'b1, 1'b0};
-
-            'b10_00     : {state, rRready, rWready}  <= {2'b00, 1'b0, 1'b0};
-            'b10_01     : {state, rRready, rWready}  <= {2'b01, 1'b0, 1'b1};
-            'b10_10     : {state, rRready, rWready}  <= {2'b10, 1'b0, 1'b0};
-            'b10_11     : {state, rRready, rWready}  <= {2'b11, 1'b0, 1'b1};
-
-            'b11_00     : {state, rRready, rWready}  <= {2'b00, 1'b0, 1'b0};
-            'b11_01     : {state, rRready, rWready}  <= {2'b01, 1'b0, 1'b1};
-            'b11_10     : {state, rRready, rWready}  <= {2'b10, 1'b1, 1'b0};
-            'b11_11     : {state, rRready, rWready}  <= {2'b11, 1'b0, 1'b0};
-
-            default     : {state, rRready, rWready}  <= {2'b00, 1'b0, 1'b0};
-        endcase
+        if (wRready & wRready)
+        begin
+            rWready <= 1'b0;
+            rRready <= qRemp;
+            rState  <= 1'b0;
+        end
+        else
+        begin
+            rWready <= 1'b0;
+            rRready <= 1'b0;
+            rState  <= 1;
+        end
     end
 end
 
 always @*
 begin
     qWemp <= (~oWEMP);
-    qRemp <= (~iWFLL) & (~oREMP);
+    // qRemp <= (~iWFLL) & (~oREMP);
+    qRemp <= (~iWFLL);
 end
 
 ////////////////////////////////////////////////////////////
@@ -177,6 +197,21 @@ begin
     if (wUiRST)     rDdrValid <= 2'b00;
     else            rDdrValid <= {oFifoRVD, oWVD};
 end
+
+
+////////////////////////////////////////////////////////////
+//----------------------------------------------------------
+// アドレスアクセスデバッグ用に MicroBlaze mcsを作成
+// Vitis上でデバッグ
+//----------------------------------------------------------
+// microblaze_mcs_0 MB (
+//     .Clk             (wUiCLK),
+//     .Reset           (wUiRST),
+//     .GPIO1_tri_i     ({oWVD, oWA[30:0]}),
+//     .GPIO1_tri_o     (),
+//     .GPIO2_tri_i     ({oFifoRVD, oRA[30:0]}),
+//     .GPIO2_tri_o     ()
+// );
 
 ////////////////////////////////////////////////////////////
 ddr3Controller #(

@@ -66,16 +66,63 @@ clk_wiz_1 DDR3_CLK (
     .clk_in1(iCLK)
 );
 
+
+////////////////////////////////////////////////////////////
+// MIG Hand Shake
+wire i_app_rd_data_valid;
+wire i_app_ready;
+wire i_app_wdf_ready;
+
+// mig signal 
+wire [pDramAddrWidth-1:0] o_app_addr;
+wire [pDramDataWidth-1:0] o_app_wdf_data;
+wire [pDramMaskWidth-1:0] o_app_wdf_mask;
+wire [pDramDataWidth-1:0] i_app_rd_data;
+wire [2:0] o_app_cmd;
+wire o_app_enable;
+wire o_app_wdf_wren;
+
+migController #(
+    .pDramAddrWidth(pDramAddrWidth),
+    .pDramDataWidth(pDramDataWidth),
+    .pDramMaskWidth(pDramMaskWidth)
+) MIG_CONTROLLER (
+    .iCLK                   (ui_clk),
+    .iRST                   (ui_clk_sync_rst),
+    .iWEnable               (iWEnable),
+    .iREnable               (iREnable),
+    .iAddr                  (iAddr),
+    .iWdData                (iWdData),
+    .iMask                  (iMask),
+    .oRdData                (oRdData),
+    .oRdDataValid           (oRdDataValid),
+    .oReady                 (oReady),
+    .oWdReady               (oWdReady),
+    .oInitCalibComplete     (),
+    .oAppAddr               (o_app_addr),
+    .oAppCmd                (o_app_cmd),
+    .oAppEnable             (o_app_enable),
+    .oAppWdfData            (o_app_wdf_data),
+    .oAppWdfWren            (o_app_wdf_wren),
+    .oAppWdfMask            (o_app_wdf_mask),
+    .iAppRdData             (i_app_rd_data),
+    .iAppRdDataValid        (i_app_rd_data_valid),
+    .iAppReady              (i_app_ready),
+    .iAppWdfReady           (i_app_wdf_ready),
+    .iInitCalibComplete     (wCal)
+);
+
+
 generate
     if (pDramDebug == "on")
         migDemo MIG_DEMO (
-            .iData      (iWdData),
-            .oData      (oRdData),                  .oCal       (wCal),
-            .iAppEN     (iWEnable | iREnable),      .iWE        (iWEnable),
-            .oWRDY      (oWdReady),                 .oRDV       (oRdDataValid),
-            .oRRDY      (oReady),
-            .iCLK       (o_DDR3_100mhz),            .iRST       (iRST & ~locked),
-            .oUiCLK     (ui_clk),                   .oUiRST     (ui_clk_sync_rst)
+            .iData      (o_app_wdf_data),
+            .oData      (i_app_rd_data),    .oCal       (wCal),
+            .iAppEN     (o_app_enable),     .iWE        (o_app_wdf_wren),
+            .oWRDY      (i_app_wdf_ready),  .oRDV       (i_app_rd_data_valid),
+            .oRRDY      (i_app_ready),
+            .iCLK       (o_DDR3_100mhz),    .iRST       (iRST & ~locked),
+            .oUiCLK     (ui_clk),           .oUiRST     (ui_clk_sync_rst)
         );
     else
         mig_7series_0 MIG (
@@ -94,21 +141,21 @@ generate
             .ddr3_dqs_p                     (ioDDR3_DQS_P),
             .ddr3_dm                        (oDDR3_DM),
             .ddr3_odt                       (oDDR3_ODT),
-            .init_calib_complete            (wCal),                 // output init_calib_complete High Out
+            .init_calib_complete            (wCal),          // output init_calib_complete High Out
 
             // Application interface ports
-            .app_addr                       (iAddr),                // input [28:0]		addr[28:3] / Bank[2:0]
-            .app_cmd                        (iREnable),             // input [2:0]		Write 000 / Read 001
-            .app_en                         (iWEnable | iREnable),  // input			ユーザー側がapp_cmd有効時にHighにする
-            .app_wdf_data                   (iWdData),              // input [127:0]	書き込みデータ 16bit x 8byte
-            .app_wdf_end                    (iWEnable),             // input			下記のwrite enable信号と同期させる
-            .app_wdf_wren                   (iWEnable),             // input			write enable
-            .app_wdf_rdy                    (oWdReady),             // output			データ書き込み可能時High
-            .app_wdf_mask                   (iMask),                // input [15:0]		各bitに1が立っていたら対応したbyteは書き込まれない
-            .app_rd_data                    (oRdData),              // output [127:0]	読み込みデータ 16bit x 8byte
+            .app_addr                       (o_app_addr),           // input [28:0]		addr[28:3] / Bank[2:0]
+            .app_cmd                        (o_app_cmd),            // input [2:0]		Write 000 / Read 001
+            .app_en                         (o_app_enable),         // input			ユーザー側がapp_cmd有効時にHighにする
+            .app_wdf_data                   (o_app_wdf_data),       // input [127:0]	書き込みデータ 16bit x 8byte
+            .app_wdf_end                    (o_app_wdf_wren),       // input			下記のwrite enable信号と同期させる
+            .app_wdf_wren                   (o_app_wdf_wren),       // input			write enable
+            .app_wdf_rdy                    (i_app_wdf_ready),      // output			データ書き込み可能時High
+            .app_wdf_mask                   (o_app_wdf_mask),       // input [15:0]		各bitに1が立っていたら対応したbyteは書き込まれない
+            .app_rd_data                    (i_app_rd_data),        // output [127:0]	読み込みデータ 16bit x 8byte
             .app_rd_data_end                (),                     // output			最後のデータ出力時High
-            .app_rd_data_valid              (oRdDataValid),         // output			読み込みデータ出力開始時High
-            .app_rdy                        (oReady),               // output			データ読み込み可能時High
+            .app_rd_data_valid              (i_app_rd_data_valid),  // output			読み込みデータ出力開始時High
+            .app_rdy                        (i_app_ready),          // output			データ読み込み可能時High
             .app_sr_req                     (1'b0),                 // input			
             .app_ref_req                    (1'b0),                 // input			
             .app_zq_req                     (1'b0),                 // input			
