@@ -89,7 +89,7 @@ localparam [lpStateSize-1:0]
 
 wire wRready, wWready;  // ddr side ready signal
 wire oWEMP,   oREMP;    // fifo empty signal
-wire oFifoRVD, oFifoWVD;
+wire oFRVD,   oFWVD;    // Fifo Read/Write Valid Data
 reg  rFROE,   rFWOE;    // Fifo Read/Write Output Enable
 reg  qRemp,   qWemp, qReady;
 reg  [lpStateSize-1:0] rState;
@@ -98,19 +98,19 @@ always @(posedge wUiCLK)
 begin
     if (wUiRST)
     begin
-        {rState, rFROE, rFWOE} <= 3'b000;
+        {rState, rFROE, rFWOE} <= {lpStateWcmd,  2'b00};
     end
     else
     begin
         case (rState)
             // lpStateWcmd  : {rState, rFROE, rFWOE} <= qReady   ? {lpStateWwait,  1'b0, qWemp} : {lpStateWcmd,  2'b00};
-            // lpStateWwait : {rState, rFROE, rFWOE} <= oFifoWVD ? {lpStateRcmd,   1'b0, 1'b0}  : {lpStateWwait, 2'b00};
+            // lpStateWwait : {rState, rFROE, rFWOE} <= oFWVD ? {lpStateRcmd,   1'b0, 1'b0}  : {lpStateWwait, 2'b00};
             // lpStateRcmd  : {rState, rFROE, rFWOE} <= wRready  ? {lpStateRwait, qRemp, 1'b0}  : {lpStateRcmd,  2'b00};
-            // lpStateRwait : {rState, rFROE, rFWOE} <= oFifoRVD ? {lpStateWcmd,   1'b0, 1'b0}  : {lpStateRwait, 2'b00};
-            lpStateWcmd  : {rState, rFROE, rFWOE} <= qWemp    ? {lpStateWwait,  1'b0, 1'b1} : {lpStateWcmd,  2'b00};
-            lpStateWwait : {rState, rFROE, rFWOE} <= oFifoWVD ? {lpStateRcmd,   1'b0, 1'b0} : {lpStateWwait, 2'b00};
-            lpStateRcmd  : {rState, rFROE, rFWOE} <= qRemp    ? {lpStateRwait,  1'b1, 1'b0} : {lpStateRcmd,  2'b00};
-            lpStateRwait : {rState, rFROE, rFWOE} <= oFifoRVD ? {lpStateWcmd,   1'b0, 1'b0} : {lpStateRwait, 2'b00};
+            // lpStateRwait : {rState, rFROE, rFWOE} <= oFRVD ? {lpStateWcmd,   1'b0, 1'b0}  : {lpStateRwait, 2'b00};
+            lpStateWcmd  : {rState, rFROE, rFWOE} <= qWemp ? {lpStateWwait,  2'b01} : {lpStateWcmd,  2'b00};
+            lpStateWwait : {rState, rFROE, rFWOE} <= oFWVD ? {lpStateRcmd,   2'b00} : {lpStateWwait, 2'b00};
+            lpStateRcmd  : {rState, rFROE, rFWOE} <= qRemp ? {lpStateRwait,  2'b10} : {lpStateRcmd,  2'b00};
+            lpStateRwait : {rState, rFROE, rFWOE} <= oFRVD ? {lpStateWcmd,   2'b00} : {lpStateRwait, 2'b00};
             default      : {rState, rFROE, rFWOE} <= {lpStateWcmd, 2'b00};
         endcase
     end
@@ -144,9 +144,9 @@ ddr3Fifo #(
 
     // output side
     .oWD            (oWD),          .oWA        (oWA),
-    .oWVD           (oFifoWVD),     .oWFLL      (oWFLL),
+    .oWVD           (oFWVD),        .oWFLL      (oWFLL),
     .oWEMP          (oWEMP),        .oREMP      (oREMP),
-    .oRA            (oRA),          .oRVD       (oFifoRVD),
+    .oRA            (oRA),          .oRVD       (oFRVD),
     .oRFLL          (oRFLL)
 );
 
@@ -161,13 +161,13 @@ reg rDdrWE, rDdrRE;
 always @(posedge wUiCLK)
 begin
     if (wUiRST)     {rData, rAddr} <= {32'd0, 32'd0};
-    else            {rData, rAddr} <= (oFifoWVD) ? {oWD, oWA} : {32'd0, oRA};
+    else            {rData, rAddr} <= (oFWVD) ? {oWD, oWA} : {32'd0, oRA};
 end
 
 always @(posedge wUiCLK)
 begin
     if (wUiRST)     {rDdrWE, rDdrRE} <= 2'b00;
-    else            {rDdrWE, rDdrRE} <= {oFifoWVD, oFifoRVD};
+    else            {rDdrWE, rDdrRE} <= {oFWVD, oFRVD};
 end
 
 
@@ -179,9 +179,9 @@ end
 // microblaze_mcs_0 MB (
 //     .Clk             (wUiCLK),
 //     .Reset           (wUiRST),
-//     .GPIO1_tri_i     ({oFifoWVD, oWA[30:0]}),
+//     .GPIO1_tri_i     ({oFWVD, oWA[30:0]}),
 //     .GPIO1_tri_o     (),
-//     .GPIO2_tri_i     ({oFifoRVD, oRA[30:0]}),
+//     .GPIO2_tri_i     ({oFRVD, oRA[30:0]}),
 //     .GPIO2_tri_o     ()
 // );
 
