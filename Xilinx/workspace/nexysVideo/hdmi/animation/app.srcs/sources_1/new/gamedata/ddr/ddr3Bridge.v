@@ -80,80 +80,48 @@ assign oUiCLK = wUiCLK;
 // read / write 切り替えステートマシン
 // この検証でwrite readの速度が間に合わなければ、128bit対応にする
 //----------------------------------------------------------
-wire wRready, wWready;
-wire oWEMP,   oREMP;
-reg  rRready, rWready, qRemp, qWemp;
-reg [2:0] rState;
+localparam lpStateSize = 3;
+localparam [lpStateSize-1:0] 
+    lpStateWcmd  = 0,
+    lpStateWwait = 1,
+    lpStateRcmd  = 2,
+    lpStateRwait = 3;
 
-// always @(posedge wUiCLK)
-// begin
-//     if (wUiRST)
-//     begin
-//         rState    <= 0;
-//         rRready <= 1'b0;
-//         rWready <= 1'b0;
-//     end
-//     else if (rState == 2)
-//     begin
-//         case ({wRready, wWready})
-//             'b00    : {rRready, rWready}  <= 2'b00;
-//             'b01    : {rRready, rWready}  <= {1'b0, 1'b1};
-//             'b10    : {rRready, rWready}  <= {qRemp, 1'b0};
-//             'b11    : {rRready, rWready}  <= {1'b0, 1'b1};
-//             default : {rRready, rWready}  <= 2'b00;
-//         endcase
-//         rState <= 0;
-//     end else begin
-//         rState <= rState + 1'b1;
-//         rRready <= 1'b0;
-//         rWready <= 1'b0;
-//     end
-// end
+wire wRready, wWready;  // ddr side ready signal
+wire oWEMP,   oREMP;    // fifo empty signal
+wire oFifoRVD, oFifoWVD;
+reg  rFROE,   rFWOE;    // Fifo Read/Write Output Enable
+reg  qRemp,   qWemp, qReady;
+reg  [lpStateSize-1:0] rState;
+
 always @(posedge wUiCLK)
 begin
     if (wUiRST)
     begin
-        rWready <= 1'b0;
-        rRready <= 1'b0;
-        rState  <= 0;
+        {rState, rFROE, rFWOE} <= 3'b000;
     end
-    else if (rState == 0)
-    begin
-        if (wWready & wRready)
-        begin
-            rWready <= 1'b1;
-            rRready <= 1'b0;
-            rState  <= 1'b1;
-        end
-        else
-        begin
-            rWready <= 1'b0;
-            rRready <= 1'b0;
-            rState  <= 0;
-        end
-    end 
     else
     begin
-        if (wRready & wRready)
-        begin
-            rWready <= 1'b0;
-            rRready <= qRemp;
-            rState  <= 1'b0;
-        end
-        else
-        begin
-            rWready <= 1'b0;
-            rRready <= 1'b0;
-            rState  <= 1;
-        end
+        case (rState)
+            // lpStateWcmd  : {rState, rFROE, rFWOE} <= qReady   ? {lpStateWwait,  1'b0, qWemp} : {lpStateWcmd,  2'b00};
+            // lpStateWwait : {rState, rFROE, rFWOE} <= oFifoWVD ? {lpStateRcmd,   1'b0, 1'b0}  : {lpStateWwait, 2'b00};
+            // lpStateRcmd  : {rState, rFROE, rFWOE} <= wRready  ? {lpStateRwait, qRemp, 1'b0}  : {lpStateRcmd,  2'b00};
+            // lpStateRwait : {rState, rFROE, rFWOE} <= oFifoRVD ? {lpStateWcmd,   1'b0, 1'b0}  : {lpStateRwait, 2'b00};
+            lpStateWcmd  : {rState, rFROE, rFWOE} <= qWemp    ? {lpStateWwait,  1'b0, 1'b1} : {lpStateWcmd,  2'b00};
+            lpStateWwait : {rState, rFROE, rFWOE} <= oFifoWVD ? {lpStateRcmd,   1'b0, 1'b0} : {lpStateWwait, 2'b00};
+            lpStateRcmd  : {rState, rFROE, rFWOE} <= qRemp    ? {lpStateRwait,  1'b1, 1'b0} : {lpStateRcmd,  2'b00};
+            lpStateRwait : {rState, rFROE, rFWOE} <= oFifoRVD ? {lpStateWcmd,   1'b0, 1'b0} : {lpStateRwait, 2'b00};
+            default      : {rState, rFROE, rFWOE} <= {lpStateWcmd, 2'b00};
+        endcase
     end
 end
 
 always @*
 begin
-    qWemp <= (~oWEMP);
+    qReady <= wWready & wRready;
+    qWemp  <= (~oWEMP);
     // qRemp <= (~iWFLL) & (~oREMP);
-    qRemp <= (~iWFLL);
+    qRemp  <= (~iWFLL);
 end
 
 ////////////////////////////////////////////////////////////
@@ -161,7 +129,6 @@ end
 // 上位モジュールからの、書き込みデータと読み込みアドレスを保存するFIFO
 //----------------------------------------------------------
 wire oRFLL, oWFLL;                  assign {oRready, oWready} = {~oRFLL, ~oWFLL};
-wire oFifoRVD, oWVD;
 wire [pBitWidth-1:0] oRA, oWD, oWA;
 
 ddr3Fifo #(
@@ -171,13 +138,13 @@ ddr3Fifo #(
     // input side
     .iCLK           (wUiCLK),       .iRST       (wUiRST),
     .iWD            (iWD),          .iWA        (iWA),
-    .iWDE           (iWvalid),      .iWRE       (rWready),
+    .iWDE           (iWvalid),      .iWRE       (rFWOE),
     .iRA            (iRA),          .iRDE       (iRvalid),
-    .iRRE           (rRready),
+    .iRRE           (rFROE),
 
     // output side
     .oWD            (oWD),          .oWA        (oWA),
-    .oWVD           (oWVD),         .oWFLL      (oWFLL),
+    .oWVD           (oFifoWVD),     .oWFLL      (oWFLL),
     .oWEMP          (oWEMP),        .oREMP      (oREMP),
     .oRA            (oRA),          .oRVD       (oFifoRVD),
     .oRFLL          (oRFLL)
@@ -186,8 +153,7 @@ ddr3Fifo #(
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
-// FIFO から書き込みと読み込みアドレスデータが交互に送信される
-// そのため 出力制御信号のvalidで判定を行い、DDR3の送信データを変更する
+// 出力制御信号のvalidで判定を行い、DDR3の送信データを変更する
 //----------------------------------------------------------
 reg [pBitWidth-1:0] rData, rAddr;
 reg rDdrWE, rDdrRE;
@@ -195,13 +161,13 @@ reg rDdrWE, rDdrRE;
 always @(posedge wUiCLK)
 begin
     if (wUiRST)     {rData, rAddr} <= {32'd0, 32'd0};
-    else            {rData, rAddr} <= (oFifoRVD) ? {32'd0, oRA} : {oWD, oWA};
+    else            {rData, rAddr} <= (oFifoWVD) ? {oWD, oWA} : {32'd0, oRA};
 end
 
 always @(posedge wUiCLK)
 begin
     if (wUiRST)     {rDdrWE, rDdrRE} <= 2'b00;
-    else            {rDdrWE, rDdrRE} <= {oWVD, oFifoRVD};
+    else            {rDdrWE, rDdrRE} <= {oFifoWVD, oFifoRVD};
 end
 
 
@@ -213,7 +179,7 @@ end
 // microblaze_mcs_0 MB (
 //     .Clk             (wUiCLK),
 //     .Reset           (wUiRST),
-//     .GPIO1_tri_i     ({oWVD, oWA[30:0]}),
+//     .GPIO1_tri_i     ({oFifoWVD, oWA[30:0]}),
 //     .GPIO1_tri_o     (),
 //     .GPIO2_tri_i     ({oFifoRVD, oRA[30:0]}),
 //     .GPIO2_tri_o     ()
@@ -228,9 +194,9 @@ wire wMig200MHz, wMig100MHz, locked;
 wire wMigRST = iRST & (~locked);
 
 clk_wiz_1 DDR3_CLK (
-    .clk_out1(wMig200MHz),   .clk_out2(wMig100MHz),
-    .reset(iRST),               .locked(locked),
-    .clk_in1(iCLK)
+    .clk_out1   (wMig200MHz),   .clk_out2   (wMig100MHz),
+    .reset      (iRST),         .locked     (locked),
+    .clk_in1    (iCLK)
 );
 
 //---------------------------------------------------------------------------
@@ -260,32 +226,31 @@ generate
             .init_calib_complete    (wCal),
 
             // Application interface ports
-            .app_addr                       (rAddr[28:0]),          // input [28:0]		addr[28:3] / Bank[2:0]
-            .app_cmd                        (rDdrRE),               // input [2:0]		Write 000 / Read 001
-            .app_en                         (rDdrRE | rDdrWE),      // input			ユーザー側がapp_cmd有効時にHighにする
-            .app_wdf_data                   ({96'd0, rData}),       // input [127:0]	書き込みデータ 16bit x 8byte
-            .app_wdf_end                    (rDdrWE),               // input			下記のwrite enable信号と同期させる
-            .app_wdf_wren                   (rDdrWE),               // input			write enable
-            .app_wdf_rdy                    (wWready),              // output			データ書き込み可能時High
-            .app_wdf_mask                   (iMask),                // input [15:0]		各bitに1が立っていたら対応したbyteは書き込まれない
-            .app_rd_data                    (oRD),                  // output [127:0]	読み込みデータ 16bit x 8byte
-            .app_rd_data_end                (),                     // output			最後のデータ出力時High
-            .app_rd_data_valid              (oRVD),                 // output			読み込みデータ出力開始時High
-            .app_rdy                        (wRready),              // output			データ読み込み可能時High
-            .app_sr_req                     (1'b0),                 // input			
-            .app_ref_req                    (1'b0),                 // input			
-            .app_zq_req                     (1'b0),                 // input			
-            .app_sr_active                  (),                     // output			
-            .app_ref_ack                    (),                     // output			
-            .app_zq_ack                     (),                     // output			
-            .ui_clk                         (ui_clk),               // output			MIGと同期のユーザーインターフェースCLK
-            .ui_clk_sync_rst                (ui_clk_sync_rst),      // output			ユーザーインターフェースリセット信号
-            .device_temp                    (),
-            .sys_clk_i                      (wMig100MHz),
-            .clk_ref_i                      (wMig200MHz),
-            .sys_rst                        (wMigRST)               // input sys_rst
+            .app_addr               (rAddr[28:0]),          // input [28:0]		addr[28:3] / Bank[2:0]
+            .app_cmd                (rDdrRE),               // input [2:0]		Write 000 / Read 001
+            .app_en                 (rDdrRE | rDdrWE),      // input			ユーザー側がapp_cmd有効時にHighにする
+            .app_wdf_data           ({96'd0, rData}),       // input [127:0]	書き込みデータ 16bit x 8byte
+            .app_wdf_end            (rDdrWE),               // input			下記のwrite enable信号と同期させる
+            .app_wdf_wren           (rDdrWE),               // input			write enable
+            .app_wdf_rdy            (wWready),              // output			データ書き込み可能時High
+            .app_wdf_mask           (iMask),                // input [15:0]		各bitに1が立っていたら対応したbyteは書き込まれない
+            .app_rd_data            (oRD),                  // output [127:0]	読み込みデータ 16bit x 8byte
+            .app_rd_data_end        (),                     // output			最後のデータ出力時High
+            .app_rd_data_valid      (oRVD),                 // output			読み込みデータ出力開始時High
+            .app_rdy                (wRready),              // output			DDR 動作可能時High
+            .app_sr_req             (1'b0),                 // input			
+            .app_ref_req            (1'b0),                 // input			
+            .app_zq_req             (1'b0),                 // input			
+            .app_sr_active          (),                     // output			
+            .app_ref_ack            (),                     // output			
+            .app_zq_ack             (),                     // output			
+            .ui_clk                 (ui_clk),               // output			MIGと同期のユーザーインターフェースCLK
+            .ui_clk_sync_rst        (ui_clk_sync_rst),      // output			ユーザーインターフェースリセット信号
+            .device_temp            (),
+            .sys_clk_i              (wMig100MHz),
+            .clk_ref_i              (wMig200MHz),
+            .sys_rst                (wMigRST)               // input sys_rst
         );
 endgenerate
-
 
 endmodule
