@@ -120,8 +120,8 @@ always @*
 begin
     qReady <= wWready & wRready;
     qWemp  <= (~oWEMP);
-    // qRemp <= (~iWFLL) & (~oREMP);
-    qRemp  <= (~iWFLL);
+    qRemp <= (~iWFLL) & (~oREMP);
+    // qRemp  <= (~iWFLL);
 end
 
 ////////////////////////////////////////////////////////////
