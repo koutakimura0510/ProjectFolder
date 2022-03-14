@@ -11,7 +11,7 @@
 // 処理の流れが分かりにくいため、全体をパイプライン処理に更新
 // RE Active時 3CLK後に RVD Assert データが出力される
 // 
-// 2022/03/14
+// 2022/03/13
 // 非同期FIFO対応のため全体構成見直し、メタ・ステーブル対策を行うようにした
 //
 // -
@@ -153,7 +153,7 @@ end
 always @(posedge iCLKA)
 begin
     if (iRST)       {wRGf2, wRGf1} <= {lpAddrNull, lpAddrNull};
-    else            {wRGf2, wRGf1} <= {wRGf1, rWG};
+    else            {wRGf2, wRGf1} <= {wRGf1, rRG};
 end
 
 //----------------------------------------------------------
