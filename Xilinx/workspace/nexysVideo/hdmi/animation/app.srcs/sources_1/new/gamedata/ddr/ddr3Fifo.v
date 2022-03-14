@@ -9,23 +9,23 @@
 //----------------------------------------------------------
 module ddr3Fifo #(
     parameter pBuffDepth     = 16,          // bram length
-    parameter pBitDepth      = 32           // data bit
+    parameter pBitWidth      = 32           // data bit
 )(
     input                       iCLK,           // system clk
     input                       iRST,           // reset High
-    input  [pBitDepth-1:0]      iWD,            // WriteData
-    input  [pBitDepth-1:0]      iWA,            // Write Addr [28]:0固定 / [27-25]:Bank / [24-10]:Row / [9-3]:Col / [2:0]:0固定
+    input  [pBitWidth-1:0]      iWD,            // WriteData
+    input  [pBitWidth-1:0]      iWA,            // Write Addr [28]:0固定 / [27-25]:Bank / [24-10]:Row / [9-3]:Col / [2:0]:0固定
     input                       iWDE,           // write data enable信号
     input                       iWRE,           // write fifo read enable
-    input  [pBitDepth-1:0]      iRA,            // Read Addr [28]:0固定 / [27-25]:Bank / [24-10]:Row / [9-3]:Col / [2:0]:0固定
+    input  [pBitWidth-1:0]      iRA,            // Read Addr [28]:0固定 / [27-25]:Bank / [24-10]:Row / [9-3]:Col / [2:0]:0固定
     input                       iRDE,
     input                       iRRE,
-    output [pBitDepth-1:0]      oWD,
-    output [pBitDepth-1:0]      oWA,
+    output [pBitWidth-1:0]      oWD,
+    output [pBitWidth-1:0]      oWA,
     output                      oWVD,           // write Valid data
     output                      oWFLL,          // write side fifo full
     output                      oWEMP,
-    output [pBitDepth-1:0]      oRA,            // read address
+    output [pBitWidth-1:0]      oRA,            // read address
     output                      oRVD,           // read Valid data
     output                      oRFLL,          // read side fifo full
     output                      oREMP
@@ -38,7 +38,7 @@ module ddr3Fifo #(
 //----------------------------------------------------------
 fifoController #(
     .pBuffDepth     (pBuffDepth),
-    .pBitWidth      (pBitDepth)
+    .pBitWidth      (pBitWidth)
 ) DDR3_WD_FIFO (
     .iCLK           (iCLK),     .iRST           (iRST),
     .iWD            (iWD),      .iWE            (iWDE),
@@ -49,7 +49,7 @@ fifoController #(
 
 fifoController #(
     .pBuffDepth     (pBuffDepth),
-    .pBitWidth      (pBitDepth)
+    .pBitWidth      (pBitWidth)
 ) DDR3_WA_FIFO (
     .iCLK           (iCLK),     .iRST           (iRST),
     .iWD            (iWA),      .iWE            (iWDE),
@@ -64,7 +64,7 @@ fifoController #(
 //----------------------------------------------------------
 fifoController #(
     .pBuffDepth     (pBuffDepth),
-    .pBitWidth      (pBitDepth)
+    .pBitWidth      (pBitWidth)
 ) DDR3_RA_FIFO (
     .iCLK           (iCLK),     .iRST           (iRST),
     .iWD            (iRA),      .iWE            (iRDE),

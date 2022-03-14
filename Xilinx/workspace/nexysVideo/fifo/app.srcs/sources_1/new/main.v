@@ -65,31 +65,9 @@ fifoController #(
 always @(posedge oCLKA)
 begin
     if (rst)        iWD <= 0;
-    else if (!qWE1)  iWD <= iWD;
+    else if (!qWE1) iWD <= iWD;
     else            iWD <= (iWD + 1'b1) & 255;
 end
-
-////////////////////////////////////////////////////////////
-//----------------------------------------------------------
-// 2-stage
-//----------------------------------------------------------
-wire [pWidth-1:0] oRD2;
-wire oRVD2, oEMP2, oFLL2;
-reg qRE2;
-
-// single port ram
-fifoController #(
-    .pBuffDepth (8),
-    .pBitWidth  (pWidth)
-) FIFO_STAGE_2 (
-    // write side       read side
-    .iCLK   (oCLKA),    .iRST   (rst),
-    .iWD    (oRD1),     .oRD    (oRD2),
-    .iWE    (oRVD1),    .iRE    (qRE2),
-                        .oRVD   (oRVD2),
-    .oFLL   (oFLL2),    .oEMP   (oEMP2)
-);
-
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
@@ -106,8 +84,8 @@ fifoDualController #(
     // write side       read side
     .iCLKA  (oCLKA),    .iCLKB  (oCLKB),
                         .iRST   (rst),
-    .iWD    (oRD2),     .oRD    (oDRD),
-    .iWE    (oRVD2),    .iRE    (qDRE),
+    .iWD    (oRD1),     .oRD    (oDRD),
+    .iWE    (oRVD1),    .iRE    (qDRE),
                         .oRVD   (oDRVD),
     .oFLL   (oDFLL),    .oEMP   (oDEMP)
 );
@@ -115,8 +93,7 @@ fifoDualController #(
 always @*
 begin
     qWE1     <= (~oFLL1);
-    qRE1     <= (~oFLL2) & (~oEMP1);
-    qRE2     <= (~oDFLL) & (~oEMP2);
+    qRE1     <= (~oDFLL) & (~oEMP1);
     qDRE     <= (~oDEMP);
 end
 

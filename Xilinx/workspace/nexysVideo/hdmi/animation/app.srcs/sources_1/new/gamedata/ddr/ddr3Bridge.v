@@ -103,14 +103,14 @@ begin
     else
     begin
         case (rState)
-            // lpStateWcmd  : {rState, rFROE, rFWOE} <= qReady   ? {lpStateWwait,  1'b0, qWemp} : {lpStateWcmd,  2'b00};
-            // lpStateWwait : {rState, rFROE, rFWOE} <= oFWVD ? {lpStateRcmd,   1'b0, 1'b0}  : {lpStateWwait, 2'b00};
-            // lpStateRcmd  : {rState, rFROE, rFWOE} <= wRready  ? {lpStateRwait, qRemp, 1'b0}  : {lpStateRcmd,  2'b00};
-            // lpStateRwait : {rState, rFROE, rFWOE} <= oFRVD ? {lpStateWcmd,   1'b0, 1'b0}  : {lpStateRwait, 2'b00};
-            lpStateWcmd  : {rState, rFROE, rFWOE} <= qWemp ? {lpStateWwait,  2'b01} : {lpStateWcmd,  2'b00};
-            lpStateWwait : {rState, rFROE, rFWOE} <= oFWVD ? {lpStateRcmd,   2'b00} : {lpStateWwait, 2'b00};
-            lpStateRcmd  : {rState, rFROE, rFWOE} <= qRemp ? {lpStateRwait,  2'b10} : {lpStateRcmd,  2'b00};
-            lpStateRwait : {rState, rFROE, rFWOE} <= oFRVD ? {lpStateWcmd,   2'b00} : {lpStateRwait, 2'b00};
+            lpStateWcmd  : {rState, rFROE, rFWOE} <= qReady   ? {lpStateWwait,  1'b0, 1'b1} : {lpStateWcmd,  2'b00};
+            lpStateWwait : {rState, rFROE, rFWOE} <= oFWVD ? {lpStateRcmd,   1'b0, 1'b0}  : {lpStateWwait, 2'b00};
+            lpStateRcmd  : {rState, rFROE, rFWOE} <= wRready  ? {lpStateRwait, qRemp, 1'b0}  : {lpStateRcmd,  2'b00};
+            lpStateRwait : {rState, rFROE, rFWOE} <= oFRVD ? {lpStateWcmd,   1'b0, 1'b0}  : {lpStateRwait, 2'b00};
+            // lpStateWcmd  : {rState, rFROE, rFWOE} <= qWemp ? {lpStateWwait,  2'b01} : {lpStateWcmd,  2'b00};
+            // lpStateWwait : {rState, rFROE, rFWOE} <= oFWVD ? {lpStateRcmd,   2'b00} : {lpStateWwait, 2'b00};
+            // lpStateRcmd  : {rState, rFROE, rFWOE} <= qRemp ? {lpStateRwait,  2'b10} : {lpStateRcmd,  2'b00};
+            // lpStateRwait : {rState, rFROE, rFWOE} <= oFRVD ? {lpStateWcmd,   2'b00} : {lpStateRwait, 2'b00};
             default      : {rState, rFROE, rFWOE} <= {lpStateWcmd, 2'b00};
         endcase
     end
