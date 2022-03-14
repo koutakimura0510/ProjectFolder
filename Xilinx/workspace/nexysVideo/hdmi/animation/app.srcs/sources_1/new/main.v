@@ -116,7 +116,7 @@ wire [23:0] oVRGB;
 gameDataTop # (
     .pHDisplay      (H_DISPLAY),    .pVDisplay      (V_DISPLAY),
     .pDramAddrWidth (29),           .pBuffDepth     (pBuffDepth),
-    .pDramDataWidth (128),          .pBitDepth      (32),
+    .pDramDataWidth (128),          .pBitWidth      (32),
     .pDramMaskWidth (16),           .pDramDebug     (pDramDebug)
 ) GAME_DATA_TOP (
     .iDispCLK       (o_clk_25),

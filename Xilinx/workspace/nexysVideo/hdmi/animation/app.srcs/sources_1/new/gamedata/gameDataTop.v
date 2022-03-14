@@ -21,7 +21,7 @@ module gameDataTop # (
     parameter pDramDataWidth = 128,
     parameter pDramMaskWidth = 16,
     parameter pBuffDepth     = 16,          // bram length
-    parameter pBitDepth      = 32,          // data bit
+    parameter pBitWidth      = 32,          // data bit
     parameter pDramDebug     = "off"
 )(
     input           iDispCLK,   // ディスプレイ描画clk vgaの場合25MHz
@@ -96,14 +96,14 @@ frameStateRW #(
 // 読み込みフレームバッファのアドレス生成
 //----------------------------------------------------------
 // ddr side
-wire [pBitDepth-1:0] wDdrRA;
+wire [pBitWidth-1:0] wDdrRA;
 wire wDdrRready;
 reg  qDdrRvalid;
 
 frameBufferRead #(
     .pHDisplay          (pHDisplay),
     .pVDisplay          (pVDisplay),
-    .pAddrWidth         (pBitDepth),
+    .pAddrWidth         (pBitWidth),
     .pBitLengthState    (2)
 ) FRAME_BUFFER_READ (
     .iCLK       (oUiCLK),       .iRST       (oUiRST),
@@ -123,15 +123,15 @@ end
 // TODO 1フレーム領域書き込んだらenabe信号を出す
 //----------------------------------------------------------
 wire wWready;
-wire [pBitDepth-1:0] wPixelWD; // pixel data
-wire [pBitDepth-1:0] wPixelWA; // write addr
+wire [pBitWidth-1:0] wPixelWD; // pixel data
+wire [pBitWidth-1:0] wPixelWA; // write addr
 reg  qPixelvalid;              // write enable
 
 pixelTop #(
     .pHDisplay              (pHDisplay),
     .pVDisplay              (pVDisplay),
-    .pAddrWidth             (pBitDepth),
-    .pBitWidth              (pBitDepth),
+    .pAddrWidth             (pBitWidth),
+    .pBitWidth              (pBitWidth),
     .pBitLengthState        (2)
 ) PIXEL_TOP (
     .iSW    (iSW),
@@ -155,11 +155,11 @@ end
 // 画素データ出力とタイミングを合わせるため、iFVDEを使用し、iVDEがONになるより早くデータを出力する
 //----------------------------------------------------------
 // top module side
-reg  [pBitDepth-1:0] rPixel;       assign oVRGB = rPixel;     // alpha値は必要でないので送信しない
-wire [pBitDepth-1:0] wVRGB;
+reg  [pBitWidth-1:0] rPixel;       assign oVRGB = rPixel;     // alpha値は必要でないので送信しない
+wire [pBitWidth-1:0] wVRGB;
 
 //ddr side
-wire [pBitDepth-1:0] wDdrRD;
+wire [pBitWidth-1:0] wDdrRD;
 wire wDdrRVD, wDualFll;
 
 // fifo side
@@ -186,7 +186,7 @@ end
 
 fifoDualController #(
     .pBuffDepth (pBuffDepth),
-    .pBitWidth  (pBitDepth)
+    .pBitWidth  (pBitWidth)
 ) PIXEL_FIFO_DUAL_CONTROLLER (
     // write side           read side
     .iCLKA  (oUiCLK),       .iCLKB  (iDispCLK),
@@ -209,7 +209,7 @@ end
 ddr3Bridge #(
     // ddr parameter                    Bram fifo parameter
     .pDramAddrWidth (pDramAddrWidth),   .pBuffDepth     (pBuffDepth),
-    .pDramDataWidth (pDramDataWidth),   .pBitDepth      (pBitDepth),
+    .pDramDataWidth (pDramDataWidth),   .pBitWidth      (pBitWidth),
     .pDramMaskWidth (pDramMaskWidth),   .pDramDebug     (pDramDebug)
 ) DDR3_BRIDGE (
     // DDR port                             

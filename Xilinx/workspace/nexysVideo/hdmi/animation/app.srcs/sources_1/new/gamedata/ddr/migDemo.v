@@ -13,9 +13,9 @@ module migDemo (
     output          oCal,
     input           iAppEN,
     input           iWE,        // write enable
-    output          oWRDY,      // write ready
-    output          oRDV,       // read data valid
-    output          oRRDY,      // read ready
+    output          oWready,      // write ready
+    output          oRVD,       // read data valid
+    output          oRready,      // read ready
     input           iCLK,
     input           iRST,
     output          oUiCLK,
@@ -33,7 +33,7 @@ assign oCal   = ~iRST;
 reg [  2:0] rWA, rRA;
 reg [127:0] rID [0:7];
 reg [127:0] rOD;                        assign oData = rOD;
-reg rWrdy, rRrdy, rRdv;                 assign {oWRDY, oRRDY, oRDV} = {rWrdy, rRrdy, rRdv};
+reg rWrdy, rRrdy, rRdv;                 assign {oWready, oRready, oRVD} = {rWrdy, rRrdy, rRdv};
 
 always @(posedge iCLK)
 begin
