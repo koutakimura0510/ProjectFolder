@@ -73,7 +73,7 @@ reg qWE, qRE;
 always @(posedge iCLKA)
 begin
     if (iRST)       rWA <= 0;
-    else if (rWE)   rWA <= rWA + 1'b1;
+    else if (qWE)   rWA <= rWA + 1'b1;
     else            rWA <= rWA;
 end
 
@@ -134,7 +134,7 @@ end
 always @(posedge iCLKB)
 begin
     if (iRST)       rRA <= 0;
-    else if (rRE)   rRA <= rRA + 1'b1;
+    else if (qRE)   rRA <= rRA + 1'b1;
     else            rRA <= rRA;
 end
 
