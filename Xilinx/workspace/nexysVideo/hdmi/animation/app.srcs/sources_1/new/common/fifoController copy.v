@@ -49,7 +49,7 @@ localparam pAddrMax    = pBuffDepth - 1;
 // oRVD Empty状態ではなく読み込みEnable信号を受信した場合High
 //----------------------------------------------------------
 reg qFLL, qEMP, qRVD;    assign {oFLL, oEMP, oRVD} = {qFLL, qEMP, qRVD};
-reg [pAddrWidth-1:0] rWA, rRA, rORP;
+reg [pAddrWidth-1:0] rWA, rWAn, rRA, rORP;
 reg qWE, qRE;
 
 
@@ -84,12 +84,12 @@ end
 //---------------------------------------------------------------------------
 always @*
 begin
-    qWaddr1 <= rWA + 1'b1;
-    qFLL    <= (qWaddr1 == rRA) ? 1'b1 : 1'b0;
-    qEMP    <= (rWA == rRA) ? 1'b1 : 1'b0;
-    qRVD    <= (rRA != rORP);
-    qWE     <= iWE & (~qFLL);
-    qRE     <= iRE & (~qEMP);
+    rWAn <= rWA + 1'b1;
+    qFLL <= (rWAn == rRA) ? 1'b1 : 1'b0;
+    qEMP <= (rWA == rRA) ? 1'b1 : 1'b0;
+    qRVD <= (rRA != rORP);
+    qWE  <= iWE & (~qFLL);
+    qRE  <= iRE & (~qEMP);
 end
 
 ////////////////////////////////////////////////////////////

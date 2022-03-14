@@ -11,7 +11,15 @@
 // 処理の流れが分かりにくいため、全体をパイプライン処理に更新
 // RE Active時 3CLK後に RVD Assert データが出力される
 // 
-// TODO Enableから出力まで遅延が発生するため、moduleのパラメータで、入力データの遅延数などを指定しなければならない
+// 2022/03/14
+// 非同期FIFO対応のため全体構成見直し、メタ・ステーブル対策を行うようにした
+//
+// -
+// 参考文献
+// 非同期FIFO Verilog ->    https://zenn.dev/sk6labo/articles/fd2bb32f6e570e
+// 非同期FIFO 概念 ->       http://altmo.html.xdomain.jp/src_01/2017_0110/00.html
+// グレイコード ->          http://www5.nkansai.ne.jp/users/khateen/gray-code.html
+// 
 //----------------------------------------------------------
 module fifoDualController #(
     parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
@@ -33,8 +41,12 @@ module fifoDualController #(
 // buffer sizeによってアドレスレジスタのサイズを自動変換するため、
 // bit幅を取得し指定する
 //----------------------------------------------------------
-localparam pAddrWidth  = fBitWidth(pBuffDepth);
-localparam pAddrMax    = pBuffDepth - 1;
+localparam lpAddrWidth   = fBitWidth(pBuffDepth);
+localparam lpAddrMsb     = lpAddrWidth - 1;
+localparam lpAddrMsbNext = lpAddrWidth - 2;
+localparam pAddrMax      = pBuffDepth  - 1;
+
+localparam [lpAddrWidth-1:0] lpAddrNull = 0;
 
 
 ////////////////////////////////////////////////////////////
@@ -46,108 +58,157 @@ localparam pAddrMax    = pBuffDepth - 1;
 // oEMP 書き込みと読み込みのアドレスが一致している、または超えそうな場合High
 // oRVD Empty状態ではなく読み込みEnable信号を受信した場合High
 //----------------------------------------------------------
-reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {rFLL, rEMP, rRVD};
-reg qFLL, qEMP, qRVD;
-reg [pAddrWidth-1:0] qWAb, qWAb2;
-reg [pAddrWidth-1:0] qRAb [3:0];
-reg [pAddrWidth-1:0] rWA, rRA, rORP;
-reg rWE, rRE;
-reg qWE, qRE, qRst;
+reg qFLL, qEMP, qRVD;    assign {oFLL, oEMP, oRVD} = {qFLL, qEMP, qRVD};
+reg [lpAddrWidth-1:0] rWA, rWG, rWB, wWGf1, wWGf2, qWAn;
+reg [lpAddrWidth-1:0] rRA, rRG, rRB, wRGf1, wRGf2, rORP;
+reg qWE, qRE;
+
 
 ////////////////////////////////////////////////////////////
-// write pointer
+//----------------------------------------------------------
+// write addr 更新
+// 非同期で動作するため、一度グレイコードに変換したものを別CLKでバイナリに復元する必要がある
+// そのためグレイコード変換後、別クロックでメタ・ステーブル対策として2段FFで受信しバイナリに変換を行う
+//----------------------------------------------------------
 always @(posedge iCLKA)
 begin
-    if (qRst)       rWA <= 0;
-    else if (!rWE)  rWA <= rWA;
-    else            rWA <= rWA + 1'b1;
+    if (iRST)       rWA <= 0;
+    else if (rWE)   rWA <= rWA + 1'b1;
+    else            rWA <= rWA;
 end
 
-// read pointer
-always @(posedge iCLKB)
-begin
-    if (qRst)      rRA <= 0;
-    else if (!rRE) rRA <= rRA;
-    else           rRA <= rRA + 1'b1;
-end
-
-// 前回のrpが更新されていたら新規データを出力できる状態と判断する
-always @(posedge iCLKB)
-begin
-    if (qRst)   rORP <= 0;
-    else        rORP <= rRA;
-end
-
-////////////////////////////////////////////////////////////
-// Hnad Shake信号、タイミング結合のためDFFに一度通す
+//----------------------------------------------------------
+// Address -> Gray Code
+//----------------------------------------------------------
 always @(posedge iCLKA)
 begin
-    if (qRst)       {rFLL, rEMP} <= {1'b1, 1'b1};
-    else            {rFLL, rEMP} <= {qFLL, qEMP};
+    if (iRST)       rWG <= 0;
+    else            rWG <= {rWA[lpAddrMsb], rWA[lpAddrMsbNext:0] ^ rWA[lpAddrMsb:1]};
 end
 
+//----------------------------------------------------------
+// meta stable
+//----------------------------------------------------------
 always @(posedge iCLKB)
 begin
-    if (qRst)       {rRVD, rRE} <= 2'b00;
-    else            {rRVD, rRE} <= {qRVD, qRE};
+    if (iRST)       {wWGf2, wWGf1} <= {lpAddrNull, lpAddrNull};
+    else            {wWGf2, wWGf1} <= {wWGf1, rWG};
 end
 
-always @(posedge iCLKA)
-begin
-    if (qRst)       rWE <= 1'b0;
-    else            rWE <= qWE;
-end
-
-integer i;
-
-// DFFの段数により3clk遅延するため、3clk分のraポインタを先取りして計算しておく
+//----------------------------------------------------------
+// Gray Code -> Bin Code
+//----------------------------------------------------------
 always @*
 begin
-    for (i = 1; i < 5; i = i + 1)
-    begin
-        qRAb[i-1] <= rRA - i;
-    end
+    integer i;
 
-    qRst    <= iRST;
-    qWAb    <= rWA - 1'b1;
-    qWAb2   <= rWA - 2'd2;
-    qFLL    <= (rWA == qRAb[0] || rWA == qRAb[1] || rWA == qRAb[2] || rWA == qRAb[3]);
-    qEMP    <= (rWA == rRA || qWAb2 == rRA || qWAb == rRA) ? 1'b1 : 1'b0;
-    qRVD    <= (rRA != rORP);
-    qWE     <= iWE;
-    qRE     <= iRE;
+    for (i = lpAddrMsb; i >= 0; i = i - 1)
+    begin
+        if (i == lpAddrMsb)
+        begin
+            rWB[i] <= wWGf2[i];
+        end
+        else
+        begin
+            rWB[i] <= wWGf2[i] ^ rWB[i+1];
+        end
+    end
 end
+
+
+////////////////////////////////////////////////////////////
+//----------------------------------------------------------
+// read addr 更新
+// 非同期で動作するため、一度グレイコードに変換したものを別CLKでバイナリに復元する必要がある
+// そのためグレイコード変換後、別クロックでメタ・ステーブル対策として2段FFで受信しバイナリに変換を行う
+//----------------------------------------------------------
+//----------------------------------------------------------
+// 前回のrpが更新されていたら新規データを出力できる状態と判断する
+//----------------------------------------------------------
+always @(posedge iCLKB)
+begin
+    if (iRST)       rORP <= 0;
+    else            rORP <= rRA;
+end
+
+always @(posedge iCLKB)
+begin
+    if (iRST)       rRA <= 0;
+    else if (rRE)   rRA <= rRA + 1'b1;
+    else            rRA <= rRA;
+end
+
+//----------------------------------------------------------
+// Address -> Gray Code
+//----------------------------------------------------------
+always @(posedge iCLKB)
+begin
+    if (iRST)       rRG <= 0;
+    else            rRG <= {rRA[lpAddrMsb], rRA[lpAddrMsbNext:0] ^ rRA[lpAddrMsb:1]};
+end
+
+//----------------------------------------------------------
+// meta stable
+//----------------------------------------------------------
+always @(posedge iCLKA)
+begin
+    if (iRST)       {wRGf2, wRGf1} <= {lpAddrNull, lpAddrNull};
+    else            {wRGf2, wRGf1} <= {wRGf1, rWG};
+end
+
+//----------------------------------------------------------
+// Gray Code -> Bin Code
+//----------------------------------------------------------
+always @*
+begin
+    integer i;
+
+    for (i = lpAddrMsb; i >= 0; i = i - 1)
+    begin
+        if (i == lpAddrMsb)
+        begin
+            rRB[i] <= wRGf2[i];
+        end
+        else
+        begin
+            rRB[i] <= wRGf2[i] ^ rRB[i+1];
+        end
+    end
+end
+
+////////////////////////////////////////////////////////////
+//----------------------------------------------------------
+// ハンドシェイク信号、read ptrが write ptrを超えないように調整
+//----------------------------------------------------------
+always @*
+begin
+    qWAn    <= rWA + 1'b1;
+    qFLL    <= (qWAn == rRB) ? 1'b1 : 1'b0;
+    qEMP    <= (rWB  == rRA) ? 1'b1 : 1'b0;
+    qRVD    <= (rRA != rORP);
+    qWE     <= iWE & (~qFLL);
+    qRE     <= iRE & (~qEMP);
+end
+
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // FIFO動作
 //----------------------------------------------------------
-reg  [pBitWidth-1:0] rWD, rRD;      assign oRD = rRD;
-wire [pBitWidth-1:0] wRD;
+wire [pBitWidth-1:0] wRD;           assign oRD = wRD;
 
 userFifoDual #(
     .pBuffDepth    (pBuffDepth),
     .pBitWidth     (pBitWidth),
-    .pAddrWidth    (pAddrWidth)
+    .pAddrWidth    (lpAddrWidth)
 ) USER_FIFO_DUAL (
     // write side       read side
     .iCLKA  (iCLKA),    .iCLKB  (iCLKB),
-    .iWD    (rWD),      .oRD    (wRD),
+    .iWD    (iWD),      .oRD    (wRD),
     .iWA    (rWA),      .iRA    (rRA),
-    .iWE    (rWE)
+    .iWE    (qWE)
 );
 
-always @(posedge iCLKA)
-begin
-    if (qRst)       rWD  <= 0;
-    else            rWD  <= iWD;
-end
-
-always @(posedge iCLKB)
-begin
-    if (qRst)       rRD  <= 0;
-    else            rRD  <= wRD;
-end
 
 ////////////////////////////////////////////////////////////
 // msb側の1を検出しbit幅を取得する
