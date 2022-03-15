@@ -89,7 +89,8 @@ begin
     rWAn <= rWA + 1'b1;
     qFLL <= (rWAn == rRA) ? 1'b1 : 1'b0;
     qEMP <= (rWA == rRA) ? 1'b1 : 1'b0;
-    qRVD <= (rRA != rORP);
+    // qRVD <= (rRA != rORP);
+    qRVD <= iRE & (~qEMP);
     qWE  <= iWE & (~qFLL);
     qRE  <= iRE & (~qEMP);
 end

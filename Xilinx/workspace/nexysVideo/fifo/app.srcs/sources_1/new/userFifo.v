@@ -21,16 +21,17 @@ module userFifo #(
     input   [pAddrWidth-1:0]   iRA     // read address
 );
 
-localparam [pAddrWidth-1:0] pDepth = pBuffDepth - 1;
+localparam pDepth = pBuffDepth - 1;
 
-(* ram_style = "block" *) reg [pBitWidth-1:0] fifo [0:2**pDepth];
-reg [pBitWidth-1:0] rd;     assign oRD = rd;
+(* ram_style = "block" *) reg [pBitWidth-1:0] fifo [0:pDepth];
+// reg [pBitWidth-1:0] rd;     assign oRD = rd;
+assign oRD = fifo[iRA];
 
 // rwポート
 always @(posedge iCLK)
 begin
+    // rd <= fifo[iRA];
     if (iWE) fifo[iWA] <= iWD;
-    rd <= fifo[iRA];
 end
 
 endmodule
