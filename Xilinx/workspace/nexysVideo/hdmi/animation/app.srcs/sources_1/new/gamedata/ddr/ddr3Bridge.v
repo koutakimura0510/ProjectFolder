@@ -78,7 +78,13 @@ assign oUiCLK = wUiCLK;
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // read / write 切り替えステートマシン
-// この検証でwrite readの速度が間に合わなければ、128bit対応にする
+// 
+// migから ready信号が来るはずなので、ready信号の状態に合わせてステートマシン動作させたい
+// migが動作可能だった場合に後段の fifo wr output enableをONにし、3clk経過後 valid dataがONになるはず
+// ステートマシン中は wvd・rvdそれぞれが Highに変化した時に次のステートに遷移するようになっているが、
+// fifoの状況によっては output enableがONにならないため、自身で 3clk以上カウントし規定カウント以上経過したら、
+// 強制的に次のステートに遷移するようにした。
+// これで動いてくれ。
 //----------------------------------------------------------
 localparam lpStateCntMax = 3;
 localparam lpStateSize   = 3;
@@ -96,27 +102,23 @@ reg  qRemp,   qWemp, qReady;
 reg  [lpStateSize-1:0] rState;
 reg  [2:0] rSCnt;
 
-// always @(posedge wUiCLK)
-// begin
-//     if (wUiRST)
-//     begin
-//         {rState, rFROE, rFWOE} <= {lpStateWcmd,  2'b00};
-//     end
-//     else
-//     begin
-//         case (rState)
-//             lpStateWcmd  : {rState, rFROE, rFWOE} <= qReady  ? {lpStateWwait,  2'b01}      : {lpStateWcmd,  2'b00};
-//             lpStateWwait : {rState, rFROE, rFWOE} <= oFWVD   ? {lpStateRcmd,   2'b00}      : {lpStateWwait, 2'b00};
-//             lpStateRcmd  : {rState, rFROE, rFWOE} <= wRready ? {lpStateRwait, qRemp, 1'b0} : {lpStateRcmd,  2'b00};
-//             lpStateRwait : {rState, rFROE, rFWOE} <= oFRVD   ? {lpStateWcmd,   2'b00}      : {lpStateRwait, 2'b00};
-//             // lpStateWcmd  : {rState, rFROE, rFWOE} <= qWemp ? {lpStateWwait,  2'b01} : {lpStateWcmd,  2'b00};
-//             // lpStateWwait : {rState, rFROE, rFWOE} <= oFWVD ? {lpStateRcmd,   2'b00} : {lpStateWwait, 2'b00};
-//             // lpStateRcmd  : {rState, rFROE, rFWOE} <= qRemp ? {lpStateRwait,  2'b10} : {lpStateRcmd,  2'b00};
-//             // lpStateRwait : {rState, rFROE, rFWOE} <= oFRVD ? {lpStateWcmd,   2'b00} : {lpStateRwait, 2'b00};
-//             default      : {rState, rFROE, rFWOE} <= {lpStateWcmd, 2'b00};
-//         endcase
-//     end
-// end
+always @( posedge wUiCLK )
+begin
+    if (wUiRST) 
+    begin
+        rSCnt <= 0;
+    end
+    else
+    begin
+        case (rState)
+            lpStateWcmd:    rSCnt <= 0;
+            lpStateWwait:   rSCnt <= rSCnt + 1'b1;
+            lpStateRcmd:    rSCnt <= 0;
+            lpStateRwait:   rSCnt <= rSCnt + 1'b1;
+            default:        rSCnt <= 0;
+        endcase
+    end
+end
 
 always @(posedge wUiCLK)
 begin
@@ -132,74 +134,30 @@ begin
         case (rState)
             lpStateWcmd:
             begin
-                if (qReady)
-                begin
-                    rFROE  <= 1'b0;
-                    rFWOE  <= qWemp;
-                    rState <= lpStateWwait;
-                    rSCnt  <= 0;
-                end
-                else
-                begin
-                    rFROE  <= 1'b0;
-                    rFWOE  <= 1'b0;
-                    rState <= lpStateWcmd;
-                    rSCnt  <= 0;
-                end
+                rFROE  <= 1'b0;
+                rFWOE  <= qReady ? qWemp : 1'b0;
+                rState <= qReady ? lpStateWwait : lpStateWcmd;
             end
 
             lpStateWwait:
             begin
-                if (oFWVD || (rSCnt == lpStateCntMax))
-                begin
-                    rFROE  <= 1'b0;
-                    rFWOE  <= 1'b0;
-                    rState <= lpStateRcmd;
-                    rSCnt  <= 0;
-                end
-                else
-                begin
-                    rFROE  <= 1'b0;
-                    rFWOE  <= 1'b0;
-                    rState <= lpStateWwait;
-                    rSCnt  <= rSCnt + 1'b1;
-                end
+                rFROE  <= 1'b0;
+                rFWOE  <= 1'b0;
+                rState <= (oFWVD || (rSCnt == lpStateCntMax)) ? lpStateRcmd : lpStateWwait;
             end
 
             lpStateRcmd:
             begin
-                if (wRready)
-                begin
-                    rFROE  <= qRemp;
-                    rFWOE  <= 1'b0;
-                    rState <= lpStateRwait;
-                    rSCnt  <= 0;
-                end
-                else
-                begin
-                    rFROE  <= 1'b0;
-                    rFWOE  <= 1'b0;
-                    rState <= lpStateRcmd;
-                    rSCnt  <= 0;
-                end
+                rFROE  <= wRready ? qRemp : 1'b0;
+                rFWOE  <= 1'b0;
+                rState <= wRready ? lpStateRwait : lpStateRcmd;
             end
 
             lpStateRwait:
             begin
-                if (oFRVD || (rSCnt == lpStateCntMax))
-                begin
-                    rFROE  <= 1'b0;
-                    rFWOE  <= 1'b0;
-                    rState <= lpStateWcmd;
-                    rSCnt  <= 0;
-                end
-                else
-                begin
-                    rFROE  <= 1'b0;
-                    rFWOE  <= 1'b0;
-                    rState <= lpStateRwait;
-                    rSCnt  <= rSCnt + 1'b1;
-                end
+                rFROE  <= 1'b0;
+                rFWOE  <= 1'b0;
+                rState <= (oFRVD || (rSCnt == lpStateCntMax)) ? lpStateWcmd : lpStateRwait;
             end
 
             default:
@@ -207,7 +165,6 @@ begin
                 rFROE  <= 1'b0;
                 rFWOE  <= 1'b0;
                 rState <= lpStateWcmd;
-                rSCnt  <= 0;
             end
         endcase
     end
