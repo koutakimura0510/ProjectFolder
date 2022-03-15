@@ -60,7 +60,7 @@ begin
 
             'b11:
             begin
-                {rWrdy, rRrdy, rRdv} <= {1'b0, 1'b1, 1'b0};
+                {rWrdy, rRrdy, rRdv} <= {1'b0, 1'b0, 1'b0};
                 rID[rWA]             <= iData;
                 rWA                  <= rWA + 1'b1;
             end
