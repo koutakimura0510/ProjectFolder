@@ -106,7 +106,7 @@ reg [9:0] rFHriz, rFVert;     assign oFVDE = (rFHriz < H_DISPLAY && rFVert < V_D
 reg qFHmatch, qFVmatch;
 
 always @(posedge iCLK) begin
-    if (iRST)           rFHriz <= 4;
+    if (iRST)           rFHriz <= 3;
     else if (qFHmatch)  rFHriz <= 0;
     else                rFHriz <= rFHriz + 1'b1;
 end

@@ -15,6 +15,9 @@
 // 2022/03/06 
 // FIFO形式でアドレスと書き込みデータの一時保存を行っていたが、動作が非常に分かりにくくなってしまったため、
 // データ単体を操作するようにし、ddrコントローラから受信するready,valid信号でread/writeの制御を行うように変更
+//
+// 2022/03/13
+// 再度 FIFO構造に戻して、余計なコントローラを削除し、mig制御をステートマシンで行うように変更
 //----------------------------------------------------------
 module ddr3Bridge #(
     parameter pDramAddrWidth    = 29,
@@ -124,10 +127,9 @@ always @(posedge wUiCLK)
 begin
     if (wUiRST)
     begin
-        rFROE  <= 1'b0
+        rFROE  <= 1'b0;
         rFWOE  <= 1'b0;
         rState <= lpStateWcmd;
-        rSCnt  <= 0;
     end
     else
     begin
