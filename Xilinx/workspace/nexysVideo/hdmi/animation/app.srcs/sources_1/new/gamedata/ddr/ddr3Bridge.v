@@ -212,7 +212,7 @@ always @(posedge iCLK)
 begin
     case ({wRready, wWready})
     'b00:    {qFWOE, qFROE} <= 2'b00;
-    'b01:    {qFWOE, qFROE} <= {1'b0, ~oREMP & ~iWFLL};
+    'b01:    {qFWOE, qFROE} <= {~oWEMP, 1'b0};
     'b10:    {qFWOE, qFROE} <= {1'b0, ~oREMP & ~iWFLL};
     'b11:    {qFWOE, qFROE} <= {~oWEMP, 1'b0};
     default: {qFWOE, qFROE} <= 2'b00;
