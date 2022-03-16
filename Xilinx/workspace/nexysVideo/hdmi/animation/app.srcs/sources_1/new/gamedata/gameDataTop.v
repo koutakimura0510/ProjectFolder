@@ -231,7 +231,8 @@ ddr3Bridge #(
 
     // user interface clk rst
     .iCLK               (iDispCLK),     .iRST           (iRST),
-    .oUiCLK             (oUiCLK),       .oUiRST         (oUiRST)
+    .oUiCLK             (oUiCLK),       .oUiRST         (oUiRST),
+    .oLED               (oLED)
 );
 
 oledTop #(
@@ -259,7 +260,5 @@ oledTop #(
     // .iDispLine3     ({"        ", 3'd0, oMapDirect[3], 3'd0, oMapDirect[2], 3'd0, oMapDirect[1], 3'd0, oMapDirect[0]}),
     // .iDispLine4     ({"        ", 0})
 );
-
-assign oLED = {1'b0, 1'b0, 1'b0, wDdrRVD, wDualFll, wWready, wDdrRready, ~oUiRST};
 
 endmodule

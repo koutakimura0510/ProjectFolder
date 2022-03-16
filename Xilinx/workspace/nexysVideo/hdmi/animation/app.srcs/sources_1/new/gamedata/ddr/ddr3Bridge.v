@@ -61,7 +61,8 @@ module ddr3Bridge #(
 
     // user clk
     output                      oUiCLK,             // user clk 100mhz
-    output                      oUiRST              // user rst Active High
+    output                      oUiRST,             // user rst Active High
+    output [7:0]                oLED
 );
 
 ////////////////////////////////////////////////////////////
@@ -186,6 +187,7 @@ wire [pBitWidth-1:0] oRA, oWD, oWA;
 wire oRFLL,   oWFLL;                                assign {oRready, oWready} = {~oRFLL, ~oWFLL};
 wire wRready, wWready;  // ddr side ready signal
 wire oWEMP,   oREMP;    // fifo empty signal
+reg  qFWOE,   qFROE;
 
 ddr3Fifo #(
     .pBuffDepth     (pBuffDepth),
@@ -208,8 +210,8 @@ ddr3Fifo #(
 
 always @*
 begin
-   qFWOE <= wWready & (~iWFLL)   & (~oWEMP);
-   qFROE <= wRready & (~wWready) & (~oREMP);
+    qFWOE <= wRready & wWready & (~iWFLL)   & (~oWEMP);
+    qFROE <= wRready & (~wWready) & (~oREMP);
 end
 
 ////////////////////////////////////////////////////////////
@@ -242,6 +244,8 @@ always @*
 begin
    qDdrAppEn <= rDdrWE | rDdrRE;
 end
+
+assign oLED = {1'b0, 1'b0, 1'b0, wRready, wWready, oRFLL, oWFLL, ~wUiRST};
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
