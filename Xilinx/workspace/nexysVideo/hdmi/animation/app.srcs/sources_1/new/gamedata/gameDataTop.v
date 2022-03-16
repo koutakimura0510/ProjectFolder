@@ -260,6 +260,6 @@ oledTop #(
     // .iDispLine4     ({"        ", 0})
 );
 
-assign oLED = {1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, ~oUiRST};
+assign oLED = {1'b0, 1'b0, 1'b0, wDdrRVD, wDualFll, wWready, wDdrRready, ~oUiRST};
 
 endmodule

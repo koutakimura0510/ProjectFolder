@@ -15,9 +15,6 @@
 // 2022/03/06 
 // FIFO形式でアドレスと書き込みデータの一時保存を行っていたが、動作が非常に分かりにくくなってしまったため、
 // データ単体を操作するようにし、ddrコントローラから受信するready,valid信号でread/writeの制御を行うように変更
-//
-// 2022/03/13
-// 再度 FIFO構造に戻して、余計なコントローラを削除し、mig制御をステートマシンで行うように変更
 //----------------------------------------------------------
 module ddr3Bridge #(
     parameter pDramAddrWidth    = 29,
@@ -89,103 +86,106 @@ assign oUiCLK = wUiCLK;
 // 強制的に次のステートに遷移するようにした。
 // これで動いてくれ。
 //----------------------------------------------------------
-localparam lpStateCntMax = 3;
-localparam lpStateSize   = 3;
-localparam [lpStateSize-1:0] 
-    lpStateWcmd  = 0,
-    lpStateWwait = 1,
-    lpStateRcmd  = 2,
-    lpStateRwait = 3;
+// localparam lpStateCntMax = 3;
+// localparam lpStateSize   = 3;
+// localparam [lpStateSize-1:0] 
+//     lpStateWcmd  = 0,
+//     lpStateWwait = 1,
+//     lpStateRcmd  = 2,
+//     lpStateRwait = 3;
 
-wire wRready, wWready;  // ddr side ready signal
-wire oWEMP,   oREMP;    // fifo empty signal
-wire oFRVD,   oFWVD;    // Fifo Read/Write Valid Data
-reg  rFROE,   rFWOE;    // Fifo Read/Write Output Enable
-reg  qRemp,   qWemp, qReady;
-reg  [lpStateSize-1:0] rState;
-reg  [2:0] rSCnt;
+// wire wRready, wWready;  // ddr side ready signal
+// wire oWEMP,   oREMP;    // fifo empty signal
+// wire oFRVD,   oFWVD;    // Fifo Read/Write Valid Data
+// reg  rFROE,   rFWOE;    // Fifo Read/Write Output Enable
+// reg  qRemp,   qWemp, qReady;
+// reg  [lpStateSize-1:0] rState;
+// reg  [2:0] rSCnt;
 
-always @( posedge wUiCLK )
-begin
-    if (wUiRST) 
-    begin
-        rSCnt <= 0;
-    end
-    else
-    begin
-        case (rState)
-            lpStateWcmd:    rSCnt <= 0;
-            lpStateWwait:   rSCnt <= rSCnt + 1'b1;
-            lpStateRcmd:    rSCnt <= 0;
-            lpStateRwait:   rSCnt <= rSCnt + 1'b1;
-            default:        rSCnt <= 0;
-        endcase
-    end
-end
+// always @( posedge wUiCLK )
+// begin
+//     if (wUiRST) 
+//     begin
+//         rSCnt <= 0;
+//     end
+//     else
+//     begin
+//         case (rState)
+//             lpStateWcmd:    rSCnt <= 0;
+//             lpStateWwait:   rSCnt <= rSCnt + 1'b1;
+//             lpStateRcmd:    rSCnt <= 0;
+//             lpStateRwait:   rSCnt <= rSCnt + 1'b1;
+//             default:        rSCnt <= 0;
+//         endcase
+//     end
+// end
 
-always @(posedge wUiCLK)
-begin
-    if (wUiRST)
-    begin
-        rFROE  <= 1'b0;
-        rFWOE  <= 1'b0;
-        rState <= lpStateWcmd;
-    end
-    else
-    begin
-        case (rState)
-            lpStateWcmd:
-            begin
-                rFROE  <= 1'b0;
-                rFWOE  <= qReady ? qWemp : 1'b0;
-                rState <= qReady ? lpStateWwait : lpStateWcmd;
-            end
+// always @(posedge wUiCLK)
+// begin
+//     if (wUiRST)
+//     begin
+//         rFROE  <= 1'b0
+//         rFWOE  <= 1'b0;
+//         rState <= lpStateWcmd;
+//         rSCnt  <= 0;
+//     end
+//     else
+//     begin
+//         case (rState)
+//             lpStateWcmd:
+//             begin
+//                 rFROE  <= 1'b0;
+//                 rFWOE  <= qReady ? qWemp : 1'b0;
+//                 rState <= qReady ? lpStateWwait : lpStateWcmd;
+//             end
 
-            lpStateWwait:
-            begin
-                rFROE  <= 1'b0;
-                rFWOE  <= 1'b0;
-                rState <= (oFWVD || (rSCnt == lpStateCntMax)) ? lpStateRcmd : lpStateWwait;
-            end
+//             lpStateWwait:
+//             begin
+//                 rFROE  <= 1'b0;
+//                 rFWOE  <= 1'b0;
+//                 rState <= (oFWVD || (rSCnt == lpStateCntMax)) ? lpStateRcmd : lpStateWwait;
+//             end
 
-            lpStateRcmd:
-            begin
-                rFROE  <= wRready ? qRemp : 1'b0;
-                rFWOE  <= 1'b0;
-                rState <= wRready ? lpStateRwait : lpStateRcmd;
-            end
+//             lpStateRcmd:
+//             begin
+//                 rFROE  <= wRready ? qRemp : 1'b0;
+//                 rFWOE  <= 1'b0;
+//                 rState <= wRready ? lpStateRwait : lpStateRcmd;
+//             end
 
-            lpStateRwait:
-            begin
-                rFROE  <= 1'b0;
-                rFWOE  <= 1'b0;
-                rState <= (oFRVD || (rSCnt == lpStateCntMax)) ? lpStateWcmd : lpStateRwait;
-            end
+//             lpStateRwait:
+//             begin
+//                 rFROE  <= 1'b0;
+//                 rFWOE  <= 1'b0;
+//                 rState <= (oFRVD || (rSCnt == lpStateCntMax)) ? lpStateWcmd : lpStateRwait;
+//             end
 
-            default:
-            begin
-                rFROE  <= 1'b0;
-                rFWOE  <= 1'b0;
-                rState <= lpStateWcmd;
-            end
-        endcase
-    end
-end
+//             default:
+//             begin
+//                 rFROE  <= 1'b0;
+//                 rFWOE  <= 1'b0;
+//                 rState <= lpStateWcmd;
+//             end
+//         endcase
+//     end
+// end
 
-always @*
-begin
-    qReady <= wWready & wRready;
-    qWemp  <= (~oWEMP);
-    qRemp  <= (~iWFLL) & (~oREMP);
-    // qRemp  <= (~iWFLL);
-end
+// always @*
+// begin
+//     qReady <= wWready & wRready;
+//     qWemp  <= (~oWEMP);
+//     qRemp  <= (~iWFLL) & (~oREMP);
+//     // qRemp  <= (~iWFLL);
+// end
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // 上位モジュールからの、書き込みデータと読み込みアドレスを保存するFIFO
 //----------------------------------------------------------
-wire oRFLL, oWFLL;                  assign {oRready, oWready} = {~oRFLL, ~oWFLL};
 wire [pBitWidth-1:0] oRA, oWD, oWA;
+wire oRFLL,   oWFLL;                                assign {oRready, oWready} = {~oRFLL, ~oWFLL};
+wire wRready, wWready;  // ddr side ready signal
+wire oWEMP,   oREMP;    // fifo empty signal
 
 ddr3Fifo #(
     .pBuffDepth     (pBuffDepth),
@@ -194,9 +194,9 @@ ddr3Fifo #(
     // input side
     .iCLK           (wUiCLK),       .iRST       (wUiRST),
     .iWD            (iWD),          .iWA        (iWA),
-    .iWDE           (iWvalid),      .iWRE       (rFWOE),
+    .iWDE           (iWvalid),      .iWRE       (qFWOE),
     .iRA            (iRA),          .iRDE       (iRvalid),
-    .iRRE           (rFROE),
+    .iRRE           (qFROE),
 
     // output side
     .oWD            (oWD),          .oWA        (oWA),
@@ -206,18 +206,24 @@ ddr3Fifo #(
     .oRFLL          (oRFLL)
 );
 
+always @*
+begin
+   qFWOE <= wWready & (~iWFLL)   & (~oWEMP);
+   qFROE <= wRready & (~wWready) & (~oREMP);
+end
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // 出力制御信号のvalidで判定を行い、DDR3の送信データを変更する
 //----------------------------------------------------------
 reg [pBitWidth-1:0] rData, rAddr;
-reg rDdrWE, rDdrRE;
+reg rDdrWE, rDdrRE, rDdrCmd;
+reg qDdrAppEn;
 
 always @(posedge wUiCLK)
 begin
     if (wUiRST)     {rData, rAddr} <= {32'd0, 32'd0};
-    else            {rData, rAddr} <= (oFWVD) ? {oWD, oWA} : {32'd0, oRA};
+    else            {rData, rAddr} <= oFWVD ? {oWD, oWA} : {32'd0, oRA};
 end
 
 always @(posedge wUiCLK)
@@ -226,6 +232,16 @@ begin
     else            {rDdrWE, rDdrRE} <= {oFWVD, oFRVD};
 end
 
+always @(posedge wUiCLK)
+begin
+    if (wUiRST)     rDdrCmd <= 1'b0;
+    else            rDdrCmd <= oFRVD;
+end
+
+always @*
+begin
+   qDdrAppEn <= rDdrWE | rDdrRE;
+end
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
@@ -263,7 +279,7 @@ generate
         migDemo MIG_DEMO (
             .iData                  ({96'd0, rData}),
             .oData                  (oRD),               .oCal          (wCal),
-            .iAppEN                 (rDdrRE | rDdrWE),   .iWE           (rDdrWE),
+            .iAppEN                 (qDdrAppEn),         .iWE           (rDdrWE),
             .oWready                (wWready),           .oRVD          (oRVD),
             .oRready                (wRready),
             .iCLK                   (wMig100MHz),        .iRST          (wMigRST),
@@ -283,8 +299,8 @@ generate
 
             // Application interface ports
             .app_addr               (rAddr[28:0]),          // input [28:0]		addr[28:3] / Bank[2:0]
-            .app_cmd                (rDdrRE),               // input [2:0]		Write 000 / Read 001
-            .app_en                 (rDdrRE | rDdrWE),      // input			ユーザー側がapp_cmd有効時にHighにする
+            .app_cmd                (rDdrCmd),              // input [2:0]		Write 000 / Read 001
+            .app_en                 (qDdrAppEn),            // input			ユーザー側がapp_cmd有効時にHighにする
             .app_wdf_data           ({96'd0, rData}),       // input [127:0]	書き込みデータ 16bit x 8byte
             .app_wdf_end            (rDdrWE),               // input			下記のwrite enable信号と同期させる
             .app_wdf_wren           (rDdrWE),               // input			write enable
