@@ -208,11 +208,21 @@ ddr3Fifo #(
     .oRFLL          (oRFLL)
 );
 
-always @*
+always @(posedge iCLK)
 begin
-    qFWOE <= wRready & wWready & (~iWFLL)   & (~oWEMP);
-    qFROE <= wRready & (~wWready) & (~oREMP);
+    case ({wRready, wWready})
+    'b00:    {qFWOE, qFROE} <= 2'b00;
+    'b01:    {qFWOE, qFROE} <= {1'b0, ~oREMP & ~iWFLL};
+    'b10:    {qFWOE, qFROE} <= {1'b0, ~oREMP & ~iWFLL};
+    'b11:    {qFWOE, qFROE} <= {~oWEMP, 1'b0};
+    default: {qFWOE, qFROE} <= 2'b00;
+    endcase
 end
+// always @*
+// begin
+//     qFWOE <= wRready & wWready & (~iWFLL)   & (~oWEMP);
+//     qFROE <= wRready & (~wWready) & (~oREMP);
+// end
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
@@ -245,7 +255,7 @@ begin
    qDdrAppEn <= rDdrWE | rDdrRE;
 end
 
-assign oLED = {1'b0, 1'b0, 1'b0, wRready, wWready, oRFLL, oWFLL, ~wUiRST};
+assign oLED = {iWFLL, oREMP, oWEMP, wRready, wWready, oRFLL, oWFLL, ~wUiRST};
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
