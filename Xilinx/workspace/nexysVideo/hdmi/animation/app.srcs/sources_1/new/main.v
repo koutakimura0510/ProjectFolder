@@ -20,7 +20,7 @@ module main
     parameter V_BOTTOM        =  11,
     parameter V_SYNC          =   2,
     parameter pDramDebug      = "off",
-    parameter pBuffDepth      = 256
+    parameter pBuffDepth      = 1024
 )
 (
     input           iCLK,           // system clk

@@ -187,7 +187,8 @@ wire [pBitWidth-1:0] oRA, oWD, oWA;
 wire oRFLL,   oWFLL;                                assign {oRready, oWready} = {~oRFLL, ~oWFLL};
 wire wRready, wWready;  // ddr side ready signal
 wire oWEMP,   oREMP;    // fifo empty signal
-reg  qFWOE,   qFROE;
+reg  qFWOE,   qFROE, qREOF;
+reg  rS;
 
 ddr3Fifo #(
     .pBuffDepth     (pBuffDepth),
@@ -210,19 +211,23 @@ ddr3Fifo #(
 
 always @(posedge iCLK)
 begin
-    case ({wRready, wWready})
-    'b00:    {qFWOE, qFROE} <= 2'b00;
-    'b01:    {qFWOE, qFROE} <= {~oWEMP, 1'b0};
-    'b10:    {qFWOE, qFROE} <= {1'b0, ~oREMP & ~iWFLL};
-    'b11:    {qFWOE, qFROE} <= {~oWEMP, 1'b0};
-    default: {qFWOE, qFROE} <= 2'b00;
+    case ({rS, wRready, wWready})
+    'b000:   {rS, qFROE, qFWOE} <= 3'b000;
+    'b001:   {rS, qFROE, qFWOE} <= {~oWEMP, 1'b0, ~oWEMP};
+    'b010:   {rS, qFROE, qFWOE} <= {1'b0, qREOF, 1'b0};
+    'b011:   {rS, qFROE, qFWOE} <= (~oWEMP) ? {3'b001} : {1'b0, qREOF, 1'b0};
+    'b100:   {rS, qFROE, qFWOE} <= {3'b000};
+    'b101:   {rS, qFROE, qFWOE} <= {3'b101};
+    'b110:   {rS, qFROE, qFWOE} <= {3'b000};
+    'b111:   {rS, qFROE, qFWOE} <= {3'b001};
+    default: {rS, qFROE, qFWOE} <= 3'b000;
     endcase
 end
-// always @*
-// begin
-//     qFWOE <= wRready & wWready & (~iWFLL)   & (~oWEMP);
-//     qFROE <= wRready & (~wWready) & (~oREMP);
-// end
+
+always @*
+begin
+    qREOF <= (~oREMP) & (~iWFLL);
+end
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
@@ -252,7 +257,7 @@ end
 
 always @*
 begin
-   qDdrAppEn <= rDdrWE | rDdrRE;
+    qDdrAppEn <= rDdrWE | rDdrRE;
 end
 
 assign oLED = {iWFLL, oREMP, oWEMP, wRready, wWready, oRFLL, oWFLL, ~wUiRST};
