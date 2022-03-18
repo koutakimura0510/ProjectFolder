@@ -75,120 +75,15 @@ wire   wUiRST = ui_clk_sync_rst & (~wCal);
 assign oUiRST = wUiRST;
 assign oUiCLK = wUiCLK;
 
-
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
-// read / write 切り替えステートマシン
+// 上位モジュールからの、書き込みデータ・アドレスと読み込みアドレスを保存するFIFO
 // 
-// migから ready信号が来るはずなので、ready信号の状態に合わせてステートマシン動作させたい
-// migが動作可能だった場合に後段の fifo wr output enableをONにし、3clk経過後 valid dataがONになるはず
-// ステートマシン中は wvd・rvdそれぞれが Highに変化した時に次のステートに遷移するようになっているが、
-// fifoの状況によっては output enableがONにならないため、自身で 3clk以上カウントし規定カウント以上経過したら、
-// 強制的に次のステートに遷移するようにした。
-// これで動いてくれ。
-//----------------------------------------------------------
-// localparam lpStateCntMax = 3;
-// localparam lpStateSize   = 3;
-// localparam [lpStateSize-1:0] 
-//     lpStateWcmd  = 0,
-//     lpStateWwait = 1,
-//     lpStateRcmd  = 2,
-//     lpStateRwait = 3;
-
-// wire wRready, wWready;  // ddr side ready signal
-// wire oWEMP,   oREMP;    // fifo empty signal
-// wire oFRVD,   oFWVD;    // Fifo Read/Write Valid Data
-// reg  rFROE,   rFWOE;    // Fifo Read/Write Output Enable
-// reg  qRemp,   qWemp, qReady;
-// reg  [lpStateSize-1:0] rState;
-// reg  [2:0] rSCnt;
-
-// always @( posedge wUiCLK )
-// begin
-//     if (wUiRST) 
-//     begin
-//         rSCnt <= 0;
-//     end
-//     else
-//     begin
-//         case (rState)
-//             lpStateWcmd:    rSCnt <= 0;
-//             lpStateWwait:   rSCnt <= rSCnt + 1'b1;
-//             lpStateRcmd:    rSCnt <= 0;
-//             lpStateRwait:   rSCnt <= rSCnt + 1'b1;
-//             default:        rSCnt <= 0;
-//         endcase
-//     end
-// end
-
-// always @(posedge wUiCLK)
-// begin
-//     if (wUiRST)
-//     begin
-//         rFROE  <= 1'b0
-//         rFWOE  <= 1'b0;
-//         rState <= lpStateWcmd;
-//         rSCnt  <= 0;
-//     end
-//     else
-//     begin
-//         case (rState)
-//             lpStateWcmd:
-//             begin
-//                 rFROE  <= 1'b0;
-//                 rFWOE  <= qReady ? qWemp : 1'b0;
-//                 rState <= qReady ? lpStateWwait : lpStateWcmd;
-//             end
-
-//             lpStateWwait:
-//             begin
-//                 rFROE  <= 1'b0;
-//                 rFWOE  <= 1'b0;
-//                 rState <= (oFWVD || (rSCnt == lpStateCntMax)) ? lpStateRcmd : lpStateWwait;
-//             end
-
-//             lpStateRcmd:
-//             begin
-//                 rFROE  <= wRready ? qRemp : 1'b0;
-//                 rFWOE  <= 1'b0;
-//                 rState <= wRready ? lpStateRwait : lpStateRcmd;
-//             end
-
-//             lpStateRwait:
-//             begin
-//                 rFROE  <= 1'b0;
-//                 rFWOE  <= 1'b0;
-//                 rState <= (oFRVD || (rSCnt == lpStateCntMax)) ? lpStateWcmd : lpStateRwait;
-//             end
-
-//             default:
-//             begin
-//                 rFROE  <= 1'b0;
-//                 rFWOE  <= 1'b0;
-//                 rState <= lpStateWcmd;
-//             end
-//         endcase
-//     end
-// end
-
-// always @*
-// begin
-//     qReady <= wWready & wRready;
-//     qWemp  <= (~oWEMP);
-//     qRemp  <= (~iWFLL) & (~oREMP);
-//     // qRemp  <= (~iWFLL);
-// end
-
-////////////////////////////////////////////////////////////
-//----------------------------------------------------------
-// 上位モジュールからの、書き込みデータと読み込みアドレスを保存するFIFO
 //----------------------------------------------------------
 wire [pBitWidth-1:0] oRA, oWD, oWA;
-wire oRFLL,   oWFLL;                                assign {oRready, oWready} = {~oRFLL, ~oWFLL};
-wire wRready, wWready;  // ddr side ready signal
-wire oWEMP,   oREMP;    // fifo empty signal
-reg  qREOF;
-reg  rS, rFWOE, rFROE;
+wire wRFLL, wWFLL;                              assign {oRready, oWready} = {~wRFLL, ~wWFLL};
+wire wWEMP, wREMP;
+reg  rFWOE, rFROE;
 
 ddr3Fifo #(
     .pBuffDepth     (pBuffDepth),
@@ -203,12 +98,42 @@ ddr3Fifo #(
 
     // output side
     .oWD            (oWD),          .oWA        (oWA),
-    .oWVD           (oFWVD),        .oWFLL      (oWFLL),
-    .oWEMP          (oWEMP),        .oREMP      (oREMP),
+    .oWVD           (oFWVD),        .oWFLL      (wWFLL),
+    .oWEMP          (wWEMP),        .oREMP      (wREMP),
     .oRA            (oRA),          .oRVD       (oFRVD),
-    .oRFLL          (oRFLL)
+    .oRFLL          (wRFLL)
 );
 
+//----------------------------------------------------------
+// ステートマシンを用いて、DDRメモリからのready信号でFIFOの読み取りenableを制御する
+// ステートマシン内部では、write readyがHighの時、DDRメモリが動作可能状態ではない場合があるので、
+// 状態を遷移させActive readyがHighになるまで待機を行う
+//----------------------------------------------------------
+wire wAready, wWready;  // Active ready when Write ready signal for ddr
+reg  qFROE, qFWOE;
+reg  rS;
+
+// always @(posedge wUiCLK)
+// begin
+//     if (wUiRST)
+//     begin
+//         {rS, rFROE, rFWOE} <= 3'b000;
+//     end
+//     else
+//     begin
+//         case ({rS, wAready, wWready})
+//         'b000:   {rS, rFROE, rFWOE} <= 3'b000;
+//         'b001:   {rS, rFROE, rFWOE} <= {qFWOE, 2'b00};
+//         'b010:   {rS, rFROE, rFWOE} <= {1'b0, qFROE, 1'b0};
+//         'b011:   {rS, rFROE, rFWOE} <= qFWOE ? 3'b001 : {1'b0, qFROE, 1'b0};
+//         'b100:   {rS, rFROE, rFWOE} <= 3'b000;
+//         'b101:   {rS, rFROE, rFWOE} <= 3'b100;
+//         'b110:   {rS, rFROE, rFWOE} <= 3'b000;
+//         'b111:   {rS, rFROE, rFWOE} <= 3'b001;
+//         default: {rS, rFROE, rFWOE} <= 3'b000;
+//         endcase
+//     end
+// end
 always @(posedge wUiCLK)
 begin
     if (wUiRST)
@@ -217,23 +142,35 @@ begin
     end
     else
     begin
-        case ({rS, wRready, wWready})
-        'b000:   {rS, rFROE, rFWOE} <= 3'b000;
-        'b001:   {rS, rFROE, rFWOE} <= {~oWEMP, 1'b0, 1'b0};
-        'b010:   {rS, rFROE, rFWOE} <= {1'b0, qREOF, 1'b0};
-        'b011:   {rS, rFROE, rFWOE} <= (~oWEMP) ? {3'b001} : {1'b0, qREOF, 1'b0};
-        'b100:   {rS, rFROE, rFWOE} <= {3'b000};
-        'b101:   {rS, rFROE, rFWOE} <= {3'b100};
-        'b110:   {rS, rFROE, rFWOE} <= {3'b000};
-        'b111:   {rS, rFROE, rFWOE} <= {3'b001};
-        default: {rS, rFROE, rFWOE} <= 3'b000;
+        case (rS)
+        'b0:
+        begin
+            case ({wAready, wWready})
+            'b00:    {rS, rFROE, rFWOE} <= 3'b000;
+            'b01:    {rS, rFROE, rFWOE} <= 3'b000;
+            'b10:    {rS, rFROE, rFWOE} <= {1'b1, qFROE, 1'b0};
+            'b11:    {rS, rFROE, rFWOE} <= qFWOE ? 3'b101 : {1'b1, qFROE, 1'b0};
+            default: {rS, rFROE, rFWOE} <= 3'b000;
+            endcase
+        end
+        
+        'b1:
+        begin
+            {rS, rFROE, rFWOE} <= 3'b000;
+        end
+
+        default
+        begin
+            {rS, rFROE, rFWOE} <= 3'b000;
+        end
         endcase
     end
 end
 
 always @*
 begin
-    qREOF <= (~oREMP) & (~iWFLL);
+    qFWOE <= (~wWEMP);
+    qFROE <= (~wREMP) & (~iWFLL);
 end
 
 ////////////////////////////////////////////////////////////
@@ -264,10 +201,10 @@ end
 
 always @*
 begin
-    qDdrAppEn <= rDdrWE | rDdrRE;
+    qDdrAppEn <=    rDdrWE | rDdrRE;
 end
 
-assign oLED = {iWFLL, oREMP, oWEMP, wRready, wWready, oRFLL, oWFLL, ~wUiRST};
+assign oLED = {iWFLL, oREMP, wWEMP, wAready, wWready, wRFLL, wWFLL, ~wUiRST};
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
@@ -307,7 +244,7 @@ generate
             .oData                  (oRD),               .oCal          (wCal),
             .iAppEN                 (qDdrAppEn),         .iWE           (rDdrWE),
             .oWready                (wWready),           .oRVD          (oRVD),
-            .oRready                (wRready),
+            .oRready                (wAready),
             .iCLK                   (wMig100MHz),        .iRST          (wMigRST),
             .oUiCLK                 (ui_clk),            .oUiRST        (ui_clk_sync_rst)
         );
@@ -335,7 +272,7 @@ generate
             .app_rd_data            (oRD),                  // output [127:0]	読み込みデータ 16bit x 8byte
             .app_rd_data_end        (),                     // output			最後のデータ出力時High
             .app_rd_data_valid      (oRVD),                 // output			読み込みデータ出力開始時High
-            .app_rdy                (wRready),              // output			DDR 動作可能時High
+            .app_rdy                (wAready),              // output			DDR 動作可能時High
             .app_sr_req             (1'b0),                 // input			
             .app_ref_req            (1'b0),                 // input			
             .app_zq_req             (1'b0),                 // input			
