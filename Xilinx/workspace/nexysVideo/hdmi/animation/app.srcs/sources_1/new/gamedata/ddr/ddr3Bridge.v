@@ -187,8 +187,8 @@ wire [pBitWidth-1:0] oRA, oWD, oWA;
 wire oRFLL,   oWFLL;                                assign {oRready, oWready} = {~oRFLL, ~oWFLL};
 wire wRready, wWready;  // ddr side ready signal
 wire oWEMP,   oREMP;    // fifo empty signal
-reg  qFWOE,   qFROE, qREOF;
-reg  rS;
+reg  qREOF;
+reg  rS, rFWOE, rFROE;
 
 ddr3Fifo #(
     .pBuffDepth     (pBuffDepth),
@@ -197,9 +197,9 @@ ddr3Fifo #(
     // input side
     .iCLK           (wUiCLK),       .iRST       (wUiRST),
     .iWD            (iWD),          .iWA        (iWA),
-    .iWDE           (iWvalid),      .iWRE       (qFWOE),
+    .iWDE           (iWvalid),      .iWRE       (rFWOE),
     .iRA            (iRA),          .iRDE       (iRvalid),
-    .iRRE           (qFROE),
+    .iRRE           (rFROE),
 
     // output side
     .oWD            (oWD),          .oWA        (oWA),
@@ -209,19 +209,26 @@ ddr3Fifo #(
     .oRFLL          (oRFLL)
 );
 
-always @(posedge iCLK)
+always @(posedge wUiCLK)
 begin
-    case ({rS, wRready, wWready})
-    'b000:   {rS, qFROE, qFWOE} <= 3'b000;
-    'b001:   {rS, qFROE, qFWOE} <= {~oWEMP, 1'b0, ~oWEMP};
-    'b010:   {rS, qFROE, qFWOE} <= {1'b0, qREOF, 1'b0};
-    'b011:   {rS, qFROE, qFWOE} <= (~oWEMP) ? {3'b001} : {1'b0, qREOF, 1'b0};
-    'b100:   {rS, qFROE, qFWOE} <= {3'b000};
-    'b101:   {rS, qFROE, qFWOE} <= {3'b101};
-    'b110:   {rS, qFROE, qFWOE} <= {3'b000};
-    'b111:   {rS, qFROE, qFWOE} <= {3'b001};
-    default: {rS, qFROE, qFWOE} <= 3'b000;
-    endcase
+    if (wUiRST)
+    begin
+        {rS, rFROE, rFWOE} <= 3'b000;
+    end
+    else
+    begin
+        case ({rS, wRready, wWready})
+        'b000:   {rS, rFROE, rFWOE} <= 3'b000;
+        'b001:   {rS, rFROE, rFWOE} <= {~oWEMP, 1'b0, 1'b0};
+        'b010:   {rS, rFROE, rFWOE} <= {1'b0, qREOF, 1'b0};
+        'b011:   {rS, rFROE, rFWOE} <= (~oWEMP) ? {3'b001} : {1'b0, qREOF, 1'b0};
+        'b100:   {rS, rFROE, rFWOE} <= {3'b000};
+        'b101:   {rS, rFROE, rFWOE} <= {3'b100};
+        'b110:   {rS, rFROE, rFWOE} <= {3'b000};
+        'b111:   {rS, rFROE, rFWOE} <= {3'b001};
+        default: {rS, rFROE, rFWOE} <= 3'b000;
+        endcase
+    end
 end
 
 always @*
