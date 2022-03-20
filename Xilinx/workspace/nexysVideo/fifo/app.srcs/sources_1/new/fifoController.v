@@ -38,7 +38,6 @@ module fifoController #(
 // bit幅を取得し指定する
 //----------------------------------------------------------
 localparam pAddrWidth  = fBitWidth(pBuffDepth);
-localparam pAddrMax    = pBuffDepth - 1;
 
 
 ////////////////////////////////////////////////////////////

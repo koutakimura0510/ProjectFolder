@@ -33,21 +33,24 @@ localparam pDdrFbufSize2 = (pHDisplay * pVDisplay) - 2;
 // 最大値カウント時 Enable ON
 //----------------------------------------------------------
 reg qRE;
-reg qREn;               assign oRE = qRE;
-reg [20:0] rAddrCnt;
+reg qREn;               assign oRE = qRE & iDdrRaE;
+reg [20:0] rDispCnt;
 
 always @(posedge iCLK)
 begin
-    if (iRST)           rAddrCnt <= 21'd0;
-    else if (qRE)       rAddrCnt <= 21'd0;
-    else if (iDdrRaE)   rAddrCnt <= rAddrCnt + 1'b1;
-    else                rAddrCnt <= rAddrCnt;
+    case ({iRST, qRE, iDdrRaE})
+    'b000:      rDispCnt <= rDispCnt;
+    'b001:      rDispCnt <= rDispCnt + 1'b1;
+    'b010:      rDispCnt <= rDispCnt;
+    'b011:      rDispCnt <= 0;
+    default:    rDispCnt <= 0;
+    endcase
 end
 
 always @*
 begin
-    qRE  <= (pDdrFbufSize  == rAddrCnt);
-    qREn <= (pDdrFbufSize2 == rAddrCnt);
+    qRE  <= (pDdrFbufSize  == rDispCnt);
+    qREn <= (pDdrFbufSize2 == rDispCnt);
 end
 
 
@@ -73,14 +76,17 @@ end
 //----------------------------------------------------------
 // フレームバッファアクセス用のアドレス更新
 //----------------------------------------------------------
-reg [pAddrWidth-1:0] rFramAddr;     assign oAddr = rFramAddr;
+reg [pAddrWidth-1:0] rRA;     assign oAddr = rRA;
 
 always @(posedge iCLK)
 begin
-    if (iRST)           rFramAddr <= DDR_ADDR_FBUF_1;
-    else if (qRE)       rFramAddr <= rNextAddr;
-    else if (iDdrRaE)   rFramAddr <= rFramAddr + 4'd8;
-    else                rFramAddr <= rFramAddr;
+    case ({iRST, qRE, iDdrRaE})
+    'b000:      rRA <= rRA;
+    'b001:      rRA <= rRA + 4'd8;
+    'b010:      rRA <= rRA;
+    'b011:      rRA <= rNextAddr;
+    default:    rRA <= DDR_ADDR_FBUF_1;
+    endcase
 end
 
 endmodule

@@ -114,8 +114,8 @@ begin
     qFLL    <= (rWA == qRAb[0] || rWA == qRAb[1] || rWA == qRAb[2] || rWA == qRAb[3]);
     qEMP    <= (rWA == rRA || qWAb2 == rRA || qWAb == rRA) ? 1'b1 : 1'b0;
     qRVD    <= (rRA != rORP);
-    qWE     <= iWE;
-    qRE     <= iRE;
+    qWE     <= iWE & (~rFLL);
+    qRE     <= iRE & (~rEMP);
 end
 
 ////////////////////////////////////////////////////////////

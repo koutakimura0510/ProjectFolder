@@ -20,6 +20,8 @@ localparam [1:0]
 parameter COLOR_RED         = ~('hffff4500);
 parameter COLOR_GREEN       = ~('hff008000);
 parameter COLOR_BLUE        = ~('hff4169e1);
+parameter COLOR_YELLOW      = ~('hffffff00);
+parameter COLOR_BROWN       = ~('hffd2691e);
 
 
 //----------------------------------------------------------

@@ -22,7 +22,8 @@ module gameDataTop # (
     parameter pDramMaskWidth = 16,
     parameter pBuffDepth     = 16,          // bram length
     parameter pBitWidth      = 32,          // data bit
-    parameter pDramDebug     = "off"
+    parameter pDramDebug     = "off",
+    parameter pPixelDebug    = "off"
 )(
     input           iDispCLK,   // ディスプレイ描画clk vgaの場合25MHz
     input           iCLK,       // system clk
@@ -62,6 +63,10 @@ module gameDataTop # (
 
 ////////////////////////////////////////////////////////////
 `include "./include/commonAddr.vh"
+// localparam lpHDisplay = 5;
+// localparam lpVDisplay = 4;
+localparam lpHDisplay = pHDisplay;
+localparam lpVDisplay = pVDisplay;
 
 
 //----------------------------------------------------------
@@ -101,8 +106,8 @@ wire wDdrRready;
 reg  qDdrRvalid;
 
 frameBufferRead #(
-    .pHDisplay          (pHDisplay),
-    .pVDisplay          (pVDisplay),
+    .pHDisplay          (lpHDisplay),
+    .pVDisplay          (lpVDisplay),
     .pAddrWidth         (pBitWidth),
     .pBitLengthState    (2)
 ) FRAME_BUFFER_READ (
@@ -128,11 +133,12 @@ wire [pBitWidth-1:0] wPixelWA; // write addr
 reg  qPixelvalid;              // write enable
 
 pixelTop #(
-    .pHDisplay              (pHDisplay),
-    .pVDisplay              (pVDisplay),
+    .pHDisplay              (lpHDisplay),
+    .pVDisplay              (lpVDisplay),
     .pAddrWidth             (pBitWidth),
     .pBitWidth              (pBitWidth),
-    .pBitLengthState        (2)
+    .pBitLengthState        (2),
+    .pDramDebug             (pDramDebug)
 ) PIXEL_TOP (
     .iSW    (iSW),
     .iCLK   (oUiCLK),       .iRST   (oUiRST),
@@ -170,18 +176,24 @@ reg rFS, qFS;
 
 always @(posedge oUiCLK)
 begin
-    if (oUiRST)      rFS <= 0;
-    else if (iFE)    rFS <= 1'b1;
-    else             rFS <= rFS;
+    if (oUiRST)             rFS <= 0;
+    else if (iFE)           rFS <= 1'b1;
+    else                    rFS <= rFS;
 end
 
 // pixel data save
 // 動作周波数が間に合っているか確認するため、wRVDのタイミングでなければ黒で塗りつぶす
+wire en, oEmp;
+
 always @(posedge iDispCLK)
 begin
-    if (iRST)               rPixel <= 0;
-    else if (wRVD)          rPixel <= wVRGB;
-    else                    rPixel <= 'hffffffff;
+    case ({iRST, wRVD, oEmp})
+    'b000:      rPixel <= COLOR_YELLOW;
+    'b001:      rPixel <= COLOR_BROWN;
+    'b010:      rPixel <= wVRGB;
+    'b011:      rPixel <= wVRGB;
+    default:    rPixel <= 0;
+    endcase
 end
 
 fifoDualController #(
@@ -194,13 +206,33 @@ fifoDualController #(
     .iWD    (wDdrRD),       .oRD    (wVRGB),
     .iWE    (wDdrRVD),      .iRE    (qFS),
     .oFLL   (wDualFll),     .oRVD   (wRVD),
-                            .oEMP   ()
+                            .oEMP   (oEmp)
 );
 
-always @*
-begin
-    qFS <= rFS & iFVDE;
-end
+generate
+    if (pPixelDebug == "on")
+    begin
+        enGen #(
+            .SYS_CLK    (12500000)
+        ) PixelEn (
+            .iCLK       (iDispCLK),
+            .iRST       (iRST),
+            .oEnable    (en)
+        );
+
+        always @*
+        begin
+            qFS <= rFS & (~oEmp) & en;
+        end
+    end
+    else
+    begin
+        always @*
+        begin
+            qFS <= rFS & iFVDE;
+        end
+    end
+endgenerate
 
 
 //----------------------------------------------------------
@@ -235,6 +267,19 @@ ddr3Bridge #(
     .oLED               (oLED)
 );
 
+
+//----------------------------------------------------------
+// データのモニタリング用にOLEDを使用
+// 
+//----------------------------------------------------------
+reg [31:0] rPixelSh [0:1];
+
+always @(posedge oUiCLK)
+begin
+    if (oUiRST) {rPixelSh[1], rPixelSh[0]} <= 64'd0;
+    else        {rPixelSh[1], rPixelSh[0]} <= {rPixelSh[0], wVRGB};
+end
+
 oledTop #(
     .PDIVCLK        (100000),
     .PDIVSCK        (128),
@@ -250,8 +295,8 @@ oledTop #(
     .oOledRes       (oOledRes),
     .oOledVbat      (oOledVbat),
     .oOledVdd       (oOledVdd),
-    .iDispLine1     (0),
-    .iDispLine2     (0),
+    .iDispLine1     (rPixelSh[1]),
+    .iDispLine2     ({2'd0, wRS, 2'd0, wWS}),
     .iDispLine3     (wPixelWA),
     .iDispLine4     (wDdrRA)
     // 95
@@ -260,5 +305,6 @@ oledTop #(
     // .iDispLine3     ({"        ", 3'd0, oMapDirect[3], 3'd0, oMapDirect[2], 3'd0, oMapDirect[1], 3'd0, oMapDirect[0]}),
     // .iDispLine4     ({"        ", 0})
 );
+    
 
 endmodule

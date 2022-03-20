@@ -42,8 +42,7 @@ module fifoController #(
 // buffer sizeによってアドレスレジスタのサイズを自動変換するため、
 // bit幅を取得し指定する
 //----------------------------------------------------------
-localparam pAddrWidth  = fBitWidth(pBuffDepth);
-localparam pAddrMax    = pBuffDepth - 1;
+localparam lpAddrWidth  = fBitWidth(pBuffDepth);
 
 
 ////////////////////////////////////////////////////////////
@@ -56,7 +55,7 @@ localparam pAddrMax    = pBuffDepth - 1;
 // oRVD Empty状態ではなく読み込みEnable信号を受信した場合High
 //----------------------------------------------------------
 reg qFLL, qEMP, qRVD;    assign {oFLL, oEMP, oRVD} = {qFLL, qEMP, qRVD};
-reg [pAddrWidth-1:0] rWA, rWAn, rRA, rORP;
+reg [lpAddrWidth-1:0] rWA, rWAn, rRA, rORP;
 reg qWE, qRE;
 
 
@@ -110,7 +109,7 @@ wire [pBitWidth-1:0] wRD;             assign oRD = wRD;
 userFifo #(
     .pBuffDepth    (pBuffDepth),
     .pBitWidth     (pBitWidth),
-    .pAddrWidth    (pAddrWidth)
+    .pAddrWidth    (lpAddrWidth)
 ) USER_FIFO (
     // write side       read side
     .iCLK   (iCLK),

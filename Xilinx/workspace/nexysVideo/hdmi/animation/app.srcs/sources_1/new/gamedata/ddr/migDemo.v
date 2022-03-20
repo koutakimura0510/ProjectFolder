@@ -13,9 +13,10 @@ module migDemo (
     output          oCal,
     input           iAppEN,
     input           iWE,        // write enable
-    output          oWready,      // write ready
+    input           iReadCmd,
+    output          oWready,    // write ready
     output          oRVD,       // read data valid
-    output          oRready,      // read ready
+    output          oAready,    // active ready
     input           iCLK,
     input           iRST,
     output          oUiCLK,
@@ -29,48 +30,27 @@ assign oUiRST = iRST;
 assign oCal   = ~iRST;
 
 ////////////////////////////////////////////////////////////
+reg qRE, qWE;
+wire wEmp, wFull;
 
-reg [  2:0] rWA, rRA;
-reg [127:0] rID [0:7];
-reg [127:0] rOD;                        assign oData = rOD;
-reg rWrdy, rRrdy, rRdv;                 assign {oWready, oRready, oRVD} = {rWrdy, rRrdy, rRdv};
+fifoController #(
+    .pBuffDepth     (8),
+    .pBitWidth      (32)
+) MIG_DEMO_FIFO (
+    .iCLK           (iCLK),             .iRST           (iRST),
+    .iWD            (iData[31:0]),      .iWE            (qWE),
+    .oFLL           (wFull),
+    .oRD            (oData[31:0]),      .iRE            (qRE),
+    .oRVD           (oRVD),             .oEMP           (wEmp)
+);
 
-always @(posedge iCLK)
+always @*
 begin
-    if (iRST)
-    begin
-        {rWrdy, rRrdy, rRdv}    <= {1'b1, 1'b1, 1'b0};
-        rOD                     <= 128'd0;
-        {rWA, rRA}              <= {8'd0, 8'd0};
-    end
-    else
-    begin
-        casex ({iAppEN, iWE})
-            'b00:
-            begin
-                {rWrdy, rRrdy, rRdv} <= {1'b1, 1'b1, 1'b0};
-            end
-
-            'b10:
-            begin
-                {rWrdy, rRrdy, rRdv} <= {1'b1, 1'b0, 1'b1};
-                rOD                  <= rID[rRA];
-                rRA                  <= rRA + 1'b1;
-            end
-
-            'b11:
-            begin
-                {rWrdy, rRrdy, rRdv} <= {1'b0, 1'b0, 1'b0};
-                rID[rWA]             <= iData;
-                rWA                  <= rWA + 1'b1;
-            end
-
-            default:
-            begin
-                {rWrdy, rRrdy, rRdv} <= {1'b1, 1'b1, 1'b0};
-            end
-        endcase
-    end
+    qRE <= iAppEN & (~wEmp) & (~iWE);//iReadCmd;
+    qWE <= iAppEN & iWE & (~wFull);
 end
+
+assign oWready = (~wFull);
+assign oAready = 1'b1;//(iAppEN && iWE) ? (~wFull) : (~wEmp);
 
 endmodule

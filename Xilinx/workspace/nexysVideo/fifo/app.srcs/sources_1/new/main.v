@@ -26,11 +26,13 @@ module main (
 //----------------------------------------------------------
 wire oCLKA;     // 100mhz
 wire oCLKB;     // 25mhz
+wire oCLKC;     // 400mhz
 wire locked;
 
 clk_wiz_0 CLK_GEN (
-    .clk_out1   (oCLKA),
-    .clk_out2   (oCLKB),
+    .clk_out1   (oCLKB),
+    .clk_out2   (oCLKA),
+    .clk_out3   (oCLKC),
     .reset      (iRST),
     .locked     (locked),
     .clk_in1    (iCLK)
@@ -42,7 +44,7 @@ wire rst = ~locked;
 //----------------------------------------------------------
 // 1-stage
 //----------------------------------------------------------
-localparam pWidth = 8;
+localparam pWidth = 128;
 
 reg  [pWidth-1:0] iWD;
 wire [pWidth-1:0] oRD1;
@@ -64,9 +66,9 @@ fifoController #(
 
 always @(posedge oCLKA)
 begin
-    if (rst)        iWD <= 0;
+    if (rst)         iWD <= 0;
     else if (!qWE1)  iWD <= iWD;
-    else            iWD <= (iWD + 1'b1) & 255;
+    else             iWD <= (iWD + 1'b1) & 255;
 end
 
 ////////////////////////////////////////////////////////////
@@ -93,7 +95,14 @@ fifoController #(
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
-// 3-stage
+// UiCLKよりも速いCLKを用いて、入力データを分割して出力する
+//----------------------------------------------------------
+
+
+
+////////////////////////////////////////////////////////////
+//----------------------------------------------------------
+// 4-stage
 //----------------------------------------------------------
 wire [pWidth-1:0] oDRD;
 wire oDRVD, oDEMP, oDFLL;

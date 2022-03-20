@@ -12,7 +12,8 @@ module pixelTop # (
     parameter       pVDisplay           = 480,
     parameter       pAddrWidth          = 32,           // address
     parameter       pBitWidth           = 32,
-    parameter       pBitLengthState     = 2
+    parameter       pBitLengthState     = 2,
+    parameter       pDramDebug          = "off"
 )(
     input [ 7:0]                    iSW,
     input                           iCLK,       // user clk
@@ -34,15 +35,18 @@ localparam pDdrFbufSize = (pHDisplay * pVDisplay) - 1;
 // 画面サイズのアドレス送信回数をカウントする
 // 最大値カウント時 Enable ON
 //----------------------------------------------------------
-reg qWE;                assign oWE = qWE;
+reg qWE;                assign oWE = qWE & iDdrWE;
 reg [20:0] rAddrCnt;
 
 always @(posedge iCLK)
 begin
-    if (iRST)           rAddrCnt <= 21'd0;
-    else if (qWE)       rAddrCnt <= 21'd0;
-    else if (iDdrWE)    rAddrCnt <= rAddrCnt + 1'b1;
-    else                rAddrCnt <= rAddrCnt;
+    case ({iRST, qWE, iDdrWE})
+    'b000:      rAddrCnt <= rAddrCnt;
+    'b001:      rAddrCnt <= rAddrCnt + 1'b1;
+    'b010:      rAddrCnt <= rAddrCnt;
+    'b011:      rAddrCnt <= 0;
+    default:    rAddrCnt <= 0;
+    endcase
 end
 
 always @*
@@ -71,13 +75,30 @@ end
 //----------------------------------------------------------
 reg [pBitWidth-1:0] rWD;        assign oPixel   = rWD;
 
-always @(posedge iCLK)
-begin
-    if (iRST)           rWD <= COLOR_RED;
-    else if (qWE)       rWD <= rNextData;
-    else if (iDdrWE)    rWD <= rWD;
-    else                rWD <= rWD;
-end
+generate
+    if (pDramDebug == "on")
+        always @(posedge iCLK)
+        begin
+            case ({iRST, qWE, iDdrWE})
+            'b000:      rWD <= rWD;
+            'b001:      rWD <= rWD + 1'b1;
+            'b010:      rWD <= rWD;
+            'b011:      rWD <= 0;
+            default:    rWD <= 0;
+            endcase
+        end
+    else
+        always @(posedge iCLK)
+        begin
+            case ({iRST, qWE, iDdrWE})
+            'b000:      rWD <= rWD;
+            'b001:      rWD <= rWD;
+            'b010:      rWD <= rWD;
+            'b011:      rWD <= rNextData;
+            default:    rWD <= COLOR_RED;
+            endcase
+        end
+endgenerate
 
 
 ////////////////////////////////////////////////////////////
@@ -100,10 +121,13 @@ end
 
 always @(posedge iCLK)
 begin
-    if (iRST)           rWA <= DDR_ADDR_FBUF_1;
-    else if (qWE)       rWA <= rNextAddr;
-    else if (iDdrWE)    rWA <= rWA + 4'd8;
-    else                rWA <= rWA;
+    case ({iRST, qWE, iDdrWE})
+    'b000:      rWA <= rWA;
+    'b001:      rWA <= rWA + 4'd8;
+    'b010:      rWA <= rWA;
+    'b011:      rWA <= rNextAddr;
+    default:    rWA <= DDR_ADDR_FBUF_1;
+    endcase
 end
 
 endmodule

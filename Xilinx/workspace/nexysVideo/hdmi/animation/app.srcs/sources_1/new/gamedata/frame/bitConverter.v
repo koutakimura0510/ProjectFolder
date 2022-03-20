@@ -1,21 +1,17 @@
 //----------------------------------------------------------
-// Create 2022/3/20
+// Create 2022/03/20
 // Author koutakimura
 // Editor VSCode ver1.62.7
 // Build  Vivado20.2
 // Borad  Nexys Video
 // -
-// デュアルポートFIFO コントロールモジュール
-// 
-// LUTRAM使用のため、レイテンシ0で動作する
 // 
 //----------------------------------------------------------
-module fifoDualController #(
+module bitConverter #(
     parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
     parameter pBitWidth   = 32      // bitサイズ
 )(
-    input                       iCLKA,  // clk write side
-    input                       iCLKB,  // clk read  side
+    input                       iCLK,
     input                       iRST,   // Active High
     input   [pBitWidth-1:0]     iWD,    // write data
     input                       iWE,    // write enable 有効データ書き込み
@@ -49,7 +45,7 @@ reg qWE, qRE;
 
 ////////////////////////////////////////////////////////////
 // write pointer
-always @(posedge iCLKA)
+always @(posedge iCLK)
 begin
     if (iRST)       rWA <= 0;
     else if (qWE)   rWA <= rWA + 1'b1;
@@ -58,7 +54,7 @@ end
 
 ////////////////////////////////////////////////////////////
 // read pointer
-always @(posedge iCLKB)
+always @(posedge iCLK)
 begin
     if (iRST)      rRA <= 0;
     else if (qRE)  rRA <= rRA + 1'b1;
@@ -66,7 +62,7 @@ begin
 end
 
 // 前回のrpが更新されていたら新規データを出力できる状態と判断する
-always @(posedge iCLKB)
+always @(posedge iCLK)
 begin
     if (iRST)   rORP <= 0;
     else        rORP <= rRA;
@@ -90,16 +86,17 @@ end
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // FIFO動作
+// 上記のハンドシェイク信号のタイミングを合わせるためDFFに入力を行う
 //----------------------------------------------------------
-wire [pBitWidth-1:0] wRD;           assign oRD = wRD;
+wire [pBitWidth-1:0] wRD;             assign oRD = wRD;
 
-userFifoDual #(
+userFifo #(
     .pBuffDepth    (pBuffDepth),
     .pBitWidth     (pBitWidth),
     .pAddrWidth    (lpAddrWidth)
-) USER_FIFO_DUAL (
+) USER_FIFO (
     // write side       read side
-    .iCLKA  (iCLKA),    .iCLKB  (iCLKB),
+    .iCLK   (iCLK),
     .iWD    (iWD),      .oRD    (wRD),
     .iWA    (rWA),      .iRA    (rRA),
     .iWE    (qWE)
@@ -129,5 +126,4 @@ function[  7:0]	fBitWidth;
     end
 endfunction
 ////////////////////////////////////////////////////////////
-
 endmodule
