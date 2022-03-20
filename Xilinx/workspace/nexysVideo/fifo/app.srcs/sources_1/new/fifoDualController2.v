@@ -1,17 +1,12 @@
 //----------------------------------------------------------
-// Create 2021/2/13
+// Create 2022/3/20
 // Author koutakimura
 // Editor VSCode ver1.62.7
 // Build  Vivado20.2
 // Borad  Nexys Video
 // -
-// デュアルポートFIFO コントロールモジュール
+// デュアルポートFIFO LUTRAM版 コントロールモジュール
 // 
-// 2022/02/26
-// 処理の流れが分かりにくいため、全体をパイプライン処理に更新
-// RE Active時 3CLK後に RVD Assert データが出力される
-// 
-// TODO Enableから出力まで遅延が発生するため、moduleのパラメータで、入力データの遅延数などを指定しなければならない
 //----------------------------------------------------------
 module fifoDualController #(
     parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
@@ -33,8 +28,7 @@ module fifoDualController #(
 // buffer sizeによってアドレスレジスタのサイズを自動変換するため、
 // bit幅を取得し指定する
 //----------------------------------------------------------
-localparam pAddrWidth  = fBitWidth(pBuffDepth);
-localparam pAddrMax    = pBuffDepth - 1;
+localparam lpAddrWidth  = fBitWidth(pBuffDepth);
 
 
 ////////////////////////////////////////////////////////////
@@ -46,108 +40,69 @@ localparam pAddrMax    = pBuffDepth - 1;
 // oEMP 書き込みと読み込みのアドレスが一致している、または超えそうな場合High
 // oRVD Empty状態ではなく読み込みEnable信号を受信した場合High
 //----------------------------------------------------------
-reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {rFLL, rEMP, rRVD};
-reg qFLL, qEMP, qRVD;
-reg [pAddrWidth-1:0] qWAb, qWAb2;
-reg [pAddrWidth-1:0] qRAb [3:0];
-reg [pAddrWidth-1:0] rWA, rRA, rORP;
-reg rWE, rRE;
-reg qWE, qRE, qRst;
+reg qFLL, qEMP, qRVD;    assign {oFLL, oEMP, oRVD} = {qFLL, qEMP, qRVD};
+reg [lpAddrWidth-1:0] rWA, rWAn, rRA, rORP;
+reg qWE, qRE;
+
 
 ////////////////////////////////////////////////////////////
 // write pointer
 always @(posedge iCLKA)
 begin
-    if (qRst)       rWA <= 0;
-    else if (!rWE)  rWA <= rWA;
-    else            rWA <= rWA + 1'b1;
+    if (iRST)       rWA <= 0;
+    else if (qWE)   rWA <= rWA + 1'b1;
+    else            rWA <= rWA;
 end
 
+////////////////////////////////////////////////////////////
 // read pointer
 always @(posedge iCLKB)
 begin
-    if (qRst)      rRA <= 0;
-    else if (!rRE) rRA <= rRA;
-    else           rRA <= rRA + 1'b1;
+    if (iRST)      rRA <= 0;
+    else if (qRE)  rRA <= rRA + 1'b1;
+    else           rRA <= rRA;
 end
 
 // 前回のrpが更新されていたら新規データを出力できる状態と判断する
 always @(posedge iCLKB)
 begin
-    if (qRst)   rORP <= 0;
+    if (iRST)   rORP <= 0;
     else        rORP <= rRA;
 end
 
-////////////////////////////////////////////////////////////
-// Hnad Shake信号、タイミング結合のためDFFに一度通す
-always @(posedge iCLKA)
-begin
-    if (qRst)       {rFLL, rEMP} <= {1'b1, 1'b1};
-    else            {rFLL, rEMP} <= {qFLL, qEMP};
-end
-
-always @(posedge iCLKB)
-begin
-    if (qRst)       {rRVD, rRE} <= 2'b00;
-    else            {rRVD, rRE} <= {qRVD, qRE};
-end
-
-always @(posedge iCLKA)
-begin
-    if (qRst)       rWE <= 1'b0;
-    else            rWE <= qWE;
-end
-
-integer i;
-
-// DFFの段数により3clk遅延するため、3clk分のraポインタを先取りして計算しておく
+///////////////////////////////////////////////////////////
+//---------------------------------------------------------------------------
+// ハンドシェイク信号、read ptrが write ptrを超えないように調整
+//---------------------------------------------------------------------------
 always @*
 begin
-    for (i = 1; i < 5; i = i + 1)
-    begin
-        qRAb[i-1] <= rRA - i;
-    end
-
-    qRst    <= iRST;
-    qWAb    <= rWA - 1'b1;
-    qWAb2   <= rWA - 2'd2;
-    qFLL    <= (rWA == qRAb[0] || rWA == qRAb[1] || rWA == qRAb[2] || rWA == qRAb[3]);
-    qEMP    <= (rWA == rRA || qWAb2 == rRA || qWAb == rRA) ? 1'b1 : 1'b0;
-    qRVD    <= (rRA != rORP);
-    qWE     <= iWE;
-    qRE     <= iRE;
+    rWAn <= rWA + 1'b1;
+    qFLL <= (rWAn == rRA) ? 1'b1 : 1'b0;
+    qEMP <= (rWA == rRA) ? 1'b1 : 1'b0;
+    // qRVD <= (rRA != rORP);
+    qRVD <= iRE & (~qEMP);
+    qWE  <= iWE & (~qFLL);
+    qRE  <= iRE & (~qEMP);
 end
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // FIFO動作
 //----------------------------------------------------------
-reg  [pBitWidth-1:0] rWD, rRD;      assign oRD = rRD;
-wire [pBitWidth-1:0] wRD;
+wire [pBitWidth-1:0] wRD;           assign oRD = wRD;
 
 userFifoDual #(
     .pBuffDepth    (pBuffDepth),
     .pBitWidth     (pBitWidth),
-    .pAddrWidth    (pAddrWidth)
+    .pAddrWidth    (lpAddrWidth)
 ) USER_FIFO_DUAL (
     // write side       read side
     .iCLKA  (iCLKA),    .iCLKB  (iCLKB),
-    .iWD    (rWD),      .oRD    (wRD),
+    .iWD    (iWD),      .oRD    (wRD),
     .iWA    (rWA),      .iRA    (rRA),
-    .iWE    (rWE)
+    .iWE    (qWE)
 );
 
-always @(posedge iCLKA)
-begin
-    if (qRst)       rWD  <= 0;
-    else            rWD  <= iWD;
-end
-
-always @(posedge iCLKB)
-begin
-    if (qRst)       rRD  <= 0;
-    else            rRD  <= wRD;
-end
 
 ////////////////////////////////////////////////////////////
 // msb側の1を検出しbit幅を取得する

@@ -23,7 +23,8 @@ module userFifo #(
 
 localparam pDepth = pBuffDepth - 1;
 
-(* ram_style = "block" *) reg [pBitWidth-1:0] fifo [0:pDepth];
+reg [pBitWidth-1:0] fifo [0:pDepth];
+// (* ram_style = "block" *) reg [pBitWidth-1:0] fifo [0:pDepth];
 // reg [pBitWidth-1:0] rd;     assign oRD = rd;
 assign oRD = fifo[iRA];
 

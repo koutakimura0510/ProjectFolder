@@ -24,15 +24,15 @@ module main (
 //----------------------------------------------------------
 // 非同期クロックの生成
 //----------------------------------------------------------
-wire oCLKA;     // 100mhz
-wire oCLKB;     // 25mhz
-wire oCLKC;     // 400mhz
+wire oCLKA;
+wire oCLKB;
+wire oCLKC;
 wire locked;
 
 clk_wiz_0 CLK_GEN (
-    .clk_out1   (oCLKB),
-    .clk_out2   (oCLKA),
-    .clk_out3   (oCLKC),
+    .clk_out1   (oCLKA),    // 100mhz
+    .clk_out2   (oCLKC),    // 25mhz
+    .clk_out3   (oCLKB),    // 200mhz
     .reset      (iRST),
     .locked     (locked),
     .clk_in1    (iCLK)
@@ -44,7 +44,8 @@ wire rst = ~locked;
 //----------------------------------------------------------
 // 1-stage
 //----------------------------------------------------------
-localparam pWidth = 128;
+localparam pWidth = 32;
+localparam pDepth = 64;
 
 reg  [pWidth-1:0] iWD;
 wire [pWidth-1:0] oRD1;
@@ -53,7 +54,7 @@ reg qWE1, qRE1;
 
 // single port ram
 fifoController #(
-    .pBuffDepth (8),
+    .pBuffDepth (pDepth),
     .pBitWidth  (pWidth)
 ) FIFO_STAGE_1 (
     // write side       read side
@@ -81,7 +82,7 @@ reg qRE2;
 
 // single port ram
 fifoController #(
-    .pBuffDepth (8),
+    .pBuffDepth (pDepth),
     .pBitWidth  (pWidth)
 ) FIFO_STAGE_2 (
     // write side       read side
@@ -105,16 +106,16 @@ fifoController #(
 // 4-stage
 //----------------------------------------------------------
 wire [pWidth-1:0] oDRD;
-wire oDRVD, oDEMP, oDFLL;
+wire oDRVD, oDEMP, oDFLL, oDFLL2;
 reg qDRE;
 
 fifoDualController #(
-    .pBuffDepth (8),
+    .pBuffDepth (pDepth),
     .pBitWidth  (pWidth)
 ) FIFO_DUAL_CONTROLLER (
     // write side       read side
     .iCLKA  (oCLKA),    .iCLKB  (oCLKB),
-                        .iRST   (rst),
+    .iRST   (rst),
     .iWD    (oRD2),     .oRD    (oDRD),
     .iWE    (oRVD2),    .iRE    (qDRE),
                         .oRVD   (oDRVD),
@@ -124,19 +125,46 @@ fifoDualController #(
 always @*
 begin
     qWE1     <= (~oFLL1);
-    qRE1     <= (~oFLL2) & (~oEMP1);
-    qRE2     <= (~oDFLL) & (~oEMP2);
-    qDRE     <= (~oDEMP);
+    qRE1     <= (~oFLL2)  & (~oEMP1);
+    qRE2     <= (~oDFLL)  & (~oEMP2);
+    qDRE     <= (~oDFLL2) & (~oDEMP);
 end
+
+////////////////////////////////////////////////////////////
+//----------------------------------------------------------
+// 5-stage
+//----------------------------------------------------------
+wire [pWidth-1:0] oDRD2;
+wire oDRVD2, oDEMP2;
+reg qDRE2;
+
+fifoDualController #(
+    .pBuffDepth (pDepth),
+    .pBitWidth  (pWidth)
+) FIFO_DUAL_CONTROLLER_2 (
+    // write side       read side
+    .iCLKA  (oCLKB),    .iCLKB  (oCLKC),
+    .iRST   (rst),
+    .iWD    (oDRD),     .oRD    (oDRD2),
+    .iWE    (oDRVD),    .iRE    (qDRE2),
+                        .oRVD   (oDRVD2),
+    .oFLL   (oDFLL2),   .oEMP   (oDEMP2)
+);
+
+always @*
+begin
+    qDRE2     <= (~oDEMP2);
+end
+
 
 ////////////////////////////////////////////////////////////
 reg [7:0] rled;
 
-always @(posedge oCLKB)
+always @(posedge oCLKC)
 begin
     if (rst)            rled <= 0;
-    else if (!oDRVD)    rled <= 255;
-    else                rled <= oDRD;
+    else if (!oDRVD2)    rled <= 255;
+    else                rled <= oDRD2;
 end
 
 assign oLED = rled;

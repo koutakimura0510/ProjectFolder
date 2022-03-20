@@ -21,7 +21,7 @@ module main
     parameter V_SYNC          =   2,
     parameter pDramDebug      = "off",
     parameter pPixelDebug     = "off",
-    parameter pBuffDepth      = 256
+    parameter pBuffDepth      = 8
 )
 (
     input           iCLK,           // system clk
@@ -122,7 +122,6 @@ gameDataTop # (
     .pPixelDebug    (pPixelDebug)
 ) GAME_DATA_TOP (
     .iDispCLK       (o_clk_25),
-    .iCLK           (iCLK),
     .iRST           (user_rst),
     .iBtn           (oBtn),
     .iSW            (iSW),

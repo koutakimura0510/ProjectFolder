@@ -21,7 +21,7 @@
 // グレイコード ->          http://www5.nkansai.ne.jp/users/khateen/gray-code.html
 // 
 //----------------------------------------------------------
-module fifoDualController #(
+module fifoDualControllerGray #(
     parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
     parameter pBitWidth   = 32      // bitサイズ
 )(

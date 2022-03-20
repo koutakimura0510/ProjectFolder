@@ -27,7 +27,8 @@ module fifoDualController #(
 )(
     input                       iCLKA,  // clk write side
     input                       iCLKB,  // clk read  side
-    input                       iRST,   // Active High
+    input                       iRSTA,  // Active High
+    input                       iRSTB,  // Active High
     input   [pBitWidth-1:0]     iWD,    // write data
     input                       iWE,    // write enable 有効データ書き込み
     output                      oFLL,   // 最大書き込み時High
@@ -72,7 +73,7 @@ reg qWE, qRE;
 //----------------------------------------------------------
 always @(posedge iCLKA)
 begin
-    if (iRST)       rWA <= 0;
+    if (iRSTA       rWA <= 0;
     else if (qWE)   rWA <= rWA + 1'b1;
     else            rWA <= rWA;
 end
@@ -82,7 +83,7 @@ end
 //----------------------------------------------------------
 always @(posedge iCLKA)
 begin
-    if (iRST)       rWG <= 0;
+    if (iRSTA)      rWG <= 0;
     else            rWG <= {rWA[lpAddrMsb], rWA[lpAddrMsbNext:0] ^ rWA[lpAddrMsb:1]};
 end
 
@@ -91,7 +92,7 @@ end
 //----------------------------------------------------------
 always @(posedge iCLKB)
 begin
-    if (iRST)       {wWGf2, wWGf1} <= {lpAddrNull, lpAddrNull};
+    if (iRSTB)      {wWGf2, wWGf1} <= {lpAddrNull, lpAddrNull};
     else            {wWGf2, wWGf1} <= {wWGf1, rWG};
 end
 
@@ -128,13 +129,13 @@ end
 //----------------------------------------------------------
 always @(posedge iCLKB)
 begin
-    if (iRST)       rORP <= 0;
+    if (iRSTB)      rORP <= 0;
     else            rORP <= rRA;
 end
 
 always @(posedge iCLKB)
 begin
-    if (iRST)       rRA <= 0;
+    if (iRSTB)      rRA <= 0;
     else if (qRE)   rRA <= rRA + 1'b1;
     else            rRA <= rRA;
 end
@@ -144,7 +145,7 @@ end
 //----------------------------------------------------------
 always @(posedge iCLKB)
 begin
-    if (iRST)       rRG <= 0;
+    if (iRSTB)      rRG <= 0;
     else            rRG <= {rRA[lpAddrMsb], rRA[lpAddrMsbNext:0] ^ rRA[lpAddrMsb:1]};
 end
 
@@ -153,7 +154,7 @@ end
 //----------------------------------------------------------
 always @(posedge iCLKA)
 begin
-    if (iRST)       {wRGf2, wRGf1} <= {lpAddrNull, lpAddrNull};
+    if (iRSTA)      {wRGf2, wRGf1} <= {lpAddrNull, lpAddrNull};
     else            {wRGf2, wRGf1} <= {wRGf1, rRG};
 end
 

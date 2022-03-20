@@ -16,7 +16,8 @@ module fifoDualController #(
 )(
     input                       iCLKA,  // clk write side
     input                       iCLKB,  // clk read  side
-    input                       iRST,   // Active High
+    input                       iRSTA,  // Active High
+    input                       iRSTB,  // Active High
     input   [pBitWidth-1:0]     iWD,    // write data
     input                       iWE,    // write enable 有効データ書き込み
     output                      oFLL,   // 最大書き込み時High
@@ -44,14 +45,14 @@ localparam lpAddrWidth  = fBitWidth(pBuffDepth);
 //----------------------------------------------------------
 reg qFLL, qEMP, qRVD;    assign {oFLL, oEMP, oRVD} = {qFLL, qEMP, qRVD};
 reg [lpAddrWidth-1:0] rWA, rWAn, rRA, rORP;
-reg qWE, qRE;
+reg qWE, qRE, qRst;
 
 
 ////////////////////////////////////////////////////////////
 // write pointer
 always @(posedge iCLKA)
 begin
-    if (iRST)       rWA <= 0;
+    if (iRSTA)      rWA <= 0;
     else if (qWE)   rWA <= rWA + 1'b1;
     else            rWA <= rWA;
 end
@@ -60,7 +61,7 @@ end
 // read pointer
 always @(posedge iCLKB)
 begin
-    if (iRST)      rRA <= 0;
+    if (iRSTB)     rRA <= 0;
     else if (qRE)  rRA <= rRA + 1'b1;
     else           rRA <= rRA;
 end
@@ -68,7 +69,7 @@ end
 // 前回のrpが更新されていたら新規データを出力できる状態と判断する
 always @(posedge iCLKB)
 begin
-    if (iRST)   rORP <= 0;
+    if (iRSTB)  rORP <= 0;
     else        rORP <= rRA;
 end
 

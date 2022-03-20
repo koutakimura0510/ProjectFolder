@@ -18,6 +18,16 @@
 // 
 // 2022/03/18
 // MIGの制御方法について誤解していたため、コントローラ部分の修正を行う
+// 
+// 2022/03/20
+// アプリケーション回路とDDR回路の切り離し、アプリ側の周波数をDDR側より高くする
+// 
+// High CLK --------------> | <---------- Low CLK
+// Application ------- Async FIFO ------- DDR
+// Pixel -----------------> |------------> |
+// Addr  -----------------> |------------> |
+//                                         |
+// Pixel <----------------- | <------------|
 //----------------------------------------------------------
 module ddr3Bridge #(
     parameter pDramAddrWidth    = 29,
@@ -29,6 +39,10 @@ module ddr3Bridge #(
 )(
     input                       iCLK,           // system clk
     input                       iRST,           // reset High
+    input                       iAppCLK,        // Application clk
+    input                       iAppRST,        // Application Rst
+    output                      oUiCLK,
+    output                      oUiRST,
 
     // DDRメモリ制御GPIO
     inout  [15:0]               ioDDR3_DQ,      // ddr portはtopモジュールから接続
@@ -46,25 +60,25 @@ module ddr3Bridge #(
     output [ 1:0]               oDDR3_DM,
     output                      oDDR3_ODT,
 
-    // インターフェース制御信号一覧
-    // write side
+    // Appcation side write data addr side
     input  [pBitWidth-1:0]      iWD,                // WriteData
     input  [pBitWidth-1:0]      iWA,                // Write Addr [28]:0固定 / [27-25]:Bank / [24-10]:Row / [9-3]:Col / [2:0]:0固定
     input  [pDramMaskWidth-1:0] iMask,              // write mask 1を立てることでその範囲は書き込まないようにできる 基本0
     input                       iWvalid,            // write enable信号
-    input                       iWFLL,              // dual buffer fifo full signal
     output                      oWready,            // write ready Active High
 
-    // read data side
-    output [pBitWidth-1:0]      oRD,                // Pixel Read Data
-    output                      oRVD,               // 有効データ出力時High Read Valid Data
+    // Appcation side read addr side
     input  [pBitWidth-1:0]      iRA,                // Read Addr [28]:0固定 / [27-25]:Bank / [24-10]:Row / [9-3]:Col / [2:0]:0固定
     input                       iRvalid,            // read addr enable
     output                      oRready,            // read ready Active High
 
-    // user clk
-    output                      oUiCLK,             // user clk 100mhz
-    output                      oUiRST,             // user rst Active High
+    // async data output
+    output [pBitWidth-1:0]      oAppRD,             // Pixel Read Data
+    output                      oAppRVD,            // 有効データ出力時High Read Valid Data
+    input                       iAppRE,
+    output                      oAppEmp,
+
+    // led
     output [7:0]                oLED
 );
 
@@ -75,14 +89,15 @@ wire   ui_clk, ui_clk_sync_rst, wCal;
 // ddr3Bridgeと上位モジュールで使用するクロック、リセット
 wire   wUiCLK = ui_clk;
 wire   wUiRST = ui_clk_sync_rst & (~wCal);
-assign oUiRST = wUiRST;
+// assign oUiCLK = wMigRefClk;
+// assign oUiRST = wUiRST;
 assign oUiCLK = wUiCLK;
-
+assign oUiRST = wUiRST;
 
 //----------------------------------------------------------
 //----------------------------------------------------------
 localparam lpSendCntSize = 4;
-localparam [lpSendCntSize-1:0] lpSendCntMax  = 8;
+localparam [lpSendCntSize-1:0] lpSendCntMax  = 4;
 localparam [lpSendCntSize-1:0] lpSendCntNull = 0;
 
 localparam lpStateSize = 4;
@@ -232,6 +247,7 @@ wire [pBitWidth-1:0] wRA, wWD, wWA;
 wire wRFLL, wWFLL;                              assign {oRready, oWready} = {~wRFLL, ~wWFLL};
 wire wWEMP, wREMP;
 wire wFWVD, wFRVD;
+wire wDualFll;
 reg  [pBitWidth-1:0] qDdrData, qDdrAddr;
 reg  qDdrWE, qDdrCmd;
 reg  qFROE,  qFWOE;
@@ -240,31 +256,68 @@ ddr3Fifo #(
     .pBuffDepth     (pBuffDepth),
     .pBitWidth      (pBitWidth)
 ) DDR3_FIFO (
-    // input side
-    .iCLK           (wUiCLK),       .iRST       (wUiRST),
+    // input App side
+    .iCLKA          (iAppCLK),      .iRSTA      (iAppRST),
     .iWD            (iWD),          .iWA        (iWA),
-    .iWDE           (iWvalid),      .iWRE       (qFWOE),
+    .iWDE           (iWvalid),      
     .iRA            (iRA),          .iRDE       (iRvalid),
-    .iRRE           (qFROE),
 
-    // output side
+    // output App side
+    .oRFLL          (wRFLL),        .oWFLL      (wWFLL),
+
+    // input Ui side
+    .iCLKB          (wUiCLK),       .iRSTB      (wUiRST),
+    .iRRE           (qFROE),        .iWRE       (qFWOE),
+
+    // output Ui side
     .oWD            (wWD),          .oWA        (wWA),
-    .oWVD           (wFWVD),        .oWFLL      (wWFLL),
-    .oWEMP          (wWEMP),        .oREMP      (wREMP),
+    .oWVD           (wFWVD),
     .oRA            (wRA),          .oRVD       (wFRVD),
-    .oRFLL          (wRFLL)
+    .oWEMP          (wWEMP),        .oREMP      (wREMP)
 );
 
 always @*
 begin
     qFWOE   <= (~wWEMP) & wAready  & wWready & rDdrWriteEn;
-    qFROE   <= (~wREMP) & (~iWFLL) & wAready & rDdrReadEn;
+    qFROE   <= (~wREMP) & (~wDualFll) & wAready & rDdrReadEn;
     qDdrWE  <= qFWOE;
     qDdrCmd <= qFROE;
     {qDdrData, qDdrAddr} <= wFWVD ? {wWD, wWA} : {32'd0, wRA};
 end
 
-assign oLED = {iWFLL, qFWOE, qFROE, wAready, wWready, wRFLL, wWFLL, ~wUiRST};
+assign oLED = {wDualFll, qFWOE, qFROE, wAready, wWready, wRFLL, wWFLL, ~wUiRST};
+
+
+//----------------------------------------------------------
+// DDR Async FIFO
+//----------------------------------------------------------
+wire [pDramDataWidth:0] wDdrRD;
+wire wDdrRVD;
+
+fifoController #(
+    .pBuffDepth (pBuffDepth),
+    .pBitWidth  (pBitWidth)
+) APP_DDR_BRIDGE (
+    // write side           read side
+    .iCLK   (wUiCLK),       .oRD    (oAppRD),
+    .iRST   (wUiRST),       .iRE    (iAppRE),
+    .iWD    (wDdrRD),       .oRVD   (oAppRVD),
+    .iWE    (wDdrRVD),      .oEMP   (oAppEmp),
+    .oFLL   (wDualFll)
+);
+// fifoDualController #(
+//     .pBuffDepth (pBuffDepth),
+//     .pBitWidth  (pBitWidth)
+// ) APP_DDR_BRIDGE (
+//     // write side           read side
+//     .iCLKA  (wUiCLK),       .iCLKB  (iAppCLK),
+//     .iRSTA  (wUiRST),       .iRSTB  (iAppRST),
+//     .iWD    (wDdrRD),       .oRD    (oAppRD),
+//     .iWE    (wDdrRVD),      .iRE    (iAppRE),
+//     .oFLL   (wDualFll),     .oRVD   (oAppRVD),
+//                             .oEMP   (oAppEmp)
+// );
+
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
@@ -286,7 +339,7 @@ assign oLED = {iWFLL, qFWOE, qFROE, wAready, wWready, wRFLL, wWFLL, ~wUiRST};
 // MIG 設定の動作周波数の生成
 //----------------------------------------------------------
 wire wMigRefClk, wMigInputClk, locked;
-wire wMigRST = iRST & (~locked);
+wire wMigRST = (~locked);
 
 clk_wiz_1 DDR3_CLK (
     .clk_out1   (wMigRefClk),   .clk_out2   (wMigInputClk),
@@ -301,10 +354,10 @@ generate
     if (pDramDebug == "on")
         migDemo MIG_DEMO (
             .iData                  ({96'd0, qDdrData}),
-            .oData                  (oRD),               .oCal          (wCal),
+            .oData                  (wDdrRD),            .oCal          (wCal),
             .iAppEN                 (rDdrAppEn),         .iWE           (qDdrWE),
             .iReadCmd               (qDdrCmd),
-            .oWready                (wWready),           .oRVD          (oRVD),
+            .oWready                (wWready),           .oRVD          (wDdrRVD),
             .oAready                (wAready),
             .iCLK                   (wMigInputClk),      .iRST          (wMigRST),
             .oUiCLK                 (ui_clk),            .oUiRST        (ui_clk_sync_rst)
@@ -330,9 +383,9 @@ generate
             .app_wdf_wren           (qDdrWE),               // input			write enable
             .app_wdf_rdy            (wWready),              // output			データ書き込み可能時High
             .app_wdf_mask           (iMask),                // input [15:0]		各bitに1が立っていたら対応したbyteは書き込まれない
-            .app_rd_data            (oRD),                  // output [127:0]	読み込みデータ 16bit x 8byte
+            .app_rd_data            (wDdrRD),               // output [127:0]	読み込みデータ 16bit x 8byte
             .app_rd_data_end        (),                     // output			最後のデータ出力時High
-            .app_rd_data_valid      (oRVD),                 // output			読み込みデータ出力開始時High
+            .app_rd_data_valid      (wDdrRVD),              // output			読み込みデータ出力開始時High
             .app_rdy                (wAready),              // output			DDR 動作可能時High
             .app_sr_req             (1'b0),                 // input			
             .app_ref_req            (1'b0),                 // input			

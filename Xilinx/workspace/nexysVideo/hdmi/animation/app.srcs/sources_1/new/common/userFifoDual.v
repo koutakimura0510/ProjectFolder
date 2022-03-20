@@ -25,7 +25,8 @@ module userFifoDual #(
 localparam [pAddrWidth-1:0] pDepth = pBuffDepth - 1;
 
 (* ram_style = "block" *) reg [pBitWidth-1:0] fifo [0:pDepth];
-reg [pBitWidth-1:0] rd;     assign oRD = rd;
+// reg [pBitWidth-1:0] rd;     assign oRD = rd;
+assign oRD = fifo[iRA];
 
 // write side
 always @(posedge iCLKA)
@@ -34,9 +35,9 @@ begin
 end
 
 // read side
-always @(posedge iCLKB)
-begin
-    rd <= fifo[iRA];
-end
+// always @(posedge iCLKB)
+// begin
+//     rd <= fifo[iRA];
+// end
 
 endmodule

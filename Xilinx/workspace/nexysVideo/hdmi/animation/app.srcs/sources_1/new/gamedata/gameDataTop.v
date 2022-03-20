@@ -26,7 +26,6 @@ module gameDataTop # (
     parameter pPixelDebug    = "off"
 )(
     input           iDispCLK,   // ディスプレイ描画clk vgaの場合25MHz
-    input           iCLK,       // system clk
     input           iRST,       // system rst
     input  [ 5:0]   iBtn,
     input  [ 7:0]   iSW,
@@ -60,7 +59,6 @@ module gameDataTop # (
     output [7:0]    oLED
 );
 
-
 ////////////////////////////////////////////////////////////
 `include "./include/commonAddr.vh"
 // localparam lpHDisplay = 5;
@@ -70,9 +68,21 @@ localparam lpVDisplay = pVDisplay;
 
 
 //----------------------------------------------------------
-// gameDataTop内を動作させるクロック・リセット信号、初期化完了のキャリブレーション信号
+// アプリケーション回路のCLK生成
 //----------------------------------------------------------
-wire oUiCLK, oUiRST;
+wire wUiCLK, wUiRST;
+wire wLocked;
+wire wAppCLK = wUiCLK;
+wire wAppRST = wUiRST;
+// wire wAppCLK, wLocked;
+// wire wAppRST = (~wLocked);
+
+// clk_wiz_2 UiClkGen (
+//     .clk_out1   (wAppCLK),
+//     .reset      (wUiRST),
+//     .locked     (wLocked),
+//     .clk_in1    (wUiCLK)
+// );
 
 
 ////////////////////////////////////////////////////////////
@@ -90,7 +100,7 @@ wire wWFE;  // write frae enable
 frameStateRW #(
     .pBitLengthState    (2)
 ) FRAME_STATE_RW (
-    .iCLK   (oUiCLK),           .iRST   (oUiRST),
+    .iCLK   (wAppCLK),          .iRST   (wAppRST),
     .iRE    (wRFE),             .iWE    (wWFE),     // fbuf change enable
     .oRS    (wRS),              .oWS    (wWS),      // state machine
     .oRE    (wFbufReadStart)
@@ -111,7 +121,7 @@ frameBufferRead #(
     .pAddrWidth         (pBitWidth),
     .pBitLengthState    (2)
 ) FRAME_BUFFER_READ (
-    .iCLK       (oUiCLK),       .iRST       (oUiRST),
+    .iCLK       (wAppCLK),      .iRST       (wAppRST),
     .iDdrRaE    (qDdrRvalid),   .iRS        (wRS),
     .oAddr      (wDdrRA),       .oRE        (wRFE)
 );
@@ -141,7 +151,7 @@ pixelTop #(
     .pDramDebug             (pDramDebug)
 ) PIXEL_TOP (
     .iSW    (iSW),
-    .iCLK   (oUiCLK),       .iRST   (oUiRST),
+    .iCLK   (wAppCLK),      .iRST   (wAppRST),
     .iWS    (wWS),          .iDdrWE (qPixelvalid),
     .oPixel (wPixelWD),     .oAddr  (wPixelWA),
     .oWE    (wWFE)
@@ -165,8 +175,9 @@ reg  [pBitWidth-1:0] rPixel;       assign oVRGB = rPixel;     // alpha値は必�
 wire [pBitWidth-1:0] wVRGB;
 
 //ddr side
-wire [pBitWidth-1:0] wDdrRD;
-wire wDdrRVD, wDualFll;
+wire [pBitWidth-1:0] wAppRD;
+wire wAppRVD, wAppEmp, wAppFull;
+reg  qAppRE;
 
 // fifo side
 wire wRVD;
@@ -174,9 +185,9 @@ wire wRVD;
 // pixel read start
 reg rFS, qFS;
 
-always @(posedge oUiCLK)
+always @(posedge wAppCLK)
 begin
-    if (oUiRST)             rFS <= 0;
+    if (wAppRST)            rFS <= 0;
     else if (iFE)           rFS <= 1'b1;
     else                    rFS <= rFS;
 end
@@ -201,11 +212,11 @@ fifoDualController #(
     .pBitWidth  (pBitWidth)
 ) PIXEL_FIFO_DUAL_CONTROLLER (
     // write side           read side
-    .iCLKA  (oUiCLK),       .iCLKB  (iDispCLK),
-    .iRST   (oUiRST),
-    .iWD    (wDdrRD),       .oRD    (wVRGB),
-    .iWE    (wDdrRVD),      .iRE    (qFS),
-    .oFLL   (wDualFll),     .oRVD   (wRVD),
+    .iCLKA  (wAppCLK),      .iCLKB  (iDispCLK),
+    .iRSTA  (wAppRST),      .iRSTB  (iRST),
+    .iWD    (wAppRD),       .oRD    (wVRGB),
+    .iWE    (wAppRVD),      .iRE    (qFS),
+    .oFLL   (wAppFull),     .oRVD   (wRVD),
                             .oEMP   (oEmp)
 );
 
@@ -229,7 +240,8 @@ generate
     begin
         always @*
         begin
-            qFS <= rFS & iFVDE;
+            qAppRE <= (~wAppFull) & (~wAppEmp);
+            qFS    <= rFS & iFVDE;
         end
     end
 endgenerate
@@ -253,17 +265,23 @@ ddr3Bridge #(
     .oDDR3_CLK_N        (oDDR3_CLK_N),  .oDDR3_CKE          (oDDR3_CKE),
     .oDDR3_DM           (oDDR3_DM),     .oDDR3_ODT          (oDDR3_ODT),
 
-    // write data side                  read pixel data
-    .iWD                (wPixelWD),     .oRD                (wDdrRD),
-    .iWA                (wPixelWA),     .oRVD               (wDdrRVD),
-    .iMask              (16'd0),        .iRA                (wDdrRA),
-    .iWvalid            (qPixelvalid),  .iRvalid            (qDdrRvalid),
-    .iWFLL              (wDualFll),     .oRready            (wDdrRready),
-    .oWready            (wWready),        
+    // App Write Data Addr com
+    .iWD                (wPixelWD),     .iWA                (wPixelWA),
+    .iMask              (16'd0),        .iWvalid            (qPixelvalid),  
+    .oWready            (wWready),      
+
+    // App Read Addr com
+    .iRA                (wDdrRA),       .iRvalid            (qDdrRvalid),
+    .oRready            (wDdrRready),
+
+    // app output data com
+    .oAppRD             (wAppRD),       .oAppRVD            (wAppRVD),
+    .iAppRE             (qAppRE),       .oAppEmp            (wAppEmp),
 
     // user interface clk rst
-    .iCLK               (iDispCLK),     .iRST           (iRST),
-    .oUiCLK             (oUiCLK),       .oUiRST         (oUiRST),
+    .iCLK               (iDispCLK),     .iRST               (iRST),
+    .iAppCLK            (wAppCLK),      .iAppRST            (wAppRST),
+    .oUiCLK             (wUiCLK),       .oUiRST             (wUiRST),
     .oLED               (oLED)
 );
 
@@ -274,21 +292,21 @@ ddr3Bridge #(
 //----------------------------------------------------------
 reg [31:0] rPixelSh [0:1];
 
-always @(posedge oUiCLK)
+always @(posedge wAppCLK)
 begin
-    if (oUiRST) {rPixelSh[1], rPixelSh[0]} <= 64'd0;
-    else        {rPixelSh[1], rPixelSh[0]} <= {rPixelSh[0], wVRGB};
+    if (wAppRST) {rPixelSh[1], rPixelSh[0]} <= 64'd0;
+    else         {rPixelSh[1], rPixelSh[0]} <= {rPixelSh[0], wVRGB};
 end
 
 oledTop #(
-    .PDIVCLK        (100000),
-    .PDIVSCK        (128),
+    .PDIVCLK        (400000),
+    .PDIVSCK        (512),
     .DISPLAY_WIDTH  (128),
     .DISPLAY_HEIGHT (4),
     .BIT_LENGTH     (64)
 ) OLED_TOP (
-    .iCLK           (oUiCLK),
-    .iRST           (oUiRST),
+    .iCLK           (wAppCLK),
+    .iRST           (wAppRST),
     .oOledScl       (oOledScl),
     .oOledSda       (oOledSda),
     .oOledDC        (oOledDC),

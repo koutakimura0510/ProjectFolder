@@ -11,8 +11,10 @@ module ddr3Fifo #(
     parameter pBuffDepth     = 16,          // bram length
     parameter pBitWidth      = 32           // data bit
 )(
-    input                       iCLK,           // system clk
-    input                       iRST,           // reset High
+    input                       iCLKA,          // app clk
+    input                       iRSTA,          // reset High
+    input                       iCLKB,          // ui clk
+    input                       iRSTB,          // reset High
     input  [pBitWidth-1:0]      iWD,            // WriteData
     input  [pBitWidth-1:0]      iWA,            // Write Addr [28]:0固定 / [27-25]:Bank / [24-10]:Row / [9-3]:Col / [2:0]:0固定
     input                       iWDE,           // write data enable信号
@@ -40,7 +42,7 @@ fifoController #(
     .pBuffDepth     (pBuffDepth),
     .pBitWidth      (pBitWidth)
 ) DDR3_WD_FIFO (
-    .iCLK           (iCLK),     .iRST           (iRST),
+    .iCLK           (iCLKA),    .iRST           (iRSTA),
     .iWD            (iWD),      .iWE            (iWDE),
     .oFLL           (oWFLL),
     .oRD            (oWD),      .iRE            (iWRE),
@@ -51,12 +53,35 @@ fifoController #(
     .pBuffDepth     (pBuffDepth),
     .pBitWidth      (pBitWidth)
 ) DDR3_WA_FIFO (
-    .iCLK           (iCLK),     .iRST           (iRST),
+    .iCLK           (iCLKA),    .iRST           (iRSTA),
     .iWD            (iWA),      .iWE            (iWDE),
     .oFLL           (),
     .oRD            (oWA),      .iRE            (iWRE),
     .oRVD           (),         .oEMP           ()
 );
+// fifoDualController #(
+//     .pBuffDepth     (pBuffDepth),
+//     .pBitWidth      (pBitWidth)
+// ) DDR3_WD_FIFO (
+//     .iCLKA          (iCLKA),    .iRSTA          (iRSTA),
+//     .iCLKB          (iCLKB),    .iRSTB          (iRSTB),
+//     .iWD            (iWD),      .iWE            (iWDE),
+//     .oFLL           (oWFLL),
+//     .oRD            (oWD),      .iRE            (iWRE),
+//     .oRVD           (oWVD),     .oEMP           (oWEMP)
+// );
+
+// fifoDualController #(
+//     .pBuffDepth     (pBuffDepth),
+//     .pBitWidth      (pBitWidth)
+// ) DDR3_WA_FIFO (
+//     .iCLKA          (iCLKA),    .iRSTA          (iRSTA),
+//     .iCLKB          (iCLKB),    .iRSTB          (iRSTB),
+//     .iWD            (iWA),      .iWE            (iWDE),
+//     .oFLL           (),
+//     .oRD            (oWA),      .iRE            (iWRE),
+//     .oRVD           (),         .oEMP           ()
+// );
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
@@ -66,12 +91,23 @@ fifoController #(
     .pBuffDepth     (pBuffDepth),
     .pBitWidth      (pBitWidth)
 ) DDR3_RA_FIFO (
-    .iCLK           (iCLK),     .iRST           (iRST),
+    .iCLK           (iCLKA),    .iRST           (iRSTA),
     .iWD            (iRA),      .iWE            (iRDE),
     .oFLL           (oRFLL),
     .oRD            (oRA),      .iRE            (iRRE),
     .oRVD           (oRVD),     .oEMP           (oREMP)
 );
+// fifoDualController #(
+//     .pBuffDepth     (pBuffDepth),
+//     .pBitWidth      (pBitWidth)
+// ) DDR3_RA_FIFO (
+//     .iCLKA          (iCLKA),    .iRSTA          (iRSTA),
+//     .iCLKB          (iCLKB),    .iRSTB          (iRSTB),
+//     .iWD            (iRA),      .iWE            (iRDE),
+//     .oFLL           (oRFLL),
+//     .oRD            (oRA),      .iRE            (iRRE),
+//     .oRVD           (oRVD),     .oEMP           (oREMP)
+// );
 
 
 endmodule
