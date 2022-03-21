@@ -29,11 +29,21 @@ wire oCLKB;
 wire oCLKC;
 wire locked;
 
+//----------------------------------------------------------
+// 非同期リセットを同期信号に変更
+//----------------------------------------------------------
+reg rRST [0:1];
+
+always @(posedge iCLK)
+begin
+    {rRST[1], rRST[0]} <= {rRST[0], ~iRST};
+end
+
 clk_wiz_0 CLK_GEN (
     .clk_out1   (oCLKA),    // 100mhz
     .clk_out2   (oCLKB),    // 25mhz
     .clk_out3   (oCLKC),    // 200mhz
-    .reset      (iRST),
+    .reset      (~iRST),
     .locked     (locked),
     .clk_in1    (iCLK)
 );
@@ -161,28 +171,36 @@ fifoDualControllerGray #(
 
 always @*
 begin
-    // qDRE2     <= (~oDEMP2);
-    qDRE2     <= (~oDEMP2) & en;
+    qDRE2     <= (~oDEMP2);
+    // qDRE2     <= (~oDEMP2) & en;
 end
 
 enGen #(
     .pSysClk (100000000)
 ) ENGEN (
-    .iCLK       (oCLKC),
+    .iCLK       (oCLKA),
     .iRST       (rst),
     .oEnable    (en)
 );
 
 ////////////////////////////////////////////////////////////
-reg [7:0] rled;
+reg [6:0] rled;
+reg rEnRed;
 
 always @(posedge oCLKC)
 begin
-    if (rst)            rled <= 255;
-    else if (oDRVD2)    rled <= oDRD2;
+    if (rst)            rled <= 127;
+    else if (oDRVD2)    rled <= oDRD2[6:0];
     else                rled <= rled;
 end
 
-assign oLED = rled;
+always @(posedge oCLKC)
+begin
+    if (rst)        rEnRed <= 0;
+    else if (en)    rEnRed <= ~rEnRed;
+    else            rEnRed <= rEnRed;
+end
+
+assign oLED = {rEnRed, rled};
 
 endmodule
