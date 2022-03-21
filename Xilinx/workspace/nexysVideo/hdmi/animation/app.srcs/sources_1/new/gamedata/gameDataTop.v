@@ -71,18 +71,8 @@ localparam lpVDisplay = pVDisplay;
 // アプリケーション回路のCLK生成
 //----------------------------------------------------------
 wire wUiCLK, wUiRST;
-wire wLocked;
 wire wAppCLK = wUiCLK;
 wire wAppRST = wUiRST;
-// wire wAppCLK, wLocked;
-// wire wAppRST = (~wLocked);
-
-// clk_wiz_2 UiClkGen (
-//     .clk_out1   (wAppCLK),
-//     .reset      (wUiRST),
-//     .locked     (wLocked),
-//     .clk_in1    (wUiCLK)
-// );
 
 
 ////////////////////////////////////////////////////////////
@@ -176,7 +166,7 @@ wire [pBitWidth-1:0] wVRGB;
 
 //ddr side
 wire [pBitWidth-1:0] wAppRD;
-wire wAppRVD, wAppEmp, wAppFull;
+wire wAppRVD, wAppEmp, wAppFull, oEmp;
 reg  qAppRE;
 
 // fifo side
@@ -192,10 +182,6 @@ begin
     else                    rFS <= rFS;
 end
 
-// pixel data save
-// 動作周波数が間に合っているか確認するため、wRVDのタイミングでなければ黒で塗りつぶす
-wire en, oEmp;
-
 always @(posedge iDispCLK)
 begin
     case ({iRST, wRVD, oEmp})
@@ -207,45 +193,24 @@ begin
     endcase
 end
 
-fifoDualController #(
+fifoDualControllerGray #(
     .pBuffDepth (pBuffDepth),
     .pBitWidth  (pBitWidth)
 ) PIXEL_FIFO_DUAL_CONTROLLER (
     // write side           read side
     .iCLKA  (wAppCLK),      .iCLKB  (iDispCLK),
-    .iRSTA  (wAppRST),      .iRSTB  (iRST),
+    .iRST   (wAppRST),
     .iWD    (wAppRD),       .oRD    (wVRGB),
     .iWE    (wAppRVD),      .iRE    (qFS),
     .oFLL   (wAppFull),     .oRVD   (wRVD),
                             .oEMP   (oEmp)
 );
 
-generate
-    if (pPixelDebug == "on")
-    begin
-        enGen #(
-            .SYS_CLK    (12500000)
-        ) PixelEn (
-            .iCLK       (iDispCLK),
-            .iRST       (iRST),
-            .oEnable    (en)
-        );
-
-        always @*
-        begin
-            qFS <= rFS & (~oEmp) & en;
-        end
-    end
-    else
-    begin
-        always @*
-        begin
-            qAppRE <= (~wAppFull) & (~wAppEmp);
-            qFS    <= rFS & iFVDE;
-        end
-    end
-endgenerate
-
+always @*
+begin
+    qAppRE <= (~wAppFull) & (~wAppEmp);
+    qFS    <= rFS & iFVDE;
+end
 
 //----------------------------------------------------------
 // DDRメモリ操作
@@ -277,12 +242,11 @@ ddr3Bridge #(
     // app output data com
     .oAppRD             (wAppRD),       .oAppRVD            (wAppRVD),
     .iAppRE             (qAppRE),       .oAppEmp            (wAppEmp),
+    .iAppFull           (wAppFull),
 
     // user interface clk rst
     .iCLK               (iDispCLK),     .iRST               (iRST),
-    .iAppCLK            (wAppCLK),      .iAppRST            (wAppRST),
-    .oUiCLK             (wUiCLK),       .oUiRST             (wUiRST),
-    .oLED               (oLED)
+    .oUiCLK             (wUiCLK),       .oUiRST             (wUiRST)
 );
 
 
@@ -299,8 +263,8 @@ begin
 end
 
 oledTop #(
-    .PDIVCLK        (400000),
-    .PDIVSCK        (512),
+    .PDIVCLK        (100000),
+    .PDIVSCK        (128),
     .DISPLAY_WIDTH  (128),
     .DISPLAY_HEIGHT (4),
     .BIT_LENGTH     (64)
@@ -323,6 +287,7 @@ oledTop #(
     // .iDispLine3     ({"        ", 3'd0, oMapDirect[3], 3'd0, oMapDirect[2], 3'd0, oMapDirect[1], 3'd0, oMapDirect[0]}),
     // .iDispLine4     ({"        ", 0})
 );
-    
+
+assign oLED = {7'd0, ~wUiRST};
 
 endmodule

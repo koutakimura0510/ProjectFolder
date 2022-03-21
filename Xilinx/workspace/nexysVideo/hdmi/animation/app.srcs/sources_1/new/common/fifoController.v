@@ -17,10 +17,8 @@
 // 2022/03/13
 // 動作周波数を上げるため全体構成見直し、パイプライン処理中止
 //
-// 2022/03/15
-// レイテンシ0にするため、BRAM構造からLUTRAM使用に変更、後々パラメータで両対応にする予定
-// 
-// TODO BRAM LUTRAM 両対応
+// 2022-03-21
+// ReadEnableから 2レイテンシでデータ出力する構造に変更、ユーザが意識せずともハンドシェイクが上手く行く用に変更
 // 
 //----------------------------------------------------------
 module fifoController #(
@@ -42,7 +40,7 @@ module fifoController #(
 // buffer sizeによってアドレスレジスタのサイズを自動変換するため、
 // bit幅を取得し指定する
 //----------------------------------------------------------
-localparam lpAddrWidth  = fBitWidth(pBuffDepth);
+localparam pAddrWidth  = fBitWidth(pBuffDepth);
 
 
 ////////////////////////////////////////////////////////////
@@ -54,8 +52,7 @@ localparam lpAddrWidth  = fBitWidth(pBuffDepth);
 // oEMP 書き込みと読み込みのアドレスが一致している、または超えそうな場合High
 // oRVD Empty状態ではなく読み込みEnable信号を受信した場合High
 //----------------------------------------------------------
-reg qFLL, qEMP, qRVD;    assign {oFLL, oEMP, oRVD} = {qFLL, qEMP, qRVD};
-reg [lpAddrWidth-1:0] rWA, rWAn, rRA, rORP;
+reg [pAddrWidth-1:0] rWA, qWAn, qWA2n, rRA, rORP;
 reg qWE, qRE;
 
 
@@ -84,18 +81,31 @@ begin
     else        rORP <= rRA;
 end
 
+//----------------------------------------------------------
+// ハンドシェイク信号出力
+//----------------------------------------------------------
+reg qFLL, qEMP, qRVD;
+reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {qFLL | rFLL, qEMP, rRVD};
+
+always @(posedge iCLK)
+begin
+    if (iRST)       {rFLL, rEMP, rRVD} <= {1'b0, 1'b0, 1'b0};
+    else            {rFLL, rEMP, rRVD} <= {qFLL, qEMP, qRVD};
+end
+
 ///////////////////////////////////////////////////////////
 //---------------------------------------------------------------------------
 // ハンドシェイク信号、read ptrが write ptrを超えないように調整
 //---------------------------------------------------------------------------
 always @*
 begin
-    rWAn <= rWA + 1'b1;
-    qFLL <= (rWAn == rRA) ? 1'b1 : 1'b0;
+    qWAn  <= rWA + 1'b1;
+    qWA2n <= rWA + 2'd2;
+    qFLL <= (qWAn == rRA || qWA2n == rRA) ? 1'b1 : 1'b0;
     qEMP <= (rWA == rRA) ? 1'b1 : 1'b0;
     // qRVD <= (rRA != rORP);
     qRVD <= iRE & (~qEMP);
-    qWE  <= iWE & (~qFLL);
+    qWE  <= iWE & (~rFLL);
     qRE  <= iRE & (~qEMP);
 end
 
@@ -109,7 +119,7 @@ wire [pBitWidth-1:0] wRD;             assign oRD = wRD;
 userFifo #(
     .pBuffDepth    (pBuffDepth),
     .pBitWidth     (pBitWidth),
-    .pAddrWidth    (lpAddrWidth)
+    .pAddrWidth    (pAddrWidth)
 ) USER_FIFO (
     // write side       read side
     .iCLK   (iCLK),

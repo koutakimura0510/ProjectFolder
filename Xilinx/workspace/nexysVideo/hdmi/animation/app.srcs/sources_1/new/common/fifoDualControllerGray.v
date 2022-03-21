@@ -14,6 +14,8 @@
 // 2022/03/13
 // 非同期FIFO対応のため全体構成見直し、メタ・ステーブル対策を行うようにした
 //
+// 2022-03-21
+// ReadEnableから 2レイテンシでデータ出力する構造に変更、ユーザが意識せずともハンドシェイクが上手く行く用に変更
 // -
 // 参考文献
 // 非同期FIFO Verilog ->    https://zenn.dev/sk6labo/articles/fd2bb32f6e570e
@@ -21,14 +23,13 @@
 // グレイコード ->          http://www5.nkansai.ne.jp/users/khateen/gray-code.html
 // 
 //----------------------------------------------------------
-module fifoDualController #(
+module fifoDualControllerGray #(
     parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
     parameter pBitWidth   = 32      // bitサイズ
 )(
     input                       iCLKA,  // clk write side
     input                       iCLKB,  // clk read  side
-    input                       iRSTA,  // Active High
-    input                       iRSTB,  // Active High
+    input                       iRST,   // Active High
     input   [pBitWidth-1:0]     iWD,    // write data
     input                       iWE,    // write enable 有効データ書き込み
     output                      oFLL,   // 最大書き込み時High
@@ -59,8 +60,7 @@ localparam [lpAddrWidth-1:0] lpAddrNull = 0;
 // oEMP 書き込みと読み込みのアドレスが一致している、または超えそうな場合High
 // oRVD Empty状態ではなく読み込みEnable信号を受信した場合High
 //----------------------------------------------------------
-reg qFLL, qEMP, qRVD;    assign {oFLL, oEMP, oRVD} = {qFLL, qEMP, qRVD};
-reg [lpAddrWidth-1:0] rWA, rWG, rWB, wWGf1, wWGf2, qWAn;
+reg [lpAddrWidth-1:0] rWA, rWG, rWB, wWGf1, wWGf2, qWAn, qWA2n;
 reg [lpAddrWidth-1:0] rRA, rRG, rRB, wRGf1, wRGf2, rORP;
 reg qWE, qRE;
 
@@ -73,7 +73,7 @@ reg qWE, qRE;
 //----------------------------------------------------------
 always @(posedge iCLKA)
 begin
-    if (iRSTA       rWA <= 0;
+    if (iRST)       rWA <= 0;
     else if (qWE)   rWA <= rWA + 1'b1;
     else            rWA <= rWA;
 end
@@ -83,7 +83,7 @@ end
 //----------------------------------------------------------
 always @(posedge iCLKA)
 begin
-    if (iRSTA)      rWG <= 0;
+    if (iRST)       rWG <= 0;
     else            rWG <= {rWA[lpAddrMsb], rWA[lpAddrMsbNext:0] ^ rWA[lpAddrMsb:1]};
 end
 
@@ -92,7 +92,7 @@ end
 //----------------------------------------------------------
 always @(posedge iCLKB)
 begin
-    if (iRSTB)      {wWGf2, wWGf1} <= {lpAddrNull, lpAddrNull};
+    if (iRST)       {wWGf2, wWGf1} <= {lpAddrNull, lpAddrNull};
     else            {wWGf2, wWGf1} <= {wWGf1, rWG};
 end
 
@@ -129,13 +129,13 @@ end
 //----------------------------------------------------------
 always @(posedge iCLKB)
 begin
-    if (iRSTB)      rORP <= 0;
+    if (iRST)       rORP <= 0;
     else            rORP <= rRA;
 end
 
 always @(posedge iCLKB)
 begin
-    if (iRSTB)      rRA <= 0;
+    if (iRST)       rRA <= 0;
     else if (qRE)   rRA <= rRA + 1'b1;
     else            rRA <= rRA;
 end
@@ -145,7 +145,7 @@ end
 //----------------------------------------------------------
 always @(posedge iCLKB)
 begin
-    if (iRSTB)      rRG <= 0;
+    if (iRST)       rRG <= 0;
     else            rRG <= {rRA[lpAddrMsb], rRA[lpAddrMsbNext:0] ^ rRA[lpAddrMsb:1]};
 end
 
@@ -154,7 +154,7 @@ end
 //----------------------------------------------------------
 always @(posedge iCLKA)
 begin
-    if (iRSTA)      {wRGf2, wRGf1} <= {lpAddrNull, lpAddrNull};
+    if (iRST)       {wRGf2, wRGf1} <= {lpAddrNull, lpAddrNull};
     else            {wRGf2, wRGf1} <= {wRGf1, rRG};
 end
 
@@ -183,13 +183,30 @@ end
 //----------------------------------------------------------
 // ハンドシェイク信号、read ptrが write ptrを超えないように調整
 //----------------------------------------------------------
+reg qFLL, qEMP, qRVD;
+reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {qFLL|rFLL, qEMP, rRVD};
+
+always @(posedge iCLKA)
+begin
+    if (iRST)       {rFLL, rEMP} <= {1'b0, 1'b0};
+    else            {rFLL, rEMP} <= {qFLL, qEMP};
+end
+
+always @(posedge iCLKB)
+begin
+    if (iRST)       {rRVD} <= {1'b0};
+    else            {rRVD} <= {qRVD};
+end
+
 always @*
 begin
     qWAn    <= rWA + 1'b1;
-    qFLL    <= (qWAn == rRB) ? 1'b1 : 1'b0;
+    qWA2n   <= rWA + 2'd2;
+    qFLL    <= (qWAn == rRA || qWA2n == rRA) ? 1'b1 : 1'b0;
     qEMP    <= (rWB  == rRA) ? 1'b1 : 1'b0;
-    qRVD    <= (rRA != rORP);
-    qWE     <= iWE & (~qFLL);
+    // qRVD    <= (rRA != rORP);
+    qRVD    <= iRE & (~qEMP);
+    qWE     <= iWE & (~rFLL);
     qRE     <= iRE & (~qEMP);
 end
 

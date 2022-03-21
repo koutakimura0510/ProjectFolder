@@ -39,8 +39,6 @@ module ddr3Bridge #(
 )(
     input                       iCLK,           // system clk
     input                       iRST,           // reset High
-    input                       iAppCLK,        // Application clk
-    input                       iAppRST,        // Application Rst
     output                      oUiCLK,
     output                      oUiRST,
 
@@ -77,9 +75,7 @@ module ddr3Bridge #(
     output                      oAppRVD,            // 有効データ出力時High Read Valid Data
     input                       iAppRE,
     output                      oAppEmp,
-
-    // led
-    output [7:0]                oLED
+    input                       iAppFull
 );
 
 ////////////////////////////////////////////////////////////
@@ -96,8 +92,8 @@ assign oUiRST = wUiRST;
 
 //----------------------------------------------------------
 //----------------------------------------------------------
-localparam lpSendCntSize = 4;
-localparam [lpSendCntSize-1:0] lpSendCntMax  = 4;
+localparam lpSendCntSize = 8;
+localparam [lpSendCntSize-1:0] lpSendCntMax  = 8;
 localparam [lpSendCntSize-1:0] lpSendCntNull = 0;
 
 localparam lpStateSize = 4;
@@ -248,8 +244,8 @@ wire wRFLL, wWFLL;                              assign {oRready, oWready} = {~wR
 wire wWEMP, wREMP;
 wire wFWVD, wFRVD;
 wire wDualFll;
-reg  [pBitWidth-1:0] qDdrData, qDdrAddr;
-reg  qDdrWE, qDdrCmd;
+reg  [pBitWidth-1:0] rDdrData, rDdrAddr;
+reg  qDdrWE, qDdrCmd, qDdrAppEn;
 reg  qFROE,  qFWOE;
 
 ddr3Fifo #(
@@ -257,7 +253,7 @@ ddr3Fifo #(
     .pBitWidth      (pBitWidth)
 ) DDR3_FIFO (
     // input App side
-    .iCLKA          (iAppCLK),      .iRSTA      (iAppRST),
+    .iCLK           (wUiCLK),       .iRST       (wUiRST),
     .iWD            (iWD),          .iWA        (iWA),
     .iWDE           (iWvalid),      
     .iRA            (iRA),          .iRDE       (iRvalid),
@@ -266,7 +262,6 @@ ddr3Fifo #(
     .oRFLL          (wRFLL),        .oWFLL      (wWFLL),
 
     // input Ui side
-    .iCLKB          (wUiCLK),       .iRSTB      (wUiRST),
     .iRRE           (qFROE),        .iWRE       (qFWOE),
 
     // output Ui side
@@ -278,46 +273,39 @@ ddr3Fifo #(
 
 always @*
 begin
-    qFWOE   <= (~wWEMP) & wAready  & wWready & rDdrWriteEn;
-    qFROE   <= (~wREMP) & (~wDualFll) & wAready & rDdrReadEn;
-    qDdrWE  <= qFWOE;
-    qDdrCmd <= qFROE;
-    {qDdrData, qDdrAddr} <= wFWVD ? {wWD, wWA} : {32'd0, wRA};
+    qFWOE      <= (~wWEMP) & wAready  & wWready & rDdrWriteEn;
+    qFROE      <= (~wREMP) & (~iAppFull) & wAready & rDdrReadEn;
+    qDdrAppEn  <= rDdrAppEn | wFWVD | wFRVD;
+    {qDdrWE, qDdrCmd}    <= {wFWVD, wFRVD};
+    {rDdrData, rDdrAddr} <= wFWVD ? {wWD, wWA} : {32'd0, wRA};
 end
 
-assign oLED = {wDualFll, qFWOE, qFROE, wAready, wWready, wRFLL, wWFLL, ~wUiRST};
+// always @(posedge wUiCLK)
+// begin
+// end
+
+// always @(posedge wUiCLK)
+// begin
+// end
 
 
 //----------------------------------------------------------
-// DDR Async FIFO
+// DDR sync FIFO
 //----------------------------------------------------------
-wire [pDramDataWidth:0] wDdrRD;
-wire wDdrRVD;
+wire [pBitWidth-1:0] wDdrRD;    assign oAppRD  = wDdrRD[31:0];
+wire wDdrRVD;                   assign oAppRVD = wDdrRVD;
 
-fifoController #(
-    .pBuffDepth (pBuffDepth),
-    .pBitWidth  (pBitWidth)
-) APP_DDR_BRIDGE (
-    // write side           read side
-    .iCLK   (wUiCLK),       .oRD    (oAppRD),
-    .iRST   (wUiRST),       .iRE    (iAppRE),
-    .iWD    (wDdrRD),       .oRVD   (oAppRVD),
-    .iWE    (wDdrRVD),      .oEMP   (oAppEmp),
-    .oFLL   (wDualFll)
-);
-// fifoDualController #(
+// fifoController #(
 //     .pBuffDepth (pBuffDepth),
 //     .pBitWidth  (pBitWidth)
 // ) APP_DDR_BRIDGE (
 //     // write side           read side
-//     .iCLKA  (wUiCLK),       .iCLKB  (iAppCLK),
-//     .iRSTA  (wUiRST),       .iRSTB  (iAppRST),
-//     .iWD    (wDdrRD),       .oRD    (oAppRD),
-//     .iWE    (wDdrRVD),      .iRE    (iAppRE),
-//     .oFLL   (wDualFll),     .oRVD   (oAppRVD),
-//                             .oEMP   (oAppEmp)
+//     .iCLK   (wUiCLK),       .oRD    (oAppRD),
+//     .iRST   (wUiRST),       .iRE    (iAppRE),
+//     .iWD    (wDdrRD),       .oRVD   (oAppRVD),
+//     .iWE    (wDdrRVD),      .oEMP   (oAppEmp),
+//     .oFLL   (wDualFll)
 // );
-
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
@@ -353,9 +341,9 @@ clk_wiz_1 DDR3_CLK (
 generate
     if (pDramDebug == "on")
         migDemo MIG_DEMO (
-            .iData                  ({96'd0, qDdrData}),
+            .iData                  ({96'd0, rDdrData}),
             .oData                  (wDdrRD),            .oCal          (wCal),
-            .iAppEN                 (rDdrAppEn),         .iWE           (qDdrWE),
+            .iAppEN                 (qDdrAppEn),         .iWE           (qDdrWE),
             .iReadCmd               (qDdrCmd),
             .oWready                (wWready),           .oRVD          (wDdrRVD),
             .oAready                (wAready),
@@ -375,10 +363,10 @@ generate
             .init_calib_complete    (wCal),
 
             // Application interface ports
-            .app_addr               (qDdrAddr[28:0]),       // input [28:0]		addr[28:3] / Bank[2:0]
+            .app_addr               (rDdrAddr[28:0]),       // input [28:0]		addr[28:3] / Bank[2:0]
             .app_cmd                (qDdrCmd),              // input [2:0]		Write 000 / Read 001
-            .app_en                 (rDdrAppEn),            // input			ユーザー側がapp_cmd有効時にHighにする
-            .app_wdf_data           ({96'd0, qDdrData}),    // input [127:0]	書き込みデータ 16bit x 8byte
+            .app_en                 (qDdrAppEn),               // input			ユーザー側がapp_cmd有効時にHighにする
+            .app_wdf_data           ({96'd0, rDdrData}),    // input [127:0]	書き込みデータ 16bit x 8byte
             .app_wdf_end            (qDdrWE),               // input			下記のwrite enable信号と同期させる
             .app_wdf_wren           (qDdrWE),               // input			write enable
             .app_wdf_rdy            (wWready),              // output			データ書き込み可能時High
