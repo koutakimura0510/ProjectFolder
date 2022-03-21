@@ -23,15 +23,14 @@ module userFifo #(
 
 localparam pDepth = pBuffDepth - 1;
 
-reg [pBitWidth-1:0] fifo [0:pDepth];
-// (* ram_style = "block" *) reg [pBitWidth-1:0] fifo [0:pDepth];
-// reg [pBitWidth-1:0] rd;     assign oRD = rd;
-assign oRD = fifo[iRA];
+(* ram_style = "block" *) reg [pBitWidth-1:0] fifo [0:pDepth];
+reg [pBitWidth-1:0] rd;     assign oRD = rd;
+// assign oRD = fifo[iRA];
 
 // rwポート
 always @(posedge iCLK)
 begin
-    // rd <= fifo[iRA];
+    rd <= fifo[iRA];
     if (iWE) fifo[iWA] <= iWD;
 end
 

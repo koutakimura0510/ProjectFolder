@@ -31,8 +31,8 @@ wire locked;
 
 clk_wiz_0 CLK_GEN (
     .clk_out1   (oCLKA),    // 100mhz
-    .clk_out2   (oCLKC),    // 25mhz
-    .clk_out3   (oCLKB),    // 200mhz
+    .clk_out2   (oCLKB),    // 25mhz
+    .clk_out3   (oCLKC),    // 200mhz
     .reset      (iRST),
     .locked     (locked),
     .clk_in1    (iCLK)
@@ -45,7 +45,7 @@ wire rst = ~locked;
 // 1-stage
 //----------------------------------------------------------
 localparam pWidth = 32;
-localparam pDepth = 64;
+localparam pDepth = 256;
 
 reg  [pWidth-1:0] iWD;
 wire [pWidth-1:0] oRD1;
@@ -72,6 +72,11 @@ begin
     else             iWD <= (iWD + 1'b1) & 255;
 end
 
+always @*
+begin
+    qWE1     <= (~oFLL1);
+end
+
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // 2-stage
@@ -93,6 +98,10 @@ fifoController #(
     .oFLL   (oFLL2),    .oEMP   (oEMP2)
 );
 
+always @*
+begin
+    qRE1     <= (~oFLL2)  & (~oEMP1);
+end
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
@@ -106,10 +115,10 @@ fifoController #(
 // 4-stage
 //----------------------------------------------------------
 wire [pWidth-1:0] oDRD;
-wire oDRVD, oDEMP, oDFLL, oDFLL2;
+wire oDRVD, oDEMP, oDFLL2, oDFLL;
 reg qDRE;
 
-fifoDualController #(
+fifoDualControllerGray #(
     .pBuffDepth (pDepth),
     .pBitWidth  (pWidth)
 ) FIFO_DUAL_CONTROLLER (
@@ -124,7 +133,6 @@ fifoDualController #(
 
 always @*
 begin
-    qWE1     <= (~oFLL1);
     qRE1     <= (~oFLL2)  & (~oEMP1);
     qRE2     <= (~oDFLL)  & (~oEMP2);
     qDRE     <= (~oDFLL2) & (~oDEMP);
@@ -135,10 +143,10 @@ end
 // 5-stage
 //----------------------------------------------------------
 wire [pWidth-1:0] oDRD2;
-wire oDRVD2, oDEMP2;
+wire oDRVD2, oDEMP2, en;
 reg qDRE2;
 
-fifoDualController #(
+fifoDualControllerGray #(
     .pBuffDepth (pDepth),
     .pBitWidth  (pWidth)
 ) FIFO_DUAL_CONTROLLER_2 (
@@ -153,18 +161,26 @@ fifoDualController #(
 
 always @*
 begin
-    qDRE2     <= (~oDEMP2);
+    // qDRE2     <= (~oDEMP2);
+    qDRE2     <= (~oDEMP2) & en;
 end
 
+enGen #(
+    .pSysClk (100000000)
+) ENGEN (
+    .iCLK       (oCLKC),
+    .iRST       (rst),
+    .oEnable    (en)
+);
 
 ////////////////////////////////////////////////////////////
 reg [7:0] rled;
 
 always @(posedge oCLKC)
 begin
-    if (rst)            rled <= 0;
-    else if (!oDRVD2)    rled <= 255;
-    else                rled <= oDRD2;
+    if (rst)            rled <= 255;
+    else if (oDRVD2)    rled <= oDRD2;
+    else                rled <= rled;
 end
 
 assign oLED = rled;

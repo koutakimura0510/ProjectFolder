@@ -14,7 +14,10 @@
 // 処理の流れが分かりにくいため、全体をパイプライン処理に更新
 // RE Active時 3CLK後に RVD Assert データが出力される
 // 
-// TODO Enableから出力まで遅延が発生するため、moduleのパラメータで、入力データの遅延数などを指定しなければならない
+// 2022/03/21
+// レイテンシ3のFIFOのため、Enable中に接続先がNon Active状態になっても出力状態を維持してしまう
+// そのため、接続先からのready信号を個別に受け付けるように変更し、VDがHigh中にreadyがLowになった場合
+// アドレスの位置を調整し出力を中断するようにした
 //----------------------------------------------------------
 module fifoController #(
     parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
@@ -28,7 +31,8 @@ module fifoController #(
     output  [pBitWidth-1:0]     oRD,    // read data
     input                       iRE,    // read enable
     output                      oRVD,   // 有効データ出力
-    output                      oEMP    // バッファ空時High
+    output                      oEMP,   // バッファ空時High
+    input                       iReady  // 接続先のReady信号
 );
 
 //----------------------------------------------------------
@@ -52,34 +56,50 @@ reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {rFLL, rEMP, rRVD};
 reg qFLL, qEMP, qRVD;
 reg [pAddrWidth-1:0] qWAb, qWAb2;
 reg [pAddrWidth-1:0] qRAb [3:0];
-reg [pAddrWidth-1:0] rWA, rRA, rORP;
+reg [pAddrWidth-1:0] rWA, rRA, rOWP, rORP;
 reg rWE, rRE;
 reg qWE, qRE, qRst;
+reg qVDStop;
 
 
 ////////////////////////////////////////////////////////////
 // write pointer
 always @(posedge iCLK)
 begin
-    if (qRst)       rWA <= 0;
-    else if (!rWE)  rWA <= rWA;
-    else            rWA <= rWA + 1'b1;
+    case ({qRst, qVDStop, rWE})
+    'b000:      rWA <= rWA;
+    'b001:      rWA <= rWA + 1'b1;
+    'b010:      rWA <= rOWP;
+    'b011:      rWA <= rWA;
+    default:    rWA <= 0;
+    endcase
+end
+
+always @(posedge iCLK)
+begin
+    if (qRst)           rOWP <= 0;
+    else if (qVDStop)   rOWP <= rOWP;
+    else                rOWP <= rWA;
 end
 
 ////////////////////////////////////////////////////////////
 // read pointer
 always @(posedge iCLK)
 begin
-    if (qRst)      rRA <= 0;
-    else if (!rRE) rRA <= rRA;
-    else           rRA <= rRA + 1'b1;
+    case ({qRst, qVDStop, rRE})
+    'b000:      rRA <= rRA;
+    'b001:      rRA <= rRA + 1'b1;
+    'b010:      rRA <= rORP;
+    default:    rRA <= 0;
+    endcase
 end
 
 // 前回のrpが更新されていたら新規データを出力できる状態と判断する
 always @(posedge iCLK)
 begin
-    if (qRst)   rORP <= 0;
-    else        rORP <= rRA;
+    if (qRst)           rORP <= 0;
+    else if (qVDStop)   rORP <= rORP;
+    else                rORP <= rRA;
 end
 
 ////////////////////////////////////////////////////////////
@@ -112,6 +132,8 @@ begin
     qFLL    <= (rWA == qRAb[0] || rWA == qRAb[1] || rWA == qRAb[2] || rWA == qRAb[3]);
     qEMP    <= (rWA == rRA || qWAb2 == rRA || qWAb == rRA) ? 1'b1 : 1'b0;
     qRVD    <= (rRA != rORP);
+    // qRVD    <= (rRA != rORP) ? iReady : 1'b0;
+    qVDStop <= rRVD & iReady;
     qWE     <= iWE;
     qRE     <= iRE;
 end
