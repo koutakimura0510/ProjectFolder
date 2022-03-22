@@ -83,8 +83,6 @@ wire   ui_clk, ui_clk_sync_rst, wCal;
 // ddr3Bridgeと上位モジュールで使用するクロック、リセット
 wire   wUiCLK = ui_clk;
 wire   wUiRST = ui_clk_sync_rst & (~wCal);
-// assign oUiCLK = wMigRefClk;
-// assign oUiRST = wUiRST;
 assign oUiCLK = wUiCLK;
 assign oUiRST = wUiRST;
 
@@ -178,7 +176,7 @@ begin
         lpReadCmd:
         begin
             rDdrState   <= lpReadPass;
-            rDdrAppEn   <= wAppFull;
+            rDdrAppEn   <= iAppFull;
             rDdrReadEn  <= 1'b0;
             rDdrWriteEn <= 1'b0;
             rDdrSendCnt <= rDdrSendCnt;
@@ -187,8 +185,8 @@ begin
         lpReadPass:
         begin
             rDdrState   <= lpReadActive;
-            rDdrAppEn   <= wAppFull;
-            rDdrReadEn  <= wAppFull;
+            rDdrAppEn   <= iAppFull;
+            rDdrReadEn  <= iAppFull;
             rDdrWriteEn <= 1'b0;
             rDdrSendCnt <= rDdrSendCnt;
             rRA         <= iRA;
@@ -209,8 +207,8 @@ begin
                 else
                 begin
                     rDdrState   <= lpReadActive;
-                    rDdrAppEn   <= wAppFull;
-                    rDdrReadEn  <= wAppFull;
+                    rDdrAppEn   <= iAppFull;
+                    rDdrReadEn  <= iAppFull;
                     rDdrWriteEn <= 1'b0;
                     rDdrSendCnt <= rDdrSendCnt + 1'b1;
                     rRA         <= iRA;

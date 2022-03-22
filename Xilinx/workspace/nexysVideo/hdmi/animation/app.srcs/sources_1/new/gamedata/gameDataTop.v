@@ -193,7 +193,7 @@ begin
     endcase
 end
 
-fifoDualControllerGray #(
+fifoDualController #(
     .pBuffDepth (pBuffDepth),
     .pBitWidth  (pBitWidth)
 ) PIXEL_FIFO_DUAL_CONTROLLER (
