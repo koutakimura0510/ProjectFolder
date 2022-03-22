@@ -208,7 +208,6 @@ fifoDualControllerGray #(
 
 always @*
 begin
-    qAppRE <= (~wAppFull) & (~wAppEmp);
     qFS    <= rFS & iFVDE;
 end
 
@@ -241,8 +240,7 @@ ddr3Bridge #(
 
     // app output data com
     .oAppRD             (wAppRD),       .oAppRVD            (wAppRVD),
-    .iAppRE             (qAppRE),       .oAppEmp            (wAppEmp),
-    .iAppFull           (wAppFull),
+    .iAppFull           (~wAppFull),
 
     // user interface clk rst
     .iCLK               (iDispCLK),     .iRST               (iRST),
