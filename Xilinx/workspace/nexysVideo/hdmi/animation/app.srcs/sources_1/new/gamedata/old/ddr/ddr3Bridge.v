@@ -71,7 +71,7 @@ module ddr3Bridge #(
     output                      oRready,            // read ready Active High
 
     // async data output
-    output [pBitWidth-1:0]      oAppRD,             // Pixel Read Data
+    output [pDramDataWidth-1:0] oAppRD,             // Pixel Read Data
     output                      oAppRVD,            // 有効データ出力時High Read Valid Data
     input                       iAppFull
 );
@@ -89,8 +89,9 @@ assign oUiRST = wUiRST;
 //----------------------------------------------------------
 //----------------------------------------------------------
 localparam lpSendCntSize = 8;
-localparam [lpSendCntSize-1:0] lpSendCntMax  = 8;
-localparam [lpSendCntSize-1:0] lpSendCntNull = 0;
+localparam [lpSendCntSize-1:0] lpSendWcntMax  = 7;
+localparam [lpSendCntSize-1:0] lpSendRcntMax  = 7;
+localparam [lpSendCntSize-1:0] lpSendCntNull  = 0;
 
 localparam lpStateSize = 4;
 localparam [lpStateSize-1:0]
@@ -102,7 +103,6 @@ localparam [lpStateSize-1:0]
     lpReadActive    = 5;
 
 wire wAready, wWready;  // Active ready when Write ready signal for ddr
-reg  [pBitWidth-1:0] rRA, rWD, rWA;
 reg  rDdrAppEn, rDdrReadEn, rDdrWriteEn;        assign {oRready, oWready} = {rDdrReadEn, rDdrWriteEn};
 reg  [lpStateSize-1:0]   rDdrState;
 reg  [lpSendCntSize-1:0] rDdrSendCnt;
@@ -134,17 +134,15 @@ begin
             rDdrState   <= lpWriteActive;
             rDdrAppEn   <= 1'b1;
             rDdrReadEn  <= 1'b0;
-            rDdrWriteEn <= 1'b1;
+            rDdrWriteEn <= 1'b0;
             rDdrSendCnt <= rDdrSendCnt;
-            rWD         <= iWD;
-            rWA         <= iWA;
         end
 
         lpWriteActive:
         begin
-            if (wAready)
+            if (wAready & wWready)
             begin
-                if (rDdrSendCnt == lpSendCntMax)
+                if (rDdrSendCnt == lpSendWcntMax)
                 begin
                     rDdrState   <= lpReadCmd;
                     rDdrAppEn   <= 1'b0;
@@ -157,10 +155,8 @@ begin
                     rDdrState   <= lpWriteActive;
                     rDdrAppEn   <= 1'b1;
                     rDdrReadEn  <= 1'b0;
-                    rDdrWriteEn <= 1'b1;
+                    rDdrWriteEn <= iWvalid;
                     rDdrSendCnt <= rDdrSendCnt + 1'b1;
-                    rWD         <= iWD;
-                    rWA         <= iWA;
                 end
             end
             else
@@ -186,17 +182,16 @@ begin
         begin
             rDdrState   <= lpReadActive;
             rDdrAppEn   <= iAppFull;
-            rDdrReadEn  <= iAppFull;
+            rDdrReadEn  <= 1'b0;
             rDdrWriteEn <= 1'b0;
             rDdrSendCnt <= rDdrSendCnt;
-            rRA         <= iRA;
         end
 
         lpReadActive:
         begin
             if (wAready)
             begin
-                if (rDdrSendCnt == lpSendCntMax)
+                if (rDdrSendCnt == lpSendRcntMax)
                 begin
                     rDdrState   <= lpWriteCmd;
                     rDdrAppEn   <= 1'b0;
@@ -211,7 +206,6 @@ begin
                     rDdrReadEn  <= iAppFull;
                     rDdrWriteEn <= 1'b0;
                     rDdrSendCnt <= rDdrSendCnt + 1'b1;
-                    rRA         <= iRA;
                 end
             end
             else
@@ -236,70 +230,6 @@ begin
         endcase
     end
 end
-
-////////////////////////////////////////////////////////////
-//----------------------------------------------------------
-// 上位モジュールからの、書き込みデータ・アドレスと読み込みアドレスを保存するFIFO
-// 
-//----------------------------------------------------------
-// wire [pBitWidth-1:0] rRA, wWD, wWA;
-// wire wRFLL, wWFLL;                              assign {oRready, oWready} = {~wRFLL, ~wWFLL};
-// wire wWEMP, wREMP;
-// wire wFWVD, wFRVD;
-// wire wDualFll;
-// reg  [pBitWidth-1:0] rDdrData, rDdrAddr;
-// reg  qDdrWE, qDdrCmd, qDdrAppEn;
-// reg  qFROE,  qFWOE;
-
-// ddr3Fifo #(
-//     .pBuffDepth     (pBuffDepth),
-//     .pBitWidth      (pBitWidth)
-// ) DDR3_FIFO (
-//     // input App side
-//     .iCLK           (wUiCLK),       .iRST       (wUiRST),
-//     .iWD            (iWD),          .iWA        (iWA),
-//     .iWDE           (iWvalid),      
-//     .iRA            (iRA),          .iRDE       (iRvalid),
-
-//     // output App side
-//     .oRFLL          (wRFLL),        .oWFLL      (wWFLL),
-
-//     // input Ui side
-//     .iRRE           (qFROE),        .iWRE       (qFWOE),
-
-//     // output Ui side
-//     .oWD            (wWD),          .oWA        (wWA),
-//     .oWVD           (wFWVD),
-//     .oRA            (rRA),          .oRVD       (wFRVD),
-//     .oWEMP          (wWEMP),        .oREMP      (wREMP)
-// );
-
-// always @*
-// begin
-//     qFWOE      <= (~wWEMP) & wAready  & wWready & rDdrWriteEn;
-//     qFROE      <= (~wREMP) & (~iAppFull) & wAready & rDdrReadEn;
-//     qDdrAppEn  <= rDdrAppEn | wFWVD | wFRVD;
-//     {qDdrWE, qDdrCmd}    <= {wFWVD, wFRVD};
-//     {rDdrData, rDdrAddr} <= wFWVD ? {wWD, wWA} : {32'd0, rRA};
-// end
-
-//----------------------------------------------------------
-// DDR sync FIFO
-//----------------------------------------------------------
-wire [pBitWidth-1:0] wDdrRD;    assign oAppRD  = wDdrRD[31:0];
-wire wDdrRVD;                   assign oAppRVD = wDdrRVD;
-
-// fifoController #(
-//     .pBuffDepth (pBuffDepth),
-//     .pBitWidth  (pBitWidth)
-// ) APP_DDR_BRIDGE (
-//     // write side           read side
-//     .iCLK   (wUiCLK),       .oRD    (oAppRD),
-//     .iRST   (wUiRST),       .iRE    (iAppRE),
-//     .iWD    (wDdrRD),       .oRVD   (oAppRVD),
-//     .iWE    (wDdrRVD),      .oEMP   (oAppEmp),
-//     .oFLL   (wDualFll)
-// );
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
@@ -332,6 +262,8 @@ clk_wiz_1 DDR3_CLK (
 //---------------------------------------------------------------------------
 // MIG 動作
 //---------------------------------------------------------------------------
+wire [pDramDataWidth-1:0] wDdrRD;       assign oAppRD  = wDdrRD;
+wire wDdrRVD;                           assign oAppRVD = wDdrRVD;
 reg  qDdrWE, qDdrCmd, qDdrAppEn;
 reg  [pBitWidth-1:0] qDdrAddr, qDdrWD;
 
@@ -340,14 +272,14 @@ begin
     qDdrWE    <= rDdrWriteEn;
     qDdrCmd   <= rDdrReadEn;
     qDdrAppEn <= rDdrAppEn;
-    qDdrAddr  <= rDdrReadEn ? rRA : rWA;
-    qDdrWD    <= rWD;
+    qDdrAddr  <= rDdrReadEn ? iRA : iWA;
+    qDdrWD    <= iWD;
 end
 
 generate
     if (pDramDebug == "on")
         migDemo MIG_DEMO (
-            .iData                  ({96'd0, qDdrWD}),
+            .iData                  ({4{qDdrWD}}),
             .oData                  (wDdrRD),            .oCal          (wCal),
             .iAppEN                 (qDdrAppEn),         .iWE           (qDdrWE),
             .iReadCmd               (qDdrCmd),
@@ -372,7 +304,7 @@ generate
             .app_addr               (qDdrAddr[28:0]),       // input [28:0]		addr[28:3] / Bank[2:0]
             .app_cmd                (qDdrCmd),              // input [2:0]		Write 000 / Read 001
             .app_en                 (qDdrAppEn),            // input			ユーザー側がapp_cmd有効時にHighにする
-            .app_wdf_data           ({96'd0, qDdrWD}),      // input [127:0]	書き込みデータ 16bit x 8byte
+            .app_wdf_data           ({4{qDdrWD}}),          // input [127:0]	書き込みデータ 16bit x 8byte
             .app_wdf_end            (qDdrWE),               // input			下記のwrite enable信号と同期させる
             .app_wdf_wren           (qDdrWE),               // input			write enable
             .app_wdf_rdy            (wWready),              // output			データ書き込み可能時High

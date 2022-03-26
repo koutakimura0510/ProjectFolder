@@ -40,7 +40,7 @@ localparam [7:0]
     VCOMH_LEVEL         = 8'h30,	    // 電圧発生回路の設定
     DUMMY               = 8'h00;        // ダミーデータ
 
-localparam LENGTH = 2**ADDR_WIDTH;
+localparam LENGTH = ADDR_WIDTH;
 
 // 初期設定コマンド配列
 (* ram_style = "BLOCK" *) reg [7:0] oled_init_rom [LENGTH-1:0];

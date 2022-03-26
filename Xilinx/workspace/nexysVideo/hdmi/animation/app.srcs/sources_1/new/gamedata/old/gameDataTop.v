@@ -130,7 +130,7 @@ end
 wire wWready;
 wire [pBitWidth-1:0] wPixelWD; // pixel data
 wire [pBitWidth-1:0] wPixelWA; // write addr
-reg  qPixelvalid;              // write enable
+reg  qPixelValid, qDdrWrEn;    // write enable
 
 pixelTop #(
     .pHDisplay              (lpHDisplay),
@@ -138,18 +138,19 @@ pixelTop #(
     .pAddrWidth             (pBitWidth),
     .pBitWidth              (pBitWidth),
     .pBitLengthState        (2),
-    .pDramDebug             (pDramDebug)
+    .pDramDebug             (pPixelDebug)
 ) PIXEL_TOP (
     .iSW    (iSW),
     .iCLK   (wAppCLK),      .iRST   (wAppRST),
-    .iWS    (wWS),          .iDdrWE (qPixelvalid),
+    .iWS    (wWS),          .iDdrWE (qPixelValid),
     .oPixel (wPixelWD),     .oAddr  (wPixelWA),
     .oWE    (wWFE)
 );
 
 always @*
 begin
-    qPixelvalid <= wWready & (wWS != IDOL);
+    qDdrWrEn    <= wWS != IDOL;
+    qPixelValid <= qDdrWrEn & wWready;
 end
 
 
@@ -160,20 +161,10 @@ end
 // FPSの向上の為、dclkの周期で必ず画素データがFIFOに存在していなければならない
 // 画素データ出力とタイミングを合わせるため、iFVDEを使用し、iVDEがONになるより早くデータを出力する
 //----------------------------------------------------------
-// top module side
-reg  [pBitWidth-1:0] rPixel;       assign oVRGB = rPixel;     // alpha値は必要でないので送信しない
-wire [pBitWidth-1:0] wVRGB;
-
-//ddr side
-wire [pBitWidth-1:0] wAppRD;
-wire wAppRVD, wAppEmp, wAppFull, oEmp;
-reg  qAppRE;
-
-// fifo side
-wire wRVD;
-
-// pixel read start
-reg rFS, qFS;
+wire [pBitWidth-1:0] wVRGB;            assign oVRGB = wVRGB[23:0];     // alpha値は必要でないので送信しない
+wire [pDramDataWidth-1:0] wAppRD;
+wire wAppRVD, wAppFull;
+reg  rFS, qFS, qAppFull;
 
 always @(posedge wAppCLK)
 begin
@@ -182,33 +173,23 @@ begin
     else                    rFS <= rFS;
 end
 
-always @(posedge iDispCLK)
-begin
-    case ({iRST, wRVD, oEmp})
-    'b000:      rPixel <= COLOR_YELLOW;
-    'b001:      rPixel <= COLOR_BROWN;
-    'b010:      rPixel <= wVRGB;
-    'b011:      rPixel <= wVRGB;
-    default:    rPixel <= 0;
-    endcase
-end
-
-fifoDualController #(
-    .pBuffDepth (pBuffDepth),
-    .pBitWidth  (pBitWidth)
-) PIXEL_FIFO_DUAL_CONTROLLER (
-    // write side           read side
-    .iCLKA  (wAppCLK),      .iCLKB  (iDispCLK),
+bitConverter # (
+    .pBuffDepth     (pBuffDepth),
+    .pBitWidth      (pBitWidth),
+    .pInDataWidth   (pDramDataWidth)
+) BIT_CONVERTER (
+    // write side               read side
+    .iCLKA  (wAppCLK),          .iCLKB  (iDispCLK),
     .iRST   (wAppRST),
-    .iWD    (wAppRD),       .oRD    (wVRGB),
-    .iWE    (wAppRVD),      .iRE    (qFS),
-    .oFLL   (wAppFull),     .oRVD   (wRVD),
-                            .oEMP   (oEmp)
+    .iWD    (wAppRD),           .oRD    (wVRGB),
+    .iWE    (wAppRVD),          .iRE    (qFS),
+    .oFLL   (wAppFull)
 );
 
 always @*
 begin
-    qFS    <= rFS & iFVDE;
+    qAppFull <= (~wAppFull) & wFbufReadStart;
+    qFS      <= rFS & iFVDE;
 end
 
 //----------------------------------------------------------
@@ -231,7 +212,7 @@ ddr3Bridge #(
 
     // App Write Data Addr com
     .iWD                (wPixelWD),     .iWA                (wPixelWA),
-    .iMask              (16'd0),        .iWvalid            (qPixelvalid),  
+    .iMask              (16'd0),        .iWvalid            (qDdrWrEn),  
     .oWready            (wWready),      
 
     // App Read Addr com
@@ -240,7 +221,7 @@ ddr3Bridge #(
 
     // app output data com
     .oAppRD             (wAppRD),       .oAppRVD            (wAppRVD),
-    .iAppFull           (~wAppFull),
+    .iAppFull           (qAppFull),
 
     // user interface clk rst
     .iCLK               (iDispCLK),     .iRST               (iRST),

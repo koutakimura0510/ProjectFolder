@@ -22,6 +22,8 @@ parameter COLOR_GREEN       = ~('hff008000);
 parameter COLOR_BLUE        = ~('hff4169e1);
 parameter COLOR_YELLOW      = ~('hffffff00);
 parameter COLOR_BROWN       = ~('hffd2691e);
+parameter COLOR_BLACK       = ~('hff000000);
+parameter COLOR_WHITE       = ~('hffffffff);
 
 
 //----------------------------------------------------------

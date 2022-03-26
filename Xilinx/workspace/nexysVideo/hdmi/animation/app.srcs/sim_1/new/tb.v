@@ -44,7 +44,15 @@ wire [ 1:0]           ddr3_dm;
 wire                  ddr3_odt;
 
 main #(
-    .H_DISPLAY  (8),
+    // .H_DISPLAY  (640),
+    // .H_BACK     (48),
+    // .H_FRONT    (16),
+    // .H_SYNC     (96),
+    // .V_DISPLAY  (480),
+    // .V_TOP      (31),
+    // .V_BOTTOM   (11),
+    // .V_SYNC     (2),
+    .H_DISPLAY  (640),
     .H_BACK     (2),
     .H_FRONT    (2),
     .H_SYNC     (2),
@@ -53,16 +61,8 @@ main #(
     .V_BOTTOM   (2),
     .V_SYNC     (2),
     .pDramDebug ("on"),
-    .pPixelDebug ("on"),
-    .pBuffDepth (8)
-    // .H_DISPLAY  (640),
-    // .H_BACK     (48),
-    // .H_FRONT    (16),
-    // .H_SYNC     (96),
-    // .V_DISPLAY  (480),
-    // .V_TOP      (31),
-    // .V_BOTTOM   (11),
-    // .V_SYNC     (2)
+    .pPixelDebug ("off"),
+    .pBuffDepth (1024)
 ) MAIN (
     .iCLK           (iCLK),
     .iRST           (iRST),

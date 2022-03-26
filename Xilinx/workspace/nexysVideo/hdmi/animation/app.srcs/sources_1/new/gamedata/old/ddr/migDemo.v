@@ -32,11 +32,11 @@ assign oCal   = ~iRST;
 ////////////////////////////////////////////////////////////
 reg qRE, qWE;
 wire wEmp, wFull;
-wire [31:0] wData;              assign oData = {96'd0, wData};
+wire [127:0] wData;              assign oData = wData;
 
 fifoController #(
-    .pBuffDepth     (4096),
-    .pBitWidth      (32)
+    .pBuffDepth     (524288),
+    .pBitWidth      (128)
 ) MIG_DEMO_FIFO (
     .iCLK           (iCLK),             .iRST           (iRST),
     .iWD            (iData[31:0]),      .iWE            (qWE),
