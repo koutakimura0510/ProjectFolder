@@ -6,10 +6,8 @@
  * Borad  Nexys Video
  * -
  * Display Timing Block
- * Sync系統の制御信号とディスプレイクロックを生成するブロック
- *
  */
-module dtpWrapper #(
+module dtbWrapper #(
     parameter       pHdisplay       = 640,
     parameter       pHback          =  48,
     parameter       pHfront         =  16,
@@ -19,30 +17,13 @@ module dtpWrapper #(
     parameter       pVbottom        =  11,
     parameter       pVsync          =   2
 )(
-    input           iCLK,           // system clk
-    input           iRST,           // async rst
+    input           iCLK,           // clk
+    input           iRST,           // Active High to sync rst
     output          oVde,           // video enable signal
     output          oFe,            // frame end
     output          oFvde,          // fast vde
     output          oHsync,
-    output          oVsync,
-    output          oSCLK,          // Sync CLK
-    output          oTCLK,          // Tmds CLk
-    output          oRST
-);
-
-//----------------------------------------------------------
-// ピクセルクロック生成
-//----------------------------------------------------------
-wire wTClk;                     assign oTCLK = wTClk;
-wire wSClk;                     assign oSCLK = wSClk;
-wire wLock;
-wire wRST = (~wLock);           assign oRST  = wRST;
-
-dtpClkGen DTP_CLK_GEN (
-    .clk_out1   (wSClk),        .clk_out2   (wTClk),
-    .reset      (iRST),         .locked     (wLock),
-    .clk_in1    (iCLK)
+    output          oVsync
 );
 
 //----------------------------------------------------------
@@ -50,12 +31,12 @@ dtpClkGen DTP_CLK_GEN (
 //----------------------------------------------------------
 hvsyncGen #(
     // hrizontal                vertical
-    .pHdisplay  (pHdisplay),    .pVdispaly  (pVdispaly),
+    .pHdisplay  (pHdisplay),    .pVdisplay  (pVdisplay),
     .pHback     (pHback),       .pVtop      (pVtop),
     .pHfront    (pHfront),      .pVbottom   (pVbottom),
     .pHsync     (pHsync),       .pVsync     (pVsync)
 ) HVSYNC_GEN (
-    .iSCLK      (wSClk),        .iRST       (wRST),
+    .iCLK       (iPClk),        .iRST       (iRST),
     .oHsync     (oHsync),       .oVsync     (oVsync),
     .oVde       (oVde),         .oFe        (oFe),
     .oFvde      (oFvde)

@@ -9,7 +9,7 @@
  * RGB色データ生成モジュール
  */
 module rgbGen(
-    input           iCLK,           // system clk
+    input           iBCLK,          // Base clk
     input           iRST,           // system rst
     input  [ 9:0]   iHPOS,          // 描画座標horizon
     input  [ 9:0]   iVPOS,          // 描画座標vertical
@@ -21,9 +21,9 @@ module rgbGen(
     output [31:0]   oARGB           // 出力画素
 );
 
-rgbGen BACK_GROUND(.iSCLK(iSCLK), .iRST(iRST), .iHPOS(iHPOS), .iVPOS(iVPOS), .iXS(0),    .iXE(640),  .iYS(0),    .iYE(480),  .iARGB(32'hffffffff), .oARGB(oBackARGB));
-rgbGen FORE_GROUND(.iSCLK(iSCLK), .iRST(iRST), .iHPOS(iHPOS), .iVPOS(iVPOS), .iXS(0),    .iXE(640),  .iYS(0),    .iYE(480),  .iARGB(oFieldDot),  .oARGB(oForeARGB));
-rgbGen USER_GROUND(.iSCLK(iSCLK), .iRST(iRST), .iHPOS(iHPOS), .iVPOS(iVPOS), .iXS(oUXS), .iXE(oUXE), .iYS(oUYS), .iYE(oUYE), .iARGB(oPlayerDot), .oARGB(oUserARGB));
+rgbGen BACK_GROUND(.iBCLK(iBCLK), .iRST(iRST), .iHPOS(iHPOS), .iVPOS(iVPOS), .iXS(0),    .iXE(640),  .iYS(0),    .iYE(480),  .iARGB(32'hffffffff), .oARGB(oBackARGB));
+rgbGen FORE_GROUND(.iBCLK(iBCLK), .iRST(iRST), .iHPOS(iHPOS), .iVPOS(iVPOS), .iXS(0),    .iXE(640),  .iYS(0),    .iYE(480),  .iARGB(oFieldDot),  .oARGB(oForeARGB));
+rgbGen USER_GROUND(.iBCLK(iBCLK), .iRST(iRST), .iHPOS(iHPOS), .iVPOS(iVPOS), .iXS(oUXS), .iXE(oUXE), .iYS(oUYS), .iYE(oUYE), .iARGB(oPlayerDot), .oARGB(oUserARGB));
 
 rgbBridge RGB_BRIDGE (
     .iBackARGB(oBackARGB), .iForeARGB(oForeARGB), .iUserARGB(oUserARGB), .oVRGB(oVRGB)

@@ -17,7 +17,7 @@ module ssbWrapper #(
     output [5:0]    oBtn    // bit列 -> ABDLRU
 );
 
-`include "../include/parameter.vh"
+`include "../include/key.vh"
 
 //----------------------------------------------------------
 // チャタリング用enable信号

@@ -11,8 +11,8 @@
 
 module pgbWrapper
 (
-    input           iCLK,       // system clk
-    input           iRST,       // system rst
+    input           iBCLK,      // Base clk
+    input           iRST,       // Active High
     input  [ 5:0]   iBtn,
     input  [ 9:0]   iStartX,    // 描画開始開始x座標
     input  [ 9:0]   iStartY,    // 描画開始開始y座標
@@ -28,13 +28,15 @@ module pgbWrapper
     input  [ 3:0]   iMapDirect  // bit列 上[3] 下[2] 左[1] 右[0]
 );
 
-// userPos USER_POS (
-//     .iCLK(iSCLK), .iRST(iRST),
-//     .iBtn(iBtn), .iEn1Ms(oEn1ms),
-//     .iStartX(0), .iStartY(416),
-//     .oUXS(oUXS), .oUYS(oUYS), .oUXE(oUXE), .oUYE(oUYE), .oFXS(oFXS), .oFYS(oFYS),
-//     .oDirX(oDirX), .oDirY(oDirY),
-//     .iMapWidth(oMapWidth), .iMapDirect(oMapDirect)
-// );
+userPos USER_POS (
+    .iCLK       (iSCLK),      .iRST         (iRST),
+    .iBtn       (iBtn),
+    .iStartX    (0),          .iStartY      (416),
+    .oUXS       (oUXS),       .oUYS         (oUYS), 
+    .oUXE       (oUXE),       .oUYE         (oUYE),
+    .oFXS       (oFXS),       .oFYS         (oFYS),
+    .oDirX      (oDirX),      .oDirY        (oDirY),
+    .iMapWidth  (oMapWidth),  .iMapDirect   (oMapDirect)
+);
 
 endmodule

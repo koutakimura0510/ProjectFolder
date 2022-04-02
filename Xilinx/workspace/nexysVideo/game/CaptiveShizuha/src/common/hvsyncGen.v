@@ -18,7 +18,7 @@ module hvsyncGen
     parameter       pVbottom        =  11,   // vertical bottom border
     parameter       pVsync          =   2    // vertical sync # lines
 )(
-    input           iSCLK,               // sync clk
+    input           iCLK,               // clk
     input           iRST,               // system rst
     output          oHsync,             // horizontal area 水平同期信号
     output          oVsync,             // vertical area 垂直同期信号
@@ -30,29 +30,33 @@ module hvsyncGen
 // declarations for TV-simulator sync parameters
 // horizontal constants
 // derived constants
-localparam lpHsyncstart    = pHdisplay + pHfront;
-localparam lpHsyncend      = pHdisplay + pHfront + pHsync  - 1;
-localparam lpHmax          = pHdisplay + pHback  + pHfront + pHsync - 1;
-localparam lpVsyncstart    = pVdisplay + pVbottom;
-localparam lpVsyncend      = pVdisplay + pVbottom + pVsync   - 1;
-localparam lpVmax          = pVdisplay + pVtop    + pVbottom + pVsync - 1;
+localparam lpHsyncstart     = pHdisplay + pHfront;
+localparam lpHsyncend       = pHdisplay + pHfront + pHsync  - 1;
+localparam lpHmax           = pHdisplay + pHback  + pHfront + pHsync - 1;
+localparam lpVsyncstart     = pVdisplay + pVbottom;
+localparam lpVsyncend       = pVdisplay + pVbottom + pVsync   - 1;
+localparam lpVmax           = pVdisplay + pVtop    + pVbottom + pVsync - 1;
+localparam lpHdisplay       = pHdisplay;
+localparam lpVdisplay       = pVdisplay;
+localparam lpHbitWidth      = fBitWidth(pHdisplay);
+localparam lpVbitWidth      = fBitWidth(pVdisplay);
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // 水平同期カウンター、信号動作
 //----------------------------------------------------------
 reg rHsync;             assign oHsync = rHsync;
-reg [9:0] rHpos;
+reg [lpHbitWidth-1:0] rHpos;
 reg qHmatch, qHrange;
 
-always @(posedge iSCLK) 
+always @(posedge iCLK) 
 begin 
     if (iRST)           rHpos <= 0;
     else if (qHmatch)   rHpos <= 0;
     else                rHpos <= rHpos + 1'b1;
 end
 
-always @(posedge iSCLK) 
+always @(posedge iCLK) 
 begin 
     if (iRST)           rHsync <= 0;
     else                rHsync <= qHrange;
@@ -69,30 +73,42 @@ end
 // 垂直同期カウンター、信号動作
 //----------------------------------------------------------
 reg rVsync;                     assign oVsync   = rVsync;
-reg qVde;                       assign oVde     = qVde;
-reg qFe;                        assign oFe      = qFe;
-reg [9:0] rVpos;
+reg qVde, rVde;                 assign oVde     = rVde;
+reg qFe, rFe;                   assign oFe      = rFe;
+reg [lpVbitWidth-1:0] rVpos;
 reg qVmatch, qVrange;
 
-always @(posedge iSCLK) 
+always @(posedge iCLK) 
 begin
     if (iRST)           rVpos <= 0;
     else if (qHmatch)   rVpos <= (qVmatch) ? 0 : rVpos + 1;
     else                rVpos <= rVpos;
 end
 
-always @(posedge iSCLK) 
+always @(posedge iCLK) 
 begin
     if (iRST)           rVsync <= 1'b0;
     else                rVsync <= qVrange;
 end
 
+always @(posedge iCLK) 
+begin
+    if (iRST)           rVde <= 1'b0;
+    else                rVde <= qVde;
+end
+
+always @(posedge iCLK) 
+begin
+    if (iRST)           rFe <= 1'b0;
+    else                rFe <= qFe;
+end
+
 always @*
 begin
-    qVmatch <= (rVpos == lpVmax);
-    qVrange <= (lpVsyncstart <= rVpos && rVpos <= lpVsyncend);
-    qVde    <= (rHpos < lpHdisplay && rVpos < lpVdisplay);
-    qFe     <= lpVdisplay < rVpos;
+    qVmatch <= rVpos == lpVmax;
+    qVrange <= (lpVsyncstart <= rVpos) && (rVpos <= lpVsyncend);
+    qVde    <= (rHpos  < lpHdisplay) && (rVpos  < lpVdisplay);
+    qFe     <= (rHpos == lpHdisplay) && (rVpos == lpVdisplay);
 end
 
 
@@ -100,29 +116,60 @@ end
 //----------------------------------------------------------
 // fast video timing
 // 独自に作成した Dual Clk FIFO の性能上、Enable信号を入力してから最速で3CLK経過後データが出力されるため、
-// 3clk + 1clk 有効領域よりも早く DE信号を作成する
+// 3clk + 1clk + DFF1clk 有効領域よりも早く DE信号を作成する
 //----------------------------------------------------------
-reg qFvde;                      assign oFVDE = qFvde;
+reg qFvde, rFvde;                      assign oFvde = rFvde;
+reg rFs;
 reg qFHmatch, qFVmatch;
-reg [9:0] rFHriz, rFVert;
+reg [lpHbitWidth-1:0] rFHriz, rFVert;
 
-always @(posedge iSCLK) begin
-    if (iRST)           rFHriz <= 4;
+always @(posedge iCLK)
+begin
+    if (iRST)           rFHriz <= 5;
     else if (qFHmatch)  rFHriz <= 0;
     else                rFHriz <= rFHriz + 1'b1;
 end
 
-always @(posedge iSCLK) begin
+always @(posedge iCLK)
+begin
     if (iRST)           rFVert <= 0;
     else if (qFHmatch)  rFVert <= (qFVmatch) ? 0 : rFVert + 1;
     else                rFVert <= rFVert;
+end
+
+always @(posedge iCLK)
+begin
+    if (iRST)           rFs <= 1'b0;
+    else if (qFe)       rFs <= 1'b1;
+    else                rFs <= rFs;
+end
+
+always @(posedge iCLK)
+begin
+    if (iRST)           rFvde <= 1'b0;
+    else                rFvde <= qFvde;
 end
 
 always @*
 begin
     qFHmatch <= (rFHriz == lpHmax);
     qFVmatch <= (rFVert == lpVmax);
-    qFvde    <= (rFHriz < lpHdisplay && rFVert < lpVdisplay);
+    qFvde    <= rFs & (rFHriz < pHdisplay && rFVert < pVdisplay);
 end
+
+////////////////////////////////////////////////////////////
+// msb側の1を検出しbit幅を取得する
+function[  7:0]	fBitWidth;
+    input [31:0] iVAL;
+    integer			i;
+
+    begin
+    fBitWidth = 1;
+    for (i = 0; i < 32; i = i+1 )
+        if (iVAL[i]) begin
+            fBitWidth = i+1;
+        end
+    end
+endfunction
 
 endmodule

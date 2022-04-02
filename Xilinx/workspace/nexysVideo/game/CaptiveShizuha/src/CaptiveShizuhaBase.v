@@ -6,115 +6,112 @@
 // Borad  Nexys Video
 // -
 // Base module
-// ゲーム進行のモジュールを管理するブロック
+// ゲームの進行状況に応じて、描画用のピクセルデータを生成するモジュール
 //----------------------------------------------------------
 module CaptiveShizuhaBase #(
     parameter       pHdisplay     = 640,
     parameter       pVdisplay     = 480,
     parameter       pPixelDebug   = "yes"
 )(
-    input           iSCLK,      // Sync CLK
-    input           iRST,       // system rst
-    input [5:0]     iBtn,
-    input           iVde,       // video enable
-    input           iFvde,      // fast video enable
-    input           iFe,        // frame end
+
+    input           iPCLK,      // Pixel Clk
+    input           iBCLK,      // Base Clk
+    input           iRST,       // Active High Sync Reset
+
+    // Interface 
+    input  [5:0]    iBtn,       // Async Push SW
+
+    // Pixel Clk Sync Signal
+    input           iPVde,      // Pixel Clk Timing video enable
+    input           iPFvde,     // Pixel Clk Timing fast video enable
+    input           iPFe,       // Pixel Clk Timing frame end
+
+    // TGB side output
     output [23:0]   oVRGB,
+
+    // debug monitor
     output          oOledScl,
     output          oOledSda,
     output          oOledDC,
     output          oOledRes,
     output          oOledVbat,
-    output          oOledVdd
+    output          oOledVdd,
+    output [7:0]    oLED
 );
 
-
-// ユーザー座標データ
-wire [ 9:0] oUXS, oUXE;
-wire [ 9:0] oUYS, oUYE;
-wire [15:0] oFXS, oFYS;
-
-// 色データ
-wire [31:0] oBackARGB;      // BackGround ARGB 背景
-wire [31:0] oForeARGB;      // ForeGround ARGB 前景
-wire [31:0] oUserARGB;      // UserGround ARGB ユーザー
-wire [31:0] oPlayerDot;
-wire [31:0] oFieldDot;
-
-// mapchip ID
-wire [15:0] oMapWidth;
-wire [ 3:0] oMapDirect;
-
-// キャラクターの向き
-wire [ 1:0] oDirX, oDirY;
-
-
-//----------------------------------------------------------
-// Base内動作クロックの生成
-// ディスプレイ制御のSync Clkよりも高速なCLKを生成し、描画用データの生成を行う
-//----------------------------------------------------------
-wire wBCLK;
-wire wLock;
-wire wRST = (~wLock);
-
-baseClkGen BASE_CLK_GEN (
-    .clk_out1   (wBCLK),    .reset      (iRST),
-    .locked     (wLock),    .clk_in1    (iSCLK)
-);
-
-
-//----------------------------------------------------------
-// Switch Serialize Block
-//----------------------------------------------------------
-wire [ 5:0] wBtn;
-
-ssbWrapper #(
-    .pMonitorTiming (500000)
-) SSB (
-    .iCLK       (wBCLK),    .iRST       (wRST),
-    .iBtn       (~iBtn),    .oBtn       (wBtn)
-);
 
 //----------------------------------------------------------
 // Position Generate Block
 //----------------------------------------------------------
-pgbWrapper #(
-
-) PGB (
-
-);
+// pgbWrapper #(
+// .iBCLK
+// ) PGB (
+// 
+// );
 
 
 //----------------------------------------------------------
 // Dot Generate Block
 //----------------------------------------------------------
-dgbWrapper #(
-    .pHdisplay  (pHdisplay),
-    .pVdisplay  (pVdisplay)
-) DGB (
+reg qCkeDgb;
+wire [23:0] wPixel;
 
+dgbWrapper #(
+    .pHdisplay          (pHdisplay),
+    .pVdisplay          (pVdisplay),
+    .pPixelWidth        (24)
+) DGB (
+    .iBCLK  (iBCLK),    .iRST   (iRST),
+    .iCKE   (qCkeDgb),  .oPixel (wPixel),
+    .oVd    (),         .oFe    ()
 );
+
 
 //----------------------------------------------------------
 // RGB Operation Block 
 //----------------------------------------------------------
-robWrapper #(
+// robWrapper #(
 
-) ROB (
+// ) ROB (
 
+// );
+
+//----------------------------------------------------------
+// Pixel Async Fifo Block
+//----------------------------------------------------------
+wire [23:0] wRD;        assign oVRGB = wRD;
+wire wFull;
+
+
+pfbWrapper #(
+    .pBuffDepth             (1024),
+    .pBitWidth              (24)
+) PFB (
+    .iBCLK  (iBCLK),        .iPCLK  (iPCLK),
+    .iRST   (iRST),     
+    .iWD    (wPixel),       .iWE    (qCkeDgb),
+    .oFull  (wFull),
+    .oRD    (wRD),          .iRE    (iPFvde)
 );
+
+always @*
+begin
+    qCkeDgb <= (~wFull);
+end
+
 
 //----------------------------------------------------------
 // デバッグ用に値表示
 //----------------------------------------------------------
-oledTop #(
-    .PDIVCLK        (25000),
-    .PDIVSCK        (32),
+odbWrapper #(
+    .PDIVCLK        (100000),
+    .PDIVSCK        (128),
     .DISPLAY_WIDTH  (128),
     .DISPLAY_HEIGHT (4),
+    // .BIT_LENGTH     (64)
     .BIT_LENGTH     (95)
-) OLED_TOP (
-    .iCLK           (iSCLK),
+) ODB (
+    .iCLK           (iBCLK),
     .iRST           (iRST),
     .oOledScl       (oOledScl),
     .oOledSda       (oOledSda),
@@ -122,10 +119,20 @@ oledTop #(
     .oOledRes       (oOledRes),
     .oOledVbat      (oOledVbat),
     .oOledVdd       (oOledVdd),
-    .iDispLine1     ({"XPOS =  ", 4'd0, 2'd0, oUXS, oFXS}),
-    .iDispLine2     ({"YPOS =  ", 4'd0, 2'd0, oUYS, oFYS}),
-    .iDispLine3     ({"        ", 3'd0, oMapDirect[3], 3'd0, oMapDirect[2], 3'd0, oMapDirect[1], 3'd0, oMapDirect[0]}),
+    .iDispLine1     ({"XPOS =  ", 0}),
+    .iDispLine2     ({"YPOS =  ", 0}),
+    .iDispLine3     ({"        ", 0}),
     .iDispLine4     ({"        ", 0})
 );
+
+reg [7:0] rLed;
+
+always @(posedge iBCLK)
+begin
+    if (iRST)   rLed <= 0;
+    else        rLed <= {2'b000, iBtn};
+end
+
+assign oLED = rLed;
 
 endmodule
