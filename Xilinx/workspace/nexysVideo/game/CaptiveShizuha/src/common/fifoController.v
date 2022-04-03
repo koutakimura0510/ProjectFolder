@@ -52,7 +52,7 @@ localparam pAddrWidth  = fBitWidth(pBuffDepth);
 // oEMP 書き込みと読み込みのアドレスが一致している、または超えそうな場合High
 // oRVD Empty状態ではなく読み込みEnable信号を受信した場合High
 //----------------------------------------------------------
-reg [pAddrWidth-1:0] rWA, qWAn, qWA2n, rRA, rORP;
+reg [pAddrWidth-1:0] rWA, qWAn, rRA, rORP;
 reg qWE, qRE;
 
 
@@ -85,7 +85,7 @@ end
 // ハンドシェイク信号出力
 //----------------------------------------------------------
 reg qFLL, qEMP, qRVD;
-reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {qFLL | rFLL, qEMP, rRVD};
+reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {qFLL, qEMP, qRVD};
 
 always @(posedge iCLK)
 begin
@@ -99,13 +99,12 @@ end
 //---------------------------------------------------------------------------
 always @*
 begin
-    qWAn  <= rWA + 1'b1;
-    qWA2n <= rWA + 2'd2;
-    qFLL <= (qWAn == rRA || qWA2n == rRA) ? 1'b1 : 1'b0;
-    qEMP <= (rWA == rRA) ? 1'b1 : 1'b0;
+    qWAn <= rWA + 1'b1;
+    qFLL <= (qWAn == rRA) ? 1'b1 : 1'b0;
+    qEMP <= (rWA  == rRA) ? 1'b1 : 1'b0;
     // qRVD <= (rRA != rORP);
     qRVD <= iRE & (~qEMP);
-    qWE  <= iWE & (~rFLL);
+    qWE  <= iWE & (~qFLL);
     qRE  <= iRE & (~qEMP);
 end
 

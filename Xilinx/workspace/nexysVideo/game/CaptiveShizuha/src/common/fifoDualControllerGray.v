@@ -60,7 +60,7 @@ localparam [lpAddrWidth-1:0] lpAddrNull = 0;
 // oEMP 書き込みと読み込みのアドレスが一致している、または超えそうな場合High
 // oRVD Empty状態ではなく読み込みEnable信号を受信した場合High
 //----------------------------------------------------------
-reg [lpAddrWidth-1:0] rWA, rWG, rWB, wWGf1, wWGf2, qWAn, qWA2n;
+reg [lpAddrWidth-1:0] rWA, rWG, rWB, wWGf1, wWGf2, qWAn, qWA2n, qWA3n;
 reg [lpAddrWidth-1:0] rRA, rRG, rRB, wRGf1, wRGf2, rORP;
 reg qWE, qRE;
 
@@ -184,7 +184,7 @@ end
 // ハンドシェイク信号、read ptrが write ptrを超えないように調整
 //----------------------------------------------------------
 reg qFLL, qEMP, qRVD;
-reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {qFLL|rFLL, qEMP, rRVD};
+reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {rFLL, rEMP, rRVD};
 
 always @(posedge iCLKA)
 begin
@@ -202,11 +202,12 @@ always @*
 begin
     qWAn    <= rWA + 1'b1;
     qWA2n   <= rWA + 2'd2;
-    qFLL    <= (qWAn == rRA || qWA2n == rRA) ? 1'b1 : 1'b0;
-    qEMP    <= (rWB  == rRA) ? 1'b1 : 1'b0;
-    // qRVD    <= (rRA != rORP);
-    qRVD    <= iRE & (~qEMP);
-    qWE     <= iWE & (~rFLL);
+    qWA3n   <= rWA + 2'd3;
+    qFLL    <= (qWAn == rRA || qWA2n == rRA || qWA3n == rRA);
+    qEMP    <= (rWB  == rRA) ;
+    qRVD    <= (rRA != rORP);
+    // qRVD    <= iRE & (~qEMP);
+    qWE     <= iWE;
     qRE     <= iRE & (~qEMP);
 end
 

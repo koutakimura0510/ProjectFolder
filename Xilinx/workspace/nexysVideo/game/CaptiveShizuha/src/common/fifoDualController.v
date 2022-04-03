@@ -49,7 +49,7 @@ localparam pAddrMax    = pBuffDepth - 1;
 reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {rFLL, rEMP, rRVD};
 reg qFLL, qEMP, qRVD;
 reg [pAddrWidth-1:0] rWAb, rWAb2, rOWP;
-reg [pAddrWidth-1:0] rWA, rRA, rORP, rRAb;
+reg [pAddrWidth-1:0] rWA, rRA, rORP, rRAb, rRAb2;
 reg rWE, rRE;
 reg qWE, qRE, qRst;
 
@@ -101,6 +101,12 @@ end
 
 always @(posedge iCLKB)
 begin
+    if (qRst)       rRAb2 <= 0;
+    else            rRAb2 <= rRA - 4'd8;
+end
+
+always @(posedge iCLKB)
+begin
     if (qRst)       rORP <= 0;
     else            rORP <= rRA;
 end
@@ -129,7 +135,7 @@ end
 always @*
 begin
     qRst    <= iRST;
-    qFLL    <= ((rRAb < rWA) && (rWA < rRA || rRA == 0)) || ((rRA < 4'd9) && (rWA < rRA));
+    qFLL    <= ((rRAb < rWA || rRAb2 < rWA) && (rWA < rRA || rRA == 0)) || ((rRA < 4'd9) && (rWA < rRA));
     qEMP    <= (rWA == rRA || rOWP == rRA || rWAb2 == rRA || rWAb == rRA) ? 1'b1 : 1'b0;
     qRVD    <= (rRA != rORP);
     qWE     <= iWE;
