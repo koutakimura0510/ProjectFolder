@@ -33,11 +33,11 @@ CaptiveShizuhaTop #(
     // .H_FRONT    (16),       .H_SYNC     (96),
     // .V_DISPLAY  (480),      .V_TOP      (31),
     // .V_BOTTOM   (11),       .V_SYNC     (2),
-    .pHdisplay  (6),        .pHback     (2),
+    .pHdisplay  (50),        .pHback     (2),
     .pHfront    (2),        .pHsync     (2),
-    .pVdisplay  (2),        .pVtop      (2),
+    .pVdisplay  (50),        .pVtop      (2),
     .pVbottom   (2),        .pVsync     (2),
-    .pPixelDebug ("off"),   .pBuffDepth (1024)
+    .pPixelDebug ("yes"),   .pBuffDepth (32)
 ) TOP (
     .iCLK           (iCLK),         .iRST           (iRST),
     .iBtn           (iBTN),         .iSW            (8'd00),

@@ -101,26 +101,16 @@ wire [23:0] wVRGB;
 
 CaptiveShizuhaBase # (
     .pHdisplay      (pHdisplay),    .pVdisplay      (pVdisplay),
-    .pPixelDebug    (pPixelDebug)
+    .pPixelDebug    (pPixelDebug),  .pBuffDepth     (pBuffDepth)
 ) BASE (
     .iPCLK          (wPCLK),        .iRST           (wRST),
-    .iBCLK          (wBCLK),
-    .iPFvde         (wPFvde),
-    .iPVde          (wPVde),        .iPFe           (wPFe),
+    .iBCLK          (wBCLK),        .iPFvde         (wPFvde),
 
     // output Pixel Data
     .oVRGB          (wVRGB),
 
-    // oled side
-    .oOledScl       (oOledScl),     .oOledSda       (oOledSda),
-    .oOledDC        (oOledDC),      .oOledRes       (oOledRes),
-    .oOledVbat      (oOledVbat),    .oOledVdd       (oOledVdd),
-
     // user interface
-    .iBtn           (wBtn),
-
-    // debug led
-    .oLED           (oLED)
+    .iBtn           (wBtn)
 );
 
 
@@ -135,5 +125,42 @@ tgbWrapper TGB (
     .iVRGB           (wVRGB),       .iVDE            (wPVde),
     .iHSYNC          (wPHsync),     .iVSYNC          (wPVsync)
 );
+
+
+//----------------------------------------------------------
+// デバッグ用に値表示
+//----------------------------------------------------------
+// odbWrapper #(
+//     .PDIVCLK        (100000),
+//     .PDIVSCK        (128),
+//     .DISPLAY_WIDTH  (128),
+//     .DISPLAY_HEIGHT (4),
+//     // .BIT_LENGTH     (64)
+//     .BIT_LENGTH     (95)
+// ) ODB (
+//     .iCLK           (wBCLK),
+//     .iRST           (wRST),
+//     .oOledScl       (oOledScl),
+//     .oOledSda       (oOledSda),
+//     .oOledDC        (oOledDC),
+//     .oOledRes       (oOledRes),
+//     .oOledVbat      (oOledVbat),
+//     .oOledVdd       (oOledVdd),
+//     .iDispLine1     ({0,0, wDwp}),
+//     .iDispLine2     ({0,0, wDhp}),
+//     .iDispLine3     ({0,0, 0}),
+//     .iDispLine4     ({0,0, 0})
+// );
+
+// reg [7:0] rLed;
+
+// always @(posedge iBCLK)
+// begin
+//     if (iRST)   rLed <= 0;
+//     else        rLed <= {2'b000, iBtn};
+// end
+
+// assign oLED = rLed;
+
 
 endmodule
