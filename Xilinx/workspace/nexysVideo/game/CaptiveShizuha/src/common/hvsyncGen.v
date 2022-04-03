@@ -45,21 +45,21 @@ localparam lpVbitWidth      = fBitWidth(pVdisplay);
 //----------------------------------------------------------
 // 水平同期カウンター、信号動作
 //----------------------------------------------------------
-reg rHsync;             assign oHsync = rHsync;
-reg [lpHbitWidth-1:0] rHpos;
+reg rHsync[0:1];             assign oHsync = rHsync[1];
+reg [lpHbitWidth:0] rHpos;
 reg qHmatch, qHrange;
 
-always @(posedge iCLK) 
+always @(posedge iCLK)
 begin 
     if (iRST)           rHpos <= 0;
     else if (qHmatch)   rHpos <= 0;
     else                rHpos <= rHpos + 1'b1;
 end
 
-always @(posedge iCLK) 
+always @(posedge iCLK)
 begin 
-    if (iRST)           rHsync <= 0;
-    else                rHsync <= qHrange;
+    if (iRST)           {rHsync[1], rHsync[0]} <= 2'b00;
+    else                {rHsync[1], rHsync[0]} <= {rHsync[0], qHrange};
 end
 
 always @*
@@ -72,10 +72,10 @@ end
 //----------------------------------------------------------
 // 垂直同期カウンター、信号動作
 //----------------------------------------------------------
-reg rVsync;                     assign oVsync   = rVsync;
+reg rVsync[0:1];                assign oVsync   = rVsync[1];
 reg qVde, rVde;                 assign oVde     = rVde;
 reg qFe, rFe;                   assign oFe      = rFe;
-reg [lpVbitWidth-1:0] rVpos;
+reg [lpVbitWidth:0] rVpos;
 reg qVmatch, qVrange;
 
 always @(posedge iCLK) 
@@ -87,8 +87,8 @@ end
 
 always @(posedge iCLK) 
 begin
-    if (iRST)           rVsync <= 1'b0;
-    else                rVsync <= qVrange;
+    if (iRST)           {rVsync[1], rVsync[0]} <= 2'b00;
+    else                {rVsync[1], rVsync[0]} <= {rVsync[0], qVrange};
 end
 
 always @(posedge iCLK) 
@@ -116,16 +116,16 @@ end
 //----------------------------------------------------------
 // fast video timing
 // 独自に作成した Dual Clk FIFO の性能上、Enable信号を入力してから最速で3CLK経過後データが出力されるため、
-// 3clk + 1clk + DFF1clk 有効領域よりも早く DE信号を作成する
+// 2clk 有効領域よりも早く DE信号を作成する
 //----------------------------------------------------------
 reg qFvde, rFvde;                      assign oFvde = rFvde;
 reg rFs;
 reg qFHmatch, qFVmatch;
-reg [lpHbitWidth-1:0] rFHriz, rFVert;
+reg [lpHbitWidth:0] rFHriz, rFVert;
 
 always @(posedge iCLK)
 begin
-    if (iRST)           rFHriz <= 5;
+    if (iRST)           rFHriz <= 2;
     else if (qFHmatch)  rFHriz <= 0;
     else                rFHriz <= rFHriz + 1'b1;
 end

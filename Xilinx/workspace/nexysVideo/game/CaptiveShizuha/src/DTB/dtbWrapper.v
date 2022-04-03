@@ -36,7 +36,7 @@ hvsyncGen #(
     .pHfront    (pHfront),      .pVbottom   (pVbottom),
     .pHsync     (pHsync),       .pVsync     (pVsync)
 ) HVSYNC_GEN (
-    .iCLK       (iPClk),        .iRST       (iRST),
+    .iCLK       (iCLK),         .iRST       (iRST),
     .oHsync     (oHsync),       .oVsync     (oVsync),
     .oVde       (oVde),         .oFe        (oFe),
     .oFvde      (oFvde)

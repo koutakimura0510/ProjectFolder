@@ -14,7 +14,8 @@
 module dgbWrapper #(
     parameter                   pHdisplay       = 640,
     parameter                   pVdisplay       = 480,
-    parameter                   pPixelWidth     = 24
+    parameter                   pPixelWidth     = 24,
+    parameter                   pPixelDebug     = "yes"
 )(
     input                       iBCLK,          // Bace clk
     input                       iRST,           // Active High Sync RST
@@ -34,9 +35,9 @@ localparam lpBitWidth  = fBitWidth(pHdisplay);
 //----------------------------------------------------------
 // ディスプレイ座標の生成
 //----------------------------------------------------------
-wire wFe;                           assign oFe = wFe;
-wire [lpBitHeight-1:0] wDhp;
+wire wFe;                           assign oFe  = wFe;
 wire [lpBitWidth -1:0] wDwp;
+wire [lpBitHeight-1:0] wDhp;
 
 hvposGen #(
     .pHeight        (pVdisplay),    .pWidth         (pHdisplay),
@@ -52,22 +53,56 @@ hvposGen #(
 //----------------------------------------------------------
 // 60フレームカウント時Enable出力
 //----------------------------------------------------------
-wire wFps60;                            assign oVd = 1'b1;
+reg [pPixelWidth-1:0] rPixel;           assign oPixel = ~rPixel;
+reg [pPixelWidth-1:0] rSqu;
+reg  rVd;                               assign oVd    = rVd;
+reg  qSquare;
+wire wFps;
 
 countGet #(
-    .pCntSize (59)
+    .pCntSize (2)
 ) COUNT_GET (
-    .iCLK   (iBCLK),        .iRST   (iRST),
-    .iCKE   (wFe),          .oCKE   (wFps60)
+    .iCLK   (iBCLK),            .iRST   (iRST),
+    .iCKE   (wFe),              .oCKE   (wFps)
 );
 
-reg [pPixelWidth-1:0] rPixel;           assign oPixel = rPixel;
+generate
+    if (pPixelDebug == "no")
+    begin
+        always @(posedge iBCLK)
+        begin
+            if (iRST)           rPixel <= 0;
+            else if (rVd)       rPixel <= rPixel + 1'b1;
+            else                rPixel <= rPixel;
+        end
+    end
+    else
+    begin
+        always @(posedge iBCLK)
+        begin
+            if (iRST)       rSqu <= 'h4169e1;
+            else if (wFps)  rSqu <= ~rSqu;
+            else            rSqu <= rSqu;
+        end
+
+        always @(posedge iBCLK)
+        begin
+            if (iRST)           rPixel <= 0;
+            else if (qSquare)   rPixel <= rSqu;
+            else                rPixel <= 0;
+        end
+    end
+endgenerate
 
 always @(posedge iBCLK)
 begin
-    if (iRST)           rPixel <= 0;
-    else if (wFps60)    rPixel <= rPixel == ~'h008000 ? ~('h4169e1) : ~('h008000);
-    else                rPixel <= rPixel;
+    if (iRST)           rVd <= 1'b0;
+    else                rVd <= iCKE;
+end
+
+always @*
+begin
+    qSquare <= (30 <= wDwp && wDwp <= 100) && (30 <= wDhp && wDhp <= 100);
 end
 
 
