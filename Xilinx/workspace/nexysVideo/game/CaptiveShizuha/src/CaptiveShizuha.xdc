@@ -12,7 +12,7 @@ set_property CFGBVS VCCO        [current_design]
 
 
 # ------------------------------------------------------------
-# Bitstream 
+# Bitstream SPI Set Clock Speed
 # ------------------------------------------------------------
 set_property BITSTREAM.CONFIG.CONFIGRATE   33 [current_design]
 set_property BITSTREAM.CONFIG.SPI_BUSWIDTH  4 [current_design]
