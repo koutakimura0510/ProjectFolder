@@ -60,7 +60,8 @@ localparam [lpAddrWidth-1:0] lpAddrNull = 0;
 // oEMP 書き込みと読み込みのアドレスが一致している、または超えそうな場合High
 // oRVD Empty状態ではなく読み込みEnable信号を受信した場合High
 //----------------------------------------------------------
-reg [lpAddrWidth-1:0] rWA, rWG, rWB, wWGf1, wWGf2, qWAn, qWA2n, qWA3n;
+reg [lpAddrWidth-1:0] rWA, rWG, rWB, wWGf1, wWGf2;
+reg [lpAddrWidth-1:0] qWAn [0:5];
 reg [lpAddrWidth-1:0] rRA, rRG, rRB, wRGf1, wRGf2, rORP;
 reg qWE, qRE;
 
@@ -200,10 +201,14 @@ end
 
 always @*
 begin
-    qWAn    <= rWA + 1'b1;
-    qWA2n   <= rWA + 2'd2;
-    qWA3n   <= rWA + 2'd3;
-    qFLL    <= (qWAn == rRA || qWA2n == rRA || qWA3n == rRA);
+    qWAn[0] <= rWA + 1'b1;
+    qWAn[1] <= rWA + 2'd2;
+    qWAn[2] <= rWA + 2'd3;
+    qWAn[3] <= rWA + 3'd4;
+    qWAn[4] <= rWA + 3'd5;
+    qWAn[5] <= rWA + 3'd6;
+    qFLL    <= (qWAn[0] == rRA || qWAn[1] == rRA || qWAn[2] == rRA ||
+                qWAn[3] == rRA || qWAn[4] == rRA || qWAn[5] == rRA);
     qEMP    <= (rWB  == rRA) ;
     qRVD    <= (rRA != rORP);
     // qRVD    <= iRE & (~qEMP);
