@@ -50,15 +50,21 @@ module CaptiveShizuhaTop #(
 // BCLK 100 MHz Base
 //----------------------------------------------------------
 wire wTCLK, wPCLK, wBCLK;
-wire wLock;
-wire wRST = (~wLock);
+wire wRST;
 
-dtpClkGen DTP_CLK_GEN (
-    .clk_out1   (wPCLK),        .clk_out2   (wTCLK),
-    .clk_out3   (wBCLK),
-    .reset      (~iRST),        .locked     (wLock),
-    .clk_in1    (iCLK)
+cgbWrapper CGB (
+    .iCLK   (iCLK),     .iRST   (iRST),
+    .oRST   (wRST),
+    .oTCLK  (wTCLK),    .oPCLK  (wPCLK),
+    .oBCLK  (wBCLK)
 );
+
+// dtpClkGen DTP_CLK_GEN (
+//     .clk_out1   (wPCLK),        .clk_out2   (wTCLK),
+//     .clk_out3   (wBCLK),
+//     .reset      (~iRST),        .locked     (wLock),
+//     .clk_in1    (iCLK)
+// );
 
 
 //----------------------------------------------------------

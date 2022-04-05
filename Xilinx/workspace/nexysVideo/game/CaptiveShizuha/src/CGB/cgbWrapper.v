@@ -34,9 +34,9 @@ IBUF clkin1_ibufg (
 //----------------------------------------------------------
 // VOC Settings
 //----------------------------------------------------------
-wire wLock;                     assign oRST = (~wLock)
+wire wLock;                     assign oRST = (~wLock);
 wire wClkOutFb, wClkInFb;
-wire wClkOut[0:5],
+wire wClkOut [0:5];
 wire wunused [0:9];
 
 MMCME2_ADV # (
@@ -71,11 +71,11 @@ MMCME2_ADV # (
     .CLKOUT5             (wClkOut[5]),
     .CLKOUT6             (wClkOut[6]),
 
-    .CLKFBOUTB           (wunused[4]),
-    .CLKOUT0B            (wunused[5]),
-    .CLKOUT1B            (wunused[6]),
-    .CLKOUT2B            (wunused[7]),
-    .CLKOUT3B            (wunused[8]),
+    .CLKFBOUTB           (wunused[0]),
+    .CLKOUT0B            (wunused[1]),
+    .CLKOUT1B            (wunused[2]),
+    .CLKOUT2B            (wunused[3]),
+    .CLKOUT3B            (wunused[4]),
      // Input clock control
     .CLKFBIN             (wClkInFb),
     .CLKIN1              (wClkIbuf),
@@ -87,18 +87,18 @@ MMCME2_ADV # (
     .DCLK                (1'b0),
     .DEN                 (1'b0),
     .DI                  (16'h0),
-    .DO                  (wunused[0]),
-    .DRDY                (wunused[1]),
+    .DO                  (wunused[5]),
+    .DRDY                (wunused[6]),
     .DWE                 (1'b0),
     // Ports for dynamic phase shift
     .PSCLK               (1'b0),
     .PSEN                (1'b0),
     .PSINCDEC            (1'b0),
-    .PSDONE              (wunused[2]),
+    .PSDONE              (wunused[7]),
     // Other control and status signals
     .LOCKED              (wLock),
-    .CLKINSTOPPED        (wunused[3]),
-    .CLKFBSTOPPED        (wunused[4]),
+    .CLKINSTOPPED        (wunused[8]),
+    .CLKFBSTOPPED        (wunused[9]),
     .PWRDWN              (1'b0),
     .RST                 (iRST)
 );
@@ -108,9 +108,9 @@ MMCME2_ADV # (
 // TCLK 250 MHz TMDS
 // BCLK 100 MHz Base
 //----------------------------------------------------------
-wire wTCLK;                     assign oTCLK;
-wire wPCLK;                     assign oPCLK;
-wire wBCLK;                     assign oBCLK;
+wire wTCLK;                     assign oTCLK = wTCLK;
+wire wPCLK;                     assign oPCLK = wPCLK;
+wire wBCLK;                     assign oBCLK = wBCLK;
 
 BUFG clkf_buf (
     .O (wClkInFb),

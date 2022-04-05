@@ -120,16 +120,16 @@ end
 //----------------------------------------------------------
 // プレイヤーのドットデータ生成
 //----------------------------------------------------------
-dotPlayerTop #(
-    .VMAX(480),
-    .CHIP_WIDTH(32)
-) DOT_PLAYER_TOP (
-    .iCLK(iSCLK), .iRST(iRST),
-    .iUXS(oUXS), .iUXE(oUXE), .iUYS(oUYS), .iUYE(oUYE),
-    .iHPOS(iHPOS), .iVPOS(iVPOS),
-    .iDirX(oDirX), .iDirY(oDirY),
-    .oPlayerDot(oPlayerDot)
-);
+// dotPlayerTop #(
+//     .VMAX(480),
+//     .CHIP_WIDTH(32)
+// ) DOT_PLAYER_TOP (
+//     .iCLK(iSCLK), .iRST(iRST),
+//     .iUXS(oUXS), .iUXE(oUXE), .iUYS(oUYS), .iUYE(oUYE),
+//     .iHPOS(iHPOS), .iVPOS(iVPOS),
+//     .iDirX(oDirX), .iDirY(oDirY),
+//     .oPlayerDot(oPlayerDot)
+// );
 
 ////////////////////////////////////////////////////////////
 // msb側の1を検出しbit幅を取得する
