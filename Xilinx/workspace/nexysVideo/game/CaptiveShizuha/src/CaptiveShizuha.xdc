@@ -14,8 +14,10 @@ set_property CFGBVS VCCO        [current_design]
 # ------------------------------------------------------------
 # Bitstream SPI Set Clock Speed
 # ------------------------------------------------------------
-set_property BITSTREAM.CONFIG.CONFIGRATE   33 [current_design]
-set_property BITSTREAM.CONFIG.SPI_BUSWIDTH  4 [current_design]
+set_property BITSTREAM.CONFIG.CONFIGRATE        33              [current_design]
+set_property BITSTREAM.CONFIG.SPI_BUSWIDTH      4               [current_design]
+set_property BITSTREAM.CONFIG.EXTMASTERCCLK_EN  DISABLE         [current_design]
+# set_property BITSTREAM.CONFIG.USERID            32'h22040501    [current_design]
 
 
 # ------------------------------------------------------------
@@ -26,13 +28,16 @@ set_property BITSTREAM.CONFIG.SPI_BUSWIDTH  4 [current_design]
 # ------------------------------------------------------------
 # OSC Input
 set_property -dict { PACKAGE_PIN R4    IOSTANDARD LVCMOS33 } [get_ports { iCLK }]; #IO_L13P_T2_MRCC_34 Sch=sysclk
-create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 5} [get_ports iCLK]
+create_clock -add -name iCLK -period 10.00 -waveform {0 5} [get_ports iCLK]
 
 # FPGA
-create_clock -name iBCLK -period 10.00 -waveform {0 5} [get_nets iBCLK]
-create_clock -name iTCLK -period  4.00 -waveform {0 5} [get_nets iTCLK]
-create_clock -name iPCLK -period 40.00 -waveform {0 5} [get_nets iPCLK]
+create_generated_clock -name TCLK [get_pins CGB/CLKOUT0]
+create_generated_clock -name PCLK [get_pins CGB/CLKOUT1]
+create_generated_clock -name BCLK [get_pins CGB/CLKOUT2]
 
+# 手動配線
+# set_property LOC PLLE2_ADV_X0Y1  [get_cells CGB/SYSTEM_CLK_GEN]
+# set_property LOC MMCME2_ADV_X0Y0 [get_cells CGB/SYSTEM_CLK_GEN]
 
 # ------------------------------------------------------------
 # 入力ポートでのデータ遅延時間を設定
@@ -109,11 +114,11 @@ create_clock -name iPCLK -period 40.00 -waveform {0 5} [get_nets iPCLK]
 # 出力バッファの駆動電流 mA指定
 # set_property DRIVE <2 4  8 12(初期値) 16 24> [get_ports pin]
 # set_property DRIVE <2 4  8 12(初期値) 16 24> [get_ports {bus Name [id]}]
-
+# 
 # 出力バッファのスルーレート
 # set_property SLEW <SLOW / FAST> [get_ports pin]
 # set_property SLEW <SLOW / FAST> [get_ports {bus Name [id]}]
-
+# 
 # プルアップ・プルダウン
 # set_property PULLUP TRUE / FALSE [get_ports pin]
 # set_property PULLDOWN TRUE / FALSE [get_ports {bus Name [id]}]

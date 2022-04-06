@@ -70,7 +70,6 @@ MMCME2_ADV # (
     .CLKOUT4             (wClkOut[4]),
     .CLKOUT5             (wClkOut[5]),
     .CLKOUT6             (wClkOut[6]),
-
     .CLKFBOUTB           (wunused[0]),
     .CLKOUT0B            (wunused[1]),
     .CLKOUT1B            (wunused[2]),
@@ -112,25 +111,9 @@ wire wTCLK;                     assign oTCLK = wTCLK;
 wire wPCLK;                     assign oPCLK = wPCLK;
 wire wBCLK;                     assign oBCLK = wBCLK;
 
-BUFG clkf_buf (
-    .O (wClkInFb),
-    .I (wClkFb)
-);
-
-BUFG clkout1_buf (
-    .O (wTCLK),
-    .I (wClkOut[0])
-);
-
-BUFG clkout2_buf (
-    .O (wPCLK),
-    .I (wClkOut[1])
-);
-
-BUFG clkout3_buf (
-    .O (wBCLK),
-    .I (wClkOut[2])
-);
-
+BUFG BUFG_ICLK (    .O (wClkInFb),  .I (wClkFb)     );
+BUFG BUFG_TCLK (    .O (wTCLK),     .I (wClkOut[0]) );
+BUFG BUFG_PCLK (    .O (wPCLK),     .I (wClkOut[1]) );
+BUFG BUFG_BCLK (    .O (wBCLK),     .I (wClkOut[2]) );
 
 endmodule
