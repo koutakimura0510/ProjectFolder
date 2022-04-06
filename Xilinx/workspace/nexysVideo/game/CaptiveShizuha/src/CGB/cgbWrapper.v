@@ -26,7 +26,7 @@ module cgbWrapper (
 //----------------------------------------------------------
 wire wClkIbuf;
 
-IBUF clkin1_ibufg (
+IBUF IBUF_ICLK (
     .O (wClkIbuf),
     .I (iCLK)
 );
@@ -58,7 +58,7 @@ MMCME2_BASE # (
     .CLKOUT0_DUTY_CYCLE   (0.500),
     .CLKOUT1_DUTY_CYCLE   (0.500),
     .CLKOUT2_DUTY_CYCLE   (0.500)
-) SYSTEM_CLK_GEN (
+) MMCME2_BASE_inst (
     .CLKOUT0             (wClkOut[0]),
     .CLKOUT1             (wClkOut[1]),
     .CLKOUT2             (wClkOut[2]),
@@ -89,7 +89,7 @@ wire wTCLK;                     assign oTCLK = wTCLK;
 wire wPCLK;                     assign oPCLK = wPCLK;
 wire wBCLK;                     assign oBCLK = wBCLK;
 
-BUFG BUFG_ICLK (    .O (wClkInFb),  .I (wClkFb)     );
+BUFG BUFG_ICLK (    .O (wClkInFb),  .I (wClkOutFb)  );
 BUFG BUFG_TCLK (    .O (wTCLK),     .I (wClkOut[0]) );
 BUFG BUFG_PCLK (    .O (wPCLK),     .I (wClkOut[1]) );
 BUFG BUFG_BCLK (    .O (wBCLK),     .I (wClkOut[2]) );
