@@ -37,7 +37,7 @@ end
 fifoDualControllerGray # (
     .pBuffDepth  (pBuffDepth),
     .pBitWidth   (pBitWidth)
-) LINE_DUAL_BUFFER_1 (
+) ASYNC_PIXEL_BUFFER (
     .iCLKA  (iBCLK),    .iCLKB  (iPCLK),
     .iRST   (iRST),
 

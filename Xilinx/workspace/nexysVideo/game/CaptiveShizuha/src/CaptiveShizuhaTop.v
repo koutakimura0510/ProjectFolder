@@ -51,20 +51,19 @@ module CaptiveShizuhaTop #(
 //----------------------------------------------------------
 wire wTCLK, wPCLK, wBCLK;
 wire wRST;
+reg  qRST;
 
 cgbWrapper CGB (
-    .iCLK   (iCLK),     .iRST   (iRST),
+    .iCLK   (iCLK),     .iRST   (qRST),
     .oRST   (wRST),
     .oTCLK  (wTCLK),    .oPCLK  (wPCLK),
     .oBCLK  (wBCLK)
 );
 
-// dtpClkGen DTP_CLK_GEN (
-//     .clk_out1   (wPCLK),        .clk_out2   (wTCLK),
-//     .clk_out3   (wBCLK),
-//     .reset      (~iRST),        .locked     (wLock),
-//     .clk_in1    (iCLK)
-// );
+always @*
+begin
+    qRST = (~iRST);
+end
 
 
 //----------------------------------------------------------
@@ -152,8 +151,8 @@ tgbWrapper TGB (
 //     .oOledRes       (oOledRes),
 //     .oOledVbat      (oOledVbat),
 //     .oOledVdd       (oOledVdd),
-//     .iDispLine1     ({0,0, wDwp}),
-//     .iDispLine2     ({0,0, wDhp}),
+//     .iDispLine1     ({0,0, wVRGB}),
+//     .iDispLine2     ({0,0, 0}),
 //     .iDispLine3     ({0,0, 0}),
 //     .iDispLine4     ({0,0, 0})
 // );

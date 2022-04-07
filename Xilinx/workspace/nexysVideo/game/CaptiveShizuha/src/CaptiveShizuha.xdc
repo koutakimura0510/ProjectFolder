@@ -36,9 +36,11 @@ create_generated_clock -name TCLK [get_pins CGB/MMCME2_BASE_CLK_GEN/CLKOUT1]
 create_generated_clock -name BCLK [get_pins CGB/MMCME2_BASE_CLK_GEN/CLKOUT2]
 
 # 手動配線
-# set_property LOC PLLE2_ADV_X0Y1  [get_cells CGB/SYSTEM_CLK_GEN]
-# set_property LOC MMCME2_ADV_X0Y0 [get_cells CGB/SYSTEM_CLK_GEN]
-# set_property LOC MMCME2_BASE_X0Y0 [get_cells CGB/SYSTEM_CLK_GEN]
+set_property LOC MMCME2_ADV_X1Y2  [get_cells CGB/MMCME2_BASE_CLK_GEN]
+# set_property LOC PLLE2_ADV_X1Y2   [get_cells CGB/PLLE2_BASE_CLK_GEN]
+# set_property LOC X1Y2 [get_cells TGB]
+
+set_property LOC RAMB36_X8Y27 [get_cells BASE/PFB/ASYNC_PIXEL_BUFFER/USER_FIFO_DUAL/fifo]
 
 # ------------------------------------------------------------
 # 入力ポートでのデータ遅延時間を設定
