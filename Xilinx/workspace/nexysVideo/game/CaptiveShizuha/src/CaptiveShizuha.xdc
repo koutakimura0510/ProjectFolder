@@ -31,15 +31,14 @@ set_property -dict { PACKAGE_PIN R4    IOSTANDARD LVCMOS33 } [get_ports { iCLK }
 create_clock -add -name iCLK -period 10.00 -waveform {0 5} [get_ports iCLK]
 
 # FPGA
-create_generated_clock -name TCLK [get_pins CGB/mmcm_base_inst/CLKOUT0]
-create_generated_clock -name PCLK [get_pins CGB/CLKOUT1]
-# create_generated_clock -name BCLK [get_pins CGB/CLKOUT2]
-create_generated_clock -name BCLK -source [get_ports iCLK] -divide_by 4 \
-[get_pins CGB/wClkOut]
+create_generated_clock -name PCLK [get_pins CGB/MMCME2_BASE_CLK_GEN/CLKOUT0]
+create_generated_clock -name TCLK [get_pins CGB/MMCME2_BASE_CLK_GEN/CLKOUT1]
+create_generated_clock -name BCLK [get_pins CGB/MMCME2_BASE_CLK_GEN/CLKOUT2]
 
 # 手動配線
 # set_property LOC PLLE2_ADV_X0Y1  [get_cells CGB/SYSTEM_CLK_GEN]
 # set_property LOC MMCME2_ADV_X0Y0 [get_cells CGB/SYSTEM_CLK_GEN]
+# set_property LOC MMCME2_BASE_X0Y0 [get_cells CGB/SYSTEM_CLK_GEN]
 
 # ------------------------------------------------------------
 # 入力ポートでのデータ遅延時間を設定
