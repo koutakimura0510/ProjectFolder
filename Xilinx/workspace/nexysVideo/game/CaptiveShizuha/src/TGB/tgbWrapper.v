@@ -28,9 +28,9 @@ wire oTmdsSeriCH0, oTmdsSeriCH1, oTmdsSeriCH2;  // tmdsシリアル信号
 //----------------------------------------------------------
 // HDMI信号
 //----------------------------------------------------------
-tmdsEncoderDvi   TMDS_ENCODER_B(.iCLK(iTmdsCLK), .iRST(iRST), .iVD(iVRGB[ 7: 0]), .iCD({iVSYNC, iHSYNC}), .iVDE(iVDE), .oTmdsPara(oTmdsParaB));
-tmdsEncoderDvi   TMDS_ENCODER_G(.iCLK(iTmdsCLK), .iRST(iRST), .iVD(iVRGB[15: 8]), .iCD(2'b00),            .iVDE(iVDE), .oTmdsPara(oTmdsParaG));
-tmdsEncoderDvi   TMDS_ENCODER_R(.iCLK(iTmdsCLK), .iRST(iRST), .iVD(iVRGB[23:16]), .iCD(2'b00),            .iVDE(iVDE), .oTmdsPara(oTmdsParaR));
+tmdsEncoderDvi TMDS_ENCODER_B(.iCLK(iTmdsCLK), .iRST(iRST), .iVD(iVRGB[ 7: 0]), .iCD({iVSYNC, iHSYNC}), .iVDE(iVDE), .oTmdsPara(oTmdsParaB));
+tmdsEncoderDvi TMDS_ENCODER_G(.iCLK(iTmdsCLK), .iRST(iRST), .iVD(iVRGB[15: 8]), .iCD(2'b00),            .iVDE(iVDE), .oTmdsPara(oTmdsParaG));
+tmdsEncoderDvi TMDS_ENCODER_R(.iCLK(iTmdsCLK), .iRST(iRST), .iVD(iVRGB[23:16]), .iCD(2'b00),            .iVDE(iVDE), .oTmdsPara(oTmdsParaR));
 
 tmdsSerialize TMDS_B(.iCLK(iTmdsOverCLK), .iRST(iRST), .iTmdsPara(oTmdsParaB), .oTmdsSeri(oTmdsSeriCH0));
 tmdsSerialize TMDS_G(.iCLK(iTmdsOverCLK), .iRST(iRST), .iTmdsPara(oTmdsParaG), .oTmdsSeri(oTmdsSeriCH1));

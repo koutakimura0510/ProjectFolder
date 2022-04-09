@@ -26,7 +26,14 @@ module cgbWrapper (
 //----------------------------------------------------------
 wire wClkIbuf;
 
-IBUF IBUF_ICLK (    .O (wClkIbuf),  .I (iCLK)   );
+IBUF # (
+    .IBUF_LOW_PWR ("FALSE"),
+    .IOSTANDARD   ("DEFAULT")
+) IBUF_ICLK (    
+    .O (wClkIbuf),
+    .I (iCLK)
+);
+
 
 //----------------------------------------------------------
 // VOC Settings
@@ -64,9 +71,13 @@ MMCME2_BASE # (
     // Ref In Jitter (0.000 ~ 0.999)
     .REF_JITTER1          (0.0), 
 
-    // VOC 分周
+    // 逓倍 (2.000 ~ 64.000)
     .CLKFBOUT_MULT_F      (lpClkOutMult),
+
+    // (1.000 ~ 128.000)
     .CLKOUT0_DIVIDE_F     (lpClk0OutDivF),
+
+    // 分周 (1 ~ 128)
     .CLKOUT1_DIVIDE       (lpClk1OutDiv),
     .CLKOUT2_DIVIDE       (lpClk2OutDiv),
     .CLKOUT3_DIVIDE       (lpClk3OutDiv),
@@ -98,6 +109,8 @@ MMCME2_BASE # (
     .CLKOUT5             (wClkOut[5]),      // 1-bit output
     .CLKOUT6             (wClkOut[6]),      // 1-bit output
     .CLKFBOUT            (wClkOutFb),       // 1-bit output FeedBack
+
+    // Bと付く部分は反転出力
     .CLKFBOUTB           (wunused[0]),
     .CLKOUT0B            (wunused[1]),
     .CLKOUT1B            (wunused[2]),
