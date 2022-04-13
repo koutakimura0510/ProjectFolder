@@ -1,9 +1,6 @@
 /*
  * Create 2021/12/23
  * Author koutakimura
- * Editor VSCode ver1.62.7
- * Build  Vivado20.2
- * Borad  Nexys Video
  * -
  * DVI/TMDS信号の送信データの符号化処理を行う
  * DVIのため4b/10b変換処理は行わない

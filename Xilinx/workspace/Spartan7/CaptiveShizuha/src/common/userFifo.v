@@ -1,9 +1,6 @@
 //----------------------------------------------------------
 // Create 2021/02/05
 // Author koutakimura
-// Editor VSCode ver1.62.7
-// Build  Vivado20.2
-// Borad  Nexys Video
 // -
 // FIFOの生成モジュール
 // このFIFOを使用する上位モジュール内でインターフェースを制御することとする

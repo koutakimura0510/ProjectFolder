@@ -1,9 +1,9 @@
 //----------------------------------------------------------
-// Create 2022/3/27
+// Create 2022/4/13
 // Author koutakimura
 // Editor VSCode ver1.62.7
 // Build  Vivado20.2
-// Borad  Nexys Video
+// Board  My Board Spartan7
 // -
 // 横スクロール Game 「囚われの静葉」Top Module
 // 

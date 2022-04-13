@@ -1,9 +1,6 @@
 /*
  * Create 2021/12/23
  * Author koutakimura
- * Editor VSCode ver1.62.7
- * Build  Vivado20.2
- * Borad  Nexys Video
  * -
  * TMDSパラレル->シリアル変換モジュール
  */

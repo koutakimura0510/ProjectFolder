@@ -3,7 +3,7 @@
  * Author koutakimura
  * Editor VSCode ver1.62.7
  * Build  Vivado20.2
- * Borad  Nexys Video
+ * Board  My Board Spartan7
  * 
  * プレイヤーのドット作成トップモジュール
  * 現在のユーザーの位置からキャラクター描画用のドット保存Rom参照アドレスを生成する

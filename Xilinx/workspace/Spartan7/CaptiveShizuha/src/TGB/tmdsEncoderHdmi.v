@@ -3,7 +3,7 @@
  * Author koutakimura
  * Editor VSCode ver1.62.7
  * Build  Vivado20.2
- * Borad  Nexys Video
+ * Board  My Board Spartan7
  * -
  * DVI/TMDS信号の送信データの符号化処理を行う
  * 

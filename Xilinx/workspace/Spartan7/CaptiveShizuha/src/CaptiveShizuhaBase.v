@@ -1,9 +1,6 @@
 //----------------------------------------------------------
 // Create 2022/3/27
 // Author koutakimura
-// Editor VSCode ver1.62.7
-// Build  Vivado20.2
-// Borad  Nexys Video
 // -
 // Base module
 // ゲームの進行状況に応じて、描画用のピクセルデータを生成するモジュール

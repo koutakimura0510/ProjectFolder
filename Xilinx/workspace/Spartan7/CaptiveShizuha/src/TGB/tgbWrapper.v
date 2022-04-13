@@ -1,9 +1,6 @@
 /*
  * Create 2022/3/27
  * Author koutakimura
- * Editor VSCode ver1.62.7
- * Build  Vivado20.2
- * Borad  Nexys Video
  * -
  * TMDS Generate Block
  */
