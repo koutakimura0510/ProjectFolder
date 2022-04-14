@@ -14,7 +14,6 @@ set_property CFGBVS VCCO        [current_design]
 set_property BITSTREAM.CONFIG.CONFIGRATE        33              [current_design]
 set_property BITSTREAM.CONFIG.SPI_BUSWIDTH      4               [current_design]
 set_property BITSTREAM.CONFIG.EXTMASTERCCLK_EN  DISABLE         [current_design]
-# set_property BITSTREAM.CONFIG.USERID            32'h22040501    [current_design]
 
 
 # ------------------------------------------------------------
@@ -44,19 +43,19 @@ set_property LOC RAMB36_X8Y27 [get_cells BASE/PFB/ASYNC_PIXEL_BUFFER/USER_FIFO_D
 
 # Flash Rom 2
 
-## HDMI out
-#set_property -dict { PACKAGE_PIN AA4   IOSTANDARD LVCMOS33 } [get_ports { hdmi_tx_cec }]; #IO_L11N_T1_SRCC_34 Sch=hdmi_tx_cec
+## HDMI TX
+#set_property -dict { PACKAGE_PIN AA4   IOSTANDARD LVCMOS33 PULLUP TRUE} [get_ports { hdmi_tx_cec }]; #IO_L11N_T1_SRCC_34 Sch=hdmi_tx_cec
 set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  } [get_ports { oHdmiClkNeg }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
 set_property -dict { PACKAGE_PIN T1    IOSTANDARD LVCMOS33  } [get_ports { oHdmiClkPos }]; #IO_L1P_T0_34 Sch=hdmi_tx_clk_p
 #set_property -dict { PACKAGE_PIN AB13  IOSTANDARD LVCMOS25 } [get_ports { hdmi_tx_hpd }]; #IO_L3N_T0_DQS_13 Sch=hdmi_tx_hpd
 #set_property -dict { PACKAGE_PIN U3    IOSTANDARD LVCMOS33 } [get_ports { hdmi_tx_rscl }]; #IO_L6P_T0_34 Sch=hdmi_tx_rscl
 #set_property -dict { PACKAGE_PIN V3    IOSTANDARD LVCMOS33 } [get_ports { hdmi_tx_rsda }]; #IO_L6N_T0_VREF_34 Sch=hdmi_tx_rsda
-set_property -dict { PACKAGE_PIN Y1    IOSTANDARD LVCMOS33  } [get_ports { oHdmiNeg[0] }]; #IO_L5N_T0_34 Sch=hdmi_tx_n[0]
-set_property -dict { PACKAGE_PIN W1    IOSTANDARD LVCMOS33  } [get_ports { oHdmiPos[0] }]; #IO_L5P_T0_34 Sch=hdmi_tx_p[0]
-set_property -dict { PACKAGE_PIN AB1   IOSTANDARD LVCMOS33  } [get_ports { oHdmiNeg[1] }]; #IO_L7N_T1_34 Sch=hdmi_tx_n[1]
-set_property -dict { PACKAGE_PIN AA1   IOSTANDARD LVCMOS33  } [get_ports { oHdmiPos[1] }]; #IO_L7P_T1_34 Sch=hdmi_tx_p[1]
-set_property -dict { PACKAGE_PIN AB2   IOSTANDARD LVCMOS33  } [get_ports { oHdmiNeg[2] }]; #IO_L8N_T1_34 Sch=hdmi_tx_n[2]
-set_property -dict { PACKAGE_PIN AB3   IOSTANDARD LVCMOS33  } [get_ports { oHdmiPos[2] }]; #IO_L8P_T1_34 Sch=hdmi_tx_p[2]
+set_property -dict { PACKAGE_PIN Y1    IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataNeg[0] }]; #IO_L5N_T0_34 Sch=hdmi_tx_n[0]
+set_property -dict { PACKAGE_PIN W1    IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataPos[0] }]; #IO_L5P_T0_34 Sch=hdmi_tx_p[0]
+set_property -dict { PACKAGE_PIN AB1   IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataNeg[1] }]; #IO_L7N_T1_34 Sch=hdmi_tx_n[1]
+set_property -dict { PACKAGE_PIN AA1   IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataPos[1] }]; #IO_L7P_T1_34 Sch=hdmi_tx_p[1]
+set_property -dict { PACKAGE_PIN AB2   IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataNeg[2] }]; #IO_L8N_T1_34 Sch=hdmi_tx_n[2]
+set_property -dict { PACKAGE_PIN AB3   IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataPos[2] }]; #IO_L8P_T1_34 Sch=hdmi_tx_p[2]
 
 # Debug Pin UART
 

@@ -16,9 +16,6 @@ module CaptiveShizuhaBase #(
     input           iBCLK,      // Base Clk
     input           iRST,       // Active High Sync Reset
 
-    // Interface 
-    input  [5:0]    iBtn,       // Async Push SW
-
     // Pixel Clk Sync Signal
     input           iPFvde,     // Pixel Clk Timing fast video enable
 

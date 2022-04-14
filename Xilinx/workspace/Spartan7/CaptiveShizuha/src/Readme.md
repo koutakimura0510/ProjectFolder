@@ -12,9 +12,9 @@ Spartan7を搭載した自作基板の横スクロールゲームプロジェク
 </br>
 
 ## 2. コーディング規則
-- parameter locparama は小文字p, lpから開始し、なるべく詳細な命名を行う</br>
-- input outputの端子は小文字・大文字を混ぜたものを使用</br>
-- reg変数のプレフィックスは、w->ネット型wire変数　q->D-FFにしないreg変数　r->D-FFにするreg変数</br>
+- parameter locparama は小文字 p, lp から開始し、なるべく詳細な命名を行う</br>
+- input outputのportは小文字 i, o から開始する。</br>
+- 変数のプレフィックスは、w->ネット型wire変数　q->D-FFにしないreg変数　r->D-FFにするreg変数</br>
 </br>
 
 ## 3. ファイル・ディレクトリ概要
