@@ -12,8 +12,8 @@ module dgbWrapper #(
     parameter                   pBitWidth       = 10,
     parameter                   pBitHeight      = 10
 )(
-    input                       iCLK,           // 指定clk
-    input                       iRST,           // Active High Sync RST
+    input                       iClk,           // 指定clk
+    input                       iRst,           // Active High Sync RST
     input  [pBitWidth -1:0]     iDwp,           // Display width  pos
     input  [pBitHeight-1:0]     iDhp,           // Display height pos
     input  [pBitWidth -1:0]     iDxs,           // Draw xpos start
@@ -31,7 +31,7 @@ module dgbWrapper #(
 //----------------------------------------------------------
 reg [pColorSize-1:0] rColor [0:1];            assign oPixel = rColor[1];
 
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
     {rColor[1], rColor[0]} <= {rColor[0], iColor};
 end
@@ -41,9 +41,9 @@ end
 //----------------------------------------------------------
 reg [3:0] rCke, qCke;
 
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
-    if (iRST)   rCke <= 4'd0;
+    if (iRst)   rCke <= 4'd0;
     else        rCke <= qCke;
 end
 
@@ -60,9 +60,9 @@ end
 //----------------------------------------------------------
 reg rVd, qVd;                            assign oVd = rVd;
 
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
-    if (iRST)   rVd <= 1'b0;
+    if (iRst)   rVd <= 1'b0;
     else        rVd <= qVd;
 end
 

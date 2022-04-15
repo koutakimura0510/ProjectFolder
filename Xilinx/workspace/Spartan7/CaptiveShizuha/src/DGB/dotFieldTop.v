@@ -10,8 +10,8 @@
  */
 
 module dotFieldTop (
-    input           iCLK,   // ディスプレイ描画clk
-    input           iRST,   // system rst
+    input           iClk,   // ディスプレイ描画clk
+    input           iRst,   // system rst
     input           iVDE,
     input  [ 9:0]   iUXS,
     input  [ 9:0]   iUYS,
@@ -72,7 +72,7 @@ endfunction
 // フィールド番号とキャラクターの座標に対応した当たり判定のデータを取得
 //----------------------------------------------------------
 dotFieldRom DOT_FIELD_ROM (
-    .iCLK           (iCLK),
+    .iClk           (iClk),
     .iAddr          (field_id_number),
     .iUXS           (iUXS),
     .iUYS           (iUYS),
@@ -88,7 +88,7 @@ dotFieldRom DOT_FIELD_ROM (
 // フィールド番号に対応したBitmapデータを取得
 //----------------------------------------------------------
 dotFieldTextureRom DOT_FIELD_TEXTURE_ROM (
-    .iCLK           (iCLK),
+    .iClk           (iClk),
     .iAddr          (mapchip_addr),
     .oFieldDot      (oFieldDot)
 );

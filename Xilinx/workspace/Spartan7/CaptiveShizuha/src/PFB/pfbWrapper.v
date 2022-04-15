@@ -9,9 +9,9 @@ module pfbWrapper #(
     parameter pBuffDepth  = 1024,   // FIFO BRAMのサイズ指定、画面サイズの横幅より大きくする
     parameter pBitWidth   = 24      // bitサイズ
 )(
-    input                   iBCLK,          // Base clk
-    input                   iPCLK,          // Pixel Clk
-    input                   iRST,           // Active High
+    input                   iBaseClk,          // Base clk
+    input                   iPixelClk,          // Pixel Clk
+    input                   iRst,           // Active High
     input  [pBitWidth-1:0]  iWD,            // Write Data
     input                   iWE,            // PD Write Enable
     output [pBitWidth-1:0]  oRD,            // Read Data
@@ -24,9 +24,9 @@ reg  [pBitWidth-1:0] rPixel;     assign oRD = rPixel;
 wire [pBitWidth-1:0] wPixel;
 wire wRvd;
 
-always @(posedge iPCLK)
+always @(posedge iPixelClk)
 begin
-    if (iRST)       rPixel <= 0;
+    if (iRst)       rPixel <= 0;
     else if (wRvd)  rPixel <= wPixel;
     else            rPixel <= rPixel;
 end
@@ -35,8 +35,8 @@ fifoDualControllerGray # (
     .pBuffDepth  (pBuffDepth),
     .pBitWidth   (pBitWidth)
 ) ASYNC_PIXEL_BUFFER (
-    .iCLKA  (iBCLK),    .iCLKB  (iPCLK),
-    .iRST   (iRST),
+    .iClkA  (iBaseClk),    .iClkB  (iPixelClk),
+    .iRst   (iRst),
 
     // write side
     .iWD    (iWD),      .iWE    (iWE),
@@ -58,7 +58,7 @@ fifoDualControllerGray # (
 //     .pBuffDepth (16),
 //     .pBitWidth  (pBitWidth)
 // ) LINE_BUFFER_1 (
-//     .iCLK   (iBCLK),    .iRST   (iRST),
+//     .iClk   (iBaseClk),    .iRst   (iRst),
 //     .iWD    (iWD),      .oRD    (wLineRd),
 //     .iWE    (iWE),      .iRE    (qLineRe),
 //     .oFLL   (oFull),    .oRVD   (wLineRvd),
@@ -73,9 +73,9 @@ fifoDualControllerGray # (
 // wire [pBitWidth-1:0] wPixel;
 // wire wRvd, wDualFull;
 
-// always @(posedge iPCLK)
+// always @(posedge iPixelClk)
 // begin
-//     if (iRST)       rPixel <= 0;
+//     if (iRst)       rPixel <= 0;
 //     else if (wRvd)  rPixel <= wPixel;
 //     else            rPixel <= rPixel;
 // end
@@ -84,8 +84,8 @@ fifoDualControllerGray # (
 //     .pBuffDepth             (pBuffDepth),
 //     .pBitWidth              (pBitWidth)
 // ) LINE_DUAL_BUFFER_1 (
-//     .iCLKA  (iBCLK),        .iCLKB  (iPCLK),
-//     .iRST   (iRST),
+//     .iClkA  (iBaseClk),        .iClkB  (iPixelClk),
+//     .iRst   (iRst),
 
 //     // write side
 //     .iWD    (wLineRd),      .iWE    (wLineRvd),

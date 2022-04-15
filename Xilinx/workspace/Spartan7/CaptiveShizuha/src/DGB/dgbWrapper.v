@@ -17,8 +17,8 @@ module dgbWrapper #(
     parameter                   pPixelWidth     = 24,
     parameter                   pPixelDebug     = "yes"
 )(
-    input                       iBCLK,          // Bace clk
-    input                       iRST,           // Active High Sync RST
+    input                       iBaseClk,          // Bace clk
+    input                       iRst,           // Active High Sync RST
     input                       iCKE,           // Base Clk Enable
     output [pPixelWidth-1:0]    oPixel,         // 生成ピクセルデータ
     output                      oVd,            // 有効データ出力時High
@@ -43,7 +43,7 @@ hvposGen #(
     .pHeight        (pVdisplay),    .pWidth         (pHdisplay),
     .pBitHeight     (lpBitHeight),  .pBitWidth      (lpBitWidth)
 ) HVPOS_GEN (
-    .iCLK           (iBCLK),        .iRST           (iRST),
+    .iClk           (iBaseClk),        .iRst           (iRst),
     .iCKE           (iCKE),
     .oDwp           (wDwp),         .oDhp           (wDhp),
     .oFe            (wFe)
@@ -62,41 +62,41 @@ wire wFps;
 countGet #(
     .pCntSize (2)
 ) COUNT_GET (
-    .iCLK   (iBCLK),            .iRST   (iRST),
+    .iClk   (iBaseClk),            .iRst   (iRst),
     .iCKE   (wFe),              .oCKE   (wFps)
 );
 
 generate
     if (pPixelDebug == "no")
     begin
-        always @(posedge iBCLK)
+        always @(posedge iBaseClk)
         begin
-            if (iRST)           rPixel <= 0;
+            if (iRst)           rPixel <= 0;
             else if (rVd)       rPixel <= rPixel + 1'b1;
             else                rPixel <= rPixel;
         end
     end
     else
     begin
-        always @(posedge iBCLK)
+        always @(posedge iBaseClk)
         begin
-            if (iRST)       rSqu <= 'h4169e1;
+            if (iRst)       rSqu <= 'h4169e1;
             else if (wFps)  rSqu <= ~rSqu;
             else            rSqu <= rSqu;
         end
 
-        always @(posedge iBCLK)
+        always @(posedge iBaseClk)
         begin
-            if (iRST)           rPixel <= 0;
+            if (iRst)           rPixel <= 0;
             else if (qSquare)   rPixel <= rSqu;
             else                rPixel <= 0;
         end
     end
 endgenerate
 
-always @(posedge iBCLK)
+always @(posedge iBaseClk)
 begin
-    if (iRST)           rVd <= 1'b0;
+    if (iRst)           rVd <= 1'b0;
     else                rVd <= iCKE;
 end
 
@@ -110,7 +110,7 @@ end
 // フィールドのドットデータ生成
 //----------------------------------------------------------
 // dotFieldTop DOT_FIELD_TOP (
-//     .iCLK(iSCLK), .iRST(iRST),
+//     .iClk(iSCLK), .iRst(iRst),
 //     .iVDE(iVDE),   .iUXS(oUXS), .iUYS(oUYS), .iFXS(oFXS), .iFYS(oFYS),
 //     .iHPOS(iHPOS), .iVPOS(iVPOS),
 //     .oFieldDot(oFieldDot), .oMapWidth(oMapWidth), .oMapDirect(oMapDirect)
@@ -124,7 +124,7 @@ end
 //     .VMAX(480),
 //     .CHIP_WIDTH(32)
 // ) DOT_PLAYER_TOP (
-//     .iCLK(iSCLK), .iRST(iRST),
+//     .iClk(iSCLK), .iRst(iRst),
 //     .iUXS(oUXS), .iUXE(oUXE), .iUYS(oUYS), .iUYE(oUYE),
 //     .iHPOS(iHPOS), .iVPOS(iVPOS),
 //     .iDirX(oDirX), .iDirY(oDirY),

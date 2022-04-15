@@ -11,8 +11,8 @@
 module ssbWrapper #(
     parameter       pMonitorTiming = 500000
 )(
-    input           iCLK, 
-    input           iRST,
+    input           iClk, 
+    input           iRst,
     input  [5:0]    iBtn,   // bit列 -> LRBADU
     output [5:0]    oBtn    // bit列 -> ABDLRU
 );
@@ -27,7 +27,7 @@ wire   oEn5ms;
 enGen #(
     .pSysClk    (pMonitorTiming)
 ) RGB_1MS_GEN (
-    .iCLK(iCLK), .iRST(iRST), .oEnable(oEn5ms)
+    .iClk(iClk), .iRst(iRst), .oEnable(oEn5ms)
 );
 
 
@@ -36,11 +36,11 @@ enGen #(
 //----------------------------------------------------------
 wire   oBtnA, oBtnB, oBtnD, oBtnL, oBtnR, oBtnU;    assign oBtn = {oBtnA, oBtnR, oBtnL, oBtnU, oBtnD, oBtnB};
 
-swGen SW_GEN_B(.iCLK(iCLK), .iEnable(oEn5ms), .iBtn(iBtn[SW_B]),     .oBtn(oBtnB));
-swGen SW_GEN_D(.iCLK(iCLK), .iEnable(oEn5ms), .iBtn(iBtn[SW_DOWN]),  .oBtn(oBtnD));
-swGen SW_GEN_U(.iCLK(iCLK), .iEnable(oEn5ms), .iBtn(iBtn[SW_UP]),    .oBtn(oBtnU));
-swGen SW_GEN_L(.iCLK(iCLK), .iEnable(oEn5ms), .iBtn(iBtn[SW_LEFT]),  .oBtn(oBtnL));
-swGen SW_GEN_R(.iCLK(iCLK), .iEnable(oEn5ms), .iBtn(iBtn[SW_RIGHT]), .oBtn(oBtnR));
-swGen SW_GEN_A(.iCLK(iCLK), .iEnable(oEn5ms), .iBtn(iBtn[SW_A]),     .oBtn(oBtnA));
+swGen SW_GEN_B(.iClk(iClk), .iEnable(oEn5ms), .iBtn(iBtn[SW_B]),     .oBtn(oBtnB));
+swGen SW_GEN_D(.iClk(iClk), .iEnable(oEn5ms), .iBtn(iBtn[SW_DOWN]),  .oBtn(oBtnD));
+swGen SW_GEN_U(.iClk(iClk), .iEnable(oEn5ms), .iBtn(iBtn[SW_UP]),    .oBtn(oBtnU));
+swGen SW_GEN_L(.iClk(iClk), .iEnable(oEn5ms), .iBtn(iBtn[SW_LEFT]),  .oBtn(oBtnL));
+swGen SW_GEN_R(.iClk(iClk), .iEnable(oEn5ms), .iBtn(iBtn[SW_RIGHT]), .oBtn(oBtnR));
+swGen SW_GEN_A(.iClk(iClk), .iEnable(oEn5ms), .iBtn(iBtn[SW_A]),     .oBtn(oBtnA));
 
 endmodule

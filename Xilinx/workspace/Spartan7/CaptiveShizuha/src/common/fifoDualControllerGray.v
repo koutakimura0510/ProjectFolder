@@ -24,9 +24,9 @@ module fifoDualControllerGray #(
     parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
     parameter pBitWidth   = 32      // bitサイズ
 )(
-    input                       iCLKA,  // clk write side
-    input                       iCLKB,  // clk read  side
-    input                       iRST,   // Active High
+    input                       iClkA,  // clk write side
+    input                       iClkB,  // clk read  side
+    input                       iRst,   // Active High
     input   [pBitWidth-1:0]     iWD,    // write data
     input                       iWE,    // write enable 有効データ書き込み
     output                      oFLL,   // 最大書き込み時High
@@ -69,9 +69,9 @@ reg qWE, qRE;
 // 非同期で動作するため、一度グレイコードに変換したものを別CLKでバイナリに復元する必要がある
 // そのためグレイコード変換後、別クロックでメタ・ステーブル対策として2段FFで受信しバイナリに変換を行う
 //----------------------------------------------------------
-always @(posedge iCLKA)
+always @(posedge iClkA)
 begin
-    if (iRST)       rWA <= 0;
+    if (iRst)       rWA <= 0;
     else if (qWE)   rWA <= rWA + 1'b1;
     else            rWA <= rWA;
 end
@@ -79,18 +79,18 @@ end
 //----------------------------------------------------------
 // Address -> Gray Code
 //----------------------------------------------------------
-always @(posedge iCLKA)
+always @(posedge iClkA)
 begin
-    if (iRST)       rWG <= 0;
+    if (iRst)       rWG <= 0;
     else            rWG <= {rWA[lpAddrMsb], rWA[lpAddrMsbNext:0] ^ rWA[lpAddrMsb:1]};
 end
 
 //----------------------------------------------------------
 // meta stable
 //----------------------------------------------------------
-always @(posedge iCLKB)
+always @(posedge iClkB)
 begin
-    if (iRST)       {wWGf2, wWGf1} <= {lpAddrNull, lpAddrNull};
+    if (iRst)       {wWGf2, wWGf1} <= {lpAddrNull, lpAddrNull};
     else            {wWGf2, wWGf1} <= {wWGf1, rWG};
 end
 
@@ -125,15 +125,15 @@ end
 //----------------------------------------------------------
 // 前回のrpが更新されていたら新規データを出力できる状態と判断する
 //----------------------------------------------------------
-always @(posedge iCLKB)
+always @(posedge iClkB)
 begin
-    if (iRST)       rORP <= 0;
+    if (iRst)       rORP <= 0;
     else            rORP <= rRA;
 end
 
-always @(posedge iCLKB)
+always @(posedge iClkB)
 begin
-    if (iRST)       rRA <= 0;
+    if (iRst)       rRA <= 0;
     else if (qRE)   rRA <= rRA + 1'b1;
     else            rRA <= rRA;
 end
@@ -141,18 +141,18 @@ end
 //----------------------------------------------------------
 // Address -> Gray Code
 //----------------------------------------------------------
-always @(posedge iCLKB)
+always @(posedge iClkB)
 begin
-    if (iRST)       rRG <= 0;
+    if (iRst)       rRG <= 0;
     else            rRG <= {rRA[lpAddrMsb], rRA[lpAddrMsbNext:0] ^ rRA[lpAddrMsb:1]};
 end
 
 //----------------------------------------------------------
 // meta stable
 //----------------------------------------------------------
-always @(posedge iCLKA)
+always @(posedge iClkA)
 begin
-    if (iRST)       {wRGf2, wRGf1} <= {lpAddrNull, lpAddrNull};
+    if (iRst)       {wRGf2, wRGf1} <= {lpAddrNull, lpAddrNull};
     else            {wRGf2, wRGf1} <= {wRGf1, rRG};
 end
 
@@ -184,15 +184,15 @@ end
 reg qFLL, qEMP, qRVD;
 reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {rFLL, rEMP, rRVD};
 
-always @(posedge iCLKA)
+always @(posedge iClkA)
 begin
-    if (iRST)       {rFLL, rEMP} <= {1'b0, 1'b0};
+    if (iRst)       {rFLL, rEMP} <= {1'b0, 1'b0};
     else            {rFLL, rEMP} <= {qFLL, qEMP};
 end
 
-always @(posedge iCLKB)
+always @(posedge iClkB)
 begin
-    if (iRST)       {rRVD} <= {1'b0};
+    if (iRst)       {rRVD} <= {1'b0};
     else            {rRVD} <= {qRVD};
 end
 
@@ -226,7 +226,7 @@ userFifoDual #(
     .pAddrWidth    (lpAddrWidth)
 ) USER_FIFO_DUAL (
     // write side       read side
-    .iCLKA  (iCLKA),    .iCLKB  (iCLKB),
+    .iClkA  (iClkA),    .iClkB  (iClkB),
     .iWD    (iWD),      .oRD    (wRD),
     .iWA    (rWA),      .iRA    (rRA),
     .iWE    (qWE)

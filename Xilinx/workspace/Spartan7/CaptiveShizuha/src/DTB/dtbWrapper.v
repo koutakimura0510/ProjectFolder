@@ -14,8 +14,8 @@ module dtbWrapper #(
     parameter       pVbottom        =  11,
     parameter       pVsync          =   2
 )(
-    input           iCLK,           // clk
-    input           iRST,           // Active High to sync rst
+    input           iClk,           // clk
+    input           iRst,           // Active High to sync rst
     output          oVde,           // video enable signal
     output          oFe,            // frame end
     output          oFvde,          // fast vde
@@ -33,7 +33,7 @@ hvsyncGen #(
     .pHfront    (pHfront),      .pVbottom   (pVbottom),
     .pHsync     (pHsync),       .pVsync     (pVsync)
 ) HVSYNC_GEN (
-    .iCLK       (iCLK),         .iRST       (iRST),
+    .iClk       (iClk),         .iRst       (iRst),
     .oHsync     (oHsync),       .oVsync     (oVsync),
     .oVde       (oVde),         .oFe        (oFe),
     .oFvde      (oFvde)

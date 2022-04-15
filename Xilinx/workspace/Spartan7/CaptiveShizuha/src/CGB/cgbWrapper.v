@@ -9,12 +9,12 @@
 // 
 //----------------------------------------------------------
 module cgbWrapper (
-    input           iCLK,           // system clk
-    input           iRST,           // Active High
-    output          oRST,           // Active High
-    output          oTCLK,
-    output          oPCLK,
-    output          oBCLK
+    input           iClk,           // system clk
+    input           iRst,           // Active High
+    output          oRst,           // Active High
+    output          oTmdsClk,
+    output          oPixelClk,
+    output          oBaseClk
 );
 
 
@@ -26,9 +26,9 @@ wire wClkIbuf;
 IBUF # (
     .IBUF_LOW_PWR ("FALSE"),
     .IOSTANDARD   ("DEFAULT")
-) IBUF_ICLK (    
+) IBUF_iClk (    
     .O (wClkIbuf),
-    .I (iCLK)
+    .I (iClk)
 );
 
 
@@ -50,7 +50,7 @@ localparam      lpClk3OutDiv     = 10;          // <Reserved>
 localparam      lpClk4OutDiv     = 10;          // <Reserved>
 localparam      lpClk5OutDiv     = 10;          // <Reserved>
 
-wire wLock;                     assign oRST = (~wLock);
+wire wLock;                     assign oRst = (~wLock);
 wire wClkOutFb, wClkInFb;
 wire [6:0] wClkOut;
 wire [8:0] wunused;
@@ -117,21 +117,21 @@ MMCME2_BASE # (
     .CLKIN1              (wClkIbuf),        // 1-bit input  IBUF Clk
     .LOCKED              (wLock),           // 1-bit output IBUF Clk
     .PWRDWN              (1'b0),            // 1-bit input  Power Down
-    .RST                 (iRST)
+    .RST                 (iRst)
 );
 
 //----------------------------------------------------------
-// iCLK は IBUF 経由後、FeedBack経由してBUFG通すような図がデータシートに記載してあったのでそうしている
+// iClk は IBUF 経由後、FeedBack経由してBUFG通すような図がデータシートに記載してあったのでそうしている
 // 
 // PCLK 25  MHz Pixel
 // TCLK 250 MHz TMDS
 // BCLK 100 MHz Base
 //----------------------------------------------------------
-wire wTCLK;                     assign oTCLK = wTCLK;
-wire wPCLK;                     assign oPCLK = wPCLK;
-wire wBCLK;                     assign oBCLK = wBCLK;
+wire wTCLK;                     assign oTmdsClk = wTCLK;
+wire wPCLK;                     assign oPixelClk = wPCLK;
+wire wBCLK;                     assign oBaseClk = wBCLK;
 
-BUFG BUFG_ICLK (    .O (wClkInFb),  .I (wClkOutFb)  );
+BUFG BUFG_iClk (    .O (wClkInFb),  .I (wClkOutFb)  );
 BUFG BUFG_PCLK (    .O (wPCLK),     .I (wClkOut[0]) );
 BUFG BUFG_TCLK (    .O (wTCLK),     .I (wClkOut[1]) );
 BUFG BUFG_BCLK (    .O (wBCLK),     .I (wClkOut[2]) );

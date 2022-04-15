@@ -8,8 +8,8 @@
  * RGB色データ生成モジュール
  */
 module rgbGen(
-    input           iCLK,           // system clk
-    input           iRST,           // system rst
+    input           iClk,           // system clk
+    input           iRst,           // system rst
     input  [ 9:0]   iHPOS,          // 描画座標horizon
     input  [ 9:0]   iVPOS,          // 描画座標vertical
     input  [ 9:0]   iXS,            // 描画開始x_start座標
@@ -27,8 +27,8 @@ wire [ 9:0] ystart = iYS;
 wire [ 9:0] yend   = (iYE);
 assign enable = (xstart <= iHPOS && iHPOS < xend && ystart <= iVPOS && iVPOS < yend) ? 1'b1 : 1'b0;
 
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
+always @(posedge iClk) begin
+    if (iRst == 1'b1) begin
         alpha <= iARGB[31:24];
     end else if (enable == 1'b1) begin
         alpha <= iARGB[31:24];
@@ -37,8 +37,8 @@ always @(posedge iCLK) begin
     end
 end
 
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
+always @(posedge iClk) begin
+    if (iRst == 1'b1) begin
         red <= iARGB[23:16];
     end else if (enable == 1'b1) begin
         red <= iARGB[23:16];
@@ -47,8 +47,8 @@ always @(posedge iCLK) begin
     end
 end
 
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
+always @(posedge iClk) begin
+    if (iRst == 1'b1) begin
         green <= iARGB[15:8];
     end else if (enable == 1'b1) begin
         green <= iARGB[15:8];
@@ -57,8 +57,8 @@ always @(posedge iCLK) begin
     end
 end
 
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
+always @(posedge iClk) begin
+    if (iRst == 1'b1) begin
         blue <= iARGB[7:0];
     end else if (enable == 1'b1) begin
         blue <= iARGB[7:0];

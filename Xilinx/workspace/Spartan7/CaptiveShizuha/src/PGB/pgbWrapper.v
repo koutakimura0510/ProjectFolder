@@ -8,8 +8,8 @@
 
 module pgbWrapper
 (
-    input           iBCLK,      // Base clk
-    input           iRST,       // Active High
+    input           iBaseClk,      // Base clk
+    input           iRst,       // Active High
     input  [ 5:0]   iBtn,
     input  [ 9:0]   iStartX,    // 描画開始開始x座標
     input  [ 9:0]   iStartY,    // 描画開始開始y座標
@@ -26,7 +26,7 @@ module pgbWrapper
 );
 
 userPos USER_POS (
-    .iCLK       (iSCLK),      .iRST         (iRST),
+    .iClk       (iSCLK),      .iRst         (iRst),
     .iBtn       (iBtn),
     .iStartX    (0),          .iStartY      (416),
     .oUXS       (oUXS),       .oUYS         (oUYS), 

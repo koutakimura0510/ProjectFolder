@@ -7,14 +7,14 @@
 module dff #(
     parameter pBitWidth = 1
 )(
-    input                   iCLK,
+    input                   iClk,
     input   [pBitWidth-1:0] iSig,
     output  [pBitWidth-1:0] oSig
 );
 
 reg [pBitWidth-1:0] rSig;       assign oSig = rSig;
 
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
     rSig <= iSig;
 end

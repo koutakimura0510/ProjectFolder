@@ -18,8 +18,8 @@ module hvsyncGen
     parameter       pVbottom        =  11,   // vertical bottom border
     parameter       pVsync          =   2    // vertical sync # lines
 )(
-    input           iCLK,               // clk
-    input           iRST,               // system rst
+    input           iClk,               // clk
+    input           iRst,               // system rst
     output          oHsync,             // horizontal area 水平同期信号
     output          oVsync,             // vertical area 垂直同期信号
     output          oVde,               // video data enable 描画エリア時High
@@ -49,16 +49,16 @@ reg rHsync[0:1];             assign oHsync = rHsync[1];
 reg [lpHbitWidth:0] rHpos;
 reg qHmatch, qHrange;
 
-always @(posedge iCLK)
+always @(posedge iClk)
 begin 
-    if (iRST)           rHpos <= 0;
+    if (iRst)           rHpos <= 0;
     else if (qHmatch)   rHpos <= 0;
     else                rHpos <= rHpos + 1'b1;
 end
 
-always @(posedge iCLK)
+always @(posedge iClk)
 begin 
-    if (iRST)           {rHsync[1], rHsync[0]} <= 2'b00;
+    if (iRst)           {rHsync[1], rHsync[0]} <= 2'b00;
     else                {rHsync[1], rHsync[0]} <= {rHsync[0], qHrange};
 end
 
@@ -78,28 +78,28 @@ reg qFe, rFe;                   assign oFe      = rFe;
 reg [lpVbitWidth:0] rVpos;
 reg qVmatch, qVrange;
 
-always @(posedge iCLK) 
+always @(posedge iClk) 
 begin
-    if (iRST)           rVpos <= 0;
+    if (iRst)           rVpos <= 0;
     else if (qHmatch)   rVpos <= (qVmatch) ? 0 : rVpos + 1;
     else                rVpos <= rVpos;
 end
 
-always @(posedge iCLK) 
+always @(posedge iClk) 
 begin
-    if (iRST)           {rVsync[1], rVsync[0]} <= 2'b00;
+    if (iRst)           {rVsync[1], rVsync[0]} <= 2'b00;
     else                {rVsync[1], rVsync[0]} <= {rVsync[0], qVrange};
 end
 
-always @(posedge iCLK) 
+always @(posedge iClk) 
 begin
-    if (iRST)           rVde <= 1'b0;
+    if (iRst)           rVde <= 1'b0;
     else                rVde <= qVde;
 end
 
-always @(posedge iCLK) 
+always @(posedge iClk) 
 begin
-    if (iRST)           rFe <= 1'b0;
+    if (iRst)           rFe <= 1'b0;
     else                rFe <= qFe;
 end
 
@@ -123,30 +123,30 @@ reg rFs;
 reg qFHmatch, qFVmatch;
 reg [lpHbitWidth:0] rFHriz, rFVert;
 
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
-    if (iRST)           rFHriz <= 2;
+    if (iRst)           rFHriz <= 2;
     else if (qFHmatch)  rFHriz <= 0;
     else                rFHriz <= rFHriz + 1'b1;
 end
 
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
-    if (iRST)           rFVert <= 0;
+    if (iRst)           rFVert <= 0;
     else if (qFHmatch)  rFVert <= (qFVmatch) ? 0 : rFVert + 1;
     else                rFVert <= rFVert;
 end
 
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
-    if (iRST)           rFs <= 1'b0;
+    if (iRst)           rFs <= 1'b0;
     else if (qFe)       rFs <= 1'b1;
     else                rFs <= rFs;
 end
 
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
-    if (iRST)           rFvde <= 1'b0;
+    if (iRst)           rFvde <= 1'b0;
     else                rFvde <= qFvde;
 end
 

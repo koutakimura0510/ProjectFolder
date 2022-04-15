@@ -12,8 +12,8 @@ module dotPlayerTop #(
     parameter VMAX = 480,
     parameter CHIP_WIDTH = 32
 )(
-    input           iCLK,   // ディスプレイ描画clk
-    input           iRST,   // system rst
+    input           iClk,   // ディスプレイ描画clk
+    input           iRst,   // system rst
     input  [ 9:0]   iUXS,
     input  [ 9:0]   iUXE,
     input  [ 9:0]   iUYS,
@@ -58,7 +58,7 @@ wire o_en_animation;
 enGen #(
     .SYS_CLK(6250000)
 ) RGB_1MS_GEN (
-    .iCLK(iCLK), .iRST(iRST), .oEnable(o_en_animation)
+    .iClk(iClk), .iRst(iRst), .oEnable(o_en_animation)
 );
 
 
@@ -68,9 +68,9 @@ enGen #(
 // LEFT  画像データは左向きのものを使用しているため、0番地から参照すれば描画される
 // RIGHT 反転描画するために右端のアドレスから参照を開始する
 //----------------------------------------------------------
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
-    if (iRST) begin
+    if (iRst) begin
         addr <= -1;
         q_start_addr <= MAPCHIP_ADDR;
         old_dir <= RIGHT;
@@ -124,8 +124,8 @@ end
 //----------------------------------------------------------
 // キャラクタードットデータ参照アドレスの更新
 //----------------------------------------------------------
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
+always @(posedge iClk) begin
+    if (iRst == 1'b1) begin
         iAddr      <= MAPCHIP_ADDR;
         next_line  <= 0;
     end else if (VMAX < iVPOS) begin
@@ -140,7 +140,7 @@ always @(posedge iCLK) begin
 end
 
 dotPlayerRom DOT_PLAYER_ROM (
-    .iCLK(iCLK), .iAddr(iAddr), .iEnable(iEnable), .oPlayerDot(oPlayerDot)
+    .iClk(iClk), .iAddr(iAddr), .iEnable(iEnable), .oPlayerDot(oPlayerDot)
 );
 
 endmodule

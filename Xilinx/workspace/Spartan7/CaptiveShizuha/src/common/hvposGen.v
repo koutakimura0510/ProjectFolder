@@ -14,8 +14,8 @@ module hvposGen
     parameter                   pBitHeight  = 10,
     parameter                   pBitWidth   = 10
 )(
-    input                       iCLK,               // clk
-    input                       iRST,               // Active High system rst
+    input                       iClk,               // clk
+    input                       iRst,               // Active High system rst
     input                       iCKE,               // pos update enable
     output [pBitWidth-1:0]      oDwp,               // Display Width  Pos
     output [pBitHeight-1:0]     oDhp,               // Display Height Pos
@@ -35,9 +35,9 @@ localparam [pBitWidth-1:0]  lpWidth  = pWidth  - 1'b1;
 reg [pBitWidth-1:0] rDwp;           assign oDwp = rDwp;
 reg qDwe;
 
-always @(posedge iCLK) 
+always @(posedge iClk) 
 begin 
-    if (iRST)       rDwp <= 0;
+    if (iRst)       rDwp <= 0;
     else if (iCKE)  rDwp <= qDwe ? 0 : rDwp + 1'b1;
     else            rDwp <= rDwp;
 end
@@ -53,9 +53,9 @@ end
 reg [pBitHeight-1:0] rDhp;           assign oDhp = rDhp;
 reg qDhe [0:1];
 
-always @(posedge iCLK) 
+always @(posedge iClk) 
 begin
-    if (iRST)           rDhp <= 0;
+    if (iRst)           rDhp <= 0;
     else if (qDhe[0])   rDhp <= (qDhe[1]) ? 0 : rDhp + 1;
     else                rDhp <= rDhp;
 end
@@ -72,9 +72,9 @@ end
 //----------------------------------------------------------
 reg qFe, rFe;                   assign oFe = rFe;
 
-always @(posedge iCLK) 
+always @(posedge iClk) 
 begin
-    if (iRST) rFe <= 1'b0;
+    if (iRst) rFe <= 1'b0;
     else      rFe <= qFe;
 end
 

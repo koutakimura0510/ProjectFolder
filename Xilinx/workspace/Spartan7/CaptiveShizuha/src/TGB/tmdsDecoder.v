@@ -6,14 +6,14 @@
  */
 module tmdsDecoder (
     input   iTmdsSeri,  // tmds serial data
-    output  oHDMI_n,
-    output  oHDMI_p
+    output  oHdmiDataNeg,
+    output  oHdmiDataPos
 );
 
 wire wPos = iTmdsSeri;
 wire wNeg = (~iTmdsSeri);
 
-OBUF HDMI_OBUF_POS (.O (oHDMI_n), .I (wPos));
-OBUF HDMI_OBUF_NEG (.O (oHDMI_p), .I (wNeg));
+OBUF HDMI_OBUF_POS (.O (oHdmiDataNeg), .I (wPos));
+OBUF HDMI_OBUF_NEG (.O (oHdmiDataPos), .I (wNeg));
 
 endmodule

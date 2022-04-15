@@ -17,8 +17,8 @@ module fifoController #(
     parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
     parameter pBitWidth   = 32      // bitサイズ
 )(
-    input                       iCLK,
-    input                       iRST,   // Active High
+    input                       iClk,
+    input                       iRst,   // Active High
     input   [pBitWidth-1:0]     iWD,    // write data
     input                       iWE,    // write enable 有効データ書き込み
     output                      oFLL,   // 最大書き込み時High
@@ -56,7 +56,7 @@ reg qWE, qRE, qRst;
 
 ////////////////////////////////////////////////////////////
 // write pointer
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
     if (qRst)       rWA <= 0;
     else if (!rWE)  rWA <= rWA;
@@ -65,7 +65,7 @@ end
 
 ////////////////////////////////////////////////////////////
 // read pointer
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
     if (qRst)      rRA <= 0;
     else if (!rRE) rRA <= rRA;
@@ -73,7 +73,7 @@ begin
 end
 
 // 前回のrpが更新されていたら新規データを出力できる状態と判断する
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
     if (qRst)   rORP <= 0;
     else        rORP <= rRA;
@@ -81,13 +81,13 @@ end
 
 ////////////////////////////////////////////////////////////
 // Hnad Shake信号、タイミング結合のためDFFに一度通す
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
     if (qRst)       {rFLL, rEMP, rRVD} <= {1'b1, 1'b1, 1'b0};
     else            {rFLL, rEMP, rRVD} <= {qFLL, qEMP, qRVD};
 end
 
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
     if (qRst)       {rWE, rRE}  <= {1'b0, 1'b0};
     else            {rWE, rRE}  <= {qWE, qRE};
@@ -105,7 +105,7 @@ begin
 
     qWAb    <= rWA - 1'b1;
     qWAb2   <= rWA - 2'd2;
-    qRst    <= iRST;
+    qRst    <= iRst;
     qFLL    <= (rWA == qRAb[0] || rWA == qRAb[1] || rWA == qRAb[2] || rWA == qRAb[3]);
     qEMP    <= (rWA == rRA || qWAb2 == rRA || qWAb == rRA) ? 1'b1 : 1'b0;
     qRVD    <= (rRA != rORP);
@@ -127,19 +127,19 @@ userFifo #(
     .pAddrWidth    (pAddrWidth)
 ) USER_FIFO (
     // write side       read side
-    .iCLK   (iCLK),
+    .iClk   (iClk),
     .iWD    (rWD),      .oRD    (wRD),
     .iWA    (rWA),      .iRA    (rRA),
     .iWE    (rWE)
 );
 
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
     if (qRst)       rRD  <= 0;
     else            rRD  <= wRD;
 end
 
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
     if (qRst)       rWD  <= 0;
     else            rWD  <= iWD;

@@ -12,8 +12,8 @@
  */
 
 module tmdsEncoderDvi(
-    input           iCLK,           // pll clk
-    input           iRST,           // system rst
+    input           iClk,           // pll clk
+    input           iRst,           // system rst
     input [7:0]     iVD,            // r or g or b video data
     input [1:0]     iCD,
     input           iVDE,           // High to display on
@@ -120,8 +120,8 @@ wire [9:0] tmds_data = {tm_bit10, tm[8], tm[7:0] ^ {8{tm_bit10}}};
 //----------------------------------------------------------
 // 新規カウンターの値を保存
 //----------------------------------------------------------
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
+always @(posedge iClk) begin
+    if (iRst == 1'b1) begin
         cnt_n_1 <= 0;
     end else if (iVDE == 1'b1) begin
         cnt_n_1 <= cnt_new;
@@ -134,8 +134,8 @@ end
 //----------------------------------------------------------
 // 出力データ選択
 //----------------------------------------------------------
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
+always @(posedge iClk) begin
+    if (iRst == 1'b1) begin
         tmds_para <= 0;
     end else if (iVDE == 1'b0) begin
         tmds_para <= tmds_code;

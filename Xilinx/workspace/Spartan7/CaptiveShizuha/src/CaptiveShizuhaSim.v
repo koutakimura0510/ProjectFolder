@@ -12,13 +12,13 @@ module CaptiveShizuhaSim;
 
 parameter CYCLE = 10;
 
-reg iCLK    = 0;
-reg iRST    = 1;
+reg iClk    = 0;
+reg iRst    = 1;
 reg [4:0] iBTN = 0;
-wire oHDMI_CLK_N;
-wire oHDMI_CLK_P;
-wire [2:0] oHDMI_N;
-wire [2:0] oHDMI_P;
+wire oHdmiClkNeg;
+wire oHdmiClkPos;
+wire [2:0] oHdmiDataNeg;
+wire [2:0] oHdmiDataPos;
 wire [7:0] oLED;
 wire oOledScl;
 wire oOledSda;
@@ -38,10 +38,10 @@ CaptiveShizuhaTop #(
     .pVbottom   (2),        .pVsync     (2),
     .pPixelDebug ("yes"),   .pBuffDepth (32)
 ) TOP (
-    .iCLK           (iCLK),         .iRST           (iRST),
+    .iClk           (iClk),         .iRst           (iRst),
     .iBtn           (iBTN),         .iSW            (8'd00),
-    .oHDMI_CLK_n    (oHDMI_CLK_N),  .oHDMI_CLK_p    (oHDMI_CLK_P),
-    .oHDMI_n        (oHDMI_N),      .oHDMI_p        (oHDMI_P),
+    .oHdmiClkNeg    (oHdmiClkNeg),  .oHdmiClkPos    (oHdmiClkPos),
+    .oHdmiDataNeg        (oHdmiDataNeg),      .oHdmiDataPos        (oHdmiDataPos),
     .oLED           (oLED),
     .oOledScl       (oOledScl),     .oOledSda       (oOledSda),
     .oOledDC        (oOledDC),      .oOledRes       (oOledRes),
@@ -50,13 +50,13 @@ CaptiveShizuhaTop #(
 
 always begin
     #(CYCLE/2);
-    iCLK = ~iCLK;
+    iClk = ~iClk;
 end
 
 initial begin
-    iRST = 0;
+    iRst = 0;
     #(CYCLE * 2);
-    iRST = 1;
+    iRst = 1;
     #(CYCLE * 2000 * 4);
     $stop;
 end

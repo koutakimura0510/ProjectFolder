@@ -10,8 +10,8 @@
 
 module userpos
 (
-    input           iCLK,       // system clk
-    input           iRST,       // system rst
+    input           iClk,       // system clk
+    input           iRst,       // system rst
     input  [ 5:0]   iBtn,
     input           iEn1Ms,
     input  [ 9:0]   iStartX,    // 描画開始開始x座標
@@ -89,8 +89,8 @@ wire [11:0] wire_fypos = fypos >> 5;
 // 右キーを押している間に左キーを押した場合、キャラクターは左に移動する
 // 左キーを押している間に右キーを押した場合、キャラクターは右に移動する
 //----------------------------------------------------------
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
+always @(posedge iClk) begin
+    if (iRst == 1'b1) begin
         now_xdir  <= IDOL;
         next_xdir <= IDOL;
     end else begin
@@ -126,8 +126,8 @@ end
 //----------------------------------------------------------
 // 左右キー長押し時の移動速度更新
 //----------------------------------------------------------
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
+always @(posedge iClk) begin
+    if (iRst == 1'b1) begin
         x_speed <= KEY_START_TIME;
     end else if ((iBtn[SW_RIGHT] | iBtn[SW_LEFT]) == 1'b1) begin
         if (iEn1Ms == 1'b1) begin
@@ -146,8 +146,8 @@ end
 //----------------------------------------------------------
 // 比較時間の設定
 //----------------------------------------------------------
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
+always @(posedge iClk) begin
+    if (iRst == 1'b1) begin
         x_comp <= KEY_START_TIME;
     end else if ((iBtn[SW_RIGHT] | iBtn[SW_LEFT]) == 1'b1) begin
         if (x_speed == KEY_END_TIME && x_comp != KEY_COMP_TIME && iEn1Ms == 1'b1) begin
@@ -165,8 +165,8 @@ end
 // ユーザーx座標の生成
 // 現在押している方向を保存しておき、左右キーが同時押された場合反対に進むようにする
 //----------------------------------------------------------
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
+always @(posedge iClk) begin
+    if (iRst == 1'b1) begin
         xpos  <= iStartX;
         fxpos <= 0;
     end else if (x_speed == KEY_END_TIME && iEn1Ms == 1'b1) begin
@@ -239,8 +239,8 @@ assign jump_max_count = 2;
 // 
 // 押しっぱなし状態で連続でジャンプを行わないようにした
 //----------------------------------------------------------
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
+always @(posedge iClk) begin
+    if (iRst == 1'b1) begin
         jump_key_toggle <= 0;
     end else if (iBtn[SW_A] == 1'b1) begin
         jump_key_toggle <= 1;
@@ -258,8 +258,8 @@ end
 
 // TODO 二回ジャンプステートを追加する
 // それぞれのレジスタごとに回路を分ける
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
+always @(posedge iClk) begin
+    if (iRst == 1'b1) begin
         ypos    <= iStartY;
         now_ydir <= IDOL;
         jump_speed <= 0;

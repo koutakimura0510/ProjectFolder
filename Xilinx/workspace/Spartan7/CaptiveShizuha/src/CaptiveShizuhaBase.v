@@ -12,9 +12,9 @@ module CaptiveShizuhaBase #(
     parameter       pBuffDepth    = 1024
 )(
 
-    input           iPCLK,      // Pixel Clk
-    input           iBCLK,      // Base Clk
-    input           iRST,       // Active High Sync Reset
+    input           iPixelClk,      // Pixel Clk
+    input           iBaseClk,      // Base Clk
+    input           iRst,       // Active High Sync Reset
 
     // Pixel Clk Sync Signal
     input           iPFvde,     // Pixel Clk Timing fast video enable
@@ -28,7 +28,7 @@ module CaptiveShizuhaBase #(
 // Position Generate Block
 //----------------------------------------------------------
 // pgbWrapper #(
-// .iBCLK
+// .iBaseClk
 // ) PGB (
 // 
 // );
@@ -47,7 +47,7 @@ dgbWrapper #(
     .pPixelWidth        (24),
     .pPixelDebug        (pPixelDebug)
 ) DGB (
-    .iBCLK  (iBCLK),    .iRST   (iRST),
+    .iBaseClk  (iBaseClk),    .iRst   (iRst),
     .iCKE   (qCkeDgb),  .oPixel (wPiDgb),
     .oVd    (wVdDgb),   .oFe    ()
 );
@@ -73,8 +73,8 @@ pfbWrapper #(
     .pBuffDepth             (pBuffDepth),
     .pBitWidth              (24)
 ) PFB (
-    .iBCLK  (iBCLK),        .iPCLK  (iPCLK),
-    .iRST   (iRST),
+    .iBaseClk  (iBaseClk),        .iPixelClk  (iPixelClk),
+    .iRst   (iRst),
     .iWD    (wPiDgb),       .oRD    (wRD),
     .iWE    (wVdDgb),       .iRE    (iPFvde),
     .oFull  (wFull)

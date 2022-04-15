@@ -5,8 +5,8 @@
  * TMDSパラレル->シリアル変換モジュール
  */
 module tmdsSerialize (
-    input           iCLK,        // PLL clk
-    input           iRST,        // system rst
+    input           iClk,        // PLL clk
+    input           iRst,        // system rst
     input  [9:0]    iTmdsPara,   // tmdsパラレル信号
     output          oTmdsSeri    // tmdsシリアル信号
 );
@@ -19,14 +19,14 @@ reg  [9:0] rTmds;        assign oTmdsSeri = rTmds[0];
 reg  [3:0] rTmdsCnt;
 reg  qEnable;
 
-always @(posedge iCLK) begin
-    if (iRST)           rTmdsCnt <= 0;
+always @(posedge iClk) begin
+    if (iRst)           rTmdsCnt <= 0;
     else if (qEnable)   rTmdsCnt <= 0;
     else                rTmdsCnt <= rTmdsCnt + 1'b1;
 end
 
-always @(posedge iCLK) begin
-    if (iRST)           rTmds <= 0;
+always @(posedge iClk) begin
+    if (iRst)           rTmds <= 0;
     else if (qEnable)   rTmds <= iTmdsPara;
     else                rTmds <= rTmds[9:1];
 end

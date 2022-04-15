@@ -10,7 +10,7 @@
  */
 module dotFieldRom
 (
-    input           iCLK,           // system clk
+    input           iClk,           // system clk
     input  [31:0]   iAddr,          // address
     input  [ 9:0]   iUXS,
     input  [ 9:0]   iUYS,
@@ -108,7 +108,7 @@ end
 
 
 // マップ情報を出力
-always @(posedge iCLK) begin
+always @(posedge iClk) begin
     dout <= memory[iAddr];
     o_map_width <= {memory[1], memory[0]};
     dir_ul <= (0 != up_pos_l       && 0 == memory[up_pos_l])       ? 1'b1 : 1'b0;

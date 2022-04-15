@@ -4,8 +4,8 @@
 module enGen #(
     parameter pSysClk = 25000000  // 分周クロックの値を指定
 )(
-    input   iCLK, 
-    input   iRST,
+    input   iClk, 
+    input   iRst,
     output  oEnable
 );
 
@@ -14,8 +14,8 @@ localparam lpCtuCNTBits	= fBitWidth(pSysClk);
 reg [lpCtuCNTBits-1:0] tmp_count;
 assign oEnable = (tmp_count == (pSysClk-1)) ? 1'b1 : 1'b0;
 
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
+always @(posedge iClk) begin
+    if (iRst == 1'b1) begin
         tmp_count <= 0;
     end else if (oEnable == 1'b1) begin
         tmp_count <= 0;

@@ -23,8 +23,8 @@ set_property BITSTREAM.CONFIG.EXTMASTERCCLK_EN  DISABLE         [current_design]
 # create_clock -name 信号名 -period 100MHz -waveform {duty比} [get_nets / get_ports 信号名]
 # ------------------------------------------------------------
 # OSC Input 25MHz
-set_property -dict { PACKAGE_PIN R4    IOSTANDARD LVCMOS33 } [get_ports { iCLK }]; #IO_L13P_T2_MRCC_34 Sch=sysclk
-create_clock -add -name iCLK -period 40.00 -waveform {0 5} [get_ports iCLK]
+set_property -dict { PACKAGE_PIN R4    IOSTANDARD LVCMOS33 } [get_ports { iClk }]; #IO_L13P_T2_MRCC_34 Sch=sysclk
+create_clock -add -name iClk -period 40.00 -waveform {0 5} [get_ports iClk]
 
 # FPGA PLL MMCM
 create_generated_clock -name PCLK [get_pins CGB/MMCME2_BASE_CLK_GEN/CLKOUT0]

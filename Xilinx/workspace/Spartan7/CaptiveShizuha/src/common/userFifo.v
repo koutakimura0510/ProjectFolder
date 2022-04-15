@@ -13,7 +13,7 @@ module userFifo #(
     parameter pBitWidth  = 32,     // bitサイズ
     parameter pAddrWidth = 16      // addr size
 )(
-    input                      iCLK,
+    input                      iClk,
     input   [pBitWidth-1:0]    iWD,    // write data
     input   [pAddrWidth-1:0]   iWA,    // write addr
     input                      iWE,    // write enable
@@ -28,7 +28,7 @@ localparam pDepth = pBuffDepth - 1;
 assign oRD = fifo[iRA];
 
 // rwポート
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
     // rd <= fifo[iRA];
     if (iWE) fifo[iWA] <= iWD;

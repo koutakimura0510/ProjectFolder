@@ -10,7 +10,7 @@
  */
 module dotFieldTextureRom
 (
-    input           iCLK,        // system clk
+    input           iClk,        // system clk
     input  [31:0]   iAddr,       // address
     output [31:0]   oFieldDot    // フィールド番号
 );
@@ -38,7 +38,7 @@ initial begin
 end
 
 // 次の立上りエッジに備えて、立ち下がり時にデータをセットしておく
-always @(negedge iCLK) begin
+always @(negedge iClk) begin
     dout <= memory[iAddr];
 end
 

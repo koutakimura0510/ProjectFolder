@@ -9,7 +9,7 @@
  */
 module dotPlayerRom
 (
-    input           iCLK,       // system clk
+    input           iClk,       // system clk
     input  [15:0]   iAddr,      // address
     input           iEnable,    // 1. Dot Data Output 0. 0x00 output
     output [31:0]   oPlayerDot  // dot data
@@ -34,7 +34,7 @@ initial begin
     $readmemh(FILENAME, memory);
 end
 
-always @(posedge iCLK) begin
+always @(posedge iClk) begin
     if (iEnable) dout <= memory[iAddr];
     else dout <= 32'h00000000;
 end

@@ -22,8 +22,8 @@ module fifoController #(
     parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
     parameter pBitWidth   = 32      // bitサイズ
 )(
-    input                       iCLK,
-    input                       iRST,   // Active High
+    input                       iClk,
+    input                       iRst,   // Active High
     input   [pBitWidth-1:0]     iWD,    // write data
     input                       iWE,    // write enable 有効データ書き込み
     output                      oFLL,   // 最大書き込み時High
@@ -55,26 +55,26 @@ reg qWE, qRE;
 
 ////////////////////////////////////////////////////////////
 // write pointer
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
-    if (iRST)       rWA <= 0;
+    if (iRst)       rWA <= 0;
     else if (qWE)   rWA <= rWA + 1'b1;
     else            rWA <= rWA;
 end
 
 ////////////////////////////////////////////////////////////
 // read pointer
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
-    if (iRST)      rRA <= 0;
+    if (iRst)      rRA <= 0;
     else if (qRE)  rRA <= rRA + 1'b1;
     else           rRA <= rRA;
 end
 
 // 前回のrpが更新されていたら新規データを出力できる状態と判断する
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
-    if (iRST)   rORP <= 0;
+    if (iRst)   rORP <= 0;
     else        rORP <= rRA;
 end
 
@@ -84,9 +84,9 @@ end
 reg qFLL, qEMP, qRVD;
 reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {qFLL, qEMP, qRVD};
 
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
-    if (iRST)       {rFLL, rEMP, rRVD} <= {1'b0, 1'b0, 1'b0};
+    if (iRst)       {rFLL, rEMP, rRVD} <= {1'b0, 1'b0, 1'b0};
     else            {rFLL, rEMP, rRVD} <= {qFLL, qEMP, qRVD};
 end
 
@@ -118,7 +118,7 @@ userFifo #(
     .pAddrWidth    (pAddrWidth)
 ) USER_FIFO (
     // write side       read side
-    .iCLK   (iCLK),
+    .iClk   (iClk),
     .iWD    (iWD),      .oRD    (wRD),
     .iWA    (rWA),      .iRA    (rRA),
     .iWE    (qWE)
