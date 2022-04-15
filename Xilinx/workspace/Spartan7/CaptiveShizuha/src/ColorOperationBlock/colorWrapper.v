@@ -5,7 +5,7 @@
  * RGB Operation Block 
  * RGB色データ生成モジュール
  */
-module rgbGen(
+module colorWrapper(
     input           iBaseClk,          // Base clk
     input           iRst,           // system rst
     input  [ 9:0]   iHPOS,          // 描画座標horizon

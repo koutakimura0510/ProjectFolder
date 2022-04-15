@@ -37,12 +37,12 @@ IBUF # (
 //----------------------------------------------------------
 localparam      lpBandWidth      = "OPTIMIZED"; // Rst Active High
 localparam      lpStartWait      = "FALSE";     // Delay DONE until PLL Locks, ("TRUE"/"FALSE")
-localparam real lpClkIn1Period   = 10.000;      // 100[MHz]
-localparam      lpClkIn1Div      = 1;           // 100[MHz] / 1 = 100[MHz]
+localparam real lpClkIn1Period   = 40.000;      // 25 [MHz]
+localparam      lpClkIn1Div      = 1;           // 25 [MHz] / 1 = 25 [MHz]
 
 // VOC 分周回路設定
 // Sped Grade 1 = (600 ~ 1200MHz)
-localparam real lpClkOutMult     = 10.000;      // 100MHz  * 10 = 1000[MHz]
+localparam real lpClkOutMult     = 40.000;      // 25 MHz  * 40 = 1000[MHz]
 localparam real lpClk0OutDivF    = 40.000;      // 1000MHz / 40 =   25[MHz]
 localparam      lpClk1OutDiv     = 4;           // 1000MHz /  4 =  250[MHz]
 localparam      lpClk2OutDiv     = 10;          // 1000MHz / 10 =  100[MHz]

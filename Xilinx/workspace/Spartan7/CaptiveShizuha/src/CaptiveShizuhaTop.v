@@ -19,7 +19,7 @@ module CaptiveShizuhaTop #(
     parameter       pVbottom        =  11,
     parameter       pVsync          =   2,
     parameter       pPixelDebug     = "off",
-    parameter       pBuffDepth      = 1024
+    parameter       pBuffDepth      = 1024      // Display の横幅より大きくする
 )(
     input           iClk,           // OSC  clk
     input           iUartRx,        // Uart Debug Pin
