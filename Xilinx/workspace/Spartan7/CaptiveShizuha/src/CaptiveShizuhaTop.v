@@ -21,42 +21,57 @@ module CaptiveShizuhaTop #(
     parameter       pPixelDebug     = "off",
     parameter       pBuffDepth      = 1024      // Display の横幅より大きくサイズを指定
 )(
+    // CLK
     input           iClk,           // OSC  clk
-    input           iUartRx,        // Uart Debug Pin
-    output          oUartTx,        // Uart Debug Pin
+
+    // APDS9960
     output [1:0]    oApdsScl,       // APDS I2C SCL
     inout  [1:0]    ioApdsSda,      // APDS I2C SDA
+    input  [1:0]    iApdsIntr,      // APDS Interrupt
+
+    // Flash Memory
     output [1:0]    oQspiSck,       // Qspi Flash Memory Clk
     output [1:0]    oQspiMosi,      // Qspi Flash Memory Master Data output
     input  [1:0]    iQspiMiso,      // Qspi Flash Memory Master Data input
+    inout  [1:0]    ioQspiHold,
+    inout  [1:0]    ioQspiRst,
     output [1:0]    oQspiCs,        // Qspi Flash Memory chip select
-    output          oHdmiClkNeg,    // hdmi clk negedge
+
+    // HDMI TX
     output          oHdmiClkPos,    // hdmi clk posedge
+    output          oHdmiClkNeg,    // hdmi clk negedge
     output [2:0]    oHdmiDataPos,   // TMDS Channel Serial Data posedge
     output [2:0]    oHdmiDataNeg,   // TMDS Channel Serial Data negedge
     output          oHdmiScl,       // hdmi I2c scl
     inout           ioHdmiSda,      // hdmi I2c sda
     inout           ioHdmiCec,      // hdmi cec
-    input           iHdmiHpd        // hdmi hpd
+    input           iHdmiHpd,       // hdmi hpd
+
+    // UART
+    input           iUartRx,        // Uart
+    output          oUartTx,        // Uart
+
+    // LED
+    output [1:0]    oLed            // Led Flash
 );
 
 //---------------------------------------------------------------------------
 // 未使用 Pin 割り当て
 //---------------------------------------------------------------------------
-wire [2:0] unUsed;
-wire unUsed[0] = iQspiMiso[0];
-wire unUsed[1] = iQspiMiso[1];
-wire unUsed[2] = iHdmiHpd;
+// wire unUsed[2] = iHdmiHpd;
 
 assign oUartTx      = iUartRx;
-assign oApdsScl     = 2'b11;
+assign oApdsScl     = iQspiMiso;
 assign ioApdsSda    = 2'bzz;
 assign oQspiSck     = 2'b00;
 assign oQspiMosi    = 2'b00;
-assign oQspiCs      = 2'b11;
+assign ioQspiHold   = 2'bzz;
+assign ioQspiRst    = 2'bzz;
+assign oQspiCs      = iApdsIntr;
 assign oHdmiScl     = iClk;
 assign ioHdmiSda    = 1'bz;
 assign ioHdmiCec    = 1'bz;
+assign oLed         = 2'd0;
 
 
 // //----------------------------------------------------------
