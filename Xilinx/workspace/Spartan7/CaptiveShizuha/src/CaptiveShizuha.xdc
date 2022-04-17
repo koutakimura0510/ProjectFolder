@@ -23,7 +23,7 @@ set_property BITSTREAM.CONFIG.EXTMASTERCCLK_EN  DISABLE         [current_design]
 # create_clock -name 信号名 -period 100MHz -waveform {duty比} [get_nets / get_ports 信号名]
 # ------------------------------------------------------------
 # OSC Input 25MHz
-set_property -dict { PACKAGE_PIN G4    IOSTANDARD LVCMOS33 } [get_ports { iClk }]; #IO_L13P_T2_MRCC_34 Sch=sysclk
+set_property -dict { PACKAGE_PIN G4    IOSTANDARD LVCMOS33 } [get_ports { iClk }];
 create_clock -add -name iClk -period 40.00 -waveform {0 5} [get_ports iClk]
 
 # FPGA PLL MMCM
@@ -38,49 +38,53 @@ create_clock -add -name iClk -period 40.00 -waveform {0 5} [get_ports iClk]
 # set_property LOC RAMB36_X8Y27 [get_cells BASE/PFB/ASYNC_PIXEL_BUFFER/USER_FIFO_DUAL/fifo_reg]
 
 # # ADUS5689
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oApdsScl[0]     }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { ioApdsSda[0]    }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oApdsScl[1]     }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { ioApdsSda[1]    }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
+set_property -dict { PACKAGE_PIN P4    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oApdsScl[0]     }];
+set_property -dict { PACKAGE_PIN P3    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { ioApdsSda[0]    }];
+set_property -dict { PACKAGE_PIN P2    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { iApdsIntr[0]    }];
+set_property -dict { PACKAGE_PIN N1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oApdsScl[1]     }];
+set_property -dict { PACKAGE_PIN M1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { ioApdsSda[1]    }];
+set_property -dict { PACKAGE_PIN L1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { iApdsIntr[0]    }];
 
-# # Flash Rom 1-2
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33             } [get_ports { oQspiSck[0]     }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oQspiMosi[0]    }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { iQspiMiso[0]    }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oQspiHold[0]    }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { iQspiRst[0]     }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oQspiCs[0]      }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
+# Flash Rom 1-2
+set_property -dict { PACKAGE_PIN F14   IOSTANDARD LVCMOS33             } [get_ports { oQspiSck[0]     }];
+set_property -dict { PACKAGE_PIN F13   IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oQspiMosi[0]    }];
+set_property -dict { PACKAGE_PIN D14   IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { iQspiMiso[0]    }];
+set_property -dict { PACKAGE_PIN E13   IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oQspiHold[0]    }];
+set_property -dict { PACKAGE_PIN D13   IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { iQspiRst[0]     }];
+set_property -dict { PACKAGE_PIN C14   IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oQspiCs[0]      }];
 
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33             } [get_ports { oQspiSck[1]     }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oQspiMosi[1]    }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { iQspiMiso[1]    }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oQspiHold[1]    }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { iQspiRst[1]     }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oQspiCs[1]      }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
+set_property -dict { PACKAGE_PIN H13   IOSTANDARD LVCMOS33             } [get_ports { oQspiSck[1]     }];
+set_property -dict { PACKAGE_PIN G14   IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oQspiMosi[1]    }];
+set_property -dict { PACKAGE_PIN J14   IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { iQspiMiso[1]    }];
+set_property -dict { PACKAGE_PIN M14   IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oQspiHold[1]    }];
+set_property -dict { PACKAGE_PIN H14   IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { iQspiRst[1]     }];
+set_property -dict { PACKAGE_PIN J13   IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oQspiCs[1]      }];
 
 # # Config Rom
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  } [get_ports { oQspiSck[1]     }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  } [get_ports { oQspiMosi[1]    }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  } [get_ports { iQspiMiso[1]    }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
-# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  } [get_ports { oQspiCs[1]      }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
+# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  } [get_ports { oQspiSck[1]     }];
+# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  } [get_ports { oQspiMosi[1]    }];
+# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  } [get_ports { iQspiMiso[1]    }];
+# set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  } [get_ports { oQspiCs[1]      }];
 
 
 # ## HDMI TX
-# set_property -dict { PACKAGE_PIN AA4   IOSTANDARD LVCMOS33  } [get_ports { ioHdmiCec        }]; #IO_L11N_T1_SRCC_34 Sch=hdmi_tx_cec
-set_property -dict { PACKAGE_PIN B1    IOSTANDARD LVCMOS33  } [get_ports { oHdmiClkNeg      }]; #IO_L1N_T0_34 Sch=hdmi_tx_clk_n
-# set_property -dict { PACKAGE_PIN T1    IOSTANDARD LVCMOS33  } [get_ports { oHdmiClkPos      }]; #IO_L1P_T0_34 Sch=hdmi_tx_clk_p
-# set_property -dict { PACKAGE_PIN AB13  IOSTANDARD LVCMOS33  } [get_ports { iHdmiHpd         }]; #IO_L3N_T0_DQS_13 Sch=hdmi_tx_hpd
-# set_property -dict { PACKAGE_PIN Y1    IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataNeg[0]  }]; #IO_L5N_T0_34 Sch=hdmi_tx_n[0]
-# set_property -dict { PACKAGE_PIN W1    IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataPos[0]  }]; #IO_L5P_T0_34 Sch=hdmi_tx_p[0]
-# set_property -dict { PACKAGE_PIN AB1   IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataNeg[1]  }]; #IO_L7N_T1_34 Sch=hdmi_tx_n[1]
-# set_property -dict { PACKAGE_PIN AA1   IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataPos[1]  }]; #IO_L7P_T1_34 Sch=hdmi_tx_p[1]
-# set_property -dict { PACKAGE_PIN AB2   IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataNeg[2]  }]; #IO_L8N_T1_34 Sch=hdmi_tx_n[2]
-# set_property -dict { PACKAGE_PIN AB3   IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataPos[2]  }]; #IO_L8P_T1_34 Sch=hdmi_tx_p[2]
-# set_property -dict { PACKAGE_PIN U3    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oHdmiScl }]; #IO_L6P_T0_34 Sch=hdmi_tx_rscl
-# set_property -dict { PACKAGE_PIN V3    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { ioHdmiSda }]; #IO_L6N_T0_VREF_34 Sch=hdmi_tx_rsda
+set_property -dict { PACKAGE_PIN B1    IOSTANDARD LVCMOS33  } [get_ports { oHdmiClkNeg      }]; 
+set_property -dict { PACKAGE_PIN B2    IOSTANDARD LVCMOS33  } [get_ports { oHdmiClkPos      }]; 
+set_property -dict { PACKAGE_PIN B3    IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataPos[0]  }]; 
+set_property -dict { PACKAGE_PIN A2    IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataNeg[0]  }]; 
+set_property -dict { PACKAGE_PIN A4    IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataPos[1]  }]; 
+set_property -dict { PACKAGE_PIN A3    IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataNeg[1]  }]; 
+set_property -dict { PACKAGE_PIN B6    IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataPos[2]  }]; 
+set_property -dict { PACKAGE_PIN A5    IOSTANDARD LVCMOS33  } [get_ports { oHdmiDataNeg[2]  }]; 
+set_property -dict { PACKAGE_PIN D1    IOSTANDARD LVCMOS33  } [get_ports { ioHdmiCec        }]; 
+set_property -dict { PACKAGE_PIN C1    IOSTANDARD LVCMOS33  } [get_ports { iHdmiHpd         }]; 
+set_property -dict { PACKAGE_PIN F2    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { oHdmiScl }];
+set_property -dict { PACKAGE_PIN F1    IOSTANDARD LVCMOS33  PULLUP TRUE} [get_ports { ioHdmiSda }];
 
-# # Debug Pin UART
-# set_property -dict { PACKAGE_PIN AB3   IOSTANDARD LVCMOS33  } [get_ports { iUartRx }]; #IO_L8P_T1_34 Sch=hdmi_tx_p[2]
-# set_property -dict { PACKAGE_PIN AB3   IOSTANDARD LVCMOS33  } [get_ports { oUartTx }]; #IO_L8P_T1_34 Sch=hdmi_tx_p[2]
+# UART
+set_property -dict { PACKAGE_PIN P13   IOSTANDARD LVCMOS33  } [get_ports { iUartRx }];
+set_property -dict { PACKAGE_PIN P12   IOSTANDARD LVCMOS33  } [get_ports { oUartTx }];
 
-# Debug Pin Free
+# LED
+set_property -dict { PACKAGE_PIN P10   IOSTANDARD LVCMOS33  } [get_ports { oLed[0] }];
+set_property -dict { PACKAGE_PIN P11   IOSTANDARD LVCMOS33  } [get_ports { oLed[1] }];
