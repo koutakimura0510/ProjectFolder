@@ -33,15 +33,15 @@ module CaptiveShizuhaTop #(
     output [1:0]    oQspiSck,       // Qspi Flash Memory Clk
     output [1:0]    oQspiMosi,      // Qspi Flash Memory Master Data output
     input  [1:0]    iQspiMiso,      // Qspi Flash Memory Master Data input
-    inout  [1:0]    ioQspiHold,
-    inout  [1:0]    ioQspiRst,
+    output [1:0]    oQspiHold,
+    output [1:0]    oQspiRst,
     output [1:0]    oQspiCs,        // Qspi Flash Memory chip select
 
     // HDMI TX
     output          oHdmiClkPos,    // hdmi clk posedge
     output          oHdmiClkNeg,    // hdmi clk negedge
-    output [2:0]    oHdmiDataPos,   // TMDS Channel Serial Data posedge
-    output [2:0]    oHdmiDataNeg,   // TMDS Channel Serial Data negedge
+    output [2:0]    oHdmiDataPos,   // hdmi Data 8b10b posedge
+    output [2:0]    oHdmiDataNeg,   // hdmi Data 8b10b negedge
     output          oHdmiScl,       // hdmi I2c scl
     inout           ioHdmiSda,      // hdmi I2c sda
     inout           ioHdmiCec,      // hdmi cec
@@ -60,46 +60,58 @@ module CaptiveShizuhaTop #(
 //---------------------------------------------------------------------------
 // wire unUsed[2] = iHdmiHpd;
 
-assign oUartTx      = iUartRx;
-assign oApdsScl     = iQspiMiso;
+assign oUartTx      = 1'b1;
+assign oApdsScl     = 2'b11;
 assign ioApdsSda    = 2'bzz;
 assign oQspiSck     = 2'b00;
 assign oQspiMosi    = 2'b00;
-assign ioQspiHold   = 2'bzz;
-assign ioQspiRst    = 2'bzz;
-assign oQspiCs      = iApdsIntr;
-assign oHdmiScl     = iClk;
+assign oQspiHold    = 2'd0;
+assign oQspiRst     = 2'd0;
+assign oQspiCs      = 2'b11;
+assign oHdmiScl     = 1'b1;
 assign ioHdmiSda    = 1'bz;
 assign ioHdmiCec    = 1'bz;
-assign oLed         = 2'd0;
+assign oLed         = 2'b11;
 
 
-// //----------------------------------------------------------
-// // System Reset Gen
-// //----------------------------------------------------------
-// wire wSysRst;
+//---------------------------------------------------------------------------
+// 入力ポートはバッファに入力したものを使用する
+// 後々モジュール内に移動する
+//---------------------------------------------------------------------------
+// IBUF # (.IBUF_LOW_PWR ("FALSE"), .IOSTANDARD ("DEFAULT")) IBUF_APDS_INTR_1 ( .O (wClkIbuf), .I (iApdsIntr[0]) );
+// IBUF # (.IBUF_LOW_PWR ("FALSE"), .IOSTANDARD ("DEFAULT")) IBUF_APDS_INTR_2 ( .O (wClkIbuf), .I (iApdsIntr[1]) );
+// IBUF # (.IBUF_LOW_PWR ("FALSE"), .IOSTANDARD ("DEFAULT")) IBUF_QSPI_MISO_1 ( .O (wClkIbuf), .I (iQspiMiso[0]) );
+// IBUF # (.IBUF_LOW_PWR ("FALSE"), .IOSTANDARD ("DEFAULT")) IBUF_QSPI_MISO_2 ( .O (wClkIbuf), .I (iQspiMiso[1]) );
+// IBUF # (.IBUF_LOW_PWR ("FALSE"), .IOSTANDARD ("DEFAULT")) IBUF_HDMI_HPD    ( .O (wClkIbuf), .I (iHdmiHpd)     );
+// IBUF # (.IBUF_LOW_PWR ("FALSE"), .IOSTANDARD ("DEFAULT")) IBUF_UART_RX     ( .O (wClkIbuf), .I (iUartRx)      );
 
-// rstGen #(
-//     .pRstFallTime (100)
-// ) SYSTEM_RST (
-//     .iClk   (iClk),     .oRst   (wSysRst),
-// );
+
+//----------------------------------------------------------
+// System Reset Gen
+//----------------------------------------------------------
+wire wSysRst;
+
+rstGen #(
+    .pRstFallTime (100)
+) SYSTEM_RST (
+    .iClk   (iClk),     .oRst   (wSysRst),
+);
 
 
-// //----------------------------------------------------------
-// // PicelClk 25  MHz
-// // TmdsClk  250 MHz
-// // BaseClk  100 MHz
-// //----------------------------------------------------------
-// wire wTmdsClk, wPixelClk, wBaseClk;
-// wire wRst;
+//----------------------------------------------------------
+// PixelClk 25  MHz
+// TmdsClk  250 MHz
+// BaseClk  100 MHz
+//----------------------------------------------------------
+wire wTmdsClk, wPixelClk, wBaseClk;
+wire wRst;
 
-// cgbWrapper CGB (
-//     .iClk       (iClk),         .iRst       (wSysRst),
-//     .oRst       (wRst),
-//     .oTmdsClk   (wTmdsClk),     .oPixelClk  (wPixelClk),
-//     .oBaseClk   (wBaseClk)
-// );
+cgbWrapper CGB (
+    .iClk       (iClk),         .iRst       (wSysRst),
+    .oRst       (wRst),
+    .oTmdsClk   (wTmdsClk),     .oPixelClk  (wPixelClk),
+    .oBaseClk   (wBaseClk)
+);
 
 
 // //----------------------------------------------------------
@@ -107,22 +119,22 @@ assign oLed         = 2'd0;
 // //----------------------------------------------------------
 
 
-// //----------------------------------------------------------
-// // Display Timing 
-// //----------------------------------------------------------
-// wire wPVde, wPFe, wPFvde, wPHsync, wPVsync;
+//----------------------------------------------------------
+// Display Timing 
+//----------------------------------------------------------
+wire wPVde, wPFe, wPFvde, wPHsync, wPVsync;
 
-// dtbWrapper #(
-//     .pHdisplay  (pHdisplay),    .pHback     (pHback),
-//     .pHfront    (pHfront),      .pHsync     (pHsync),
-//     .pVdisplay  (pVdisplay),    .pVtop      (pVtop),
-//     .pVbottom   (pVbottom),     .pVsync     (pVsync)
-// ) DTP (
-//     .iClk       (wPixelClk),    .iRst       (wRst),
-//     .oVde       (wPVde),        .oFe        (wPFe),
-//     .oFvde      (wPFvde),
-//     .oHsync     (wPHsync),      .oVsync     (wPVsync)
-// );
+dtbWrapper #(
+    .pHdisplay  (pHdisplay),    .pHback     (pHback),
+    .pHfront    (pHfront),      .pHsync     (pHsync),
+    .pVdisplay  (pVdisplay),    .pVtop      (pVtop),
+    .pVbottom   (pVbottom),     .pVsync     (pVsync)
+) DTP (
+    .iClk       (wPixelClk),    .iRst       (wRst),
+    .oVde       (wPVde),        .oFe        (wPFe),
+    .oFvde      (wPFvde),
+    .oHsync     (wPHsync),      .oVsync     (wPVsync)
+);
 
 
 // //----------------------------------------------------------
@@ -142,17 +154,17 @@ assign oLed         = 2'd0;
 // );
 
 
-// //----------------------------------------------------------
-// // HDMI Output
-// //----------------------------------------------------------
-// tgbWrapper TGB (
-//     .iPixelCLK       (wPixelClk),   .iTmdsCLK    (wTmdsClk),
-//     .iRst            (wRst),
-//     .oHdmiClkNeg     (oHdmiClkNeg), .oHdmiClkPos     (oHdmiClkPos),
-//     .oHdmiDataNeg    (oHdmiDataNeg),.oHdmiDataPos    (oHdmiDataPos),
-//     .iVRGB           (wVRGB),       .iVDE            (wPVde),
-//     .iHSYNC          (wPHsync),     .iVSYNC          (wPVsync)
-// );
+//----------------------------------------------------------
+// HDMI Output
+//----------------------------------------------------------
+tgbWrapper TGB (
+    .iPixelCLK       (wPixelClk),   .iTmdsCLK       (wTmdsClk),
+    .iRst            (wRst),
+    .oHdmiClkNeg     (oHdmiClkNeg), .oHdmiClkPos    (oHdmiClkPos),
+    .oHdmiDataNeg    (oHdmiDataNeg),.oHdmiDataPos   (oHdmiDataPos),
+    .iVRGB           (24'h000800),  .iVDE           (wPVde),
+    .iHSYNC          (wPHsync),     .iVSYNC         (wPVsync)
+);
 
 
 endmodule

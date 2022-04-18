@@ -49,15 +49,15 @@ set_property -dict { PACKAGE_PIN L1    IOSTANDARD LVCMOS33} [get_ports { iApdsIn
 set_property -dict { PACKAGE_PIN F14   IOSTANDARD LVCMOS33} [get_ports { oQspiSck[0]     }];
 set_property -dict { PACKAGE_PIN F13   IOSTANDARD LVCMOS33} [get_ports { oQspiMosi[0]    }];
 set_property -dict { PACKAGE_PIN D14   IOSTANDARD LVCMOS33} [get_ports { iQspiMiso[0]    }];
-set_property -dict { PACKAGE_PIN E13   IOSTANDARD LVCMOS33} [get_ports { ioQspiHold[0]    }];
-set_property -dict { PACKAGE_PIN D13   IOSTANDARD LVCMOS33} [get_ports { ioQspiRst[0]     }];
+set_property -dict { PACKAGE_PIN E13   IOSTANDARD LVCMOS33} [get_ports { oQspiHold[0]    }];
+set_property -dict { PACKAGE_PIN D13   IOSTANDARD LVCMOS33} [get_ports { oQspiRst[0]     }];
 set_property -dict { PACKAGE_PIN C14   IOSTANDARD LVCMOS33} [get_ports { oQspiCs[0]      }];
 
 set_property -dict { PACKAGE_PIN H13   IOSTANDARD LVCMOS33} [get_ports { oQspiSck[1]     }];
 set_property -dict { PACKAGE_PIN G14   IOSTANDARD LVCMOS33} [get_ports { oQspiMosi[1]    }];
 set_property -dict { PACKAGE_PIN J14   IOSTANDARD LVCMOS33} [get_ports { iQspiMiso[1]    }];
-set_property -dict { PACKAGE_PIN M14   IOSTANDARD LVCMOS33} [get_ports { ioQspiHold[1]    }];
-set_property -dict { PACKAGE_PIN H14   IOSTANDARD LVCMOS33} [get_ports { ioQspiRst[1]     }];
+set_property -dict { PACKAGE_PIN M14   IOSTANDARD LVCMOS33} [get_ports { oQspiHold[1]    }];
+set_property -dict { PACKAGE_PIN H14   IOSTANDARD LVCMOS33} [get_ports { oQspiRst[1]     }];
 set_property -dict { PACKAGE_PIN J13   IOSTANDARD LVCMOS33} [get_ports { oQspiCs[1]      }];
 
 # # Config Rom
