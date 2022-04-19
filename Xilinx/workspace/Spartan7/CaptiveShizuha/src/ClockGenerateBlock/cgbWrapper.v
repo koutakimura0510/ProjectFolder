@@ -6,7 +6,24 @@
 // -
 // CLK Generate Block
 // クロックの生成を行うブロック
+// --
+// MMCM
+// 7 シリーズ デバイス ファミリで使用可能な MMCM (Mixed Mode Clock Manager) には、次の機能があります。
 // 
+// パワーダウン モード
+// 周波数合成
+// 入力クロック切り替え
+// 分数除算
+// ダイナミック位相シフト
+// --
+// PLL
+// 7 シリーズ デバイス ファミリの PLL には、MMCM と同じ機能が多く備わっていますが、次のような違いがあります。
+// 
+// VCO 周波数範囲の最小値および最大値が高い
+// 分数除算がない
+// ダイナミック位相シフトがない
+// O0 から O5 までの 6 つの出力クロック (MMCM の場合は O0 から O6)
+// 出力クロックの 4 つに対して補数出力なし
 //----------------------------------------------------------
 module cgbWrapper (
     input           iClk,           // system clk
@@ -19,21 +36,7 @@ module cgbWrapper (
 
 
 //----------------------------------------------------------
-// Input Clk Buffer
-//----------------------------------------------------------
-wire wClkIbuf;
-
-IBUF # (
-    .IBUF_LOW_PWR ("FALSE"),
-    .IOSTANDARD   ("DEFAULT")
-) IBUF_iClk (    
-    .O (wClkIbuf),
-    .I (iClk)
-);
-
-
-//----------------------------------------------------------
-// VOC Settings
+// CLK Settings
 //----------------------------------------------------------
 localparam      lpBandWidth      = "OPTIMIZED"; // Rst Active High
 localparam      lpStartWait      = "FALSE";     // Delay DONE until PLL Locks, ("TRUE"/"FALSE")
@@ -51,7 +54,7 @@ localparam      lpClk4OutDiv     = 10;          // <Reserved>
 localparam      lpClk5OutDiv     = 10;          // <Reserved>
 
 wire wLock;                     assign oRst = (~wLock);
-wire wClkOutFb, wClkInFb;
+wire wClkOutFb, wClkInFb, wClkIbuf;
 wire [6:0] wClkOut;
 wire [8:0] wunused;
 
@@ -122,16 +125,25 @@ MMCME2_BASE # (
 
 //----------------------------------------------------------
 // iClk は IBUF 経由後、FeedBack経由してBUFG通すような図がデータシートに記載してあったのでそうしている
-// 
-// PixelClk 25  MHz Pixel
-// TmdsClk 250 MHz TMDS
-// BaseClk 100 MHz Base
 //----------------------------------------------------------
+IBUF # (
+    .IBUF_LOW_PWR ("FALSE"),
+    .IOSTANDARD   ("DEFAULT")
+) IBUF_iClk (    
+    .O (wClkIbuf),
+    .I (iClk)
+);
+
+BUFG BUFG_iClk ( .O (wClkInFb), .I (wClkOutFb));
+
+
+//---------------------------------------------------------------------------
+// Buffer経由して使用
+//---------------------------------------------------------------------------
 wire wTmdsClk;                     assign oTmdsClk  = wTmdsClk;
 wire wPixelClk;                    assign oPixelClk = wPixelClk;
 wire wBaseClk;                     assign oBaseClk  = wBaseClk;
 
-BUFG BUFG_iClk      (    .O (wClkInFb),  .I (wClkOutFb)  );
 BUFG BUFG_PixelClk  (    .O (wPixelClk), .I (wClkOut[0]) );
 BUFG BUFG_TmdsClk   (    .O (wTmdsClk),  .I (wClkOut[1]) );
 BUFG BUFG_BaseClk   (    .O (wBaseClk),  .I (wClkOut[2]) );
