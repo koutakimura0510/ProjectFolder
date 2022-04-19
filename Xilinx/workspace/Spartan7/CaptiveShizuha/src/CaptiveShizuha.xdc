@@ -58,11 +58,11 @@ set_property -dict { PACKAGE_PIN E13   IOSTANDARD LVCMOS33} [get_ports { ioQspiD
 set_property -dict { PACKAGE_PIN C14   IOSTANDARD LVCMOS33} [get_ports { oQspiCs   [0]    }];
 
 set_property -dict { PACKAGE_PIN H13   IOSTANDARD LVCMOS33} [get_ports { oQspiSck  [1]    }];
+set_property -dict { PACKAGE_PIN J13   IOSTANDARD LVCMOS33} [get_ports { oQspiCs   [1]    }];
 set_property -dict { PACKAGE_PIN G14   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq0 [1]    }];
 set_property -dict { PACKAGE_PIN J14   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq1 [1]    }];
 set_property -dict { PACKAGE_PIN H14   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq2 [1]    }];
 set_property -dict { PACKAGE_PIN M14   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq3 [1]    }];
-set_property -dict { PACKAGE_PIN J13   IOSTANDARD LVCMOS33} [get_ports { oQspiCs   [1]    }];
 
 # # Config Rom
 # set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  } [get_ports { oQspiSck[1]     }];

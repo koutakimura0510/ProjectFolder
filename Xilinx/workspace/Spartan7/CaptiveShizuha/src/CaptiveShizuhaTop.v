@@ -30,12 +30,12 @@ module CaptiveShizuhaTop #(
     input  [1:0]    iApdsIntr,      // APDS Interrupt / Open Drain Active Low
 
     // Flash Memory
-    output [1:0]    oQspiSck,       // Qspi Flash Memory Clk
-    output [1:0]    ioQspiDq0,      // SPI時 MOSI
-    input  [1:0]    ioQspiDq1,      // SPI時 MISO
-    output [1:0]    ioQspiDq2,      // SPI時 High 固定, 書き込み保護 Low Active
-    output [1:0]    ioQspiDq3,      // SPI時 High 固定, 書き込み停止 Low Active
     output [1:0]    oQspiCs,        // Qspi Flash Memory chip select Low Active
+    output [1:0]    oQspiSck,       // Qspi Flash Memory Clk
+    inout  [1:0]    ioQspiDq0,      // SPI時 MOSI
+    inout  [1:0]    ioQspiDq1,      // SPI時 MISO
+    inout  [1:0]    ioQspiDq2,      // SPI時 High 固定, 書き込み保護 Low Active
+    inout  [1:0]    ioQspiDq3,      // SPI時 High 固定, 書き込み停止 Low Active
 
     // HDMI TX
     output          oHdmiClkPos,    // hdmi clk posedge
@@ -63,16 +63,15 @@ module CaptiveShizuhaTop #(
 assign oUartTx      = 1'b1;
 
 // APDS
-assign oApdsScl     = 2'b11;
+assign oApdsScl     = 2'bzz;
 // iApdsIntr
 assign ioApdsSda    = 2'bzz;
 
 // Flash Memory
 assign oQspiSck     = 2'b00;
-// iQspiMiso
 assign ioQspiDq0    = 2'b00;
-assign ioQspiDq2    = 2'd0;
-assign ioQspiDq3    = 2'd0;
+assign ioQspiDq2    = 2'b00;
+assign ioQspiDq3    = 2'b00;
 assign oQspiCs      = 2'b11;
 
 
@@ -80,12 +79,9 @@ assign oQspiCs      = 2'b11;
 // 入力ポートはバッファに入力したものを使用する
 // 後々モジュール内に移動する
 //---------------------------------------------------------------------------
-// IBUF # (.IBUF_LOW_PWR ("FALSE"), .IOSTANDARD ("DEFAULT")) IBUF_APDS_INTR_1 ( .O (wClkIbuf), .I (iApdsIntr[0]) );
-// IBUF # (.IBUF_LOW_PWR ("FALSE"), .IOSTANDARD ("DEFAULT")) IBUF_APDS_INTR_2 ( .O (wClkIbuf), .I (iApdsIntr[1]) );
-// IBUF # (.IBUF_LOW_PWR ("FALSE"), .IOSTANDARD ("DEFAULT")) IBUF_QSPI_MISO_1 ( .O (wClkIbuf), .I (iQspiMiso[0]) );
-// IBUF # (.IBUF_LOW_PWR ("FALSE"), .IOSTANDARD ("DEFAULT")) IBUF_QSPI_MISO_2 ( .O (wClkIbuf), .I (iQspiMiso[1]) );
-// IBUF # (.IBUF_LOW_PWR ("FALSE"), .IOSTANDARD ("DEFAULT")) IBUF_HDMI_HPD    ( .O (wClkIbuf), .I (iHdmiHpd)     );
-// IBUF # (.IBUF_LOW_PWR ("FALSE"), .IOSTANDARD ("DEFAULT")) IBUF_UART_RX     ( .O (wClkIbuf), .I (iUartRx)      );
+// IBUF IBUF_APDS_INTR_1 ( .O (wClkIbuf), .I (iApdsIntr[0]) );
+// IBUF IBUF_APDS_INTR_2 ( .O (wClkIbuf), .I (iApdsIntr[1]) );
+// IBUF IBUF_UART_RX     ( .O (wClkIbuf), .I (iUartRx)      );
 
 
 //----------------------------------------------------------
@@ -160,17 +156,20 @@ CaptiveShizuhaBase # (
 // HDMI Output
 // TODO オーディオ出力追加予定
 //----------------------------------------------------------
+wire wHdmiHpd;
+
 tgbWrapper TGB (
     .iPixelCLK      (wPixelClk),    .iTmdsCLK       (wTmdsClk),
     .iRst           (wSysRst),
     .oHdmiClkNeg    (oHdmiClkNeg),  .oHdmiClkPos    (oHdmiClkPos),
     .oHdmiDataNeg   (oHdmiDataNeg), .oHdmiDataPos   (oHdmiDataPos),
     .oHdmiScl       (oHdmiScl),     .ioHdmiSda      (ioHdmiSda),
-    .ioHdmiCec      (ioHdmiCec),    .iHdmiHpd       (iHdmiHpd),
+    .ioHdmiCec      (ioHdmiCec),    .iHdmiHpd       (wHdmiHpd),
     .iVRGB          (wVRGB),        .iVDE           (wPVde),
     .iHSYNC         (wPHsync),      .iVSYNC         (wPVsync)
 );
 
+IBUF IBUF_HDMI_HPD    ( .O (wHdmiHpd), .I (iHdmiHpd)     );
 
 //---------------------------------------------------------------------------
 // Debug Pin
@@ -183,7 +182,7 @@ reg [1:0] rHpd;
 always @( posedge wPixelClk )
 begin
    if       (wSysRst)   rHpd <= 1'b0;
-   else if  (iHdmiHpd)  rHpd <= 1'b0;
+   else if  (wHdmiHpd)  rHpd <= 1'b0;
    else                 rHpd <= 1'b1;
 end
 

@@ -27,7 +27,7 @@ module tgbWrapper (
 // 使用していない
 //---------------------------------------------------------------------------
 assign ioHdmiSda = 1'bz;
-assign oHdmiScl  = 1'b1;
+assign oHdmiScl  = 1'bz;
 assign ioHdmiCec = 1'bz;
 
 // tmds
