@@ -27,15 +27,15 @@ module CaptiveShizuhaTop #(
     // APDS9960
     output [1:0]    oApdsScl,       // APDS I2C SCL
     inout  [1:0]    ioApdsSda,      // APDS I2C SDA
-    input  [1:0]    iApdsIntr,      // APDS Interrupt
+    input  [1:0]    iApdsIntr,      // APDS Interrupt / Open Drain Active Low
 
     // Flash Memory
     output [1:0]    oQspiSck,       // Qspi Flash Memory Clk
-    output [1:0]    oQspiMosi,      // Qspi Flash Memory Master Data output
-    input  [1:0]    iQspiMiso,      // Qspi Flash Memory Master Data input
-    output [1:0]    oQspiHold,
-    output [1:0]    oQspiRst,
-    output [1:0]    oQspiCs,        // Qspi Flash Memory chip select
+    output [1:0]    ioQspiDq0,      // SPI時 MOSI
+    input  [1:0]    ioQspiDq1,      // SPI時 MISO
+    output [1:0]    ioQspiDq2,      // SPI時 High 固定, 書き込み保護 Low Active
+    output [1:0]    ioQspiDq3,      // SPI時 High 固定, 書き込み停止 Low Active
+    output [1:0]    oQspiCs,        // Qspi Flash Memory chip select Low Active
 
     // HDMI TX
     output          oHdmiClkPos,    // hdmi clk posedge
@@ -45,7 +45,7 @@ module CaptiveShizuhaTop #(
     output          oHdmiScl,       // hdmi I2c scl
     inout           ioHdmiSda,      // hdmi I2c sda
     inout           ioHdmiCec,      // hdmi cec
-    input           iHdmiHpd,       // hdmi hpd
+    input           iHdmiHpd,       // hdmi hpd Low Active
 
     // UART
     input           iUartRx,        // Uart
@@ -70,9 +70,9 @@ assign ioApdsSda    = 2'bzz;
 // Flash Memory
 assign oQspiSck     = 2'b00;
 // iQspiMiso
-assign oQspiMosi    = 2'b00;
-assign oQspiHold    = 2'd0;
-assign oQspiRst     = 2'd0;
+assign ioQspiDq0    = 2'b00;
+assign ioQspiDq2    = 2'd0;
+assign ioQspiDq3    = 2'd0;
 assign oQspiCs      = 2'b11;
 
 
