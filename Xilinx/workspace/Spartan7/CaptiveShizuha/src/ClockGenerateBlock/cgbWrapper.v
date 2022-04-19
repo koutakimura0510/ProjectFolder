@@ -45,10 +45,10 @@ localparam      lpClkIn1Div      = 1;           // 25 [MHz] / 1 = 25 [MHz]
 
 // VOC 分周回路設定
 // Spped Grade 1 = (600 ~ 1200MHz)
-localparam real lpClkOutMult     = 40.000;      // 25 MHz  * 40 = 1000[MHz]
-localparam real lpClk0OutDivF    = 40.000;      // 1000MHz / 40 =   25[MHz]
-localparam      lpClk1OutDiv     = 4;           // 1000MHz /  4 =  250[MHz]
-localparam      lpClk2OutDiv     = 10;          // 1000MHz / 10 =  100[MHz]
+localparam real lpClkOutMult     = 40.000;      //   25 MHz * 40 = 1000[MHz]
+localparam real lpClk0OutDivF    = 40.000;      // 1000 MHz / 40 =   25[MHz]
+localparam      lpClk1OutDiv     = 4;           // 1000 MHz /  4 =  250[MHz]
+localparam      lpClk2OutDiv     = 10;          // 1000 MHz / 10 =  100[MHz]
 localparam      lpClk3OutDiv     = 10;          // <Reserved>
 localparam      lpClk4OutDiv     = 10;          // <Reserved>
 localparam      lpClk5OutDiv     = 10;          // <Reserved>
@@ -71,13 +71,13 @@ MMCME2_BASE # (
     // Ref In Jitter (0.000 ~ 0.999)
     .REF_JITTER1          (0.0), 
 
-    // 逓倍 (2.000 ~ 64.000)
+    // 小数逓倍 (2.000 ~ 64.000)
     .CLKFBOUT_MULT_F      (lpClkOutMult),
 
-    // (1.000 ~ 128.000)
+    // 小数分周 (1.000 ~ 128.000)
     .CLKOUT0_DIVIDE_F     (lpClk0OutDivF),
 
-    // 分周 (1 ~ 128)
+    // 整数分周 (1 ~ 128)
     .CLKOUT1_DIVIDE       (lpClk1OutDiv),
     .CLKOUT2_DIVIDE       (lpClk2OutDiv),
     .CLKOUT3_DIVIDE       (lpClk3OutDiv),
@@ -110,7 +110,7 @@ MMCME2_BASE # (
     .CLKOUT6              (wClkOut[6]),      // 1-bit output
     .CLKFBOUT             (wClkOutFb),       // 1-bit output FeedBack
 
-    // Bと付く部分は反転出力
+    // Bと付く部分は反転出力 DDRに使用
     .CLKFBOUTB            (wunused[0]),
     .CLKOUT0B             (wunused[1]),
     .CLKOUT1B             (wunused[2]),
