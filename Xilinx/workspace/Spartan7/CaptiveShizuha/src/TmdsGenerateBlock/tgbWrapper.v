@@ -5,22 +5,34 @@
  * TMDS Generate Block
  */
 module tgbWrapper (
-    input           iPixelCLK,       // 画面サイズに対応したclkを入力
-    input           iTmdsCLK,   // tmdsの10倍のクロック入力
+    input           iPixelCLK,      // 画面サイズに対応したclkを入力
+    input           iTmdsCLK,       // PixelClkの10倍のクロック入力
     input           iRst,           // Active High
-    output          oHdmiClkNeg,    // hdmi clk negedge
-    output          oHdmiClkPos,    // hdmi clk posedge
-    output [ 2:0]   oHdmiDataPos,   // TMDS Channel Serial Data posedge
-    output [ 2:0]   oHdmiDataNeg,   // TMDS Channel Serial Data negedge
-    input  [23:0]   iVRGB,          // rgb
+    output          oHdmiClkNeg,    // hdmi clk posedge
+    output          oHdmiClkPos,    // hdmi clk negedge
+    output [ 2:0]   oHdmiDataPos,   // hdmi Data 8b10b posedge
+    output [ 2:0]   oHdmiDataNeg,   // hdmi Data 8b10b negedge
+    output          oHdmiScl,       // hdmi I2c scl
+    inout           ioHdmiSda,      // hdmi I2c sda
+    inout           ioHdmiCec,      // hdmi cec
+    input           iHdmiHpd,       // hdmi hpd
+    input  [23:0]   iVRGB,          // Pixel Data
     input           iVDE,           // video enable signal
     input           iHSYNC,
     input           iVSYNC
 );
 
+
+//---------------------------------------------------------------------------
+// 使用していない
+//---------------------------------------------------------------------------
+assign ioHdmiSda = 1'bz;
+assign oHdmiScl  = 1'b1;
+assign ioHdmiCec = 1'bz;
+
 // tmds
 wire [ 9:0] oTmdsParaB, oTmdsParaG, oTmdsParaR;  // tmdsパラレル信号
-wire oTmdsSeriCH0, oTmdsSeriCH1, oTmdsSeriCH2;  // tmdsシリアル信号
+wire oTmdsSeriCH0, oTmdsSeriCH1, oTmdsSeriCH2;   // tmdsシリアル信号
 
 //----------------------------------------------------------
 // 8b10b変換
@@ -44,7 +56,7 @@ tmdsSerialize TMDS_R(.iClk(iTmdsCLK), .iRst(iRst), .iTmdsPara(oTmdsParaR), .oTmd
 tmdsDecoder TMDS_DECODER_CH0(.iTmdsSeri(oTmdsSeriCH0), .oHdmiDataNeg(oHdmiDataNeg[0]),  .oHdmiDataPos(oHdmiDataPos[0]));
 tmdsDecoder TMDS_DECODER_CH1(.iTmdsSeri(oTmdsSeriCH1), .oHdmiDataNeg(oHdmiDataNeg[1]),  .oHdmiDataPos(oHdmiDataPos[1]));
 tmdsDecoder TMDS_DECODER_CH2(.iTmdsSeri(oTmdsSeriCH2), .oHdmiDataNeg(oHdmiDataNeg[2]),  .oHdmiDataPos(oHdmiDataPos[2]));
-tmdsDecoder TMDS_DECODER_CH3(.iTmdsSeri(iPixelCLK),     .oHdmiDataNeg(oHdmiClkNeg),      .oHdmiDataPos(oHdmiClkPos));
+tmdsDecoder TMDS_DECODER_CH3(.iTmdsSeri(iPixelCLK),    .oHdmiDataNeg(oHdmiClkNeg),      .oHdmiDataPos(oHdmiClkPos));
 
 
 endmodule

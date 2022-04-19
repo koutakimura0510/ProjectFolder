@@ -47,9 +47,9 @@ dgbWrapper #(
     .pPixelWidth        (24),
     .pPixelDebug        (pPixelDebug)
 ) DGB (
-    .iBaseClk  (iBaseClk),    .iRst   (iRst),
-    .iCKE   (qCkeDgb),  .oPixel (wPiDgb),
-    .oVd    (wVdDgb),   .oFe    ()
+    .iBaseClk   (iBaseClk),     .iRst   (iRst),
+    .iCKE       (qCkeDgb),      .oPixel (wPiDgb),
+    .oVd        (wVdDgb),       .oFe    ()
 );
 
 

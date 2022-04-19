@@ -58,20 +58,22 @@ module CaptiveShizuhaTop #(
 //---------------------------------------------------------------------------
 // 未使用 Pin 割り当て
 //---------------------------------------------------------------------------
-// wire unUsed[2] = iHdmiHpd;
-
+// UART
+// iUartRx
 assign oUartTx      = 1'b1;
+
+// APDS
 assign oApdsScl     = 2'b11;
+// iApdsIntr
 assign ioApdsSda    = 2'bzz;
+
+// Flash Memory
 assign oQspiSck     = 2'b00;
+// iQspiMiso
 assign oQspiMosi    = 2'b00;
 assign oQspiHold    = 2'd0;
 assign oQspiRst     = 2'd0;
 assign oQspiCs      = 2'b11;
-assign oHdmiScl     = 1'b1;
-assign ioHdmiSda    = 1'bz;
-assign ioHdmiCec    = 1'bz;
-assign oLed         = 2'b11;
 
 
 //---------------------------------------------------------------------------
@@ -89,12 +91,12 @@ assign oLed         = 2'b11;
 //----------------------------------------------------------
 // System Reset Gen
 //----------------------------------------------------------
-wire wSysRst;
+wire wClkRst;
 
 rstGen #(
     .pRstFallTime (100)
 ) SYSTEM_RST (
-    .iClk   (iClk),     .oRst   (wSysRst),
+    .iClk   (iClk),     .oRst   (wClkRst),
 );
 
 
@@ -104,19 +106,19 @@ rstGen #(
 // BaseClk  100 MHz
 //----------------------------------------------------------
 wire wTmdsClk, wPixelClk, wBaseClk;
-wire wRst;
+wire wSysRst;
 
 cgbWrapper CGB (
-    .iClk       (iClk),         .iRst       (wSysRst),
-    .oRst       (wRst),
+    .iClk       (iClk),         .iRst       (wClkRst),
+    .oRst       (wSysRst),
     .oTmdsClk   (wTmdsClk),     .oPixelClk  (wPixelClk),
     .oBaseClk   (wBaseClk)
 );
 
 
-// //----------------------------------------------------------
-// // APDS9960 I2C Connect
-// //----------------------------------------------------------
+//----------------------------------------------------------
+// APDS9960 I2C Connect
+//----------------------------------------------------------
 
 
 //----------------------------------------------------------
@@ -130,41 +132,63 @@ dtbWrapper #(
     .pVdisplay  (pVdisplay),    .pVtop      (pVtop),
     .pVbottom   (pVbottom),     .pVsync     (pVsync)
 ) DTP (
-    .iClk       (wPixelClk),    .iRst       (wRst),
+    .iClk       (wPixelClk),    .iRst       (wSysRst),
     .oVde       (wPVde),        .oFe        (wPFe),
     .oFvde      (wPFvde),
     .oHsync     (wPHsync),      .oVsync     (wPVsync)
 );
 
 
-// //----------------------------------------------------------
-// // RGB Gen
-// //----------------------------------------------------------
-// wire [23:0] wVRGB;
+//----------------------------------------------------------
+// RGB Gen
+//----------------------------------------------------------
+wire [23:0] wVRGB;
 
-// CaptiveShizuhaBase # (
-//     .pHdisplay      (pHdisplay),    .pVdisplay      (pVdisplay),
-//     .pPixelDebug    (pPixelDebug),  .pBuffDepth     (pBuffDepth)
-// ) BASE (
-//     .iPixelClk      (wPixelClk),    .iRst           (wRst),
-//     .iBaseClk       (wBaseClk),     .iPFvde         (wPFvde),
+CaptiveShizuhaBase # (
+    .pHdisplay      (pHdisplay),    .pVdisplay      (pVdisplay),
+    .pPixelDebug    (pPixelDebug),  .pBuffDepth     (pBuffDepth)
+) BASE (
+    .iPixelClk      (wPixelClk),    .iRst           (wSysRst),
+    .iBaseClk       (wBaseClk),     .iPFvde         (wPFvde),
 
-//     // output Pixel Data
-//     .oVRGB          (wVRGB)
-// );
+    // output Pixel Data
+    .oVRGB          (wVRGB)
+);
 
 
 //----------------------------------------------------------
 // HDMI Output
+// TODO オーディオ出力追加予定
 //----------------------------------------------------------
 tgbWrapper TGB (
-    .iPixelCLK       (wPixelClk),   .iTmdsCLK       (wTmdsClk),
-    .iRst            (wRst),
-    .oHdmiClkNeg     (oHdmiClkNeg), .oHdmiClkPos    (oHdmiClkPos),
-    .oHdmiDataNeg    (oHdmiDataNeg),.oHdmiDataPos   (oHdmiDataPos),
-    .iVRGB           (24'h000800),  .iVDE           (wPVde),
-    .iHSYNC          (wPHsync),     .iVSYNC         (wPVsync)
+    .iPixelCLK      (wPixelClk),    .iTmdsCLK       (wTmdsClk),
+    .iRst           (wSysRst),
+    .oHdmiClkNeg    (oHdmiClkNeg),  .oHdmiClkPos    (oHdmiClkPos),
+    .oHdmiDataNeg   (oHdmiDataNeg), .oHdmiDataPos   (oHdmiDataPos),
+    .oHdmiScl       (oHdmiScl),     .ioHdmiSda      (ioHdmiSda),
+    .ioHdmiCec      (ioHdmiCec),    .iHdmiHpd       (iHdmiHpd),
+    .iVRGB          (wVRGB),        .iVDE           (wPVde),
+    .iHSYNC         (wPHsync),      .iVSYNC         (wPVsync)
 );
+
+
+//---------------------------------------------------------------------------
+// Debug Pin
+// 
+// HPD は通常ケーブル接続時に High になるが、トランジスタのスイッチング回路経由でポートに入力されるため
+// ケーブル接続時は Low 信号が検出される
+//---------------------------------------------------------------------------
+reg [1:0] rHpd;
+
+always @( posedge wPixelClk )
+begin
+   if       (wSysRst)   rHpd <= 1'b0;
+   else if  (iHdmiHpd)  rHpd <= 1'b0;
+   else                 rHpd <= 1'b1;
+end
+
+assign oLed = {1'b0, rHpd};
+
 
 
 endmodule
