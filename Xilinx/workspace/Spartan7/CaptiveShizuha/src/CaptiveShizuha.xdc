@@ -22,9 +22,9 @@ set_property BITSTREAM.CONFIG.EXTMASTERCCLK_EN  DISABLE         [current_design]
 
 # ------------------------------------------------------------
 # Clock Signal
-# dutyを指定しない場合は duty50%適応
-# create_clock -name 信号名 -period 周期ns -waveform {duty比} [get_nets / get_ports 信号名]
-# create_clock -name 信号名 -period 100MHz -waveform {duty比} [get_nets / get_ports 信号名]
+# dutyを指定しな�?場合�?� duty50%適�?
+# create_clock -name 信号�? -period 周期ns -waveform {duty比} [get_nets / get_ports 信号名]
+# create_clock -name 信号�? -period 100MHz -waveform {duty比} [get_nets / get_ports 信号名]
 # ------------------------------------------------------------
 # OSC Input 25MHz
 set_property -dict { PACKAGE_PIN G4    IOSTANDARD LVCMOS33 } [get_ports { iClk }];
@@ -35,34 +35,34 @@ create_generated_clock -name PixelClk [get_pins CGB/MMCME2_BASE_CLK_GEN/CLKOUT0]
 create_generated_clock -name TmdsClk  [get_pins CGB/MMCME2_BASE_CLK_GEN/CLKOUT1]
 create_generated_clock -name BaseClk  [get_pins CGB/MMCME2_BASE_CLK_GEN/CLKOUT2]
 
-# 手動配線
+# 手動配�?
 set_property LOC MMCME2_ADV_X1Y0  [get_cells CGB/MMCME2_BASE_CLK_GEN]
 # # set_property LOC PLLE2_ADV_X1Y0   [get_cells CGB/PLLE2_BASE_CLK_GEN]
 # # set_property LOC RAMB18_X8Y55 [get_cells BASE/PFB/ASYNC_PIXEL_BUFFER/USER_FIFO_DUAL/fifo_reg]
 set_property LOC RAMB36_X2Y8 [get_cells BASE/PFB/ASYNC_PIXEL_BUFFER/USER_FIFO_DUAL/fifo_reg]
 
 # # ADUS5689
-set_property -dict { PACKAGE_PIN P4    IOSTANDARD LVCMOS33} [get_ports { oApdsScl  [0]    }];
-set_property -dict { PACKAGE_PIN P3    IOSTANDARD LVCMOS33} [get_ports { ioApdsSda [0]    }];
-set_property -dict { PACKAGE_PIN P2    IOSTANDARD LVCMOS33} [get_ports { iApdsIntr [0]    }];
-set_property -dict { PACKAGE_PIN N1    IOSTANDARD LVCMOS33} [get_ports { oApdsScl  [1]    }];
-set_property -dict { PACKAGE_PIN M1    IOSTANDARD LVCMOS33} [get_ports { ioApdsSda [1]    }];
-set_property -dict { PACKAGE_PIN L1    IOSTANDARD LVCMOS33} [get_ports { iApdsIntr [1]    }];
+set_property -dict { PACKAGE_PIN P4    IOSTANDARD LVCMOS33} [get_ports { ioApdsScl[0]    }];
+set_property -dict { PACKAGE_PIN P3    IOSTANDARD LVCMOS33} [get_ports { ioApdsSda[0]    }];
+set_property -dict { PACKAGE_PIN P2    IOSTANDARD LVCMOS33} [get_ports { iApdsIntr[0]    }];
+set_property -dict { PACKAGE_PIN N1    IOSTANDARD LVCMOS33} [get_ports { ioApdsScl[1]    }];
+set_property -dict { PACKAGE_PIN M1    IOSTANDARD LVCMOS33} [get_ports { ioApdsSda[1]    }];
+set_property -dict { PACKAGE_PIN L1    IOSTANDARD LVCMOS33} [get_ports { iApdsIntr[1]    }];
 
 # Flash Rom 1-2
-set_property -dict { PACKAGE_PIN F14   IOSTANDARD LVCMOS33} [get_ports { oQspiSck  [0]    }];
-set_property -dict { PACKAGE_PIN F13   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq0 [0]    }];
-set_property -dict { PACKAGE_PIN D14   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq1 [0]    }];
-set_property -dict { PACKAGE_PIN D13   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq2 [0]    }];
-set_property -dict { PACKAGE_PIN E13   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq3 [0]    }];
-set_property -dict { PACKAGE_PIN C14   IOSTANDARD LVCMOS33} [get_ports { oQspiCs   [0]    }];
+set_property -dict { PACKAGE_PIN F14   IOSTANDARD LVCMOS33} [get_ports { oQspiSck[0]     }];
+set_property -dict { PACKAGE_PIN F13   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq0[0]    }];
+set_property -dict { PACKAGE_PIN D14   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq1[0]    }];
+set_property -dict { PACKAGE_PIN D13   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq2[0]    }];
+set_property -dict { PACKAGE_PIN E13   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq3[0]    }];
+set_property -dict { PACKAGE_PIN C14   IOSTANDARD LVCMOS33} [get_ports { oQspiCs[0]      }];
 
-set_property -dict { PACKAGE_PIN H13   IOSTANDARD LVCMOS33} [get_ports { oQspiSck  [1]    }];
-set_property -dict { PACKAGE_PIN J13   IOSTANDARD LVCMOS33} [get_ports { oQspiCs   [1]    }];
-set_property -dict { PACKAGE_PIN G14   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq0 [1]    }];
-set_property -dict { PACKAGE_PIN J14   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq1 [1]    }];
-set_property -dict { PACKAGE_PIN H14   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq2 [1]    }];
-set_property -dict { PACKAGE_PIN M14   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq3 [1]    }];
+set_property -dict { PACKAGE_PIN H13   IOSTANDARD LVCMOS33} [get_ports { oQspiSck[1]     }];
+set_property -dict { PACKAGE_PIN J13   IOSTANDARD LVCMOS33} [get_ports { oQspiCs[1]      }];
+set_property -dict { PACKAGE_PIN G14   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq0[1]    }];
+set_property -dict { PACKAGE_PIN J14   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq1[1]    }];
+set_property -dict { PACKAGE_PIN H14   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq2[1]    }];
+set_property -dict { PACKAGE_PIN M14   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq3[1]    }];
 
 # # Config Rom
 # set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  } [get_ports { oQspiSck[1]     }];

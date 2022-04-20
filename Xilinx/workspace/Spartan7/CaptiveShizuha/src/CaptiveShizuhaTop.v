@@ -5,8 +5,8 @@
 // Build  Vivado20.2
 // Board  My Board Spartan7 FTGB196
 // -
-// デバッグを除いて外部から信号を受信、又は外部に信号を送信するモジュールは Top に記述
-// FPGA 内部で完結するモジュールは Base に記述
+// �?バッグを除�?て外部から信号を受信、又は外部に信号を�?�信するモジュールは Top に記述
+// FPGA �?部で完結するモジュールは Base に記述
 // 
 //----------------------------------------------------------
 module CaptiveShizuhaTop #(
@@ -19,7 +19,7 @@ module CaptiveShizuhaTop #(
     parameter       pVbottom        =  11,
     parameter       pVsync          =   2,
     parameter       pPixelDebug     = "off",
-    parameter       pBuffDepth      = 1024      // Display の横幅より大きくサイズを指定
+    parameter       pBuffDepth      = 1024      // Display の横�?より大きくサイズを指�?
 )(
     // CLK
     input           iClk,           // OSC  clk
@@ -32,10 +32,10 @@ module CaptiveShizuhaTop #(
     // Flash Memory
     output [1:0]    oQspiCs,        // Qspi Flash Memory chip select Low Active
     output [1:0]    oQspiSck,       // Qspi Flash Memory Clk
-    inout  [1:0]    ioQspiDq0,      // SPI時 MOSI
-    inout  [1:0]    ioQspiDq1,      // SPI時 MISO
-    inout  [1:0]    ioQspiDq2,      // SPI時 High 固定, 書き込み保護 Low Active
-    inout  [1:0]    ioQspiDq3,      // SPI時 High 固定, 書き込み停止 Low Active
+    inout  [1:0]    ioQspiDq0,      // SPI�? MOSI
+    inout  [1:0]    ioQspiDq1,      // SPI�? MISO
+    inout  [1:0]    ioQspiDq2,      // SPI�? High 固�?, 書き込み保護 Low Active
+    inout  [1:0]    ioQspiDq3,      // SPI�? High 固�?, 書き込み停止 Low Active
 
     // HDMI TX
     output          oHdmiClkPos,    // hdmi clk posedge
@@ -84,7 +84,7 @@ rstGen #(
     .pRstFallTime   (100)
 ) SYSTEM_RST (
     .iClk           (iClk),
-    .oRst           (wClkRst),
+    .oRst           (wClkRst)
 );
 
 
@@ -157,7 +157,7 @@ CaptiveShizuhaBase # (
 
 //----------------------------------------------------------
 // HDMI Output
-// TODO オーディオ出力追加予定
+// TODO オー�?ィオ出力追�?予�?
 //----------------------------------------------------------
 wire wHdmiHpd;
 
@@ -187,8 +187,8 @@ IBUF IBUF_HDMI_HPD (
 //---------------------------------------------------------------------------
 // Debug Pin
 // 
-// HPD は通常ケーブル接続時に High になるが、トランジスタのスイッチング回路経由でポートに入力されるため
-// ケーブル接続時は Low 信号が検出される
+// HPD は通常ケーブル接続時に High になるが、トランジスタのスイ�?チング回路経由でポ�?�トに入力されるため
+// ケーブル接続時は Low 信号が検�?�され�?
 //---------------------------------------------------------------------------
 reg [1:0] rHpd;
 
