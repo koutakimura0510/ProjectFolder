@@ -1,14 +1,9 @@
 /*
  * Create 2022/3/27
  * Author koutakimura
- * Editor VSCode ver1.62.7
- * Build  Vivado20.2
- * Board  My Board Spartan7
  * -
  * Dot Generate Block
  * 描画用ドットデータの生成を行うブロック
- *
- * 2022-03-27: New Relese
  *
  */
 module dgbWrapper #(
@@ -17,12 +12,12 @@ module dgbWrapper #(
     parameter                   pPixelWidth     = 24,
     parameter                   pPixelDebug     = "yes"
 )(
-    input                       iBaseClk,          // Bace clk
+    input                       iBaseClk,       // Bace clk
     input                       iRst,           // Active High Sync RST
     input                       iCKE,           // Base Clk Enable
     output [pPixelWidth-1:0]    oPixel,         // 生成ピクセルデータ
     output                      oVd,            // 有効データ出力時High
-    output                      oFe
+    output                      oFe             // 1frame の終端時 High
 );
 
 //----------------------------------------------------------
@@ -33,19 +28,26 @@ localparam lpBitHeight = fBitWidth(pVdisplay);
 
 
 //----------------------------------------------------------
-// ディスプレイ座標の生成
+// HDMI のディスプレイ信号とは別に、内部高速クロックのタイミングで
+// ドットデータ生成用の内部座標データを生成
+// 各ドットデータ生成モジュールが動作完了時に CKE を High にすることで、
+// 座標データが更新される
 //----------------------------------------------------------
 wire wFe;                           assign oFe  = wFe;
 wire [lpBitWidth -1:0] wDwp;
 wire [lpBitHeight-1:0] wDhp;
 
 hvposGen #(
-    .pHeight        (pVdisplay),    .pWidth         (pHdisplay),
-    .pBitHeight     (lpBitHeight),  .pBitWidth      (lpBitWidth)
+    .pHeight        (pVdisplay),
+    .pWidth         (pHdisplay),
+    .pBitHeight     (lpBitHeight),
+    .pBitWidth      (lpBitWidth)
 ) HVPOS_GEN (
-    .iClk           (iBaseClk),        .iRst           (iRst),
+    .iClk           (iBaseClk),
+    .iRst           (iRst),
     .iCKE           (iCKE),
-    .oDwp           (wDwp),         .oDhp           (wDhp),
+    .oDwp           (wDwp),
+    .oDhp           (wDhp),
     .oFe            (wFe)
 );
 
@@ -60,10 +62,12 @@ reg  qSquare;
 wire wFps;
 
 countGet #(
-    .pCntSize (2)
+    .pCntSize   (2)
 ) COUNT_GET (
-    .iClk   (iBaseClk),            .iRst   (iRst),
-    .iCKE   (wFe),              .oCKE   (wFps)
+    .iClk       (iBaseClk),
+    .iRst       (iRst),
+    .iCKE       (wFe),
+    .oCKE       (wFps)
 );
 
 generate

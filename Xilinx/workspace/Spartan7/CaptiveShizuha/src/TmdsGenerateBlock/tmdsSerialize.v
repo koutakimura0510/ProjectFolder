@@ -19,13 +19,15 @@ reg  [9:0] rTmds;        assign oTmdsSeri = rTmds[0];
 reg  [3:0] rTmdsCnt;
 reg  qEnable;
 
-always @(posedge iClk) begin
+always @(posedge iClk)
+begin
     if (iRst)           rTmdsCnt <= 0;
     else if (qEnable)   rTmdsCnt <= 0;
     else                rTmdsCnt <= rTmdsCnt + 1'b1;
 end
 
-always @(posedge iClk) begin
+always @(posedge iClk)
+begin
     if (iRst)           rTmds <= 0;
     else if (qEnable)   rTmds <= iTmdsPara;
     else                rTmds <= rTmds[9:1];

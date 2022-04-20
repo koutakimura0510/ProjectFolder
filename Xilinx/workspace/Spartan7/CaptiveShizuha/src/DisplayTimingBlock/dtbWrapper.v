@@ -27,15 +27,21 @@ module dtbWrapper #(
 // ディスプレイ制御信号生成
 //----------------------------------------------------------
 hvsyncGen #(
-    // hrizontal                vertical
-    .pHdisplay  (pHdisplay),    .pVdisplay  (pVdisplay),
-    .pHback     (pHback),       .pVtop      (pVtop),
-    .pHfront    (pHfront),      .pVbottom   (pVbottom),
-    .pHsync     (pHsync),       .pVsync     (pVsync)
+    .pHdisplay  (pHdisplay),
+    .pVdisplay  (pVdisplay),
+    .pHback     (pHback),
+    .pVtop      (pVtop),
+    .pHfront    (pHfront),
+    .pVbottom   (pVbottom),
+    .pHsync     (pHsync),
+    .pVsync     (pVsync)
 ) HVSYNC_GEN (
-    .iClk       (iClk),         .iRst       (iRst),
-    .oHsync     (oHsync),       .oVsync     (oVsync),
-    .oVde       (oVde),         .oFe        (oFe),
+    .iClk       (iClk),
+    .iRst       (iRst),
+    .oHsync     (oHsync),
+    .oVsync     (oVsync),
+    .oVde       (oVde),
+    .oFe        (oFe),
     .oFvde      (oFvde)
 );
 

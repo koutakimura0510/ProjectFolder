@@ -127,14 +127,17 @@ MMCME2_BASE # (
 // iClk は IBUF 経由後、FeedBack経由してBUFG通すような図がデータシートに記載してあったのでそうしている
 //----------------------------------------------------------
 IBUF # (
-    .IBUF_LOW_PWR ("FALSE"),
-    .IOSTANDARD   ("DEFAULT")
+    .IBUF_LOW_PWR   ("FALSE"),
+    .IOSTANDARD     ("DEFAULT")
 ) IBUF_iClk (    
-    .O (wClkIbuf),
-    .I (iClk)
+    .O              (wClkIbuf),
+    .I              (iClk)
 );
 
-BUFG BUFG_iClk ( .O (wClkInFb), .I (wClkOutFb));
+BUFG BUFG_iClk (
+    .O              (wClkInFb),
+    .I              (wClkOutFb)
+);
 
 
 //---------------------------------------------------------------------------
@@ -144,8 +147,19 @@ wire wTmdsClk;                     assign oTmdsClk  = wTmdsClk;
 wire wPixelClk;                    assign oPixelClk = wPixelClk;
 wire wBaseClk;                     assign oBaseClk  = wBaseClk;
 
-BUFG BUFG_PixelClk  (    .O (wPixelClk), .I (wClkOut[0]) );
-BUFG BUFG_TmdsClk   (    .O (wTmdsClk),  .I (wClkOut[1]) );
-BUFG BUFG_BaseClk   (    .O (wBaseClk),  .I (wClkOut[2]) );
+BUFG BUFG_PixelClk (
+    .O (wPixelClk),
+    .I (wClkOut[0])
+);
+
+BUFG BUFG_TmdsClk (
+    .O (wTmdsClk),
+    .I (wClkOut[1])
+);
+
+BUFG BUFG_BaseClk (
+    .O (wBaseClk),
+    .I (wClkOut[2])
+);
 
 endmodule

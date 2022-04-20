@@ -8,36 +8,38 @@
  // 解像度の拡大に対応したときのため、動作速度向上が必要になるためパイプライン化にしてある。
  //----------------------------------------------------------
 module dgbWrapper #(
-    parameter                   pColorSize      = 24 
+    parameter                   pPixelSize      = 24 
     parameter                   pBitWidth       = 10,
     parameter                   pBitHeight      = 10
 )(
     input                       iClk,           // 指定clk
     input                       iRst,           // Active High Sync RST
-    input  [pBitWidth -1:0]     iDwp,           // Display width  pos
-    input  [pBitHeight-1:0]     iDhp,           // Display height pos
-    input  [pBitWidth -1:0]     iDxs,           // Draw xpos start
-    input  [pBitWidth -1:0]     iDxe,           // Draw xpos end
-    input  [pBitHeight-1:0]     iDys,           // Draw ypos start
-    input  [pBitHeight-1:0]     iDye,           // Draw ypos start
-    input  [pColorSize-1:0]     iColor,         // Draw Color 
-    output [pPixelWidth-1:0]    oPixel,         // 生成ピクセルデータ
+    input  [pBitWidth -1:0]     iDwp,           // 現在の横幅の座標
+    input  [pBitHeight-1:0]     iDhp,           // 現在の立幅の座標
+    input  [pBitWidth -1:0]     iDxs,           // 描画開始 X座標 Draw X Start
+    input  [pBitWidth -1:0]     iDxe,           // 描画終了 X座標 Draw X End
+    input  [pBitHeight-1:0]     iDys,           // 描画開始 Y座標 Draw Y Start
+    input  [pBitHeight-1:0]     iDye,           // 描画終了 Y座標 Draw Y End
+    input  [pPixelSize-1:0]     iPixel,         // 描画色
+    output [pPixelWidth-1:0]    oPixel,         // 出力ピクセルデータ
     output                      oVd             // 有効データ出力時High
 );
 
 
 //----------------------------------------------------------
-// Color Gen
+// Pixel Gen
+// 入力色データをシフトレジスタで受信
 //----------------------------------------------------------
-reg [pColorSize-1:0] rColor [0:1];            assign oPixel = rColor[1];
+reg [pPixelSize-1:0] rPixel [0:1];            assign oPixel = rPixel[1];
 
 always @(posedge iClk)
 begin
-    {rColor[1], rColor[0]} <= {rColor[0], iColor};
+    {rPixel[1], rPixel[0]} <= {rPixel[0], iPixel};
 end
 
 //----------------------------------------------------------
 // Stage 1
+// 選択範囲内時 CKE 発行
 //----------------------------------------------------------
 reg [3:0] rCke, qCke;
 

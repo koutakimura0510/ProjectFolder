@@ -2,7 +2,7 @@
 // Create 2022/4/20
 // Author koutakimura
 // -
-// フラッシュメモリと通信を行うブロック
+// フラッシュメモリの制御を行うブロック
 // ブロック内の処理を分かりやすくするために、複雑なフロー処理はせずに、
 // Enable 信号を受信したら、アドレスに対応したデータを Read / Write を行い、
 // 書き込みの場合は データの形成が完了したら valid 信号と共に データを出力する方式にする。
@@ -10,7 +10,9 @@
 // (例えば Enable 発行後 valid 受信を完了時にアドレス更新など)
 // 
 //----------------------------------------------------------
-module fmbWrapper #(
+module fcbWrapper #(
+    parameter pClkDivsion = 400     // 分周数
+)(
     // FPGA Pin
     output [1:0]    oQspiCs,        // Qspi Flash Memory chip select Low Active
     output [1:0]    oQspiSck,       // Qspi Flash Memory Clk
@@ -40,17 +42,17 @@ module fmbWrapper #(
 wire [1:0] wQspiCs,  wQspiSck;
 wire [1:0] wQspiDq0, wQspiDq1, wQspiDq2, wQspiDq3;
 
-fmbSpi FMB_SPI_PIXEL (
-    // SPI Port
-    .oCs            (wQspiCs  [0]),     .oSck           (wQspiSck [0]),
-    .oMosi          (wQspiDq0 [0]),     .iMiso          (wQspiDq1 [0]),
-    .oWp            (wQspiDq2 [0]),     .oHold          (wQspiDq3 [0]),
-
-    // Data Bus
-    .oData          (oPixel),           .iAddr          (iPixelAddr),
-
-    // Hand Shake
-    .iCke           (iPixelCke),        .oVd            (oPixelVd)
+fmSpi FMB_SPI_PIXEL (
+    .oCs            (wQspiCs  [0]),
+    .oSck           (wQspiSck [0]),
+    .oMosi          (wQspiDq0 [0]),
+    .iMiso          (wQspiDq1 [0]),
+    .oWp            (wQspiDq2 [0]),
+    .oHold          (wQspiDq3 [0]),
+    .oData          (oPixel),
+    .iAddr          (iPixelAddr),
+    .iCke           (iPixelCke),
+    .oVd            (oPixelVd)
 );
 
 // fmbSpi FMB_SPI_SOUND (
@@ -74,20 +76,68 @@ fmbSpi FMB_SPI_PIXEL (
 // .I  => I/O が出力ポート扱い (MOSI)
 // .T  => Tri State High Input / Low Output
 //---------------------------------------------------------------------------
+// Memory 0
+OBUF OBUF_SPI_CS_0   (
+    .O (oQspiCs   [0]),
+    .I (wQspiCs   [0])
+);
 
-OBUF QSPI_OBUF_CS_0   (.O (oQspiCs   [0]), .I (wQspiCs   [0])  );
-OBUF QSPI_OBUF_SCK_0  (.O (oQspiSck  [0]), .I (wQspiSck  [0])  );
-OBUF QSPI_IOBUF_DQ0_0 (.O (ioQspiDq0 [0]), .I (wQspiDq0  [0])  );
-IBUF QSPI_IOBUF_DQ1_0 (.O (wQspiDq1  [0]), .I (ioQspiDq1 [0])  );
-OBUF QSPI_IOBUF_DQ2_0 (.O (ioQspiDq2 [0]), .I (wQspiDq2  [0])  );
-OBUF QSPI_IOBUF_DQ3_0 (.O (ioQspiDq3 [0]), .I (wQspiDq3  [0])  );
+OBUF OBUF_SPI_SCK_0  (
+    .O (oQspiSck  [0]),
+    .I (wQspiSck  [0])
+);
 
-OBUF QSPI_OBUF_CS_1   (.O (oQspiCs   [1]), .I (wQspiCs   [1])  );
-OBUF QSPI_OBUF_SCK_1  (.O (oQspiSck  [1]), .I (wQspiSck  [1])  );
-OBUF QSPI_IOBUF_DQ0_1 (.O (ioQspiDq0 [1]), .I (wQspiDq0  [1])  );
-IBUF QSPI_IOBUF_DQ1_1 (.O (wQspiDq1  [1]), .I (ioQspiDq1 [1])  );
-OBUF QSPI_IOBUF_DQ2_1 (.O (ioQspiDq2 [1]), .I (wQspiDq2  [1])  );
-OBUF QSPI_IOBUF_DQ3_1 (.O (ioQspiDq3 [1]), .I (wQspiDq3  [1])  );
+OBUF IOBUF_SPI_DQ0_0 (
+    .O (ioQspiDq0 [0]),
+    .I (wQspiDq0  [0])
+);
+
+IBUF IOBUF_SPI_DQ1_0 (
+    .O (wQspiDq1  [0]),
+    .I (ioQspiDq1 [0])
+);
+
+OBUF IOBUF_SPI_DQ2_0 (
+    .O (ioQspiDq2 [0]),
+    .I (wQspiDq2  [0])
+);
+
+OBUF IOBUF_SPI_DQ3_0 (
+    .O (ioQspiDq3 [0]),
+    .I (wQspiDq3  [0])
+);
+
+// Memory 1
+OBUF OBUF_SPI_CS_1   (
+    .O (oQspiCs   [1]),
+    .I (wQspiCs   [1])
+);
+
+OBUF OBUF_SPI_SCK_1  (
+    .O (oQspiSck  [1]),
+    .I (wQspiSck  [1])
+);
+
+OBUF IOBUF_SPI_DQ0_1 (
+    .O (ioQspiDq0 [1]),
+    .I (wQspiDq0  [1])
+);
+
+IBUF IOBUF_SPI_DQ1_1 (
+    .O (wQspiDq1  [1]),
+    .I (ioQspiDq1 [1])
+);
+
+OBUF IOBUF_SPI_DQ2_1 (
+    .O (ioQspiDq2 [1]),
+    .I (wQspiDq2  [1])
+);
+
+OBUF IOBUF_SPI_DQ3_1 (
+    .O (ioQspiDq3 [1]),
+    .I (wQspiDq3  [1])
+);
+
 
 
 // wire [1:0] wOutQspiCs, wOutQspiSck;

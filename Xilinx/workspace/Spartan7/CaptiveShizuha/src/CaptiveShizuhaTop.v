@@ -25,7 +25,7 @@ module CaptiveShizuhaTop #(
     input           iClk,           // OSC  clk
 
     // APDS9960
-    output [1:0]    oApdsScl,       // APDS I2C SCL
+    inout  [1:0]    ioApdsScl,      // APDS I2C SCL
     inout  [1:0]    ioApdsSda,      // APDS I2C SDA
     input  [1:0]    iApdsIntr,      // APDS Interrupt / Open Drain Active Low
 
@@ -64,7 +64,6 @@ assign oUartTx      = 1'b1;
 
 // APDS
 assign oApdsScl     = 2'bzz;
-// iApdsIntr
 assign ioApdsSda    = 2'bzz;
 
 // Flash Memory
@@ -75,14 +74,6 @@ assign ioQspiDq3    = 2'b00;
 assign oQspiCs      = 2'b11;
 
 
-//---------------------------------------------------------------------------
-// 入力ポートはバッファに入力したものを使用する
-// 後々モジュール内に移動する
-//---------------------------------------------------------------------------
-// IBUF IBUF_APDS_INTR_1 ( .O (wClkIbuf), .I (iApdsIntr[0]) );
-// IBUF IBUF_APDS_INTR_2 ( .O (wClkIbuf), .I (iApdsIntr[1]) );
-// IBUF IBUF_UART_RX     ( .O (wClkIbuf), .I (iUartRx)      );
-
 
 //----------------------------------------------------------
 // System Reset Gen
@@ -90,9 +81,10 @@ assign oQspiCs      = 2'b11;
 wire wClkRst;
 
 rstGen #(
-    .pRstFallTime (100)
+    .pRstFallTime   (100)
 ) SYSTEM_RST (
-    .iClk   (iClk),     .oRst   (wClkRst),
+    .iClk           (iClk),
+    .oRst           (wClkRst),
 );
 
 
@@ -105,9 +97,11 @@ wire wTmdsClk, wPixelClk, wBaseClk;
 wire wSysRst;
 
 cgbWrapper CGB (
-    .iClk       (iClk),         .iRst       (wClkRst),
+    .iClk       (iClk),
+    .iRst       (wClkRst),
     .oRst       (wSysRst),
-    .oTmdsClk   (wTmdsClk),     .oPixelClk  (wPixelClk),
+    .oTmdsClk   (wTmdsClk),
+    .oPixelClk  (wPixelClk),
     .oBaseClk   (wBaseClk)
 );
 
@@ -123,15 +117,22 @@ cgbWrapper CGB (
 wire wPVde, wPFe, wPFvde, wPHsync, wPVsync;
 
 dtbWrapper #(
-    .pHdisplay  (pHdisplay),    .pHback     (pHback),
-    .pHfront    (pHfront),      .pHsync     (pHsync),
-    .pVdisplay  (pVdisplay),    .pVtop      (pVtop),
-    .pVbottom   (pVbottom),     .pVsync     (pVsync)
+    .pHdisplay  (pHdisplay),
+    .pHback     (pHback),
+    .pHfront    (pHfront),
+    .pHsync     (pHsync),
+    .pVdisplay  (pVdisplay),
+    .pVtop      (pVtop),
+    .pVbottom   (pVbottom),
+    .pVsync     (pVsync)
 ) DTP (
-    .iClk       (wPixelClk),    .iRst       (wSysRst),
-    .oVde       (wPVde),        .oFe        (wPFe),
+    .iClk       (wPixelClk),
+    .iRst       (wSysRst),
+    .oVde       (wPVde),
+    .oFe        (wPFe),
     .oFvde      (wPFvde),
-    .oHsync     (wPHsync),      .oVsync     (wPVsync)
+    .oHsync     (wPHsync),
+    .oVsync     (wPVsync)
 );
 
 
@@ -141,13 +142,15 @@ dtbWrapper #(
 wire [23:0] wVRGB;
 
 CaptiveShizuhaBase # (
-    .pHdisplay      (pHdisplay),    .pVdisplay      (pVdisplay),
-    .pPixelDebug    (pPixelDebug),  .pBuffDepth     (pBuffDepth)
+    .pHdisplay      (pHdisplay),
+    .pVdisplay      (pVdisplay),
+    .pPixelDebug    (pPixelDebug),
+    .pBuffDepth     (pBuffDepth)
 ) BASE (
-    .iPixelClk      (wPixelClk),    .iRst           (wSysRst),
-    .iBaseClk       (wBaseClk),     .iPFvde         (wPFvde),
-
-    // output Pixel Data
+    .iPixelClk      (wPixelClk),
+    .iRst           (wSysRst),
+    .iBaseClk       (wBaseClk),
+    .iPFvde         (wPFvde),
     .oVRGB          (wVRGB)
 );
 
@@ -159,17 +162,27 @@ CaptiveShizuhaBase # (
 wire wHdmiHpd;
 
 tgbWrapper TGB (
-    .iPixelCLK      (wPixelClk),    .iTmdsCLK       (wTmdsClk),
+    .iPixelCLK      (wPixelClk),
+    .iTmdsCLK       (wTmdsClk),
     .iRst           (wSysRst),
-    .oHdmiClkNeg    (oHdmiClkNeg),  .oHdmiClkPos    (oHdmiClkPos),
-    .oHdmiDataNeg   (oHdmiDataNeg), .oHdmiDataPos   (oHdmiDataPos),
-    .oHdmiScl       (oHdmiScl),     .ioHdmiSda      (ioHdmiSda),
-    .ioHdmiCec      (ioHdmiCec),    .iHdmiHpd       (wHdmiHpd),
-    .iVRGB          (wVRGB),        .iVDE           (wPVde),
-    .iHSYNC         (wPHsync),      .iVSYNC         (wPVsync)
+    .oHdmiClkNeg    (oHdmiClkNeg),
+    .oHdmiClkPos    (oHdmiClkPos),
+    .oHdmiDataNeg   (oHdmiDataNeg),
+    .oHdmiDataPos   (oHdmiDataPos),
+    .oHdmiScl       (oHdmiScl),
+    .ioHdmiSda      (ioHdmiSda),
+    .ioHdmiCec      (ioHdmiCec),
+    .iHdmiHpd       (wHdmiHpd),
+    .iVRGB          (wVRGB),
+    .iVDE           (wPVde),
+    .iHSYNC         (wPHsync),
+    .iVSYNC         (wPVsync)
 );
 
-IBUF IBUF_HDMI_HPD    ( .O (wHdmiHpd), .I (iHdmiHpd)     );
+IBUF IBUF_HDMI_HPD ( 
+    .O (wHdmiHpd),
+    .I (iHdmiHpd)
+);
 
 //---------------------------------------------------------------------------
 // Debug Pin
@@ -181,9 +194,9 @@ reg [1:0] rHpd;
 
 always @( posedge wPixelClk )
 begin
-   if       (wSysRst)   rHpd <= 1'b0;
-   else if  (wHdmiHpd)  rHpd <= 1'b0;
-   else                 rHpd <= 1'b1;
+   if       (wSysRst)     rHpd <= 1'b0;
+   else if  (wHdmiHpd)    rHpd <= 1'b0;
+   else                   rHpd <= 1'b1;
 end
 
 assign oLed = {1'b0, rHpd};

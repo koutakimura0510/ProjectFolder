@@ -9,8 +9,8 @@ module pfbWrapper #(
     parameter pBuffDepth  = 1024,   // FIFO BRAMのサイズ指定、画面サイズの横幅より大きくする
     parameter pBitWidth   = 24      // bitサイズ
 )(
-    input                   iBaseClk,          // Base clk
-    input                   iPixelClk,          // Pixel Clk
+    input                   iBaseClk,       // Base clk
+    input                   iPixelClk,      // Pixel Clk
     input                   iRst,           // Active High
     input  [pBitWidth-1:0]  iWD,            // Write Data
     input                   iWE,            // PD Write Enable
@@ -32,19 +32,19 @@ begin
 end
 
 fifoDualControllerGray # (
-    .pBuffDepth  (pBuffDepth),
-    .pBitWidth   (pBitWidth)
+    .pBuffDepth     (pBuffDepth),
+    .pBitWidth      (pBitWidth)
 ) ASYNC_PIXEL_BUFFER (
-    .iClkA  (iBaseClk),    .iClkB  (iPixelClk),
-    .iRst   (iRst),
-
-    // write side
-    .iWD    (iWD),      .iWE    (iWE),
-    .oFLL   (oFull),
-
-    // read side
-    .oRD    (wPixel),   .iRE    (iRE),
-    .oRVD   (wRvd),     .oEMP   ()
+    .iClkA          (iBaseClk),
+    .iClkB          (iPixelClk),
+    .iRst           (iRst),
+    .iWD            (iWD),
+    .iWE            (iWE),
+    .oFLL           (oFull),
+    .oRD            (wPixel),
+    .iRE            (iRE),
+    .oRVD           (wRvd),
+    .oEMP           ()
 );
 
 //----------------------------------------------------------

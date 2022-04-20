@@ -3,7 +3,7 @@
 // Author koutakimura
 // -
 // Base module
-// ゲームの進行状況に応じて、描画用のピクセルデータを生成するモジュール
+// 描画用のピクセルデータを生成するモジュール
 //----------------------------------------------------------
 module CaptiveShizuhaBase #(
     parameter       pHdisplay     = 640,
@@ -13,11 +13,11 @@ module CaptiveShizuhaBase #(
 )(
 
     input           iPixelClk,      // Pixel Clk
-    input           iBaseClk,      // Base Clk
-    input           iRst,       // Active High Sync Reset
+    input           iBaseClk,       // Base Clk
+    input           iRst,           // Active High Sync Reset
 
     // Pixel Clk Sync Signal
-    input           iPFvde,     // Pixel Clk Timing fast video enable
+    input           iPFvde,         // Pixel Clk Timing fast video enable
 
     // TGB side output
     output [23:0]   oVRGB
@@ -42,14 +42,17 @@ wire [23:0] wPiDgb;
 wire wVdDgb;
 
 dgbWrapper #(
-    .pHdisplay          (pHdisplay),
-    .pVdisplay          (pVdisplay),
-    .pPixelWidth        (24),
-    .pPixelDebug        (pPixelDebug)
+    .pHdisplay      (pHdisplay),
+    .pVdisplay      (pVdisplay),
+    .pPixelWidth    (24),
+    .pPixelDebug    (pPixelDebug)
 ) DGB (
-    .iBaseClk   (iBaseClk),     .iRst   (iRst),
-    .iCKE       (qCkeDgb),      .oPixel (wPiDgb),
-    .oVd        (wVdDgb),       .oFe    ()
+    .iBaseClk       (iBaseClk),
+    .iRst           (iRst),
+    .iCKE           (qCkeDgb),
+    .oPixel         (wPiDgb),
+    .oVd            (wVdDgb),
+    .oFe            ()
 );
 
 
@@ -68,16 +71,18 @@ dgbWrapper #(
 wire [23:0] wRD;            assign oVRGB = wRD;
 wire wFull;
 
-
 pfbWrapper #(
-    .pBuffDepth             (pBuffDepth),
-    .pBitWidth              (24)
+    .pBuffDepth     (pBuffDepth),
+    .pBitWidth      (24)
 ) PFB (
-    .iBaseClk  (iBaseClk),        .iPixelClk  (iPixelClk),
-    .iRst   (iRst),
-    .iWD    (wPiDgb),       .oRD    (wRD),
-    .iWE    (wVdDgb),       .iRE    (iPFvde),
-    .oFull  (wFull)
+    .iBaseClk       (iBaseClk),
+    .iPixelClk      (iPixelClk),
+    .iRst           (iRst),
+    .iWD            (wPiDgb),
+    .oRD            (wRD),
+    .iWE            (wVdDgb),
+    .iRE            (iPFvde),
+    .oFull          (wFull)
 );
 
 always @*
