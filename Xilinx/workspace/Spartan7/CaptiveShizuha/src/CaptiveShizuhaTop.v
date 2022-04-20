@@ -5,8 +5,8 @@
 // Build  Vivado20.2
 // Board  My Board Spartan7 FTGB196
 // -
-// 繝?繝舌ャ繧ｰ繧帝勁縺?縺ｦ螟夜Κ縺九ｉ菫｡蜿ｷ繧貞女菫｡縲∝処縺ｯ螟夜Κ縺ｫ菫｡蜿ｷ繧帝?∽ｿ｡縺吶ｋ繝｢繧ｸ繝･繝ｼ繝ｫ縺ｯ Top 縺ｫ險倩ｿｰ
-// FPGA 蜀?驛ｨ縺ｧ螳檎ｵ舌☆繧九Δ繧ｸ繝･繝ｼ繝ｫ縺ｯ Base 縺ｫ險倩ｿｰ
+// デバッグを除いて外部から信号を受信、又は外部に信号を送信するモジュールは Top に記述
+// FPGA 内部で完結するモジュールは Base に記述
 // 
 //----------------------------------------------------------
 module CaptiveShizuhaTop #(
@@ -19,25 +19,18 @@ module CaptiveShizuhaTop #(
     parameter       pVbottom        =  11,
     parameter       pVsync          =   2,
     parameter       pPixelDebug     = "off",
-    parameter       pBuffDepth      = 1024      // Display 縺ｮ讓ｪ蟷?繧医ｊ螟ｧ縺阪￥繧ｵ繧､繧ｺ繧呈欠螳?
+    parameter       pBuffDepth      = 1024      // Display の横幅より大きくサイズを指定
 )(
-    // CLK
     input           iClk,           // OSC  clk
-
-    // APDS9960
     inout  [1:0]    ioApdsScl,      // APDS I2C SCL
     inout  [1:0]    ioApdsSda,      // APDS I2C SDA
     input  [1:0]    iApdsIntr,      // APDS Interrupt / Open Drain Active Low
-
-    // Flash Memory
     output [1:0]    oQspiCs,        // Qspi Flash Memory chip select Low Active
     output [1:0]    oQspiSck,       // Qspi Flash Memory Clk
-    inout  [1:0]    ioQspiDq0,      // SPI譎? MOSI
-    inout  [1:0]    ioQspiDq1,      // SPI譎? MISO
-    inout  [1:0]    ioQspiDq2,      // SPI譎? High 蝗ｺ螳?, 譖ｸ縺崎ｾｼ縺ｿ菫晁ｭｷ Low Active
-    inout  [1:0]    ioQspiDq3,      // SPI譎? High 蝗ｺ螳?, 譖ｸ縺崎ｾｼ縺ｿ蛛懈ｭ｢ Low Active
-
-    // HDMI TX
+    inout  [1:0]    ioQspiDq0,      // SPI時 MOSI
+    inout  [1:0]    ioQspiDq1,      // SPI時 MISO
+    inout  [1:0]    ioQspiDq2,      // SPI時 High 固定, 書き込み保護 Low Active
+    inout  [1:0]    ioQspiDq3,      // SPI時 High 固定, 書き込み停止 Low Active
     output          oHdmiClkPos,    // hdmi clk posedge
     output          oHdmiClkNeg,    // hdmi clk negedge
     output [2:0]    oHdmiDataPos,   // hdmi Data 8b10b posedge
@@ -46,17 +39,13 @@ module CaptiveShizuhaTop #(
     inout           ioHdmiSda,      // hdmi I2c sda
     inout           ioHdmiCec,      // hdmi cec
     input           iHdmiHpd,       // hdmi hpd Low Active
-
-    // UART
     input           iUartRx,        // Uart
     output          oUartTx,        // Uart
-
-    // LED
     output [1:0]    oLed            // Led Flash
 );
 
 //---------------------------------------------------------------------------
-// 譛ｪ菴ｿ逕ｨ Pin 蜑ｲ繧雁ｽ薙※
+// 未使用 Pin 割り当て
 //---------------------------------------------------------------------------
 // UART
 // iUartRx
@@ -84,7 +73,7 @@ rstGen #(
     .pRstFallTime   (100)
 ) SYSTEM_RST (
     .iClk           (iClk),
-    .oRst           (wClkRst)
+    .oRst           (wClkRst),
 );
 
 
@@ -157,7 +146,7 @@ CaptiveShizuhaBase # (
 
 //----------------------------------------------------------
 // HDMI Output
-// TODO 繧ｪ繝ｼ繝?繧｣繧ｪ蜃ｺ蜉幄ｿｽ蜉?莠亥ｮ?
+// TODO オーディオ出力追加予定
 //----------------------------------------------------------
 wire wHdmiHpd;
 
@@ -187,8 +176,8 @@ IBUF IBUF_HDMI_HPD (
 //---------------------------------------------------------------------------
 // Debug Pin
 // 
-// HPD 縺ｯ騾壼ｸｸ繧ｱ繝ｼ繝悶Ν謗･邯壽凾縺ｫ High 縺ｫ縺ｪ繧九′縲√ヨ繝ｩ繝ｳ繧ｸ繧ｹ繧ｿ縺ｮ繧ｹ繧､繝?繝√Φ繧ｰ蝗櫁ｷｯ邨檎罰縺ｧ繝昴?ｼ繝医↓蜈･蜉帙＆繧後ｋ縺溘ａ
-// 繧ｱ繝ｼ繝悶Ν謗･邯壽凾縺ｯ Low 菫｡蜿ｷ縺梧､懷?ｺ縺輔ｌ繧?
+// HPD は通常ケーブル接続時に High になるが、トランジスタのスイッチング回路経由でポートに入力されるため
+// ケーブル接続時は Low 信号が検出される
 //---------------------------------------------------------------------------
 reg [1:0] rHpd;
 
