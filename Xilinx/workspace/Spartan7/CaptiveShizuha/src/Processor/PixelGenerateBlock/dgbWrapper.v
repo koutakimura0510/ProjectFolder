@@ -2,11 +2,10 @@
  * Create 2022/3/27
  * Author koutakimura
  * -
- * Dot Generate Block
  * 描画用ドットデータの生成を行うブロック
  *
  */
-module dgbWrapper #(
+module pgbWrapper #(
     parameter                   pHdisplay       = 640,
     parameter                   pVdisplay       = 480,
     parameter                   pPixelWidth     = 24,

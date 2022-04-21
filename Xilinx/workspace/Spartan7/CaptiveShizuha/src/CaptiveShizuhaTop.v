@@ -133,7 +133,8 @@ PostProcesser POSTPROCESSER (
     .iVRGB          (wVRGB),
     .iVde           (wVde),
     .iHsync         (wHsync),
-    .iVsync         (wVsync)
+    .iVsync         (wVsync),
+    .oLed           (oLed)
 );
 
 endmodule

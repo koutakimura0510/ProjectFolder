@@ -73,13 +73,13 @@ assign ioQspiDq3    = 2'b00;
 
 
 //----------------------------------------------------------
-// Dot Generate Block
+// Pixel Generate Block
 //----------------------------------------------------------
 reg  qCkeDgb;
 wire [23:0] wPiDgb;
 wire wVdDgb;
 
-dgbWrapper #(
+pgbWrapper #(
     .pHdisplay      (pHdisplay),
     .pVdisplay      (pVdisplay),
     .pPixelWidth    (24),
@@ -95,7 +95,7 @@ dgbWrapper #(
 
 
 //----------------------------------------------------------
-// RGB Operation Block 
+// Pixel Operation Block 
 //----------------------------------------------------------
 // robWrapper #(
 
