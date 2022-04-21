@@ -8,7 +8,7 @@
 
 module pgbWrapper
 (
-    input           iBaseClk,      // Base clk
+    input           iSysClk,      // Sys clk
     input           iRst,       // Active High
     input  [ 5:0]   iBtn,
     input  [ 9:0]   iStartX,    // 描画開始開始x座標

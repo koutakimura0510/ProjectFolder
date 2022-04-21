@@ -5,9 +5,10 @@
 // Build  Vivado20.2
 // Board  My Board Spartan7 FTGB196
 // -
-// デバッグを除いて外部から信号を受信、又は外部に信号を送信するモジュールは Top に記述
-// FPGA 内部で完結するモジュールは Base に記述
-// 
+// [Top Module の構造]
+// Pre  Processer module
+//      Processer module
+// Post Processer module
 //----------------------------------------------------------
 module CaptiveShizuhaTop #(
     parameter       pHdisplay       = 640,
@@ -22,7 +23,7 @@ module CaptiveShizuhaTop #(
     parameter       pBuffDepth      = 1024      // Display の横幅より大きくサイズを指定
 )(
     input           iClk,           // OSC  clk
-    inout  [1:0]    ioApdsScl,      // APDS I2C SCL
+    output [1:0]    oApdsScl,       // APDS I2C SCL
     inout  [1:0]    ioApdsSda,      // APDS I2C SDA
     input  [1:0]    iApdsIntr,      // APDS Interrupt / Open Drain Active Low
     output [1:0]    oQspiCs,        // Qspi Flash Memory chip select Low Active
@@ -44,68 +45,18 @@ module CaptiveShizuhaTop #(
     output [1:0]    oLed            // Led Flash
 );
 
-//---------------------------------------------------------------------------
-// 未使用 Pin 割り当て
-//---------------------------------------------------------------------------
-// UART
-// iUartRx
-assign oUartTx      = 1'b1;
-
-// APDS
-assign oApdsScl     = 2'bzz;
-assign ioApdsSda    = 2'bzz;
-
-// Flash Memory
-assign oQspiSck     = 2'b00;
-assign ioQspiDq0    = 2'b00;
-assign ioQspiDq2    = 2'b00;
-assign ioQspiDq3    = 2'b00;
-assign oQspiCs      = 2'b11;
-
-
 
 //----------------------------------------------------------
-// System Reset Gen
+// ホスト前処理モジュール
+// 
+// main 処理に使用する Clk, Display Sync の生成を行う
+// (役割的には OSC と同じ 一定タイミングでクロックを出力だけである)
 //----------------------------------------------------------
-wire wClkRst;
-
-rstGen #(
-    .pRstFallTime   (100)
-) SYSTEM_RST (
-    .iClk           (iClk),
-    .oRst           (wClkRst),
-);
-
-
-//----------------------------------------------------------
-// PixelClk 25  MHz
-// TmdsClk  250 MHz
-// BaseClk  100 MHz
-//----------------------------------------------------------
-wire wTmdsClk, wPixelClk, wBaseClk;
+wire wTmdsClk, wPixelClk, wSysClk;
 wire wSysRst;
+wire wVde, wFe, wFvde, wHsync, wVsync;
 
-cgbWrapper CGB (
-    .iClk       (iClk),
-    .iRst       (wClkRst),
-    .oRst       (wSysRst),
-    .oTmdsClk   (wTmdsClk),
-    .oPixelClk  (wPixelClk),
-    .oBaseClk   (wBaseClk)
-);
-
-
-//----------------------------------------------------------
-// APDS9960 I2C Connect
-//----------------------------------------------------------
-
-
-//----------------------------------------------------------
-// Display Timing 
-//----------------------------------------------------------
-wire wPVde, wPFe, wPFvde, wPHsync, wPVsync;
-
-dtbWrapper #(
+PreProcesser #(
     .pHdisplay  (pHdisplay),
     .pHback     (pHback),
     .pHfront    (pHfront),
@@ -114,82 +65,75 @@ dtbWrapper #(
     .pVtop      (pVtop),
     .pVbottom   (pVbottom),
     .pVsync     (pVsync)
-) DTP (
-    .iClk       (wPixelClk),
-    .iRst       (wSysRst),
-    .oVde       (wPVde),
-    .oFe        (wPFe),
-    .oFvde      (wPFvde),
-    .oHsync     (wPHsync),
-    .oVsync     (wPVsync)
+) PREPROCESSER (
+    .iClk       (iClk),
+    .oTmdsClk   (wTmdsClk),
+    .oPixelClk  (wPixelClk),
+    .oSysClk    (wSysClk),
+    .oRst       (wSysRst),
+    .oVde       (wVde),
+    .oFe        (wFe),
+    .oFvde      (wFvde),
+    .oHsync     (wHsync),
+    .oVsync     (wVsync)
 );
 
 
 //----------------------------------------------------------
-// RGB Gen
+// ホストメイン処理モジュール
+// 
+// システムの管理を司る
 //----------------------------------------------------------
 wire [23:0] wVRGB;
 
-CaptiveShizuhaBase # (
+Processer # (
     .pHdisplay      (pHdisplay),
     .pVdisplay      (pVdisplay),
     .pPixelDebug    (pPixelDebug),
     .pBuffDepth     (pBuffDepth)
-) BASE (
+) PROCESSER (
     .iPixelClk      (wPixelClk),
     .iRst           (wSysRst),
-    .iBaseClk       (wBaseClk),
-    .iPFvde         (wPFvde),
+    .iSysClk        (wSysClk),
+    .oApdsScl       (oApdsScl),
+    .ioApdsSda      (ioApdsSda),
+    .iApdsIntr      (iApdsIntr),
+    .oQspiCs        (oQspiCs),
+    .oQspiSck       (oQspiSck),
+    .ioQspiDq0      (ioQspiDq0),
+    .ioQspiDq1      (ioQspiDq1),
+    .ioQspiDq2      (ioQspiDq2),
+    .ioQspiDq3      (ioQspiDq3),
+    .iUartRx        (iUartRx),
+    .oUartTx        (oUartTx),
+    .iPFvde         (wFvde),
     .oVRGB          (wVRGB)
 );
 
 
 //----------------------------------------------------------
-// HDMI Output
 // TODO オーディオ出力追加予定
+// 
+// ホスト後処理モジュール
+// 
+// 受信した Pixel Data, Sound Data を TMDS 信号に変換し出力を行う
 //----------------------------------------------------------
-wire wHdmiHpd;
-
-tgbWrapper TGB (
-    .iPixelCLK      (wPixelClk),
-    .iTmdsCLK       (wTmdsClk),
+PostProcesser POSTPROCESSER (
+    .iPixelClk      (wPixelClk),
+    .iTmdsClk       (wTmdsClk),
     .iRst           (wSysRst),
-    .oHdmiClkNeg    (oHdmiClkNeg),
     .oHdmiClkPos    (oHdmiClkPos),
-    .oHdmiDataNeg   (oHdmiDataNeg),
+    .oHdmiClkNeg    (oHdmiClkNeg),
     .oHdmiDataPos   (oHdmiDataPos),
+    .oHdmiDataNeg   (oHdmiDataNeg),
     .oHdmiScl       (oHdmiScl),
     .ioHdmiSda      (ioHdmiSda),
     .ioHdmiCec      (ioHdmiCec),
-    .iHdmiHpd       (wHdmiHpd),
+    .iHdmiHpd       (iHdmiHpd),
     .iVRGB          (wVRGB),
-    .iVDE           (wPVde),
-    .iHSYNC         (wPHsync),
-    .iVSYNC         (wPVsync)
+    .iVde           (wVde),
+    .iHsync         (wHsync),
+    .iVsync         (wVsync)
 );
-
-IBUF IBUF_HDMI_HPD ( 
-    .O (wHdmiHpd),
-    .I (iHdmiHpd)
-);
-
-//---------------------------------------------------------------------------
-// Debug Pin
-// 
-// HPD は通常ケーブル接続時に High になるが、トランジスタのスイッチング回路経由でポートに入力されるため
-// ケーブル接続時は Low 信号が検出される
-//---------------------------------------------------------------------------
-reg [1:0] rHpd;
-
-always @( posedge wPixelClk )
-begin
-   if       (wSysRst)     rHpd <= 1'b0;
-   else if  (wHdmiHpd)    rHpd <= 1'b0;
-   else                   rHpd <= 1'b1;
-end
-
-assign oLed = {1'b0, rHpd};
-
-
 
 endmodule

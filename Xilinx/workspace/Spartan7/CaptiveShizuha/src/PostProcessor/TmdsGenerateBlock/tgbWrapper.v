@@ -5,8 +5,8 @@
  * TMDS Generate Block
  */
 module tgbWrapper (
-    input           iPixelCLK,      // 画面サイズに対応したclkを入力
-    input           iTmdsCLK,       // PixelClkの10倍のクロック入力
+    input           iPixelClk,      // 画面サイズに対応したclkを入力
+    input           iTmdsClk,       // PixelClkの10倍のクロック入力
     input           iRst,           // Active High
     output          oHdmiClkNeg,    // hdmi clk posedge
     output          oHdmiClkPos,    // hdmi clk negedge
@@ -26,8 +26,8 @@ module tgbWrapper (
 //---------------------------------------------------------------------------
 // 使用していない
 //---------------------------------------------------------------------------
+assign oHdmiScl  = 1'b1;
 assign ioHdmiSda = 1'bz;
-assign oHdmiScl  = 1'bz;
 assign ioHdmiCec = 1'bz;
 
 // tmds
@@ -38,7 +38,7 @@ wire oTmdsSeriCH0, oTmdsSeriCH1, oTmdsSeriCH2;   // tmdsシリアル信号
 // 8b10b変換
 //----------------------------------------------------------
 tmdsEncoderDvi TMDS_ENCODER_B (
-    .iClk       (iPixelCLK),
+    .iClk       (iPixelClk),
     .iRst       (iRst),
     .iVD        (iVRGB[ 7: 0]),
     .iCD        ({iVSYNC, iHSYNC}),
@@ -47,7 +47,7 @@ tmdsEncoderDvi TMDS_ENCODER_B (
 );
 
 tmdsEncoderDvi TMDS_ENCODER_G (
-    .iClk       (iPixelCLK),
+    .iClk       (iPixelClk),
     .iRst       (iRst),
     .iVD        (iVRGB[15: 8]),
     .iCD        (2'b00),
@@ -56,7 +56,7 @@ tmdsEncoderDvi TMDS_ENCODER_G (
 );
 
 tmdsEncoderDvi TMDS_ENCODER_R (
-    .iClk       (iPixelCLK),
+    .iClk       (iPixelClk),
     .iRst       (iRst),
     .iVD        (iVRGB[23:16]),
     .iCD        (2'b00),
@@ -69,21 +69,21 @@ tmdsEncoderDvi TMDS_ENCODER_R (
 // パラレル->シリアル変換
 //---------------------------------------------------------------------------
 tmdsSerialize TMDS_B (
-    .iClk       (iTmdsCLK),
+    .iClk       (iTmdsClk),
     .iRst       (iRst),
     .iTmdsPara  (oTmdsParaB),
     .oTmdsSeri  (oTmdsSeriCH0)
 );
 
 tmdsSerialize TMDS_G (
-    .iClk       (iTmdsCLK),
+    .iClk       (iTmdsClk),
     .iRst       (iRst),
     .iTmdsPara  (oTmdsParaG),
     .oTmdsSeri  (oTmdsSeriCH1)
 );
 
 tmdsSerialize TMDS_R (
-    .iClk       (iTmdsCLK),
+    .iClk       (iTmdsClk),
     .iRst       (iRst),
     .iTmdsPara  (oTmdsParaR),
     .oTmdsSeri  (oTmdsSeriCH2)
@@ -112,7 +112,7 @@ tmdsDecoder TMDS_DECODER_CH2 (
 );
 
 tmdsDecoder TMDS_DECODER_CH3 (
-    .iTmdsSeri      (iPixelCLK),
+    .iTmdsSeri      (iPixelClk),
     .oHdmiDataNeg   (oHdmiClkNeg),
     .oHdmiDataPos   (oHdmiClkPos)
 );

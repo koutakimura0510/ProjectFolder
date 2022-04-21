@@ -33,7 +33,7 @@ create_clock -add -name iClk -period 40.00 -waveform {0 5} [get_ports iClk]
 # FPGA PLL MMCM
 create_generated_clock -name PixelClk [get_pins CGB/MMCME2_BASE_CLK_GEN/CLKOUT0]
 create_generated_clock -name TmdsClk  [get_pins CGB/MMCME2_BASE_CLK_GEN/CLKOUT1]
-create_generated_clock -name BaseClk  [get_pins CGB/MMCME2_BASE_CLK_GEN/CLKOUT2]
+create_generated_clock -name SysClk   [get_pins CGB/MMCME2_BASE_CLK_GEN/CLKOUT2]
 
 # 手動配�?
 set_property LOC MMCME2_ADV_X1Y0  [get_cells CGB/MMCME2_BASE_CLK_GEN]
@@ -42,10 +42,10 @@ set_property LOC MMCME2_ADV_X1Y0  [get_cells CGB/MMCME2_BASE_CLK_GEN]
 set_property LOC RAMB36_X2Y8 [get_cells BASE/PFB/ASYNC_PIXEL_BUFFER/USER_FIFO_DUAL/fifo_reg]
 
 # # ADUS5689
-set_property -dict { PACKAGE_PIN P4    IOSTANDARD LVCMOS33} [get_ports { ioApdsScl[0]    }];
+set_property -dict { PACKAGE_PIN P4    IOSTANDARD LVCMOS33} [get_ports { oApdsScl[0]     }];
 set_property -dict { PACKAGE_PIN P3    IOSTANDARD LVCMOS33} [get_ports { ioApdsSda[0]    }];
 set_property -dict { PACKAGE_PIN P2    IOSTANDARD LVCMOS33} [get_ports { iApdsIntr[0]    }];
-set_property -dict { PACKAGE_PIN N1    IOSTANDARD LVCMOS33} [get_ports { ioApdsScl[1]    }];
+set_property -dict { PACKAGE_PIN N1    IOSTANDARD LVCMOS33} [get_ports { oApdsScl[1]     }];
 set_property -dict { PACKAGE_PIN M1    IOSTANDARD LVCMOS33} [get_ports { ioApdsSda[1]    }];
 set_property -dict { PACKAGE_PIN L1    IOSTANDARD LVCMOS33} [get_ports { iApdsIntr[1]    }];
 

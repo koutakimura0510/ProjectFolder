@@ -12,9 +12,9 @@ module dgbWrapper #(
     parameter                   pPixelWidth     = 24,
     parameter                   pPixelDebug     = "yes"
 )(
-    input                       iBaseClk,       // Bace clk
+    input                       iSysClk,       // Bace clk
     input                       iRst,           // Active High Sync RST
-    input                       iCKE,           // Base Clk Enable
+    input                       iCKE,           // Sys Clk Enable
     output [pPixelWidth-1:0]    oPixel,         // 生成ピクセルデータ
     output                      oVd,            // 有効データ出力時High
     output                      oFe             // 1frame の終端時 High
@@ -43,7 +43,7 @@ hvposGen #(
     .pBitHeight     (lpBitHeight),
     .pBitWidth      (lpBitWidth)
 ) HVPOS_GEN (
-    .iClk           (iBaseClk),
+    .iClk           (iSysClk),
     .iRst           (iRst),
     .iCKE           (iCKE),
     .oDwp           (wDwp),
@@ -64,7 +64,7 @@ wire wFps;
 countGet #(
     .pCntSize   (2)
 ) COUNT_GET (
-    .iClk       (iBaseClk),
+    .iClk       (iSysClk),
     .iRst       (iRst),
     .iCKE       (wFe),
     .oCKE       (wFps)
@@ -73,7 +73,7 @@ countGet #(
 generate
     if (pPixelDebug == "no")
     begin
-        always @(posedge iBaseClk)
+        always @(posedge iSysClk)
         begin
             if (iRst)           rPixel <= 0;
             else if (rVd)       rPixel <= rPixel + 1'b1;
@@ -82,14 +82,14 @@ generate
     end
     else
     begin
-        always @(posedge iBaseClk)
+        always @(posedge iSysClk)
         begin
             if (iRst)       rSqu <= 'h4169e1;
             else if (wFps)  rSqu <= ~rSqu;
             else            rSqu <= rSqu;
         end
 
-        always @(posedge iBaseClk)
+        always @(posedge iSysClk)
         begin
             if (iRst)           rPixel <= 0;
             else if (qSquare)   rPixel <= rSqu;
@@ -98,7 +98,7 @@ generate
     end
 endgenerate
 
-always @(posedge iBaseClk)
+always @(posedge iSysClk)
 begin
     if (iRst)           rVd <= 1'b0;
     else                rVd <= iCKE;

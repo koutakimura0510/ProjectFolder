@@ -31,7 +31,7 @@ module cgbWrapper (
     output          oRst,           // Active High
     output          oTmdsClk,
     output          oPixelClk,
-    output          oBaseClk
+    output          oSysClk
 );
 
 
@@ -145,7 +145,7 @@ BUFG BUFG_iClk (
 //---------------------------------------------------------------------------
 wire wTmdsClk;                     assign oTmdsClk  = wTmdsClk;
 wire wPixelClk;                    assign oPixelClk = wPixelClk;
-wire wBaseClk;                     assign oBaseClk  = wBaseClk;
+wire wSysClk;                      assign oSysClk  = wSysClk;
 
 BUFG BUFG_PixelClk (
     .O (wPixelClk),
@@ -157,8 +157,8 @@ BUFG BUFG_TmdsClk (
     .I (wClkOut[1])
 );
 
-BUFG BUFG_BaseClk (
-    .O (wBaseClk),
+BUFG BUFG_SysClk (
+    .O (wSysClk),
     .I (wClkOut[2])
 );
 

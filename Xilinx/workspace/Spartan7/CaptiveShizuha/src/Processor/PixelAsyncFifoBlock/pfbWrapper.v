@@ -9,7 +9,7 @@ module pfbWrapper #(
     parameter pBuffDepth  = 1024,   // FIFO BRAMのサイズ指定、画面サイズの横幅より大きくする
     parameter pBitWidth   = 24      // bitサイズ
 )(
-    input                   iBaseClk,       // Base clk
+    input                   iSysClk,       // Sys clk
     input                   iPixelClk,      // Pixel Clk
     input                   iRst,           // Active High
     input  [pBitWidth-1:0]  iWD,            // Write Data
@@ -35,7 +35,7 @@ fifoDualControllerGray # (
     .pBuffDepth     (pBuffDepth),
     .pBitWidth      (pBitWidth)
 ) ASYNC_PIXEL_BUFFER (
-    .iClkA          (iBaseClk),
+    .iClkA          (iSysClk),
     .iClkB          (iPixelClk),
     .iRst           (iRst),
     .iWD            (iWD),
@@ -58,7 +58,7 @@ fifoDualControllerGray # (
 //     .pBuffDepth (16),
 //     .pBitWidth  (pBitWidth)
 // ) LINE_BUFFER_1 (
-//     .iClk   (iBaseClk),    .iRst   (iRst),
+//     .iClk   (iSysClk),    .iRst   (iRst),
 //     .iWD    (iWD),      .oRD    (wLineRd),
 //     .iWE    (iWE),      .iRE    (qLineRe),
 //     .oFLL   (oFull),    .oRVD   (wLineRvd),
@@ -84,7 +84,7 @@ fifoDualControllerGray # (
 //     .pBuffDepth             (pBuffDepth),
 //     .pBitWidth              (pBitWidth)
 // ) LINE_DUAL_BUFFER_1 (
-//     .iClkA  (iBaseClk),        .iClkB  (iPixelClk),
+//     .iClkA  (iSysClk),        .iClkB  (iPixelClk),
 //     .iRst   (iRst),
 
 //     // write side

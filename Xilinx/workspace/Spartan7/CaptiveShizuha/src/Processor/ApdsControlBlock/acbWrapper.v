@@ -8,7 +8,7 @@
 module acbWrapper #(
     parameter pClkDivsion = 400     // 分周数
 )(
-    input           iBaseClk,
+    input           iSysClk,
     input           iRst,
     inout  [1:0]    ioApdsScl,      // [1]. Left  [0]. Right
     inout  [1:0]    ioApdsSda,      // [1]. Left  [0]. Right
