@@ -9,22 +9,21 @@
  * SPI接続のフラッシュメモリデモプロジェクト
  */
 module flashTop #(
-    parameter PDIVSCK = 250
+    parameter       pClkDiv = 4
 )(
-    input           iCLK,           // system clk
-    input           iRST,           // system rst
-    output          oQspiCLK,       // フラッシュメモリsck
-    output          oQspiCS,        // フラッシュメモリチップセレクト
-    output          oQspiDO,        // SPIデータ出力端子
-    input           iQspiDI,        // SPIデータ入力端子
-    output          oQspiWP,        // spiモードで使用するためHigh固定
-    output          oQspiHOLD       // spiモードで使用するためHigh固定
-    input [7:0]     iWData,         // 書き込みデータ
-    output [7:0]    oRData,         // 読み込みデータ
-    input [15:0]    iLength,        // 書き込み・読み込みバイト数
-    input [15:0]    iAddr,          // 書き込み・読み込みアドレス
-    output          oWDataValid,    // 書き込み完了時High
-    output          oRDataValid     // 読み込みデータ出力時High
+    input           iSysClk,        // system clk
+    input           iRst,           // system rst
+    output          oCs,            // Chip Select
+    output          oSck,           // spi clk
+    output          oMosi,          // master out slave in
+    input           iMiso,          // master in slave out
+    output          oWp,            // write guard Low Active
+    output          oHold,          // write stop  Low Active
+    input           iCke,           // 0. disconnect 1. active
+    input  [15:0]   iWd,            // 書き込みデータ
+    output [15:0]   oRd,            // 読み込みデータ
+    output          oWdVd,          // 書き込み完了時High
+    output          oRdVd           // 読み込みデータ出力時High
 );
 
 // parameter ERASE_SECTOR_SIZE  = 256,   // KB
@@ -32,22 +31,23 @@ module flashTop #(
 // parameter PARAMETER_SECTOR_SIZE = 4 // KB
 
 flashSpi #(
-    .PDIVCLK(PDIVCLK)
+    .pClkDiv        (pClkDiv)
 ) FLASH_SPI (
-    .iCLK(iCLK),
-    .iRST(iRST),
-    .oQspiCLK(oQspiCLK),
-    .oQspiCS(oQspiCS),
-    .oQspiDO(oQspiDO),
-    .iQspiDI(iQspiDI),
-    .oQspiWP(oQspiWP),
-    .oQspiHOLD(oQspiHOLD),
-    .iEnable(iEnable),
-    .iWData(iWData),
-    .oRData(oRData),
-    .oSpiValid(oSpiValid),
-    .oWDataValid(oWDataValid),
-    .oRDataValid(oRDataValid)
+    .iSysClk        (iSysClk),
+    .iRst           (iRst),
+    .oCs            (oCs),
+    .oSck           (oSck),
+    .oMosi          (oMosi),
+    .iMiso          (iMiso),
+    .oWp            (oWp),
+    .oHold          (oHold),
+    .iCke           (iCke),
+    .iCs            (iCs),
+    .iWd            (iWd),
+    .oRd            (oRd),
+    .oSpiVd         (oSpiVd),
+    .oWdVd          (oWdVd),
+    .oRdVd          (oRdVd)
 );
 
 endmodule

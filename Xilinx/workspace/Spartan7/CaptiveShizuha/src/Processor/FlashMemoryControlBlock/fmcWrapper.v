@@ -10,7 +10,7 @@
 // (例えば Enable 発行後 valid 受信を完了時にアドレス更新など)
 // 
 //----------------------------------------------------------
-module srcWrapper #(
+module fmcWrapper #(
     parameter       pClkDiv = 400     // 分周数
 )(
     output [1:0]    oQspiCs,        // Qspi Flash Memory chip select Low Active
@@ -19,10 +19,13 @@ module srcWrapper #(
     input  [1:0]    ioQspiDq1,      // SPI時 MISO
     output [1:0]    ioQspiDq2,      // SPI時 High 固定, 書き込み保護 Low Active
     output [1:0]    ioQspiDq3,      // SPI時 High 固定, 書き込み停止 Low Active
+    input  [15:0]   iPixel,         // Pixel Data ARGB 4:4:4:4 / YUV 4:2:2
     output [15:0]   oPixel,         // Pixel Data ARGB 4:4:4:4 / YUV 4:2:2
     input  [23:0]   iPixelAddr,     // Flash Memory Address
     input           iPixelCke,      // Address Enable
+    input           iPixelCmd,      // 0.Read 1.Write
     output          oPixelVd,       // 有効データ出力時 High
+    input  [15:0]   iSound,         // PCM 16bit 48000 Hz
     output [15:0]   oSound,         // PCM 16bit 48000 Hz
     input  [23:0]   iSoundAddr,     // Flash Memory Address
     input           iSoundCke,      // Address Enable
@@ -45,10 +48,12 @@ fmSpi #(
     .iMiso          (wQspiDq1 [0]),
     .oWp            (wQspiDq2 [0]),
     .oHold          (wQspiDq3 [0]),
+    .iData          (iPixel),
     .oData          (oPixel),
     .iAddr          (iPixelAddr),
     .iCke           (iPixelCke),
-    .oVd            (oPixelVd)
+    .iCmd,          (iPixelCmd),
+    .oRdVd          (oPixelVd)
 );
 
 fmSpi #(

@@ -6,14 +6,14 @@
 // 
 //----------------------------------------------------------
 module fmSpi #(
-    parameter       pClkDiv = 400     // 分周数
+    parameter       pClkDiv = 400       // 分周数
 )(
-    output          oCs,
-    output          oSck,
-    output          oMosi,
-    input           iMiso,
-    output          oWp,
-    output          oHold,
+    output          oCs,                // Chip Select
+    output          oSck,               // spi clk
+    output          oMosi,              // master out slave in
+    input           iMiso,              // master in slave out
+    output          oWp,                // write guard Low Active
+    output          oHold,              // write stop  Low Active
     output [15:0]   oData,
     input  [23:0]   iAddr,
     input           iCke,

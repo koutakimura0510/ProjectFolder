@@ -1,181 +1,188 @@
 /*
- * Create 2021/1/4
+ * Create 2022/4/24
  * Author koutakimura
- * Editor VSCode ver1.62.7
- * Build  Vivado20.2
- * Borad  Nexys Video
  * 
- * フラッシュメモリ専用SPIモジュール
- *
- * ver2. Bit幅を変更可能にしなければならない
+ * Flash Memory Spi Access
  */
 module flashSpi #(
-    parameter PDIVSCK = 250 // systemclk 100MHz / 250 = 400kHz
+    parameter       pClkDiv = 4     // 100MHz / 4 = 25MHz
 )(
-    input           iCLK,           // system clk
-    input           iRST,           // system rst
-    output          oQspiCLK,       // sclk
-    output          oQspiCS,        // フラッシュメモリチップセレクト
-    output          oQspiDO,        // SPIデータ出力端子
-    input           iQspiDI,        // SPIデータ入力端子
-    output          oQspiWP,        // spiモードで使用するためHigh固定
-    output          oQspiHOLD,      // spiモードで使用するためHigh固定
-    input           iEnable,        // 0. disconnect 1. active
-    input  [7:0]    iWData,         // 書き込みデータ
-    output [7:0]    oRData,         // 読み込みデータ
-    output          oSpiValid,      // 1byteデータ送信完了時High
-    output          oWDataValid,    // 書き込み完了時High
-    output          oRDataValid     // 読み込みデータ出力時High
+    input           iSysClk,        // system clk
+    input           iRst,           // system rst
+    output          oCs,            // Chip Select
+    output          oSck,           // spi clk
+    output          oMosi,          // master out slave in
+    input           iMiso,          // master in slave out
+    output          oWp,            // write guard Low Active
+    output          oHold,          // write stop  Low Active
+    input           iCke,           // 0. disconnect 1. active
+    input           iCs,            // chip select
+    input  [7:0]    iWd,            // 書き込みデータ
+    output [7:0]    oRd,            // 読み込みデータ
+    output          oSpiVd,         // 1byteデータ送信完了時High
+    output          oWdVd,          // 書き込み完了時High
+    output          oRdVd           // 読み込みデータ出力時High
 );
 
 
-// シリアルデータ制御信号
-assign oQspiWP   = 1'b1;
-assign oQspiHOLD = 1'b1;
-assign oQspiCS   = ~iEnable;
-reg o_scl;          assign oQspiCLK   = o_scl;
-reg o_sdo;          assign oQspiDO    = o_sdo;
-reg o_sdi;          assign iQspiDI    = o_sdi;
-reg spi_valid;      assign oSpiValid  = spi_valid;
+//----------------------------------------------------------
+// Flash Memory Control Pin
+//----------------------------------------------------------
+assign oWp   = 1'b1;
+assign oHold = 1'b1;
+assign oCs   = iCs;
 
 
 //----------------------------------------------------------
-// scl発生用に関するパラメータリスト
+// Division Clk Enable
 //----------------------------------------------------------
-localparam ENABLE_CNT = (PDIVSCK - 1);
-reg [15:0] enable_cnt;  
-assign clk_enable = (ENABLE_CNT == enable_cnt) ? 1'b1 : 1'b0; // sck発生分周カウンター とりあえず65536分周可能
+localparam lpClkDiv = pClkDiv - 1'b1;
+reg [15:0] rDiv;
+reg qDiv
+
+always @(posedge iSysClk)
+begin
+    if      (iRst)          rDiv <= 16'd0;
+    else if (!iCke)         rDiv <= 16'd0;
+    else if (qDiv)          rDiv <= 16'd0;
+    else                    rDiv <= rDiv + 1'b1;
+end
+
+always @*
+begin
+    qDiv <= (rDiv == lpClkDiv);
+end
 
 
 //----------------------------------------------------------
-// spi通信の信号管理
+// Sck Generate
+// Sckの立ち下がりをモニタリングし、送信回数をカウントする
 //----------------------------------------------------------
+reg rScl;                           assign oSck = rScl;
+reg [3:0] rSckCnt;
+reg qSckCke;
+
+always @(posedge iSysClk) 
+begin
+    if      (iRst)          rScl <= 1'b1;
+    else if (!iCke)         rScl <= 1'b1;
+    else if (qDiv)          rScl <= ~rScl;
+    else                    rScl <= rScl;
+end
+
+always @(posedge iSysClk)
+begin
+    if      (iRst)          rSckCnt <= 0;
+    else if (!iCke)         rSckCnt <= 0;
+    else if (qDiv && !rScl) rSckCnt <= qSckCke ? 0 : rSckCnt + 4'd1;
+    else                    rSckCnt <= rSckCnt;
+end
+
+always @*
+begin
+    qSckCke <= rSckCnt == 4'd7;
+end
+
+
+//----------------------------------------------------------
+// 1byteデータ送信完了
+//----------------------------------------------------------
+reg rSpiVd;                         assign oSpiVd  = rSpiVd;
+reg qSpiVd;
+
+always @(posedge iSysClk)
+begin
+    if      (iRst)          rSpiVd <= 1'b0;
+    else if (qSpiVd)        rSpiVd <= 1'b1;
+    else                    rSpiVd <= 1'b0;
+end
+
+always @*
+begin
+    qSpiVd <= (iCke && qDiv && !rScl && qSckCke);
+end
+
+
+//----------------------------------------------------------
+// Sck Hold Time Generate -> min 15ns HOLD
+//----------------------------------------------------------
+localparam lpHoldTimeMosi = 10;
 localparam [2:0]
     IDLE = 0,
     HOLD = 1;
 
-localparam HOLD_TIME_SDA = 10;
+reg [5:0] rHoldTime;
+reg [1:0] rStHold;
+reg qHoldTimeCke;
 
-reg [7:0] send_byte;     // 送信データ受信レジスタ
-reg [3:0] sck_cnt;       // sckの立上り回数をカウント 最大8カウント
-reg [5:0] hold_time;     // sda hold
-reg [1:0] hold_state = IDLE;
-
-
-//----------------------------------------------------------
-// sck enable信号の生成
-//----------------------------------------------------------
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
-        enable_cnt <= 0;
-    end else if (clk_enable == 1'b1 || iEnable == 1'b0) begin
-        enable_cnt <= 0;
-    end else begin
-        enable_cnt <= enable_cnt + 1'b1;
-    end
-end
-
-
-//----------------------------------------------------------
-// spi ハンド・シェイク信号
-// spi_valid    1byteデータ送信完了
-//----------------------------------------------------------
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
-        spi_valid <= 0;
-    end else if (iEnable == 1'b1 && clk_enable == 1'b1 && o_scl == 1'b0 && sck_cnt == 4'd7) begin
-        spi_valid <= 1'b1;
-    end else begin
-        spi_valid <= 1'b0;
-    end
-end
-
-
-//----------------------------------------------------------
-// SCLの生成
-//----------------------------------------------------------
-// sckの立上り回数をカウント
-// 1byte送信時にHIGH
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
-        sck_cnt <= 0;
-    end else if (iEnable == 1'b0) begin
-        sck_cnt <= 0;
-    end else if (clk_enable == 1'b1 && o_scl == 1'b0) begin
-        if (sck_cnt == 4'd7) begin
-            sck_cnt <= 0;
-        end else begin
-            sck_cnt <= sck_cnt + 4'd1;
-        end
-    end
-end
-
-// sckの信号生成
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
-        o_scl <= 1'b1;
-    end else if (iEnable == 1'b0) begin
-        o_scl <= 1'b1;
-    end else if (clk_enable == 1'b1) begin
-        o_scl <= ~o_scl;
-    end
-end
-
-
-//----------------------------------------------------------
-// SDAの生成
-//----------------------------------------------------------
-
-// sda出力の遅延カウンターステートマシン
-// sclの立ち下がりに対して max15ns HOLDする必要あり
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
-        hold_state <= IDLE;
-    end else begin
-        case (hold_state)
-            IDLE:    hold_state <= (clk_enable == 1'b1 && o_scl == 1'b1) ? HOLD : IDLE;
-            HOLD:    hold_state <= (hold_time == HOLD_TIME_SDA) ? IDLE : HOLD;
-            default: hold_state <= IDLE;
+always @(posedge iSysClk) begin
+    if (iRst) 
+    begin
+        rStHold <= IDLE;
+    end 
+    else
+    begin
+        case (rStHold)
+            IDLE:    rStHold <= (qDiv & rScl)  ? HOLD : IDLE;
+            HOLD:    rStHold <= (qHoldTimeCke) ? IDLE : HOLD;
+            default: rStHold <= IDLE;
         endcase
     end
 end
 
-
-// sda出力の遅延カウンター
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
-        hold_time <= 0;
-    end else begin
-        case (hold_state)
-            IDLE:    hold_time <= 0;
-            HOLD:    hold_time <= (hold_time == HOLD_TIME_SDA) ? 0 : hold_time + 1'b1;
-            default: hold_time <= 0
+always @(posedge iSysClk) begin
+    if (iRst)
+    begin
+        rHoldTime <= 0;
+    end
+    else
+    begin
+        case (rStHold)
+            IDLE:    rHoldTime <= 0;
+            HOLD:    rHoldTime <= (qHoldTimeCke) ? 0 : rHoldTime + 1'b1;
+            default: rHoldTime <= 0
         endcase
     end
 end
 
+always @*
+begin
+    qHoldTimeCke <= rHoldTime == lpHoldTimeMosi;
+end
 
+
+//----------------------------------------------------------
 // 送信バイトデータの取り込み
-// 1bitずつ送信するため、sck_cntの開始時に新規データで上書きする
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
-        send_byte <= iSendByte;
-    end else if (iEnable == 1'b0 || spi_valid == 1'b1) begin
-        send_byte <= iSendByte;
-    end else if (hold_time == HOLD_TIME_SDA) begin
-        send_byte <= {send_byte[6:0], 1'b1};
-    end
+// 1bitずつ送信するため、rSckCntの開始時に新規データで上書きする
+//----------------------------------------------------------
+reg [7:0] rWd;
+
+always @(posedge iSysClk)
+begin
+    if      (iRst)          rWd <= iWd;
+    else if (!iCke)         rWd <= iWd;
+    else if (rSpiVd)        rWd <= iWd;
+    else if (qHoldTimeCke)  rWd <= {rWd[6:0], 1'b1};
+    else                    rWd <= rWd;
 end
 
 
-// sdaの信号生成
+//----------------------------------------------------------
 // sckの立ち下がりエッジ時にデータ更新
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
-        o_sdo <= send_byte[7];
-    end else if (hold_time == HOLD_TIME_SDA && iEnable == 1'b1) begin
-        o_sdo <= send_byte[7];
-    end
+//----------------------------------------------------------
+reg rMosi;                              assign oMosi  = rMosi;
+reg qMosiCke;
+
+always @(posedge iSysClk)
+begin
+    if      (iRst)          rMosi <= rWd[7];
+    else if (qMosiCke)      rMosi <= rWd[7];
+    else                    rMosi <= rMosi;
+end
+
+always @*
+begin
+    qMosiCke <= qHoldTimeCke & iCke;
 end
 
 endmodule

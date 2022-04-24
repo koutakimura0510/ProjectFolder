@@ -8,14 +8,14 @@
  * コマンド発行
  */
 module flashCmd (
-    input           iCLK,           // system clk
-    input           iRST,           // system rst
-    input           iEnable,        // 0. disconnect 1. active
-    input  [7:0]    iWData,         // 書き込みデータ
-    output [7:0]    oRData,         // 読み込みデータ
-    output          oSpiValid,      // 1byteデータ送信完了時High
-    output          oWDataValid,    // 書き込み完了時High
-    output          oRDataValid     // 読み込みデータ出力時High
+    input           iClk,           // system clk
+    input           iRst,           // system rst
+    input           iCke,           // 0. disconnect 1. active
+    input  [7:0]    iWd,            // 書き込みデータ
+    output [7:0]    oRd,            // 読み込みデータ
+    output          oSpiVd,         // 1byteデータ送信完了時High
+    output          oWdVd,          // 書き込み完了時High
+    output          oRdVd           // 読み込みデータ出力時High
 );
 
 
