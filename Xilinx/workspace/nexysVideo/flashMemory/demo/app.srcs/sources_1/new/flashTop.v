@@ -20,6 +20,7 @@ module flashTop #(
     output          oWp,            // write guard Low Active
     output          oHold,          // write stop  Low Active
     input           iCke,           // 0. disconnect 1. active
+    input           iCmd,           // 1. Read / 0. Write
     input  [15:0]   iWd,            // 書き込みデータ
     output [15:0]   oRd,            // 読み込みデータ
     output          oWdVd,          // 書き込み完了時High
@@ -30,9 +31,21 @@ module flashTop #(
 // parameter PROGRAM_SIZE = 512    // Byte
 // parameter PARAMETER_SECTOR_SIZE = 4 // KB
 
-flashSpi #(
+
+//----------------------------------------------------------
+// Spi Data Generate
+// 上位モジュールからの Addr. Data. Cmd. Cke. を受信し、
+// 後段の Spi 送受信モジュール の
+//----------------------------------------------------------
+flash
+
+
+//----------------------------------------------------------
+// Flash Memory Spi Access
+//----------------------------------------------------------
+fmSpi #(
     .pClkDiv        (pClkDiv)
-) FLASH_SPI (
+) FM_SPI (
     .iSysClk        (iSysClk),
     .iRst           (iRst),
     .oCs            (oCs),

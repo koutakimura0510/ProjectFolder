@@ -4,7 +4,7 @@
  * 
  * Flash Memory Spi Access
  */
-module flashSpi #(
+module fmSpi #(
     parameter       pClkDiv = 4     // 100MHz / 4 = 25MHz
 )(
     input           iSysClk,        // system clk

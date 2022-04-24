@@ -11,7 +11,7 @@
 // 
 //----------------------------------------------------------
 module fmcWrapper #(
-    parameter       pClkDiv = 400     // 分周数
+    parameter       pClkDiv = 10    // 分周数 100 MHz / 10 = 10 MHz
 )(
     output [1:0]    oQspiCs,        // Qspi Flash Memory chip select Low Active
     output [1:0]    oQspiSck,       // Qspi Flash Memory Clk
@@ -19,17 +19,20 @@ module fmcWrapper #(
     input  [1:0]    ioQspiDq1,      // SPI時 MISO
     output [1:0]    ioQspiDq2,      // SPI時 High 固定, 書き込み保護 Low Active
     output [1:0]    ioQspiDq3,      // SPI時 High 固定, 書き込み停止 Low Active
-    input  [15:0]   iPixel,         // Pixel Data ARGB 4:4:4:4 / YUV 4:2:2
-    output [15:0]   oPixel,         // Pixel Data ARGB 4:4:4:4 / YUV 4:2:2
+    input  [15:0]   iPixel,         // Pixel Data ARGB 4:4:4:4 or YUV 4:2:2
+    output [15:0]   oPixel,         // Pixel Data ARGB 4:4:4:4 or YUV 4:2:2
     input  [23:0]   iPixelAddr,     // Flash Memory Address
     input           iPixelCke,      // Address Enable
-    input           iPixelCmd,      // 0.Read 1.Write
-    output          oPixelVd,       // 有効データ出力時 High
+    input           iPixelCmd,      // 1.Read / 0.Write
+    output          oPixelWdVd,     // Write Data Valid / 書き込み完了時 High
+    output          oPixelRdVd,     // Read Data Valid  / 有効データ出力時 High
     input  [15:0]   iSound,         // PCM 16bit 48000 Hz
     output [15:0]   oSound,         // PCM 16bit 48000 Hz
     input  [23:0]   iSoundAddr,     // Flash Memory Address
     input           iSoundCke,      // Address Enable
-    output          oSoundVd        // 有効データ出力時 High
+    input           iPixelCmd,      // 1.Read / 0.Write
+    output          oSoundWdVd,     // Read Data Valid / 書き込み完了時 High
+    output          oSoundRdVd      // Read Data Valid / 有効データ出力時 High
 );
 
 
@@ -42,18 +45,21 @@ wire [1:0] wQspiDq0, wQspiDq1, wQspiDq2, wQspiDq3;
 fmSpi #(
     .pClkDiv        (pClkDiv)
 ) FMB_SPI_PIXEL (
+    .iSysClk        (iSysClk),
+    .iRst           (iRst),
     .oCs            (wQspiCs  [0]),
     .oSck           (wQspiSck [0]),
     .oMosi          (wQspiDq0 [0]),
     .iMiso          (wQspiDq1 [0]),
     .oWp            (wQspiDq2 [0]),
     .oHold          (wQspiDq3 [0]),
-    .iData          (iPixel),
-    .oData          (oPixel),
+    .iWd            (iPixel),
+    .oRd            (oPixel),
     .iAddr          (iPixelAddr),
     .iCke           (iPixelCke),
     .iCmd,          (iPixelCmd),
-    .oRdVd          (oPixelVd)
+    .oWdVd,         (oPixelWdVd),
+    .oRdVd          (oPixelRdVd)
 );
 
 fmSpi #(
