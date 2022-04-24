@@ -97,7 +97,7 @@ pgbWrapper #(
     .pPixelWidth    (24),
     .pPixelDebug    (pPixelDebug)
 ) PGB (
-    .iSysClk       (iSysClk),
+    .iSysClk        (iSysClk),
     .iRst           (iRst),
     .iCKE           (qCkeDgb),
     .oPixel         (wPiDgb),
@@ -125,7 +125,7 @@ pfbWrapper #(
     .pBuffDepth     (pBuffDepth),
     .pBitWidth      (24)
 ) PFB (
-    .iSysClk       (iSysClk),
+    .iSysClk        (iSysClk),
     .iPixelClk      (iPixelClk),
     .iRst           (iRst),
     .iWD            (wPiDgb),

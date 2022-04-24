@@ -77,14 +77,15 @@ always @(posedge iCLK) begin
 end
 
 uartTx #(
-    .UART_CLK_SPEED(UART_CLK_SPEED)
+    .pClkDiv    (UART_CLK_SPEED),
+    .pBitLen    (16)
 ) UART_TX (
-    .iCLK(iCLK),
-    .iRST(~iRST),
-    .iEnable(u_en),
-    .iSendData(8'h53),
-    .oUartRX(oUartRX),
-    .oReady(oReady)
+    .iSysClk    (iCLK),
+    .iRst       (~iRST),
+    .iEnable    (u_en),
+    .iSendData  (16'h44ff),
+    .oUartRX    (oUartRX),
+    .oReady     (oReady)
 );
 
 endmodule
