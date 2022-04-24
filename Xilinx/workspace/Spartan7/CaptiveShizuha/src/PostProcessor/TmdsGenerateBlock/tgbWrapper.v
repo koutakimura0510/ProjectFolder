@@ -16,10 +16,10 @@ module tgbWrapper (
     inout           ioHdmiSda,      // hdmi I2c sda
     inout           ioHdmiCec,      // hdmi cec
     input           iHdmiHpd,       // hdmi hpd
-    input  [23:0]   iVRGB,          // Pixel Data
-    input           iVDE,           // video enable signal
-    input           iHSYNC,
-    input           iVSYNC
+    input  [23:0]   iPixel,         // Pixel Data
+    input           iVde,           // video enable signal
+    input           iHsync,
+    input           iVsync
 );
 
 
@@ -40,27 +40,27 @@ wire oTmdsSeriCH0, oTmdsSeriCH1, oTmdsSeriCH2;   // tmdsシリアル信号
 tmdsEncoderDvi TMDS_ENCODER_B (
     .iClk       (iPixelClk),
     .iRst       (iRst),
-    .iVD        (iVRGB[ 7: 0]),
-    .iCD        ({iVSYNC, iHSYNC}),
-    .iVDE       (iVDE),
+    .iVD        (iPixel[ 7: 0]),
+    .iCD        ({iVsync, iHsync}),
+    .iVde       (iVde),
     .oTmdsPara  (oTmdsParaB)
 );
 
 tmdsEncoderDvi TMDS_ENCODER_G (
     .iClk       (iPixelClk),
     .iRst       (iRst),
-    .iVD        (iVRGB[15: 8]),
+    .iVD        (iPixel[15: 8]),
     .iCD        (2'b00),
-    .iVDE       (iVDE),
+    .iVde       (iVde),
     .oTmdsPara  (oTmdsParaG)
 );
 
 tmdsEncoderDvi TMDS_ENCODER_R (
     .iClk       (iPixelClk),
     .iRst       (iRst),
-    .iVD        (iVRGB[23:16]),
+    .iVD        (iPixel[23:16]),
     .iCD        (2'b00),
-    .iVDE       (iVDE),
+    .iVde       (iVde),
     .oTmdsPara  (oTmdsParaR)
 );
 

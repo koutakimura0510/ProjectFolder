@@ -10,29 +10,23 @@
 // (例えば Enable 発行後 valid 受信を完了時にアドレス更新など)
 // 
 //----------------------------------------------------------
-module fcbWrapper #(
-    parameter pClkDivsion = 400     // 分周数
+module srcWrapper #(
+    parameter       pClkDiv = 400     // 分周数
 )(
-    // FPGA Pin
     output [1:0]    oQspiCs,        // Qspi Flash Memory chip select Low Active
     output [1:0]    oQspiSck,       // Qspi Flash Memory Clk
-    inout  [1:0]    ioQspiDq0,      // SPI時 MOSI
-    inout  [1:0]    ioQspiDq1,      // SPI時 MISO
-    inout  [1:0]    ioQspiDq2,      // SPI時 High 固定, 書き込み保護 Low Active
-    inout  [1:0]    ioQspiDq3,      // SPI時 High 固定, 書き込み停止 Low Active
-
-    // Data Pixel Line
+    output [1:0]    ioQspiDq0,      // SPI時 MOSI
+    input  [1:0]    ioQspiDq1,      // SPI時 MISO
+    output [1:0]    ioQspiDq2,      // SPI時 High 固定, 書き込み保護 Low Active
+    output [1:0]    ioQspiDq3,      // SPI時 High 固定, 書き込み停止 Low Active
     output [15:0]   oPixel,         // Pixel Data ARGB 4:4:4:4 / YUV 4:2:2
     input  [23:0]   iPixelAddr,     // Flash Memory Address
     input           iPixelCke,      // Address Enable
     output          oPixelVd,       // 有効データ出力時 High
-
-
-    // Data Sound Line
     output [15:0]   oSound,         // PCM 16bit 48000 Hz
     input  [23:0]   iSoundAddr,     // Flash Memory Address
     input           iSoundCke,      // Address Enable
-    input           oSoundVd        // 有効データ出力時 High
+    output          oSoundVd        // 有効データ出力時 High
 );
 
 
@@ -42,7 +36,9 @@ module fcbWrapper #(
 wire [1:0] wQspiCs,  wQspiSck;
 wire [1:0] wQspiDq0, wQspiDq1, wQspiDq2, wQspiDq3;
 
-fmSpi FMB_SPI_PIXEL (
+fmSpi #(
+    .pClkDiv        (pClkDiv)
+) FMB_SPI_PIXEL (
     .oCs            (wQspiCs  [0]),
     .oSck           (wQspiSck [0]),
     .oMosi          (wQspiDq0 [0]),
@@ -55,18 +51,20 @@ fmSpi FMB_SPI_PIXEL (
     .oVd            (oPixelVd)
 );
 
-// fmbSpi FMB_SPI_SOUND (
-//     .oCs            (wQspiCs  [1]),
-//     .oSck           (wQspiSck [1]),
-//     .oMosi          (wQspiDq0 [1]),
-//     .iMiso          (wQspiDq1 [1]),
-//     .oWp            (wQspiDq2 [1]),
-//     .oHold          (wQspiDq3 [1]),
-//     .oData          (oPixel),
-//     .iAddr          (iPixelAddr),
-//     .iCke           (iPixelCke),
-//     .oVd            (oPixelVd)
-// );
+fmSpi #(
+    .pClkDiv        (pClkDiv)
+) FMB_SPI_SOUND (
+    .oCs            (wQspiCs  [1]),
+    .oSck           (wQspiSck [1]),
+    .oMosi          (wQspiDq0 [1]),
+    .iMiso          (wQspiDq1 [1]),
+    .oWp            (wQspiDq2 [1]),
+    .oHold          (wQspiDq3 [1]),
+    .oData          (oSound),
+    .iAddr          (iSoundAddr),
+    .iCke           (iSoundCke),
+    .oVd            (oSoundVd)
+);
 
 
 //---------------------------------------------------------------------------
@@ -147,10 +145,10 @@ OBUF IOBUF_SPI_DQ3_1 (
 // IOBUF QSPI_IOBUF_DQ1_0 (.O (wInQspiDq1[0]), .I (wOutQspiDq1[0]), .IO (ioQspiDq1[0]), .T (1'b1)  );
 // IOBUF QSPI_IOBUF_DQ2_0 (.O (wInQspiDq2[0]), .I (wOutQspiDq2[0]), .IO (ioQspiDq2[0]), .T (1'b0)  );
 // IOBUF QSPI_IOBUF_DQ3_0 (.O (wInQspiDq3[0]), .I (wOutQspiDq3[0]), .IO (ioQspiDq3[0]), .T (1'b0)  );
-// IOBUF QSPI_IOBUF_DQ0_0 (.O (wInQspiDq0[1]), .I (wOutQspiDq0[1]), .IO (ioQspiDq0[1]), .T (1'b0)  );
-// IOBUF QSPI_IOBUF_DQ1_0 (.O (wInQspiDq1[1]), .I (wOutQspiDq1[1]), .IO (ioQspiDq1[1]), .T (1'b1)  );
-// IOBUF QSPI_IOBUF_DQ2_0 (.O (wInQspiDq2[1]), .I (wOutQspiDq2[1]), .IO (ioQspiDq2[1]), .T (1'b0)  );
-// IOBUF QSPI_IOBUF_DQ3_0 (.O (wInQspiDq3[1]), .I (wOutQspiDq3[1]), .IO (ioQspiDq3[1]), .T (1'b0)  );
+// IOBUF QSPI_IOBUF_DQ0_1 (.O (wInQspiDq0[1]), .I (wOutQspiDq0[1]), .IO (ioQspiDq0[1]), .T (1'b0)  );
+// IOBUF QSPI_IOBUF_DQ1_1 (.O (wInQspiDq1[1]), .I (wOutQspiDq1[1]), .IO (ioQspiDq1[1]), .T (1'b1)  );
+// IOBUF QSPI_IOBUF_DQ2_1 (.O (wInQspiDq2[1]), .I (wOutQspiDq2[1]), .IO (ioQspiDq2[1]), .T (1'b0)  );
+// IOBUF QSPI_IOBUF_DQ3_1 (.O (wInQspiDq3[1]), .I (wOutQspiDq3[1]), .IO (ioQspiDq3[1]), .T (1'b0)  );
 
 
 

@@ -5,10 +5,10 @@
 // Build  Vivado20.2
 // Board  My Board Spartan7 FTGB196
 // -
-// [Top Module ‚Ì\‘¢]
-// Pre  Processer module
-//      Processer module
-// Post Processer module
+// [Top Module]
+// Pre  Processer ãƒ¡ã‚¤ãƒ³ã‚·ã‚¹ãƒ†ãƒ ãƒ»ã‚¿ãƒ¼ã‚²ãƒƒãƒˆå‡¦ç†ã«ä½¿ç”¨ã™ã‚‹ Clk ã®ç”Ÿæˆ
+//      Processer ãƒ¡ã‚¤ãƒ³ã‚·ã‚¹ãƒ†ãƒ å‡¦ç†
+// Post Processer ãƒ¡ã‚¤ãƒ³ã‚·ã‚¹ãƒ†ãƒ ã®å‡¦ç†çµæœã‚’ã€ã‚¿ãƒ¼ã‚²ãƒƒãƒˆæ¥ç¶šã® Clk ã«å¤‰æ›
 //----------------------------------------------------------
 module CaptiveShizuhaTop #(
     parameter       pHdisplay       = 640,
@@ -20,23 +20,24 @@ module CaptiveShizuhaTop #(
     parameter       pVbottom        =  11,
     parameter       pVsync          =   2,
     parameter       pPixelDebug     = "off",
-    parameter       pBuffDepth      = 1024      // Display ‚Ì‰¡•‚æ‚è‘å‚«‚­ƒTƒCƒY‚ğw’è
+    parameter       pBuffDepth      = 1024      // Displayã®æ¨ªå¹…ã‚ˆã‚Šã‚‚å¤§ãã„ã‚µã‚¤ã‚ºã‚’æŒ‡å®š
 )(
     input           iClk,           // OSC  clk
-    output [1:0]    oApdsScl,       // APDS I2C SCL
-    inout  [1:0]    ioApdsSda,      // APDS I2C SDA
-    input  [1:0]    iApdsIntr,      // APDS Interrupt / Open Drain Active Low
-    output [1:0]    oQspiCs,        // Qspi Flash Memory chip select Low Active
-    output [1:0]    oQspiSck,       // Qspi Flash Memory Clk
-    inout  [1:0]    ioQspiDq0,      // SPI MOSI
-    inout  [1:0]    ioQspiDq1,      // SPI MISO
-    inout  [1:0]    ioQspiDq2,      // SPI High ŒÅ’è, ‘‚«‚İ•ÛŒì Low Active
-    inout  [1:0]    ioQspiDq3,      // SPI High ŒÅ’è, ‘‚«‚İ’â~ Low Active
+    output [2:0]    oUnusedPin,     // not  pin
+    output          oApdsScl,       // APDS I2C SCL
+    inout           ioApdsSda,      // APDS I2C SDA
+    input           iApdsIntr,      // APDS Interrupt / Open Drain Active Low
+    output [1:0]    oQspiCs,        // Qspi Mode Cs   / Spi Mode Cs   Low Active
+    output [1:0]    oQspiSck,       // Qspi Mode Clk  / Spi Mode Clk
+    output [1:0]    ioQspiDq0,      // Qspi Mode DQ 0 / Spi Mode MOSI
+    input  [1:0]    ioQspiDq1,      // Qspi Mode DQ 1 / Spi Mode MISO
+    output [1:0]    ioQspiDq2,      // Qspi Mode DQ 2 / Spi Mode Wp   Low Active
+    output [1:0]    ioQspiDq3,      // Qspi Mode DQ 3 / Spi Mode Hold Low Active
     output          oHdmiClkPos,    // hdmi clk posedge
     output          oHdmiClkNeg,    // hdmi clk negedge
     output [2:0]    oHdmiDataPos,   // hdmi Data 8b10b posedge
     output [2:0]    oHdmiDataNeg,   // hdmi Data 8b10b negedge
-    output          oHdmiScl,       // hdmi I2c scl
+    output          oHdmiScl,       // hdmi I2c scl 
     inout           ioHdmiSda,      // hdmi I2c sda
     inout           ioHdmiCec,      // hdmi cec
     input           iHdmiHpd,       // hdmi hpd Low Active
@@ -47,44 +48,39 @@ module CaptiveShizuhaTop #(
 
 
 //----------------------------------------------------------
-// ƒzƒXƒg‘Oˆ—ƒ‚ƒWƒ…[ƒ‹
-// 
-// main ˆ—‚Ég—p‚·‚é Clk, Display Sync ‚Ì¶¬‚ğs‚¤
-// (–ğŠ„“I‚É‚Í OSC ‚Æ“¯‚¶ ˆê’èƒ^ƒCƒ~ƒ“ƒO‚ÅƒNƒƒbƒN‚ğo—Í‚¾‚¯‚Å‚ ‚é)
+// System Clk / Display Timing Clk Generate
 //----------------------------------------------------------
 wire wTmdsClk, wPixelClk, wSysClk;
 wire wSysRst;
 wire wVde, wFe, wFvde, wHsync, wVsync;
 
 PreProcesser #(
-    .pHdisplay  (pHdisplay),
-    .pHback     (pHback),
-    .pHfront    (pHfront),
-    .pHsync     (pHsync),
-    .pVdisplay  (pVdisplay),
-    .pVtop      (pVtop),
-    .pVbottom   (pVbottom),
-    .pVsync     (pVsync)
+    .pHdisplay      (pHdisplay),
+    .pHback         (pHback),
+    .pHfront        (pHfront),
+    .pHsync         (pHsync),
+    .pVdisplay      (pVdisplay),
+    .pVtop          (pVtop),
+    .pVbottom       (pVbottom),
+    .pVsync         (pVsync)
 ) PREPROCESSER (
-    .iClk       (iClk),
-    .oTmdsClk   (wTmdsClk),
-    .oPixelClk  (wPixelClk),
-    .oSysClk    (wSysClk),
-    .oRst       (wSysRst),
-    .oVde       (wVde),
-    .oFe        (wFe),
-    .oFvde      (wFvde),
-    .oHsync     (wHsync),
-    .oVsync     (wVsync)
+    .iClk           (iClk),
+    .oTmdsClk       (wTmdsClk),
+    .oPixelClk      (wPixelClk),
+    .oSysClk        (wSysClk),
+    .oRst           (wSysRst),
+    .oVde           (wVde),
+    .oFe            (wFe),
+    .oFvde          (wFvde),
+    .oHsync         (wHsync),
+    .oVsync         (wVsync)
 );
 
 
 //----------------------------------------------------------
-// ƒzƒXƒgƒƒCƒ“ˆ—ƒ‚ƒWƒ…[ƒ‹
-// 
-// ƒVƒXƒeƒ€‚ÌŠÇ—‚ği‚é
+// CPU
 //----------------------------------------------------------
-wire [23:0] wVRGB;
+wire [23:0] wPixel;
 
 Processer # (
     .pHdisplay      (pHdisplay),
@@ -93,8 +89,9 @@ Processer # (
     .pBuffDepth     (pBuffDepth)
 ) PROCESSER (
     .iPixelClk      (wPixelClk),
-    .iRst           (wSysRst),
     .iSysClk        (wSysClk),
+    .iRst           (wSysRst),
+    .oUnusedPin     (oUnusedPin),
     .oApdsScl       (oApdsScl),
     .ioApdsSda      (ioApdsSda),
     .iApdsIntr      (iApdsIntr),
@@ -107,16 +104,13 @@ Processer # (
     .iUartRx        (iUartRx),
     .oUartTx        (oUartTx),
     .iPFvde         (wFvde),
-    .oVRGB          (wVRGB)
+    .oPixel         (wPixel)
 );
 
 
 //----------------------------------------------------------
-// TODO ƒI[ƒfƒBƒIo—Í’Ç‰Á—\’è
-// 
-// ƒzƒXƒgŒãˆ—ƒ‚ƒWƒ…[ƒ‹
-// 
-// óM‚µ‚½ Pixel Data, Sound Data ‚ğ TMDS M†‚É•ÏŠ·‚µo—Í‚ğs‚¤
+// TODO Sound 
+// TMDS output
 //----------------------------------------------------------
 PostProcesser POSTPROCESSER (
     .iPixelClk      (wPixelClk),
@@ -130,7 +124,7 @@ PostProcesser POSTPROCESSER (
     .ioHdmiSda      (ioHdmiSda),
     .ioHdmiCec      (ioHdmiCec),
     .iHdmiHpd       (iHdmiHpd),
-    .iVRGB          (wVRGB),
+    .iPixel         (wPixel),
     .iVde           (wVde),
     .iHsync         (wHsync),
     .iVsync         (wVsync),

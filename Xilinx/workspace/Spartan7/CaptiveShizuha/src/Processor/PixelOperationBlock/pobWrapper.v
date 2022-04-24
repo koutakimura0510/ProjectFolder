@@ -23,7 +23,7 @@ rgbGen FORE_GROUND(.iSysClk(iSysClk), .iRst(iRst), .iHPOS(iHPOS), .iVPOS(iVPOS),
 rgbGen USER_GROUND(.iSysClk(iSysClk), .iRst(iRst), .iHPOS(iHPOS), .iVPOS(iVPOS), .iXS(oUXS), .iXE(oUXE), .iYS(oUYS), .iYE(oUYE), .iARGB(oPlayerDot), .oARGB(oUserARGB));
 
 rgbBridge RGB_BRIDGE (
-    .iBackARGB(oBackARGB), .iForeARGB(oForeARGB), .iUserARGB(oUserARGB), .oVRGB(oVRGB)
+    .iBackARGB(oBackARGB), .iForeARGB(oForeARGB), .iUserARGB(oUserARGB), .oPixel(oPixel)
 );
 
 endmodule

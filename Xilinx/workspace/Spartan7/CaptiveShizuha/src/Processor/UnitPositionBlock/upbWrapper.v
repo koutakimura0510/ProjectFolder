@@ -2,11 +2,10 @@
  * Create 2022/3/26
  * Author koutakimura
  * -
- * Position Generate Block
  * ユーザーの描画座標データ生成
  */
 
-module pgbWrapper
+module upbWrapper
 (
     input           iSysClk,      // Sys clk
     input           iRst,       // Active High

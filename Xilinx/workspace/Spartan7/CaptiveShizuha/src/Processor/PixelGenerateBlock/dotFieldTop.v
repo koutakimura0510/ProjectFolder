@@ -12,7 +12,7 @@
 module dotFieldTop (
     input           iClk,   // ディスプレイ描画clk
     input           iRst,   // system rst
-    input           iVDE,
+    input           iVde,
     input  [ 9:0]   iUXS,
     input  [ 9:0]   iUYS,
     input  [15:0]   iFXS,

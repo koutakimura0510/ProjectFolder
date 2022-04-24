@@ -3,6 +3,8 @@
 // Author koutakimura
 // -
 // ホスト前処理ブロック
+// Processor. PostProcesser のシステムを動作させるための CLK を生成する
+// 
 //----------------------------------------------------------
 module PreProcesser #(
     parameter       pHdisplay       = 640,
@@ -37,7 +39,7 @@ rstGen #(
     .pRstFallTime   (100)
 ) SYSTEM_RST (
     .iClk           (iClk),
-    .oRst           (wClkRst),
+    .oRst           (wClkRst)
 );
 
 

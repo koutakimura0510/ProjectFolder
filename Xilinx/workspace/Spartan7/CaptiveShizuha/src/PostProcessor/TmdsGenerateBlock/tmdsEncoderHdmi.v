@@ -17,7 +17,7 @@ module tmdsEncoderDvi(
     input           iRst,           // system rst
     input [7:0]     iVideoData,     // r or g or b video data
     input [1:0]     iCD,
-    input           iVDE,           // High to display on
+    input           iVde,           // High to display on
     output [9:0]    oTmdsPara
 );
 
@@ -43,7 +43,7 @@ wire [9:0] tmds_code = cd[1] ? (cd[0] ? 10'b1010101011 : 10'b0101010100) : (cd[0
 always @(posedge iClk) begin
     if (iRst == 1'b1) begin
         tmds_para <= 0;
-    end else if (iVDE == 1'b1) begin
+    end else if (iVde == 1'b1) begin
         tmds_para <= tmds_data;
     end else begin
         tmds_para <= tmds_code;

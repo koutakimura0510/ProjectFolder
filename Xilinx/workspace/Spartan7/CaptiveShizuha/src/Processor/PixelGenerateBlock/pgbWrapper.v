@@ -114,7 +114,7 @@ end
 //----------------------------------------------------------
 // dotFieldTop DOT_FIELD_TOP (
 //     .iClk(iSCLK), .iRst(iRst),
-//     .iVDE(iVDE),   .iUXS(oUXS), .iUYS(oUYS), .iFXS(oFXS), .iFYS(oFYS),
+//     .iVde(iVde),   .iUXS(oUXS), .iUYS(oUYS), .iFXS(oFXS), .iFYS(oFYS),
 //     .iHPOS(iHPOS), .iVPOS(iVPOS),
 //     .oFieldDot(oFieldDot), .oMapWidth(oMapWidth), .oMapDirect(oMapDirect)
 // );

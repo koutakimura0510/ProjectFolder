@@ -3,8 +3,9 @@
 // Author koutakimura
 // -
 // ホスト後処理ブロック
+// ターゲットの規格に対応したデータを出力
 //----------------------------------------------------------
-module PostProcesser #(
+module PostProcesser (
     input           iPixelClk,      // 画面サイズに対応したclkを入力
     input           iTmdsClk,       // PixelClkの10倍のクロック入力
     input           iRst,           // Active High
@@ -16,7 +17,7 @@ module PostProcesser #(
     inout           ioHdmiSda,      // hdmi I2c sda
     inout           ioHdmiCec,      // hdmi cec
     input           iHdmiHpd,       // hdmi hpd
-    input  [23:0]   iVRGB,          // Pixel Data
+    input  [23:0]   iPixel,          // Pixel Data
     input           iVde,           // video enable signal
     input           iHsync,
     input           iVsync,
@@ -43,10 +44,10 @@ tgbWrapper TGB (
     .ioHdmiSda      (ioHdmiSda),
     .ioHdmiCec      (ioHdmiCec),
     .iHdmiHpd       (wHdmiHpd),
-    .iVRGB          (iVRGB),
-    .iVDE           (iVde),
-    .iHSYNC         (iHsync),
-    .iVSYNC         (iVsync)
+    .iPixel          (iPixel),
+    .iVde           (iVde),
+    .iHsync         (iHsync),
+    .iVsync         (iVsync)
 );
 
 IBUF IBUF_HDMI_HPD ( 

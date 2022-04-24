@@ -13,31 +13,41 @@ module CaptiveShizuhaSim;
 parameter CYCLE = 10;
 
 reg rClk     = 0;
-reg rUartRx  = 0;
-reg rHdmiHpd = 0;
-reg rQspiDq0 = 0;
-reg rQspiDq1 = 0;
-reg rQspiDq2 = 0;
-reg rQspiDq3 = 0;
-
-wire ioQspiDq0;
-wire ioQspiDq1;
-wire ioQspiDq2;
-wire ioQspiDq3;
 
 
-wire ioApdsScl;
+// APDS9960
+wire rApdsIntr  = 0; 
+wire oApdsScl;
 wire ioApdsSda;
-wire iApdsIntr;
-wire oQspiCs;
-wire oQspiSck;
+
+// QSPI
+reg  [1:0] rQspiDq0 = 0;
+reg  [1:0] rQspiDq1 = 0;
+reg  [1:0] rQspiDq2 = 0;
+reg  [1:0] rQspiDq3 = 0;
+wire [1:0] oQspiCs;
+wire [1:0] oQspiSck;
+wire [1:0] ioQspiDq0;       assign ioQspiDq0 = rQspiDq0;
+wire [1:0] ioQspiDq1;       assign ioQspiDq1 = rQspiDq1;
+wire [1:0] ioQspiDq2;       assign ioQspiDq2 = rQspiDq2;
+wire [1:0] ioQspiDq3;       assign ioQspiDq3 = rQspiDq3;
+
+
+// HDMI
+reg  rHdmiHpd = 0;
+reg  rHdmiSda = 1;
+reg  rHdmiCec = 0;
 wire oHdmiScl;
-wire ioHdmiSda;
-wire ioHdmiCec;
-wire oUartTx;
+wire ioHdmiSda;             assign ioHdmiSda = rHdmiSda;
+wire ioHdmiCec;             assign ioHdmiCec = rHdmiCec;
 wire oHdmiClkNeg, oHdmiClkPos;
 wire [2:0] oHdmiDataNeg, oHdmiDataPos;
+
+// DEBUG
+reg  rUartRx  = 0;
+wire oUartTx;
 wire [1:0] oLED;
+wire [2:0] oUnusedPin;
 
 CaptiveShizuhaTop #(
     // .H_DISPLAY  (640),      .H_BACK     (48),
@@ -55,10 +65,11 @@ CaptiveShizuhaTop #(
     .pPixelDebug    ("yes"),
     .pBuffDepth     (32)
 ) TOP (
-    .iClk           (iClk),
-    .ioApdsScl      (ioApdsScl),
+    .iClk           (rClk),
+    .oUnusedPin     (oUnusedPin),
+    .oApdsScl       (oApdsScl),
     .ioApdsSda      (ioApdsSda),
-    .iApdsIntr      (iApdsIntr),
+    .iApdsIntr      (rApdsIntr),
     .oQspiCs        (oQspiCs),
     .oQspiSck       (oQspiSck),
     .ioQspiDq0      (ioQspiDq0),
@@ -72,15 +83,15 @@ CaptiveShizuhaTop #(
     .oHdmiScl       (oHdmiScl),
     .ioHdmiSda      (ioHdmiSda),
     .ioHdmiCec      (ioHdmiCec),
-    .iHdmiHpd       (iHdmiHpd),
-    .iUartRx        (iUartRx),
+    .iHdmiHpd       (rHdmiHpd),
+    .iUartRx        (rUartRx),
     .oUartTx        (oUartTx),
     .oLed           (oLed)
 );
 
 always begin
     #(CYCLE/2);
-    iClk = ~iClk;
+    rClk = ~rClk;
 end
 
 initial begin
