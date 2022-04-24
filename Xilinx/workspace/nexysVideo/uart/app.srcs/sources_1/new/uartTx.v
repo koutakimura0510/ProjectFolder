@@ -16,7 +16,7 @@ module uartTx #(
 )(
     input               iSysClk,        // System Clk
     input               iRst,           // Active High
-    input               iEnable,        // 1. connect / 0. discon
+    input               iCke,           // 1. connect / 0. discon
     input [pBitLen-1:0] iSendData,      // 送信データ
     output              oUartRX,        // 送信bit
     output              oReady          // 送信中Low 受付可能High
@@ -48,17 +48,20 @@ end
 // ASCII 変換
 //----------------------------------------------------------
 localparam              lpAsciiCnt  = ((pBitLen * 2) >> 3) + 1'b1;
-localparam              lpBitMsb    = (pBitLen * 2) + 7;
+localparam              lpBitMsb    = (pBitLen  * 2) + 7;
 localparam [lpBitMsb:0] lpBitNull   = 0;
 
 wire [lpBitMsb:0] wAscii;
+wire wVd;
 
 DecAsciiConvert # (
     .pBitLen    (pBitLen)
 ) DEC_ASCII_CON (
     .iSysClk    (iSysClk),
+    .iCke       (iCke),
     .iDec       (iSendData),
-    .oAscii     (wAscii)
+    .oAscii     (wAscii),
+    .oVd        (wVd)
 );
 
 
@@ -97,10 +100,10 @@ begin
             lpStIdle:
             begin
                 rRx    <= 1'b1;
-                rSt    <= iEnable;
+                rSt    <= wVd;
                 rData  <= wAscii;
                 rCnt   <= 0;
-                rReady <= ~iEnable;
+                rReady <= ~wVd;
             end
 
             lpStStartBit:
@@ -109,13 +112,11 @@ begin
                 begin
                     rRx   <= 1'b0;
                     rSt   <= lpStSend;
-                    rData <= rData;
                 end
                 else
                 begin
                     rRx   <= 1'b1;
                     rSt   <= lpStStartBit;
-                    rData <= rData;
                 end
             end
 
@@ -157,10 +158,12 @@ begin
 
             default:
             begin
-                rRx   <= 1'b1;
-                rSt   <= lpStIdle;
-                rData <= lpBitNull;
-                rCnt  <= 0;
+                rRx    <= 1'b1;
+                rSt    <= lpStIdle;
+                rData  <= lpBitNull;
+                rAsCnt <= 0;
+                rCnt   <= 0;
+                rReady <= 1'b1;
             end
         endcase
     end
