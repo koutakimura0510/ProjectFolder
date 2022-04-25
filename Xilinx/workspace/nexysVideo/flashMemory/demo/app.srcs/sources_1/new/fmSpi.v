@@ -16,11 +16,11 @@ module fmSpi #(
     output          oWp,            // write guard Low Active
     output          oHold,          // write stop  Low Active
     input           iCke,           // 0. disconnect 1. active
+    input           iCmd,           // read / write
     input           iCs,            // chip select
     input  [7:0]    iWd,            // 書き込みデータ
     output [7:0]    oRd,            // 読み込みデータ
-    output          oSpiVd,         // 1byteデータ送信完了時High
-    output          oWdVd,          // 書き込み完了時High
+    output          oWdVd,          // 1byteデータ送信完了時High
     output          oRdVd           // 読み込みデータ出力時High
 );
 
@@ -168,7 +168,7 @@ end
 
 
 //----------------------------------------------------------
-// sckの立ち下がりエッジ時にデータ更新
+// Write Side sckの立ち下がりエッジ時にデータ更新
 //----------------------------------------------------------
 reg rMosi;                              assign oMosi  = rMosi;
 reg qMosiCke;
@@ -183,6 +183,24 @@ end
 always @*
 begin
     qMosiCke <= qHoldTimeCke & iCke;
+end
+
+
+//----------------------------------------------------------
+// Read Side
+//----------------------------------------------------------
+reg [7:0] rMiso;
+reg qMiso;
+
+always @(posedge iSysClk)
+begin
+    if      (qMiso) rMiso <= {rMiso[6:0], iMiso};
+    else    Q <= D;
+end
+
+always @*
+begin
+    qMiso <= rScl & iCmd;
 end
 
 endmodule
