@@ -1,25 +1,9 @@
-/*
- * Create 2021/1/4
- * Author koutakimura
- * Editor VSCode ver1.62.7
- * Build  Vivado20.2
- * Borad  Nexys Video
- * 
- * コマンド発行
- */
-module flashCmd (
-    input           iClk,           // system clk
-    input           iRst,           // system rst
-    input           iCke,           // 0. disconnect 1. active
-    input  [7:0]    iWd,            // 書き込みデータ
-    output [7:0]    oRd,            // 読み込みデータ
-    output          oSpiVd,         // 1byteデータ送信完了時High
-    output          oWdVd,          // 書き込み完了時High
-    output          oRdVd           // 読み込みデータ出力時High
-);
-
-
 //----------------------------------------------------------
+// Create  2022/4/25
+// Author  koutakimura
+// -
+// SPI Rom データ発行
+// 
 // メモリ構造例
 // sector 256 KB
 // page   1sector * 8 = 2048
@@ -70,23 +54,45 @@ module flashCmd (
 // [容量]
 // 128MB -> 24bit -> 24bitコマンド使用
 // 256MB -> 25bit -> 32bitコマンド使用
+// 
+// Winbond W25N01GV 1Gbit 128MB アドレスマップ
+// 1 sector  512 byte 
+// 1 page   2048 byte + spare area 64 byte
+// 1 block   128 KB (64 page)
+// column   2048 11bit
+// page    65536
+// 
 //----------------------------------------------------------
 
-//---------------------------------------------------------------------------
+module flashCmd (
+    input           iClk,           // system clk
+    input           iRst,           // system rst
+    input           iCke,           // 0. disconnect 1. active
+    input  [7:0]    iWd,            // 書き込みデータ
+    output [7:0]    oRd,            // 読み込みデータ
+    output          oSpiVd,         // 1byteデータ送信完了時High
+    output          oWdVd,          // 書き込み完了時High
+    output          oRdVd           // 読み込みデータ出力時High
+);
+
+
+
+
+//---------------------------------------------------------
 // Winbond W25N01GV　レジスタマップ
-//---------------------------------------------------------------------------
+//---------------------------------------------------------
 localparam CMD_REMS  = 8'h90;   // デバイスのIDを取得、Cmd + Null24bit address + 2byte Null data
 localparam CMD_RDID  = 8'h9f;   // JEDEC Manufacturer ID and JEDEC CF1
-localparam CMD_READ  = 8'h03;   // Read 3 byte address -> Cmd + Addr + Data(MOSI は0でよい)
+localparam CMD_READ  = 8'h03;   // Read 3 byte address -> Cmd + ColAddr + Dummy + Data(MOSI は0でよい)
 // localparam CMD_4READ = 8'h13;   // Read 4 byte address -> Cmd + Addr + Data(MOSI は0でよい)
 localparam CMD_WREN  = 8'h06;   // Write Enable  -> Cmd
 localparam CMD_WRDI  = 8'h04;   // Write Disable -> Cmd
-localparam CMD_P4E   = 8'h20;   // Parameter Sector Erase 3byte Address -> Cmd + Addr
-localparam CMD_4P4E  = 8'h21;   // Parameter Sector Erase 4byte Address -> Cmd + Addr
-localparam CMD_BE    = 8'hD8;   // Parameter Block Erase 3byte Address -> Cmd + Dummy + 16bit page Addr
+// localparam CMD_P4E   = 8'h20;   // Parameter Sector Erase 3byte Address -> Cmd + Addr
+// localparam CMD_4P4E  = 8'h21;   // Parameter Sector Erase 4byte Address -> Cmd + Addr
+localparam CMD_BE    = 8'hD8;   // Parameter Block Erase -> Cmd + 1byte Dummy + 16bit page Addr
 // localparam CMD_4BE   = 8'hDC;   // Parameter Block Erase 4byte Address -> Cmd + Dummy + 16bit page Addr
-localparam CMD_P8E   = 8'h40;   // 全消去 
-localparam CMD_BE    = 8'h60;   // Bulk Erase
+// localparam CMD_P8E   = 8'h40;   // 全消去 
+// localparam CMD_BE    = 8'h60;   // Bulk Erase
 localparam CMD_PP    = 8'h02;   // Page Program 3byte Address -> Cmd + Addr + Data
 // localparam CMD_4PP   = 8'h12;   // Page Program 4byte Address -> Cmd + Addr + Data
 localparam CMD_RDSR1 = 8'h05;   // Read Status Register-1 WIPの確認用0x01 -> Cmd + Dummy Clk
