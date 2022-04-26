@@ -5,10 +5,11 @@
  * Flash Memory Spi Access
  */
 module fmSpi #(
-    parameter       pClkDiv = 4     // 100MHz / 4 = 25MHz
+    parameter [15:0]pClkDiv   = 4,      // 100MHz / 4 = 25MHz
+    parameter       pHoldTime = 10,     // Mosi Hold Time
+    parameter       pMode     = "mode0" // mode select
 )(
     input           iSysClk,        // system clk
-    input           iRst,           // system rst
     output          oCs,            // Chip Select
     output          oSck,           // spi clk
     output          oMosi,          // master out slave in
@@ -16,12 +17,12 @@ module fmSpi #(
     output          oWp,            // write guard Low Active
     output          oHold,          // write stop  Low Active
     input           iCke,           // 0. disconnect 1. active
-    input           iCmd,           // read / write
+    input           iCmd,           // 1. Read Active
     input           iCs,            // chip select
     input  [7:0]    iWd,            // 書き込みデータ
     output [7:0]    oRd,            // 読み込みデータ
     output          oWdVd,          // 1byteデータ送信完了時High
-    output          oRdVd           // 読み込みデータ出力時High
+    output          oRdVd           // 1byte読み込みデータ出力時High
 );
 
 
@@ -36,21 +37,20 @@ assign oCs   = iCs;
 //----------------------------------------------------------
 // Division Clk Enable
 //----------------------------------------------------------
-localparam lpClkDiv = pClkDiv - 1'b1;
+localparam [15:0] lpClkDiv = pClkDiv - 1'b1;
 reg [15:0] rDiv;
 reg qDiv
 
 always @(posedge iSysClk)
 begin
-    if      (iRst)          rDiv <= 16'd0;
-    else if (!iCke)         rDiv <= 16'd0;
+    if (!iCke)              rDiv <= 16'd0;
     else if (qDiv)          rDiv <= 16'd0;
     else                    rDiv <= rDiv + 1'b1;
 end
 
 always @*
 begin
-    qDiv <= (rDiv == lpClkDiv);
+    qDiv <= rDiv == lpClkDiv;
 end
 
 
@@ -60,53 +60,54 @@ end
 //----------------------------------------------------------
 reg rScl;                           assign oSck = rScl;
 reg [3:0] rSckCnt;
-reg qSckCke;
+reg qSckNeg;
+reg qSckCke, qByteVd;
 
 always @(posedge iSysClk) 
 begin
-    if      (iRst)          rScl <= 1'b1;
-    else if (!iCke)         rScl <= 1'b1;
+    if (!iCke)              rScl <= 1'b0;
     else if (qDiv)          rScl <= ~rScl;
     else                    rScl <= rScl;
 end
 
 always @(posedge iSysClk)
 begin
-    if      (iRst)          rSckCnt <= 0;
-    else if (!iCke)         rSckCnt <= 0;
-    else if (qDiv && !rScl) rSckCnt <= qSckCke ? 0 : rSckCnt + 4'd1;
+    if (!iCke)              rSckCnt <= 0;
+    else if (qSckNeg)       rSckCnt <= qSckCke ? 0 : rSckCnt + 4'd1;
     else                    rSckCnt <= rSckCnt;
 end
 
 always @*
 begin
+    qSckNeg <= qDiv & rScl;
     qSckCke <= rSckCnt == 4'd7;
+    qByteVd <= qSckNeg & qSckCke;
 end
 
 
 //----------------------------------------------------------
 // 1byteデータ送信完了
 //----------------------------------------------------------
-reg rSpiVd;                         assign oSpiVd  = rSpiVd;
-reg qSpiVd;
+reg rWdVd;                         assign oWdVd  = rWdVd;
+reg qWdVd;
 
 always @(posedge iSysClk)
 begin
-    if      (iRst)          rSpiVd <= 1'b0;
-    else if (qSpiVd)        rSpiVd <= 1'b1;
-    else                    rSpiVd <= 1'b0;
+    if      (!iCke)         rWdVd <= 1'b0;
+    else if (qWdVd)         rWdVd <= 1'b1;
+    else                    rWdVd <= 1'b0;
 end
 
 always @*
 begin
-    qSpiVd <= (iCke && qDiv && !rScl && qSckCke);
+    qWdVd <= qByteVd;
 end
 
 
 //----------------------------------------------------------
 // Sck Hold Time Generate -> min 15ns HOLD
+// Sck の立下り時に Hold Time Count Start
 //----------------------------------------------------------
-localparam lpHoldTimeMosi = 10;
 localparam [2:0]
     IDLE = 0,
     HOLD = 1;
@@ -116,14 +117,14 @@ reg [1:0] rStHold;
 reg qHoldTimeCke;
 
 always @(posedge iSysClk) begin
-    if (iRst) 
+    if (!iCke)
     begin
         rStHold <= IDLE;
     end 
     else
     begin
         case (rStHold)
-            IDLE:    rStHold <= (qDiv & rScl)  ? HOLD : IDLE;
+            IDLE:    rStHold <= (qSckNeg)      ? HOLD : IDLE;
             HOLD:    rStHold <= (qHoldTimeCke) ? IDLE : HOLD;
             default: rStHold <= IDLE;
         endcase
@@ -131,7 +132,7 @@ always @(posedge iSysClk) begin
 end
 
 always @(posedge iSysClk) begin
-    if (iRst)
+    if (!iCke)
     begin
         rHoldTime <= 0;
     end
@@ -147,7 +148,7 @@ end
 
 always @*
 begin
-    qHoldTimeCke <= rHoldTime == lpHoldTimeMosi;
+    qHoldTimeCke <= rHoldTime == pHoldTime;
 end
 
 
@@ -159,48 +160,51 @@ reg [7:0] rWd;
 
 always @(posedge iSysClk)
 begin
-    if      (iRst)          rWd <= iWd;
-    else if (!iCke)         rWd <= iWd;
-    else if (rSpiVd)        rWd <= iWd;
+    if (!iCke)              rWd <= iWd;
+    else if (rWdVd)         rWd <= iWd;
     else if (qHoldTimeCke)  rWd <= {rWd[6:0], 1'b1};
     else                    rWd <= rWd;
 end
 
 
 //----------------------------------------------------------
-// Write Side sckの立ち下がりエッジ時にデータ更新
+// Sckの立ち下がりエッジ時にデータ更新
 //----------------------------------------------------------
 reg rMosi;                              assign oMosi  = rMosi;
-reg qMosiCke;
 
 always @(posedge iSysClk)
 begin
-    if      (iRst)          rMosi <= rWd[7];
-    else if (qMosiCke)      rMosi <= rWd[7];
+    if (!iCke)              rMosi <= rWd[7];
+    else if (qHoldTimeCke)  rMosi <= rWd[7];
     else                    rMosi <= rMosi;
 end
 
-always @*
-begin
-    qMosiCke <= qHoldTimeCke & iCke;
-end
-
 
 //----------------------------------------------------------
-// Read Side
+// Miso Pin Capture
+// 1byte Sck カウント時に Read Cmd 発行されていればデータを出力
 //----------------------------------------------------------
-reg [7:0] rMiso;
-reg qMiso;
+reg [7:0] rMiso;                        assign oRd   = rMiso;
+reg rRdVd;                              assign oRdVd = rRdVd;
+reg qMiso, qRdVd;
 
 always @(posedge iSysClk)
 begin
-    if      (qMiso) rMiso <= {rMiso[6:0], iMiso};
-    else    Q <= D;
+    if  (qMiso) rMiso <= {rMiso[6:0], iMiso};
+    else        rMiso <= rMiso;
+end
+
+always @(posedge iSysClk)
+begin
+    if (qRdVd)   rRdVd <= 1'b1;
+    else         rRdVd <= 1'b0;
 end
 
 always @*
 begin
-    qMiso <= rScl & iCmd;
+    qMiso <= ~rScl & qDiv & iCmd;
+    qRdVd <= qByteVd & iCmd;
 end
+
 
 endmodule

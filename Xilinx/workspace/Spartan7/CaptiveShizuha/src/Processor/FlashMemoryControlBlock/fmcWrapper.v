@@ -30,7 +30,7 @@ module fmcWrapper #(
     output [15:0]   oSound,         // PCM 16bit 48000 Hz
     input  [23:0]   iSoundAddr,     // Flash Memory Address
     input           iSoundCke,      // Address Enable
-    input           iPixelCmd,      // 1.Read / 0.Write
+    input           iSoundCmd,      // 1.Read / 0.Write
     output          oSoundWdVd,     // Read Data Valid / 書き込み完了時 High
     output          oSoundRdVd      // Read Data Valid / 有効データ出力時 High
 );
