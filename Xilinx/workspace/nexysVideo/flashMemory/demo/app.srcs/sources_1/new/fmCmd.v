@@ -46,7 +46,7 @@ localparam [7:0]
     ADDR_SR_0 = 8'h00,  // Protection Reg-0
     ADDR_SR_1 = 8'h01,  // Status Reg-1
     ADDR_SR_2 = 8'h02,  // Configration Reg-2
-    ADDR_SR_3 = 8'h03;  // Status Reg-3
+    ADDR_SR_3 = 8'h03;  // Status Reg-3 1bit wel 0bit busy
 
 reg [7:0] r;
 

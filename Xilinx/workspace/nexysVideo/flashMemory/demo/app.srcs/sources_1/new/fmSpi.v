@@ -28,6 +28,7 @@ module fmSpi #(
 
 //----------------------------------------------------------
 // Flash Memory Control Pin
+// CS High Low Min 100ns
 //----------------------------------------------------------
 assign oWp   = 1'b1;
 assign oHold = 1'b1;
