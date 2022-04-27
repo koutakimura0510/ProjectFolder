@@ -31,8 +31,9 @@ Write Status Register | 1Fh / 01h | SR Addr | S7-n
 Write Enable | 06h | 
 Write Disable | 04h | 
 Program Data Load (write) | 02h | CA15-8 | CA7-0 | Data-n |
-Read | 03h | CA15-8 | CA7-0 | Dummy | D7-0n
 Program Execute | 10h | dummy | PA15-8 | PA7-0
+Page Data Read | 13h | dummy | PA15-8 | PA7-0
+Read | 03h | CA15-8 | CA7-0 | Dummy | D7-0n
 Block Erase | d8h | dummy | PA15-8 | PA7-0
 </br>
 
@@ -41,7 +42,7 @@ Block Erase | d8h | dummy | PA15-8 | PA7-0
 </br>
 [Write Flow]</br>
 Write Enable (WREN) コマンドを発行し、WEL レジスタに 1 を設定し CS を High にする</br>
-Block Erase を発行し、次に消去を行う Block アドrテスを発行し、CS を High にし書き込み予定のブロックを消去する</br>
+Block Erase を発行し、次に消去を行う Block アドレスを発行し、CS を High にし書き込み予定のブロックを消去する</br>
 Block Erase 後は、最大 10ms 完了にかかる</br>
 このとき、ステータス・レジスタの BUSY bit を確認し、0 になっていれば、プログラムは終了している</br>
 WEL レジスタが 0 にクリアされる</br>
@@ -53,6 +54,14 @@ Program Execute 後は、最大 700us 完了にかかる</br>
 WEL レジスタが 0 にクリアされる</br>
 以下繰り返し</br>
 </br>
+[Read Flow]</br>
+Page Data Read を発行し、指定 page の 2048 + 64 Byte のデータを FIFO にロードする</br>
+Page Data Read 後は、最大 700us 完了にかかる</br>
+このとき、ステータス・レジスタの BUSY bit を確認し、0 になっていれば、プログラムは終了している</br>
+Read コマンドを発行し、ロードしたデータを、指定アドレスから順次読み出す</br>
+以下繰り返し</br>
+</br>
+
 **`「注意点」`**</br>
 `ブロック内のページは、下位のページアドレスから次のページに順番にプログラムする必要があります`</br>
 `ブロック内の上位ページアドレス。ページを順不同でプログラミングすることは禁止されています`**</br>

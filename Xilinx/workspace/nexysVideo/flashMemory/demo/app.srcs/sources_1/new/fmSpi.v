@@ -1,9 +1,9 @@
-/*
- * Create 2022/4/24
- * Author koutakimura
- * 
- * Flash Memory Spi Access
- */
+//----------------------------------------------------------
+// Create 2022/4/24
+// Author koutakimura
+// 
+// Flash Memory Spi Access
+//----------------------------------------------------------
 module fmSpi #(
     parameter [9:0] pClkDiv   = 4,      // 100MHz / 4 = 25MHz
     parameter       pHoldTime = 10,     // Mosi Hold Time

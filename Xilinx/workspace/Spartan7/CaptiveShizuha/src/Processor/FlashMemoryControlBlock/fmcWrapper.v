@@ -21,14 +21,14 @@ module fmcWrapper #(
     output [1:0]    ioQspiDq3,      // SPI時 High 固定, 書き込み停止 Low Active
     input  [15:0]   iPixel,         // Pixel Data ARGB 4:4:4:4 or YUV 4:2:2
     output [15:0]   oPixel,         // Pixel Data ARGB 4:4:4:4 or YUV 4:2:2
-    input  [23:0]   iPixelAddr,     // Flash Memory Address
+    input  [26:0]   iPixelAddr,     // 26:17 Block - 16:11 Page - 10:0 Column
     input           iPixelCke,      // Address Enable
     input           iPixelCmd,      // 1.Read / 0.Write
     output          oPixelWdVd,     // Write Data Valid / 書き込み完了時 High
     output          oPixelRdVd,     // Read Data Valid  / 有効データ出力時 High
     input  [15:0]   iSound,         // PCM 16bit 48000 Hz
     output [15:0]   oSound,         // PCM 16bit 48000 Hz
-    input  [23:0]   iSoundAddr,     // Flash Memory Address
+    input  [26:0]   iSoundAddr,     // 26:17 Block - 16:11 Page - 10:0 Column
     input           iSoundCke,      // Address Enable
     input           iSoundCmd,      // 1.Read / 0.Write
     output          oSoundWdVd,     // Read Data Valid / 書き込み完了時 High

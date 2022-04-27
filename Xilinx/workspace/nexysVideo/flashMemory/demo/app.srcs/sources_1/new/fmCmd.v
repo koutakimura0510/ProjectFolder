@@ -9,10 +9,10 @@ module flashCmd (
     input           iClk,           // system clk
     input           iRst,           // system rst
     input           iCke,           // 0. disconnect 1. active
+    input           iCmd,           // 1. Read / 0. Write
     input  [7:0]    iWd,            // 書き込みデータ
     output [7:0]    oRd,            // 読み込みデータ
-    output          oSpiVd,         // 1byteデータ送信完了時High
-    output          oWdVd,          // 書き込み完了時High
+    output          iWdVd,          // 1byte 書き込み完了時 High
     output          oRdVd           // 読み込みデータ出力時High
 );
 
@@ -37,21 +37,23 @@ module flashCmd (
 // localparam CMD_RDSR1 = 8'h05;   // Read Status Register-1 WIPの確認用0x01 -> Cmd + Dummy Clk
 
 localparam [7:0]
-    CMD_READ  = 8'h03,  // Read
-    CMD_WRDI  = 8'h04,  // Write Disable
-    CMD_WREN  = 8'h06,  // Write Enable
-    CMD_BE    = 8'hD8,  // Parameter Block Erase
-    CMD_PD    = 8'h02,  // Program Data
-    CMD_RDSR1 = 8'h05,  // Read Status cmd
-    ADDR_SR_0 = 8'h00,  // Protection Reg-0
-    ADDR_SR_1 = 8'h01,  // Status Reg-1
-    ADDR_SR_2 = 8'h02,  // Configration Reg-2
-    ADDR_SR_3 = 8'h03;  // Status Reg-3 1bit wel 0bit busy
+    CMD_READ  = 8'h03,      // Read
+    CMD_WRDI  = 8'h04,      // Write Disable
+    CMD_WREN  = 8'h06,      // Write Enable
+    CMD_BE    = 8'hD8,      // Parameter Block Erase
+    CMD_PD    = 8'h02,      // Program Data
+    CMD_PE    = 8'h10,      // Program Execute
+    CMD_RDSR1 = 8'h05,      // Read Status cmd
+    ADDR_SR_0 = 8'h00,      // Protection Reg-0
+    ADDR_SR_1 = 8'h01,      // Status Reg-1
+    ADDR_SR_2 = 8'h02,      // Configration Reg-2
+    ADDR_SR_3 = 8'h03;      // Status Reg-3 1bit wel (write enable latch) / 0bit busy
 
 reg [7:0] r;
 
-always @(posedge iCLK) begin
-    if (iRST == 1'b1) begin
+always @(posedge iSysClk)
+begin
+    if (iRst) begin
         Q <= D;
     end else begin
         Q <= D;
