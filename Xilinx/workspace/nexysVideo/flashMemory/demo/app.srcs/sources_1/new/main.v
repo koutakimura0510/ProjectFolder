@@ -11,29 +11,34 @@
 module main (
     input           iCLK,       // system clk
     input           iRST,       // system rst
-    input           iBtnC,
     output          oQspiCLK,   // フラッシュメモリsck
     output          oQspiCS,    // フラッシュメモリチップセレクト
     output          oQspiDO,    // SPIデータ出力端子
     input           iQspiDI,    // SPIデータ入力端子
     output          oQspiWP,    // spiモードで使用するためHigh固定
-    output          oQspiHOLD,  // spiモードで使用するためHigh固定
-    output          oUartRX,    // test用 uart端子
-    output [7:0]    oLED    
+    output          oQspiHOLD   // spiモードで使用するためHigh固定
 );
 
 
 flashTop #(
-    .PDIVSCK(250)
+    .pClkDiv    (4),
+    .pHoldTime  (10),
+    .pMode      ("mode0")
 ) FLASH_TOP (
-    .iCLK(iCLK),
-    .iRST(iRST),
-    .oQspiCLK(oQspiCLK),
-    .oQspiCS(oQspiCS),
-    .oQspiDO(oQspiDO),
-    .iQspiDI(iQspiDI),
-    .oQspiWP(oQspiWP),
-    .oQspiHOLD(oQspiHOLD)
+    .iSysClk    (iClk),
+    .oCs        (oQspiCS),
+    .oSck       (oQspiCLK),
+    .oMosi      (oQspiDO),
+    .iMiso      (oQspiDI),
+    .oWp        (oQspiWP),
+    .oHold      (oQspiHOLD),
+    .iWd        (iWd),
+    .oRd        (oRd),
+    .iAddr      (iAddr),
+    .iCke       (iCke),
+    .iCmd       (iCmd),
+    .oWdVd      (oWdVd),
+    .oRdVd      (oRdVd)
 );
 
 endmodule

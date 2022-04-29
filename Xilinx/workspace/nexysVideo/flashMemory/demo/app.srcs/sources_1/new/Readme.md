@@ -40,26 +40,27 @@ Block Erase | d8h | dummy | PA15-8 | PA7-0
 ## 4. W25N01GVxxIG 1Gbit 使用方法
 32MB Memory などの場合は、大容量のものとコマンドの数や手順が異なるため、都度データシートを確認すること</br>
 </br>
-[Write Flow]</br>
-Write Enable (WREN) コマンドを発行し、WEL レジスタに 1 を設定し CS を High にする</br>
-Block Erase を発行し、次に消去を行う Block アドレスを発行し、CS を High にし書き込み予定のブロックを消去する</br>
-Block Erase 後は、最大 10ms 完了にかかる</br>
-このとき、ステータス・レジスタの BUSY bit を確認し、0 になっていれば、プログラムは終了している</br>
-WEL レジスタが 0 にクリアされる</br>
-Write Enable (WREN) コマンドを発行し、WEL レジスタに 1 を設定し CS を High にする</br>
-Program Data Load を発行し、次に 1 page の書き込みアドレスを発行し、書き込みデータをメモリの FIFO に順次送信</br>
-Program Execute を発行し、次に Block と page アドレスを発行し、CS を Highにし、書き込みを開始する</br>
-Program Execute 後は、最大 700us 完了にかかる</br>
-このとき、ステータス・レジスタの BUSY bit を確認し、0 になっていれば、プログラムは終了している</br>
-WEL レジスタが 0 にクリアされる</br>
-以下繰り返し</br>
-</br>
-[Read Flow]</br>
-Page Data Read を発行し、指定 page の 2048 + 64 Byte のデータを FIFO にロードする</br>
-Page Data Read 後は、最大 700us 完了にかかる</br>
-このとき、ステータス・レジスタの BUSY bit を確認し、0 になっていれば、プログラムは終了している</br>
-Read コマンドを発行し、ロードしたデータを、指定アドレスから順次読み出す</br>
-以下繰り返し</br>
+ID | Exp
+-|-
+1 | Write Enable (WREN) コマンドを発行し、WEL レジスタに 1 を設定し CS を High にする</br>
+2 | Block Erase を発行し、次に消去を行う Block アドレスを発行し、CS を High にし書き込み予定のブロックを消去する</br>
+3 | Block Erase 後は、最大 10ms 完了にかかる</br>
+4 | このとき、ステータス・レジスタの BUSY bit を確認し、0 になっていれば、プログラムは終了している</br>
+5 | WEL レジスタが 0 にクリアされる</br>
+6 | Write Enable (WREN) コマンドを発行し、WEL レジスタに 1 を設定し CS を High にする</br>
+7 | Program Data Load を発行し、次にセクタの書き込みアドレスを発行し、書き込みデータをメモリの FIFO に順次送信 CS を High にする</br>
+8 | Program Execute を発行し、次に Block と page アドレスを発行し、CS を Highにし、書き込みを開始する</br>
+9 | Program Execute 後は、最大 700us 完了にかかる</br>
+10 | このとき、ステータス・レジスタの BUSY bit を確認し、0 になっていれば、プログラムは終了している</br>
+11 | WEL レジスタが 0 にクリアされる</br>
+12 | 以下繰り返し</br>
+13 | </br>
+14 | [Read Flow]</br>
+15 | Page Data Read を発行し、指定 page の 2048 + 64 Byte のデータを FIFO にロードする</br>
+16 | Page Data Read 後は、最大 700us 完了にかかる</br>
+17 | このとき、ステータス・レジスタの BUSY bit を確認し、0 になっていれば、プログラムは終了している</br>
+18 | Read コマンドを発行し、ロードしたデータを、指定アドレスから順次読み出す</br>
+19 | 以下繰り返し</br>
 </br>
 
 **`「注意点」`**</br>

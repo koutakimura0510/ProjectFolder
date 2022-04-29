@@ -1,9 +1,10 @@
 //----------------------------------------------------------
-// Create 2022/4/28
+// Create 2022/4/29
 // Author koutakimura
 // -
+// Flash  Memory Control Top Module
 //----------------------------------------------------------
-module flashTop #(
+module fmTop #(
     parameter [9:0] pClkDiv     = 4,      // 100MHz / 4 = 25MHz
     parameter       pHoldTime   = 10,     // Mosi Hold Time
     parameter       pMode       = "mode0" // mode0 mode3 対応
@@ -38,7 +39,7 @@ wire [7:0] wWd, wRd;
 wire wWdVd, wRdVd;                      assign oWdVd = wWdVd;
 wire wCs, wCke, wCmd;
 
-fmCmd FM_CMD (
+fmState FM_STATE (
     .iSysClk        (iSysClk),
     .iCke           (iCke),
     .iCmd           (iCmd),

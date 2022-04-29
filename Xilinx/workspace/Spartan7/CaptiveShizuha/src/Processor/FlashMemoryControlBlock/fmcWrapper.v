@@ -43,10 +43,11 @@ wire [1:0] wQspiCs,  wQspiSck;
 wire [1:0] wQspiDq0, wQspiDq1, wQspiDq2, wQspiDq3;
 
 fmSpi #(
-    .pClkDiv        (pClkDiv)
+    .pClkDiv        (pClkDiv),
+    .pHoldTime      (pHoldTime),
+    .pMode          (pMode)
 ) FMB_SPI_PIXEL (
     .iSysClk        (iSysClk),
-    .iRst           (iRst),
     .oCs            (wQspiCs  [0]),
     .oSck           (wQspiSck [0]),
     .oMosi          (wQspiDq0 [0]),
@@ -63,18 +64,24 @@ fmSpi #(
 );
 
 fmSpi #(
-    .pClkDiv        (pClkDiv)
+    .pClkDiv        (pClkDiv),
+    .pHoldTime      (pHoldTime),
+    .pMode          (pMode)
 ) FMB_SPI_SOUND (
+    .iSysClk        (iSysClk),
     .oCs            (wQspiCs  [1]),
     .oSck           (wQspiSck [1]),
     .oMosi          (wQspiDq0 [1]),
     .iMiso          (wQspiDq1 [1]),
     .oWp            (wQspiDq2 [1]),
     .oHold          (wQspiDq3 [1]),
-    .oData          (oSound),
+    .iWd            (iSound),
+    .oRd            (oSound),
     .iAddr          (iSoundAddr),
     .iCke           (iSoundCke),
-    .oVd            (oSoundVd)
+    .iCmd,          (iSoundCmd),
+    .oWdVd,         (oSoundWdVd),
+    .oRdVd          (oSoundRdVd)
 );
 
 

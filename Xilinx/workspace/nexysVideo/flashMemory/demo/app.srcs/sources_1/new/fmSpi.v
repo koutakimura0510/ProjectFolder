@@ -235,16 +235,16 @@ generate
     begin
         always @*
         begin
-            qMiso <= ~rScl & qDiv & iCmd;
-            qRdVd <= qByteVd & iCmd;
+            qMiso <= ~rScl & qDiv;
+            qRdVd <= qByteVd;
         end
     end
     else
     begin
         always @*
         begin
-            qMiso <= rScl & qDiv & iCmd;
-            qRdVd <= qByteVd & iCmd;
+            qMiso <= rScl & qDiv;
+            qRdVd <= qByteVd;
         end
     end
 endgenerate

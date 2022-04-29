@@ -1,5 +1,5 @@
 //----------------------------------------------------------
-// Create  2022/4/25
+// Create  2022/4/29
 // Author  koutakimura
 // -
 // Spi Rom ステートマシン
@@ -10,7 +10,7 @@
 // ※ 各データ (データベース) は必ず 128KB 単位で管理を行う
 // 
 //----------------------------------------------------------
-module flashCmd (
+module fmState (
     input           iSysClk,        // system clk
     input           iCke,           // Top    Side: 0. disconnect 1. active
     input           iCmd,           // Top    Side: 1. Read / 0. Write
