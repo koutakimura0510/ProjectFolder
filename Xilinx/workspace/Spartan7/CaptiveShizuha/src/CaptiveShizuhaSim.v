@@ -21,16 +21,12 @@ wire oApdsScl;
 wire ioApdsSda;
 
 // QSPI
-reg  [1:0] rQspiDq0 = 0;
 reg  [1:0] rQspiDq1 = 0;
-reg  [1:0] rQspiDq2 = 0;
-reg  [1:0] rQspiDq3 = 0;
 wire [1:0] oQspiCs;
 wire [1:0] oQspiSck;
-wire [1:0] ioQspiDq0;       assign ioQspiDq0 = rQspiDq0;
-wire [1:0] ioQspiDq1;       assign ioQspiDq1 = rQspiDq1;
-wire [1:0] ioQspiDq2;       assign ioQspiDq2 = rQspiDq2;
-wire [1:0] ioQspiDq3;       assign ioQspiDq3 = rQspiDq3;
+wire [1:0] ioQspiDq0;
+wire [1:0] ioQspiDq2;
+wire [1:0] ioQspiDq3;
 
 
 // HDMI

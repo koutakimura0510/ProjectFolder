@@ -9,20 +9,20 @@ module fmSpi #(
     parameter       pHoldTime = 10,     // Mosi Hold Time
     parameter       pMode     = "mode0" // mode0 mode3 対応
 )(
-    input           iSysClk,        // system clk
-    output          oCs,            // Chip Select
-    output          oSck,           // spi clk
-    output          oMosi,          // master out slave in
-    input           iMiso,          // master in slave out
-    output          oWp,            // write guard Low Active
-    output          oHold,          // write stop  Low Active
-    input           iCke,           // 0. disconnect 1. active
-    input           iCmd,           // 1. Read Active
-    input           iCs,            // chip select
-    input  [7:0]    iWd,            // 書き込みデータ
-    output [7:0]    oRd,            // 読み込みデータ
-    output          oWdVd,          // 1byteデータ送信完了時High
-    output          oRdVd           // 1byte読み込みデータ出力時High
+    input           iSysClk,            // system clk
+    output          oCs,                // Chip Select
+    output          oSck,               // spi clk
+    output          oMosi,              // master out slave in
+    input           iMiso,              // master in slave out
+    output          oWp,                // write guard Low Active
+    output          oHold,              // write stop  Low Active
+    input           iCke,               // 0. disconnect 1. active
+    input           iCmd,               // 1. Read Active
+    input           iCs,                // chip select
+    input  [7:0]    iWd,                // 書き込みデータ
+    output [7:0]    oRd,                // 読み込みデータ
+    output          oWdVd,              // 1byteデータ送信完了時High
+    output          oRdVd               // 1byte読み込みデータ出力時High
 );
 
 
@@ -40,7 +40,7 @@ assign oCs   = iCs;
 //----------------------------------------------------------
 localparam [9:0] lpClkDiv = pClkDiv - 1'b1;
 reg [9:0] rDiv;
-reg qDiv
+reg qDiv;
 
 always @(posedge iSysClk)
 begin
@@ -172,7 +172,7 @@ always @(posedge iSysClk) begin
         case (rStHold)
             IDLE:    rHoldTime <= 0;
             HOLD:    rHoldTime <= (qHoldTimeCke) ? 0 : rHoldTime + 1'b1;
-            default: rHoldTime <= 0
+            default: rHoldTime <= 0;
         endcase
     end
 end

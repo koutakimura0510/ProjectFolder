@@ -16,7 +16,6 @@ module fmState (
     input           iCmd,           // Top    Side: 1. Read / 0. Write
     input  [26:0]   iAddr,          // Top    Side: 26:17 Block - 16:11 Page - 10:0 Column
     input  [7:0]    iWd,            // Top    Side: 書き込みデータ
-    output          qWdVd,          
     output [7:0]    oRd,            // Top    Side: Flash Mem からのデータを上位モジュールに渡す
     output          oRdVd,          // Top    Side: 読み込みデータ出力時High
     output [7:0]    oWd,            // Memory Side: フラッシュメモリの書き込みデータ
@@ -97,6 +96,7 @@ reg [3:0] rSt;
 reg [3:0] rStNext, rStNext2;
 
 // enable
+reg rBusy;
 reg qCsCke;
 reg qCntCke, qPageCke;
 
@@ -105,14 +105,14 @@ begin
     case (rSt)
         lpIdol:
         begin
-            rSt     <= (iCke) ? lpCslow : lpIdol;
+            rSt     <= (iCke) ? lpCsLow : lpIdol;
             rStNext <= (iCmd) ? lpPdr   : lpWren1;
             rCs     <= (iCke) ? 1'b0    : 1'b1; 
         end
 
-        lpCslow:
+        lpCsLow:
         begin
-            rSt     <= (qCsCke) ? rStNext : lpCslow;
+            rSt     <= (qCsCke) ? rStNext : lpCsLow;
             rCs     <= 1'b0; 
         end
 
@@ -124,7 +124,7 @@ begin
 
         lpWait:
         begin
-            rSt     <= (qCsCke) ? lpCslow  : lpWait;
+            rSt     <= (qCsCke) ? lpCsLow  : lpWait;
         end
 
         lpBusy:
@@ -266,8 +266,6 @@ end
 //----------------------------------------------------------
 // Busy Bit 確認
 //----------------------------------------------------------
-reg rBusy;
-
 always @(posedge iSysClk)
 begin
     if (iRdVd)          rBusy <= iRd & lpBusyBit;
@@ -293,6 +291,9 @@ begin
         lpWren1:
         begin
             qCmd[0] <= lpCmdWren;
+            qCmd[1] <= lpDummy;
+            qCmd[2] <= lpDummy;
+            qCmd[3] <= lpDummy;
         end
 
         lpBe:
@@ -308,11 +309,15 @@ begin
             qCmd[0] <= lpCmdRdsr1;
             qCmd[1] <= lpAddrSr3;
             qCmd[2] <= lpDummy;
+            qCmd[3] <= lpDummy;
         end
 
         lpWren2:
         begin
             qCmd[0] <= lpCmdWren;
+            qCmd[1] <= lpDummy;
+            qCmd[2] <= lpDummy;
+            qCmd[3] <= lpDummy;
         end
 
         lpPdl:
@@ -320,6 +325,7 @@ begin
             qCmd[0] <= lpCmdPdl;
             qCmd[1] <= {5'd0, iAddr[10:8]};
             qCmd[2] <= iAddr[ 7:0];
+            qCmd[3] <= lpDummy;
         end
 
         lpPe:
@@ -330,7 +336,7 @@ begin
             qCmd[3] <= iAddr[18:11];
         end
 
-        lpCmdPdr:
+        lpPdr:
         begin
             qCmd[0] <= lpCmdPdr;
             qCmd[1] <= lpDummy;
@@ -350,6 +356,9 @@ begin
         default: 
         begin
             qCmd[0] <= lpCmdWren;
+            qCmd[1] <= lpDummy;
+            qCmd[2] <= lpDummy;
+            qCmd[3] <= lpDummy;
         end
     endcase
 end

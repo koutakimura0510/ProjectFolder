@@ -5,29 +5,25 @@
 // Flash  Memory Control Top Module
 //----------------------------------------------------------
 module fmTop #(
-    parameter [9:0] pClkDiv     = 4,      // 100MHz / 4 = 25MHz
-    parameter       pHoldTime   = 10,     // Mosi Hold Time
-    parameter       pMode       = "mode0" // mode0 mode3 対応
+    parameter [9:0] pClkDiv     = 4,        // 100MHz / 4 = 25MHz
+    parameter       pHoldTime   = 10,       // Mosi Hold Time
+    parameter       pMode       = "mode0"   // mode0 mode3 対応
 )(
-    input           iSysClk,            // system clk
-    output          oCs,                // Chip Select
-    output          oSck,               // spi clk
-    output          oMosi,              // master out slave in
-    input           iMiso,              // master in slave out
-    output          oWp,                // write guard Low Active
-    output          oHold,              // write stop  Low Active
-    input  [ 7:0]   iWd,                // 書き込みデータ
-    output [ 7:0]   oRd,                // 読み込みデータ
-    input  [26:0]   iAddr,              // 26:17 Block - 16:11 Page - 10:0 Column
-    input           iCke,               // 0. disconnect 1. active
-    input           iCmd,               // 1. Read / 0. Write
-    output          oWdVd,              // 書き込み完了時High
-    output          oRdVd               // 読み込みデータ出力時High
+    input           iSysClk,                // system clk
+    output          oCs,                    // Chip Select
+    output          oSck,                   // spi clk
+    output          oMosi,                  // master out slave in
+    input           iMiso,                  // master in slave out
+    output          oWp,                    // write guard Low Active
+    output          oHold,                  // write stop  Low Active
+    input  [ 7:0]   iWd,                    // 書き込みデータ
+    output [ 7:0]   oRd,                    // 読み込みデータ
+    input  [26:0]   iAddr,                  // 26:17 Block - 16:11 Page - 10:0 Column
+    input           iCke,                   // 0. disconnect 1. active
+    input           iCmd,                   // 1. Read / 0. Write
+    output          oWdVd,                  // 書き込み完了時High
+    output          oRdVd                   // 読み込みデータ出力時High
 );
-
-// parameter ERASE_SECTOR_SIZE  = 256,   // KB
-// parameter PROGRAM_SIZE = 512    // Byte
-// parameter PARAMETER_SECTOR_SIZE = 4 // KB
 
 
 //----------------------------------------------------------
@@ -61,7 +57,7 @@ fmState FM_STATE (
 // Flash Memory Spi Access
 //----------------------------------------------------------
 fmSpi #(
-    .pClkDiv        (pClkDiv)
+    .pClkDiv        (pClkDiv),
     .pHoldTime      (pHoldTime),
     .pMode          (pMode)
 ) FM_SPI (
@@ -73,6 +69,7 @@ fmSpi #(
     .oWp            (oWp),
     .oHold          (oHold),
     .iCke           (wCke),
+    .iCmd           (wCmd),
     .iCs            (wCs),
     .iWd            (wWd),
     .oRd            (wRd),

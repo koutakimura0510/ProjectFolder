@@ -50,23 +50,32 @@ assign ioApdsSda    = 1'bz;
 //----------------------------------------------------------
 // Spi Rom Control Block
 //----------------------------------------------------------
-srcWrapper #(
-    .pClkDiv (400)
-) SRC (
+fmcWrapper #(
+    .pClkDiv        (4),
+    .pHoldTime      (10),
+    .pMode          ("mode0")
+) FMC (
+    .iSysClk        (iSysClk),
     .oQspiCs        (oQspiCs),
     .oQspiSck       (oQspiSck),
     .ioQspiDq0      (ioQspiDq0),
     .ioQspiDq1      (ioQspiDq1),
     .ioQspiDq2      (ioQspiDq2),
     .ioQspiDq3      (ioQspiDq3),
+    .iPixel         (0),
     .oPixel         (),
     .iPixelAddr     (0),
     .iPixelCke      (0),
-    .oPixelVd       (),
+    .iPixelCmd      (0),
+    .oPixelWdVd     (),
+    .oPixelRdVd     (),
+    .iSound         (0),
     .oSound         (),
     .iSoundAddr     (0),
     .iSoundCke      (0),
-    .oSoundVd       ()
+    .iSoundCmd      (0),
+    .oSoundWdVd     (),
+    .oSoundRdVd     ()
 );
 
 //----------------------------------------------------------
