@@ -48,35 +48,83 @@ assign ioApdsSda    = 1'bz;
 
 
 //----------------------------------------------------------
+// Update System Block
+//----------------------------------------------------------
+usbWrapper #(
+    .pClkDiv    (868),
+    .pBitLen    (8)
+) USB (
+    .iSysClk    (iSysClk),
+    .iRst       (iRst),
+    .iCke       (),
+    .iSendData  (),
+    .oUartRX    (),
+    .oReady     ()
+);
+
+
+//----------------------------------------------------------
 // Spi Rom Control Block
 //----------------------------------------------------------
+wire [ 7:0] wInPixel, wOutPixel;
+wire [26:0] wPixelAddr;
+wire wPixelCke;
+wire wPixelCmd;
+wire wPixelWdVd;
+wire wPixelRdVd;
+wire wPixelSectorCke;
+wire wPixelWblockCke;
+
+wire [ 7:0] wInSound, wOutSound;
+wire [26:0] wSoundAddr;
+wire wSoundCke;
+wire wSoundCmd;
+wire wSoundWdVd;
+wire wSoundRdVd;
+wire wSoundSectorCke;
+wire wSoundWblockCke;
+
 fmcWrapper #(
-    .pClkDiv        (4),
-    .pHoldTime      (10),
-    .pMode          ("mode0")
+    .pClkDiv            (4),
+    .pSector            (2048),
+    .pPage              (64),
+    .pBlock             (1024),
+    .pHoldTime          (10),
+    .pMode              ("mode0")
 ) FMC (
-    .iSysClk        (iSysClk),
-    .oQspiCs        (oQspiCs),
-    .oQspiSck       (oQspiSck),
-    .ioQspiDq0      (ioQspiDq0),
-    .ioQspiDq1      (ioQspiDq1),
-    .ioQspiDq2      (ioQspiDq2),
-    .ioQspiDq3      (ioQspiDq3),
-    .iPixel         (0),
-    .oPixel         (),
-    .iPixelAddr     (0),
-    .iPixelCke      (0),
-    .iPixelCmd      (0),
-    .oPixelWdVd     (),
-    .oPixelRdVd     (),
-    .iSound         (0),
-    .oSound         (),
-    .iSoundAddr     (0),
-    .iSoundCke      (0),
-    .iSoundCmd      (0),
-    .oSoundWdVd     (),
-    .oSoundRdVd     ()
+    .iSysClk            (iSysClk),
+    .iRst               (iRst),
+    .oQspiCs            (oQspiCs),
+    .oQspiSck           (oQspiSck),
+    .ioQspiDq0          (ioQspiDq0),
+    .ioQspiDq1          (ioQspiDq1),
+    .ioQspiDq2          (ioQspiDq2),
+    .ioQspiDq3          (ioQspiDq3),
+    .iPixel             (wInPixel),
+    .oPixel             (wOutPixel),
+    .iPixelAddr         (wPixelAddr),
+    .iPixelCke          (wPixelCke),
+    .iPixelCmd          (wPixelCmd),
+    .oPixelWdVd         (wPixelWdVd),
+    .oPixelRdVd         (wPixelRdVd),
+    .oPixelSectorCke    (wPixelSectorCke),
+    .oPixelWblockCke    (wPixelWblockCke),
+    .iSound             (wInSound),
+    .oSound             (wOutSound),
+    .iSoundAddr         (wSoundAddr),
+    .iSoundCke          (wSoundCke),
+    .iSoundCmd          (wSoundCmd),
+    .oSoundWdVd         (wSoundWdVd),
+    .oSoundRdVd         (wSoundRdVd),
+    .oSoundSectorCke    (wSoundSectorCke),
+    .oSoundWblockCke    (wSoundWblockCke)
 );
+
+
+//----------------------------------------------------------
+// Spi Dummy Data
+//----------------------------------------------------------
+
 
 //----------------------------------------------------------
 // APDS9960 Control Block

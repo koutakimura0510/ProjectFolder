@@ -6,10 +6,14 @@
 //----------------------------------------------------------
 module fmTop #(
     parameter [9:0] pClkDiv     = 4,        // 100MHz / 4 = 25MHz
-    parameter       pHoldTime   = 10,       // Mosi Hold Time
+    parameter       pSector     = 2048,     // 1 page の合計セクタ数
+    parameter       pPage       = 64,       // 1 block の合計ページ数　
+    parameter       pBlock      = 1024,     // Memory のブロック数
+    parameter       pHoldTime   = 1,        // Mosi Hold Time
     parameter       pMode       = "mode0"   // mode0 mode3 対応
 )(
     input           iSysClk,                // system clk
+    input           iRst,                   // Active High
     output          oCs,                    // Chip Select
     output          oSck,                   // spi clk
     output          oMosi,                  // master out slave in
@@ -22,7 +26,9 @@ module fmTop #(
     input           iCke,                   // 0. disconnect 1. active
     input           iCmd,                   // 1. Read / 0. Write
     output          oWdVd,                  // 書き込み完了時High
-    output          oRdVd                   // 読み込みデータ出力時High
+    output          oRdVd,                  // 読み込みデータ出力時High
+    output          oSectorCke,             // 1page カウント時 High
+    output          oWblockCke              // 1block 書き込み時 High
 );
 
 
@@ -32,17 +38,25 @@ module fmTop #(
 // 後段の Spi 送受信モジュール の
 //----------------------------------------------------------
 wire [7:0] wWd, wRd;
-wire wWdVd, wRdVd;                      assign oWdVd = wWdVd;
+wire wWdVd, wRdVd;
 wire wCs, wCke, wCmd;
 
-fmState FM_STATE (
+fmState #(
+    .pSector        (pSector),
+    .pPage          (pPage),
+    .pBlock         (pBlock)
+) FM_STATE (
     .iSysClk        (iSysClk),
+    .iRst           (iRst),
     .iCke           (iCke),
     .iCmd           (iCmd),
     .iAddr          (iAddr),
     .iWd            (iWd),
+    .oWdVd          (oWdVd),
     .oRd            (oRd),
     .oRdVd          (oRdVd),
+    .oSectorCke     (oSectorCke),
+    .oWblockCke     (oWblockCke),
     .oWd            (wWd),
     .iWdVd          (wWdVd),
     .iRd            (wRd),

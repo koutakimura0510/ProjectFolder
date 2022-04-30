@@ -187,25 +187,12 @@ end
 // 送信バイトデータの取り込み
 // 1bitずつ送信するため、rSckCntの開始時に新規データで上書きする
 //----------------------------------------------------------
-reg [7:0] rWd;
+reg [7:0] rMosi;                        assign oMosi  = rMosi[7];
 
 always @(posedge iSysClk)
 begin
-    if (!iCke)              rWd <= iWd;
-    else if (qHoldTimeCke)  rWd <= {rWd[6:0], 1'b1};
-    else                    rWd <= rWd;
-end
-
-
-//----------------------------------------------------------
-// Sckの立ち下がりエッジ時にデータ更新
-//----------------------------------------------------------
-reg rMosi;                              assign oMosi  = rMosi;
-
-always @(posedge iSysClk)
-begin
-    if (!iCke)              rMosi <= rWd[7];
-    else if (qHoldTimeCke)  rMosi <= rWd[7];
+    if (!iCke)              rMosi <= iWd;
+    else if (qHoldTimeCke)  rMosi <= {rMosi[6:0], 1'b1};
     else                    rMosi <= rMosi;
 end
 

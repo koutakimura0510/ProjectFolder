@@ -12,10 +12,14 @@
 //----------------------------------------------------------
 module fmcWrapper #(
     parameter [9:0] pClkDiv     = 4,        // 100MHz / 4 = 25MHz
+    parameter       pSector     = 2048,     // 1 page の合計セクタ数
+    parameter       pPage       = 64,       // 1 block の合計ページ数　
+    parameter       pBlock      = 1024,     // Memory のブロック数
     parameter       pHoldTime   = 10,       // Mosi Hold Time
     parameter       pMode       = "mode0"   // mode0 mode3 対応
 )(
     input           iSysClk,
+    input           iRst,           // Active High
     output [1:0]    oQspiCs,        // Qspi Flash Memory chip select Low Active
     output [1:0]    oQspiSck,       // Qspi Flash Memory Clk
     output [1:0]    ioQspiDq0,      // SPI時 MOSI
@@ -29,13 +33,17 @@ module fmcWrapper #(
     input           iPixelCmd,      // 1.Read / 0.Write
     output          oPixelWdVd,     // Write Data Valid / 書き込み完了時 High
     output          oPixelRdVd,     // Read Data Valid  / 有効データ出力時 High
+    output          oPixelSectorCke,// 1page カウント時 High
+    output          oPixelWblockCke,// 1block 書き込み時 High
     input  [7:0]    iSound,         // PCM 16bit 48000 Hz
     output [7:0]    oSound,         // PCM 16bit 48000 Hz
     input  [26:0]   iSoundAddr,     // 26:17 Block - 16:11 Page - 10:0 Column
     input           iSoundCke,      // Address Enable
     input           iSoundCmd,      // 1.Read / 0.Write
     output          oSoundWdVd,     // Read Data Valid / 書き込み完了時 High
-    output          oSoundRdVd      // Read Data Valid / 有効データ出力時 High
+    output          oSoundRdVd,     // Read Data Valid / 有効データ出力時 High
+    output          oSoundSectorCke,// 1page カウント時 High
+    output          oSoundWblockCke // 1block 書き込み時 High
 );
 
 
@@ -47,10 +55,14 @@ wire [1:0] wQspiDq0, wQspiDq1, wQspiDq2, wQspiDq3;
 
 fmTop #(
     .pClkDiv        (pClkDiv),
+    .pSector        (pSector),
+    .pPage          (pPage),
+    .pBlock         (pBlock),
     .pHoldTime      (pHoldTime),
     .pMode          (pMode)
 ) FMB_SPI_PIXEL (
     .iSysClk        (iSysClk),
+    .iRst           (iRst),
     .oCs            (wQspiCs  [0]),
     .oSck           (wQspiSck [0]),
     .oMosi          (wQspiDq0 [0]),
@@ -63,15 +75,21 @@ fmTop #(
     .iCke           (iPixelCke),
     .iCmd           (iPixelCmd),
     .oWdVd          (oPixelWdVd),
-    .oRdVd          (oPixelRdVd)
+    .oRdVd          (oPixelRdVd),
+    .oSectorCke     (oPixelSectorCke),
+    .oWblockCke     (oPixelWblockCke)
 );
 
 fmTop #(
     .pClkDiv        (pClkDiv),
+    .pSector        (pSector),
+    .pPage          (pPage),
+    .pBlock         (pBlock),
     .pHoldTime      (pHoldTime),
     .pMode          (pMode)
 ) FMB_SPI_SOUND (
     .iSysClk        (iSysClk),
+    .iRst           (iRst),
     .oCs            (wQspiCs  [1]),
     .oSck           (wQspiSck [1]),
     .oMosi          (wQspiDq0 [1]),
@@ -84,7 +102,9 @@ fmTop #(
     .iCke           (iSoundCke),
     .iCmd           (iSoundCmd),
     .oWdVd          (oSoundWdVd),
-    .oRdVd          (oSoundRdVd)
+    .oRdVd          (oSoundRdVd),
+    .oSectorCke     (oSoundSectorCke),
+    .oWblockCke     (oSoundWblockCke)
 );
 
 
