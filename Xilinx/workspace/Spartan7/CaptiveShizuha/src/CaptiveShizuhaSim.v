@@ -21,7 +21,7 @@ wire oApdsScl;
 wire ioApdsSda;
 
 // QSPI
-reg  [1:0] rQspiDq1 = 0;
+reg  [1:0] rQspiDq1 = 2'b11;
 wire [1:0] oQspiCs;
 wire [1:0] oQspiSck;
 wire [1:0] ioQspiDq0;
@@ -59,7 +59,8 @@ CaptiveShizuhaTop #(
     .pVbottom       (2),
     .pVsync         (2),
     .pPixelDebug    ("yes"),
-    .pBuffDepth     (32)
+    .pBuffDepth     (32),
+    .pDebug         ("on")
 ) TOP (
     .iClk           (rClk),
     .oUnusedPin     (oUnusedPin),
@@ -69,7 +70,7 @@ CaptiveShizuhaTop #(
     .oQspiCs        (oQspiCs),
     .oQspiSck       (oQspiSck),
     .ioQspiDq0      (ioQspiDq0),
-    .ioQspiDq1      (ioQspiDq1),
+    .ioQspiDq1      (rQspiDq1),
     .ioQspiDq2      (ioQspiDq2),
     .ioQspiDq3      (ioQspiDq3),
     .oHdmiClkPos    (oHdmiClkPos),

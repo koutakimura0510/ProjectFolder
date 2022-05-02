@@ -6,7 +6,7 @@
 //----------------------------------------------------------
 module fmSpi #(
     parameter [9:0] pClkDiv   = 4,      // 100MHz / 4 = 25MHz
-    parameter       pHoldTime = 10,     // Mosi Hold Time
+    parameter       pHoldTime = 1,      // Mosi Hold Time
     parameter       pMode     = "mode0" // mode0 mode3 対応
 )(
     input           iSysClk,            // system clk
@@ -67,6 +67,9 @@ reg qSckCke, qByteVd;
 generate
     if (pMode == "mode0")
     begin
+        //----------------------------------------------------------
+        // Mode 0 
+        //----------------------------------------------------------
         always @(posedge iSysClk) 
         begin
             if (!iCke)              rScl <= 1'b0;
@@ -90,6 +93,9 @@ generate
     end
     else
     begin
+        //----------------------------------------------------------
+        // Mode 3
+        //----------------------------------------------------------
         always @(posedge iSysClk) 
         begin
             if (!iCke)              rScl <= 1'b1;
@@ -112,8 +118,6 @@ generate
         end
     end
 endgenerate
-
-
 
 
 //----------------------------------------------------------

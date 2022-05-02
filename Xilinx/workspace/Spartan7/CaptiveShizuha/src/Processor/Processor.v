@@ -8,7 +8,8 @@ module Processer #(
     parameter       pHdisplay     = 640,
     parameter       pVdisplay     = 480,
     parameter       pPixelDebug   = "yes",
-    parameter       pBuffDepth    = 1024
+    parameter       pBuffDepth    = 1024,
+    parameter       pDebug        = "off"
 )(
     input           iPixelClk,      // Pixel Clk
     input           iSysClk,        // System Clk
@@ -33,63 +34,84 @@ module Processer #(
 //---------------------------------------------------------------------------
 // 未使用 Pin 割り当て
 //---------------------------------------------------------------------------
-// UART
-// iUartRx
-assign oUartTx      = 1'b1;
-
-//
 assign oUnusedPin   = 3'd0;
 assign oApdsScl     = 1'b1;
 assign ioApdsSda    = 1'bz;
+
 
 //----------------------------------------------------------
 // Ultra Simple Interface Bus
 //----------------------------------------------------------
 
 
+
 //----------------------------------------------------------
 // Update System Block
 //----------------------------------------------------------
+wire [26:0] wUsbAddr;
+wire [ 7:0] wUsbPixelUpDa;
+wire wUsbPixelCke;
+wire [ 7:0] wUsbSoundUpDa;
+wire wUsbSoundCke;
+wire wUsbCmd;
+reg  qUsbWdVd;
+reg  qUsbSectorCke;
+reg  qUsbBlockCke;
+reg  qUsbPdCmdCke;
+
 usbWrapper #(
-    .pClkDiv    (868),
-    .pBitLen    (8)
+    .pClkDiv            (868),
+    .pBitLen            (8),
+    .pDebug             (pDebug)
 ) USB (
-    .iSysClk    (iSysClk),
-    .iRst       (iRst),
-    .iCke       (),
-    .iSendData  (),
-    .oUartRX    (),
-    .oReady     ()
+    .iSysClk            (iSysClk),
+    .iRst               (iRst),
+    .iUartRx            (iUartRx),
+    .oUartTx            (oUartTx),
+    .iWdVd              (qUsbWdVd),
+    .iSectorCke         (qUsbSectorCke),
+    .iBlockCke          (qUsbBlockCke),
+    .iPdCmdCke          (qUsbPdCmdCke),
+    .oAddr              (wUsbAddr),
+    .oPixelUpdate       (wUsbPixelUpDa),
+    .oPixelCke          (wUsbPixelCke),
+    .oSoundUpdate       (wUsbSoundUpDa),
+    .oSoundCke          (wUsbSoundCke),
+    .oCmd               (wUsbCmd)
 );
 
 
 //----------------------------------------------------------
 // Spi Rom Control Block
 //----------------------------------------------------------
-wire [ 7:0] wInPixel, wOutPixel;
-wire [26:0] wPixelAddr;
-wire wPixelCke;
-wire wPixelCmd;
-wire wPixelWdVd;
-wire wPixelRdVd;
-wire wPixelSectorCke;
-wire wPixelWblockCke;
+reg  [ 7:0] qFmcInPixel;
+wire [ 7:0] wFmcOutPixel;
+reg  [26:0] qFmcPixelAddr;
+reg  qFmcPixelCke;
+reg  qFmcPixelCmd;
+wire wFmcPixelWdVd;
+wire wFmcPixelRdVd;
+wire wFmcPixelSectorCke;
+wire wFmcPixelWblockCke;
+wire wFmcPixelPdCmdCke;
 
-wire [ 7:0] wInSound, wOutSound;
-wire [26:0] wSoundAddr;
-wire wSoundCke;
-wire wSoundCmd;
-wire wSoundWdVd;
-wire wSoundRdVd;
-wire wSoundSectorCke;
-wire wSoundWblockCke;
+reg  [ 7:0] qFmcInSound;
+wire [ 7:0] wFmcOutSound;
+reg  [26:0] qFmcSoundAddr;
+reg  qFmcSoundCke;
+reg  qFmcSoundCmd;
+wire wFmcSoundWdVd;
+wire wFmcSoundRdVd;
+wire wFmcSoundSectorCke;
+wire wFmcSoundWblockCke;
+wire wFmcSoundPdCmdCke;
 
 fmcWrapper #(
     .pClkDiv            (4),
     .pSector            (2048),
     .pPage              (64),
     .pBlock             (1024),
-    .pHoldTime          (10),
+    .pHoldTime          (1),
     .pMode              ("mode0")
 ) FMC (
     .iSysClk            (iSysClk),
@@ -100,30 +122,43 @@ fmcWrapper #(
     .ioQspiDq1          (ioQspiDq1),
     .ioQspiDq2          (ioQspiDq2),
     .ioQspiDq3          (ioQspiDq3),
-    .iPixel             (wInPixel),
-    .oPixel             (wOutPixel),
-    .iPixelAddr         (wPixelAddr),
-    .iPixelCke          (wPixelCke),
-    .iPixelCmd          (wPixelCmd),
-    .oPixelWdVd         (wPixelWdVd),
-    .oPixelRdVd         (wPixelRdVd),
-    .oPixelSectorCke    (wPixelSectorCke),
-    .oPixelWblockCke    (wPixelWblockCke),
-    .iSound             (wInSound),
-    .oSound             (wOutSound),
-    .iSoundAddr         (wSoundAddr),
-    .iSoundCke          (wSoundCke),
-    .iSoundCmd          (wSoundCmd),
-    .oSoundWdVd         (wSoundWdVd),
-    .oSoundRdVd         (wSoundRdVd),
-    .oSoundSectorCke    (wSoundSectorCke),
-    .oSoundWblockCke    (wSoundWblockCke)
+    .iPixel             (qFmcInPixel),
+    .oPixel             (wFmcOutPixel),
+    .iPixelAddr         (qFmcPixelAddr),
+    .iPixelCke          (qFmcPixelCke),
+    .iPixelCmd          (qFmcPixelCmd),
+    .oPixelWdVd         (wFmcPixelWdVd),
+    .oPixelRdVd         (wFmcPixelRdVd),
+    .oPixelSectorCke    (wFmcPixelSectorCke),
+    .oPixelWblockCke    (wFmcPixelWblockCke),
+    .oPixelPdCmdCke     (wFmcPixelPdCmdCke),
+    .iSound             (qFmcInSound),
+    .oSound             (wFmcOutSound),
+    .iSoundAddr         (qFmcSoundAddr),
+    .iSoundCke          (qFmcSoundCke),
+    .iSoundCmd          (qFmcSoundCmd),
+    .oSoundWdVd         (wFmcSoundWdVd),
+    .oSoundRdVd         (wFmcSoundRdVd),
+    .oSoundSectorCke    (wFmcSoundSectorCke),
+    .oSoundWblockCke    (wFmcSoundWblockCke),
+    .oSoundPdCmdCke     (wFmcSoundPdCmdCke)
 );
 
-
-//----------------------------------------------------------
-// Spi Dummy Data
-//----------------------------------------------------------
+always @*
+begin
+    qUsbSectorCke   <= wFmcPixelSectorCke | wFmcSoundSectorCke; 
+    qUsbBlockCke    <= wFmcPixelWblockCke | wFmcSoundWblockCke; 
+    qUsbWdVd        <= wFmcPixelWdVd | wFmcSoundWdVd;
+    qUsbPdCmdCke    <= wFmcPixelPdCmdCke | wFmcSoundPdCmdCke;
+    qFmcInPixel     <= wUsbPixelUpDa;
+    qFmcPixelAddr   <= wUsbAddr;
+    qFmcPixelCke    <= wUsbPixelCke;
+    qFmcPixelCmd    <= wUsbCmd;
+    qFmcInSound     <= wUsbSoundUpDa;
+    qFmcSoundAddr   <= wUsbAddr;
+    qFmcSoundCke    <= wUsbSoundCke;
+    qFmcSoundCmd    <= wUsbCmd;
+end
 
 
 //----------------------------------------------------------
@@ -144,9 +179,9 @@ fmcWrapper #(
 //----------------------------------------------------------
 // Pixel Generate Block
 //----------------------------------------------------------
-reg  qCkeDgb;
-wire [23:0] wPiDgb;
-wire wVdDgb;
+reg  qPgbCke;
+wire [23:0] wPgbPi;
+wire wPgbVd;
 
 pgbWrapper #(
     .pHdisplay      (pHdisplay),
@@ -156,9 +191,9 @@ pgbWrapper #(
 ) PGB (
     .iSysClk        (iSysClk),
     .iRst           (iRst),
-    .iCKE           (qCkeDgb),
-    .oPixel         (wPiDgb),
-    .oVd            (wVdDgb),
+    .iCKE           (qPgbCke),
+    .oPixel         (wPgbPi),
+    .oVd            (wPgbVd),
     .oFe            ()
 );
 
@@ -175,8 +210,10 @@ pgbWrapper #(
 //----------------------------------------------------------
 // Pixel Async Fifo Block
 //----------------------------------------------------------
-wire [23:0] wRD;            assign oPixel = wRD;
-wire wFull;
+wire [23:0] wPfbRd;            assign oPixel = wPfbRd;
+reg  [23:0] qPfbPi;
+reg  qPfbVd;
+wire wPfbFull;
 
 pfbWrapper #(
     .pBuffDepth     (pBuffDepth),
@@ -185,16 +222,18 @@ pfbWrapper #(
     .iSysClk        (iSysClk),
     .iPixelClk      (iPixelClk),
     .iRst           (iRst),
-    .iWD            (wPiDgb),
-    .oRD            (wRD),
-    .iWE            (wVdDgb),
+    .iWD            (qPfbPi),
+    .oRD            (wPfbRd),
+    .iWE            (qPfbVd),
     .iRE            (iPFvde),
-    .oFull          (wFull)
+    .oFull          (wPfbFull)
 );
 
 always @*
 begin
-    qCkeDgb <= (~wFull);
+    qPfbVd  <= wPgbVd;
+    qPfbPi  <= wPgbPi;
+    qPgbCke <= (~wPfbFull);
 end
 
 endmodule

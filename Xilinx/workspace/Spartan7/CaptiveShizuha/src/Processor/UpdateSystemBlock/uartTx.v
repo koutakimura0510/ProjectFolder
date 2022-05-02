@@ -9,13 +9,14 @@
 //------------------------------------------------------
 module uartTx #(
     parameter [ 9:0]    pClkDiv = 868,  // 100MHz / 115200bps
-    parameter           pBitLen = 16    // 送信ビット長
+    parameter           pBitLen = 8,    // 送信ビット長
+    parameter           pDec    = "dec" // dec 10進数 / ascii 
 )(
     input               iSysClk,        // System Clk
     input               iRst,           // Active High
     input               iCke,           // 1. connect / 0. discon
     input [pBitLen-1:0] iSendData,      // 送信データ
-    output              oUartRX,        // 送信bit
+    output              oUartTx,        // 送信bit
     output              oReady          // 送信中Low 受付可能High
 );
 
@@ -47,19 +48,29 @@ end
 localparam              lpAsciiCnt  = ((pBitLen * 2) >> 3) + 1'b1;
 localparam              lpBitMsb    = (pBitLen  * 2) + 7;
 localparam [lpBitMsb:0] lpBitNull   = 0;
-
-wire [lpBitMsb:0] wAscii;
+wire [pBitLen-1:0] wData;
 wire wVd;
 
-DecAsciiConvert # (
-    .pBitLen    (pBitLen)
-) DEC_ASCII_CON (
-    .iSysClk    (iSysClk),
-    .iCke       (iCke),
-    .iDec       (iSendData),
-    .oAscii     (wAscii),
-    .oVd        (wVd)
-);
+
+generate
+    if (pDec == "dec")
+    begin
+        assign wData  = iSendData;
+        assign wVd    = iCke;
+    end
+    else
+    begin
+        DecAsciiConvert # (
+            .pBitLen    (pBitLen)
+        ) DEC_ASCII_CON (
+            .iSysClk    (iSysClk),
+            .iCke       (iCke),
+            .iDec       (iSendData),
+            .oAscii     (wData),
+            .oVd        (wVd)
+        );
+    end
+endgenerate
 
 
 //----------------------------------------------------------
@@ -73,7 +84,7 @@ localparam [3:0]
     lpStStopBit     = 4'd3,
     lpStNextLine    = 4'd4;
 
-reg rRx;                            assign oUartRX = rRx;
+reg rTx;                            assign oUartTx = rTx;
 reg rReady;                         assign oReady  = rReady;
 reg [3:0]        rCnt, rAsCnt;
 reg [lpBitMsb:0] rData;
@@ -84,7 +95,7 @@ always @(posedge iSysClk)
 begin
     if (iRst)
     begin
-        rRx    <= 1'b1;
+        rTx    <= 1'b1;
         rSt    <= lpStIdle;
         rData  <= lpBitNull;
         rAsCnt <= 0;
@@ -96,9 +107,9 @@ begin
         case (rSt)
             lpStIdle:
             begin
-                rRx    <= 1'b1;
+                rTx    <= 1'b1;
                 rSt    <= wVd;
-                rData  <= wAscii;
+                rData  <= wData;
                 rCnt   <= 0;
                 rReady <= ~wVd;
             end
@@ -107,12 +118,12 @@ begin
             begin
                 if (qDivEn)
                 begin
-                    rRx   <= 1'b0;
+                    rTx   <= 1'b0;
                     rSt   <= lpStSend;
                 end
                 else
                 begin
-                    rRx   <= 1'b1;
+                    rTx   <= 1'b1;
                     rSt   <= lpStStartBit;
                 end
             end
@@ -121,14 +132,14 @@ begin
             begin
                 if (qDivEn)
                 begin
-                    rRx   <= rData[0];
+                    rTx   <= rData[0];
                     rSt   <= (rCnt == 4'd7) ? lpStStopBit : lpStSend;
                     rCnt  <= (rCnt == 4'd7) ? 0 : rCnt + 1'b1;
                     rData <= {1'b1, rData[lpBitMsb:1]};
                 end
                 else
                 begin
-                    rRx   <= rRx;
+                    rTx   <= rTx;
                     rSt   <= lpStSend;
                     rData <= rData;
                     rCnt  <= rCnt;
@@ -139,14 +150,14 @@ begin
             begin
                 if (qDivEn)
                 begin
-                    rRx    <= 1'b1;
+                    rTx    <= 1'b1;
                     rReady <= (rAsCnt == lpAsciiCnt) ? 1'b1 : 1'b0;
                     rSt    <= (rAsCnt == lpAsciiCnt) ? lpStIdle : lpStStartBit;
                     rAsCnt <= (rAsCnt == lpAsciiCnt) ? 0 : rAsCnt + 1'b1;
                 end
                 else
                 begin
-                    rRx    <= 1'b0;
+                    rTx    <= 1'b0;
                     rReady <= 1'b0;
                     rSt    <= lpStStopBit;
                     rAsCnt <= rAsCnt;
@@ -155,7 +166,7 @@ begin
 
             default:
             begin
-                rRx    <= 1'b1;
+                rTx    <= 1'b1;
                 rSt    <= lpStIdle;
                 rData  <= lpBitNull;
                 rAsCnt <= 0;

@@ -26,6 +26,7 @@ module fmState #(
     output          oRdVd,          // Top    Side: 読み込みデータ出力時High
     output          oSectorCke,     // Top    Side: 1page カウント時 High
     output          oWblockCke,     // Top    Side: 1block 書き込み時 High
+    output          oPdCmdCke,      // Top    Side: Program Data Cmd 完了時 High
     output [7:0]    oWd,            // Memory Side: フラッシュメモリの書き込みデータ
     output          iWdVd,          // Memory Side: 1byte 書き込み完了時 High
     input  [7:0]    iRd,            // Memory Side: フラッシュメモリからの読み込みデータ
@@ -281,12 +282,32 @@ end
 
 always @(posedge iSysClk)
 begin
-    rSectorCke <= qCntCke;
+    case (rSt)
+        lpWrNow:    rSectorCke <= qCntCke;
+        lpReNow:    rSectorCke <= qCntCke;
+        default:    rSectorCke <= 1'b0;
+    endcase
 end
 
 always @*
 begin
     qCntCke <= rCmdCnt == rCmdMaxCnt;
+end
+
+//----------------------------------------------------------
+// アドレス書き込み・読み込みコマンド発行確認信号の生成
+// 上位モジュールで R/W のアドレスを管理するため、
+// Pe Pdr の Cke を出力しておく
+//----------------------------------------------------------
+reg rPdCmdCke;                                        assign oPdCmdCke = rPdCmdCke;
+
+always @(posedge iSysClk)
+begin
+    case (rSt)
+        lpPe:      rPdCmdCke <= qCntCke;
+        lpPdr:      rPdCmdCke <= qCntCke;
+        default:    rPdCmdCke <= 1'b0;
+    endcase
 end
 
 
@@ -314,7 +335,11 @@ end
 
 always @(posedge iSysClk)
 begin
-    rWblockCke <= qPageCke;
+    case (rSt)
+        lpWrNow:    rWblockCke <= qPageCke;
+        lpReNow:    rWblockCke <= qPageCke;
+        default:    rWblockCke <= 1'b0;
+    endcase
 end
 
 always @*

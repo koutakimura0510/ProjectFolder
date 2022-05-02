@@ -20,7 +20,8 @@ module CaptiveShizuhaTop #(
     parameter       pVbottom        =  11,
     parameter       pVsync          =   2,
     parameter       pPixelDebug     = "off",
-    parameter       pBuffDepth      = 1024      // Displayの横幅よりも大きいサイズを指定
+    parameter       pBuffDepth      = 1024,      // Displayの横幅よりも大きいサイズを指定
+    parameter       pDebug          = "off"
 )(
     input           iClk,           // OSC  clk
     output [2:0]    oUnusedPin,     // not  pin
@@ -52,7 +53,7 @@ module CaptiveShizuhaTop #(
 //----------------------------------------------------------
 wire wTmdsClk, wPixelClk, wSysClk;
 wire wSysRst;
-wire wVde, wFe, wFvde, wHsync, wVsync;
+wire wPreVde, wPreFe, wPreFvde, wPreHsync, wPreVsync;
 
 PreProcesser #(
     .pHdisplay      (pHdisplay),
@@ -69,11 +70,11 @@ PreProcesser #(
     .oPixelClk      (wPixelClk),
     .oSysClk        (wSysClk),
     .oRst           (wSysRst),
-    .oVde           (wVde),
-    .oFe            (wFe),
-    .oFvde          (wFvde),
-    .oHsync         (wHsync),
-    .oVsync         (wVsync)
+    .oVde           (wPreVde),
+    .oFe            (wPreFe),
+    .oFvde          (wPreFvde),
+    .oHsync         (wPreHsync),
+    .oVsync         (wPreVsync)
 );
 
 
@@ -86,7 +87,8 @@ Processer # (
     .pHdisplay      (pHdisplay),
     .pVdisplay      (pVdisplay),
     .pPixelDebug    (pPixelDebug),
-    .pBuffDepth     (pBuffDepth)
+    .pBuffDepth     (pBuffDepth),
+    .pDebug         (pDebug)
 ) PROCESSER (
     .iPixelClk      (wPixelClk),
     .iSysClk        (wSysClk),
@@ -103,7 +105,7 @@ Processer # (
     .ioQspiDq3      (ioQspiDq3),
     .iUartRx        (iUartRx),
     .oUartTx        (oUartTx),
-    .iPFvde         (wFvde),
+    .iPFvde         (wPreFvde),
     .oPixel         (wPixel)
 );
 
@@ -125,9 +127,9 @@ PostProcesser POSTPROCESSER (
     .ioHdmiCec      (ioHdmiCec),
     .iHdmiHpd       (iHdmiHpd),
     .iPixel         (wPixel),
-    .iVde           (wVde),
-    .iHsync         (wHsync),
-    .iVsync         (wVsync),
+    .iVde           (wPreVde),
+    .iHsync         (wPreHsync),
+    .iVsync         (wPreVsync),
     .oLed           (oLed)
 );
 

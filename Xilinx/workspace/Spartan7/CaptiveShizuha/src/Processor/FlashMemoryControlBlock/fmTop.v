@@ -28,7 +28,8 @@ module fmTop #(
     output          oWdVd,                  // 書き込み完了時High
     output          oRdVd,                  // 読み込みデータ出力時High
     output          oSectorCke,             // 1page カウント時 High
-    output          oWblockCke              // 1block 書き込み時 High
+    output          oWblockCke,             // 1block 書き込み時 High
+    output          oPdCmdCke               // Program Data Cmd 完了時 High
 );
 
 
@@ -57,6 +58,7 @@ fmState #(
     .oRdVd          (oRdVd),
     .oSectorCke     (oSectorCke),
     .oWblockCke     (oWblockCke),
+    .oPdCmdCke      (oPdCmdCke),
     .oWd            (wWd),
     .iWdVd          (wWdVd),
     .iRd            (wRd),

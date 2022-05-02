@@ -15,35 +15,37 @@ module fmcWrapper #(
     parameter       pSector     = 2048,     // 1 page の合計セクタ数
     parameter       pPage       = 64,       // 1 block の合計ページ数　
     parameter       pBlock      = 1024,     // Memory のブロック数
-    parameter       pHoldTime   = 10,       // Mosi Hold Time
+    parameter       pHoldTime   = 1,        // Mosi Hold Time
     parameter       pMode       = "mode0"   // mode0 mode3 対応
 )(
     input           iSysClk,
-    input           iRst,           // Active High
-    output [1:0]    oQspiCs,        // Qspi Flash Memory chip select Low Active
-    output [1:0]    oQspiSck,       // Qspi Flash Memory Clk
-    output [1:0]    ioQspiDq0,      // SPI時 MOSI
-    input  [1:0]    ioQspiDq1,      // SPI時 MISO
-    output [1:0]    ioQspiDq2,      // SPI時 High 固定, 書き込み保護 Low Active
-    output [1:0]    ioQspiDq3,      // SPI時 High 固定, 書き込み停止 Low Active
-    input  [7:0]    iPixel,         // Pixel Data ARGB 4:4:4:4 or YUV 4:2:2
-    output [7:0]    oPixel,         // Pixel Data ARGB 4:4:4:4 or YUV 4:2:2
-    input  [26:0]   iPixelAddr,     // 26:17 Block - 16:11 Page - 10:0 Column
-    input           iPixelCke,      // Address Enable
-    input           iPixelCmd,      // 1.Read / 0.Write
-    output          oPixelWdVd,     // Write Data Valid / 書き込み完了時 High
-    output          oPixelRdVd,     // Read Data Valid  / 有効データ出力時 High
-    output          oPixelSectorCke,// 1page カウント時 High
-    output          oPixelWblockCke,// 1block 書き込み時 High
-    input  [7:0]    iSound,         // PCM 16bit 48000 Hz
-    output [7:0]    oSound,         // PCM 16bit 48000 Hz
-    input  [26:0]   iSoundAddr,     // 26:17 Block - 16:11 Page - 10:0 Column
-    input           iSoundCke,      // Address Enable
-    input           iSoundCmd,      // 1.Read / 0.Write
-    output          oSoundWdVd,     // Read Data Valid / 書き込み完了時 High
-    output          oSoundRdVd,     // Read Data Valid / 有効データ出力時 High
-    output          oSoundSectorCke,// 1page カウント時 High
-    output          oSoundWblockCke // 1block 書き込み時 High
+    input           iRst,                   // Active High
+    output [1:0]    oQspiCs,                // Qspi Flash Memory chip select Low Active
+    output [1:0]    oQspiSck,               // Qspi Flash Memory Clk
+    output [1:0]    ioQspiDq0,              // SPI時 MOSI
+    input  [1:0]    ioQspiDq1,              // SPI時 MISO
+    output [1:0]    ioQspiDq2,              // SPI時 High 固定, 書き込み保護 Low Active
+    output [1:0]    ioQspiDq3,              // SPI時 High 固定, 書き込み停止 Low Active
+    input  [7:0]    iPixel,                 // Pixel Data ARGB 4:4:4:4 or YUV 4:2:2
+    output [7:0]    oPixel,                 // Pixel Data ARGB 4:4:4:4 or YUV 4:2:2
+    input  [26:0]   iPixelAddr,             // 26:17 Block - 16:11 Page - 10:0 Column
+    input           iPixelCke,              // Address Enable
+    input           iPixelCmd,              // 1.Read / 0.Write
+    output          oPixelWdVd,             // Write Data Valid / 書き込み完了時 High
+    output          oPixelRdVd,             // Read Data Valid  / 有効データ出力時 High
+    output          oPixelSectorCke,        // 1page カウント時 High
+    output          oPixelWblockCke,        // 1block 書き込み時 High
+    output          oPixelPdCmdCke,         // Program Data Cmd 完了時 High
+    input  [7:0]    iSound,                 // PCM 16bit 48000 Hz
+    output [7:0]    oSound,                 // PCM 16bit 48000 Hz
+    input  [26:0]   iSoundAddr,             // 26:17 Block - 16:11 Page - 10:0 Column
+    input           iSoundCke,              // Address Enable
+    input           iSoundCmd,              // 1.Read / 0.Write
+    output          oSoundWdVd,             // Read Data Valid / 書き込み完了時 High
+    output          oSoundRdVd,             // Read Data Valid / 有効データ出力時 High
+    output          oSoundSectorCke,        // 1page カウント時 High
+    output          oSoundWblockCke,        // 1block 書き込み時 High
+    output          oSoundPdCmdCke          // Program Data Cmd 完了時 High
 );
 
 
@@ -77,7 +79,8 @@ fmTop #(
     .oWdVd          (oPixelWdVd),
     .oRdVd          (oPixelRdVd),
     .oSectorCke     (oPixelSectorCke),
-    .oWblockCke     (oPixelWblockCke)
+    .oWblockCke     (oPixelWblockCke),
+    .oPdCmdCke      (oPixelPdCmdCke)
 );
 
 fmTop #(
@@ -104,7 +107,8 @@ fmTop #(
     .oWdVd          (oSoundWdVd),
     .oRdVd          (oSoundRdVd),
     .oSectorCke     (oSoundSectorCke),
-    .oWblockCke     (oSoundWblockCke)
+    .oWblockCke     (oSoundWblockCke),
+    .oPdCmdCke      (oSoundPdCmdCke)
 );
 
 

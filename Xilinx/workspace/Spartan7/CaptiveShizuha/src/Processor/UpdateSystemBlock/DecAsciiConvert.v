@@ -48,14 +48,14 @@ always @(posedge iSysClk)
 begin
     rVd2     <= rVd1;
     rJuge    <= qJuge;
-    rDec2[0] <= qDec2;
-    rDec2[1] <= qDec2;
-    rDec2[2] <= qDec2;
-    rDec2[3] <= qDec2;
-    rAsc2[0] <= qAsc2;
-    rAsc2[1] <= qAsc2;
-    rAsc2[2] <= qAsc2;
-    rAsc2[3] <= qAsc2;
+    rDec2[0] <= qDec2[0];
+    rDec2[1] <= qDec2[1];
+    rDec2[2] <= qDec2[2];
+    rDec2[3] <= qDec2[3];
+    rAsc2[0] <= qAsc2[0];
+    rAsc2[1] <= qAsc2[1];
+    rAsc2[2] <= qAsc2[2];
+    rAsc2[3] <= qAsc2[3];
 end
 
 always @*
