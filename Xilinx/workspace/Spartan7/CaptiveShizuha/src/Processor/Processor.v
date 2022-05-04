@@ -24,10 +24,12 @@ module Processer #(
     input  [1:0]    ioQspiDq1,      // Qspi Mode DQ 1 / Spi Mode MISO
     output [1:0]    ioQspiDq2,      // Qspi Mode DQ 2 / Spi Mode Wp   Low Active
     output [1:0]    ioQspiDq3,      // Qspi Mode DQ 3 / Spi Mode Hold Low Active
-    input           iUartRx,        // Debug use Uart
-    output          oUartTx,        // Debug use Uart
+    input           iUartRx,        // use Uart
+    output          oUartTx,        // use Uart
     input           iPFvde,         // Pixel Clk Timing fast video enable
-    output [23:0]   oPixel          // Display Pixel Data
+    output [23:0]   oPixel,         // Display Pixel Data
+    input           iSoundCke,      // Sound Valid
+    output [15:0]   oSound          // Sound Data
 );
 
 
@@ -37,6 +39,24 @@ module Processer #(
 assign oUnusedPin   = 3'd0;
 assign oApdsScl     = 1'b1;
 assign ioApdsSda    = 1'bz;
+
+
+//----------------------------------------------------------
+// Core Master Block
+//----------------------------------------------------------
+// cmbWrapper CMB (
+
+// );
+
+
+//----------------------------------------------------------
+// Sound Generate Block
+//----------------------------------------------------------
+assign oSound = 0;
+
+// sgbWrapper (
+
+// );
 
 
 //----------------------------------------------------------
@@ -84,8 +104,8 @@ usbWrapper #(
 //----------------------------------------------------------
 // Spi Rom Control Block
 //----------------------------------------------------------
-reg  [ 7:0] qFmcInPixel;
-wire [ 7:0] wFmcOutPixel;
+reg  [ 7:0] qFmcPixelIn;
+wire [ 7:0] wFmcPixelOut;
 reg  [26:0] qFmcPixelAddr;
 reg  qFmcPixelCke;
 reg  qFmcPixelCmd;
@@ -95,8 +115,8 @@ wire wFmcPixelSectorCke;
 wire wFmcPixelWblockCke;
 wire wFmcPixelPdCmdCke;
 
-reg  [ 7:0] qFmcInSound;
-wire [ 7:0] wFmcOutSound;
+reg  [ 7:0] qFmcSoundIn;
+wire [ 7:0] wFmcSoundOut;
 reg  [26:0] qFmcSoundAddr;
 reg  qFmcSoundCke;
 reg  qFmcSoundCmd;
@@ -107,7 +127,7 @@ wire wFmcSoundWblockCke;
 wire wFmcSoundPdCmdCke;
 
 fmcWrapper #(
-    .pClkDiv            (4),
+    .pClkDiv            (3),
     .pSector            (2048),
     .pPage              (64),
     .pBlock             (1024),
@@ -122,8 +142,8 @@ fmcWrapper #(
     .ioQspiDq1          (ioQspiDq1),
     .ioQspiDq2          (ioQspiDq2),
     .ioQspiDq3          (ioQspiDq3),
-    .iPixel             (qFmcInPixel),
-    .oPixel             (wFmcOutPixel),
+    .iPixel             (qFmcPixelIn),
+    .oPixel             (wFmcPixelOut),
     .iPixelAddr         (qFmcPixelAddr),
     .iPixelCke          (qFmcPixelCke),
     .iPixelCmd          (qFmcPixelCmd),
@@ -132,8 +152,8 @@ fmcWrapper #(
     .oPixelSectorCke    (wFmcPixelSectorCke),
     .oPixelWblockCke    (wFmcPixelWblockCke),
     .oPixelPdCmdCke     (wFmcPixelPdCmdCke),
-    .iSound             (qFmcInSound),
-    .oSound             (wFmcOutSound),
+    .iSound             (qFmcSoundIn),
+    .oSound             (wFmcSoundOut),
     .iSoundAddr         (qFmcSoundAddr),
     .iSoundCke          (qFmcSoundCke),
     .iSoundCmd          (qFmcSoundCmd),
@@ -148,13 +168,13 @@ always @*
 begin
     qUsbSectorCke   <= wFmcPixelSectorCke | wFmcSoundSectorCke; 
     qUsbBlockCke    <= wFmcPixelWblockCke | wFmcSoundWblockCke; 
-    qUsbWdVd        <= wFmcPixelWdVd | wFmcSoundWdVd;
-    qUsbPdCmdCke    <= wFmcPixelPdCmdCke | wFmcSoundPdCmdCke;
-    qFmcInPixel     <= wUsbPixelUpDa;
+    qUsbWdVd        <= wFmcPixelWdVd      | wFmcSoundWdVd;
+    qUsbPdCmdCke    <= wFmcPixelPdCmdCke  | wFmcSoundPdCmdCke;
+    qFmcPixelIn     <= wUsbPixelUpDa;
     qFmcPixelAddr   <= wUsbAddr;
     qFmcPixelCke    <= wUsbPixelCke;
     qFmcPixelCmd    <= wUsbCmd;
-    qFmcInSound     <= wUsbSoundUpDa;
+    qFmcSoundIn     <= wUsbSoundUpDa;
     qFmcSoundAddr   <= wUsbAddr;
     qFmcSoundCke    <= wUsbSoundCke;
     qFmcSoundCmd    <= wUsbCmd;

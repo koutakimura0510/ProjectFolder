@@ -304,7 +304,7 @@ reg rPdCmdCke;                                        assign oPdCmdCke = rPdCmdC
 always @(posedge iSysClk)
 begin
     case (rSt)
-        lpPe:      rPdCmdCke <= qCntCke;
+        lpPe:       rPdCmdCke <= qCntCke;
         lpPdr:      rPdCmdCke <= qCntCke;
         default:    rPdCmdCke <= 1'b0;
     endcase

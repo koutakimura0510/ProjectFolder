@@ -4,8 +4,8 @@
 // -
 // FIFOコントロールモジュール
 // この回路を使用する上位モジュールでは下記の内容でデータのやり取りを行う
-// 1.書き込み時はoFLLのみ確認すれば良い
-// 2.読み込み時はoEMPとoRDVを確認すれば良い
+// 1.書き込み時はoFullのみ確認すれば良い
+// 2.読み込み時はoEMPとoRdVを確認すれば良い
 //
 // 2022/02/26
 // 処理の流れが分かりにくいため、全体をパイプライン処理に更新
@@ -24,13 +24,13 @@ module fifoController #(
 )(
     input                       iClk,
     input                       iRst,   // Active High
-    input   [pBitWidth-1:0]     iWD,    // write data
-    input                       iWE,    // write enable 有効データ書き込み
-    output                      oFLL,   // 最大書き込み時High
-    output  [pBitWidth-1:0]     oRD,    // read data
-    input                       iRE,    // read enable
-    output                      oRVD,   // 有効データ出力
-    output                      oEMP    // バッファ空時High
+    input   [pBitWidth-1:0]     iWd,    // write data
+    input                       iWe,    // write enable 有効データ書き込み
+    output                      oFull,   // 最大書き込み時High
+    output  [pBitWidth-1:0]     oRd,    // read data
+    input                       iRe,    // read enable
+    output                      oRvd,   // 有効データ出力
+    output                      oEmp    // バッファ空時High
 );
 
 //----------------------------------------------------------
@@ -45,11 +45,12 @@ localparam pAddrWidth  = fBitWidth(pBuffDepth);
 // write read アドレス更新
 // アドレスの位置に応じてハンド・シェイク信号生成
 // 
-// oFLL 書き込みアドレスが一周して読み込みアドレスを超えそうだった場合High
-// oEMP 書き込みと読み込みのアドレスが一致している、または超えそうな場合High
-// oRVD Empty状態ではなく読み込みEnable信号を受信した場合High
+// oFull 書き込みアドレスが一周して読み込みアドレスを超えそうだった場合High
+// oEmp 書き込みと読み込みのアドレスが一致している、または超えそうな場合High
+// oRvd Empty状態ではなく読み込みEnable信号を受信した場合High
 //----------------------------------------------------------
-reg [pAddrWidth-1:0] rWA, qWAn, rRA, rORP;
+reg [pAddrWidth-1:0] rWA, rRA, rORP;
+reg [pAddrWidth-1:0] qWAn [0:5];
 reg qWE, qRE;
 
 
@@ -82,7 +83,7 @@ end
 // ハンドシェイク信号出力
 //----------------------------------------------------------
 reg qFLL, qEMP, qRVD;
-reg rFLL, rEMP, rRVD;    assign {oFLL, oEMP, oRVD} = {qFLL, qEMP, qRVD};
+reg rFLL, rEMP, rRVD;    assign {oFull, oEmp, oRvd} = {rFLL, rEMP, rRVD};
 
 always @(posedge iClk)
 begin
@@ -96,13 +97,19 @@ end
 //---------------------------------------------------------------------------
 always @*
 begin
-    qWAn <= rWA + 1'b1;
-    qFLL <= (qWAn == rRA) ? 1'b1 : 1'b0;
+    qWAn[0] <= rWA + 1'd1;
+    qWAn[1] <= rWA + 2'd2;
+    qWAn[2] <= rWA + 2'd3;
+    qWAn[3] <= rWA + 3'd4;
+    qWAn[4] <= rWA + 3'd5;
+    qWAn[5] <= rWA + 3'd6;
+    qFLL    <= (qWAn[0] == rRA || qWAn[1] == rRA || qWAn[2] == rRA ||
+                qWAn[3] == rRA || qWAn[4] == rRA || qWAn[5] == rRA);
     qEMP <= (rWA  == rRA) ? 1'b1 : 1'b0;
-    // qRVD <= (rRA != rORP);
-    qRVD <= iRE & (~qEMP);
-    qWE  <= iWE & (~qFLL);
-    qRE  <= iRE & (~qEMP);
+    qRVD <= (rRA != rORP);
+    // qRVD <= iRe & (~qEMP);
+    qWE  <= iWe;
+    qRE  <= iRe & (~qEMP);
 end
 
 ////////////////////////////////////////////////////////////
@@ -110,7 +117,7 @@ end
 // FIFO動作
 // 上記のハンドシェイク信号のタイミングを合わせるためDFFに入力を行う
 //----------------------------------------------------------
-wire [pBitWidth-1:0] wRD;             assign oRD = wRD;
+wire [pBitWidth-1:0] wRD;             assign oRd = wRD;
 
 userFifo #(
     .pBuffDepth    (pBuffDepth),
@@ -119,7 +126,7 @@ userFifo #(
 ) USER_FIFO (
     // write side       read side
     .iClk   (iClk),
-    .iWD    (iWD),      .oRD    (wRD),
+    .iWD    (iWd),      .oRD    (wRD),
     .iWA    (rWA),      .iRA    (rRA),
     .iWE    (qWE)
 );

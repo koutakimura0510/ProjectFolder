@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "MAPCHIP.H": "cpp"
+        "MAPCHIP.H": "cpp",
+        "MAPCHIP_ID.H": "cpp"
     }
 }

@@ -81,7 +81,10 @@ PreProcesser #(
 //----------------------------------------------------------
 // CPU
 //----------------------------------------------------------
-wire [23:0] wPixel;
+wire [23:0] wProPixel;
+wire [15:0] wProSound;
+reg  qProSoundCke;
+reg  qProFvde;
 
 Processer # (
     .pHdisplay      (pHdisplay),
@@ -105,15 +108,29 @@ Processer # (
     .ioQspiDq3      (ioQspiDq3),
     .iUartRx        (iUartRx),
     .oUartTx        (oUartTx),
-    .iPFvde         (wPreFvde),
-    .oPixel         (wPixel)
+    .iPFvde         (qProFvde),
+    .oPixel         (wProPixel),
+    .iSoundCke      (qProSoundCke),
+    .oSound         (wProSound)
 );
+
+always @*
+begin
+    qProFvde <= wPreFvde;
+end
 
 
 //----------------------------------------------------------
 // TODO Sound 
 // TMDS output
 //----------------------------------------------------------
+wire wPostSoundCke;
+reg  [15:0] qPostSound;
+reg  [23:0] qPostPixel;
+reg  qPostVde;
+reg  qPostHsync;
+reg  qPostVsync;
+
 PostProcesser POSTPROCESSER (
     .iPixelClk      (wPixelClk),
     .iTmdsClk       (wTmdsClk),
@@ -126,11 +143,22 @@ PostProcesser POSTPROCESSER (
     .ioHdmiSda      (ioHdmiSda),
     .ioHdmiCec      (ioHdmiCec),
     .iHdmiHpd       (iHdmiHpd),
-    .iPixel         (wPixel),
-    .iVde           (wPreVde),
-    .iHsync         (wPreHsync),
-    .iVsync         (wPreVsync),
+    .iPixel         (qPostPixel),
+    .iVde           (qPostVde),
+    .iHsync         (qPostHsync),
+    .iVsync         (qPostVsync),
     .oLed           (oLed)
 );
+
+always @*
+begin
+    // qProSoundCke <= wPostSoundCke;
+    qProSoundCke    <= 1'b0;
+    qPostSound      <= wProSound;
+    qPostPixel      <= wProPixel;
+    qPostVde        <= wPreVde;
+    qPostHsync      <= wPreHsync;
+    qPostVsync      <= wPreVsync;
+end
 
 endmodule

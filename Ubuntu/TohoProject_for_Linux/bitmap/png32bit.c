@@ -164,24 +164,42 @@ int system_init(char *path)
  * type
  * RGBの生成パターンを選択
  */
-uint32_t rgb_generate(uint32_t alpha, uint32_t red, uint32_t green, uint32_t blue, uint32_t type)
+uint32_t rgb_generate(uint32_t alpha, uint32_t red, uint32_t green, uint32_t blue, uint32_t type, uint32_t color_bit)
 {
 	uint32_t pixel;
 
-	switch (type) {
-		case XILINX:
-			pixel = alpha;
-			pixel = (pixel << 8) | red;
-			pixel = (pixel << 8) | blue;
-			pixel = (pixel << 8) | green;
-			break;
+	if (color_bit == 0) {
+		switch (type) {
+			case XILINX:
+				pixel = alpha >> 4;
+				pixel = (pixel << 4) | (red >> 4);
+				pixel = (pixel << 4) | (blue >> 4);
+				pixel = (pixel << 4) | (green >> 4);
+				break;
 
-		default:
-			pixel = alpha;
-			pixel = (pixel << 8) | red;
-			pixel = (pixel << 8) | green;
-			pixel = (pixel << 8) | blue;
-			break;
+			default:
+				pixel = alpha >> 4;
+				pixel = (pixel << 4) | (red >> 4);
+				pixel = (pixel << 4) | (green >> 4);
+				pixel = (pixel << 4) | (blue >> 4);
+				break;
+		}
+	}else{
+		switch (type) {
+			case XILINX:
+				pixel = alpha;
+				pixel = (pixel << 8) | red;
+				pixel = (pixel << 8) | blue;
+				pixel = (pixel << 8) | green;
+				break;
+
+			default:
+				pixel = alpha;
+				pixel = (pixel << 8) | red;
+				pixel = (pixel << 8) | green;
+				pixel = (pixel << 8) | blue;
+				break;
+		}
 	}
 
 	return pixel;
@@ -200,7 +218,7 @@ uint32_t rgb_generate(uint32_t alpha, uint32_t red, uint32_t green, uint32_t blu
  */
 void pixel_generate(void)
 {
-	uint32_t pixel_wid, pixel_hei, type, memory_type;
+	uint32_t pixel_wid, pixel_hei, type, color_bit, memory_type;
 	uint8_t *p;
 
 	/* 指定した画像データのアドレスと情報取得 */
@@ -228,6 +246,10 @@ void pixel_generate(void)
 	fprintf(stderr, "RGBの生成タイプを指定して下さい。\n");
 	fprintf(stderr, "0 = RBG, 1 = RGB\n");
 	scanf("%d", &type);
+	fprintf(stderr, "\n");
+	fprintf(stderr, "RGBのBit数を選択して下さい\n");
+	fprintf(stderr, "0 = 4Bit, 1 = 8Bit\n");
+	scanf("%d", &color_bit);
 	fprintf(stderr, "\n");
 	fprintf(stderr, "データの保存先を選択して下さい。\n");
 	fprintf(stderr, "0 = Flash Memory, 1 = Block RAM\n");
@@ -276,18 +298,26 @@ void pixel_generate(void)
 
 				if (fmt->BytesPerPixel == 3)
 				{
-					pixel = rgb_generate(0xff, color[z + 2], color[z + 1], color[z], type);
+					pixel = rgb_generate(0xff, color[z + 2], color[z + 1], color[z], type, color_bit);
 				}
 				else
 				{
-					pixel = rgb_generate(color[z + 3], color[z], color[z + 1], color[z + 2], type);
+					pixel = rgb_generate(color[z + 3], color[z], color[z + 1], color[z + 2], type, color_bit);
 				}
 				// fprintf(stderr, "ID = %4d, マップチップの切り取り位置 = %4d, color = 0x%08x\n", id_cnt, z / fmt->BytesPerPixel, pixel);
 
 				if (memory_type == 1) {
-					fprintf(fp, "%08x\n", pixel);
+					if (color_bit == 0) {
+						fprintf(fp, "%04x\n", pixel);
+					}else{
+						fprintf(fp, "%08x\n", pixel);
+					}
 				} else {
-					fprintf(fp, "0x%08x,", pixel);
+					if (color_bit == 0) {
+						fprintf(fp, "0x%04x\n", pixel);
+					}else{
+						fprintf(fp, "0x%08x\n", pixel);
+					}
 				}
 			}
 			fprintf(stderr, "ID = %3d,  マップチップのサイズ = %4d\n", id_cnt, wpos / fmt->BytesPerPixel);
