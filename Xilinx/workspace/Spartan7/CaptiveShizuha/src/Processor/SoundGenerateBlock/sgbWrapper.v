@@ -25,6 +25,7 @@ module sgbWrapper (
     output [15:0]           oSound          // Post Side: 音源データ出力
 );
 
-
+assign oChannelRdy = 5'b11111;
+assign oSound      = 16'd0;
 
 endmodule

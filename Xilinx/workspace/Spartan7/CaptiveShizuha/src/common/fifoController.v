@@ -16,21 +16,26 @@
 //
 // 2022-03-21
 // ReadEnableから 2レイテンシでデータ出力する構造に変更、ユーザが意識せずともハンドシェイクが上手く行く用に変更
+//
+// 2022-05-04
+// 読み込みデータを Bit 結合できるよう改造
 // 
 //----------------------------------------------------------
 module fifoController #(
-    parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
-    parameter pBitWidth   = 32      // bitサイズ
+    parameter pBuffDepth        = 256,      // FIFO BRAMのサイズ指定
+    parameter pWriteWidth       = 8,        // bitサイズ
+    parameter pBitConvert       = "off",    // on の場合 出力データの Bit 結合を行う
+    parameter pReadWidth        = 8         // on の場合 WriteWidth と Bit 幅を合わせる
 )(
     input                       iClk,
-    input                       iRst,   // Active High
-    input   [pBitWidth-1:0]     iWd,    // write data
-    input                       iWe,    // write enable 有効データ書き込み
-    output                      oFull,   // 最大書き込み時High
-    output  [pBitWidth-1:0]     oRd,    // read data
-    input                       iRe,    // read enable
-    output                      oRvd,   // 有効データ出力
-    output                      oEmp    // バッファ空時High
+    input                       iRst,       // Active High
+    input   [pWriteWidth-1:0]   iWd,        // write data
+    input                       iWe,        // write enable 有効データ書き込み
+    output                      oFull,      // 最大書き込み時High
+    output  [pReadWidth-1:0]    oRd,        // read data
+    input                       iRe,        // read enable
+    output                      oRvd,       // 有効データ出力
+    output                      oEmp        // バッファ空時High
 );
 
 //----------------------------------------------------------
@@ -83,18 +88,46 @@ end
 // ハンドシェイク信号出力
 //----------------------------------------------------------
 reg qFLL, qEMP, qRVD;
-reg rFLL, rEMP, rRVD;    assign {oFull, oEmp, oRvd} = {rFLL, rEMP, rRVD};
+reg rFLL, rEMP;                         assign {oFull, oEmp} = {rFLL, rEMP};
 
 always @(posedge iClk)
 begin
-    if (iRst)       {rFLL, rEMP, rRVD} <= {1'b0, 1'b0, 1'b0};
-    else            {rFLL, rEMP, rRVD} <= {qFLL, qEMP, qRVD};
+    if (iRst)       {rFLL, rEMP} <= {1'b0, 1'b0};
+    else            {rFLL, rEMP} <= {qFLL, qEMP};
 end
 
+
+//----------------------------------------------------------
+// rvd
+//----------------------------------------------------------
+generate
+    if (pBitConvert == "on")
+    begin
+        reg [1:0] rRvd;                 assign oRvd = rRvd[1];
+
+        always @(posedge iClk)
+        begin
+            if (iRst)       rRvd <= 2'd0;
+            else if (qRVD)  rRvd <= (rRvd == 2'd2) ? 2'd1 : rRvd + 1'b1;
+            else            rRvd <= (rRvd == 2'd2) ? 2'd0 : rRvd;
+        end
+    end
+    else
+    begin
+        reg rRvd;                       assign oRvd = rRvd;
+
+        always @(posedge iClk)
+        begin
+            rRvd <= qRVD;
+        end
+    end
+endgenerate
+
+
 ///////////////////////////////////////////////////////////
-//---------------------------------------------------------------------------
+//---------------------------------------------------------
 // ハンドシェイク信号、read ptrが write ptrを超えないように調整
-//---------------------------------------------------------------------------
+//---------------------------------------------------------
 always @*
 begin
     qWAn[0] <= rWA + 1'd1;
@@ -114,14 +147,14 @@ end
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
-// FIFO動作
+// FIFO 動作
 // 上記のハンドシェイク信号のタイミングを合わせるためDFFに入力を行う
 //----------------------------------------------------------
-wire [pBitWidth-1:0] wRD;             assign oRd = wRD;
+wire [pWriteWidth-1:0] wRD;
 
 userFifo #(
     .pBuffDepth    (pBuffDepth),
-    .pBitWidth     (pBitWidth),
+    .pBitWidth     (pWriteWidth),
     .pAddrWidth    (pAddrWidth)
 ) USER_FIFO (
     // write side       read side
@@ -130,6 +163,27 @@ userFifo #(
     .iWA    (rWA),      .iRA    (rRA),
     .iWE    (qWE)
 );
+
+
+//----------------------------------------------------------
+// Bit 結合
+//----------------------------------------------------------
+generate
+    if (pBitConvert == "on")
+    begin
+        reg [pReadWidth-1:0] rRd;    assign oRd = rRd;
+
+        always @(posedge iClk)
+        begin
+            if (qRVD)   {rRd[15:8], rRd[7:0]} <= {rRd[7:0], wRD};
+            else        rRd <= rRd;
+        end
+    end
+    else
+    begin
+                                    assign oRd = wRD;
+    end
+endgenerate
 
 
 ////////////////////////////////////////////////////////////

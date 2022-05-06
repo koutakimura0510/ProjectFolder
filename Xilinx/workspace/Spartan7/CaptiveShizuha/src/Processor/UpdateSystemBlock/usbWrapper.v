@@ -23,7 +23,8 @@ module usbWrapper #(
     output                  oPixelCke,      // fmc side: 有効読み込みデータ出力時 High
     output [pBitLen-1:0]    oSoundUpdate,   // fmc side: サウンド更新データ
     output                  oSoundCke,      // fmc side: 有効読み込みデータ出力時 High
-    output                  oCmd            // fmc side: 1.Read Cmd, 0.Write Cmd
+    output                  oCmd,           // fmc side: 1.Read Cmd, 0.Write Cmd
+    output                  oUpdateCke      // fmc side: 1.Update Enable, 0.Update Disable
 );
 
 
@@ -146,7 +147,8 @@ end
 // 制御信号 生成
 // iWdVd 受信後一度リセットを行うため Cke Disable にする
 //----------------------------------------------------------
-reg  rStPiCke, rStSoCke;                             assign {oPixelCke, oSoundCke} = {rStPiCke, rStSoCke};
+reg  rStPiCke, rStSoCke;                            assign {oPixelCke, oSoundCke} = {rStPiCke, rStSoCke};
+reg  rUpdateCke;                                    assign oUpdateCke = rUpdateCke;
 
 always @(posedge iSysClk)
 begin
@@ -155,6 +157,16 @@ begin
         lpPiUp:     {rStPiCke, rStSoCke} <= qStRdVd ? 2'b10 : {rStPiCke, rStSoCke};
         lpSoUp:     {rStPiCke, rStSoCke} <= qStRdVd ? 2'b01 : {rStPiCke, rStSoCke};
         default:    {rStPiCke, rStSoCke} <= 2'd0;
+    endcase
+end
+
+always @(posedge iSysClk)
+begin
+    case (rSt)
+        lpIdol:     rUpdateCke <= 1'b0;
+        lpPiUp:     rUpdateCke <= 1'b1;
+        lpSoUp:     rUpdateCke <= 1'b1;
+        default:    rUpdateCke <= 1'b0;
     endcase
 end
 

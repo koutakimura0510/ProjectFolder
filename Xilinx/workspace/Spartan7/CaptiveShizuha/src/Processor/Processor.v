@@ -44,40 +44,114 @@ assign ioApdsSda    = 1'bz;
 //----------------------------------------------------------
 // Core Master Block
 //----------------------------------------------------------
-// cmbWrapper CMB (
+reg  [7:0] qCmbSoundRd;
+reg  qCmbSoundRdVd;
+reg  qCmbSoundSectorCke;
+wire [26:0] wCmbSoundAddr;
+wire wCmbSoundCke;
+wire wCmbSoundCmd;
+reg  [4:0] qCmbAction;
+wire [15:0] wCmbSoundCh0;
+wire [15:0] wCmbSoundCh1;
+wire [15:0] wCmbSoundCh2;
+wire [15:0] wCmbSoundCh3;
+wire [15:0] wCmbSoundCh4;
+reg  [ 4:0] qCmbChannelRdy;
+wire wCmbWdVdCh0;
+wire wCmbWdVdCh1;
+wire wCmbWdVdCh2;
+wire wCmbWdVdCh3;
+wire wCmbWdVdCh4;
 
-// );
+cmbWrapper CMB (
+    .iSysClk                (iSysClk),
+    .iRst                   (iRst),
+    .iSoundRd               (qCmbSoundRd),
+    .iSoundRdVd             (qCmbSoundRdVd),
+    .iSoundSectorCke        (qCmbSoundSectorCke),
+    .oSoundAddr             (wCmbSoundAddr),
+    .oSoundCke              (wCmbSoundCke),
+    .oSoundCmd              (wCmbSoundCmd),
+    .iAction                (5'b11111),
+    .oSgbSoundCh0           (wCmbSoundCh0),
+    .oSgbSoundCh1           (wCmbSoundCh1),
+    .oSgbSoundCh2           (wCmbSoundCh2),
+    .oSgbSoundCh3           (wCmbSoundCh3),
+    .oSgbSoundCh4           (wCmbSoundCh4),
+    .iSgbChannelRdy         (qCmbChannelRdy),
+    .oSgbWdVdCh0            (wCmbWdVdCh0),
+    .oSgbWdVdCh1            (wCmbWdVdCh1),
+    .oSgbWdVdCh2            (wCmbWdVdCh2),
+    .oSgbWdVdCh3            (wCmbWdVdCh3),
+    .oSgbWdVdCh4            (wCmbWdVdCh4)
+);
 
 
 //----------------------------------------------------------
 // Sound Generate Block
 //----------------------------------------------------------
-assign oSound = 0;
+reg  [15:0] qSgbSoundCh0;
+reg  [15:0] qSgbSoundCh1;
+reg  [15:0] qSgbSoundCh2;
+reg  [15:0] qSgbSoundCh3;
+reg  [15:0] qSgbSoundCh4;
+reg  qSgbWdVdCh0;
+reg  qSgbWdVdCh1;
+reg  qSgbWdVdCh2;
+reg  qSgbWdVdCh3;
+reg  qSgbWdVdCh4;
+reg  qSgbCke;
+wire [ 4:0] wSgbChannelRdy;
 
-// sgbWrapper (
+sgbWrapper SGB (
+    .iSysClk                (iSysClk),
+    .iRst                   (iRst),
+    .iSoundCh0              (qSgbSoundCh0),
+    .iSoundCh1              (qSgbSoundCh1),
+    .iSoundCh2              (qSgbSoundCh2),
+    .iSoundCh3              (qSgbSoundCh3),
+    .iSoundCh4              (qSgbSoundCh4),
+    .iWdVdCh0               (qSgbWdVdCh0),
+    .iWdVdCh1               (qSgbWdVdCh1),
+    .iWdVdCh2               (qSgbWdVdCh2),
+    .iWdVdCh3               (qSgbWdVdCh3),
+    .iWdVdCh4               (qSgbWdVdCh4),
+    .oChannelRdy            (wSgbChannelRdy),
+    .iCke                   (qSgbCke),
+    .oSound                 (oSound)
+);
 
-// );
-
-
-//----------------------------------------------------------
-// Ultra Simple Interface Bus
-//----------------------------------------------------------
-
+always @*
+begin
+    qCmbChannelRdy  <= wSgbChannelRdy;
+    qSgbSoundCh0    <= wCmbSoundCh0;
+    qSgbSoundCh1    <= wCmbSoundCh1;
+    qSgbSoundCh2    <= wCmbSoundCh2;
+    qSgbSoundCh3    <= wCmbSoundCh3;
+    qSgbSoundCh4    <= wCmbSoundCh4;
+    qSgbWdVdCh0     <= wCmbWdVdCh0;
+    qSgbWdVdCh1     <= wCmbWdVdCh1;
+    qSgbWdVdCh2     <= wCmbWdVdCh2;
+    qSgbWdVdCh3     <= wCmbWdVdCh3;
+    qSgbWdVdCh4     <= wCmbWdVdCh4;
+    qSgbCke         <= 1'b0;
+end
 
 
 //----------------------------------------------------------
 // Update System Block
 //----------------------------------------------------------
+reg  qUsbWdVd;
+reg  qUsbSectorCke;
+reg  qUsbBlockCke;
+reg  qUsbPdCmdCke;
 wire [26:0] wUsbAddr;
 wire [ 7:0] wUsbPixelUpDa;
 wire wUsbPixelCke;
 wire [ 7:0] wUsbSoundUpDa;
 wire wUsbSoundCke;
 wire wUsbCmd;
-reg  qUsbWdVd;
-reg  qUsbSectorCke;
-reg  qUsbBlockCke;
-reg  qUsbPdCmdCke;
+wire wUpdatCke;
 
 usbWrapper #(
     .pClkDiv            (868),
@@ -97,7 +171,8 @@ usbWrapper #(
     .oPixelCke          (wUsbPixelCke),
     .oSoundUpdate       (wUsbSoundUpDa),
     .oSoundCke          (wUsbSoundCke),
-    .oCmd               (wUsbCmd)
+    .oCmd               (wUsbCmd),
+    .oUpdateCke         (wUpdatCke)
 );
 
 
@@ -166,18 +241,42 @@ fmcWrapper #(
 
 always @*
 begin
-    qUsbSectorCke   <= wFmcPixelSectorCke | wFmcSoundSectorCke; 
-    qUsbBlockCke    <= wFmcPixelWblockCke | wFmcSoundWblockCke; 
-    qUsbWdVd        <= wFmcPixelWdVd      | wFmcSoundWdVd;
-    qUsbPdCmdCke    <= wFmcPixelPdCmdCke  | wFmcSoundPdCmdCke;
-    qFmcPixelIn     <= wUsbPixelUpDa;
-    qFmcPixelAddr   <= wUsbAddr;
-    qFmcPixelCke    <= wUsbPixelCke;
-    qFmcPixelCmd    <= wUsbCmd;
-    qFmcSoundIn     <= wUsbSoundUpDa;
-    qFmcSoundAddr   <= wUsbAddr;
-    qFmcSoundCke    <= wUsbSoundCke;
-    qFmcSoundCmd    <= wUsbCmd;
+    if (wUpdatCke)
+    begin
+        qUsbSectorCke       <= wFmcPixelSectorCke | wFmcSoundSectorCke; 
+        qUsbBlockCke        <= wFmcPixelWblockCke | wFmcSoundWblockCke; 
+        qUsbWdVd            <= wFmcPixelWdVd      | wFmcSoundWdVd;
+        qUsbPdCmdCke        <= wFmcPixelPdCmdCke  | wFmcSoundPdCmdCke;
+        qCmbSoundRd         <= 1'b0;
+        qCmbSoundRdVd       <= 1'b0;
+        qCmbSoundSectorCke  <= 1'b0;
+        qFmcPixelIn         <= wUsbPixelUpDa;
+        qFmcPixelAddr       <= wUsbAddr;
+        qFmcPixelCke        <= wUsbPixelCke;
+        qFmcPixelCmd        <= wUsbCmd;
+        qFmcSoundIn         <= wUsbSoundUpDa;
+        qFmcSoundAddr       <= wUsbAddr;
+        qFmcSoundCke        <= wUsbSoundCke;
+        qFmcSoundCmd        <= wUsbCmd;
+    end
+    else
+    begin
+        qUsbSectorCke       <= 1'b0; 
+        qUsbBlockCke        <= 1'b0; 
+        qUsbWdVd            <= 1'b0;
+        qUsbPdCmdCke        <= 1'b0;
+        qCmbSoundRd         <= wFmcSoundOut;
+        qCmbSoundRdVd       <= wFmcSoundRdVd;
+        qCmbSoundSectorCke  <= wFmcSoundSectorCke;
+        qFmcPixelIn         <= 0;
+        qFmcPixelAddr       <= 0;
+        qFmcPixelCke        <= 1'b0;
+        qFmcPixelCmd        <= 1'b0;
+        qFmcSoundIn         <= 0;
+        qFmcSoundAddr       <= wCmbSoundAddr;
+        qFmcSoundCke        <= wCmbSoundCke;
+        qFmcSoundCmd        <= wCmbSoundCmd;
+    end
 end
 
 
