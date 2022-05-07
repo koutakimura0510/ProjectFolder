@@ -78,7 +78,7 @@ end
 
 always @*
 begin
-    qRaWaAbs <= rCntAbs < 2048  ;
+    qRaWaAbs <= rCntAbs < 2048;
 end
 
 
