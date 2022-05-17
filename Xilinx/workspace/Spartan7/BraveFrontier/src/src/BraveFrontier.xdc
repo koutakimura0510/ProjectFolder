@@ -13,6 +13,7 @@
 # ------------------------------------------------------------
 set_property CONFIG_VOLTAGE 3.3 [current_design]
 set_property CFGBVS VCCO        [current_design]
+set_property INTERNAL_VREF                      0.900           [get_iobanks 14]
 
 
 # ------------------------------------------------------------
@@ -21,7 +22,6 @@ set_property CFGBVS VCCO        [current_design]
 set_property BITSTREAM.CONFIG.CONFIGRATE        33              [current_design]
 set_property BITSTREAM.CONFIG.SPI_BUSWIDTH      4               [current_design]
 set_property BITSTREAM.CONFIG.EXTMASTERCCLK_EN  DISABLE         [current_design]
-
 
 # ------------------------------------------------------------
 # Clock Signal
@@ -68,6 +68,10 @@ set_property -dict { PACKAGE_PIN H14   IOSTANDARD LVCMOS33} [get_ports { ioQspiD
 set_property -dict { PACKAGE_PIN M14   IOSTANDARD LVCMOS33} [get_ports { ioQspiDq3[1]    }];
 
 # PSRAM
+# set_property SLEW FAST [get_ports {ddr3_dqs_n[1]}]
+# set_property IN_TERM UNTUNED_SPLIT_50 [get_ports {ddr3_dqs_n[1]}]
+# set_property IOSTANDARD DIFF_SSTL15 [get_ports {ddr3_dqs_n[1]}]
+# set_property PACKAGE_PIN AA3 [get_ports {ddr3_dqs_n[1]}]
 
 # # Config Rom
 # set_property -dict { PACKAGE_PIN U1    IOSTANDARD LVCMOS33  } [get_ports { oQspiSck[1]     }];
