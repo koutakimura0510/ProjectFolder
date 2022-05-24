@@ -104,6 +104,7 @@ set_property SLEW FAST [get_ports {oSrampClk}]
 set_property IN_TERM UNTUNED_SPLIT_25 [get_ports {oSrampClk}]
 # CS Bus
 set_property -dict { PACKAGE_PIN M14   IOSTANDARD LVCMOS18  } [get_ports { oSrampCs      }];
+set_property PULLUP true [get_ports oSrampCs]
 
 #-------------------------------------------------------------------------------
 # PSRAM Secondary Port
@@ -138,6 +139,7 @@ set_property SLEW FAST [get_ports {oSramsClk}]
 set_property IN_TERM UNTUNED_SPLIT_25 [get_ports {oSramsClk}]
 # CS Bus
 set_property -dict { PACKAGE_PIN M14   IOSTANDARD LVCMOS18  } [get_ports { oSramsCs      }];
+set_property PULLUP true [get_ports oSramsCs]
 
 #-------------------------------------------------------------------------------
 # TFT Display Port
@@ -163,24 +165,31 @@ set_property -dict { PACKAGE_PIN A2    IOSTANDARD LVCMOS33  } [get_ports { oTftV
 set_property -dict { PACKAGE_PIN A2    IOSTANDARD LVCMOS33  } [get_ports { oTftDe           }]; 
 set_property -dict { PACKAGE_PIN A2    IOSTANDARD LVCMOS33  } [get_ports { oTftBackLight    }]; 
 set_property -dict { PACKAGE_PIN A2    IOSTANDARD LVCMOS33  } [get_ports { oTftRst          }]; 
+set_property PULLUP true [get_ports oTftRst]
 
 #-------------------------------------------------------------------------------
 # USB Controller CH1
 #-------------------------------------------------------------------------------
 set_property -dict { PACKAGE_PIN P13   IOSTANDARD LVCMOS33  } [get_ports { iUsbCh1 }];
 set_property -dict { PACKAGE_PIN P13   IOSTANDARD LVCMOS33  } [get_ports { oUsbCh1 }];
+set_property PULLUP true [get_ports iUsbCh1]
+set_property PULLUP true [get_ports oUsbCh1]
 
 #-------------------------------------------------------------------------------
 # USB Controller CH2
 #-------------------------------------------------------------------------------
 set_property -dict { PACKAGE_PIN P13   IOSTANDARD LVCMOS33  } [get_ports { iUsbCh2 }];
 set_property -dict { PACKAGE_PIN P13   IOSTANDARD LVCMOS33  } [get_ports { oUsbCh2 }];
+set_property PULLUP true [get_ports iUsbCh2]
+set_property PULLUP true [get_ports oUsbCh2]
 
 #-------------------------------------------------------------------------------
 # USB Type-C UART Port
 #-------------------------------------------------------------------------------
 set_property -dict { PACKAGE_PIN P13   IOSTANDARD LVCMOS33  } [get_ports { iUartRx }];
 set_property -dict { PACKAGE_PIN P12   IOSTANDARD LVCMOS33  } [get_ports { oUartTx }];
+set_property PULLUP true [get_ports iUartRx]
+set_property PULLUP true [get_ports oUartTx]
 
 #-------------------------------------------------------------------------------
 # I2S Audio Port
