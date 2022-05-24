@@ -13,7 +13,7 @@
 # ------------------------------------------------------------------------------
 set_property CONFIG_VOLTAGE 1.8     [current_design]
 set_property CFGBVS GND             [current_design]
-set_property INTERNAL_VREF  0.900   [get_iobanks 14]
+set_property INTERNAL_VREF  0.900   [get_iobanks 34]
 
 
 # ------------------------------------------------------------------------------
@@ -197,8 +197,8 @@ set_property -dict { PACKAGE_PIN P12   IOSTANDARD LVCMOS33  } [get_ports { oAudi
 #-------------------------------------------------------------------------------
 # LED Port
 #-------------------------------------------------------------------------------
-set_property -dict { PACKAGE_PIN P10   IOSTANDARD LVCMOS33  } [get_ports { oLed[0] }];
-set_property -dict { PACKAGE_PIN P11   IOSTANDARD LVCMOS33  } [get_ports { oLed[1] }];
+set_property -dict { PACKAGE_PIN P10   IOSTANDARD LVCMOS18  } [get_ports { oLed[0] }];
+set_property -dict { PACKAGE_PIN P11   IOSTANDARD LVCMOS18  } [get_ports { oLed[1] }];
 
 # 個別設定
 # set_property PACKAGE_PIN A3       [get_ports aa]
