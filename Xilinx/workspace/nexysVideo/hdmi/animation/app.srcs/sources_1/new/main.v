@@ -49,15 +49,15 @@ module main
     output [0:0]    ddr3_ck_n,
     output [0:0]    ddr3_cke,
     output [1:0]    ddr3_dm,
-    output [0:0]    ddr3_odt,
+    output [0:0]    ddr3_odt
 
     // 評価ボード上oled
-    output          oOledScl,
-    output          oOledSda,
-    output          oOledDC,
-    output          oOledRes,
-    output          oOledVbat,
-    output          oOledVdd
+    // output          oOledScl,
+    // output          oOledSda,
+    // output          oOledDC,
+    // output          oOledRes,
+    // output          oOledVbat,
+    // output          oOledVdd
 );
 
 //----------------------------------------------------------
@@ -147,12 +147,12 @@ gameDataTop # (
     .oDDR3_ODT      (ddr3_odt),
 
     // oled side
-    .oOledScl       (oOledScl),
-    .oOledSda       (oOledSda),
-    .oOledDC        (oOledDC),
-    .oOledRes       (oOledRes),
-    .oOledVbat      (oOledVbat),
-    .oOledVdd       (oOledVdd),
+    // .oOledScl       (oOledScl),
+    // .oOledSda       (oOledSda),
+    // .oOledDC        (oOledDC),
+    // .oOledRes       (oOledRes),
+    // .oOledVbat      (oOledVbat),
+    // .oOledVdd       (oOledVdd),
     .oLED           (oLED)
 );
 

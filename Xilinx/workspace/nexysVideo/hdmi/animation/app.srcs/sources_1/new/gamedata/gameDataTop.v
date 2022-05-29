@@ -50,17 +50,17 @@ module gameDataTop # (
     output          oDDR3_ODT,
 
     // デバッグ用OLED信号
-    output          oOledScl,
-    output          oOledSda,
-    output          oOledDC,
-    output          oOledRes,
-    output          oOledVbat,
-    output          oOledVdd,
+    // output          oOledScl,
+    // output          oOledSda,
+    // output          oOledDC,
+    // output          oOledRes,
+    // output          oOledVbat,
+    // output          oOledVdd,
     output [7:0]    oLED
 );
 
 ////////////////////////////////////////////////////////////
-`include "./include/commonAddr.vh"
+`include "../include/commonAddr.vh"
 // localparam lpHDisplay = 5;
 // localparam lpVDisplay = 4;
 localparam lpHDisplay = pHDisplay;
@@ -233,39 +233,39 @@ ddr3Bridge #(
 // データのモニタリング用にOLEDを使用
 // 
 //----------------------------------------------------------
-reg [31:0] rPixelSh [0:1];
+// reg [31:0] rPixelSh [0:1];
 
-always @(posedge wAppCLK)
-begin
-    if (wAppRST) {rPixelSh[1], rPixelSh[0]} <= 64'd0;
-    else         {rPixelSh[1], rPixelSh[0]} <= {rPixelSh[0], wVRGB};
-end
+// always @(posedge wAppCLK)
+// begin
+//     if (wAppRST) {rPixelSh[1], rPixelSh[0]} <= 64'd0;
+//     else         {rPixelSh[1], rPixelSh[0]} <= {rPixelSh[0], wVRGB};
+// end
 
-oledTop #(
-    .PDIVCLK        (100000),
-    .PDIVSCK        (128),
-    .DISPLAY_WIDTH  (128),
-    .DISPLAY_HEIGHT (4),
-    .BIT_LENGTH     (64)
-) OLED_TOP (
-    .iCLK           (wAppCLK),
-    .iRST           (wAppRST),
-    .oOledScl       (oOledScl),
-    .oOledSda       (oOledSda),
-    .oOledDC        (oOledDC),
-    .oOledRes       (oOledRes),
-    .oOledVbat      (oOledVbat),
-    .oOledVdd       (oOledVdd),
-    .iDispLine1     (rPixelSh[1]),
-    .iDispLine2     ({2'd0, wRS, 2'd0, wWS}),
-    .iDispLine3     (wPixelWA),
-    .iDispLine4     (wDdrRA)
-    // 95
-    // .iDispLine1     ({"XPOS =  ", 4'd0, 2'd0, oUXS, oFXS}),
-    // .iDispLine2     ({"YPOS =  ", 4'd0, 2'd0, oUYS, oFYS}),
-    // .iDispLine3     ({"        ", 3'd0, oMapDirect[3], 3'd0, oMapDirect[2], 3'd0, oMapDirect[1], 3'd0, oMapDirect[0]}),
-    // .iDispLine4     ({"        ", 0})
-);
+// oledTop #(
+//     .PDIVCLK        (100000),
+//     .PDIVSCK        (128),
+//     .DISPLAY_WIDTH  (128),
+//     .DISPLAY_HEIGHT (4),
+//     .BIT_LENGTH     (64)
+// ) OLED_TOP (
+//     .iCLK           (wAppCLK),
+//     .iRST           (wAppRST),
+//     .oOledScl       (oOledScl),
+//     .oOledSda       (oOledSda),
+//     .oOledDC        (oOledDC),
+//     .oOledRes       (oOledRes),
+//     .oOledVbat      (oOledVbat),
+//     .oOledVdd       (oOledVdd),
+//     .iDispLine1     (rPixelSh[1]),
+//     .iDispLine2     ({2'd0, wRS, 2'd0, wWS}),
+//     .iDispLine3     (wPixelWA),
+//     .iDispLine4     (wDdrRA)
+//     // 95
+//     // .iDispLine1     ({"XPOS =  ", 4'd0, 2'd0, oUXS, oFXS}),
+//     // .iDispLine2     ({"YPOS =  ", 4'd0, 2'd0, oUYS, oFYS}),
+//     // .iDispLine3     ({"        ", 3'd0, oMapDirect[3], 3'd0, oMapDirect[2], 3'd0, oMapDirect[1], 3'd0, oMapDirect[0]}),
+//     // .iDispLine4     ({"        ", 0})
+// );
 
 assign oLED = {7'd0, ~wUiRST};
 
