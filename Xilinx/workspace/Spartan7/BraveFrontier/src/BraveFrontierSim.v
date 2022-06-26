@@ -23,10 +23,10 @@ reg rAudioClk   = 0;
 //----------------------------------------------------------
 // SPI 
 //----------------------------------------------------------
-reg  rSpiMiso   = 0;
-reg  rSpiMosi   = 0;
-reg  rSpiWp     = 0;
-reg  rSpiHold   = 0;
+reg  rSpiMiso   = 1'bz;
+reg  rSpiMosi   = 1'bz;
+reg  rSpiWp     = 1'bz;
+reg  rSpiHold   = 1'bz;
 wire ioSpiMiso;             assign ioSpiMiso = rSpiMiso;
 wire ioSpiMosi;             assign ioSpiMosi = rSpiMosi;
 wire ioSpiWp;               assign ioSpiWp   = rSpiWp;
@@ -34,23 +34,39 @@ wire ioSpiHold;             assign ioSpiHold = rSpiHold;
 wire oSpiConfigCs;
 wire oSpiCs;
 
+always @(posedge rSysClk)
+begin
+    rSpiMiso    <= 1'bz;
+    rSpiMosi    <= 1'bz;
+    rSpiWp      <= 1'bz;
+    rSpiHold    <= 1'bz;
+end
+
 
 //----------------------------------------------------------
 // PSRAM
 //----------------------------------------------------------
-reg  [15:0] rSrampDq    = 0;
-reg  [1:0]  rSrampDqs   = 0;
+reg  [15:0] rSrampDq    = 16'dz;
+reg  [1:0]  rSrampDqs   = 2'dz;
 wire [15:0] ioSrampDq;      assign ioSrampDq  = rSrampDq;
 wire [1:0]  ioSrampDqs;     assign ioSrampDqs = rSrampDqs;
 wire oSrampClk;
 wire oSrampCs;
 
-reg  [15:0] rSramsDq    = 0;
-reg  [1:0]  rSramsDqs   = 0;
+reg  [15:0] rSramsDq    = 16'dz;
+reg  [1:0]  rSramsDqs   = 2'dz;
 wire [15:0] ioSramsDq;      assign ioSramsDq  = rSramsDq;
 wire [1:0]  ioSramsDqs;     assign ioSramsDqs = rSramsDqs;
 wire oSramsClk;
 wire oSramsCs;
+
+always @(posedge rSysClk)
+begin
+    rSrampDq    <= 16'dz;
+    rSrampDqs   <= 2'dz;
+    rSramsDq    <= 16'dz;
+    rSramsDqs   <= 2'dz;
+end
 
 
 //----------------------------------------------------------
@@ -72,6 +88,11 @@ wire oTftRst;
 reg  rSwSda  = 0;
 wire oSwScl;
 wire ioSwSda;               assign ioSwSda = rSwSda;
+
+always @(posedge rSysClk)
+begin
+    rSwSda   <= 1'dz;
+end
 
 //----------------------------------------------------------
 // Audio
