@@ -1,51 +1,103 @@
 `timescale 1ns / 1ps
 /*
- * Create 2021/12/23
+ * Create 2022/6/26
  * Author koutakimura
  * Editor VSCode ver1.62.7
  * Build  Vivado20.2
  * Board  My Board Spartan7
  * -
- * hdmi video timing テストベンチ
+ * 
  */
 module BraveFrontierSim;
 
-parameter CYCLE = 10;
-
-reg rClk     = 0;
 
 
-// APDS9960
-wire rApdsIntr  = 0; 
-wire oApdsScl;
-wire ioApdsSda;
-
-// QSPI
-reg  [1:0] rQspiDq1 = 2'b11;
-wire [1:0] oQspiCs;
-wire [1:0] oQspiSck;
-wire [1:0] ioQspiDq0;
-wire [1:0] ioQspiDq2;
-wire [1:0] ioQspiDq3;
+//----------------------------------------------------------
+// comment
+//----------------------------------------------------------
+parameter CYCLE = 20;
+reg rSysClk     = 0;
+reg rAudioClk   = 0;
 
 
-// HDMI
-reg  rHdmiHpd = 0;
-reg  rHdmiSda = 1;
-reg  rHdmiCec = 0;
-wire oHdmiScl;
-wire ioHdmiSda;             assign ioHdmiSda = rHdmiSda;
-wire ioHdmiCec;             assign ioHdmiCec = rHdmiCec;
-wire oHdmiClkNeg, oHdmiClkPos;
-wire [2:0] oHdmiDataNeg, oHdmiDataPos;
+//----------------------------------------------------------
+// SPI 
+//----------------------------------------------------------
+reg  rSpiMiso   = 0;
+reg  rSpiMosi   = 0;
+reg  rSpiWp     = 0;
+reg  rSpiHold   = 0;
+wire ioSpiMiso;             assign ioSpiMiso = rSpiMiso;
+wire ioSpiMosi;             assign ioSpiMosi = rSpiMosi;
+wire ioSpiWp;               assign ioSpiWp   = rSpiWp;
+wire ioSpiHold;             assign ioSpiHold = rSpiHold;
+wire oSpiConfigCs;
+wire oSpiCs;
 
-// DEBUG
-reg  rUartRx  = 0;
+
+//----------------------------------------------------------
+// PSRAM
+//----------------------------------------------------------
+reg  [15:0] rSrampDq    = 0;
+reg  [1:0]  rSrampDqs   = 0;
+wire [15:0] ioSrampDq;      assign ioSrampDq  = rSrampDq;
+wire [1:0]  ioSrampDqs;     assign ioSrampDqs = rSrampDqs;
+wire oSrampClk;
+wire oSrampCs;
+
+reg  [15:0] rSramsDq    = 0;
+reg  [1:0]  rSramsDqs   = 0;
+wire [15:0] ioSramsDq;      assign ioSramsDq  = rSramsDq;
+wire [1:0]  ioSramsDqs;     assign ioSramsDqs = rSramsDqs;
+wire oSramsClk;
+wire oSramsCs;
+
+
+//----------------------------------------------------------
+// TFT Display
+//----------------------------------------------------------
+wire [7:4] oTftColorR;
+wire [7:4] oTftColorG;
+wire [7:4] oTftColorB;
+wire oTftDclk;
+wire oTftHsync;
+wire oTftVsync;
+wire oTftDe;
+wire oTftBackLight;
+wire oTftRst;
+
+//----------------------------------------------------------
+// I2C
+//----------------------------------------------------------
+reg  rSwSda  = 0;
+wire oSwScl;
+wire ioSwSda;               assign ioSwSda = rSwSda;
+
+//----------------------------------------------------------
+// Audio
+//----------------------------------------------------------
+wire oAudioMclk;
+wire oAudioBclk;
+wire oAudioCclk;
+wire oAudioData;
+
+//----------------------------------------------------------
+// Uart
+//----------------------------------------------------------
 wire oUartTx;
-wire [1:0] oLED;
-wire [2:0] oUnusedPin;
+reg  rUartRx    = 0;
 
-BraveFrontierTop #(
+//----------------------------------------------------------
+// Led
+//----------------------------------------------------------
+wire oLedEdge;
+wire oLedClk;
+
+
+//----------------------------------------------------------
+// Top Module Connect
+//----------------------------------------------------------
+BraveFrontier #(
     // .H_DISPLAY  (640),      .H_BACK     (48),
     // .H_FRONT    (16),       .H_SYNC     (96),
     // .V_DISPLAY  (480),      .V_TOP      (31),
@@ -62,33 +114,52 @@ BraveFrontierTop #(
     .pBuffDepth     (32),
     .pDebug         ("on")
 ) TOP (
-    .iClk           (rClk),
-    .oUnusedPin     (oUnusedPin),
-    .oApdsScl       (oApdsScl),
-    .ioApdsSda      (ioApdsSda),
-    .iApdsIntr      (rApdsIntr),
-    .oQspiCs        (oQspiCs),
-    .oQspiSck       (oQspiSck),
-    .ioQspiDq0      (ioQspiDq0),
-    .ioQspiDq1      (rQspiDq1),
-    .ioQspiDq2      (ioQspiDq2),
-    .ioQspiDq3      (ioQspiDq3),
-    .oHdmiClkPos    (oHdmiClkPos),
-    .oHdmiClkNeg    (oHdmiClkNeg),
-    .oHdmiDataPos   (oHdmiDataPos),
-    .oHdmiDataNeg   (oHdmiDataNeg),
-    .oHdmiScl       (oHdmiScl),
-    .ioHdmiSda      (ioHdmiSda),
-    .ioHdmiCec      (ioHdmiCec),
-    .iHdmiHpd       (rHdmiHpd),
-    .iUartRx        (rUartRx),
-    .oUartTx        (oUartTx),
-    .oLed           (oLed)
+    .iOscSystemClk      (rSysClk),
+    .iOscAudioClk       (rAudioClk),
+    // .oSpiSck            (),
+    .ioSpiMiso          (rSpiMiso),
+    .ioSpiMosi          (rSpiMosi),
+    .ioSpiWp            (rSpiWp),
+    .ioSpiHold          (rSpiHold),
+    .oSpiConfigCs       (oSpiConfigCs),
+    .oSpiCs             (oSpiCs),
+    .ioSrampDq          (rSrampDq),
+    .ioSrampDqs         (rSrampDqs),
+    .oSrampClk          (oSrampClk),
+    .oSrampCs           (oSrampCs),
+    .ioSramsDq          (rSramsDq),
+    .ioSramsDqs         (rSramsDqs),
+    .oSramsClk          (oSramsClk),
+    .oSramsCs           (oSramsCs),
+    .oTftColorR         (oTftColorR),
+    .oTftColorG         (oTftColorG),
+    .oTftColorB         (oTftColorB),
+    .oTftDclk           (oTftDclk),
+    .oTftHsync          (oTftHsync),
+    .oTftVsync          (oTftVsync),
+    .oTftDe             (oTftDe),
+    .oTftBackLight      (oTftBackLight),
+    .oTftRst            (oTftRst),
+    .oSwScl             (oSwScl),
+    .ioSwSda            (rSwSda),
+    .oAudioMclk         (oAudioMclk),
+    .oAudioBclk         (oAudioBclk),
+    .oAudioCclk         (oAudioCclk),
+    .oAudioData         (oAudioData),
+    .oUartTx            (oUartTx),
+    .iUartRx            (rUartRx),
+    .oLedEdge           (oLedEdge),
+    .oLedClk            (oLedClk)
 );
 
 always begin
-    #(CYCLE/2);
-    rClk = ~rClk;
+    #(CYCLE/5);
+    rSysClk = ~rSysClk;
+end
+
+always begin
+    #(CYCLE/4);
+    rAudioClk = ~rAudioClk;
 end
 
 initial begin

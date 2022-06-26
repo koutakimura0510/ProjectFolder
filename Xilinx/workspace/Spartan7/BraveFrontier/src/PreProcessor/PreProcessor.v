@@ -15,13 +15,18 @@ module PreProcesser #(
     parameter       pVtop           =  31,
     parameter       pVbottom        =  11,
     parameter       pVsync          =   2,
-    parameter       pPixelDebug     = "off"
+    parameter       pPixelDebug     = "off",
+    parameter       pSystemPll      = "on",
+    parameter       pAudioPll       = "on"
 )(
     input           iClk,
-    output          oMemClk,       // Tmds Clk
-    output          oPixelClk,      // Pixel Clk
-    output          oSysClk,       // Sys Clk
-    output          oRst,           // Active High Sync Reset
+    input           iAudioClk,
+    output          oMemClk,
+    output          oPixelClk,
+    output          oSysClk,
+    output          oAudioClk,
+    output          oSysRst,        // Active High Sync Reset
+    output          oAudioRst,      // Active High Sync Reset
     output          oVde,
     output          oFe,
     output          oFvde,
@@ -31,31 +36,23 @@ module PreProcesser #(
 
 
 //----------------------------------------------------------
-// System Reset Gen
-//----------------------------------------------------------
-wire wClkRst;
-
-rstGen #(
-    .pRstFallTime   (100)
-) SYSTEM_RST (
-    .iClk           (iClk),
-    .oRst           (wClkRst)
-);
-
-
-//----------------------------------------------------------
 // Clock Generate Block
 //----------------------------------------------------------
-wire wMemClk, wPixelClk, wSysClk;       assign {oMemClk, oPixelClk, oSysClk} = {wMemClk, wPixelClk, wSysClk};
-wire wSysRst;                           assign oRst = wSysRst;
+wire wMemClk, wPixelClk, wSysClk, wAudioClk;    assign {oMemClk, oPixelClk, oSysClk, oAudioClk} = {wMemClk, wPixelClk, wSysClk, wAudioClk};
+wire wSysRst, wAudioRst;                        assign {oSysRst, oAudioRst} = {wSysRst, wAudioRst};
 
-cgbWrapper CGB (
+cgbWrapper # (
+    .pSystemPll (pSystemPll),
+    .pAudioPll  (pAudioPll)
+) CGB (
     .iClk       (iClk),
-    .iRst       (wClkRst),
+    .iAudioClk  (iAudioClk),
     .oRst       (wSysRst),
+    .oAudioRst  (wAudioRst),
     .oMemClk    (wMemClk),
     .oPixelClk  (wPixelClk),
-    .oSysClk    (wSysClk)
+    .oSysClk    (wSysClk),
+    .oAudioClk  (wAudioClk)
 );
 
 
