@@ -18,7 +18,7 @@ module PreProcesser #(
     parameter       pPixelDebug     = "off"
 )(
     input           iClk,
-    output          oTmdsClk,       // Tmds Clk
+    output          oMemClk,       // Tmds Clk
     output          oPixelClk,      // Pixel Clk
     output          oSysClk,       // Sys Clk
     output          oRst,           // Active High Sync Reset
@@ -45,18 +45,15 @@ rstGen #(
 
 //----------------------------------------------------------
 // Clock Generate Block
-// PixelClk 25  MHz
-// TmdsClk  250 MHz
-// SysClk   100 MHz
 //----------------------------------------------------------
-wire wTmdsClk, wPixelClk, wSysClk;      assign {oTmdsClk, oPixelClk, oSysClk} = {wTmdsClk, wPixelClk, wSysClk};
+wire wMemClk, wPixelClk, wSysClk;       assign {oMemClk, oPixelClk, oSysClk} = {wMemClk, wPixelClk, wSysClk};
 wire wSysRst;                           assign oRst = wSysRst;
 
 cgbWrapper CGB (
     .iClk       (iClk),
     .iRst       (wClkRst),
     .oRst       (wSysRst),
-    .oTmdsClk   (wTmdsClk),
+    .oMemClk    (wMemClk),
     .oPixelClk  (wPixelClk),
     .oSysClk    (wSysClk)
 );

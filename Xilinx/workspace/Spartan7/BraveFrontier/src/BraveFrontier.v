@@ -51,34 +51,34 @@ wire [31:0]rLed;
 assign oLed = rLed[0];
 
 
-// //----------------------------------------------------------
-// // System Clk / Display Timing Clk Generate
-// //----------------------------------------------------------
-// wire wTmdsClk, wPixelClk, wSysClk;
-// wire wSysRst;
-// wire wPreVde, wPreFe, wPreFvde, wPreHsync, wPreVsync;
+//----------------------------------------------------------
+// System Clk / Display Timing Clk Generate
+//----------------------------------------------------------
+wire wMemClk, wPixelClk, wSysClk;
+wire wSysRst;
+wire wPreVde, wPreFe, wPreFvde, wPreHsync, wPreVsync;
 
-// PreProcesser #(
-//     .pHdisplay      (pHdisplay),
-//     .pHback         (pHback),
-//     .pHfront        (pHfront),
-//     .pHsync         (pHsync),
-//     .pVdisplay      (pVdisplay),
-//     .pVtop          (pVtop),
-//     .pVbottom       (pVbottom),
-//     .pVsync         (pVsync)
-// ) PREPROCESSER (
-//     .iClk           (iClk),
-//     .oTmdsClk       (wTmdsClk),
-//     .oPixelClk      (wPixelClk),
-//     .oSysClk        (wSysClk),
-//     .oRst           (wSysRst),
-//     .oVde           (wPreVde),
-//     .oFe            (wPreFe),
-//     .oFvde          (wPreFvde),
-//     .oHsync         (wPreHsync),
-//     .oVsync         (wPreVsync)
-// );
+PreProcesser #(
+    .pHdisplay      (pHdisplay),
+    .pHback         (pHback),
+    .pHfront        (pHfront),
+    .pHsync         (pHsync),
+    .pVdisplay      (pVdisplay),
+    .pVtop          (pVtop),
+    .pVbottom       (pVbottom),
+    .pVsync         (pVsync)
+) PREPROCESSER (
+    .iClk           (iClk),
+    .oMemClk        (wMemClk),
+    .oPixelClk      (wPixelClk),
+    .oSysClk        (wSysClk),
+    .oRst           (wSysRst),
+    .oVde           (wPreVde),
+    .oFe            (wPreFe),
+    .oFvde          (wPreFvde),
+    .oHsync         (wPreHsync),
+    .oVsync         (wPreVsync)
+);
 
 
 // //----------------------------------------------------------
@@ -123,45 +123,44 @@ assign oLed = rLed[0];
 // end
 
 
-// //----------------------------------------------------------
-// // TODO Sound 
-// // TMDS output
-// //----------------------------------------------------------
-// wire wPostSoundCke;
-// reg  [15:0] qPostSound;
-// reg  [23:0] qPostPixel;
-// reg  qPostVde;
-// reg  qPostHsync;
-// reg  qPostVsync;
+//----------------------------------------------------------
+// TMDS output
+//----------------------------------------------------------
+wire wPostSoundCke;
+reg  [15:0] qPostSound;
+reg  [23:0] qPostPixel;
+reg  qPostVde;
+reg  qPostHsync;
+reg  qPostVsync;
 
-// PostProcesser POSTPROCESSER (
-//     .iPixelClk      (wPixelClk),
-//     .iTmdsClk       (wTmdsClk),
-//     .iRst           (wSysRst),
-//     .oHdmiClkPos    (oHdmiClkPos),
-//     .oHdmiClkNeg    (oHdmiClkNeg),
-//     .oHdmiDataPos   (oHdmiDataPos),
-//     .oHdmiDataNeg   (oHdmiDataNeg),
-//     .oHdmiScl       (oHdmiScl),
-//     .ioHdmiSda      (ioHdmiSda),
-//     .ioHdmiCec      (ioHdmiCec),
-//     .iHdmiHpd       (iHdmiHpd),
-//     .iPixel         (qPostPixel),
-//     .iVde           (qPostVde),
-//     .iHsync         (qPostHsync),
-//     .iVsync         (qPostVsync),
-//     .oLed           (oLed)
-// );
+PostProcesser POSTPROCESSER (
+    .iPixelClk      (wPixelClk),
+    .iMemClk        (wMemClk),
+    .iRst           (wSysRst),
+    .oHdmiClkPos    (oHdmiClkPos),
+    .oHdmiClkNeg    (oHdmiClkNeg),
+    .oHdmiDataPos   (oHdmiDataPos),
+    .oHdmiDataNeg   (oHdmiDataNeg),
+    .oHdmiScl       (oHdmiScl),
+    .ioHdmiSda      (ioHdmiSda),
+    .ioHdmiCec      (ioHdmiCec),
+    .iHdmiHpd       (iHdmiHpd),
+    .iPixel         (qPostPixel),
+    .iVde           (qPostVde),
+    .iHsync         (qPostHsync),
+    .iVsync         (qPostVsync),
+    .oLed           (oLed)
+);
 
-// always @*
-// begin
-//     // qProSoundCke <= wPostSoundCke;
-//     qProSoundCke    <= 1'b0;
-//     qPostSound      <= wProSound;
-//     qPostPixel      <= wProPixel;
-//     qPostVde        <= wPreVde;
-//     qPostHsync      <= wPreHsync;
-//     qPostVsync      <= wPreVsync;
-// end
+always @*
+begin
+    // qProSoundCke <= wPostSoundCke;
+    qProSoundCke    <= 1'b0;
+    qPostSound      <= wProSound;
+    qPostPixel      <= wProPixel;
+    qPostVde        <= wPreVde;
+    qPostHsync      <= wPreHsync;
+    qPostVsync      <= wPreVsync;
+end
 
 endmodule

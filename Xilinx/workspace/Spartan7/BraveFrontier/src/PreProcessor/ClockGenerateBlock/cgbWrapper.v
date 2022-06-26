@@ -29,7 +29,7 @@ module cgbWrapper (
     input           iClk,           // system clk
     input           iRst,           // Active High
     output          oRst,           // Active High
-    output          oTmdsClk,
+    output          oMemClk,
     output          oPixelClk,
     output          oSysClk
 );
@@ -45,10 +45,10 @@ localparam      lpClkIn1Div      = 1;           // 25 [MHz] / 1 = 25 [MHz]
 
 // VOC 分周回路設定
 // Spped Grade 1 = (600 ~ 1200MHz)
-localparam real lpClkOutMult     = 40.000;      //   25 MHz * 40 = 1000[MHz]
-localparam real lpClk0OutDivF    = 40.000;      // 1000 MHz / 40 =   25[MHz]
-localparam      lpClk1OutDiv     = 4;           // 1000 MHz /  4 =  250[MHz]
-localparam      lpClk2OutDiv     = 10;          // 1000 MHz / 10 =  100[MHz]
+localparam real lpClkOutMult     = 36.000;      // OSC MHz * Mult = VOC[MHz]
+localparam real lpClk0OutDivF    = 4.500;       // VOC MHz / DivF =  Clk0[MHz]
+localparam      lpClk1OutDiv     = 100;         // VOC MHz / Div  =  Clk1[MHz]
+localparam      lpClk2OutDiv     = 9;           // VOC MHz / Div  =  Clk2[MHz]
 localparam      lpClk3OutDiv     = 10;          // <Reserved>
 localparam      lpClk4OutDiv     = 10;          // <Reserved>
 localparam      lpClk5OutDiv     = 10;          // <Reserved>
@@ -143,21 +143,21 @@ BUFG BUFG_iClk (
 //---------------------------------------------------------------------------
 // Buffer経由して使用
 //---------------------------------------------------------------------------
-wire wTmdsClk;                     assign oTmdsClk  = wTmdsClk;
+wire wMemClk;                      assign oMemClk   = wMemClk;
 wire wPixelClk;                    assign oPixelClk = wPixelClk;
-wire wSysClk;                      assign oSysClk  = wSysClk;
+wire wSysClk;                      assign oSysClk   = wSysClk;
 
-BUFG BUFG_PixelClk (
+BUFG BUFG_CLKO_0 (
     .O (wPixelClk),
     .I (wClkOut[0])
 );
 
-BUFG BUFG_TmdsClk (
-    .O (wTmdsClk),
+BUFG BUFG_CLKO_1 (
+    .O (wMemClk),
     .I (wClkOut[1])
 );
 
-BUFG BUFG_SysClk (
+BUFG BUFG_CLKO_2 (
     .O (wSysClk),
     .I (wClkOut[2])
 );

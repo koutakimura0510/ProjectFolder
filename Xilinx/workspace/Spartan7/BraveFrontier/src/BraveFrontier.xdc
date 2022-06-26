@@ -34,9 +34,9 @@ set_property BITSTREAM.CONFIG.EXTMASTERCCLK_EN  DISABLE         [current_design]
 set_property -dict { PACKAGE_PIN G4    IOSTANDARD LVCMOS33 } [get_ports { iOscSystemClk }];
 create_clock -add -name iOscSystemClk -period 40.00 -waveform {0 5} [get_ports iOscSystemClk]
 
-# # OSC Input 24.576MHz
-# set_property -dict { PACKAGE_PIN G4    IOSTANDARD LVCMOS33 } [get_ports { iOscAudioClk }];
-# create_clock -add -name iOscAudioClk -period 40.69 -waveform {0 5} [get_ports iOscAudioClk]
+# OSC Input 24.576MHz
+set_property -dict { PACKAGE_PIN G4    IOSTANDARD LVCMOS33 } [get_ports { iOscAudioClk }];
+create_clock -add -name iOscAudioClk -period 40.69 -waveform {0 5} [get_ports iOscAudioClk]
 
 # #-------------------------------------------------------------------------------
 # # FPGA PLL MMCM
