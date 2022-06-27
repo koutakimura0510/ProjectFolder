@@ -66,18 +66,18 @@ module BraveFrontier #(
 // ピンアサイン確認用
 //----------------------------------------------------------
 // assign oSpiSck      = 1'd0;
-assign ioSpiMiso    = 1'dz;
-assign ioSpiMosi    = 1'dz;
-assign ioSpiWp      = 1'dz;
-assign ioSpiHold    = 1'dz;
+assign ioSpiMiso    = 1'd0;
+assign ioSpiMosi    = 1'd0;
+assign ioSpiWp      = 1'd0;
+assign ioSpiHold    = 1'd0;
 assign oSpiConfigCs = 1'd0;
 assign oSpiCs       = 1'd0;
-assign ioSrampDq    = 16'dz;
-assign ioSrampDqs   = 2'dz;
+assign ioSrampDq    = 16'd0;
+assign ioSrampDqs   = 2'd0;
 assign oSrampClk    = 1'd0;
 assign oSrampCs     = 1'd0;
-assign ioSramsDq    = 16'dz;
-assign ioSramsDqs   = 2'dz;
+assign ioSramsDq    = 16'd0;
+assign ioSramsDqs   = 2'd0;
 assign oSramsClk    = 1'd0;
 assign oSramsCs     = 1'd0;
 assign oTftColorR   = 4'd0;
@@ -90,13 +90,13 @@ assign oTftDe       = 1'd0;
 assign oTftBackLight= 1'd0;
 assign oTftRst      = 1'd0;
 assign oSwScl       = 1'd0;
-assign ioSwSda      = 1'dz;
+assign ioSwSda      = 1'd0;
 assign oAudioMclk   = 1'd0;
 assign oAudioBclk   = 1'd0;
 assign oAudioCclk   = 1'd0;
 assign oAudioData   = 1'd0;
 assign oUartTx      = 1'd0;
-assign iUartRx      = 1'dz;
+// assign iUartRx      = 1'dz;
 assign oLedEdge     = 2'd0;
 assign oLedClk      = 1'd0;
 
@@ -105,7 +105,7 @@ assign oLedClk      = 1'd0;
 // System Clk / Display Timing Clk Generate
 //----------------------------------------------------------
 wire wMemClk, wPixelClk, wSysClk, wAudioClk;
-wire wSysRst;
+wire wSysRst, wAudioRst;
 wire wPreVde, wPreFe, wPreFvde, wPreHsync, wPreVsync;
 
 PreProcesser #(
@@ -179,32 +179,38 @@ PreProcesser #(
 
 
 //----------------------------------------------------------
-// TMDS output
+// Display / Audio output
 //----------------------------------------------------------
 // wire wPostSoundCke;
 // reg  [15:0] qPostSound;
-// reg  [23:0] qPostPixel;
+// reg  [15:0] qPostPixel;
 // reg  qPostVde;
 // reg  qPostHsync;
 // reg  qPostVsync;
 
 // PostProcesser POSTPROCESSER (
 //     .iPixelClk      (wPixelClk),
-//     .iMemClk        (wMemClk),
-//     .iRst           (wSysRst),
-//     .oHdmiClkPos    (oHdmiClkPos),
-//     .oHdmiClkNeg    (oHdmiClkNeg),
-//     .oHdmiDataPos   (oHdmiDataPos),
-//     .oHdmiDataNeg   (oHdmiDataNeg),
-//     .oHdmiScl       (oHdmiScl),
-//     .ioHdmiSda      (ioHdmiSda),
-//     .ioHdmiCec      (ioHdmiCec),
-//     .iHdmiHpd       (iHdmiHpd),
+//     .iAudioClk      (wAudioClk),
+//     .iSysRst        (wSysRst),
+// 	.iAudioRst		(wAudioRst),
+// 	.oTftColorR		(oTftColorR),
+// 	.oTftColorG		(oTftColorG),
+// 	.oTftColorB		(oTftColorB),
+// 	.oTftDclk		(oTftDclk),
+// 	.oTftHsync		(oTftHsync),
+// 	.oTftVsync		(oTftVsync),
+// 	.oTftDe			(oTftDe),
+// 	.oTftBackLight	(oTftBackLight),
+// 	.oTftRst		(oTftRst),
+// 	.oAudioMclk		(oAudioMclk),
+// 	.oAudioBclk		(oAudioBclk),
+// 	.oAudioCclk		(oAudioCclk),
+// 	.oAudioData		(oAudioData),
 //     .iPixel         (qPostPixel),
 //     .iVde           (qPostVde),
 //     .iHsync         (qPostHsync),
 //     .iVsync         (qPostVsync),
-//     .oLed           (oLed)
+// 	.iAudio			(qPostSound)
 // );
 
 // always @*

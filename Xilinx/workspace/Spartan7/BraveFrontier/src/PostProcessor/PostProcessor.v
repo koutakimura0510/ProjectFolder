@@ -6,71 +6,39 @@
 // ターゲットの規格に対応したデータを出力
 //----------------------------------------------------------
 module PostProcesser (
-    input           iPixelClk,      // 画面サイズに対応したclkを入力
-    input           iTmdsClk,       // PixelClkの10倍のクロック入力
-    input           iRst,           // Active High
-    output          oHdmiClkPos,    // hdmi clk negedge
-    output          oHdmiClkNeg,    // hdmi clk posedge
-    output [ 2:0]   oHdmiDataPos,   // hdmi Data 8b10b posedge
-    output [ 2:0]   oHdmiDataNeg,   // hdmi Data 8b10b negedge
-    output          oHdmiScl,       // hdmi I2c scl
-    inout           ioHdmiSda,      // hdmi I2c sda
-    inout           ioHdmiCec,      // hdmi cec
-    input           iHdmiHpd,       // hdmi hpd
-    input  [23:0]   iPixel,          // Pixel Data
-    input           iVde,           // video enable signal
-    input           iHsync,
-    input           iVsync,
-    output [1:0]    oLed
-);
-
-
-//----------------------------------------------------------
-// TMDS Generate Block
-// 
-// HDMI Output
-//----------------------------------------------------------
-wire wHdmiHpd;
-
-tgbWrapper TGB (
-    .iPixelClk      (iPixelClk),
-    .iTmdsClk       (iTmdsClk),
-    .iRst           (iRst),
-    .oHdmiClkPos    (oHdmiClkPos),
-    .oHdmiClkNeg    (oHdmiClkNeg),
-    .oHdmiDataPos   (oHdmiDataPos),
-    .oHdmiDataNeg   (oHdmiDataNeg),
-    .oHdmiScl       (oHdmiScl),
-    .ioHdmiSda      (ioHdmiSda),
-    .ioHdmiCec      (ioHdmiCec),
-    .iHdmiHpd       (wHdmiHpd),
-    .iPixel          (iPixel),
-    .iVde           (iVde),
-    .iHsync         (iHsync),
-    .iVsync         (iVsync)
-);
-
-IBUF IBUF_HDMI_HPD ( 
-    .O (wHdmiHpd),
-    .I (iHdmiHpd)
+	input 			iPixelClk,
+	input 			iAudioClk,
+	input 			iSysRst,
+	input 			iAudioRst,
+	output [7:4] 	oTftColorR,
+	output [7:4] 	oTftColorG,
+	output [7:4] 	oTftColorB,
+	output 			oTftDclk,
+	output 			oTftHsync,
+	output 			oTftVsync,
+	output 			oTftDe,
+	output 			oTftBackLight,
+	output 			oTftRst,
+	output 			oAudioMclk,
+	output 			oAudioBclk,
+	output 			oAudioCclk,
+	output 			oAudioData,
+	input  [15:0] 	iPixel,
+	input 			iVde,
+	input 			iHsync,
+	input 			iVsync,
+	input  [15:0]	iAudio
 );
 
 //---------------------------------------------------------------------------
-// Debug Pin
-// 
-// HPD は通常ケーブル接続時に High になるが、トランジスタのスイッチング回路経由でポートに入力されるため
-// ケーブル接続時は Low 信号が検出される
+// TFT Display 送信
 //---------------------------------------------------------------------------
-reg [1:0] rHpd;
 
-always @( posedge iPixelClk )
-begin
-   if       (iRst)        rHpd <= 1'b0;
-   else if  (wHdmiHpd)    rHpd <= 1'b0;
-   else                   rHpd <= 1'b1;
-end
 
-assign oLed = {1'b0, rHpd};
+//---------------------------------------------------------------------------
+// Audio データを I2S 規格で送信
+//---------------------------------------------------------------------------
+
 
 
 endmodule
