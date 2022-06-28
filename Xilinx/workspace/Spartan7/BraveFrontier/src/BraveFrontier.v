@@ -189,10 +189,6 @@ PreProcesser #(
 // reg  qPostVsync;
 
 // PostProcesser POSTPROCESSER (
-//     .iPixelClk      (wPixelClk),
-//     .iAudioClk      (wAudioClk),
-//     .iSysRst        (wSysRst),
-// 	.iAudioRst		(wAudioRst),
 // 	.oTftColorR		(oTftColorR),
 // 	.oTftColorG		(oTftColorG),
 // 	.oTftColorB		(oTftColorB),
@@ -206,6 +202,10 @@ PreProcesser #(
 // 	.oAudioBclk		(oAudioBclk),
 // 	.oAudioCclk		(oAudioCclk),
 // 	.oAudioData		(oAudioData),
+//     .iPixelClk      (wPixelClk),
+//     .iAudioClk      (wAudioClk),
+//     .iSysRst        (wSysRst),
+// 	.iAudioRst		(wAudioRst),
 //     .iPixel         (qPostPixel),
 //     .iVde           (qPostVde),
 //     .iHsync         (qPostHsync),
