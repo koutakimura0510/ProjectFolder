@@ -19,8 +19,10 @@ module PreProcesser #(
     parameter       pSystemPll      = "on",
     parameter       pAudioPll       = "on"
 )(
+	// External Port
     input           iClk,
     input           iAudioClk,
+	// Internal Port
     output          oMemClk,
     output          oPixelClk,
     output          oSysClk,

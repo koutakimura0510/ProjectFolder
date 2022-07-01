@@ -4,7 +4,8 @@
  * -
  * TFT Display Block
  */
-module tgbWrapper (
+module tftWrapper (
+	// External Port
 	output [7:4] 	oTftColorR,
 	output [7:4] 	oTftColorG,
 	output [7:4] 	oTftColorB,
@@ -14,17 +15,19 @@ module tgbWrapper (
 	output 			oTftDe,
 	output 			oTftBackLight,
 	output 			oTftRst,
+	// Internal Port
 	input 			iPixelClk,
 	input  			iSysRst,
-	input  			iPixel,
+	input [15:0]	iPixel,
 	input  			iVde,
 	input  			iHsync,
-	input  			iVsync
+	input  			iVsync,
+	input 			iBackLightControl
 );
 
 
 //---------------------------------------------------------------------------
-// 
+// TFT DIsplay 出力
 //---------------------------------------------------------------------------
 genvar i;
 
@@ -39,10 +42,11 @@ generate
 	OBUF TFT_HSYNC 	(.O (oTftHsync),	.I (iHsync));
 	OBUF TFT_VSYNC 	(.O (oTftVsync),	.I (iVsync));
 	OBUF TFT_VDE 	(.O (oTftDe),		.I (iVde));
-	OBUF TFT_BL 	(.O (oTftBackLight),.I (1'b0));
-	OBUF TFT_RST 	(.O (oTftRst),		.I (1'b0));
+	OBUF TFT_RST 	(.O (oTftRst),		.I (iSysRst));
 endgenerate
 
+
+OBUF TFT_BL 	(.O (oTftBackLight),	.I (1'b0));
 
 
 endmodule

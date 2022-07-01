@@ -29,7 +29,9 @@ module PostProcesser (
 	input 			iVde,
 	input 			iHsync,
 	input 			iVsync,
-	input  [15:0]	iAudio
+	input  [15:0]	iAudio,
+	input 			iBackLightControl,
+	input  [1:0]	iAudioVolumeSw	// [1] UP / [0] DOWN
 );
 
 //---------------------------------------------------------------------------

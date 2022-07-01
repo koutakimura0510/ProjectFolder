@@ -29,8 +29,10 @@ module cgbWrapper #(
     parameter       pSystemPll      = "on",
     parameter       pAudioPll       = "on"
 )(
+	// External Port
     input           iClk,           // system clk
     input           iAudioClk,
+	// Internal Port
     output          oRst,           // Active High
     output          oAudioRst,
     output          oMemClk,
