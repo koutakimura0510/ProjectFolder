@@ -2,7 +2,7 @@
 // Create 2022/6/28
 // Author koutakimura
 // -
-// ホスト後処理ブロック
+// ユーザー後処理ブロック
 // ターゲットの規格に対応したデータを出力
 //----------------------------------------------------------
 module PostProcesser (
@@ -22,37 +22,37 @@ module PostProcesser (
 	output 			oAudioData,
 	// Internal Port
 	input 			iPixelClk,
-	input 			iAudioClk,
 	input 			iSysRst,
-	input 			iAudioRst,
-	input  [15:0] 	iPixel,
+	input  [15:0] 	iPixelData,
 	input 			iVde,
 	input 			iHsync,
 	input 			iVsync,
-	input  [15:0]	iAudio,
 	input 			iBackLightControl,
-	input  [1:0]	iAudioVolumeSw	// [1] UP / [0] DOWN
+	input 			iAudioClk,
+	input 			iAudioRst,
+	input  [31:0]	iAudioData
 );
 
 //---------------------------------------------------------------------------
 // TFT Display 送信
 //---------------------------------------------------------------------------
 tftWrapper TFT_WRAPPER (
-	.oTftColorR		(oTftColorR),
-	.oTftColorG		(oTftColorG),
-	.oTftColorB		(oTftColorB),
-	.oTftDclk		(oTftDclk),
-	.oTftHsync		(oTftHsync),
-	.oTftVsync		(oTftVsync),
-	.oTftDe			(oTftDe),
-	.oTftBackLight	(oTftBackLight),
-	.oTftRst		(oTftRst),
-	.PixelClk 		(iPixelClk),
-	.iSysRst		(iSysRst),
-	.iPixel			(iPixel),
-	.iVde			(iVde),
-	.iHsync			(iHsync),
-	.iVsync			(iVsync)
+	.oTftColorR			(oTftColorR),
+	.oTftColorG			(oTftColorG),
+	.oTftColorB			(oTftColorB),
+	.oTftDclk			(oTftDclk),
+	.oTftHsync			(oTftHsync),
+	.oTftVsync			(oTftVsync),
+	.oTftDe				(oTftDe),
+	.oTftBackLight		(oTftBackLight),
+	.oTftRst			(oTftRst),
+	.iPixelClk 			(iPixelClk),
+	.iSysRst			(iSysRst),
+	.iPixel				(iPixelData),
+	.iVde				(iVde),
+	.iHsync				(iHsync),
+	.iVsync				(iVsync),
+	.iBackLightControl 	(iBackLightControl)
 );
 
 
@@ -66,7 +66,7 @@ i2sWrapper I2S_WRAPPER (
 	.oAudioData		(oAudioData),
 	.iAudioClk		(iAudioClk),
 	.iAudioRst		(iAudioRst),
-	.iAudio			(iAudio)
+	.iAudioData		(iAudioData)
 );
 
 
