@@ -44,7 +44,7 @@ generate
 	OBUF TFT_HSYNC 	(.O (oTftHsync),	.I (iHsync));
 	OBUF TFT_VSYNC 	(.O (oTftVsync),	.I (iVsync));
 	OBUF TFT_VDE 	(.O (oTftDe),		.I (iVde));
-	OBUF TFT_RST 	(.O (oTftRst),		.I (iSysRst));
+	OBUF TFT_RST 	(.O (oTftRst),		.I (~iSysRst));
 	OBUF TFT_BL 	(.O (oTftBackLight),.I (iBackLightControl));
 endgenerate
 

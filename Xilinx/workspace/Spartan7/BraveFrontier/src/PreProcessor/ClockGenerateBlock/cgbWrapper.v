@@ -63,7 +63,7 @@ localparam      lpClk5OutDiv     = 10;          // <Reserved>
 generate
     if (pSystemPll == "on")
     begin
-        wire wLock;                     assign oRst = ~wLock;
+        wire wLock;
         wire wClkOutFb, wClkInFb, wClkIbuf;
         wire [6:0] wClkOut;
         wire [8:0] wunused;
@@ -155,6 +155,7 @@ generate
         wire wMemClk;                      assign oMemClk   = wMemClk;
         wire wPixelClk;                    assign oPixelClk = wPixelClk;
         wire wSysClk;                      assign oSysClk   = wSysClk;
+        wire wSysRst;                      assign oRst		= wSysRst;
 
         BUFG BUFG_CLKO_0 (
             .O (wPixelClk),
@@ -169,6 +170,11 @@ generate
         BUFG BUFG_CLKO_2 (
             .O (wSysClk),
             .I (wClkOut[2])
+        );
+
+        BUFG BUFG_SYSRST (
+            .O (wSysRst),
+            .I (wLock)
         );
     end
 endgenerate
@@ -302,7 +308,8 @@ generate
         );
 
         rstGen #(
-            .pRstFallTime   (100)
+            .pRstFallTime   (100),
+			.pBufgUsed		("yes")
         ) AUDIO_RST (
             .iClk           (wAudioBufg),
             .oRst           (wAudioLock)

@@ -2,10 +2,12 @@
 // Create 2021/04/14
 // Author koutakimura
 // -
-// リセット信号を生成する
+// 21/04/14 リセット信号を生成する
+// 22/07/09 パラメータ設定で BUFGに接続を行えるように更新
 //----------------------------------------------------------
 module rstGen # (
-    parameter [7:0] pRstFallTime = 150
+    parameter [7:0] pRstFallTime 	= 150,
+	parameter 		pBufgUsed 		= "no"
 )(
     input   iClk,
     output  oRst
@@ -15,17 +17,32 @@ module rstGen # (
 //---------------------------------------------------------------------------
 // リセットの立下り時間
 //---------------------------------------------------------------------------
-localparam lpRstFallTime = pRstFallTime - 1;
+localparam [7:0] lpRstFallTime = pRstFallTime - 8'd1;
 
 
 //---------------------------------------------------------------------------
 // リセットの生成
 //---------------------------------------------------------------------------
 reg         qEn;
-reg [7:0]   rCnt = 0;
-reg         rRst = 1;
+reg [7:0]   rCnt = 8'd0;
 
-always @( posedge iClk )
+generate
+	if (pBufgUsed == "yes")
+	begin
+		reg rRst = 1'd1;
+
+		BUFG BUFG_AudioClk (
+            .O	(oRst),
+            .I	(rRst)
+        );
+	end
+	else
+	begin
+		reg rRst = 1'd1;	assign oRst = rRst;
+	end
+endgenerate
+
+always @(posedge iClk)
 begin
     rCnt <= rCnt + 1'b1;
 end
@@ -38,7 +55,7 @@ end
 
 always @*
 begin
-   qEn <= (rCnt == lpRstFallTime);
+	qEn <= (rCnt == lpRstFallTime);
 end
 
 endmodule

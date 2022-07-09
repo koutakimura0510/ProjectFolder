@@ -61,9 +61,11 @@ set_property -dict { PACKAGE_PIN B11   IOSTANDARD LVCMOS18} [get_ports { ioSpiMo
 set_property -dict { PACKAGE_PIN D10   IOSTANDARD LVCMOS18} [get_ports { ioSpiWp     }];
 set_property -dict { PACKAGE_PIN C10   IOSTANDARD LVCMOS18} [get_ports { ioSpiHold   }];
 set_property -dict { PACKAGE_PIN C11   IOSTANDARD LVCMOS18} [get_ports { oSpiConfigCs}];
-set_property -dict { PACKAGE_PIN A10   IOSTANDARD LVCMOS18} [get_ports { oSpiCs      }];
+set_property -dict { PACKAGE_PIN A10   IOSTANDARD LVCMOS18} [get_ports { oSpiCs1     }];
+set_property -dict { PACKAGE_PIN A10   IOSTANDARD LVCMOS18} [get_ports { oSpiCs2     }];
 set_property PULLUP true [get_ports oSpiConfigCs];
-set_property PULLUP true [get_ports oSpiCs];
+set_property PULLUP true [get_ports oSpiCs1];
+set_property PULLUP true [get_ports oSpiCs2];
 
 
 #-------------------------------------------------------------------------------

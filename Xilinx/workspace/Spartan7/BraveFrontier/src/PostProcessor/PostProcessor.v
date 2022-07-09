@@ -30,7 +30,8 @@ module PostProcesser (
 	input 			iBackLightControl,
 	input 			iAudioClk,
 	input 			iAudioRst,
-	input  [31:0]	iAudioData
+	input  [31:0]	iAudioData,
+	output          oAudioLRch
 );
 
 //---------------------------------------------------------------------------
@@ -66,7 +67,8 @@ i2sWrapper I2S_WRAPPER (
 	.oAudioData		(oAudioData),
 	.iAudioClk		(iAudioClk),
 	.iAudioRst		(iAudioRst),
-	.iAudioData		(iAudioData)
+	.iAudioData		(iAudioData),
+	.oAudioLRch     (oAudioLRch)
 );
 
 

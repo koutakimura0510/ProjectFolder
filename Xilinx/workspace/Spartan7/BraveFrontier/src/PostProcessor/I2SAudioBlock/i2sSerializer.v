@@ -12,7 +12,8 @@ module i2sSerializer (
     input  [31:0]   iAudioData,
     output          oAudioBclk,
     output          oAudioCclk,
-    output          oAudioData
+    output          oAudioData,
+    output          oAudioLRch          // Low L-Ch / High R-Ch
 );
 
 
@@ -46,21 +47,20 @@ end
 
 
 //----------------------------------------------------------
-// LRCLK
-// Low  LCLK Output
-// High RCLK Output
+// LRCLK Generator
 // Bclk の CKE が DDR でアサートされるので、32bit x 2clk
 // 合計 64カウント のレジスタを確保する
 //----------------------------------------------------------
 localparam lpCclkCntMax = 7'd63;
 
-reg  rCclk;             assign oAudioCclk = rCclk;
+reg  rCclk;             assign {oAudioCclk, oAudioLRch} = {2{rCclk}};
 reg  [6:0] rCclkCnt;
 wire wCclkCke;
 
 always @(negedge iAudioClk)
 begin
     if (iAudioRst)      rCclkCnt <= 7'd0;
+    else if (wCclkCke)  rCclkCnt <= 7'd0;
     else if (wBclkCke)  rCclkCnt <= rCclkCnt + 1'd1;
     else                rCclkCnt <= rCclkCnt;
 
@@ -78,6 +78,10 @@ end
 //----------------------------------------------------------
 // パラレル -> シリアル変換
 // LRch 32bit MSB farst
+// 
+// MSB Farst で送信する必要がある。
+// Cclk が DDR クロックカウントのため 0 ~ 63 までインクリメントでカウントするが、
+// 1bit 詰めて、更に反転すると 31 ~ 0 のデクリメントカウンタとして使用できる
 //----------------------------------------------------------
 reg  rAudioData;           assign oAudioData = rAudioData;
 wire wBitRp;
