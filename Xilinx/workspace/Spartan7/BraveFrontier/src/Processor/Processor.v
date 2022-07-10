@@ -13,7 +13,7 @@ module Processer #(
 )(
     // External port
     // SPI
-    output          oSpiSck,
+    output          ioSpiSck,
     inout           ioSpiMiso,
     inout           ioSpiMosi,
     inout           ioSpiWp,
@@ -42,11 +42,11 @@ module Processer #(
     // Internal Port
     // Video
     input           iPFvde,
-    output          oPixelData,
+    output [15:0]   oPixelData,
     output          oBackLightControl,
     // Audio
     input           iAudioLRch,
-    output          oAudioData,
+    output [31:0]   oAudioData,
     // CLK Reset
     input           iSysClk,
     input           iPixelClk,
@@ -56,43 +56,92 @@ module Processer #(
     input           iAudioRst
 );
 
-//
-assign oSpiSck      = 0;
-assign ioSpiMiso    = 0;
-assign ioSpiMosi    = 0;
-assign ioSpiWp      = 0;
-assign ioSpiHold    = 0;
-assign oSpiConfigCs = 0;
-assign oSpiCs1      = 0;
-assign oSpiCs2      = 0;
-assign ioSrampDq	= 1'bz;
-assign ioSrampDqs	= 1'bz;
-assign oSrampClk	= 1'b0;
-assign oSrampCs		= 1'b0;
-assign ioSramsDq	= 1'bz;
-assign ioSramsDqs	= 1'bz;
-assign oSramsClk	= 1'b0;
-assign oSramsCs		= 1'b0;
-assign oSwScl		= 1'b0;
-assign ioSwSda		= 1'bz;
-assign oUartTx		= 1'b0;
-assign oLedEdge		= 1'b0;
-assign oLedClk		= 1'b0;
+// 
+assign ioSpiSck      	= 1'bz;
+assign ioSpiMiso    	= 1'bz;
+assign ioSpiMosi    	= 1'bz;
+assign ioSpiWp      	= 1'bz;
+assign ioSpiHold    	= 1'bz;
+assign oSpiConfigCs 	= 0;
+assign oSpiCs1      	= 0;
+assign oSpiCs2      	= 0;
+assign ioSrampDq		= 16'bz;
+assign ioSrampDqs		= 2'bz;
+assign oSrampClk		= 1'b0;
+assign oSrampCs			= 1'b0;
+assign ioSramsDq		= 16'bz;
+assign ioSramsDqs		= 2'bz;
+assign oSramsClk		= 1'b0;
+assign oSramsCs			= 1'b0;
+assign oSwScl			= 1'b0;
+assign ioSwSda			= 1'bz;
+assign oUartTx			= 1'b0;
+assign oLedEdge			= 1'b0;
+assign oLedClk			= 1'b0;
 assign oPixelData		= 1'b0;
 assign oBackLightControl= 1'b0;
 assign oAudioData		= 1'b0;
 
 //----------------------------------------------------------
-// 外部ユーザーインターフェースを操作しシステムと協調動作させる
-// SPI-ROM / LED / SW
+// MCB
 //----------------------------------------------------------
-// MicroControllerUnit MCU
+// MicroControllerBlock MCB
 
+
+//----------------------------------------------------------
+// LED Block
+//----------------------------------------------------------
+// GPIOBlock GPIO_LED_BLOCK
+
+//----------------------------------------------------------
+// BackLight
+//----------------------------------------------------------
+// PWMBlock PWM_BLOCK
+
+//----------------------------------------------------------
+// Flash Memory Block
+//----------------------------------------------------------
+// SPIBlock SPI_BLOCK
+
+//----------------------------------------------------------
+// SW
+//----------------------------------------------------------
+// I2CBlock I2C1_BLOCK()
+
+//----------------------------------------------------------
+// PGB
+//----------------------------------------------------------
+// PixelGenBlock PGB
+
+//----------------------------------------------------------
+// AGB
+//----------------------------------------------------------
+// AudioGenBlock AGB
+
+//----------------------------------------------------------
+// VDMA
+//----------------------------------------------------------
+// VDMABlock VDMA ()
+
+//----------------------------------------------------------
+// ADMA
+//----------------------------------------------------------
+// ADMABlock ADMA ()
 
 //----------------------------------------------------------
 // 外部 RAM を操作しシステムと協調動作させる
 //----------------------------------------------------------
-// MemoryInterfaceBlock MEMORY_INTERFACE_BLOCK
+// PSRAMBlock PSRAM_BLOCK
+
+//----------------------------------------------------------
+// USI/F BUS
+//----------------------------------------------------------
+// UltraSimpleInterface USI_BUS
+
+//----------------------------------------------------------
+// UFI/F BUS
+//----------------------------------------------------------
+// UltraFastInterface UFI_BUS
 
 
 endmodule

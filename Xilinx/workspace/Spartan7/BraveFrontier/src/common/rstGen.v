@@ -25,12 +25,11 @@ localparam [7:0] lpRstFallTime = pRstFallTime - 8'd1;
 //---------------------------------------------------------------------------
 reg         qEn;
 reg [7:0]   rCnt = 8'd0;
+reg rRst = 1'd1;
 
 generate
 	if (pBufgUsed == "yes")
 	begin
-		reg rRst = 1'd1;
-
 		BUFG BUFG_AudioClk (
             .O	(oRst),
             .I	(rRst)
@@ -38,7 +37,7 @@ generate
 	end
 	else
 	begin
-		reg rRst = 1'd1;	assign oRst = rRst;
+		assign oRst = rRst;
 	end
 endgenerate
 

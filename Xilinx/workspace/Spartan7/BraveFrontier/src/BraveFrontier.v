@@ -25,7 +25,7 @@ module BraveFrontier #(
 )(
     input           iOscSystemClk,     // OSC  clk
     input           iOscAudioClk,      // OSC  clk
-    // output          oSpiSck,
+    inout           ioSpiSck,
     inout           ioSpiMiso,
     inout           ioSpiMosi,
     inout           ioSpiWp,
@@ -111,8 +111,8 @@ PreProcesser #(
 
 always @*
 begin
-    qProSysClk <= wSysClk;
-    qProMemClk <= wMemClk;
+    qProSysClk	<= wSysClk;
+    qProMemClk	<= wMemClk;
     {qPostPixelClk, qProPixelClk} <= {2{wPixelClk}};
     {qPostAudioClk, qProAudioClk} <= {2{wAudioClk}};
     {qPostPixelRst, qProSysRst}   <= {2{wSysRst}};
@@ -126,9 +126,10 @@ end
 // Video
 wire [15:0] wProPixel;
 wire wProBackLightControl;
+reg  qProFvde;
 
 // Audio
-wire [15:0] wProAudioData;
+wire [31:0] wProAudioData;
 reg  qProAudioLRch;
 
 Processer # (
@@ -142,7 +143,7 @@ Processer # (
     // External Port
     //----------------------------------------------------------
     // SPI
-    .oSpiSck        (/*oSpiSck*/),
+    .ioSpiSck       (ioSpiSck),
     .ioSpiMiso      (ioSpiMiso),        .ioSpiMosi      (ioSpiMosi),
     .ioSpiHold      (ioSpiHold),        .ioSpiWp        (ioSpiWp),
     .oSpiCs1        (oSpiCs1),          .oSpiCs2        (oSpiCs2),
@@ -188,9 +189,10 @@ reg  [15:0] qPostPixel;
 reg  qPostVde;
 reg  qPostHsync;
 reg  qPostVsync;
+reg  qPostBackLightControl;
 
 // Audio
-reg  [15:0] qPostAudioData;
+reg  [31:0] qPostAudioData;
 wire wPostAudioLRch;
 
 PostProcesser POST_PROCESSER (

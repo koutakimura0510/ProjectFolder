@@ -27,22 +27,22 @@ localparam lpBclkCntMax = 4'd4;
 
 reg  [2:0] rMclkCnt;
 reg  rBclk;              assign oAudioBclk = rBclk;
-wire wBclkCke;
+reg  qBclkCke;
 
 always @(negedge iAudioClk)
 begin
     if (iAudioRst)      rMclkCnt <= 3'd0;
-    else if (wBclkCke)  rMclkCnt <= 3'd0;
+    else if (qBclkCke)  rMclkCnt <= 3'd0;
     else                rMclkCnt <= rMclkCnt + 1'd1;
 
     if (iAudioRst)      rBclk <= 1'd0;
-    else if (wBclkCke)  rBclk <= ~rBclk;
+    else if (qBclkCke)  rBclk <= ~rBclk;
     else                rBclk <= rBclk;
 end
 
 always @*
 begin
-    wBclkCke <= (rMclkCnt == lpBclkCntMax);
+    qBclkCke <= (rMclkCnt == lpBclkCntMax);
 end
 
 
@@ -55,23 +55,23 @@ localparam lpCclkCntMax = 7'd63;
 
 reg  rCclk;             assign {oAudioCclk, oAudioLRch} = {2{rCclk}};
 reg  [6:0] rCclkCnt;
-wire wCclkCke;
+reg  qCclkCke;
 
 always @(negedge iAudioClk)
 begin
     if (iAudioRst)      rCclkCnt <= 7'd0;
-    else if (wCclkCke)  rCclkCnt <= 7'd0;
-    else if (wBclkCke)  rCclkCnt <= rCclkCnt + 1'd1;
+    else if (qCclkCke)  rCclkCnt <= 7'd0;
+    else if (qBclkCke)  rCclkCnt <= rCclkCnt + 1'd1;
     else                rCclkCnt <= rCclkCnt;
 
     if (iAudioRst)      rCclk <= 1'd0;
-    else if (wCclkCke)  rCclk <= ~rCclk;
+    else if (qCclkCke)  rCclk <= ~rCclk;
     else                rCclk <= rCclk;
 end
 
 always @*
 begin
-    wCclkCke <= (rCclkCnt == lpCclkCntMax);
+    qCclkCke <= (rCclkCnt == lpCclkCntMax);
 end
 
 
@@ -84,17 +84,17 @@ end
 // 1bit 詰めて、更に反転すると 31 ~ 0 のデクリメントカウンタとして使用できる
 //----------------------------------------------------------
 reg  rAudioData;           assign oAudioData = rAudioData;
-wire wBitRp;
+reg  qBitRp;
 
 always @(negedge iAudioClk)
 begin
-    if (wCclkCke)  rAudioData <= iAudioData[0];
-    else           rAudioData <= iAudioData[wBitRp];
+    if (qCclkCke)  rAudioData <= iAudioData[0];
+    else           rAudioData <= iAudioData[qBitRp];
 end
 
 always @*
 begin
-    wBitRp <= ~(rCclkCnt[6:1]);
+    qBitRp <= ~(rCclkCnt[6:1]);
 end
 
 endmodule

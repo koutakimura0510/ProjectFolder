@@ -49,7 +49,7 @@ tftWrapper TFT_WRAPPER (
 	.oTftRst			(oTftRst),
 	.iPixelClk 			(iPixelClk),
 	.iSysRst			(iSysRst),
-	.iPixel				(iPixelData),
+	.iPixelData			(iPixelData),
 	.iVde				(iVde),
 	.iHsync				(iHsync),
 	.iVsync				(iVsync),
@@ -70,6 +70,5 @@ i2sWrapper I2S_WRAPPER (
 	.iAudioData		(iAudioData),
 	.oAudioLRch     (oAudioLRch)
 );
-
 
 endmodule

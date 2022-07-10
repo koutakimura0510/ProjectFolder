@@ -37,15 +37,15 @@ create_clock -add -name iOscAudioClk -period 40.69 -waveform {0 5} [get_ports iO
 #-------------------------------------------------------------------------------
 # FPGA PLL MMCM
 #-------------------------------------------------------------------------------
-create_generated_clock -name PixelClk [get_pins PREPROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT0]
-create_generated_clock -name MemClk   [get_pins PREPROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT1]
-create_generated_clock -name SysClk   [get_pins PREPROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT2]
+create_generated_clock -name PixelClk [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT0]
+create_generated_clock -name MemClk   [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT1]
+create_generated_clock -name SysClk   [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT2]
 # create_generated_clock -name AudioClk [get_pins PREPROCESSER/CGB/PLLE2_ADV_CLK_GEN/CLKOUT0]
 
 #-------------------------------------------------------------------------------
 # 手動配置
 #-------------------------------------------------------------------------------
-set_property LOC MMCME2_ADV_X1Y0  [get_cells PREPROCESSER/CGB/MMCME2_BASE_CLK_GEN]
+set_property LOC MMCME2_ADV_X1Y0  [get_cells PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN]
 # set_property LOC PLLE2_ADV_X1Y0   [get_cells PREPROCESSER/CGB/PLLE2_ADV_CLK_GEN]
 # # set_property LOC RAMB18_X8Y55 [get_cells BASE/PFB/ASYNC_PIXEL_BUFFER/USER_FIFO_DUAL/fifo_reg]
 # set_property LOC RAMB36_X2Y8 [get_cells PROCESSER/PFB/ASYNC_PIXEL_BUFFER/USER_FIFO_DUAL/fifo_reg]
@@ -55,17 +55,19 @@ set_property LOC MMCME2_ADV_X1Y0  [get_cells PREPROCESSER/CGB/MMCME2_BASE_CLK_GE
 # Connected Config Memory and System Memory
 # Sck は Config 用の CCLK に直接つないでいるため、プリミティブを使用して通常ピンとして動作させる
 #-------------------------------------------------------------------------------
-# set_property -dict { PACKAGE_PIN A8    IOSTANDARD LVCMOS18} [get_ports { oSpiSck     }];
-set_property -dict { PACKAGE_PIN b12   IOSTANDARD LVCMOS18} [get_ports { ioSpiMiso   }];
-set_property -dict { PACKAGE_PIN B11   IOSTANDARD LVCMOS18} [get_ports { ioSpiMosi   }];
-set_property -dict { PACKAGE_PIN D10   IOSTANDARD LVCMOS18} [get_ports { ioSpiWp     }];
-set_property -dict { PACKAGE_PIN C10   IOSTANDARD LVCMOS18} [get_ports { ioSpiHold   }];
-set_property -dict { PACKAGE_PIN C11   IOSTANDARD LVCMOS18} [get_ports { oSpiConfigCs}];
-set_property -dict { PACKAGE_PIN A10   IOSTANDARD LVCMOS18} [get_ports { oSpiCs1     }];
-set_property -dict { PACKAGE_PIN A10   IOSTANDARD LVCMOS18} [get_ports { oSpiCs2     }];
-set_property PULLUP true [get_ports oSpiConfigCs];
-set_property PULLUP true [get_ports oSpiCs1];
-set_property PULLUP true [get_ports oSpiCs2];
+set_property -dict { PACKAGE_PIN A10   IOSTANDARD LVCMOS18} [get_ports { ioSpiSck    }]
+set_property -dict { PACKAGE_PIN B12   IOSTANDARD LVCMOS18} [get_ports { ioSpiMiso   }]
+set_property -dict { PACKAGE_PIN B11   IOSTANDARD LVCMOS18} [get_ports { ioSpiMosi   }]
+set_property -dict { PACKAGE_PIN D10   IOSTANDARD LVCMOS18} [get_ports { ioSpiWp     }]
+set_property -dict { PACKAGE_PIN C10   IOSTANDARD LVCMOS18} [get_ports { ioSpiHold   }]
+set_property -dict { PACKAGE_PIN C11   IOSTANDARD LVCMOS18} [get_ports { oSpiConfigCs}]
+set_property -dict { PACKAGE_PIN M12   IOSTANDARD LVCMOS18} [get_ports { oSpiCs1     }]
+set_property -dict { PACKAGE_PIN M11   IOSTANDARD LVCMOS18} [get_ports { oSpiCs2     }]
+set_property PULLUP true [get_ports ioSpiWp]
+set_property PULLUP true [get_ports ioSpiHold]
+set_property PULLUP true [get_ports oSpiConfigCs]
+set_property PULLUP true [get_ports oSpiCs1]
+set_property PULLUP true [get_ports oSpiCs2]
 
 
 #-------------------------------------------------------------------------------

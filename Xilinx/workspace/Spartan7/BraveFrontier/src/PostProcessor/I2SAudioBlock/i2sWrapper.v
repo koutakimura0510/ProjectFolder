@@ -4,7 +4,7 @@
 // -
 // I2S信号生成ラッパーモジュール
 //----------------------------------------------------------
-module i2cWrapper (
+module i2sWrapper (
     // External Port
     output          oAudioMclk, // Master CLK
     output          oAudioBclk, // Base CLK
