@@ -21,7 +21,8 @@ FPGA を搭載した自作基板を作成、機能を実装しイベントでの
 - parameter locparama は小文字 p, lp から開始し、なるべく詳細な命名を行う</br>
 - input outputのportは小文字 i, o から開始する。</br>
 - 変数のプレフィックスは、w->ネット型wire変数, q->D-FFにしないreg変数, r->D-FFにするreg変数</br>
-- よく使用するハンド・シェイク信号は、Valid->Vld, Ready->Rdy, ClockEnable->Cke と省略する
+- よく使用するハンド・シェイク信号は、Valid->Vld, Ready->Rdy, ClockEnable->Cke と省略する</br>
+- module の 入出力 Port のプレフィックス S->Slave, M->Master とする</br>
 </br>
 
 ## 4. ファイル・ディレクトリ構成
