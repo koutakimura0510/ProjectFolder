@@ -93,7 +93,7 @@ assign oAudioData		= 1'b0;
 // GPIOBlock GPIO_LED_BLOCK
 
 //----------------------------------------------------------
-// BackLight
+// PWM BackLight
 //----------------------------------------------------------
 // PWMBlock PWM_BLOCK
 

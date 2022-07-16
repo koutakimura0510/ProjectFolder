@@ -24,60 +24,102 @@ module MicroControllerCsr #(
 	parameter 		pBusWidth	= 8
 )(
     // Internal Port
-	// Csr Ctl
-	input  	[31:0]	iWd,		// Ckeによる手動レジスタ更新時の Write Data
-	input  	[ 7:0]	iAdrs,		// R/W アドレス指定
-	input 			iCke,		// 有効データ書き込み時 Assert
-	output 	[31:0]	oRd,		// Read Data
-    // CLK Reset
-    input           iSysClk,
-    input           iSysRst,
-	// Csr
-	input  	[pBusWidth:0]	iUsiRdy,
-	input	[pBusWidth:0]	iUsiCke,
-	input	[31:0]			iUsiRd,
+	// Csr Manual
+	input  	[31:0]			iWd,		// Ckeによる手動レジスタ更新時の Write Data
+	input  	[ 7:0]			iAdrs,		// R/W アドレス指定
+	input 					iCke,		// 有効データ書き込み時 Assert
+	output 	[31:0]			oRd,		// Read Data
+	// Csr Auto
+	input	[31:0]			iSUsiRd,
+	input  	[pBusWidth:0]	iSUsiRdy,
+	input	[pBusWidth:0]	iSUsiCke,
 	output 			
+    // CLK Reset
+    input           		iSysClk,
+    input           		iSysRst,
 );
 
 //----------------------------------------------------------
 // レジスタマップ
 //----------------------------------------------------------
+// Manual R/W Reg
 reg [31:0] 			rMUsiWd;		// Bus 書き込みデータ
 reg [31:0] 			rMUsiAdrs;	// Bus 書き込みアドレス
 reg [pBusWidth:0] 	rMUsiCke;	// Bus 書き込み Enable 自動で 0クリア
 reg [pBusWidth:0] 	rMUsiRdy;	//
-reg [31:0] 			rSUsiRd;
+// Auto R/W Reg
+reg [31:0]			rSUsiGpioRd;
+reg [31:0]			rSUsiPwmRd;
+reg [31:0]			rSUsiSpiRd;
+reg [31:0]			rSUsiI2cRd;
+reg [31:0]			rSUsiPgbRd;
+reg [31:0]			rSUsiAgbRd;
+reg [31:0]			rSUsiVdamRd;
+reg [31:0]			rSUsiAdmaRd;
+reg [31:0]			rSUsiSramRd;
+reg [31:0]			rSUsiBusRd;
 reg [pBusWidth:0] 	rSUsiCke;
-reg [pBusWidth:0] 	rSUsiRdy;	//
-reg [ 8:0] 			qAdrs;
+reg [pBusWidth:0] 	rSUsiRdy;
+// Access Address
+reg [ 8:0] 			qCsrAdrs;
 
 always @(posedge iSysClk)
 begin
 	if (iSysRst)
 	begin
-		
+		rMUsiWd			<= 'h0;
+		rMUsiAdrs		<= 'h0;
+		rMUsiCke		<= {pBusWidth{1'b0}};
+		rMUsiRdy		<= {pBusWidth{1'b1}};
+		rSUsiGpioRd		<= 'h0;
+		rSUsiPwmRd		<= 'h0;
+		rSUsiSpiRd		<= 'h0;
+		rSUsiI2cRd		<= 'h0;
+		rSUsiPgbRd		<= 'h0;
+		rSUsiAgbRd		<= 'h0;
+		rSUsiVdamRd		<= 'h0;
+		rSUsiAdmaRd		<= 'h0;
+		rSUsiSramRd		<= 'h0;
+		rSUsiBusRd		<= 'h0;
+		rSUsiCke		<= {pBusWidth{1'b0}};
+		rSUsiRdy		<= {pBusWidth{1'b0a}};
 	end
 	else
 	begin
-		// Usi Write
-		rMUsiWd		<= (qAdrs == 9'h100) ? iWd : rMUsiWd;
-		rMUsiAdrs	<= (qAdrs == 9'h104) ? iWd : rMUsiAdrs;
-		rMUsiCke	<= (qAdrs == 9'h108) ? iWd : 1'b0;		// TODO 自動クリアしたい
-
-		rSUsiGpioRd	<= iSUsiGpioRd; // TODO Slave ブロック名のレジスタ用意
+		// Manual
+		rMUsiWd		<= (qCsrAdrs == 9'h100) ? iWd : rMUsiWd;
+		rMUsiAdrs	<= (qCsrAdrs == 9'h104) ? iWd : rMUsiAdrs;
+		rMUsiCke	<= (qCsrAdrs == 9'h108) ? iWd : rMUsiCke;		// TODO 自動クリアしたい
+		rMUsiRdy	<= (qCsrAdrs == 9'h10c) ? iWd : rMUsiRdy;		// TODO 自動クリアしたい
+		// Auto
+		rSUsiGpioRd	<= (iSUsiCke[0] == 1'd1) ? iSUsiRd : rSUsiGpioRd;
+		rSUsiPwmRd	<= (iSUsiCke[1] == 1'd1) ? iSUsiRd : rSUsiPwmRd;
+		rSUsiSpiRd	<= (iSUsiCke[2] == 1'd1) ? iSUsiRd : rSUsiSpiRd;
+		rSUsiI2cRd	<= (iSUsiCke[3] == 1'd1) ? iSUsiRd : rSUsiI2cRd;
+		rSUsiPgbRd	<= (iSUsiCke[4] == 1'd1) ? iSUsiRd : rSUsiPgbRd;
+		rSUsiAgbRd	<= (iSUsiCke[5] == 1'd1) ? iSUsiRd : rSUsiAgbRd;
+		rSUsiVdamRd	<= (iSUsiCke[6] == 1'd1) ? iSUsiRd : rSUsiVdamRd;
+		rSUsiAdmaRd	<= (iSUsiCke[7] == 1'd1) ? iSUsiRd : rSUsiAdmaRd;
+		rSUsiSramRd	<= (iSUsiCke[8] == 1'd1) ? iSUsiRd : rSUsiSramRd;
+		rSUsiBusRd	<= (iSUsiCke[9] == 1'd1) ? iSUsiRd : rSUsiBusRd;
 		rSUsiCke	<= iSUsiCke;
 		rSUsiRdy	<= iSUsiRdy;
 
+		// Ufi 
+		// rSUfiBusRd	<= iSUfiBusRd;
+		// rSUfiCke	<= iSUfiCke;
+		// rSUfiRdy	<= iSUfiRdy;
 	end
 end
 
 always @*
 begin
-	qAdrs <= {iCke, iAdrs};
+	qCsrAdrs <= {iCke, iAdrs};
 end
 
 //----------------------------------------------------------
-// Read
+// Csr Read
+// この Read データはプロセッサに入力する
 //----------------------------------------------------------
 reg [31:0] rRd;			assign oRd = rRd;
 
@@ -90,11 +132,23 @@ begin
 	else
 	begin
 		case (iAdrs)
-			'h00: 		rRd <= rUsiWd;
-			'h04: 		rRd <= rUsiAdrs;
-			'h08: 		rRd <= rUsiCke;
-			'h0c: 		rRd <= rUsiRdy;
-			'h10: 		rRd <= rUsiRd;
+			'h00: 		rRd <= rMUsiWd;
+			'h04: 		rRd <= rMUsiAdrs;
+			'h08: 		rRd <= rMUsiCke;
+			'h0c: 		rRd <= rMUsiRdy;
+			'h10: 		rRd <= rRd;			// 空き
+			'h14:		rRd <= rSUsiGpioRd;
+			'h18:		rRd <= rSUsiPwmRd;
+			'h1c:		rRd <= rSUsiSpiRd;
+			'h20:		rRd <= rSUsiI2cRd;
+			'h24:		rRd <= rSUsiPgbRd;
+			'h28:		rRd <= rSUsiAgbRd;
+			'h2c:		rRd <= rSUsiVdamRd;
+			'h30:		rRd <= rSUsiAdmaRd;
+			'h34:		rRd <= rSUsiSramRd;
+			'h38:		rRd <= rSUsiBusRd;
+			'h3c:		rRd <= rSUsiCke;
+			'h40:		rRd <= rSUsiRdy;
 			default: 	rRd <= rRd;
 		endcase
 	end
