@@ -1,30 +1,9 @@
-/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/HVSYNC_GEN.v
-Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module HVSYNC_GEN
-
-Top level modules:
-	HVSYNC_GEN
-
-} {} {}} /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/TEST.v
-Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module TEST
-
-Top level modules:
-	TEST
-
-} {} {}} /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/ENABLE/EN_GEN.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/ENABLE/EN_GEN.v
+/home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/ENABLE/EN_GEN.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/ENABLE/EN_GEN.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
 -- Compiling module EN_GEN
 
 Top level modules:
 	EN_GEN
-
-} {} {}} /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Display/VGA/VGA_DEMO/VGA_DEMO.v
-Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
--- Compiling module VGA_DEMO
-
-Top level modules:
-	VGA_DEMO
 
 } {} {}} /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/LEDR/LED_DEMO.v {1 {vlog -work work -stats=none /home/koutakimura/workspace/ProjectFolder/Intel/FPGA/MAX10/Include/LEDR/LED_DEMO.v
 Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
