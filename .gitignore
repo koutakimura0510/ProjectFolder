@@ -2,6 +2,8 @@
 *.bin
 *.build
 *.bmp
+*.brd
+*.bsd
 *.bc
 *.cdb
 *.d
@@ -31,6 +33,7 @@
 *.mem
 *.mk
 *.o
+*.olb
 *.pdf
 *.png
 *.pb
@@ -68,7 +71,10 @@
 *.xci
 *.xml
 *.xmi
+*.xlsm
+*.xlsx
 *.xdbg
+*.zip
 
 # 管理しないプロジェクト ArtyZ7
 # Xilinx/workspace/IP/*
