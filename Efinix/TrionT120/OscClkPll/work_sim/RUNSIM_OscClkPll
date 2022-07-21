@@ -1,0 +1,2 @@
+iverilog -s sim -o/home/koutakimura/workspace/ProjectFolder/Efinix/TrionT120/OscClkPll/work_sim/OscClkPll.vvp -f/home/koutakimura/workspace/ProjectFolder/Efinix/TrionT120/OscClkPll/work_sim/OscClkPll.f
+vvp -l/home/koutakimura/workspace/ProjectFolder/Efinix/TrionT120/OscClkPll/outflow/OscClkPll.rtl.simlog /home/koutakimura/workspace/ProjectFolder/Efinix/TrionT120/OscClkPll/work_sim/OscClkPll.vvp

@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-module LedBlinkSwSim;
+module OscClkPllSim;
 
 parameter CYCLE = 10;
 reg [3:0] 	rUserDipSw  = 0;
@@ -9,12 +9,14 @@ reg 		rSysClk = 0;
 wire 		rPllLoked = 0;
 wire 		wPllRst;
 
-LedBlinkTop LEDBlinkTop
+OscClkPllTop OSC_CLK_PllTop
 (
 	.iUserDipSw		(rUserDipSw),
 	.iUserPushSw	(rUserPushSw),
 	.oUserLed		(wUserLed),
-	.iOscClk		(rSysClk)
+	.iSysClk		(rSysClk),
+	.iPllLoked		(rPllLoked),
+	.oPllRst		(wPllRst)
 );
 
 always begin
@@ -28,8 +30,8 @@ initial begin
 end
 
 initial begin
-	$dumpfile("outflow/Sim.vcd");
-	$dumpvars(0, LedBlinkSwSim);
+	$dumpfile("outflow/OscClkPll.vcd");
+	$dumpvars(0, OscClkPllSim);
 end
 
 endmodule
