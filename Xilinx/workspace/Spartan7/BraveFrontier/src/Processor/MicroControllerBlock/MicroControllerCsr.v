@@ -5,6 +5,7 @@
 // コントロール・ステータス・レジスタ
 // [Write]
 // iCke Assert を確認し指定アドレスのレジスタに iWd のデータを書き込む。
+// バス経由をしない手動レジスタ更新は、CSR の上位モジュールが直接管理を行う
 // 
 // [Read]
 // 読み込みの場合はアドレスを変更するだけにする。
@@ -21,7 +22,7 @@
 // 上位モジュールへの output port は必ずレジスタ経由で出力する。
 //----------------------------------------------------------
 module MicroControllerCsr #(
-	parameter 		pBusWidth	= 8
+	parameter 				pBusWidth	= 8
 )(
     // Internal Port
 	// Csr Manual
@@ -43,23 +44,23 @@ module MicroControllerCsr #(
 // レジスタマップ
 //----------------------------------------------------------
 // Manual R/W Reg
-reg [31:0] 			rMUsiWd;		// Bus 書き込みデータ
+reg [31:0] 			rMUsiWd;	// Bus 書き込みデータ
 reg [31:0] 			rMUsiAdrs;	// Bus 書き込みアドレス
 reg [pBusWidth:0] 	rMUsiCke;	// Bus 書き込み Enable 自動で 0クリア
-reg [pBusWidth:0] 	rMUsiRdy;	//
 // Auto R/W Reg
-reg [31:0]			rSUsiGpioRd;
-reg [31:0]			rSUsiPwmRd;
-reg [31:0]			rSUsiSpiRd;
-reg [31:0]			rSUsiI2cRd;
-reg [31:0]			rSUsiPgbRd;
-reg [31:0]			rSUsiAgbRd;
-reg [31:0]			rSUsiVdamRd;
-reg [31:0]			rSUsiAdmaRd;
-reg [31:0]			rSUsiSramRd;
-reg [31:0]			rSUsiBusRd;
-reg [pBusWidth:0] 	rSUsiCke;
-reg [pBusWidth:0] 	rSUsiRdy;
+reg [31:0]			rSUsiGpioRd;	// GPIO ブロック
+reg [31:0]			rSUsiPwmRd;		// PWM ブロック
+reg [31:0]			rSUsiSpiRd;		// SPI ブロック
+reg [31:0]			rSUsiI2cRd;		// I2C ブロック
+reg [31:0]			rSUsiPgbRd;		// Pixel Gen Block
+reg [31:0]			rSUsiAgbRd;		// Audio Gen Block
+reg [31:0]			rSUsiVdamRd;	// Video DMA ブロック
+reg [31:0]			rSUsiAdmaRd;	// Audio DMA ブロック
+reg [31:0]			rSUsiSramRd;	// PSRAM ブロック
+reg [31:0]			rSUsiBusRd;		// USI Bus I/F
+// reg [31:0]			rSUsiUfiBusRd;	// Ufi Bus I/F
+reg [pBusWidth:0] 	rSUsiCke;		// 指定Bit が Assert されていればデータが書き込まれていると判断
+reg [pBusWidth:0] 	rSUsiRdy;		// 指定Bit が Assert されていればデータ書き込み可能と判断
 // Access Address
 reg [ 8:0] 			qCsrAdrs;
 
@@ -69,7 +70,7 @@ begin
 	begin
 		rMUsiWd			<= 'h0;
 		rMUsiAdrs		<= 'h0;
-		rMUsiCke		<= {pBusWidth{1'b0}};
+		rMUsiCke		<= 1'b0;
 		rMUsiRdy		<= {pBusWidth{1'b1}};
 		rSUsiGpioRd		<= 'h0;
 		rSUsiPwmRd		<= 'h0;
@@ -82,7 +83,7 @@ begin
 		rSUsiSramRd		<= 'h0;
 		rSUsiBusRd		<= 'h0;
 		rSUsiCke		<= {pBusWidth{1'b0}};
-		rSUsiRdy		<= {pBusWidth{1'b0a}};
+		rSUsiRdy		<= {pBusWidth{1'b0}};
 	end
 	else
 	begin
@@ -90,7 +91,6 @@ begin
 		rMUsiWd		<= (qCsrAdrs == 9'h100) ? iWd : rMUsiWd;
 		rMUsiAdrs	<= (qCsrAdrs == 9'h104) ? iWd : rMUsiAdrs;
 		rMUsiCke	<= (qCsrAdrs == 9'h108) ? iWd : rMUsiCke;		// TODO 自動クリアしたい
-		rMUsiRdy	<= (qCsrAdrs == 9'h10c) ? iWd : rMUsiRdy;		// TODO 自動クリアしたい
 		// Auto
 		rSUsiGpioRd	<= (iSUsiCke[0] == 1'd1) ? iSUsiRd : rSUsiGpioRd;
 		rSUsiPwmRd	<= (iSUsiCke[1] == 1'd1) ? iSUsiRd : rSUsiPwmRd;
@@ -135,7 +135,7 @@ begin
 			'h00: 		rRd <= rMUsiWd;
 			'h04: 		rRd <= rMUsiAdrs;
 			'h08: 		rRd <= rMUsiCke;
-			'h0c: 		rRd <= rMUsiRdy;
+			'h0c: 		rRd <= rRd;
 			'h10: 		rRd <= rRd;			// 空き
 			'h14:		rRd <= rSUsiGpioRd;
 			'h18:		rRd <= rSUsiPwmRd;

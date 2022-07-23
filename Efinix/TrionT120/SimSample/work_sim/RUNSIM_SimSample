@@ -1,0 +1,2 @@
+iverilog -s Top_tb -o/home/koutakimura/workspace/ProjectFolder/Efinix/TrionT120/SimSample/work_sim/SimSample.vvp -f/home/koutakimura/workspace/ProjectFolder/Efinix/TrionT120/SimSample/work_sim/SimSample.f
+vvp -l/home/koutakimura/workspace/ProjectFolder/Efinix/TrionT120/SimSample/outflow/SimSample.rtl.simlog /home/koutakimura/workspace/ProjectFolder/Efinix/TrionT120/SimSample/work_sim/SimSample.vvp

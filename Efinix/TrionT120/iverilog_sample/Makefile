@@ -2,6 +2,7 @@
 # -s Top module の名前 / ファイル名
 #
 SIM		= iverilog
+TB		= -s CountTest
 NAME    = -o sim.out
 TOP 	= ./src/sim/CountTest.v
 SRC 	= ./src/*.v
@@ -15,7 +16,7 @@ all:
 	make run
 
 sim:
-	$(SIM) $(NAME) $(TOP) $(SRC) $(LIBS) $(DFLAG)
+	$(SIM) $(TB) $(NAME) $(TOP) $(SRC) $(LIBS) $(DFLAG)
 	$(VPP)
 run:
 	$(RUN)

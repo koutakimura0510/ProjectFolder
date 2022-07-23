@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+// `timescale 1ns / 1ps
 module LedBlinkSwSim;
 
 parameter CYCLE = 10;
@@ -6,10 +6,8 @@ reg [3:0] 	rUserDipSw  = 0;
 reg [3:0] 	rUserPushSw = 0;
 wire [7:0] 	wUserLed;
 reg 		rSysClk = 0;
-wire 		rPllLoked = 0;
-wire 		wPllRst;
 
-LedBlinkTop LEDBlinkTop
+LedBlinkSwTop LEDBlinkSwTop
 (
 	.iUserDipSw		(rUserDipSw),
 	.iUserPushSw	(rUserPushSw),
@@ -28,7 +26,7 @@ initial begin
 end
 
 initial begin
-	$dumpfile("outflow/Sim.vcd");
+	$dumpfile("outflow/sim.vcd");
 	$dumpvars(0, LedBlinkSwSim);
 end
 
