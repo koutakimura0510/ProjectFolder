@@ -171,7 +171,7 @@ Processer # (
     .iAudioLRch     (qProAudioLRch),    .oAudioData     (wProAudioData),
     // Clk Reset Port
     .iPixelClk      (qProPixelClk),     .iMemClk        (qProMemClk),
-    .iSysClk        (qProwSysClk),      .iAudioClk      (qProAudioClk),
+    .iSysClk        (qProSysClk),       .iAudioClk      (qProAudioClk),
     .iSysRst        (qProSysRst),       .iAudioRst      (qProAudioRst)
 );
 
@@ -185,7 +185,7 @@ end
 // Video / Audio output
 //----------------------------------------------------------
 // Video 
-reg  [15:0] qPostPixel;
+reg  [11:0] qPostPixel;
 reg  qPostVde;
 reg  qPostHsync;
 reg  qPostVsync;
@@ -213,7 +213,7 @@ PostProcesser POST_PROCESSER (
     // Internal Port
     //----------------------------------------------------------
     // Video Port
-    .iPixelClk          (qPostPixelClk),    .iSysRst            (qPostSysRst),
+    .iPixelClk          (qPostPixelClk),    .iSysRst            (qPostPixelRst),
     .iPixelData         (qPostPixel),       .iVde               (qPostVde),
     .iHsync             (qPostHsync),       .iVsync             (qPostVsync),
     .iBackLightControl  (qPostBackLightControl),
@@ -224,7 +224,7 @@ PostProcesser POST_PROCESSER (
 
 always @*
 begin
-    qPostPixel              <= wProPixel;
+    qPostPixel              <= wProPixel[11:0];
     qPostVde                <= wPreVde;
     qPostHsync              <= wPreHsync;
     qPostVsync              <= wPreVsync;

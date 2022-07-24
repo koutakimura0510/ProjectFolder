@@ -65,11 +65,9 @@ assign ioSpiHold    	= 1'bz;
 assign oSpiConfigCs 	= 0;
 assign oSpiCs1      	= 0;
 assign oSpiCs2      	= 0;
-assign ioSrampDq		= 16'bz;
 assign ioSrampDqs		= 2'bz;
 assign oSrampClk		= 1'b0;
 assign oSrampCs			= 1'b0;
-assign ioSramsDq		= 16'bz;
 assign ioSramsDqs		= 2'bz;
 assign oSramsClk		= 1'b0;
 assign oSramsCs			= 1'b0;
@@ -82,10 +80,34 @@ assign oPixelData		= 1'b0;
 assign oBackLightControl= 1'b0;
 assign oAudioData		= 1'b0;
 
+
+//----------------------------------------------------------
+// バス幅を定義
+//----------------------------------------------------------
+localparam  [3:0] 	pBusNum = 4'd10;
+localparam			pBusBit	= 32;
+
 //----------------------------------------------------------
 // MCB
 //----------------------------------------------------------
-// MicroControllerBlock MCB
+// Slave -> Master
+wire [31:0] wMUsiRd,wMUsiRdy;
+// Master -> Slave
+wire [31:0] wMUsiWd,wMUsiAdrs;
+wire wMUsiWCke;
+
+MicroControllerBlock #(
+	.pBusNum	(pBusNum)
+) MCB (
+	.iMUsiRd	(wMUsiRd),
+	.iMUsiRdy	(wMUsiRdy),
+	.oMUsiWd	(wMUsiWd),
+	.oMUsiAdrs	(wMUsiAdrs),
+	.oMUsiWCke	(wMUsiWCke),
+	.iSysClk	(iSysClk),
+	.iSysRst	(iSysRst)
+);
+
 
 //----------------------------------------------------------
 // LED Block
@@ -135,7 +157,25 @@ assign oAudioData		= 1'b0;
 //----------------------------------------------------------
 // USI/F BUS
 //----------------------------------------------------------
-// UltraSimpleInterface USI_BUS
+
+
+UltraSimpleInterface #(
+	.pBusNum	(pBusNum),
+	.pBusBit	(pBusBit)
+) USI_BUS (
+	.oMUsiRd	(wMUsiRd),
+	.oMUsiRdy	(wMUsiRdy),
+	.iMUsiWd	(wMUsiWd),
+	.iMUsiAdrs	(wMUsiAdrs),
+	.iMUsiWCke	(wMUsiWCke),
+	.oSUsiWd	(),
+	.oSUsiAdrs	(),
+	.oSUsiWCke	(),
+	.iSUsiRd	(),
+	.iSUsiRdy	(),
+	.iUsiClk 	(iSysClk),
+	.iUsiRst	(iSysRst)
+);
 
 //----------------------------------------------------------
 // UFI/F BUS

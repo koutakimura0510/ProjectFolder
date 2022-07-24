@@ -20,7 +20,7 @@ module tftWrapper (
 	// Internal Port
 	input 			iPixelClk,
 	input  			iSysRst,
-	input [15:0]	iPixelData,
+	input [11:0]	iPixelData,
 	input  			iVde,
 	input  			iHsync,
 	input  			iVsync,

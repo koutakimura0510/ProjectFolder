@@ -30,37 +30,28 @@ module MicroControllerCsr #(
 	input  	[ 7:0]			iAdrs,		// R/W アドレス指定
 	input 					iCke,		// 有効データ書き込み時 Assert
 	output 	[31:0]			oRd,		// Read Data
-	// Csr Auto
-	input	[31:0]			iSUsiRd,
-	input  	[pBusWidth:0]	iSUsiRdy,
-	input	[pBusWidth:0]	iSUsiCke,
-	output 			
+	// Csr Slave
+	input	[31:0]			iMUsiRd,
+	input  	[pBusWidth:0]	iMUsiRdy,
+	// Csr Master
+	output	[31:0]			oMUsiWd,	// 書き込みデータ
+	output	[31:0]			oMUsiAdrs,	// {31:30} / 0.Cmd 無効, 1. WriteCmd, 2. ReadCmd, 3.WRCmd (*)未実装 {29: 0} アドレス入力
+	output					oMUsiWCke,	// コマンド有効時 Assert
     // CLK Reset
     input           		iSysClk,
-    input           		iSysRst,
+    input           		iSysRst
 );
 
 //----------------------------------------------------------
 // レジスタマップ
 //----------------------------------------------------------
-// Manual R/W Reg
-reg [31:0] 			rMUsiWd;	// Bus 書き込みデータ
-reg [31:0] 			rMUsiAdrs;	// Bus 書き込みアドレス
-reg [pBusWidth:0] 	rMUsiCke;	// Bus 書き込み Enable 自動で 0クリア
-// Auto R/W Reg
-reg [31:0]			rSUsiGpioRd;	// GPIO ブロック
-reg [31:0]			rSUsiPwmRd;		// PWM ブロック
-reg [31:0]			rSUsiSpiRd;		// SPI ブロック
-reg [31:0]			rSUsiI2cRd;		// I2C ブロック
-reg [31:0]			rSUsiPgbRd;		// Pixel Gen Block
-reg [31:0]			rSUsiAgbRd;		// Audio Gen Block
-reg [31:0]			rSUsiVdamRd;	// Video DMA ブロック
-reg [31:0]			rSUsiAdmaRd;	// Audio DMA ブロック
-reg [31:0]			rSUsiSramRd;	// PSRAM ブロック
-reg [31:0]			rSUsiBusRd;		// USI Bus I/F
-// reg [31:0]			rSUsiUfiBusRd;	// Ufi Bus I/F
-reg [pBusWidth:0] 	rSUsiCke;		// 指定Bit が Assert されていればデータが書き込まれていると判断
-reg [pBusWidth:0] 	rSUsiRdy;		// 指定Bit が Assert されていればデータ書き込み可能と判断
+// Manual
+reg [31:0] 			rMUsiWd;		assign oMUsiWd   = rMUsiWd;		// Bus 書き込みデータ
+reg [31:0] 			rMUsiAdrs;		assign oMUsiAdrs = rMUsiAdrs;	// Bus 書き込みアドレス
+reg [ 0:0]		 	rMUsiWCke;		assign oMUsiWCke = rMUsiWCke;	// Bus 書き込み Enable 自動で 0クリア
+// Auto
+reg [31:0]			rMUsiRd;		// 
+reg [pBusWidth:0] 	rMUsiRdy;		// 指定Bit が Assert されていればデータ書き込み可能と判断
 // Access Address
 reg [ 8:0] 			qCsrAdrs;
 
@@ -70,40 +61,19 @@ begin
 	begin
 		rMUsiWd			<= 'h0;
 		rMUsiAdrs		<= 'h0;
-		rMUsiCke		<= 1'b0;
-		rMUsiRdy		<= {pBusWidth{1'b1}};
-		rSUsiGpioRd		<= 'h0;
-		rSUsiPwmRd		<= 'h0;
-		rSUsiSpiRd		<= 'h0;
-		rSUsiI2cRd		<= 'h0;
-		rSUsiPgbRd		<= 'h0;
-		rSUsiAgbRd		<= 'h0;
-		rSUsiVdamRd		<= 'h0;
-		rSUsiAdmaRd		<= 'h0;
-		rSUsiSramRd		<= 'h0;
-		rSUsiBusRd		<= 'h0;
-		rSUsiCke		<= {pBusWidth{1'b0}};
-		rSUsiRdy		<= {pBusWidth{1'b0}};
+		rMUsiWCke		<= 1'b0;
+		rMUsiRd			<= 'h0;
+		rMUsiRdy		<= {pBusWidth{1'b0}};
 	end
 	else
 	begin
 		// Manual
 		rMUsiWd		<= (qCsrAdrs == 9'h100) ? iWd : rMUsiWd;
 		rMUsiAdrs	<= (qCsrAdrs == 9'h104) ? iWd : rMUsiAdrs;
-		rMUsiCke	<= (qCsrAdrs == 9'h108) ? iWd : rMUsiCke;		// TODO 自動クリアしたい
+		rMUsiWCke	<= (qCsrAdrs == 9'h108) ? iWd : rMUsiWCke;		// TODO 自動クリアしたい
 		// Auto
-		rSUsiGpioRd	<= (iSUsiCke[0] == 1'd1) ? iSUsiRd : rSUsiGpioRd;
-		rSUsiPwmRd	<= (iSUsiCke[1] == 1'd1) ? iSUsiRd : rSUsiPwmRd;
-		rSUsiSpiRd	<= (iSUsiCke[2] == 1'd1) ? iSUsiRd : rSUsiSpiRd;
-		rSUsiI2cRd	<= (iSUsiCke[3] == 1'd1) ? iSUsiRd : rSUsiI2cRd;
-		rSUsiPgbRd	<= (iSUsiCke[4] == 1'd1) ? iSUsiRd : rSUsiPgbRd;
-		rSUsiAgbRd	<= (iSUsiCke[5] == 1'd1) ? iSUsiRd : rSUsiAgbRd;
-		rSUsiVdamRd	<= (iSUsiCke[6] == 1'd1) ? iSUsiRd : rSUsiVdamRd;
-		rSUsiAdmaRd	<= (iSUsiCke[7] == 1'd1) ? iSUsiRd : rSUsiAdmaRd;
-		rSUsiSramRd	<= (iSUsiCke[8] == 1'd1) ? iSUsiRd : rSUsiSramRd;
-		rSUsiBusRd	<= (iSUsiCke[9] == 1'd1) ? iSUsiRd : rSUsiBusRd;
-		rSUsiCke	<= iSUsiCke;
-		rSUsiRdy	<= iSUsiRdy;
+		rMUsiRd		<= iMUsiRd;
+		rMUsiRdy	<= iMUsiRdy;
 
 		// Ufi 
 		// rSUfiBusRd	<= iSUfiBusRd;
@@ -134,21 +104,11 @@ begin
 		case (iAdrs)
 			'h00: 		rRd <= rMUsiWd;
 			'h04: 		rRd <= rMUsiAdrs;
-			'h08: 		rRd <= rMUsiCke;
+			'h08: 		rRd <= rMUsiWCke;
 			'h0c: 		rRd <= rRd;
 			'h10: 		rRd <= rRd;			// 空き
-			'h14:		rRd <= rSUsiGpioRd;
-			'h18:		rRd <= rSUsiPwmRd;
-			'h1c:		rRd <= rSUsiSpiRd;
-			'h20:		rRd <= rSUsiI2cRd;
-			'h24:		rRd <= rSUsiPgbRd;
-			'h28:		rRd <= rSUsiAgbRd;
-			'h2c:		rRd <= rSUsiVdamRd;
-			'h30:		rRd <= rSUsiAdmaRd;
-			'h34:		rRd <= rSUsiSramRd;
-			'h38:		rRd <= rSUsiBusRd;
-			'h3c:		rRd <= rSUsiCke;
-			'h40:		rRd <= rSUsiRdy;
+			'h14:		rRd <= rMUsiRd;
+			'h18:		rRd <= rMUsiRdy;
 			default: 	rRd <= rRd;
 		endcase
 	end
