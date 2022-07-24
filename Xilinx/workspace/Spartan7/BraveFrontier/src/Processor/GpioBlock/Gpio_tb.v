@@ -6,7 +6,7 @@
 // MCB 専用のテストベンチ
 // 
 //----------------------------------------------------------
-module Mcb_tb;
+module Gpio_tb;
 
 //----------------------------------------------------------
 // Top Module Connect
@@ -17,36 +17,36 @@ parameter [3:0]		pBusWidth 	= pBusNum - 1'b1;	// Busに接続する Slave数 最
 
 reg 				rSysClk = 0;
 reg 				rSysRst = 1;
-reg  [31:0] 		rSUsiRd;
-reg  [pBusWidth:0] 	rSUsiVd;
-reg  [pBusWidth:0] 	rSUsiCke;
-wire [31:0] 		wMUsiWd;
-wire [31:0] 		wMUsiAdrs;
-wire 				wMUsiCke;
+wire [1:0]			wLedEdge;
+wire 				wLedClk;
+wire [31:0] 		wSUsiRd;
+wire 				wSUsiVd;
+reg [31:0] 			rSUsiWd;
+reg [31:0] 			rSUsiAdrs;
+reg 				rSUsiWCke;
 
-MicroControllerBlock #(
-	.pBusNum	(pBusNum)
-) MCB (
-	.iSUsiRd	(rSUsiRd),
-	.iSUsiVd	(rSUsiVd),
-	.iSUsiCke	(rSUsiCke),
-	.oMUsiWd	(wMUsiWd),
-	.oMUsiAdrs	(wMUsiAdrs),
-	.oMUsiCke	(wMUsiCke),
+GpioBlock GPIO_BLOCK (
+	.oLedEdge	(wLedEdge),
+	.oLedClk	(wLedClk),
+	.oSUsiRd	(wSUsiRd),
+	.oSUsiVd	(wSUsiVd),
+	.iSUsiWd	(rSUsiWd),
+	.iSUsiAdrs	(rSUsiAdrs),
+	.iSUsiWCke	(rSUsiWCke),
 	.iSysClk	(rSysClk),
 	.iSysRst	(rSysRst)
 );
 
 always @(posedge rSysClk)
 begin
-	if (rSysRst) 	rSUsiRd <= 0;
-	else 			rSUsiRd <= rSUsiRd + 1'b1;
+	if (rSysRst) 	rSUsiWd <= 32'h0289;
+	else 			rSUsiWd <= rSUsiWd;
 
-	if (rSysRst) 	rSUsiVd <= 0;
-	else 			rSUsiVd <= rSUsiVd + 1'b1;
+	if (rSysRst) 	rSUsiAdrs <= 32'h0100;
+	else 			rSUsiAdrs <= rSUsiAdrs;
 
-	if (rSysRst) 	rSUsiCke <= 0;
-	else 			rSUsiCke <= rSUsiCke + 1'b1;
+	if (rSysRst) 	rSUsiWCke <= 1'b1;
+	else 			rSUsiWCke <= rSUsiWCke;
 end
 
 always begin

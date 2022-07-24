@@ -8,7 +8,7 @@
 // -
 // リソース削減のため、コマンドとアドレスは同じ Port を使用する
 //----------------------------------------------------------
-module MicroControllerBlock #(
+module MicroControllerUnit #(
 	parameter [3:0]			pBusNum 	= 1,				// Busに接続する Slave数 最大16
 	// Not Set Param
 	parameter [3:0]			pBusWidth 	= pBusNum - 1'b1	// Busに接続する Slave数 最大16
@@ -29,67 +29,6 @@ module MicroControllerBlock #(
     input           		iSysRst
 );
 
-
-//----------------------------------------------------------
-// デバッグ用 MicroBlaze
-//----------------------------------------------------------
-wire [31:0] 		wMcsWd;
-wire [ 7:0] 		wMcsAdrs;
-wire 				wMcsCke;
-reg  [31:0]			qMcsManualRd;
-reg  [31:0]			qMcsAutoRd;
-reg  [pBusWidth:0] 	qMcsRd;
-
-microblaze_mcs_0 MCS (
-	.Clk			(iSysClk),
-	.Reset			(iSysRst),
-	.UART_rxd		(iUartRx),
-	.UART_txd		(oUartTx),
-	.GPIO1_tri_i	(qMcsManualRd),
-	.GPIO2_tri_i	(qMcsAutoRd),
-	.GPIO3_tri_i	({23'd0, qMcsRd}),
-	.GPIO1_tri_o	(wMcsWd),
-	.GPIO2_tri_o	(wMcsAdrs),
-	.GPIO3_tri_o	(wMcsCke)
-);
-
-//----------------------------------------------------------
-// Csr space
-//----------------------------------------------------------
-wire [31:0]			wMcbManualRd;
-wire [31:0]			wMcbAutoRd;
-wire [pBusWidth:0] 	wMcbRd;
-reg  [31:0] 		qMcbCsrWd;
-reg  [ 7:0]			qMcbCsrAdrs;
-reg  				qMcbCsrCke;
-
-MicroControllerCsr #(
-	.pBusWidth	(pBusWidth)
-) MICRO_CONTROLLER_CSR (
-	.iWd		(qMcbCsrWd),
-	.iAdrs		(qMcbCsrAdrs),
-	.iCke		(qMcbCsrCke),
-	.oRd		(wMcbManualRd),
-	.iMUsiRd	(iMUsiRd),
-	.iMUsiVd	(iMUsiVd),
-	.oMUsiWd	(oMUsiWd),
-	.oMUsiAdrs	(oMUsiAdrs),
-	.oMUsiWCke	(oMUsiWCke),
-	.oMUsiRd	(wMcbAutoRd),
-	.oMUsiVd	(wMcbRd),
-	.iSysClk	(iSysClk),
-	.iSysRst	(iSysRst)
-);
-
-always @*
-begin
-	qMcsManualRd	<= wMcbManualRd;
-	qMcsAutoRd		<= wMcbAutoRd;
-	qMcsRd			<= wMcbRd;
-	qMcbCsrWd		<= wMcsWd;
-	qMcbCsrAdrs		<= wMcsAdrs;
-	qMcbCsrCke		<= wMcsCke;
-end
 
 // //----------------------------------------------------------
 // // msb側の1を検出しbit幅を取得する

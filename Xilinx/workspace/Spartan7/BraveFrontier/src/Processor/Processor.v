@@ -62,9 +62,9 @@ assign ioSpiMiso    	= 1'bz;
 assign ioSpiMosi    	= 1'bz;
 assign ioSpiWp      	= 1'bz;
 assign ioSpiHold    	= 1'bz;
-assign oSpiConfigCs 	= 0;
-assign oSpiCs1      	= 0;
-assign oSpiCs2      	= 0;
+assign oSpiConfigCs 	= 1'b0;
+assign oSpiCs1      	= 1'b0;
+assign oSpiCs2      	= 1'b0;
 assign ioSrampDqs		= 2'bz;
 assign oSrampClk		= 1'b0;
 assign oSrampCs			= 1'b0;
@@ -73,9 +73,6 @@ assign oSramsClk		= 1'b0;
 assign oSramsCs			= 1'b0;
 assign oSwScl			= 1'b0;
 assign ioSwSda			= 1'bz;
-assign oUartTx			= 1'b0;
-assign oLedEdge			= 1'b0;
-assign oLedClk			= 1'b0;
 assign oPixelData		= 1'b0;
 assign oBackLightControl= 1'b0;
 assign oAudioData		= 1'b0;
@@ -84,14 +81,20 @@ assign oAudioData		= 1'b0;
 //----------------------------------------------------------
 // バス幅を定義
 //----------------------------------------------------------
-localparam  [3:0] 	pBusNum = 4'd10;
-localparam			pBusBit	= 32;
+// variable parameter
+localparam  [3:0] 	pBusNum   = 4'd9;
+localparam			pBusBit	  = 32;
+
+// not variable parameter
+localparam  [3:0] 	pBusWidth = pBusNum - 1'b1;
+localparam			pBusLen	  = (pBusBit * pBusNum) - 1'b1;
 
 //----------------------------------------------------------
 // MCB
 //----------------------------------------------------------
 // Slave -> Master
-wire [31:0] wMUsiRd,wMUsiRdy;
+wire [31:0] 		wMUsiRd;
+wire [pBusWidth:0]	wMUsiVd;
 // Master -> Slave
 wire [31:0] wMUsiWd,wMUsiAdrs;
 wire wMUsiWCke;
@@ -99,8 +102,10 @@ wire wMUsiWCke;
 MicroControllerBlock #(
 	.pBusNum	(pBusNum)
 ) MCB (
+	.iUartRx	(iUartRx),
+	.oUartTx	(oUartTx),
 	.iMUsiRd	(wMUsiRd),
-	.iMUsiRdy	(wMUsiRdy),
+	.iMUsiVd	(wMUsiVd),
 	.oMUsiWd	(wMUsiWd),
 	.oMUsiAdrs	(wMUsiAdrs),
 	.oMUsiWCke	(wMUsiWCke),
@@ -110,9 +115,27 @@ MicroControllerBlock #(
 
 
 //----------------------------------------------------------
-// LED Block
+// GPIO Block
 //----------------------------------------------------------
-// GPIOBlock GPIO_LED_BLOCK
+// Slave -> Master
+wire [31:0] wSUsiGpioRd;
+wire 		wSUsiGpioVd;
+// Master -> Slave
+reg  [31:0] qSUsiGpioWd;
+reg  [31:0] qSUsiGpioAdrs;
+reg  		qSUsiGpioWCke;
+
+GpioBlock GPIO_BLOCK (
+	.oLedEdge	(oLedEdge),
+	.oLedClk	(oLedClk),
+	.oSUsiRd	(wSUsiGpioRd),
+	.oSUsiVd	(wSUsiGpioVd),
+	.iSUsiWd	(qSUsiGpioWd),
+	.iSUsiAdrs	(qSUsiGpioAdrs),
+	.iSUsiWCke	(qSUsiGpioWCke),
+	.iSysClk	(iSysClk),
+	.iSysRst	(iSysRst)
+);
 
 //----------------------------------------------------------
 // PWM BackLight
@@ -157,25 +180,40 @@ MicroControllerBlock #(
 //----------------------------------------------------------
 // USI/F BUS
 //----------------------------------------------------------
-
+// Slave -> Master
+reg  [pBusLen:0]	qSUsiRd;
+reg  [pBusWidth:0]	qSUsiVd;
+// Master -> Slave
+wire [31:0] 		wSUsiWd;
+wire [31:0] 		wSUsiAdrs;
+wire 				wSUsiWCke;
 
 UltraSimpleInterface #(
 	.pBusNum	(pBusNum),
 	.pBusBit	(pBusBit)
 ) USI_BUS (
 	.oMUsiRd	(wMUsiRd),
-	.oMUsiRdy	(wMUsiRdy),
+	.oMUsiVd	(wMUsiVd),
 	.iMUsiWd	(wMUsiWd),
 	.iMUsiAdrs	(wMUsiAdrs),
 	.iMUsiWCke	(wMUsiWCke),
-	.oSUsiWd	(),
-	.oSUsiAdrs	(),
-	.oSUsiWCke	(),
-	.iSUsiRd	(),
-	.iSUsiRdy	(),
+	.oSUsiWd	(wSUsiWd),
+	.oSUsiAdrs	(wSUsiAdrs),
+	.oSUsiWCke	(wSUsiWCke),
+	.iSUsiRd	(qSUsiRd),
+	.iSUsiVd	(qSUsiVd),
 	.iUsiClk 	(iSysClk),
 	.iUsiRst	(iSysRst)
 );
+
+always @*
+begin
+	qSUsiGpioWd		<= wSUsiWd;
+	qSUsiGpioAdrs 	<= wSUsiAdrs;
+	qSUsiGpioWCke	<= wSUsiWCke;
+	qSUsiRd			<= {pBusNum{wSUsiGpioRd}};
+	qSUsiVd			<= {pBusNum{wSUsiGpioVd}};
+end
 
 //----------------------------------------------------------
 // UFI/F BUS
