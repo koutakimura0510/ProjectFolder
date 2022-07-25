@@ -173,10 +173,10 @@ set_property PULLUP true [get_ports oTftRst]
 #-------------------------------------------------------------------------------
 # I2C Controller
 #-------------------------------------------------------------------------------
-set_property -dict { PACKAGE_PIN M2    IOSTANDARD LVCMOS33  } [get_ports { oSwScl  }];
-set_property -dict { PACKAGE_PIN N1    IOSTANDARD LVCMOS33  } [get_ports { ioSwSda }];
-set_property PULLUP true [get_ports oSwScl]
-set_property PULLUP true [get_ports ioSwSda]
+set_property -dict { PACKAGE_PIN M2    IOSTANDARD LVCMOS33  } [get_ports { oI2cScl  }];
+set_property -dict { PACKAGE_PIN N1    IOSTANDARD LVCMOS33  } [get_ports { ioI2CSda }];
+set_property PULLUP true [get_ports oI2cScl]
+set_property PULLUP true [get_ports ioI2CSda]
 
 #-------------------------------------------------------------------------------
 # I2S Audio Port

@@ -9,7 +9,7 @@ module LedSftReg (
 	// Internal Port
 	output [1:0] 			oSftEdge,
 	output 					oSftClk,
-	input  [7:0]			iGpioEn,
+	input  [7:0]			iGpioLed,
 	input  [7:0]			iGpioDiv,
     // CLK Reset
     input           		iSysClk,
@@ -49,26 +49,26 @@ end
 //----------------------------------------------------------
 reg rSftEdge;				assign oSftEdge = {2{rSftEdge}};
 reg qGpioBitSftEn;
-reg [1:0] rGpioEnCnt;
+reg [1:0] rGpioLedCnt;
 reg [2:0] rGpioBitSftCnt;
 
 always @(posedge iSysClk)
 begin
-	if (iSysRst)			rGpioEnCnt <= 2'd0;
-	else if (qGpioBitSftEn)	rGpioEnCnt <= 2'd0;
-	else if (qGpioDivEn) 	rGpioEnCnt <= rGpioEnCnt + 1'b1;
-	else					rGpioEnCnt <= rGpioEnCnt;
+	if (iSysRst)			rGpioLedCnt <= 2'd0;
+	else if (qGpioBitSftEn)	rGpioLedCnt <= 2'd0;
+	else if (qGpioDivEn) 	rGpioLedCnt <= rGpioLedCnt + 1'b1;
+	else					rGpioLedCnt <= rGpioLedCnt;
 
 	if (iSysRst)			rGpioBitSftCnt <= 3'd0;
 	else if (qGpioBitSftEn)	rGpioBitSftCnt <= rGpioBitSftCnt + 1'b1;
 	else 					rGpioBitSftCnt <= rGpioBitSftCnt;
 
-	rSftEdge <= iGpioEn[~rGpioBitSftCnt];
+	rSftEdge <= iGpioLed[~rGpioBitSftCnt];
 end
 
 always @*
 begin
-	qGpioBitSftEn <= (rGpioEnCnt == 2'd2);
+	qGpioBitSftEn <= (rGpioLedCnt == 2'd2);
 end
 
 endmodule

@@ -9,24 +9,25 @@
 // リソース削減のため、コマンドとアドレスは同じ Port を使用する
 //----------------------------------------------------------
 module MicroControllerBlock #(
-	parameter [3:0]			pBusNum 	= 1,				// Busに接続する Slave数 最大16
+	parameter [3:0]	pBusSlaveConnect 	= 1,				// Busに接続する Slave数 最大16
+	parameter		pBusAdrsBit			= 15,
 	// Not Set Param
-	parameter [3:0]			pBusWidth 	= pBusNum - 1'b1	// Busに接続する Slave数 最大16
+	parameter [3:0]	pBusSlaveConnectWidth 	= pBusSlaveConnect - 1'b1	// Busに接続する Slave数 最大16
 )(
 	// External Port
-	input 					iUartRx,
-	output 					oUartTx,
+	input 								iUartRx,
+	output 								oUartTx,
     // Internal Port
 	// Bus Master Read
-	input	[31:0]			iMUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
-	input	[pBusWidth:0]	iMUsiVd,	// Slave アクセス可能時 Assert
+	input	[31:0]						iMUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
+	input	[pBusSlaveConnectWidth:0]	iMUsiVd,	// Slave アクセス可能時 Assert
 	// Bus Master Write
-	output	[31:0]			oMUsiWd,	// 書き込みデータ
-	output	[31:0]			oMUsiAdrs,	// {31:30} / 0.Cmd 無効, 1. WriteCmd, 2. ReadCmd, 3.WRCmd (*)未実装 / {23:16} Busアドレス / {15:0} Csrアドレス
-	output					oMUsiWCke,	// コマンド有効時 Assert
+	output	[31:0]						oMUsiWd,	// 書き込みデータ
+	output	[pBusAdrsBit:0]				oMUsiAdrs,	// 書き込み元のアドレス指定
+	output								oMUsiWCke,	// コマンド有効時 Assert
     // CLK Reset
-    input           		iSysClk,
-    input           		iSysRst
+    input           					iSysClk,
+    input           					iSysRst
 );
 
 
@@ -38,33 +39,34 @@ wire [ 7:0] 		wMcsAdrs;
 wire 				wMcsCke;
 reg  [31:0]			qMcsManualRd;
 reg  [31:0]			qMcsAutoRd;
-reg  [pBusWidth:0] 	qMcsRd;
+reg  [pBusSlaveConnectWidth:0] 	qMcsRd;
 
-microblaze_mcs_0 MCS (
-	.Clk			(iSysClk),
-	.Reset			(iSysRst),
-	.UART_rxd		(iUartRx),
-	.UART_txd		(oUartTx),
-	.GPIO1_tri_i	(qMcsManualRd),
-	.GPIO2_tri_i	(qMcsAutoRd),
-	.GPIO3_tri_i	({23'd0, qMcsRd}),
-	.GPIO1_tri_o	(wMcsWd),
-	.GPIO2_tri_o	(wMcsAdrs),
-	.GPIO3_tri_o	(wMcsCke)
-);
+// microblaze_mcs_0 MCS (
+// 	.Clk			(iSysClk),
+// 	.Reset			(iSysRst),
+// 	.UART_rxd		(iUartRx),
+// 	.UART_txd		(oUartTx),
+// 	.GPIO1_tri_i	(qMcsManualRd),
+// 	.GPIO2_tri_i	(qMcsAutoRd),
+// 	.GPIO3_tri_i	({23'd0, qMcsRd}),
+// 	.GPIO1_tri_o	(wMcsWd),
+// 	.GPIO2_tri_o	(wMcsAdrs),
+// 	.GPIO3_tri_o	(wMcsCke)
+// );
 
 //----------------------------------------------------------
 // Csr space
 //----------------------------------------------------------
-wire [31:0]			wMcbManualRd;
-wire [31:0]			wMcbAutoRd;
-wire [pBusWidth:0] 	wMcbRd;
-reg  [31:0] 		qMcbCsrWd;
-reg  [ 7:0]			qMcbCsrAdrs;
-reg  				qMcbCsrCke;
+wire [31:0]						wMcbManualRd;
+wire [31:0]						wMcbAutoRd;
+wire [pBusSlaveConnectWidth:0] 	wMcbRd;
+reg  [31:0] 					qMcbCsrWd;
+reg  [ 7:0]						qMcbCsrAdrs;
+reg  							qMcbCsrCke;
 
 MicroControllerCsr #(
-	.pBusWidth	(pBusWidth)
+	.pBusSlaveConnectWidth	(pBusSlaveConnectWidth),
+	.pBusAdrsBit			(pBusAdrsBit)
 ) MICRO_CONTROLLER_CSR (
 	.iWd		(qMcbCsrWd),
 	.iAdrs		(qMcbCsrAdrs),

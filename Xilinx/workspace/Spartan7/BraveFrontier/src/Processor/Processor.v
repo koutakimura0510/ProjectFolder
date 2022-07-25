@@ -31,8 +31,8 @@ module Processer #(
     output          oSramsClk,
     output          oSramsCs,
     // I2C
-    output          oSwScl,
-    inout           ioSwSda,
+    output          oI2cScl,
+    inout           ioI2CSda,
     // UART
     output          oUartTx,
     input           iUartRx,
@@ -71,36 +71,54 @@ assign oSrampCs			= 1'b0;
 assign ioSramsDqs		= 2'bz;
 assign oSramsClk		= 1'b0;
 assign oSramsCs			= 1'b0;
-assign oSwScl			= 1'b0;
-assign ioSwSda			= 1'bz;
 assign oPixelData		= 1'b0;
 assign oBackLightControl= 1'b0;
 assign oAudioData		= 1'b0;
 
 
 //----------------------------------------------------------
+// バス接続の周辺機能アドレスマップ
+//----------------------------------------------------------
+localparam lpBlockAdrsMap = 'd8;
+
+localparam [lpBlockAdrsMap-1'b1:0] 
+	lpGpioAdrsMap 	= 8'h01,
+	lpPWMAdrsMap 	= 8'h02,
+	lpSPIAdrsMap	= 8'h03,
+	lpI2CAdrsMap	= 8'h04,
+	lpPGBAdrsMap	= 8'h05,
+	lpAGBAdrsMap	= 8'h06,
+	lpVDMAAdrsMap	= 8'h07,
+	lpADMAAdrsMap	= 8'h08,
+	lpPSRAMAdrsMap 	= 8'h09;
+
+
+//----------------------------------------------------------
 // バス幅を定義
 //----------------------------------------------------------
 // variable parameter
-localparam  [3:0] 	pBusNum   = 4'd9;
-localparam			pBusBit	  = 32;
+parameter	[3:0] 	pBusSlaveConnect   	= 4'd9;		// 接続Slave数、最大16
+parameter			pBusDataBit	  		= 32;		// バスデータ幅, 内部計算にも用いるため、bit数のままを指定
+parameter	[3:0]	pBusAdrsBit			= 4'd15;	// バスアドレス幅,内部計算には用いないため、bit数 - 1 を指定
 
 // not variable parameter
-localparam  [3:0] 	pBusWidth = pBusNum - 1'b1;
-localparam			pBusLen	  = (pBusBit * pBusNum) - 1'b1;
+parameter	[3:0] 	pBusSlaveConnectWidth 	= pBusSlaveConnect - 1'b1;
+parameter			pBusLen	  				= (pBusDataBit * pBusSlaveConnect) - 1'b1;
+
 
 //----------------------------------------------------------
 // MCB
 //----------------------------------------------------------
 // Slave -> Master
 wire [31:0] 		wMUsiRd;
-wire [pBusWidth:0]	wMUsiVd;
+wire [pBusSlaveConnectWidth:0]	wMUsiVd;
 // Master -> Slave
 wire [31:0] wMUsiWd,wMUsiAdrs;
 wire wMUsiWCke;
 
 MicroControllerBlock #(
-	.pBusNum	(pBusNum)
+	.pBusSlaveConnect		(pBusSlaveConnect),
+	.pBusAdrsBit			(pBusAdrsBit)
 ) MCB (
 	.iUartRx	(iUartRx),
 	.oUartTx	(oUartTx),
@@ -118,23 +136,27 @@ MicroControllerBlock #(
 // GPIO Block
 //----------------------------------------------------------
 // Slave -> Master
-wire [31:0] wSUsiGpioRd;
-wire 		wSUsiGpioVd;
+wire [31:0] 			wSUsiGpioRd;
+wire 					wSUsiGpioVd;
 // Master -> Slave
-reg  [31:0] qSUsiGpioWd;
-reg  [31:0] qSUsiGpioAdrs;
-reg  		qSUsiGpioWCke;
+reg  [31:0] 			qSUsiGpioWd;
+reg  [pBusAdrsBit:0] 	qSUsiGpioAdrs;
+reg  					qSUsiGpioWCke;
 
-GpioBlock GPIO_BLOCK (
-	.oLedEdge	(oLedEdge),
-	.oLedClk	(oLedClk),
-	.oSUsiRd	(wSUsiGpioRd),
-	.oSUsiVd	(wSUsiGpioVd),
-	.iSUsiWd	(qSUsiGpioWd),
-	.iSUsiAdrs	(qSUsiGpioAdrs),
-	.iSUsiWCke	(qSUsiGpioWCke),
-	.iSysClk	(iSysClk),
-	.iSysRst	(iSysRst)
+GpioBlock #(
+	.pBlockAdrsMap	(lpBlockAdrsMap),
+	.pAdrsMap	 	(lpGpioAdrsMap),
+	.pBusAdrsBit	(pBusAdrsBit)
+) GPIO_BLOCK (
+	.oLedEdge		(oLedEdge),
+	.oLedClk		(oLedClk),
+	.oSUsiRd		(wSUsiGpioRd),
+	.oSUsiVd		(wSUsiGpioVd),
+	.iSUsiWd		(qSUsiGpioWd),
+	.iSUsiAdrs		(qSUsiGpioAdrs),
+	.iSUsiWCke		(qSUsiGpioWCke),
+	.iSysClk		(iSysClk),
+	.iSysRst		(iSysRst)
 );
 
 //----------------------------------------------------------
@@ -148,9 +170,31 @@ GpioBlock GPIO_BLOCK (
 // SPIBlock SPI_BLOCK
 
 //----------------------------------------------------------
-// SW
+// 外部コントローラ接続
 //----------------------------------------------------------
-// I2CBlock I2C1_BLOCK()
+// Slave -> Master
+wire [31:0] 			wSUsiI2CRd;
+wire 					wSUsiI2CVd;
+// Master -> Slave
+reg  [31:0] 			qSUsiI2CWd;
+reg  [pBusAdrsBit:0] 	qSUsiI2CAdrs;
+reg  					qSUsiI2CWCke;
+
+I2CBlock #(
+	.pBlockAdrsMap	(lpBlockAdrsMap),
+	.pAdrsMap	 	(lpGpioAdrsMap),
+	.pBusAdrsBit	(pBusAdrsBit)
+) I2C_BLOCK (
+	.oI2cScl,		(oI2cScl),
+	.ioI2CSda,		(ioI2CSda),
+	.oSUsiRd		(wSUsiGpioRd),
+	.oSUsiVd		(wSUsiGpioVd),
+	.iSUsiWd		(qSUsiGpioWd),
+	.iSUsiAdrs		(qSUsiGpioAdrs),
+	.iSUsiWCke		(qSUsiGpioWCke),
+	.iSysClk		(iSysClk),
+	.iSysRst		(iSysRst)
+);
 
 //----------------------------------------------------------
 // PGB
@@ -181,16 +225,17 @@ GpioBlock GPIO_BLOCK (
 // USI/F BUS
 //----------------------------------------------------------
 // Slave -> Master
-reg  [pBusLen:0]	qSUsiRd;
-reg  [pBusWidth:0]	qSUsiVd;
+reg  [pBusLen:0]				qSUsiRd;
+reg  [pBusSlaveConnectWidth:0]	qSUsiVd;
 // Master -> Slave
-wire [31:0] 		wSUsiWd;
-wire [31:0] 		wSUsiAdrs;
-wire 				wSUsiWCke;
+wire [31:0] 					wSUsiWd;
+wire [pBusAdrsBit:0] 			wSUsiAdrs;
+wire 							wSUsiWCke;
 
 UltraSimpleInterface #(
-	.pBusNum	(pBusNum),
-	.pBusBit	(pBusBit)
+	.pBusSlaveConnect	(pBusSlaveConnect),
+	.pBusDataBit		(pBusDataBit),
+	.pBusAdrsBit		(pBusAdrsBit)
 ) USI_BUS (
 	.oMUsiRd	(wMUsiRd),
 	.oMUsiVd	(wMUsiVd),
@@ -211,8 +256,8 @@ begin
 	qSUsiGpioWd		<= wSUsiWd;
 	qSUsiGpioAdrs 	<= wSUsiAdrs;
 	qSUsiGpioWCke	<= wSUsiWCke;
-	qSUsiRd			<= {pBusNum{wSUsiGpioRd}};
-	qSUsiVd			<= {pBusNum{wSUsiGpioVd}};
+	qSUsiRd			<= {pBusSlaveConnect{wSUsiGpioRd}};
+	qSUsiVd			<= {pBusSlaveConnect{wSUsiGpioVd}};
 end
 
 //----------------------------------------------------------

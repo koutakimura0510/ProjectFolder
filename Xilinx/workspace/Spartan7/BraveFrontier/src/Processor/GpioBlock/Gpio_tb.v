@@ -12,8 +12,8 @@ module Gpio_tb;
 // Top Module Connect
 //----------------------------------------------------------
 parameter 			CYCLE 		= 2;				// CLK サイクル
-parameter [3:0]		pBusNum		= 10; 				// Busに接続する Slave数 最大16
-parameter [3:0]		pBusWidth 	= pBusNum - 1'b1;	// Busに接続する Slave数 最大16
+parameter [3:0]		pBusSlaveConnect		= 10; 				// Busに接続する Slave数 最大16
+parameter [3:0]		pBusSlaveConnectWidth 	= pBusSlaveConnect - 1'b1;	// Busに接続する Slave数 最大16
 
 reg 				rSysClk = 0;
 reg 				rSysRst = 1;

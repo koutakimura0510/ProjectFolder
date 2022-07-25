@@ -50,8 +50,8 @@ module BraveFrontier #(
     output          oTftDe,
     output          oTftBackLight,
     output          oTftRst,
-    output          oSwScl,
-    inout           ioSwSda,
+    output          oI2cScl,
+    inout           ioI2CSda,
     output          oAudioMclk,
     output          oAudioBclk,
     output          oAudioCclk,
@@ -149,7 +149,7 @@ Processer # (
     .oSpiCs1        (oSpiCs1),          .oSpiCs2        (oSpiCs2),
     .oSpiConfigCs   (oSpiConfigCs),
     // I2C Controller
-    .oSwScl         (oSwScl),           .ioSwSda        (ioSwSda),
+    .oI2cScl         (oI2cScl),           .ioI2CSda        (ioI2CSda),
     // Memory Primary
     .ioSrampDq      (ioSrampDq),        .ioSrampDqs     (ioSrampDqs),
     .oSrampClk      (oSrampClk),        .oSrampCs       (oSrampCs),

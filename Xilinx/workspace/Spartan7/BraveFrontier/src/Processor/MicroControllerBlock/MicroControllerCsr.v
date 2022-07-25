@@ -22,58 +22,60 @@
 // 上位モジュールへの output port は必ずレジスタ経由で出力する。
 //----------------------------------------------------------
 module MicroControllerCsr #(
-	parameter 				pBusWidth	= 8
+	parameter 		pBusSlaveConnectWidth	= 8,
+	parameter		pBusAdrsBit				= 15,
 )(
     // Internal Port
 	// Csr Manual
-	input  	[31:0]			iWd,		// Ckeによる手動レジスタ更新時の Write Data
-	input  	[ 7:0]			iAdrs,		// R/W アドレス指定
-	input 					iCke,		// 有効データ書き込み時 Assert
-	output 	[31:0]			oRd,		// Read Data
+	input  	[31:0]						iWd,		// Ckeによる手動レジスタ更新時の Write Data
+	input  	[ 7:0]						iAdrs,		// R/W アドレス指定
+	input 								iCke,		// 有効データ書き込み時 Assert
+	output 	[31:0]						oRd,		// Read Data
 	// Csr Slave
-	input	[31:0]			iMUsiRd,
-	input  	[pBusWidth:0]	iMUsiVd,
+	input	[31:0]						iMUsiRd,
+	input  	[pBusSlaveConnectWidth:0]	iMUsiVd,
 	// Csr Master
-	output	[31:0]			oMUsiWd,	// 書き込みデータ
-	output	[31:0]			oMUsiAdrs,	// {31:30} / 0.Cmd 無効, 1. WriteCmd, 2. ReadCmd, 3.WRCmd (*)未実装 {29: 0} アドレス入力
-	output					oMUsiWCke,	// コマンド有効時 Assert
+	output	[31:0]						oMUsiWd,	// 書き込みデータ
+	output	[pBusAdrsBit:0]				oMUsiAdrs,
+	output								oMUsiWCke,	// コマンド有効時 Assert
 	// Csr Output
-	output	[31:0]			oMUsiRd,
-	output	[pBusWidth:0]	oMUsiVd,
+	output	[31:0]						oMUsiRd,
+	output	[pBusSlaveConnectWidth:0]	oMUsiVd,
     // CLK Reset
-    input           		iSysClk,
-    input           		iSysRst
+    input           					iSysClk,
+    input           					iSysRst
 );
+
 
 //----------------------------------------------------------
 // レジスタマップ
 //----------------------------------------------------------
 // Manual
-reg [31:0] 			rMUsiWd;		assign oMUsiWd   = rMUsiWd;		// Bus 書き込みデータ
-reg [31:0] 			rMUsiAdrs;		assign oMUsiAdrs = rMUsiAdrs;	// Bus 書き込みアドレス
-reg [ 0:0]		 	rMUsiWCke;		assign oMUsiWCke = rMUsiWCke;	// Bus 書き込み Enable 自動で 0クリア
+reg [31:0] 						rMUsiWd;		assign oMUsiWd   = rMUsiWd;		// Bus 書き込みデータ
+reg [pBusAdrsBit:0]				rMUsiAdrs;		assign oMUsiAdrs = rMUsiAdrs;	// Bus 書き込みアドレス
+reg [ 0:0]		 				rMUsiWCke;		assign oMUsiWCke = rMUsiWCke;	// Bus 書き込み Enable 自動で 0クリア
 // Auto
-reg [31:0]			rMUsiRd;		assign oMUsiRd	 = rMUsiRd;		// 
-reg [pBusWidth:0] 	rMUsiVd;		assign oMUsiVd	 = rMUsiVd;		// 指定Bit が Assert されていればデータ書き込み可能と判断
+reg [31:0]						rMUsiRd;		assign oMUsiRd	 = rMUsiRd;		// 
+reg [pBusSlaveConnectWidth:0] 	rMUsiVd;		assign oMUsiVd	 = rMUsiVd;		// 指定Bit が Assert されていればデータ書き込み可能と判断
 // Access Address
-reg [ 8:0] 			qCsrAdrs;
+reg [ 8:0] 						qCsrAdrs;
 
 always @(posedge iSysClk)
 begin
 	if (iSysRst)
 	begin
 		rMUsiWd		<= 'h0;
-		rMUsiAdrs	<= 'h0;
+		rMUsiAdrs	<= {pBusAdrsBit{1'b0}};
 		rMUsiWCke	<= 1'b0;
 		rMUsiRd		<= 'h0;
-		rMUsiVd		<= {pBusWidth{1'b0}};
+		rMUsiVd		<= {pBusSlaveConnectWidth{1'b0}};
 	end
 	else
 	begin
 		// Manual
 		rMUsiWd		<= (qCsrAdrs == 9'h100) ? iWd : rMUsiWd;
-		rMUsiAdrs	<= (qCsrAdrs == 9'h104) ? iWd : rMUsiAdrs;
-		rMUsiWCke	<= (qCsrAdrs == 9'h108) ? iWd : rMUsiWCke;		// TODO 自動クリアしたい
+		rMUsiAdrs	<= (qCsrAdrs == 9'h104) ? iWd[pBusAdrsBit:0] : rMUsiAdrs;
+		rMUsiWCke	<= (qCsrAdrs == 9'h108) ? iWd[0] : rMUsiWCke;		// TODO 自動クリアしたい
 		// Auto
 		rMUsiRd		<= iMUsiRd;
 		rMUsiVd		<= iMUsiVd;
