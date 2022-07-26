@@ -23,7 +23,7 @@
 //----------------------------------------------------------
 module MicroControllerCsr #(
 	parameter 		pBusSlaveConnectWidth	= 8,
-	parameter		pBusAdrsBit				= 15,
+	parameter		pBusAdrsBit				= 15
 )(
     // Internal Port
 	// Csr Manual

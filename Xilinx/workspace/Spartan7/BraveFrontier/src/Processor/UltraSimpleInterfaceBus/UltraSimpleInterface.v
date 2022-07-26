@@ -16,7 +16,7 @@ module UltraSimpleInterface #(
 	parameter [3:0]						pBusSlaveConnect 		= 1,				// Busに接続する Slave数 最大16
 	parameter 							pBusDataBit				= 32,				// Bus幅
 	parameter							pBusAdrsBit				= 15,
-	parameter							pBlockAdrsMap			= 8'd8,
+	parameter							pBlockAdrsMap			= 8,
 	parameter [pBlockAdrsMap-1:0]		pGpioAdrsMap			= 'h0,
 	parameter [pBlockAdrsMap-1:0]		pPWMAdrsMap				= 'h1,
 	parameter [pBlockAdrsMap-1:0]		pSPIAdrsMap				= 'h2,
@@ -28,7 +28,7 @@ module UltraSimpleInterface #(
 	parameter [pBlockAdrsMap-1:0]		pPSRAMAdrsMap			= 'h8,
 	// Not variable parameter
 	parameter 							pBusLen 				= (pBusDataBit * pBusSlaveConnect) - 1'b1,
-	parameter [3:0]						pBusSlaveConnectWidth 	= pBusSlaveConnect - 1'b1,
+	parameter [3:0]						pBusSlaveConnectWidth 	= pBusSlaveConnect - 1'b1
 )(
     // Internal Port
 	// Bus Master Read
@@ -80,14 +80,14 @@ begin
 
 	case (iMUsiAdrs[pBlockAdrsMap + 3'd7:8])
 		pGpioAdrsMap:	rSUsiRd <= iSUsiRd[ 31:  0];
-		pBusAdrsPWM:	rSUsiRd <= iSUsiRd[ 63: 32];
-		pBusAdrsSPI:	rSUsiRd <= iSUsiRd[ 95: 64];
-		pBusAdrsI2C:	rSUsiRd <= iSUsiRd[127: 96];
-		pBusAdrsPGB:	rSUsiRd <= iSUsiRd[159:128];
-		pBusAdrsAGB:	rSUsiRd <= iSUsiRd[191:160];
-		pBusAdrsVDMA:	rSUsiRd <= iSUsiRd[223:192];
-		pBusAdrsADMA:	rSUsiRd <= iSUsiRd[255:224];
-		pBusAdrsPSRAM:	rSUsiRd <= iSUsiRd[287:256];
+		pPWMAdrsMap:	rSUsiRd <= iSUsiRd[ 63: 32];
+		pSPIAdrsMap:	rSUsiRd <= iSUsiRd[ 95: 64];
+		pI2CAdrsMap:	rSUsiRd <= iSUsiRd[127: 96];
+		pPGBAdrsMap:	rSUsiRd <= iSUsiRd[159:128];
+		pAGBAdrsMap:	rSUsiRd <= iSUsiRd[191:160];
+		pVDMAAdrsMap:	rSUsiRd <= iSUsiRd[223:192];
+		pADMAAdrsMap:	rSUsiRd <= iSUsiRd[255:224];
+		pPSRAMAdrsMap:	rSUsiRd <= iSUsiRd[287:256];
 		default:		rSUsiRd <= 'h1234_5678;		// アドレスの判定バグを分かりやすくするためのデータ
 	endcase
 end

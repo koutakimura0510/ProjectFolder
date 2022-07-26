@@ -110,16 +110,17 @@ parameter			pBusLen	  				= (pBusDataBit * pBusSlaveConnect) - 1'b1;
 // MCB
 //----------------------------------------------------------
 // Slave -> Master
-wire [31:0] 		wMUsiRd;
+wire [31:0] 					wMUsiRd;
 wire [pBusSlaveConnectWidth:0]	wMUsiVd;
 // Master -> Slave
-wire [31:0] wMUsiWd,wMUsiAdrs;
-wire wMUsiWCke;
+wire [31:0] 			wMUsiWd;
+wire [pBusAdrsBit:0] 	wMUsiAdrs;
+wire 					wMUsiWCke;
 
 MicroControllerBlock #(
 	.pBusSlaveConnect		(pBusSlaveConnect),
 	.pBusAdrsBit			(pBusAdrsBit)
-) MCB (
+) MICRO_CONTROLLER_BLOCK (
 	.iUartRx	(iUartRx),
 	.oUartTx	(oUartTx),
 	.iMUsiRd	(wMUsiRd),
@@ -185,13 +186,13 @@ I2CBlock #(
 	.pAdrsMap	 	(lpGpioAdrsMap),
 	.pBusAdrsBit	(pBusAdrsBit)
 ) I2C_BLOCK (
-	.oI2cScl,		(oI2cScl),
-	.ioI2CSda,		(ioI2CSda),
-	.oSUsiRd		(wSUsiGpioRd),
-	.oSUsiVd		(wSUsiGpioVd),
-	.iSUsiWd		(qSUsiGpioWd),
-	.iSUsiAdrs		(qSUsiGpioAdrs),
-	.iSUsiWCke		(qSUsiGpioWCke),
+	.oI2cScl		(oI2cScl),
+	.ioI2CSda		(ioI2CSda),
+	.oSUsiRd		(wSUsiI2CRd),
+	.oSUsiVd		(wSUsiI2CVd),
+	.iSUsiWd		(qSUsiI2CWd),
+	.iSUsiAdrs		(qSUsiI2CAdrs),
+	.iSUsiWCke		(qSUsiI2CWCke),
 	.iSysClk		(iSysClk),
 	.iSysRst		(iSysRst)
 );
@@ -235,7 +236,17 @@ wire 							wSUsiWCke;
 UltraSimpleInterface #(
 	.pBusSlaveConnect	(pBusSlaveConnect),
 	.pBusDataBit		(pBusDataBit),
-	.pBusAdrsBit		(pBusAdrsBit)
+	.pBusAdrsBit		(pBusAdrsBit),
+	.pBlockAdrsMap		(lpBlockAdrsMap),
+	.pGpioAdrsMap		(lpGpioAdrsMap),
+	.pPWMAdrsMap		(lpPWMAdrsMap),
+	.pSPIAdrsMap		(lpSPIAdrsMap),
+	.pI2CAdrsMap		(lpI2CAdrsMap),
+	.pPGBAdrsMap		(lpPGBAdrsMap),
+	.pAGBAdrsMap		(lpAGBAdrsMap),
+	.pVDMAAdrsMap		(lpVDMAAdrsMap),
+	.pADMAAdrsMap		(lpADMAAdrsMap),
+	.pPSRAMAdrsMap		(lpPSRAMAdrsMap)
 ) USI_BUS (
 	.oMUsiRd	(wMUsiRd),
 	.oMUsiVd	(wMUsiVd),
@@ -256,8 +267,11 @@ begin
 	qSUsiGpioWd		<= wSUsiWd;
 	qSUsiGpioAdrs 	<= wSUsiAdrs;
 	qSUsiGpioWCke	<= wSUsiWCke;
-	qSUsiRd			<= {pBusSlaveConnect{wSUsiGpioRd}};
-	qSUsiVd			<= {pBusSlaveConnect{wSUsiGpioVd}};
+	qSUsiI2CWd		<= wSUsiWd;
+	qSUsiI2CAdrs	<= wSUsiAdrs;
+	qSUsiI2CWCke	<= wSUsiWCke;
+	qSUsiRd			<= {'h0,'h0,'h0,'h0,'h0, wSUsiI2CRd, 'h0, 'h0, wSUsiGpioRd};
+	qSUsiVd			<= {1'h0,1'h0,1'h0,1'h0,1'h0, wSUsiI2CVd, 1'h0, 1'h0, wSUsiGpioVd};
 end
 
 //----------------------------------------------------------

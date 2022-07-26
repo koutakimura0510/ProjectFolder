@@ -34,9 +34,9 @@ reg 		qI2CUnitEn;
 reg [15:0]	qI2CUnitDiv;
 reg [23:0]	qI2CUnitSAdrs;
 
-I2CUnit I2C_UNIT (
+// I2CUnit I2C_UNIT (
 
-);
+// );
 
 
 //----------------------------------------------------------
