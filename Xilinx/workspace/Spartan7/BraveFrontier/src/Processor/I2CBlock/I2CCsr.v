@@ -20,25 +20,31 @@ module I2CCsr #(
 	input	[31:0]			iSUsiWd,	// 書き込みデータ
 	input	[pBusAdrsBit:0]	iSUsiAdrs,
 	input					iSUsiWCke,	// コマンド有効時 Assert
+	// Csr Input
+	input 	[15:0]			iI2CGetKeyPad,
 	// Csr Output
-	output 	[7:0]			oI2cEn,
-	output 	[7:0]			oI2cDiv,
+	output 					oI2cEn,
+	output 	[15:0]			oI2cDiv,
+	output	[23:0]			oI2CSAdrs,
     // CLK Reset
     input           		iSysClk,
     input           		iSysRst
 );
 
 
+
 //----------------------------------------------------------
-// レジスタマップ
+// Regi
 //----------------------------------------------------------
-reg 			rI2CEn;		// I2C 通信開始, Enable 1 の間、Adrs1 ~ 3 に設定した Slave に順番に繰り返し通信を行う
-reg [15:0]		rI2CDiv;	// I2C CLK Division
-reg [23:0]		rI2CSAdrs;	// Slave Address [23:16] Sensor / [15:8] Right Controller / [7:0] Left Controller
-reg [15:0]		rI2CGetKeyPad;	// Slave のコントローラーデータを保存
+// USI/F Write
+reg 			rI2CEn;				assign oI2cEn 			= rI2CEn;			// I2C 通信開始, Enable 1 の間、Adrs1 ~ 3 に設定した Slave に順番に繰り返し通信を行う
+reg [15:0]		rI2CDiv;			assign oI2cDiv 		 	= rI2CDiv;			// I2C CLK Division
+reg [23:0]		rI2CSAdrs;			assign oI2CSAdrs 	 	= rI2CSAdrs;		// Slave Address [23:16] Sensor / [15:8] Right Controller / [7:0] Left Controller
+// Upper module Write
+reg [15:0]		rI2CGetKeyPad;		// Slave のコントローラーデータを保存
 // reg [23:0]		rI2CGetGyro;	// Slave のジャイロセンサデータを保存
 //
-reg [32:0]		qCsrAdrs;
+reg [pBusAdrsBit + 1:0]	qCsrAdrs;
 
 always @(posedge iSysClk)
 begin
@@ -51,7 +57,7 @@ begin
 		rI2CEn				<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[ 0:0] : rI2CEn;
 		rI2CDiv				<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[15:0] : rI2CDiv;
 		rI2CSAdrs			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h08}) ? iSUsiWd[23:0] : rI2CSAdrs;
-		rI2CGetKeyPad		<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h0c}) ? iSUsiWd[15:0] : rI2CGetKeyPad;
+		rI2CGetKeyPad		<= iI2CGetKeyPad;
 	end
 end
 
@@ -79,7 +85,7 @@ begin
 			'h100:		rSUsiRd <= {31'd0, rI2CEn};
 			'h104:		rSUsiRd <= {16'd0, rI2CDiv};
 			'h108:		rSUsiRd <= { 8'd0, rI2CSAdrs};
-			'h10c:		rSUsiRd <= {16'd0, rI2CGetKeyPad};
+			'h180:		rSUsiRd <= {16'd0, rI2CGetKeyPad};
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase
 

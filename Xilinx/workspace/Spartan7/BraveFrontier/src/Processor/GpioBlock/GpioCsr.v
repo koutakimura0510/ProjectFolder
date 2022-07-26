@@ -35,7 +35,8 @@ module GpioCsr #(
 //----------------------------------------------------------
 reg [ 7:0]		rGpioLed;		assign oGpioLed  = rGpioLed;	// 汎用 GPIO ON/OFF 制御
 reg [ 7:0]		rGpioDiv;		assign oGpioDiv = rGpioDiv;	// 汎用 GPIO 動作周波数
-reg [32:0]		qCsrAdrs;
+//
+reg [pBusAdrsBit+1:0]		qCsrAdrs;
 
 always @(posedge iSysClk)
 begin

@@ -2,7 +2,7 @@
 // Create 2022/7/25
 // Author koutakimura
 // -
-// I2C の操作を司るブロック
+// I2C の管理を司るブロック
 // 
 //----------------------------------------------------------
 module I2CBlock #(
@@ -28,24 +28,48 @@ module I2CBlock #(
 
 
 //----------------------------------------------------------
+// I2C Unit
+//----------------------------------------------------------
+reg 		qI2CUnitEn;
+reg [15:0]	qI2CUnitDiv;
+reg [23:0]	qI2CUnitSAdrs;
+
+I2CUnit I2C_UNIT (
+
+);
+
+
+//----------------------------------------------------------
 // Csr space
 //----------------------------------------------------------
+wire 		wI2CCsrEn;
+wire [15:0]	wI2CCsrDiv;
+wire [23:0]	wI2CCsrSAdrs;
+
 I2CCsr #(
 	.pBlockAdrsMap	(pBlockAdrsMap),
 	.pAdrsMap		(pAdrsMap),
 	.pBusAdrsBit	(pBusAdrsBit)
 ) I2C_CSR (
-	.oSUsiRd	(oSUsiRd),
-	.oSUsiVd	(oSUsiVd),
-	.iSUsiWd	(iSUsiWd),
-	.iSUsiAdrs	(iSUsiAdrs),
-	.iSUsiWCke	(iSUsiWCke),
-	.oGpioLed 	(wGpioLed),
-	.oGpioDiv	(wGpioDiv),
-	.iSysClk	(iSysClk),
-	.iSysRst	(iSysRst)
+	.oSUsiRd		(oSUsiRd),
+	.oSUsiVd		(oSUsiVd),
+	.iSUsiWd		(iSUsiWd),
+	.iSUsiAdrs		(iSUsiAdrs),
+	.iSUsiWCke		(iSUsiWCke),
+	.iI2CGetKeyPad	(),
+	.oI2cEn			(wI2CCsrEn),
+	.oI2cDiv		(wI2CCsrDiv),
+	.oI2CSAdrs		(wI2CCsrSAdrs),
+	.iSysClk		(iSysClk),
+	.iSysRst		(iSysRst)
 );
 
+always @*
+begin
+	qI2CUnitEn		<= wI2CCsrEn;
+	qI2CUnitDiv		<= wI2CCsrDiv;
+	qI2CUnitSAdrs	<= wI2CCsrSAdrs;
+end
 
 
 endmodule

@@ -28,16 +28,14 @@ module GpioBlock #(
 
 
 //----------------------------------------------------------
-// 外部 シフトレジスタ動作
+// GPIO UNIT
 //----------------------------------------------------------
-wire [1:0]	wSftEdge;		assign oLedEdge	= wSftEdge;
-wire 		wSftClk;		assign oLedClk	= wSftClk;
 wire [7:0] 	wGpioLed;
 wire [7:0] 	wGpioDiv;
 
-LedSftReg LED_SFT_REG (
-	.oSftEdge	(wSftEdge),
-	.oSftClk	(wSftClk),
+GpioUnit GPIO_UNIT (
+	.oSftEdge	(oLedEdge),
+	.oSftClk	(oLedClk),
 	.iGpioLed	(wGpioLed),
 	.iGpioDiv	(wGpioDiv),
 	.iSysClk	(iSysClk),

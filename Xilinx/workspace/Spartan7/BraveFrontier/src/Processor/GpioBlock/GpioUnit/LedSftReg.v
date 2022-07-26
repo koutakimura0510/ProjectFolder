@@ -20,7 +20,7 @@ module LedSftReg (
 //----------------------------------------------------------
 // 分周値に応じてカウントし CLK 生成
 //----------------------------------------------------------
-reg rSftClk;				assign oSftClk = rSftClk;
+reg rSftClk;
 reg [7:0] rGpioDivCnt;
 reg qGpioDivEn;
 
@@ -47,7 +47,7 @@ end
 // ボード付属の LED が 8つなので、rGpioBitSftCnt は 3bit(0〜7)容量とする。
 // 7 の Carry は自動的に 0 に戻るので、カウントの最大値を気にする必要がなくなる。
 //----------------------------------------------------------
-reg rSftEdge;				assign oSftEdge = {2{rSftEdge}};
+reg rSftEdge;
 reg qGpioBitSftEn;
 reg [1:0] rGpioLedCnt;
 reg [2:0] rGpioBitSftCnt;
@@ -70,5 +70,14 @@ always @*
 begin
 	qGpioBitSftEn <= (rGpioLedCnt == 2'd2);
 end
+
+
+//----------------------------------------------------------
+// ポート接続
+//----------------------------------------------------------
+OBUF GPIO_SFT_CLK 	(.O (oSftClk),		.I (rSftClk));
+OBUF GPIO_SFT_AND1 	(.O (oSftEdge[0]),  .I (rSftEdge));
+OBUF GPIO_SFT_AND2 	(.O (oSftEdge[1]),  .I (rSftEdge));
+
 
 endmodule

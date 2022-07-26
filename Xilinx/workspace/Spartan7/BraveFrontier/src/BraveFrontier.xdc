@@ -204,3 +204,6 @@ set_property PULLUP true [get_ports iUartRx]
 set_property -dict { PACKAGE_PIN B6    IOSTANDARD LVCMOS33  } [get_ports { oLedEdge[0] }];
 set_property -dict { PACKAGE_PIN C5    IOSTANDARD LVCMOS33  } [get_ports { oLedEdge[1] }];
 set_property -dict { PACKAGE_PIN E4    IOSTANDARD LVCMOS33  } [get_ports { oLedClk }];
+set_property DRIVE 4 [get_ports {oLedEdge[0]}];
+set_property DRIVE 4 [get_ports {oLedEdge[1]}];
+set_property DRIVE 4 [get_ports {oLedClk}];
