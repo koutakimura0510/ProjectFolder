@@ -28,28 +28,43 @@ module I2CBlock #(
 
 
 //----------------------------------------------------------
+// Csr ビット幅
+//----------------------------------------------------------
+localparam lpI2CDivClk = 15;	// システムクロックによる SCL生成の分周値
+
+
+//----------------------------------------------------------
 // I2C Unit
 //----------------------------------------------------------
-reg 		qI2CUnitEn;
-reg [15:0]	qI2CUnitDiv;
-reg [23:0]	qI2CUnitSAdrs;
+reg 				qI2CUnitEn;
+reg [lpI2CDivClk:0]	qI2CUnitDiv;
+reg [23:0]			qI2CUnitSAdrs;
 
-// I2CUnit I2C_UNIT (
-
-// );
+I2CUnit #(
+	.pI2CDivClk	(lpI2CDivClk)
+) I2C_UNIT (
+	.oI2cScl	(oI2cScl),
+	.ioI2CSda	(ioI2CSda),
+	.iI2cEn		(qI2CUnitEn),
+	.iI2cDiv	(qI2CUnitDiv),
+	.iI2CSAdrs	(qI2CUnitSAdrs),
+	.iSysClk	(iSysClk),
+	.iSysRst	(iSysRst)
+);
 
 
 //----------------------------------------------------------
 // Csr space
 //----------------------------------------------------------
-wire 		wI2CCsrEn;
-wire [15:0]	wI2CCsrDiv;
-wire [23:0]	wI2CCsrSAdrs;
+wire 					wI2CCsrEn;
+wire [lpI2CDivClk:0]	wI2CCsrDiv;
+wire [23:0]				wI2CCsrSAdrs;
 
 I2CCsr #(
 	.pBlockAdrsMap	(pBlockAdrsMap),
 	.pAdrsMap		(pAdrsMap),
-	.pBusAdrsBit	(pBusAdrsBit)
+	.pBusAdrsBit	(pBusAdrsBit),
+	.pI2CDivClk		(pI2CDivClk)
 ) I2C_CSR (
 	.oSUsiRd		(oSUsiRd),
 	.oSUsiVd		(oSUsiVd),

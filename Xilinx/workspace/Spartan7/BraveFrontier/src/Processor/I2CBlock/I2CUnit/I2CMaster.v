@@ -2,23 +2,27 @@
 // Create 2022/7/26
 // Author koutakimura
 // -
-// I2C Master 処理
+// I2C 通信 Master 処理
 // 
 //----------------------------------------------------------
-module i2cMaster
-(
-output 			ioSCLF,
-inout  			ioSDAF,
-input  			iCLK,
-input  			iRST,
-input 			enClk,			// 100 / 400 / 800khz enable信号
-input			iEnable,		// 0. discon 1. start
-input			wTimeEnable,	// 待機時間完了Enable信号
-input [ 7:0]	sendByte,		// 送信データ address + cmd + data byte
-input [31:0]	iLength,		// 送信データ配列長
-// input [31:0]	waitTime,		// データ送信後の待機時間、デバイスによっては初期設定時の待機時間があるため設けた
-output			oLE,			// 指定配列長送信完了信号 	output Length Enable
-output			oBE				// １バイト送信完了信号		output Byte Enable
+module i2cMaster (
+	// Enternal Port
+	output 			oI2cScl,
+	inout  			ioI2CSda,
+	// Internal Port
+	input  			iCLK,
+	input  			iRST,
+	input 			enClk,			// 100 / 400 / 800khz enable信号
+	input			iEnable,		// 0. discon 1. start
+	input			wTimeEnable,	// 待機時間完了Enable信号
+	input [ 7:0]	sendByte,		// 送信データ address + cmd + data byte
+	input [31:0]	iLength,		// 送信データ配列長
+	// input [31:0]	waitTime,		// データ送信後の待機時間、デバイスによっては初期設定時の待機時間があるため設けた
+	output			oLE,			// 指定配列長送信完了信号 	output Length Enable
+	output			oBE				// １バイト送信完了信号		output Byte Enable
+
+    input           		iSysClk,
+    input           		iSysRst
 );
 
 //----------------------------------------------------------

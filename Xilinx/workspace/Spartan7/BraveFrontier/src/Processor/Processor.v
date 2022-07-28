@@ -97,13 +97,13 @@ localparam [lpBlockAdrsMap-1'b1:0]
 // バス幅を定義
 //----------------------------------------------------------
 // variable parameter
-parameter	[3:0] 	pBusSlaveConnect   	= 4'd9;		// 接続Slave数、最大16
-parameter			pBusDataBit	  		= 32;		// バスデータ幅, 内部計算にも用いるため、bit数のままを指定
-parameter	[3:0]	pBusAdrsBit			= 4'd15;	// バスアドレス幅,内部計算には用いないため、bit数 - 1 を指定
+localparam	[3:0] 	lpBusSlaveConnect  	= 4'd9;		// 接続Slave数、最大16
+localparam			lpBusDataBit  		= 32;		// バスデータ幅, 内部計算にも用いるため、bit数のままを指定
+localparam	[3:0]	lpBusAdrsBit		= 4'd15;	// バスアドレス幅,内部計算には用いないため、bit数 - 1 を指定
 
 // not variable parameter
-parameter	[3:0] 	pBusSlaveConnectWidth 	= pBusSlaveConnect - 1'b1;
-parameter			pBusLen	  				= (pBusDataBit * pBusSlaveConnect) - 1'b1;
+localparam	[3:0] 	lpBusSlaveConnectWidth 	= lpBusSlaveConnect - 1'b1;
+localparam			lpBusLen  				= (lpBusDataBit * lpBusSlaveConnect) - 1'b1;
 
 
 //----------------------------------------------------------
@@ -111,25 +111,25 @@ parameter			pBusLen	  				= (pBusDataBit * pBusSlaveConnect) - 1'b1;
 //----------------------------------------------------------
 // Slave -> Master
 wire [31:0] 					wMUsiRd;
-wire [pBusSlaveConnectWidth:0]	wMUsiVd;
+wire [lpBusSlaveConnectWidth:0]	wMUsiVd;
 // Master -> Slave
 wire [31:0] 			wMUsiWd;
-wire [pBusAdrsBit:0] 	wMUsiAdrs;
+wire [lpBusAdrsBit:0] 	wMUsiAdrs;
 wire 					wMUsiWCke;
 
 MicroControllerBlock #(
-	.pBusSlaveConnect		(pBusSlaveConnect),
-	.pBusAdrsBit			(pBusAdrsBit)
+	.pBusSlaveConnect		(lpBusSlaveConnect),
+	.pBusAdrsBit			(lpBusAdrsBit)
 ) MICRO_CONTROLLER_BLOCK (
-	.iUartRx	(iUartRx),
-	.oUartTx	(oUartTx),
-	.iMUsiRd	(wMUsiRd),
-	.iMUsiVd	(wMUsiVd),
-	.oMUsiWd	(wMUsiWd),
-	.oMUsiAdrs	(wMUsiAdrs),
-	.oMUsiWCke	(wMUsiWCke),
-	.iSysClk	(iSysClk),
-	.iSysRst	(iSysRst)
+	.iUartRx				(iUartRx),
+	.oUartTx				(oUartTx),
+	.iMUsiRd				(wMUsiRd),
+	.iMUsiVd				(wMUsiVd),
+	.oMUsiWd				(wMUsiWd),
+	.oMUsiAdrs				(wMUsiAdrs),
+	.oMUsiWCke				(wMUsiWCke),
+	.iSysClk				(iSysClk),
+	.iSysRst				(iSysRst)
 );
 
 
@@ -141,13 +141,13 @@ wire [31:0] 			wSUsiGpioRd;
 wire 					wSUsiGpioVd;
 // Master -> Slave
 reg  [31:0] 			qSUsiGpioWd;
-reg  [pBusAdrsBit:0] 	qSUsiGpioAdrs;
+reg  [lpBusAdrsBit:0] 	qSUsiGpioAdrs;
 reg  					qSUsiGpioWCke;
 
 GpioBlock #(
 	.pBlockAdrsMap	(lpBlockAdrsMap),
 	.pAdrsMap	 	(lpGpioAdrsMap),
-	.pBusAdrsBit	(pBusAdrsBit)
+	.pBusAdrsBit	(lpBusAdrsBit)
 ) GPIO_BLOCK (
 	.oLedEdge		(oLedEdge),
 	.oLedClk		(oLedClk),
@@ -178,13 +178,13 @@ wire [31:0] 			wSUsiI2CRd;
 wire 					wSUsiI2CVd;
 // Master -> Slave
 reg  [31:0] 			qSUsiI2CWd;
-reg  [pBusAdrsBit:0] 	qSUsiI2CAdrs;
+reg  [lpBusAdrsBit:0] 	qSUsiI2CAdrs;
 reg  					qSUsiI2CWCke;
 
 I2CBlock #(
 	.pBlockAdrsMap	(lpBlockAdrsMap),
 	.pAdrsMap	 	(lpGpioAdrsMap),
-	.pBusAdrsBit	(pBusAdrsBit)
+	.pBusAdrsBit	(lpBusAdrsBit)
 ) I2C_BLOCK (
 	.oI2cScl		(oI2cScl),
 	.ioI2CSda		(ioI2CSda),
@@ -226,17 +226,17 @@ I2CBlock #(
 // USI/F BUS
 //----------------------------------------------------------
 // Slave -> Master
-reg  [pBusLen:0]				qSUsiRd;
-reg  [pBusSlaveConnectWidth:0]	qSUsiVd;
+reg  [lpBusLen:0]				qSUsiRd;
+reg  [lpBusSlaveConnectWidth:0]	qSUsiVd;
 // Master -> Slave
 wire [31:0] 					wSUsiWd;
-wire [pBusAdrsBit:0] 			wSUsiAdrs;
+wire [lpBusAdrsBit:0] 			wSUsiAdrs;
 wire 							wSUsiWCke;
 
 UltraSimpleInterface #(
-	.pBusSlaveConnect	(pBusSlaveConnect),
-	.pBusDataBit		(pBusDataBit),
-	.pBusAdrsBit		(pBusAdrsBit),
+	.pBusSlaveConnect	(lpBusSlaveConnect),
+	.pBusDataBit		(lpBusDataBit),
+	.pBusAdrsBit		(lpBusAdrsBit),
 	.pBlockAdrsMap		(lpBlockAdrsMap),
 	.pGpioAdrsMap		(lpGpioAdrsMap),
 	.pPWMAdrsMap		(lpPWMAdrsMap),
@@ -248,18 +248,18 @@ UltraSimpleInterface #(
 	.pADMAAdrsMap		(lpADMAAdrsMap),
 	.pPSRAMAdrsMap		(lpPSRAMAdrsMap)
 ) USI_BUS (
-	.oMUsiRd	(wMUsiRd),
-	.oMUsiVd	(wMUsiVd),
-	.iMUsiWd	(wMUsiWd),
-	.iMUsiAdrs	(wMUsiAdrs),
-	.iMUsiWCke	(wMUsiWCke),
-	.oSUsiWd	(wSUsiWd),
-	.oSUsiAdrs	(wSUsiAdrs),
-	.oSUsiWCke	(wSUsiWCke),
-	.iSUsiRd	(qSUsiRd),
-	.iSUsiVd	(qSUsiVd),
-	.iUsiClk 	(iSysClk),
-	.iUsiRst	(iSysRst)
+	.oMUsiRd			(wMUsiRd),
+	.oMUsiVd			(wMUsiVd),
+	.iMUsiWd			(wMUsiWd),
+	.iMUsiAdrs			(wMUsiAdrs),
+	.iMUsiWCke			(wMUsiWCke),
+	.oSUsiWd			(wSUsiWd),
+	.oSUsiAdrs			(wSUsiAdrs),
+	.oSUsiWCke			(wSUsiWCke),
+	.iSUsiRd			(qSUsiRd),
+	.iSUsiVd			(qSUsiVd),
+	.iUsiClk 			(iSysClk),
+	.iUsiRst			(iSysRst)
 );
 
 always @*
@@ -270,7 +270,7 @@ begin
 	qSUsiI2CWd		<= wSUsiWd;
 	qSUsiI2CAdrs	<= wSUsiAdrs;
 	qSUsiI2CWCke	<= wSUsiWCke;
-	qSUsiRd			<= {'h0,'h0,'h0,'h0,'h0, wSUsiI2CRd, 'h0, 'h0, wSUsiGpioRd};
+	qSUsiRd			<= { 'h0, 'h0, 'h0, 'h0, 'h0, wSUsiI2CRd,  'h0, 'h0, wSUsiGpioRd};
 	qSUsiVd			<= {1'h0,1'h0,1'h0,1'h0,1'h0, wSUsiI2CVd, 1'h0, 1'h0, wSUsiGpioVd};
 end
 

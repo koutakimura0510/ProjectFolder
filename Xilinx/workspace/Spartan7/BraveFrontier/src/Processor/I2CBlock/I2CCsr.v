@@ -8,9 +8,11 @@
 // 上位モジュールへの output port は必ずレジスタ経由で出力する。
 //----------------------------------------------------------
 module I2CCsr #(
+	// variable parameter
 	parameter 						pBlockAdrsMap 	= 'd8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h01,
-	parameter						pBusAdrsBit		= 'd31
+	parameter						pBusAdrsBit		= 'd31,
+	parameter 						pI2CDivClk = 15
 )(
     // Internal Port
 	// Csr Read
@@ -37,9 +39,9 @@ module I2CCsr #(
 // Regi
 //----------------------------------------------------------
 // USI/F Write
-reg 			rI2CEn;				assign oI2cEn 			= rI2CEn;			// I2C 通信開始, Enable 1 の間、Adrs1 ~ 3 に設定した Slave に順番に繰り返し通信を行う
-reg [15:0]		rI2CDiv;			assign oI2cDiv 		 	= rI2CDiv;			// I2C CLK Division
-reg [23:0]		rI2CSAdrs;			assign oI2CSAdrs 	 	= rI2CSAdrs;		// Slave Address [23:16] Sensor / [15:8] Right Controller / [7:0] Left Controller
+reg 					rI2CEn;				assign oI2cEn 			= rI2CEn;			// I2C 通信開始, Enable 1 の間、Adrs1 ~ 3 に設定した Slave に順番に繰り返し通信を行う
+reg [pI2CDivClk:0]		rI2CDiv;			assign oI2cDiv 		 	= rI2CDiv;			// I2C CLK Division
+reg [23:0]				rI2CSAdrs;			assign oI2CSAdrs 	 	= rI2CSAdrs;		// Slave Address [23:16] Sensor / [15:8] Right Controller / [7:0] Left Controller
 // Upper module Write
 reg [15:0]		rI2CGetKeyPad;		// Slave のコントローラーデータを保存
 // reg [23:0]		rI2CGetGyro;	// Slave のジャイロセンサデータを保存
@@ -54,9 +56,9 @@ begin
 	end
 	else
 	begin
-		rI2CEn				<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[ 0:0] : rI2CEn;
-		rI2CDiv				<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[15:0] : rI2CDiv;
-		rI2CSAdrs			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h08}) ? iSUsiWd[23:0] : rI2CSAdrs;
+		rI2CEn				<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[ 0:0] 			: rI2CEn;
+		rI2CDiv				<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pI2CDivClk:0] 	: rI2CDiv;
+		rI2CSAdrs			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h08}) ? iSUsiWd[23:0] 			: rI2CSAdrs;
 		rI2CGetKeyPad		<= iI2CGetKeyPad;
 	end
 end
@@ -83,7 +85,7 @@ begin
 	begin
 		case ({qAdrsComp, iSUsiAdrs[7:0]})
 			'h100:		rSUsiRd <= {31'd0, rI2CEn};
-			'h104:		rSUsiRd <= {16'd0, rI2CDiv};
+			'h104:		rSUsiRd <= {{(31 - pI2CDivClk){1'b0}}, rI2CDiv};	// パラメータ可変なので、可変に対応して0で埋めるようにした
 			'h108:		rSUsiRd <= { 8'd0, rI2CSAdrs};
 			'h180:		rSUsiRd <= {16'd0, rI2CGetKeyPad};
 			default: 	rSUsiRd <= iSUsiWd;
