@@ -64,7 +64,7 @@ I2CCsr #(
 	.pBlockAdrsMap	(pBlockAdrsMap),
 	.pAdrsMap		(pAdrsMap),
 	.pBusAdrsBit	(pBusAdrsBit),
-	.pI2CDivClk		(pI2CDivClk)
+	.pI2CDivClk		(lpI2CDivClk)
 ) I2C_CSR (
 	.oSUsiRd		(oSUsiRd),
 	.oSUsiVd		(oSUsiVd),

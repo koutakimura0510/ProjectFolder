@@ -12,7 +12,7 @@ module I2CCsr #(
 	parameter 						pBlockAdrsMap 	= 'd8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h01,
 	parameter						pBusAdrsBit		= 'd31,
-	parameter 						pI2CDivClk = 15
+	parameter 						pI2CDivClk 		= 'd15
 )(
     // Internal Port
 	// Csr Read

@@ -2,247 +2,157 @@
 // Create 2022/7/26
 // Author koutakimura
 // -
-// I2C 通信 Master 処理
-// 
+// I2C 通信 Master 処理 -> 参考 HDL Arty-50S の シリアルプロジェクト
+// 最大 255 Byte 連続送信可能、送信データは 1Byte(8bit) 固定
+// I2CMaster モジュールの 上位モジュールが VD シグナルに応じて データ変更
+// このモジュールの役割は データを送信するだけ
 //----------------------------------------------------------
-module i2cMaster (
+module I2CMaster (
 	// Enternal Port
 	output 			oI2cScl,
 	inout  			ioI2CSda,
 	// Internal Port
-	input  			iCLK,
-	input  			iRST,
-	input 			enClk,			// 100 / 400 / 800khz enable信号
-	input			iEnable,		// 0. discon 1. start
-	input			wTimeEnable,	// 待機時間完了Enable信号
-	input [ 7:0]	sendByte,		// 送信データ address + cmd + data byte
-	input [31:0]	iLength,		// 送信データ配列長
-	// input [31:0]	waitTime,		// データ送信後の待機時間、デバイスによっては初期設定時の待機時間があるため設けた
-	output			oLE,			// 指定配列長送信完了信号 	output Length Enable
-	output			oBE				// １バイト送信完了信号		output Byte Enable
-
-    input           		iSysClk,
-    input           		iSysRst
+	input 			iDivCke,		// 100 / 400 / 800khz enable信号
+	input			iI2CEn,			// 0. Discon / 1. Start
+	input 			iTriState,		// 0. Sda Send / 1. Sda Hi-z
+	input [ 7:0]	iI2CSend,		// 送信データ
+	input [ 7:0]	iI2CBufLen,		// 送信データ配列長 Adrs + Cmd + Data とかなら 3byte指定
+	output			oI2CBufVd,		// 指定配列長送信完了信号
+	output			oI2CByteVd,		// 1バイト送信完了信号
+	// Slave
+	output [ 7:0]	oSdaByte,		// Slave からの 1バイトデータ
+	output 			oSdaVd,			// Slave からの 1バイトデータ出力時 Assign
+	// Clk Rst
+    input           iSysClk,
+    input           iSysRst
 );
 
-//----------------------------------------------------------
-// Port接続
-//----------------------------------------------------------
-// i2c信号生成
-reg ioSclf;		assign ioSCLF  	= ioSclf;
-reg ioSdaf;		assign ioSDAF  	= ioSdaf;
-reg ole;		assign oLE	   	= ole;
-reg obe;		assign oBE		= obe;
-
 
 //----------------------------------------------------------
-// i2c状態遷移
+// I2C Master 制御
 //----------------------------------------------------------
 localparam [2:0] 
-	disConnect 		= 3'd0,		// マスタのSCLがHIGHの間にSDAをLOWでStartシーケンス
-	startCondition 	= 3'd1,		// SCLがHIGHの間にSDAをHIGHでStopシーケンス
-	stopCondition 	= 3'd2;
-
-reg [2:0] i2cState;	// i2c状態遷移管理変数
-
-
-//----------------------------------------------------------
-// scl送信回数
-//----------------------------------------------------------
+	lpDisConnect 		= 3'd0,		// Master の SCL が High の間に SDA を LOW で Start シーケンス
+	lpStartCondition 	= 3'd1,		// SCL が High の間に SDA を High で Stop シーケンス
+	lpStopCondition 	= 3'd2;		// SCL, SDA が両方 High で 停止中
 localparam [3:0] 
-	SclCntUp		= 4'd1,
-	SclNull 		= 4'd0,
-	SclDataByte		= 4'd8,
-	SclAck	 		= 4'd7;
+	lpSclCntNull 		= 4'd0,
+	lpSclCntMax			= 4'd8,
+localparam [5:0]
+	lpDelayCntClear		= 6'd0,
+	lpDelayCntMax		= 6'd35; 	// 100MHz = 35clk -> 300ns
+//
+reg rI2CScl;					assign oI2cScl 		= rI2CScl;
+reg rI2CSda;					assign ioI2CSda		= rI2CSda;
+reg rBufVd;						assign oI2CBufVd	= rBufVd;
+reg rByteVd;					assign oI2CByteVd	= rByteVd;
 
-reg [3:0] sclCnt;	// sclの立上り回数
-reg [31:0] mLength;	// 1byte送信回数カウント
-reg [3:0] sdaRp;	// sda送信データ参照rp
+OBUF I2C_SCL 	(.O (oI2cScl), .I (rSftClk));
+IOBUF I2C_SDA 	(.O (oSftClk),	.IO (ioI2CSda), .I (rI2CSda), .T (iTriState));
+//
+reg [2:0] 	rI2CState;
+reg [3:0] 	rSclPoseCnt;	// SCL 立ち上がり回数カウント
+reg [31:0] 	rBufLenCnt;		// 1byte送信回数カウント
+reg [5:0]  	rSdaDelayCnt;	// 遅延時間カウント
+reg [2:0] 	rSdaRp;			// sda送信データ参照rp
+//
+reg 		qStartRdy, qStopRdy, qDisconRdy;	// ステートマシン制御
+reg 		qSclPosCke,	qSclCntMax;				// SCL posedge Cnt 制御
+reg 		qSdaDelCke;
 
+always @(posedge iSysClk)
+begin
+	// I2C 規格 ステートマシン
+	casex ({iSysRst, iI2CEn, qDisconRdy, qStopRdy, qStartRdy, rI2CState})
+		8'b1_x_xxx_xxx:		rI2CState <= lpDisConnect;
+		8'bx_0_xxx_xxx:		rI2CState <= lpDisConnect;
+		8'b0_1_xx1_000:		rI2CState <= lpStartCondition;
+		8'b0_1_x1x_001: 	rI2CState <= lpStopCondition;
+		8'b0_1_1xx_010: 	rI2CState <= lpDisConnect;
+		default:	 		rI2CState <= rI2CState;
+	endcase
 
-//----------------------------------------------------------
-// sda出力データ遅延カウンタ
-//----------------------------------------------------------
-localparam [6:0]
-	delayCntUp 		= 7'd1,
-	delayCntClear	= 7'd0,
-	delayCntMax		= 7'd35; // 35clk -> 300ns
+	// Start Condition 発行後の SCL 立ち上がり回数カウント
+	casex ({iSysRst, iI2CEn, qSclPosCke, qSclCntMax, rI2CState})
+		7'b1_x_x_x_xxx:		rSclPoseCnt <= lpSclCntNull;
+		7'bx_0_x_x_xxx:		rSclPoseCnt <= lpSclCntNull;
+		7'b0_1_1_x_xx0:		rSclPoseCnt <= lpSclCntNull;	// Discon, Stop 検出
+		7'b0_1_1_0_001: 	rSclPoseCnt <= rSclPoseCnt + 1'b1;
+		7'b0_1_1_1_001: 	rSclPoseCnt <= lpSclCntNull;
+		default:	 		rSclPoseCnt <= rSclPoseCnt;
+	endcase
 
-reg [6:0]  sdaDelayCnt;
+	// Start から Stop までの 1byte 送信回数カウント
+	casex ({iSysRst, iI2CEn, qSclPosCke, qSclCntMax, rI2CState})
+		7'b1_x_x_x_xxx:		rBufLenCnt <= 8'd0;
+		7'bx_0_x_x_xxx:		rBufLenCnt <= 8'd0;
+		7'b0_1_1_x_xx0:		rBufLenCnt <= 8'd0;
+		7'b0_1_1_1_001: 	rBufLenCnt <= rBufLenCnt + 1'd1;
+		default:	 		rBufLenCnt <= rBufLenCnt;
+	endcase
 
-//----------------------------------------------------------
-// I2Cステートマシン制御
-//----------------------------------------------------------
+	// SCL 生成
+	casex ({iSysRst, iI2CEn, iDivCke, rI2CSda, rI2CState})
+		7'b1_x_x_x_xxx:		rI2CScl <= 1'b1;
+		7'bx_0_x_x_xxx:		rI2CScl <= 1'b1;
+		7'b0_1_1_0_000:		rI2CScl <= 1'b0;	// SDA Low に遷移後 SCL Low
+		7'b0_1_1_x_001: 	rI2CScl <= ~rI2CScl;
+		7'b0_1_1_x_010: 	rI2CScl <= 1'b1;
+		default:	 		rI2CScl <= rI2CScl;
+	endcase
 
-// i2cステートマシン管理
-always @(posedge iCLK) begin
-	if (iRST == 1'b1) begin
-		i2cState <= disConnect;
-	end else if (iEnable == 1'b0) begin
-		i2cState <= disConnect;
-	end else begin
-		case (i2cState)
-			disConnect: 	i2cState <= (ioSclf == 1'b0 && ioSdaf == 1'b0) ? startCondition : disConnect;
-			startCondition: i2cState <= (iLength == mLength) ? stopCondition : startCondition;
-			stopCondition: 	i2cState <= (ioSclf == 1'b1 && ioSdaf == 1'b1) ? disConnect : stopCondition;
-			default: 		i2cState <= disConnect;
-		endcase
-	end
+	// sda 生成
+	// 0 ~ 7clkは通常の1byteデータ送信
+	// 8clkはACK受信のためハイ・インピーダンスにする
+	casex ({iSysRst, iI2CEn, qSclPosCke, qSclCntMax, qStopRdy, qSdaDelCke, rI2CState})
+		9'b1_x_x_xxx_xxx:	rI2CSda <= 1'b1;
+		9'bx_0_x_xxx_xxx:	rI2CSda <= 1'b1;
+		9'b0_1_x_xxx_000:	rI2CSda <= 1'b0;	// Start Condition
+		9'b0_1_x_011_001: 	rI2CSda <= 1'b0;	// 指定バイト送信時、Stop Condition に備える
+		9'b0_1_x_101_001: 	rI2CSda <= 1'bz;
+		9'b0_1_x_001_001: 	rI2CSda <= iI2CSend[rSdaRp];
+		9'b0_1_1_xxx_010: 	rI2CSda <= 1'b1;	// Stop Condition
+		default:	 		rI2CSda <= rI2CSda;
+	endcase
+
+	// Rp 更新
+	casex ({iSysRst, iI2CEn, qSclPosCke, rI2CState})
+		6'b1_x_x_xxx:		rSdaRp <= 3'd7;
+		6'bx_0_x_xxx:		rSdaRp <= 3'd7;
+		6'b0_1_1_xx0:		rSdaRp <= 3'd7;
+		6'b0_1_1_001:	 	rSdaRp <= rSdaRp - 1'b1;
+		default:	 		rSdaRp <= rSdaRp;
+	endcase
+
+	// sda 送信データの変化遅延タイミング生成回路
+	// scl の立下りから最低300ns Sdaの状態を保持する必要があるため遅延用カウンタを設ける
+	if (iSysRst) 		rSdaDelayCnt <= lpDelayCntClear;
+	else if (!rI2CScl) 	rSdaDelayCnt <= rSdaDelayCnt + 1'b1;
+	else 				rSdaDelayCnt <= lpDelayCntClear;
+
+	// 全バイトデータ送信時にenable信号を出力
+	if (iSysRst) 		rBufVd <= 1'b0;
+	else if (qStopRdy)	rBufVd <= 1'b1;
+	else 				rBufVd <= 1'b0;
+
+	// 1byteデータ送信時にenable信号を出力
+	casex ({iSysRst, qSclCntMax, iDivCke, rI2CScl})
+		4'b1_xxx:		rByteVd <= 1'b0;
+		4'b0_110:	 	rByteVd <= 1'b1;
+		default: 		rByteVd <= 1'b0;
+	endcase
 end
 
-
-//----------------------------------------------------------
-// I2C クロック生成
-//----------------------------------------------------------
-
-// sclの立上り回数をカウント
-always @(posedge iCLK) begin
-	if (iRST == 1'b1) begin
-		sclCnt <= SclNull;
-	end else if (iEnable == 1'b0) begin
-		sclCnt <= SclNull;
-	end else if (enClk == 1'b1 && ioSclf == 1'b1) begin
-		case (i2cState)
-			disConnect: 	sclCnt <= SclNull;
-			startCondition: sclCnt <= (sclCnt == SclDataByte) ? SclNull : sclCnt + SclCntUp;
-			stopCondition: 	sclCnt <= SclNull;
-			default: 		sclCnt <= SclNull;
-		endcase
-	end
-end
-
-// i2cのデータ送信回数をカウント
-always @(posedge iCLK) begin
-	if (iRST == 1'b1) begin
-		mLength <= 32'd0;
-	end else if (iEnable == 1'b0) begin
-		mLength <= 32'd0;
-	end else if (enClk == 1'b1 && ioSclf == 1'b1) begin
-		case (i2cState)
-			disConnect: 	mLength <= 32'd0;
-			startCondition: mLength <= (sclCnt == SclDataByte) ? mLength + 32'd1 : mLength;
-			stopCondition: 	mLength <= 32'd0;
-			default: 		mLength <= 32'd0;
-		endcase
-	end
-end
-
-// scl生成
-// reset時は次回start condition生成の為にHighにする
-always @(posedge iCLK) begin
-	if (iRST == 1'b1) begin
-		ioSclf <= 1'b1;
-	end else if (iEnable == 1'b0) begin
-		ioSclf <= 1'b1;
-	end else if (enClk == 1'b1) begin
-		case (i2cState)
-			disConnect: 	ioSclf <= (ioSdaf == 1'b0) ? 1'b0 : 1'b1;
-			startCondition: ioSclf <= ~ioSclf;
-			stopCondition: 	ioSclf <= 1'b1;
-			default: 		ioSclf <= 1'b1;
-		endcase
-	end
-end
-
-// sda送信用sendByteのbit位置参照rpの更新
-always @(posedge iCLK) begin
-	if (iRST == 1'b1) begin
-		sdaRp <= 4'd0;
-	end else if (enClk == 1'b1 && ioSclf == 1'b1) begin
-		case (i2cState)
-			disConnect: 	sdaRp <= 4'd7;
-			startCondition: sdaRp <= (sdaRp == SclNull || sclCnt == SclDataByte) ? 4'd7 : sdaRp - 1'b1;
-			stopCondition: 	sdaRp <= 4'd7;
-			default: 		sdaRp <= 4'd7;
-		endcase
-	end
-end
-
-
-// sda送信データの変化遅延タイミング生成回路
-// sclの立下りから最低300nsSdaの状態を保持する必要があるため
-// 遅延用カウンタを設ける
-always @(posedge iCLK) begin
-	if (iRST == 1'b1) begin
-		sdaDelayCnt <= delayCntClear;
-	end else if (ioSclf == 1'b0) begin
-		sdaDelayCnt <= sdaDelayCnt + delayCntUp;
-	end else begin
-		sdaDelayCnt <= delayCntClear;
-	end
-end
-
-
-// sda送信
-// 0 ~ 7clkは通常の1byteデータ送信
-// 8clkはACK受信のためハイ・インピーダンスにする
-always @(posedge iCLK) begin
-	if (iRST == 1'b1) begin
-		ioSdaf <= 1'b1;
-	end else if (iEnable == 1'b0) begin
-		ioSdaf <= 1'b1;
-	end else begin
-		case (i2cState)
-			disConnect: begin
-				if (wTimeEnable == 1'b1) begin
-					ioSdaf <= 1'b0;
-				end
-			end
-
-			startCondition: begin
-				if (sdaDelayCnt == delayCntMax) begin
-					if (iLength == mLength) begin // 指定バイト送信時、stop conditionに備えてlowにする
-						ioSdaf <= 1'b0;
-					end else if (sclCnt == SclDataByte) begin
-						ioSdaf <= 1'bz;
-					end else begin
-						ioSdaf <= sendByte[sdaRp]; //byte data
-					end
-				end
-			end
-
-			stopCondition: begin
-				if (ioSclf == 1'b1) begin
-					if (enClk == 1'b1) begin
-						ioSdaf <= 1'b1;
-					end
-				end else begin
-					ioSdaf <= 1'b0;
-				end
-			end
-
-			default: begin
-				ioSdaf <= 1'b0;
-			end
-		endcase
-	end
-end
-
-
-//----------------------------------------------------------
-// 送信シーケンス処理
-//----------------------------------------------------------
-
-// 全バイトデータ送信時にenable信号を出力
-always @(posedge iCLK) begin
-	if (iRST == 1'b1) begin
-		ole <= 1'b0;
-	end else if (sclCnt == SclNull && iLength == mLength) begin
-		ole <= 1'b1;
-	end else begin
-		ole <= 1'b0;
-	end
-end
-
-// 1byteデータ送信時にenable信号を出力
-always @(posedge iCLK) begin
-	if (iRST == 1'b1) begin
-		obe <= 1'b0;
-	end else if (sclCnt == SclDataByte && enClk == 1'b1 && ioSclf == 1'b0) begin
-		obe <= 1'b1;
-	end else begin
-		obe <= 1'b0;
-	end
+always @*
+begin
+	qStartRdy 	<= !(rI2CScl | rI2CSda);		// Start Condition
+	qStopRdy	<= (iI2CBufLen == rBufLenCnt);	// Stop Condition
+	qDisconRdy	<= (rI2CScl & rI2CSda);			// Disconnect
+	//
+	qSclPosCke	<= (iDivCke & rI2CScl);
+	qSclCntMax	<= (rSclPoseCnt == lpSclCntMax);
+	//
+	qSdaDelCke	<= (rSdaDelayCnt == lpDelayCntMax);
 end
 
 endmodule

@@ -270,7 +270,7 @@ begin
 	qSUsiI2CWd		<= wSUsiWd;
 	qSUsiI2CAdrs	<= wSUsiAdrs;
 	qSUsiI2CWCke	<= wSUsiWCke;
-	qSUsiRd			<= { 'h0, 'h0, 'h0, 'h0, 'h0, wSUsiI2CRd,  'h0, 'h0, wSUsiGpioRd};
+	qSUsiRd			<= {{5{32'd0}}, wSUsiI2CRd,  'h0, 'h0, wSUsiGpioRd};
 	qSUsiVd			<= {1'h0,1'h0,1'h0,1'h0,1'h0, wSUsiI2CVd, 1'h0, 1'h0, wSUsiGpioVd};
 end
 

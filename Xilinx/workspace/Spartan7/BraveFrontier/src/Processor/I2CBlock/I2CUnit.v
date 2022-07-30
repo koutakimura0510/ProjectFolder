@@ -14,8 +14,9 @@ module I2CUnit #(
 	inout 					ioI2CSda,
     // Internal Port
 	input 					iI2cEn,
-	input [pI2CDivClk:0]	iI2cDiv,
-	input [23:0]			iI2CSAdrs,
+	input 	[pI2CDivClk:0]	iI2cDiv,
+	input 	[23:0]			iI2CSAdrs,
+	output 	[15:0]			oI2CGetKeyPad
     // CLK Reset
     input           		iSysClk,
     input           		iSysRst
