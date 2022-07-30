@@ -31,7 +31,7 @@ module Processer #(
     output          oSramsClk,
     output          oSramsCs,
     // I2C
-    output          oI2cScl,
+    output          oI2CScl,
     inout           ioI2CSda,
     // UART
     output          oUartTx,
@@ -186,7 +186,7 @@ I2CBlock #(
 	.pAdrsMap	 	(lpGpioAdrsMap),
 	.pBusAdrsBit	(lpBusAdrsBit)
 ) I2C_BLOCK (
-	.oI2cScl		(oI2cScl),
+	.oI2CScl		(oI2CScl),
 	.ioI2CSda		(ioI2CSda),
 	.oSUsiRd		(wSUsiI2CRd),
 	.oSUsiVd		(wSUsiI2CVd),

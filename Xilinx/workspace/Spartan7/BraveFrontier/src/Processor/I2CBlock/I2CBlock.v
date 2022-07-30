@@ -11,7 +11,7 @@ module I2CBlock #(
 	parameter						pBusAdrsBit		= 'd31
 )(
 	// External Port
-	output					oI2cScl,
+	output					oI2CScl,
 	inout 					ioI2CSda,
     // Internal Port
 	// Bus Slave Read
@@ -38,16 +38,14 @@ localparam lpI2CDivClk = 15;	// システムクロックによる SCL生成の�
 //----------------------------------------------------------
 reg 				qI2CUnitEn;
 reg [lpI2CDivClk:0]	qI2CUnitDiv;
-reg [23:0]			qI2CUnitSAdrs;
 
 I2CUnit #(
 	.pI2CDivClk	(lpI2CDivClk)
 ) I2C_UNIT (
-	.oI2cScl	(oI2cScl),
+	.oI2CScl	(oI2CScl),
 	.ioI2CSda	(ioI2CSda),
 	.iI2cEn		(qI2CUnitEn),
 	.iI2cDiv	(qI2CUnitDiv),
-	.iI2CSAdrs	(qI2CUnitSAdrs),
 	.iSysClk	(iSysClk),
 	.iSysRst	(iSysRst)
 );
@@ -74,7 +72,6 @@ I2CCsr #(
 	.iI2CGetKeyPad	(),
 	.oI2cEn			(wI2CCsrEn),
 	.oI2cDiv		(wI2CCsrDiv),
-	.oI2CSAdrs		(wI2CCsrSAdrs),
 	.iSysClk		(iSysClk),
 	.iSysRst		(iSysRst)
 );
@@ -83,7 +80,6 @@ always @*
 begin
 	qI2CUnitEn		<= wI2CCsrEn;
 	qI2CUnitDiv		<= wI2CCsrDiv;
-	qI2CUnitSAdrs	<= wI2CCsrSAdrs;
 end
 
 

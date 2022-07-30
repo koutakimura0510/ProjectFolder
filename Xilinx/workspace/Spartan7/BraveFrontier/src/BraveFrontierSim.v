@@ -86,7 +86,7 @@ wire oTftRst;
 // I2C
 //----------------------------------------------------------
 reg  rSwSda  = 0;
-wire oI2cScl;
+wire oI2CScl;
 wire ioI2CSda;               assign ioI2CSda = rSwSda;
 
 always @(posedge rSysClk)
@@ -161,7 +161,7 @@ BraveFrontier #(
     .oTftDe             (oTftDe),
     .oTftBackLight      (oTftBackLight),
     .oTftRst            (oTftRst),
-    .oI2cScl             (oI2cScl),
+    .oI2CScl             (oI2CScl),
     .ioI2CSda            (ioI2CSda),
     .oAudioMclk         (oAudioMclk),
     .oAudioBclk         (oAudioBclk),
