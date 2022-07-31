@@ -39,7 +39,7 @@ CkeGenerator #(
 
 
 //----------------------------------------------------------
-// I2C Master の送信データと GPIO TriState 制御
+// I2C Master の送受信データと GPIO TriState 制御
 //----------------------------------------------------------
 wire 		wTriState;
 wire [7:0]	wSend;

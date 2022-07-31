@@ -3,9 +3,11 @@
 // Author koutakimura
 // -
 // I2C 通信 Master 処理 -> 参考 HDL Arty-50S の シリアルプロジェクト
+// 
+// クロックストレッチ未対応
 // 最大 255 Byte 連続送信可能、送信データは 1Byte(8bit) 固定
-// I2CMaster モジュールの 上位モジュールが VD シグナルに応じて データ変更
-// このモジュールの役割は データを送信するだけ
+// I2CMaster モジュールの 上位モジュールが 各VD に応じて処理の工夫を行う
+// 
 //----------------------------------------------------------
 module I2CMaster (
 	// Enternal Port
@@ -60,14 +62,15 @@ reg [2:0] 	rSdaRp;			// sda送信データ参照rp
 //
 reg 		qStartRdy, qStopRdy, qDisconRdy;	// ステートマシン制御
 reg 		qSclPosCke,	qSclCntMax;				// SCL posedge Cnt 制御
-reg 		qSdaDelCke, qDelCntStart, qStoplssueCke;
+reg 		qSdaDelCke, qDelCntStart;			// SDA Delay 制御
+reg 		qStoplssueCke;						// Stop Condition 保持
 //
 OBUF  I2C_SCL 	(.O (oI2CScl), .I (rScl));
 IOBUF I2C_SDA 	(.O (wISda), .IO (ioI2CSda), .I (rOSda), .T (iTriState));
 
 always @(posedge iSysClk)
 begin
-	// I2C 規格 ステートマシン
+	// I2C ステートマシン
 	casex ({iI2CEn, qStoplssueCke, qDisconRdy, qStopRdy, qStartRdy, rI2CState})
 		8'b0_xxxx_xxx:		rI2CState <= lpDisConnect;
 		8'b1_xxx1_000:		rI2CState <= lpStartCondition;
@@ -83,10 +86,10 @@ begin
 		default:	rStoplssueCnt <= 5'd0;
 	endcase
 
-	// Start Condition 発行後の SCL 立ち上がり回数カウント
+	// Start Condition + Device アクセス中の SCL 立ち下がり回数カウント
 	casex ({iI2CEn, qSclPosCke, qSclCntMax, rI2CState[0]})
 		4'b0_xx_x:		rSclPoseCnt <= lpSclCntNull;
-		4'b1_1x_0:		rSclPoseCnt <= lpSclCntNull;	// Discon, Stop 検出
+		4'b1_1x_0:		rSclPoseCnt <= lpSclCntNull;		// Discon, Stop 検出
 		4'b1_10_1:	 	rSclPoseCnt <= rSclPoseCnt + 1'b1;
 		4'b1_11_1:		rSclPoseCnt <= lpSclCntNull;
 		default:		rSclPoseCnt <= rSclPoseCnt;
@@ -105,18 +108,18 @@ begin
 		5'b0_xx_xx:		rScl <= 1'b1;
 		5'b1_10_00:		rScl <= 1'b0;	// SDA Low に遷移後 SCL Low
 		5'b1_1x_01:		rScl <= ~rScl;
-		5'b1_1x_10:	 	rScl <= 1'b1;
+		5'b1_1x_10:	 	rScl <= 1'b1;	// Stop Condition
 		default:		rScl <= rScl;
 	endcase
 
-	// sda 生成
+	// SDA 生成
 	// 0 ~ 7clkは通常の1byteデータ送信
-	// 8clkはACK受信のためハイ・インピーダンスにする
+	// 8clkは Slave ACK送信のため 0 にする
 	casex ({iI2CEn, qSclPosCke, qSclCntMax, qStopRdy, qSdaDelCke, rI2CState[1:0]})
 		7'b0x_xxx_xx:		rOSda <= 1'b1;
 		7'b1x_xxx_00:		rOSda <= 1'b0;	// Start Condition
 		7'b1x_011_01:	 	rOSda <= 1'b0;	// 指定バイト送信時、Stop Condition に備える
-		7'b1x_101_01: 		rOSda <= 1'b0;	// 受信時の Slave への Ack応答;
+		7'b1x_101_01: 		rOSda <= 1'b0;	// 受信時の Slave への Ack応答
 		7'b1x_001_01: 		rOSda <= iI2CSend[rSdaRp];
 		7'b11_xxx_10: 		rOSda <= 1'b1;	// Stop Condition
 		default:	 		rOSda <= rOSda;
@@ -140,13 +143,13 @@ begin
 		default: 	rSdaDelayCnt <= rSdaDelayCnt;
 	endcase
 
-	// 全バイトデータ送信時にenable信号を出力
+	// 全バイトデータ送信時 Assign
 	casex ({qSclPosCke, qStopRdy})
 		2'b11:	 	rBufVd <= 1'b1;
 		default:	rBufVd <= 1'b0;
 	endcase
 
-	// 1byteデータ送受信時にenable信号を出力
+	// 1byteデータ送受信時 Assign
 	casex ({qSclCntMax, qSdaDelCke})
 		2'b11:	 	rByteVd <= 1'b1;
 		default:	rByteVd <= 1'b0;

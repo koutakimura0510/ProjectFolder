@@ -27,7 +27,7 @@ module I2CMasterMux (
 
 
 //----------------------------------------------------------
-// 
+// インターコネクト制御
 //----------------------------------------------------------
 localparam [7:0] 
 	lpKeyPadAdrs1	= 'h02,		//  Left Key Pad Adrs
@@ -40,9 +40,9 @@ localparam [1:0]
 localparam lpByteCntWidth	= 4;
 //
 reg [15:0] 	rRecData;			assign oI2CGetKeyPad = rRecData;
-reg [7:0] 	rSendData;			assign oI2CSend 	= rSendData;
-reg [7:0]	rI2CBufLen;			assign oI2CBufLen 	= rI2CBufLen;
-reg 		rTriState;			assign oTriState	= rTriState;
+reg [7:0] 	rSendData;			assign oI2CSend 	 = rSendData;
+reg [7:0]	rI2CBufLen;			assign oI2CBufLen 	 = rI2CBufLen;
+reg 		rTriState;			assign oTriState	 = rTriState;
 //
 reg [1:0] 	rDeviceSel;
 //
@@ -69,6 +69,7 @@ begin
 
 	// KeyPad は 1Byteは Ack 受信
 	// 2Byte は Ack送信
+	// TODO ここから下記の処理は 2byte固定のため、後々可変式に対応
 	casex ({iSysRst, iI2CByteVd})
 		2'b1_x:		rTriState <= 1'b0;
 		2'b0_1:		rTriState <= ~rTriState;

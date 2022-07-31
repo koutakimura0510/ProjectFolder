@@ -88,7 +88,6 @@ begin
 			'h180:		rSUsiRd <= {16'd0, rI2CGetKeyPad};
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase
-
 	end
 
 	if (iSysRst)		rSUsiVd <= 1'b0;
