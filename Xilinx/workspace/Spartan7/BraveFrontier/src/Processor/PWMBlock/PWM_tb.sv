@@ -60,6 +60,7 @@ initial begin
 	rSysRst = 0;
 	#(lpSysClkCycle * 5);
 	CsrSetting(100, 'h0204);
+	CsrSetting(5, 'h0208);
 	CsrSetting(1, 'h0200);
     #(lpSysClkCycle * 2000 * 4);
     $stop;

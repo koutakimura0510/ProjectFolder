@@ -8,7 +8,7 @@
 module PWMBlock #(
 	parameter 						pBlockAdrsMap 	= 'd8,	// ブロックのアドレス幅を指定
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h02,
-	parameter						pBusAdrsBit		= 'd31	// 32bit ならば (32-1)31 を指定
+	parameter						pBusAdrsBit		= 'd32	// 32bit ならば (32-1)31 を指定
 )(
 	// External Port
 	output					oPwm,
@@ -18,7 +18,7 @@ module PWMBlock #(
 	output					oSUsiVd,	// アクセス可能時 Assert
 	// Bus Slave Write
 	input	[31:0]			iSUsiWd,	// Master からの書き込みデータ
-	input	[pBusAdrsBit:0]	iSUsiAdrs,	// {31:30} / 0.Cmd 無効, 1. WriteCmd, 2. ReadCmd, 3.WRCmd (*)未実装 / {23:16} Busアドレス / {15:0} Csrアドレス
+	input	[pBusAdrsBit-1:0]iSUsiAdrs,
 	input					iSUsiWCke,	// コマンド有効時 Assert
     // CLK Reset
     input           		iSysClk,
@@ -29,16 +29,16 @@ module PWMBlock #(
 //----------------------------------------------------------
 // Csr ビット幅
 //----------------------------------------------------------
-localparam lpPWMDutyWidth = 7;	// Duty比の分解能
-localparam lpIVtimerWidth = 15;	// PWM インターバルタイマの分周値
+localparam lpPWMDutyWidth = 10;	// Duty比の分解能
+localparam lpIVtimerWidth = 10;	// PWM インターバルタイマの分周値
 
 
 //----------------------------------------------------------
 // I2C Unit
 //----------------------------------------------------------
-wire 						wPWMEnCsr;
-wire 	[lpPWMDutyWidth:0]	wPWMDutyCsr;
-wire 	[lpPWMDutyWidth:0]	wIVtimerCsr;
+wire 							wPWMEnCsr;
+wire 	[lpPWMDutyWidth-1:0]	wPWMDutyCsr;
+wire 	[lpIVtimerWidth-1:0]	wIVtimerCsr;
 
 PWMUnit #(
 	.pPWMDutyWidth	(lpPWMDutyWidth),

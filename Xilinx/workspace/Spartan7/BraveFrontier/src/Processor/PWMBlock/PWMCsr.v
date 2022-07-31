@@ -11,9 +11,9 @@ module PWMCsr #(
 	// variable parameter
 	parameter 						pBlockAdrsMap 	= 'd8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h02,
-	parameter						pBusAdrsBit		= 'd31,
-	parameter 						pPWMDutyWidth	= 'd15,	// PWM の分解能
-	parameter 						pIVtimerWidth	= 'd15	// インターバルタイマ分周値
+	parameter						pBusAdrsBit		= 'd32,
+	parameter 						pPWMDutyWidth	= 'd16,	// PWM の分解能
+	parameter 						pIVtimerWidth	= 'd16	// インターバルタイマ分周値
 )(
     // Internal Port
 	// Csr Read
@@ -21,12 +21,12 @@ module PWMCsr #(
 	output 						oSUsiVd,
 	// Csr Write
 	input	[31:0]				iSUsiWd,	// 書き込みデータ
-	input	[pBusAdrsBit:0]		iSUsiAdrs,
+	input	[pBusAdrsBit-1:0]	iSUsiAdrs,
 	input						iSUsiWCke,	// コマンド有効時 Assert
 	// Csr Output
 	output 						oPWMEn,
-	output 	[pPWMDutyWidth:0]	oPWMDuty,
-	output	[pIVtimerWidth:0]	oIVtimer,
+	output 	[pPWMDutyWidth-1:0]	oPWMDuty,
+	output	[pIVtimerWidth-1:0]	oIVtimer,
     // CLK Reset
     input           			iSysClk,
     input           			iSysRst
@@ -39,23 +39,24 @@ module PWMCsr #(
 //----------------------------------------------------------
 // USI/F Write
 reg 					rPWMEn;				assign oPWMEn 	= rPWMEn;			// PWM 出力開始
-reg [pPWMDutyWidth:0]	rPWMDuty;			assign oPWMDuty	= rPWMDuty;			// PWM CLK Division
-reg [pIVtimerWidth:0]	rIVtimer;			assign oIVtimer	= rIVtimer;			// PWM CLK Division
+reg [pPWMDutyWidth-1:0]	rPWMDuty;			assign oPWMDuty	= rPWMDuty;			// PWM CLK Division
+reg [pIVtimerWidth-1:0]	rIVtimer;			assign oIVtimer	= rIVtimer;			// PWM CLK Division
 //
-reg [pBusAdrsBit + 1:0]	qCsrAdrs;
+reg [pBusAdrsBit:0]	qCsrAdrs;
 
 always @(posedge iSysClk)
 begin
 	if (iSysRst)
 	begin
 		rPWMEn			<= 1'b0;
-		rPWMDuty		<= {(pPWMDutyWidth + 1){1'b1}};
+		rPWMDuty		<= {pPWMDutyWidth{1'b1}};
+		rIVtimer		<= {pIVtimerWidth{1'b1}};
 	end
 	else
 	begin
-		rPWMEn			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[ 0:0] 			: rPWMEn;
-		rPWMDuty		<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pPWMDutyWidth:0] : rPWMDuty;
-		rIVtimer		<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h08}) ? iSUsiWd[pIVtimerWidth:0] : rIVtimer;
+		rPWMEn			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[ 0:0] 		      : rPWMEn;
+		rPWMDuty		<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pPWMDutyWidth-1:0] : rPWMDuty;
+		rIVtimer		<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h08}) ? iSUsiWd[pIVtimerWidth-1:0] : rIVtimer;
 	end
 end
 
@@ -81,8 +82,8 @@ begin
 	begin
 		case ({qAdrsComp, iSUsiAdrs[7:0]})
 			'h100:		rSUsiRd <= {31'd0, rPWMEn};
-			'h104:		rSUsiRd <= {{(31 - pPWMDutyWidth){1'b0}}, rPWMDuty};	// パラメータ可変なので、可変に対応して0で埋めるようにした
-			'h108:		rSUsiRd <= {{(31 - pIVtimerWidth){1'b0}}, rIVtimer};	// パラメータ可変なので、可変に対応して0で埋めるようにした
+			'h104:		rSUsiRd <= {{(32 - pPWMDutyWidth){1'b0}}, rPWMDuty};	// パラメータ可変なので、可変に対応して0で埋めるようにした
+			'h108:		rSUsiRd <= {{(32 - pIVtimerWidth){1'b0}}, rIVtimer};	// パラメータ可変なので、可変に対応して0で埋めるようにした
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase
 	end

@@ -8,7 +8,7 @@
 module GpioBlock #(
 	parameter 						pBlockAdrsMap 	= 'd8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h01,
-	parameter						pBusAdrsBit		= 'd31
+	parameter						pBusAdrsBit		= 'd32
 )(
 	// External Port
 	output	[1:0]			oLedEdge,
@@ -19,7 +19,7 @@ module GpioBlock #(
 	output					oSUsiVd,	// アクセス可能時 Assert
 	// Bus Slave Write
 	input	[31:0]			iSUsiWd,	// Master からの書き込みデータ
-	input	[pBusAdrsBit:0]	iSUsiAdrs,
+	input	[pBusAdrsBit-1:0]iSUsiAdrs,
 	input					iSUsiWCke,	// コマンド有効時 Assert
     // CLK Reset
     input           		iSysClk,

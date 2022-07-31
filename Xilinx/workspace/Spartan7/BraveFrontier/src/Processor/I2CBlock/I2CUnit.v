@@ -7,14 +7,14 @@
 //----------------------------------------------------------
 module I2CUnit #(
 	// variable parameter
-	parameter 				pI2CDivClk = 15
+	parameter 				pI2CDivClk = 16
 )(
 	// External Port
 	output					oI2CScl,
 	inout 					ioI2CSda,
     // Internal Port
 	input 					iI2CEn,
-	input 	[pI2CDivClk:0]	iI2CDiv,
+	input 	[pI2CDivClk-1:0]iI2CDiv,
 	output 	[15:0]			oI2CGetKeyPad,
     // CLK Reset
     input           		iSysClk,

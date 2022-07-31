@@ -7,12 +7,12 @@
 module CkeGenerator #(
 	// variable parameter
 	parameter 	pDivReg		= "no",
-	parameter	pDivWidth	= 15,
+	parameter	pDivWidth	= 16,
     parameter 	pSysClk  	= 25000000,  // 分周クロックの値を指定
     parameter 	pTimeCke 	= 1          // Enable 出力の時間指定
 )(
 	// Internal Clk
-	input [pDivWidth:0]		iDiv,		// レジスタ入力の分周値
+	input [pDivWidth-1:0]	iDiv,		// レジスタ入力の分周値
 	input 					iCke,		// レジスた入力使用時 Cke制御を行う
     output  				oCke,
 	// Clk Reset
@@ -67,12 +67,12 @@ generate
 	else
 	begin
 		//
-		localparam [pDivWidth:0] lpTmpClear = 'h0;
+		localparam [pDivWidth-1:0] lpTmpClear = 'h0;
 
 		//----------------------------------------------------------
 		// Cke Counter
 		//----------------------------------------------------------
-		reg [pDivWidth:0] rTmpCount;
+		reg [pDivWidth-1:0] rTmpCount;
 		reg qCke;							assign oCke = qCke;
 
 		always_ff @( posedge iSysClk )

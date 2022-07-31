@@ -6,14 +6,14 @@
 // 
 //----------------------------------------------------------
 module PWMUnit #(
-	parameter 					pPWMDutyWidth	= 'd15,	// PWM の分解能
-	parameter 					pIVtimerWidth	= 'd15	// インターバルタイマ分周値
+	parameter 					pPWMDutyWidth	= 'd16,	// PWM の分解能
+	parameter 					pIVtimerWidth	= 'd16	// インターバルタイマ分周値
 )(
     // Internal Port
 	output						oPwm,
 	input 						iPWMEn,
-	input 	[pPWMDutyWidth:0]	iPWMDuty,
-	input 	[pIVtimerWidth:0]	iIVtimer,
+	input 	[pPWMDutyWidth-1:0]	iPWMDuty,
+	input 	[pIVtimerWidth-1:0]	iIVtimer,
     // CLK Reset
     input           			iSysClk,
     input           			iSysRst
@@ -40,16 +40,16 @@ CkeGenerator #(
 //----------------------------------------------------------
 // PWM Unit
 //----------------------------------------------------------
-reg 	[lpPWMDutyWidth:0] rDutyCnt;
+reg 	[pPWMDutyWidth-1:0] rDutyCnt;
 reg 	rPwm;							assign oPwm = rPwm;
 //
 reg		qCntCompare;
 
 always @(posedge iSysClk)
 begin
-	if (iSysRst) 		rDutyCnt <= {lpPWMDutyWidth{1'b0}};
+	if (iSysRst) 		rDutyCnt <= {pPWMDutyWidth{1'b0}};
 	else if (iPWMEn)	rDutyCnt <= rDutyCnt + wDivCke;
-	else 				rDutyCnt <= {lpPWMDutyWidth{1'b0}};
+	else 				rDutyCnt <= {pPWMDutyWidth{1'b0}};
 
 	if (qCntCompare)	rPwm <= 1'b1;
 	else 				rPwm <= 1'b0;

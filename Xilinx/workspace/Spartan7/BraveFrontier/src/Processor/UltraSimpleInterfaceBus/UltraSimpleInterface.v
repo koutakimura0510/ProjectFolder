@@ -15,7 +15,7 @@ module UltraSimpleInterface #(
 	// variable parameter
 	parameter [3:0]						pBusSlaveConnect 		= 1,				// Busに接続する Slave数 最大16
 	parameter 							pBusDataBit				= 32,				// Bus幅
-	parameter							pBusAdrsBit				= 15,
+	parameter							pBusAdrsBit				= 16,
 	parameter							pBlockAdrsMap			= 8,
 	parameter [pBlockAdrsMap-1:0]		pGpioAdrsMap			= 'h1,
 	parameter [pBlockAdrsMap-1:0]		pPWMAdrsMap				= 'h2,
@@ -36,11 +36,11 @@ module UltraSimpleInterface #(
 	output	[pBusSlaveConnectWidth:0]	oMUsiVd,	// Slave アクセス可能時 Assert
 	// Bus Master Write
 	input 	[31:0]						iMUsiWd,	// 書き込みデータ
-	input 	[pBusAdrsBit:0]				iMUsiAdrs,	// {31:30} / 0.Cmd 無効, 1. WriteCmd, 2. ReadCmd, 3.WRCmd (*)未実装 / {23:16} Busアドレス / {15:0} Csrアドレス
+	input 	[pBusAdrsBit-1:0]			iMUsiAdrs,	// {31:30} / 0.Cmd 無効, 1. WriteCmd, 2. ReadCmd, 3.WRCmd (*)未実装 / {23:16} Busアドレス / {15:0} Csrアドレス
 	input 								iMUsiWCke,	// コマンド有効時 Assert
 	// Bus Slave Read / Master In <- Slave Out
 	output	[31:0]						oSUsiWd,	// 書き込みデータ
-	output	[pBusAdrsBit:0]				oSUsiAdrs,	// {31:30} / 0.Cmd 無効, 1. WriteCmd, 2. ReadCmd, 3.WRCmd (*)未実装 / {23:16} Busアドレス / {15:0} Csrアドレス
+	output	[pBusAdrsBit-1:0]			oSUsiAdrs,	// {31:30} / 0.Cmd 無効, 1. WriteCmd, 2. ReadCmd, 3.WRCmd (*)未実装 / {23:16} Busアドレス / {15:0} Csrアドレス
 	output								oSUsiWCke,	// コマンド有効時 Assert
 	// Bus Slave Write / Master Out -> Slave In
 	input	[pBusLen:0]					iSUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
@@ -78,12 +78,12 @@ localparam lpPSRAMAdrsLsb = pBusDataBit * (pPSRAMAdrsMap - 1);
 // バスクロックで バス経由データ保存
 //----------------------------------------------------------
 // Master -> Slave
-reg [31:0] 			rMUsiWd;				assign oSUsiWd		= rMUsiWd;
-reg [pBusAdrsBit:0]	rMUsiAdrs;				assign oSUsiAdrs	= rMUsiAdrs;
-reg 				rMUsiWCke;				assign oSUsiWCke	= rMUsiWCke;
+reg [31:0] 				rMUsiWd;				assign oSUsiWd		= rMUsiWd;
+reg [pBusAdrsBit-1:0]	rMUsiAdrs;				assign oSUsiAdrs	= rMUsiAdrs;
+reg 					rMUsiWCke;				assign oSUsiWCke	= rMUsiWCke;
 // Slave -> Master
-reg [31:0] 			rSUsiRd;				assign oMUsiRd		= rSUsiRd;
-reg	[pBusSlaveConnectWidth:0]	rSUsiVd;	assign oMUsiVd		= rSUsiVd;
+reg [31:0] 				rSUsiRd;				assign oMUsiRd		= rSUsiRd;
+reg	[pBusSlaveConnectWidth:0]	rSUsiVd;		assign oMUsiVd		= rSUsiVd;
 
 always @(posedge iUsiClk)
 begin

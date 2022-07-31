@@ -11,7 +11,7 @@
 module GpioCsr #(
 	parameter 						pBlockAdrsMap 	= 'd8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h01,
-	parameter						pBusAdrsBit		= 'd31
+	parameter						pBusAdrsBit		= 'd32
 )(
     // Internal Port
 	// Csr Read
@@ -19,7 +19,7 @@ module GpioCsr #(
 	output 					oSUsiVd,
 	// Csr Write
 	input	[31:0]			iSUsiWd,	// 書き込みデータ
-	input	[pBusAdrsBit:0]	iSUsiAdrs,
+	input	[pBusAdrsBit-1:0]iSUsiAdrs,
 	input					iSUsiWCke,	// コマンド有効時 Assert
 	// Csr Output
 	output 	[7:0]			oGpioLed,
@@ -36,7 +36,7 @@ module GpioCsr #(
 reg [ 7:0]		rGpioLed;		assign oGpioLed  = rGpioLed;	// 汎用 GPIO ON/OFF 制御
 reg [ 7:0]		rGpioDiv;		assign oGpioDiv = rGpioDiv;	// 汎用 GPIO 動作周波数
 //
-reg [pBusAdrsBit+1:0]		qCsrAdrs;
+reg [pBusAdrsBit:0]		qCsrAdrs;
 
 always @(posedge iSysClk)
 begin

@@ -98,7 +98,7 @@ localparam [lpBlockAdrsMap-1'b1:0]
 // variable parameter
 localparam	[3:0] 	lpBusSlaveConnect  	= 4'd9;		// 接続Slave数、最大16
 localparam			lpBusDataBit  		= 32;		// バスデータ幅, 内部計算にも用いるため、bit数のままを指定
-localparam	[3:0]	lpBusAdrsBit		= 4'd15;	// バスアドレス幅,内部計算には用いないため、bit数 - 1 を指定
+localparam			lpBusAdrsBit		= 16;		// バスアドレス幅
 
 // not variable parameter
 localparam	[3:0] 	lpBusSlaveConnectWidth 	= lpBusSlaveConnect - 1'b1;
@@ -113,7 +113,7 @@ wire [31:0] 					wMUsiRd;
 wire [lpBusSlaveConnectWidth:0]	wMUsiVd;
 // Master -> Slave
 wire [31:0] 			wMUsiWd;
-wire [lpBusAdrsBit:0] 	wMUsiAdrs;
+wire [lpBusAdrsBit-1:0]	wMUsiAdrs;
 wire 					wMUsiWCke;
 
 MicroControllerBlock #(
@@ -140,7 +140,7 @@ wire [31:0] 			wSUsiGpioRd;
 wire 					wSUsiGpioVd;
 // Master -> Slave
 reg  [31:0] 			qSUsiGpioWd;
-reg  [lpBusAdrsBit:0] 	qSUsiGpioAdrs;
+reg  [lpBusAdrsBit-1:0] qSUsiGpioAdrs;
 reg  					qSUsiGpioWCke;
 
 GpioBlock #(
@@ -167,7 +167,7 @@ wire [31:0] 			wSUsiPWMRd;
 wire 					wSUsiPWMVd;
 // Master -> Slave
 reg  [31:0] 			qSUsiPWMWd;
-reg  [lpBusAdrsBit:0] 	qSUsiPWMAdrs;
+reg  [lpBusAdrsBit-1:0]	qSUsiPWMAdrs;
 reg  					qSUsiPWMWCke;
 
 PWMBlock #(
@@ -198,7 +198,7 @@ wire [31:0] 			wSUsiI2CRd;
 wire 					wSUsiI2CVd;
 // Master -> Slave
 reg  [31:0] 			qSUsiI2CWd;
-reg  [lpBusAdrsBit:0] 	qSUsiI2CAdrs;
+reg  [lpBusAdrsBit-1:0]	qSUsiI2CAdrs;
 reg  					qSUsiI2CWCke;
 
 I2CBlock #(
@@ -250,7 +250,7 @@ reg  [lpBusLen:0]				qSUsiRd;
 reg  [lpBusSlaveConnectWidth:0]	qSUsiVd;
 // Master -> Slave
 wire [31:0] 					wSUsiWd;
-wire [lpBusAdrsBit:0] 			wSUsiAdrs;
+wire [lpBusAdrsBit-1:0] 		wSUsiAdrs;
 wire 							wSUsiWCke;
 
 UltraSimpleInterface #(

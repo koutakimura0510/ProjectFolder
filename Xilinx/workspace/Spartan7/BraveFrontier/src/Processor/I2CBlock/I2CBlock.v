@@ -8,7 +8,7 @@
 module I2CBlock #(
 	parameter 						pBlockAdrsMap 	= 'd8,	// ブロックのアドレス幅を指定
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h04,	
-	parameter						pBusAdrsBit		= 'd31	// 32bit ならば (32-1)31 を指定
+	parameter						pBusAdrsBit		= 'd32	// 32bit ならば (32-1)31 を指定
 )(
 	// External Port
 	output					oI2CScl,
@@ -19,7 +19,7 @@ module I2CBlock #(
 	output					oSUsiVd,	// アクセス可能時 Assert
 	// Bus Slave Write
 	input	[31:0]			iSUsiWd,	// Master からの書き込みデータ
-	input	[pBusAdrsBit:0]	iSUsiAdrs,	// {31:30} / 0.Cmd 無効, 1. WriteCmd, 2. ReadCmd, 3.WRCmd (*)未実装 / {23:16} Busアドレス / {15:0} Csrアドレス
+	input	[pBusAdrsBit-1:0]iSUsiAdrs,	// {31:30} / 0.Cmd 無効, 1. WriteCmd, 2. ReadCmd, 3.WRCmd (*)未実装 / {23:16} Busアドレス / {15:0} Csrアドレス
 	input					iSUsiWCke,	// コマンド有効時 Assert
     // CLK Reset
     input           		iSysClk,
@@ -30,15 +30,15 @@ module I2CBlock #(
 //----------------------------------------------------------
 // Csr ビット幅
 //----------------------------------------------------------
-localparam lpI2CDivClk = 15;	// SCL生成の分周値レジスタBit幅
+localparam lpI2CDivClk = 16;	// SCL生成の分周値レジスタBit幅
 
 
 //----------------------------------------------------------
 // I2C Unit
 //----------------------------------------------------------
-reg 				qI2CUnitEn;
-reg [lpI2CDivClk:0]	qI2CUnitDiv;
-wire [15:0]			wI2CGetKeyPad;
+reg 					qI2CUnitEn;
+reg [lpI2CDivClk-1:0]	qI2CUnitDiv;
+wire [15:0]				wI2CGetKeyPad;
 
 I2CUnit #(
 	.pI2CDivClk		(lpI2CDivClk)
@@ -56,9 +56,9 @@ I2CUnit #(
 //----------------------------------------------------------
 // Csr space
 //----------------------------------------------------------
-wire 					wI2CCsrEn;
-wire 	[lpI2CDivClk:0]	wI2CCsrDiv;
-reg		[15:0]			qI2CGetKeyPad;
+wire 						wI2CCsrEn;
+wire 	[lpI2CDivClk-1:0]	wI2CCsrDiv;
+reg		[15:0]				qI2CGetKeyPad;
 
 I2CCsr #(
 	.pBlockAdrsMap	(pBlockAdrsMap),

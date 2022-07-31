@@ -10,7 +10,7 @@
 //----------------------------------------------------------
 module MicroControllerBlock #(
 	parameter [3:0]	pBusSlaveConnect 	= 1,				// Busに接続する Slave数 最大16
-	parameter		pBusAdrsBit			= 15,
+	parameter		pBusAdrsBit			= 16,
 	// Not Set Param
 	parameter [3:0]	pBusSlaveConnectWidth 	= pBusSlaveConnect - 1'b1	// Busに接続する Slave数 最大16
 )(
@@ -23,7 +23,7 @@ module MicroControllerBlock #(
 	input	[pBusSlaveConnectWidth:0]	iMUsiVd,	// Slave アクセス可能時 Assert
 	// Bus Master Write
 	output	[31:0]						oMUsiWd,	// 書き込みデータ
-	output	[pBusAdrsBit:0]				oMUsiAdrs,	// 書き込み元のアドレス指定
+	output	[pBusAdrsBit-1:0]			oMUsiAdrs,	// 書き込み元のアドレス指定
 	output								oMUsiWCke,	// コマンド有効時 Assert
     // CLK Reset
     input           					iSysClk,

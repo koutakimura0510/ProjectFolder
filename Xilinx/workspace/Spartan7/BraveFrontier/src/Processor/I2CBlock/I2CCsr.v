@@ -11,8 +11,8 @@ module I2CCsr #(
 	// variable parameter
 	parameter 						pBlockAdrsMap 	= 'd8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h01,
-	parameter						pBusAdrsBit		= 'd31,
-	parameter 						pI2CDivClk 		= 'd15
+	parameter						pBusAdrsBit		= 'd32,
+	parameter 						pI2CDivClk 		= 'd16
 )(
     // Internal Port
 	// Csr Read
@@ -20,13 +20,13 @@ module I2CCsr #(
 	output 					oSUsiVd,
 	// Csr Write
 	input	[31:0]			iSUsiWd,	// 書き込みデータ
-	input	[pBusAdrsBit:0]	iSUsiAdrs,
+	input	[pBusAdrsBit-1:0]iSUsiAdrs,
 	input					iSUsiWCke,	// コマンド有効時 Assert
 	// Csr Input
 	input 	[15:0]			iI2CGetKeyPad,
 	// Csr Output
 	output 					oI2CEn,
-	output 	[15:0]			oI2CDiv,
+	output 	[pI2CDivClk-1:0]oI2CDiv,
     // CLK Reset
     input           		iSysClk,
     input           		iSysRst
@@ -39,12 +39,12 @@ module I2CCsr #(
 //----------------------------------------------------------
 // USI/F Write
 reg 					rI2CEn;				assign oI2CEn 	= rI2CEn;			// I2C 通信開始, Enable 1 の間、Adrs1 ~ 3 に設定した Slave に順番に繰り返し通信を行う
-reg [pI2CDivClk:0]		rI2CDiv;			assign oI2CDiv 	= rI2CDiv;			// I2C CLK Division
+reg [pI2CDivClk-1:0]	rI2CDiv;			assign oI2CDiv 	= rI2CDiv;			// I2C CLK Division
 // Upper module Write
 reg [15:0]		rI2CGetKeyPad;		// Slave のコントローラーデータを保存
 // reg [23:0]		rI2CGetGyro;	// Slave のジャイロセンサデータを保存
 //
-reg [pBusAdrsBit + 1:0]	qCsrAdrs;
+reg [pBusAdrsBit:0]	qCsrAdrs;
 
 always @(posedge iSysClk)
 begin
@@ -57,7 +57,7 @@ begin
 	else
 	begin
 		rI2CEn			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[ 0:0] 			: rI2CEn;
-		rI2CDiv			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pI2CDivClk:0] 	: rI2CDiv;
+		rI2CDiv			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pI2CDivClk-1:0] 	: rI2CDiv;
 		rI2CGetKeyPad	<= iI2CGetKeyPad;
 	end
 end
@@ -84,7 +84,7 @@ begin
 	begin
 		case ({qAdrsComp, iSUsiAdrs[7:0]})
 			'h100:		rSUsiRd <= {31'd0, rI2CEn};
-			'h104:		rSUsiRd <= {{(31 - pI2CDivClk){1'b0}}, rI2CDiv};	// パラメータ可変なので、可変に対応して0で埋めるようにした
+			'h104:		rSUsiRd <= {{(32 - pI2CDivClk){1'b0}}, rI2CDiv};	// パラメータ可変なので、可変に対応して0で埋めるようにした
 			'h180:		rSUsiRd <= {16'd0, rI2CGetKeyPad};
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase

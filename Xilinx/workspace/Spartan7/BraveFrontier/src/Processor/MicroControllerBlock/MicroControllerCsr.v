@@ -23,7 +23,7 @@
 //----------------------------------------------------------
 module MicroControllerCsr #(
 	parameter 		pBusSlaveConnectWidth	= 8,
-	parameter		pBusAdrsBit				= 15
+	parameter		pBusAdrsBit				= 16
 )(
     // Internal Port
 	// Csr Manual
@@ -36,7 +36,7 @@ module MicroControllerCsr #(
 	input  	[pBusSlaveConnectWidth:0]	iMUsiVd,
 	// Csr Master
 	output	[31:0]						oMUsiWd,	// 書き込みデータ
-	output	[pBusAdrsBit:0]				oMUsiAdrs,
+	output	[pBusAdrsBit-1:0]			oMUsiAdrs,
 	output								oMUsiWCke,	// コマンド有効時 Assert
 	// Csr Output
 	output	[31:0]						oMUsiRd,
@@ -52,7 +52,7 @@ module MicroControllerCsr #(
 //----------------------------------------------------------
 // Manual
 reg [31:0] 						rMUsiWd;		assign oMUsiWd   = rMUsiWd;		// Bus 書き込みデータ
-reg [pBusAdrsBit:0]				rMUsiAdrs;		assign oMUsiAdrs = rMUsiAdrs;	// Bus 書き込みアドレス
+reg [pBusAdrsBit-1:0]			rMUsiAdrs;		assign oMUsiAdrs = rMUsiAdrs;	// Bus 書き込みアドレス
 reg [ 0:0]		 				rMUsiWCke;		assign oMUsiWCke = rMUsiWCke;	// Bus 書き込み Enable 自動で 0クリア
 // Auto
 reg [31:0]						rMUsiRd;		assign oMUsiRd	 = rMUsiRd;		// 
@@ -74,7 +74,7 @@ begin
 	begin
 		// Manual
 		rMUsiWd		<= (qCsrAdrs == 9'h100) ? iWd : rMUsiWd;
-		rMUsiAdrs	<= (qCsrAdrs == 9'h104) ? iWd[pBusAdrsBit:0] : rMUsiAdrs;
+		rMUsiAdrs	<= (qCsrAdrs == 9'h104) ? iWd[pBusAdrsBit-1:0] : rMUsiAdrs;
 		rMUsiWCke	<= (qCsrAdrs == 9'h108) ? iWd[0] : rMUsiWCke;		// TODO 自動クリアしたい
 		// Auto
 		rMUsiRd		<= iMUsiRd;
