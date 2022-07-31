@@ -29,35 +29,28 @@ module PWMBlock #(
 //----------------------------------------------------------
 // Csr ビット幅
 //----------------------------------------------------------
-localparam lpPWMDivWidth = 7;	// SCL生成の分周値レジスタBit幅
+localparam lpPWMDutyWidth = 7;	// Duty比の分解能
+localparam lpIVtimerWidth = 15;	// PWM インターバルタイマの分周値
 
 
 //----------------------------------------------------------
-// PWM Unit
+// I2C Unit
 //----------------------------------------------------------
-wire 						wPWMCsrEn;
-wire 	[lpPWMDivWidth:0]	wPWMCsrDiv;
-//
-reg 	[lpPWMDivWidth:0] rDivCnt;
-reg 	rPwm;							assign oPwm = rPwm;
-//
-reg		qCntCompare;
+wire 						wPWMEnCsr;
+wire 	[lpPWMDutyWidth:0]	wPWMDutyCsr;
+wire 	[lpPWMDutyWidth:0]	wIVtimerCsr;
 
-always @(posedge iSysClk)
-begin
-	if (iSysRst) 		rDivCnt <= {lpPWMDivWidth{1'b0}};
-	else if (wPWMCsrEn)	rDivCnt <= rDivCnt + 1'b1;
-	else 				rDivCnt <= {lpPWMDivWidth{1'b0}};
-
-	if (qCntCompare)	rPwm <= 1'b1;
-	else 				rPwm <= 1'b0;
-
-end
-
-always @*
-begin
-	qCntCompare <= (wPWMCsrDiv < rDivCnt);
-end
+PWMUnit #(
+	.pPWMDutyWidth	(lpPWMDutyWidth),
+	.pIVtimerWidth	(lpIVtimerWidth)
+) PWM_UNIT (
+	.oPwm			(oPwm),
+	.iPWMEn			(wPWMEnCsr),
+	.iPWMDuty		(wPWMDutyCsr),
+	.iIVtimer		(wIVtimerCsr),
+	.iSysClk		(iSysClk),
+	.iSysRst		(iSysRst)
+);
 
 
 //----------------------------------------------------------
@@ -67,15 +60,17 @@ PWMCsr #(
 	.pBlockAdrsMap	(pBlockAdrsMap),
 	.pAdrsMap		(pAdrsMap),
 	.pBusAdrsBit	(pBusAdrsBit),
-	.pPWMDivWidth	(lpPWMDivWidth)
+	.pPWMDutyWidth	(lpPWMDutyWidth),
+	.pIVtimerWidth	(lpIVtimerWidth)
 ) PWM_CSR (
 	.oSUsiRd		(oSUsiRd),
 	.oSUsiVd		(oSUsiVd),
 	.iSUsiWd		(iSUsiWd),
 	.iSUsiAdrs		(iSUsiAdrs),
 	.iSUsiWCke		(iSUsiWCke),
-	.oPWMEn			(wPWMCsrEn),
-	.oPWMDiv		(wPWMCsrDiv),
+	.oPWMEn			(wPWMEnCsr),
+	.oPWMDuty		(wPWMDutyCsr),
+	.oIVtimer		(wIVtimerCsr),
 	.iSysClk		(iSysClk),
 	.iSysRst		(iSysRst)
 );
