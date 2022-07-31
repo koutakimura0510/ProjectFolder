@@ -1,7 +1,7 @@
 { signal: [
   { name: "SCL",         wave: "p.........h" },
-  { name: "SDA",         wave: "x=.=.=.=.=.=.=.=.zl", "data": ["1","2","3","4","5","6","7","8",],"period":0.5 },
-  { name: "SDA",         wave: "hlhlhl","period":0.8 },
+  { name: "SDA",         wave: "x=.=.=.=.=.=.=.=.=.01.", "data": ["1","2","3","4","5","6","7","8","Ack"],"period":0.5 },
+  { name: "VD",         wave: "0.............h","period":0.6 },
   { name: "Request",     wave: "0.1..0|1.0" },
   {},
   { name: "Acknowledge", wave: "1.....|01." }

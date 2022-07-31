@@ -13,6 +13,7 @@ module CkeGenerator #(
 )(
 	// Internal Clk
 	input [pDivWidth:0]		iDiv,		// レジスタ入力の分周値
+	input 					iCke,		// レジスた入力使用時 Cke制御を行う
     output  				oCke,
 	// Clk Reset
     input   				iSysClk, 
@@ -78,7 +79,8 @@ generate
 		begin
 			if (iSysRst)    rTmpCount <= lpTmpClear;
 			else if (qCke)  rTmpCount <= lpTmpClear;
-			else            rTmpCount <= rTmpCount + 1'b1;
+			else if (iCke)	rTmpCount <= rTmpCount + 1'b1;
+			else			rTmpCount <= rTmpCount;
 		end
 
 		always_comb

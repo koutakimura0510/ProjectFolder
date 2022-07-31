@@ -25,8 +25,8 @@ module I2CCsr #(
 	// Csr Input
 	input 	[15:0]			iI2CGetKeyPad,
 	// Csr Output
-	output 					oI2cEn,
-	output 	[15:0]			oI2cDiv,
+	output 					oI2CEn,
+	output 	[15:0]			oI2CDiv,
     // CLK Reset
     input           		iSysClk,
     input           		iSysRst
@@ -38,8 +38,8 @@ module I2CCsr #(
 // Regi
 //----------------------------------------------------------
 // USI/F Write
-reg 					rI2CEn;				assign oI2cEn 			= rI2CEn;			// I2C 通信開始, Enable 1 の間、Adrs1 ~ 3 に設定した Slave に順番に繰り返し通信を行う
-reg [pI2CDivClk:0]		rI2CDiv;			assign oI2cDiv 		 	= rI2CDiv;			// I2C CLK Division
+reg 					rI2CEn;				assign oI2CEn 			= rI2CEn;			// I2C 通信開始, Enable 1 の間、Adrs1 ~ 3 に設定した Slave に順番に繰り返し通信を行う
+reg [pI2CDivClk:0]		rI2CDiv;			assign oI2CDiv 		 	= rI2CDiv;			// I2C CLK Division
 // Upper module Write
 reg [15:0]		rI2CGetKeyPad;		// Slave のコントローラーデータを保存
 // reg [23:0]		rI2CGetGyro;	// Slave のジャイロセンサデータを保存
@@ -50,13 +50,15 @@ always @(posedge iSysClk)
 begin
 	if (iSysRst)
 	begin
-
+		rI2CEn			<= 1'b0;
+		rI2CDiv			<= {pI2CDivClk{1'b1}};
+		rI2CGetKeyPad	<= 16'd0;
 	end
 	else
 	begin
-		rI2CEn				<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[ 0:0] 			: rI2CEn;
-		rI2CDiv				<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pI2CDivClk:0] 	: rI2CDiv;
-		rI2CGetKeyPad		<= iI2CGetKeyPad;
+		rI2CEn			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[ 0:0] 			: rI2CEn;
+		rI2CDiv			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pI2CDivClk:0] 	: rI2CDiv;
+		rI2CGetKeyPad	<= iI2CGetKeyPad;
 	end
 end
 

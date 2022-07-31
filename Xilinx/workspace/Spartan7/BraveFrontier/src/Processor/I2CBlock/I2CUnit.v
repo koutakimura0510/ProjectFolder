@@ -30,7 +30,8 @@ CkeGenerator #(
 	.pDivReg	("yes"),
 	.pDivWidth	(pI2CDivClk)
 ) I2C_CKE_GEN (
-	.iDiv		(iI2cDiv),
+	.iDiv		(iI2CDiv),
+	.iCke		(iI2CEn),
 	.oCke		(wDivCke),
 	.iSysClk	(iSysClk),
 	.iSysRst	(iSysRst)
@@ -56,7 +57,7 @@ I2CMasterMux I2C_MASTER_MUX (
 	.iI2CByteVd		(wByteVd),
 	.iSdaByte		(wSdaByte),
 	.iSysClk		(iSysClk),
-	.iSysRst		(iSysRst),
+	.iSysRst		(iSysRst)
 );
 
 

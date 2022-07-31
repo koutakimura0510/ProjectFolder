@@ -7,7 +7,7 @@
 //----------------------------------------------------------
 module GpioBlock #(
 	parameter 						pBlockAdrsMap 	= 'd8,
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  	= 'h01,
+	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h01,
 	parameter						pBusAdrsBit		= 'd31
 )(
 	// External Port

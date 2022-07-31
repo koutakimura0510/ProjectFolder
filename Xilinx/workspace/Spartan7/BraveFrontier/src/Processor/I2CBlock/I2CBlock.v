@@ -6,9 +6,9 @@
 // 
 //----------------------------------------------------------
 module I2CBlock #(
-	parameter 						pBlockAdrsMap 	= 'd8,
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h01,
-	parameter						pBusAdrsBit		= 'd31
+	parameter 						pBlockAdrsMap 	= 'd8,	// ブロックのアドレス幅を指定
+	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h04,	
+	parameter						pBusAdrsBit		= 'd31	// 32bit ならば (32-1)31 を指定
 )(
 	// External Port
 	output					oI2CScl,
@@ -30,7 +30,7 @@ module I2CBlock #(
 //----------------------------------------------------------
 // Csr ビット幅
 //----------------------------------------------------------
-localparam lpI2CDivClk = 15;	// システムクロックによる SCL生成の分周値
+localparam lpI2CDivClk = 15;	// SCL生成の分周値レジスタBit幅
 
 
 //----------------------------------------------------------
@@ -38,16 +38,18 @@ localparam lpI2CDivClk = 15;	// システムクロックによる SCL生成の�
 //----------------------------------------------------------
 reg 				qI2CUnitEn;
 reg [lpI2CDivClk:0]	qI2CUnitDiv;
+wire [15:0]			wI2CGetKeyPad;
 
 I2CUnit #(
-	.pI2CDivClk	(lpI2CDivClk)
+	.pI2CDivClk		(lpI2CDivClk)
 ) I2C_UNIT (
-	.oI2CScl	(oI2CScl),
-	.ioI2CSda	(ioI2CSda),
-	.iI2cEn		(qI2CUnitEn),
-	.iI2cDiv	(qI2CUnitDiv),
-	.iSysClk	(iSysClk),
-	.iSysRst	(iSysRst)
+	.oI2CScl		(oI2CScl),
+	.ioI2CSda		(ioI2CSda),
+	.iI2CEn			(qI2CUnitEn),
+	.iI2CDiv		(qI2CUnitDiv),
+	.oI2CGetKeyPad	(wI2CGetKeyPad),
+	.iSysClk		(iSysClk),
+	.iSysRst		(iSysRst)
 );
 
 
@@ -55,8 +57,8 @@ I2CUnit #(
 // Csr space
 //----------------------------------------------------------
 wire 					wI2CCsrEn;
-wire [lpI2CDivClk:0]	wI2CCsrDiv;
-wire [23:0]				wI2CCsrSAdrs;
+wire 	[lpI2CDivClk:0]	wI2CCsrDiv;
+reg		[15:0]			qI2CGetKeyPad;
 
 I2CCsr #(
 	.pBlockAdrsMap	(pBlockAdrsMap),
@@ -69,9 +71,9 @@ I2CCsr #(
 	.iSUsiWd		(iSUsiWd),
 	.iSUsiAdrs		(iSUsiAdrs),
 	.iSUsiWCke		(iSUsiWCke),
-	.iI2CGetKeyPad	(),
-	.oI2cEn			(wI2CCsrEn),
-	.oI2cDiv		(wI2CCsrDiv),
+	.iI2CGetKeyPad	(qI2CGetKeyPad),
+	.oI2CEn			(wI2CCsrEn),
+	.oI2CDiv		(wI2CCsrDiv),
 	.iSysClk		(iSysClk),
 	.iSysRst		(iSysRst)
 );
@@ -80,6 +82,7 @@ always @*
 begin
 	qI2CUnitEn		<= wI2CCsrEn;
 	qI2CUnitDiv		<= wI2CCsrDiv;
+	qI2CGetKeyPad	<= wI2CGetKeyPad;
 end
 
 
