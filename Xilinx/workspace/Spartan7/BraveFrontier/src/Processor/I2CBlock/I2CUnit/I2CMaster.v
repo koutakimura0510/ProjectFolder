@@ -33,12 +33,12 @@ localparam [2:0]
 	lpDisConnect 		= 3'd0,		// Master の SCL が High の間に SDA を LOW で Start シーケンス
 	lpStartCondition 	= 3'd1,		// SCL が High の間に SDA を High で Stop シーケンス
 	lpStopCondition 	= 3'd2,		// SCL, SDA が両方 High で 停止中
-	lpStoplssue		 	= 3'd6;		// StopCondition SDA High を一定時間保持
+	lpStoplssue		 	= 3'd6;		// StopCondition を一定時間保持
 localparam [3:0] 
 	lpSclCntNull 		= 4'd0,
-	lpSclCntMax			= 4'd8;		// 1byte
+	lpSclCntMax			= 4'd8;		// 1byte + Ack
 localparam [4:0]
-	lpStoplssueCntMax	= 5'd30;
+	lpStoplssueCntMax	= 5'd30;	// StopCondition 保持時間
 localparam [5:0]
 	lpDelayCntClear		= 6'd0,
 	lpDelayCntStart		= 6'd1,
@@ -54,7 +54,7 @@ wire wISda;
 reg [2:0] 	rI2CState;
 reg [4:0]	rStoplssueCnt;	// Stop Condition 保持時間
 reg [3:0] 	rSclPoseCnt;	// SCL 立ち上がり回数カウント
-reg [31:0] 	rBufLenCnt;		// 1byte送信回数カウント
+reg [7:0] 	rBufLenCnt;		// 1byte送信回数カウント
 reg [5:0]  	rSdaDelayCnt;	// 遅延時間カウント
 reg [2:0] 	rSdaRp;			// sda送信データ参照rp
 //

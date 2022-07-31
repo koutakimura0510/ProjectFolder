@@ -26,15 +26,17 @@ typedef enum logic [7:0] {
 
 EnumCsrState csr_state;
 
+
 //----------------------------------------------------------
 // 
 //----------------------------------------------------------
-reg rScl = 1;
-reg rSda = 1;
+reg rScl = 1'bz;
+reg rSda = 1'b1;
 wire wScl, wSda;
 
 assign wScl = rScl;
 assign wSda = rSda;
+
 
 //----------------------------------------------------------
 // CSR初期設定

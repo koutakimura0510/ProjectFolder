@@ -38,8 +38,8 @@ module I2CCsr #(
 // Regi
 //----------------------------------------------------------
 // USI/F Write
-reg 					rI2CEn;				assign oI2CEn 			= rI2CEn;			// I2C 通信開始, Enable 1 の間、Adrs1 ~ 3 に設定した Slave に順番に繰り返し通信を行う
-reg [pI2CDivClk:0]		rI2CDiv;			assign oI2CDiv 		 	= rI2CDiv;			// I2C CLK Division
+reg 					rI2CEn;				assign oI2CEn 	= rI2CEn;			// I2C 通信開始, Enable 1 の間、Adrs1 ~ 3 に設定した Slave に順番に繰り返し通信を行う
+reg [pI2CDivClk:0]		rI2CDiv;			assign oI2CDiv 	= rI2CDiv;			// I2C CLK Division
 // Upper module Write
 reg [15:0]		rI2CGetKeyPad;		// Slave のコントローラーデータを保存
 // reg [23:0]		rI2CGetGyro;	// Slave のジャイロセンサデータを保存
