@@ -72,7 +72,6 @@ assign ioSramsDqs		= 2'bz;
 assign oSramsClk		= 1'b0;
 assign oSramsCs			= 1'b0;
 assign oPixelData		= 1'b0;
-assign oBackLightControl= 1'b0;
 assign oAudioData		= 1'b0;
 
 
@@ -163,7 +162,28 @@ GpioBlock #(
 //----------------------------------------------------------
 // PWM BackLight
 //----------------------------------------------------------
-// PWMBlock PWM_BLOCK
+// Slave -> Master
+wire [31:0] 			wSUsiPWMRd;
+wire 					wSUsiPWMVd;
+// Master -> Slave
+reg  [31:0] 			qSUsiPWMWd;
+reg  [lpBusAdrsBit:0] 	qSUsiPWMAdrs;
+reg  					qSUsiPWMWCke;
+
+PWMBlock #(
+	.pBlockAdrsMap	(lpBlockAdrsMap),
+	.pAdrsMap	 	(lpPWMAdrsMap),
+	.pBusAdrsBit	(lpBusAdrsBit)
+) PWM_BLOCK (
+	.oPwm			(oBackLightControl),
+	.oSUsiRd		(wSUsiPWMRd),
+	.oSUsiVd		(wSUsiPWMVd),
+	.iSUsiWd		(qSUsiPWMWd),
+	.iSUsiAdrs		(qSUsiPWMAdrs),
+	.iSUsiWCke		(qSUsiPWMWCke),
+	.iSysClk		(iSysClk),
+	.iSysRst		(iSysRst)
+);
 
 //----------------------------------------------------------
 // Flash Memory Block
@@ -267,11 +287,17 @@ begin
 	qSUsiGpioWd		<= wSUsiWd;
 	qSUsiGpioAdrs 	<= wSUsiAdrs;
 	qSUsiGpioWCke	<= wSUsiWCke;
+	//
+	qSUsiPWMWd		<= wSUsiWd;
+	qSUsiPWMAdrs	<= wSUsiAdrs;
+	qSUsiPWMWCke	<= wSUsiWCke;
+	//
 	qSUsiI2CWd		<= wSUsiWd;
 	qSUsiI2CAdrs	<= wSUsiAdrs;
 	qSUsiI2CWCke	<= wSUsiWCke;
-	qSUsiRd			<= {{5{32'd0}}, wSUsiI2CRd,  'h0, 'h0, wSUsiGpioRd};
-	qSUsiVd			<= {1'h0,1'h0,1'h0,1'h0,1'h0, wSUsiI2CVd, 1'h0, 1'h0, wSUsiGpioVd};
+	//
+	qSUsiRd			<= {{5{32'd0}}, wSUsiI2CRd,  'h0, wSUsiPWMRd, wSUsiGpioRd};
+	qSUsiVd			<= {1'h0,1'h0,1'h0,1'h0,1'h0, wSUsiI2CVd, 1'h0, wSUsiPWMVd, wSUsiGpioVd};
 end
 
 //----------------------------------------------------------
