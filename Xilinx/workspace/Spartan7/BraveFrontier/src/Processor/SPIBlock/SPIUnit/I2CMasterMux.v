@@ -33,8 +33,7 @@ localparam [7:0]
 	lpKeyPadAdrs1	= 'h02,		//  Left Key Pad Adrs
 	lpKeyPadAdrs2	= 'h03,		//	Right Key Pad Adrs
 	lpGyroAdrs		= 'h04;		//	Gyro Sensor Adrs
-localparam [2:0] 
-	lpDeviceStop	= 'b00,
+localparam [1:0] 
 	lpDeviceKey1	= 'b01,
 	lpDeviceKey2	= 'b10,
 	lpDeviceGyro	= 'b11;
@@ -56,7 +55,6 @@ begin
 		4'b0101:	rDeviceSel <= lpDeviceKey2;
 		4'b0110:	rDeviceSel <= lpDeviceGyro;
 		4'b0111:	rDeviceSel <= lpDeviceKey1;
-		lpDeviceStop
 		default:	rDeviceSel <= rDeviceSel;
 	endcase
 

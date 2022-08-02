@@ -1,25 +1,31 @@
 //----------------------------------------------------------
-// Create 2022/7/25
+// Create 2022/8/2
 // Author koutakimura
 // -
-// I2C の管理を司るブロック
+// SPI の管理を司るブロック
 // 
 //----------------------------------------------------------
-module I2CBlock #(
+module SPIBlock #(
 	parameter 						pBlockAdrsMap 	= 'd8,	// ブロックのアドレス幅を指定
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h04,	
+	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h03,
 	parameter						pBusAdrsBit		= 'd32	// 32bit ならば (32-1)31 を指定
 )(
 	// External Port
-	output						oI2CScl,
-	inout 						ioI2CSda,
+    output          			ioSpiSck,
+    inout           			ioSpiMiso,
+    inout           			ioSpiMosi,
+    inout           			ioSpiWp,
+    inout           			ioSpiHold,
+    output          			oSpiConfigCs,
+    output          			oSpiCs1,
+    output          			oSpiCs2,
     // Internal Port
 	// Bus Slave Read
 	output	[31:0]				oSUsiRd,	// アドレス一致 かつ RCmd 発行時データ出力
 	output						oSUsiVd,	// アクセス可能時 Assert
 	// Bus Slave Write
 	input	[31:0]				iSUsiWd,	// Master からの書き込みデータ
-	input	[pBusAdrsBit-1:0]	iSUsiAdrs,
+	input	[pBusAdrsBit-1:0]	iSUsiAdrs,	
 	input						iSUsiWCke,	// コマンド有効時 Assert
     // CLK Reset
     input           			iSysClk,
@@ -60,12 +66,12 @@ wire 						wI2CCsrEn;
 wire 	[lpI2CDivClk-1:0]	wI2CCsrDiv;
 reg		[15:0]				qI2CGetKeyPad;
 
-I2CCsr #(
+SPICsr #(
 	.pBlockAdrsMap	(pBlockAdrsMap),
 	.pAdrsMap		(pAdrsMap),
 	.pBusAdrsBit	(pBusAdrsBit),
 	.pI2CDivClk		(lpI2CDivClk)
-) I2C_CSR (
+) SPI_CSR (
 	.oSUsiRd		(oSUsiRd),
 	.oSUsiVd		(oSUsiVd),
 	.iSUsiWd		(iSUsiWd),

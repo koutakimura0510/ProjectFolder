@@ -11,18 +11,18 @@ module PWMBlock #(
 	parameter						pBusAdrsBit		= 'd32	// 32bit ならば (32-1)31 を指定
 )(
 	// External Port
-	output					oPwm,
+	output						oPwm,
     // Internal Port
 	// Bus Slave Read
-	output	[31:0]			oSUsiRd,	// アドレス一致 かつ RCmd 発行時データ出力
-	output					oSUsiVd,	// アクセス可能時 Assert
+	output	[31:0]				oSUsiRd,	// アドレス一致 かつ RCmd 発行時データ出力
+	output						oSUsiVd,	// アクセス可能時 Assert
 	// Bus Slave Write
-	input	[31:0]			iSUsiWd,	// Master からの書き込みデータ
-	input	[pBusAdrsBit-1:0]iSUsiAdrs,
-	input					iSUsiWCke,	// コマンド有効時 Assert
+	input	[31:0]				iSUsiWd,	// Master からの書き込みデータ
+	input	[pBusAdrsBit-1:0]	iSUsiAdrs,
+	input						iSUsiWCke,	// コマンド有効時 Assert
     // CLK Reset
-    input           		iSysClk,
-    input           		iSysRst
+    input           			iSysClk,
+    input           			iSysRst
 );
 
 

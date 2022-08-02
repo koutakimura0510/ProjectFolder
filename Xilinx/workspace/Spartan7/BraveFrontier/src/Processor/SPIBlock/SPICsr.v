@@ -1,5 +1,5 @@
 //----------------------------------------------------------
-// Create 2022/7/31
+// Create 2022/7/24
 // Author koutakimura
 // -
 // 
@@ -7,13 +7,12 @@
 // 自動レジスタ更新は、上位モジュールからの input port とレジスタを接続する。
 // 上位モジュールへの output port は必ずレジスタ経由で出力する。
 //----------------------------------------------------------
-module PWMCsr #(
+module SPICsr #(
 	// variable parameter
 	parameter 						pBlockAdrsMap 	= 'd8,
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h02,
+	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h03,
 	parameter						pBusAdrsBit		= 'd32,
-	parameter 						pPWMDutyWidth	= 'd16,	// PWM の分解能
-	parameter 						pIVtimerWidth	= 'd16	// インターバルタイマ分周値
+	parameter 						pSPIDivClk 		= 'd16
 )(
     // Internal Port
 	// Csr Read
@@ -23,10 +22,11 @@ module PWMCsr #(
 	input	[31:0]				iSUsiWd,	// 書き込みデータ
 	input	[pBusAdrsBit-1:0]	iSUsiAdrs,
 	input						iSUsiWCke,	// コマンド有効時 Assert
+	// Csr Input
+	input 	[15:0]				iI2CGetKeyPad,
 	// Csr Output
-	output 						oPWMEn,
-	output 	[pPWMDutyWidth-1:0]	oPWMDuty,
-	output	[pIVtimerWidth-1:0]	oIVtimer,
+	output 						oSPIEn,
+	output 	[pSPIDivClk-1:0]	oSPIDiv,
     // CLK Reset
     input           			iSysClk,
     input           			iSysRst
@@ -38,9 +38,12 @@ module PWMCsr #(
 // Csr Write
 //----------------------------------------------------------
 // USI/F Write
-reg 					rPWMEn;				assign oPWMEn 	= rPWMEn;			// PWM 出力開始
-reg [pPWMDutyWidth-1:0]	rPWMDuty;			assign oPWMDuty	= rPWMDuty;			// PWM CLK Division
-reg [pIVtimerWidth-1:0]	rIVtimer;			assign oIVtimer	= rIVtimer;			// PWM CLK Division
+reg 					rSPIEn;				assign oSPIEn 		= rSPIEn;			// 通信開始, 一度 clearしなければ 通信を再開始できないようにする
+reg [pSPIDivClk-1:0]	rSPIDiv;			assign oSPIDiv 		= rSPIDiv;			// CLK Division
+reg [31:0]				rDeviceAdrs;		assign oDeviceAdrs 	= rDeviceAdrs;		// Device のアクセスアドレス
+reg [11:0]				rNeglength;			assign oNeglength	= rNeglength;		// 一度に行うネゴシエーションの回数
+// Upper module Write
+reg [15:0]				rI2CGetKeyPad;		// Slave のコントローラーデータを保存
 //
 reg [pBusAdrsBit:0]	qCsrAdrs;
 
@@ -48,15 +51,17 @@ always @(posedge iSysClk)
 begin
 	if (iSysRst)
 	begin
-		rPWMEn			<= 1'b0;
-		rPWMDuty		<= {pPWMDutyWidth{1'b1}};
-		rIVtimer		<= {pIVtimerWidth{1'b1}};
+		rSPIEn			<= 1'b0;
+		rSPIDiv			<= {pSPIDivClk{1'b1}};
+		rI2CGetKeyPad	<= 16'd0;
 	end
 	else
 	begin
-		rPWMEn			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[ 0:0] 		      : rPWMEn;
-		rPWMDuty		<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pPWMDutyWidth-1:0] : rPWMDuty;
-		rIVtimer		<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h08}) ? iSUsiWd[pIVtimerWidth-1:0] : rIVtimer;
+		rSPIEn			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[ 0:0] 			: rSPIEn;
+		rSPIDiv			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pSPIDivClk-1:0] 	: rSPIDiv;
+		rDeviceAdrs		<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h08}) ? iSUsiWd[31:0]			: rDeviceAdrs;
+		rNeglength		<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h0c}) ? iSUsiWd[11:0]		 	: rNeglength;
+		rI2CGetKeyPad	<= iI2CGetKeyPad;
 	end
 end
 
@@ -81,9 +86,9 @@ begin
 	else
 	begin
 		case ({qAdrsComp, iSUsiAdrs[7:0]})
-			'h100:		rSUsiRd <= {31'd0, rPWMEn};
-			'h104:		rSUsiRd <= {{(32 - pPWMDutyWidth){1'b0}}, rPWMDuty};	// パラメータ可変なので、可変に対応して0で埋めるようにした
-			'h108:		rSUsiRd <= {{(32 - pIVtimerWidth){1'b0}}, rIVtimer};	// パラメータ可変なので、可変に対応して0で埋めるようにした
+			'h100:		rSUsiRd <= {31'd0, rSPIEn};
+			'h104:		rSUsiRd <= {{(32 - pSPIDivClk){1'b0}}, rSPIDiv};	// パラメータ可変なので、可変に対応して0で埋めるようにした
+			'h180:		rSUsiRd <= {16'd0, rI2CGetKeyPad};
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase
 	end
