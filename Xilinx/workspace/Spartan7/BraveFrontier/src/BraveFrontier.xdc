@@ -55,19 +55,19 @@ set_property LOC MMCME2_ADV_X1Y0  [get_cells PRE_PROCESSER/CGB/MMCME2_BASE_CLK_G
 # Connected Config Memory and System Memory
 # Sck は Config 用の CCLK に直接つないでいるため、プリミティブを使用して通常ピンとして動作させる
 #-------------------------------------------------------------------------------
-set_property -dict { PACKAGE_PIN A10   IOSTANDARD LVCMOS18} [get_ports { ioSpiSck    }]
+set_property -dict { PACKAGE_PIN A10   IOSTANDARD LVCMOS18} [get_ports { iioSpiSck    }]
 set_property -dict { PACKAGE_PIN B12   IOSTANDARD LVCMOS18} [get_ports { ioSpiMiso   }]
 set_property -dict { PACKAGE_PIN B11   IOSTANDARD LVCMOS18} [get_ports { ioSpiMosi   }]
 set_property -dict { PACKAGE_PIN D10   IOSTANDARD LVCMOS18} [get_ports { ioSpiWp     }]
 set_property -dict { PACKAGE_PIN C10   IOSTANDARD LVCMOS18} [get_ports { ioSpiHold   }]
 set_property -dict { PACKAGE_PIN C11   IOSTANDARD LVCMOS18} [get_ports { oSpiConfigCs}]
-set_property -dict { PACKAGE_PIN M12   IOSTANDARD LVCMOS18} [get_ports { oSpiCs1     }]
-set_property -dict { PACKAGE_PIN M11   IOSTANDARD LVCMOS18} [get_ports { oSpiCs2     }]
+set_property -dict { PACKAGE_PIN M12   IOSTANDARD LVCMOS18} [get_ports { ioSpiCs1     }]
+set_property -dict { PACKAGE_PIN M11   IOSTANDARD LVCMOS18} [get_ports { ioSpiCs2     }]
 set_property PULLUP true [get_ports ioSpiWp]
 set_property PULLUP true [get_ports ioSpiHold]
 set_property PULLUP true [get_ports oSpiConfigCs]
-set_property PULLUP true [get_ports oSpiCs1]
-set_property PULLUP true [get_ports oSpiCs2]
+set_property PULLUP true [get_ports ioSpiCs1]
+set_property PULLUP true [get_ports ioSpiCs2]
 
 
 #-------------------------------------------------------------------------------

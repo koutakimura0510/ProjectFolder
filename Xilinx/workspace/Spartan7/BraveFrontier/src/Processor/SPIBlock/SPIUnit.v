@@ -1,21 +1,28 @@
 //----------------------------------------------------------
-// Create 2022/7/26
+// Create 2022/8/3
 // Author koutakimura
 // -
-// I2C 通信の制御を司るユニット
+// SPI 通信の制御を司るユニット
 // 
 //----------------------------------------------------------
-module I2CUnit #(
+module SPIUnit #(
 	// variable parameter
-	parameter 				pI2CDivClk = 16
+	parameter 				pDivClk = 16
 )(
 	// External Port
-	output					oI2CScl,
-	inout 					ioI2CSda,
+    inout	          		ioSpiSck,
+    inout           		ioSpiMiso,
+    inout           		ioSpiMosi,
+    inout           		ioSpiWp,
+    inout           		ioSpiHold,
+    output          		oSpiConfigCs,
+    input	          		ioSpiCs1,
+    input	          		ioSpiCs2,
     // Internal Port
-	input 					iI2CEn,
-	input 	[pI2CDivClk-1:0]iI2CDiv,
-	output 	[15:0]			oI2CGetKeyPad,
+	input 					iSPIEn;
+	input 	[lpDivClk-1:0]	iSPIDiv;
+	input 	[31:0]			iSPIDeviceAdrs;
+	input 	[11:0]			iSPINeglength;
     // CLK Reset
     input           		iSysClk,
     input           		iSysRst
@@ -28,10 +35,10 @@ wire wDivCke;
 
 CkeGenerator #(
 	.pDivReg	("yes"),
-	.pDivWidth	(pI2CDivClk)
+	.pDivWidth	(pDivClk)
 ) I2C_CKE_GEN (
-	.iDiv		(iI2CDiv),
-	.iCke		(iI2CEn),
+	.iCke		(iSPIEn),
+	.iDiv		(iSPIDiv),
 	.oCke		(wDivCke),
 	.iSysClk	(iSysClk),
 	.iSysRst	(iSysRst)
@@ -62,9 +69,9 @@ I2CMasterMux I2C_MASTER_MUX (
 
 
 //----------------------------------------------------------
-// Master I2C 通信信号生成
+// SPI 通信信号生成
 //----------------------------------------------------------
-I2CMaster I2C_MASTER (
+SPISignal SPI_SIGNAL (
 	.oI2CScl		(oI2CScl),
 	.ioI2CSda		(ioI2CSda),
 	.iDivCke		(wDivCke),

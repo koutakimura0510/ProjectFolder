@@ -12,7 +12,7 @@ module SPICsr #(
 	parameter 						pBlockAdrsMap 	= 'd8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h03,
 	parameter						pBusAdrsBit		= 'd32,
-	parameter 						pSPIDivClk 		= 'd16
+	parameter 						pDivClk 		= 'd16
 )(
     // Internal Port
 	// Csr Read
@@ -23,10 +23,12 @@ module SPICsr #(
 	input	[pBusAdrsBit-1:0]	iSUsiAdrs,
 	input						iSUsiWCke,	// コマンド有効時 Assert
 	// Csr Input
-	input 	[15:0]				iI2CGetKeyPad,
+	// input 	[15:0]				iI2CGetKeyPad,
 	// Csr Output
 	output 						oSPIEn,
-	output 	[pSPIDivClk-1:0]	oSPIDiv,
+	output 	[pDivClk-1:0]		oSPIDiv,
+	output	[31:0]				oDeviceAdrs,
+	output	[11:0]				oNeglength,
     // CLK Reset
     input           			iSysClk,
     input           			iSysRst
@@ -39,11 +41,9 @@ module SPICsr #(
 //----------------------------------------------------------
 // USI/F Write
 reg 					rSPIEn;				assign oSPIEn 		= rSPIEn;			// 通信開始, 一度 clearしなければ 通信を再開始できないようにする
-reg [pSPIDivClk-1:0]	rSPIDiv;			assign oSPIDiv 		= rSPIDiv;			// CLK Division
+reg [pDivClk-1:0]		rSPIDiv;			assign oSPIDiv 		= rSPIDiv;			// CLK Division
 reg [31:0]				rDeviceAdrs;		assign oDeviceAdrs 	= rDeviceAdrs;		// Device のアクセスアドレス
 reg [11:0]				rNeglength;			assign oNeglength	= rNeglength;		// 一度に行うネゴシエーションの回数
-// Upper module Write
-reg [15:0]				rI2CGetKeyPad;		// Slave のコントローラーデータを保存
 //
 reg [pBusAdrsBit:0]	qCsrAdrs;
 
@@ -52,16 +52,15 @@ begin
 	if (iSysRst)
 	begin
 		rSPIEn			<= 1'b0;
-		rSPIDiv			<= {pSPIDivClk{1'b1}};
+		rSPIDiv			<= {pDivClk{1'b1}};
 		rI2CGetKeyPad	<= 16'd0;
 	end
 	else
 	begin
 		rSPIEn			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[ 0:0] 			: rSPIEn;
-		rSPIDiv			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pSPIDivClk-1:0] 	: rSPIDiv;
+		rSPIDiv			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pDivClk-1:0] 	: rSPIDiv;
 		rDeviceAdrs		<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h08}) ? iSUsiWd[31:0]			: rDeviceAdrs;
 		rNeglength		<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h0c}) ? iSUsiWd[11:0]		 	: rNeglength;
-		rI2CGetKeyPad	<= iI2CGetKeyPad;
 	end
 end
 
@@ -87,7 +86,9 @@ begin
 	begin
 		case ({qAdrsComp, iSUsiAdrs[7:0]})
 			'h100:		rSUsiRd <= {31'd0, rSPIEn};
-			'h104:		rSUsiRd <= {{(32 - pSPIDivClk){1'b0}}, rSPIDiv};	// パラメータ可変なので、可変に対応して0で埋めるようにした
+			'h104:		rSUsiRd <= {{(32 - pDivClk){1'b0}}, rSPIDiv};	// パラメータ可変なので、可変に対応して0で埋めるようにした
+			'h108:		rSUsiRd <= {rDeviceAdrs};
+			'h10c:		rSUsiRd <= {20'd0, rNeglength};
 			'h180:		rSUsiRd <= {16'd0, rI2CGetKeyPad};
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase

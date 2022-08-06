@@ -137,7 +137,7 @@ BraveFrontier #(
 ) TOP (
     .iOscSystemClk      (rSysClk),
     .iOscAudioClk       (rAudioClk),
-    // .oSpiSck            (),
+    // .ioSpiSck            (),
     .ioSpiMiso          (ioSpiMiso),
     .ioSpiMosi          (ioSpiMosi),
     .ioSpiWp            (ioSpiWp),

@@ -47,12 +47,15 @@ wire [7:0]	wBufLen;
 wire 		wBufVd;
 wire 		wByteVd;
 wire [7:0] 	wSdaByte;
+wire 		wI2CEnMux;
 
 I2CMasterMux I2C_MASTER_MUX (
 	.oI2CGetKeyPad	(oI2CGetKeyPad),
 	.oTriState		(wTriState),
 	.oI2CSend		(wSend),
 	.oI2CBufLen		(wBufLen),
+	.oI2CEn			(wI2CEnMux),
+	.iI2CEn			(iI2CEn),
 	.iI2CBufVd		(wBufVd),
 	.iI2CByteVd		(wByteVd),
 	.iSdaByte		(wSdaByte),
@@ -68,7 +71,7 @@ I2CMaster I2C_MASTER (
 	.oI2CScl		(oI2CScl),
 	.ioI2CSda		(ioI2CSda),
 	.iDivCke		(wDivCke),
-	.iI2CEn			(iI2CEn),
+	.iI2CEn			(wI2CEnMux),
 	.iTriState		(wTriState),
 	.iI2CSend		(wSend),
 	.iI2CBufLen		(wBufLen),

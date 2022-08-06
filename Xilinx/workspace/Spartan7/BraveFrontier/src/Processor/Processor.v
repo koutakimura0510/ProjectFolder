@@ -13,14 +13,14 @@ module Processer #(
 )(
     // External port
     // SPI
-    output          ioSpiSck,
+    input			ioSpiSck,
     inout           ioSpiMiso,
     inout           ioSpiMosi,
     inout           ioSpiWp,
     inout           ioSpiHold,
     output          oSpiConfigCs,
-    output          oSpiCs1,
-    output          oSpiCs2,
+    input	        ioSpiCs1,
+    input	        ioSpiCs2,
     // PSRAM
     inout  [15:0]   ioSrampDq,
     inout  [1:0]    ioSrampDqs,
@@ -57,14 +57,14 @@ module Processer #(
 );
 
 // 
-assign ioSpiSck      	= 1'bz;
+assign iioSpiSck      	= 1'bz;
 assign ioSpiMiso    	= 1'bz;
 assign ioSpiMosi    	= 1'bz;
 assign ioSpiWp      	= 1'bz;
 assign ioSpiHold    	= 1'bz;
 assign oSpiConfigCs 	= 1'b0;
-assign oSpiCs1      	= 1'b0;
-assign oSpiCs2      	= 1'b0;
+assign ioSpiCs1      	= 1'b0;
+assign ioSpiCs2      	= 1'b0;
 assign ioSrampDqs		= 2'bz;
 assign oSrampClk		= 1'b0;
 assign oSrampCs			= 1'b0;

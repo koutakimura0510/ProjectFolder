@@ -31,8 +31,8 @@ module BraveFrontier #(
     inout           ioSpiWp,
     inout           ioSpiHold,
     output          oSpiConfigCs,
-    output          oSpiCs1,
-    output          oSpiCs2,
+    input           ioSpiCs1,
+    input           ioSpiCs2,
     inout  [15:0]   ioSrampDq,
     inout  [1:0]    ioSrampDqs,
     output          oSrampClk,
@@ -146,10 +146,10 @@ Processer # (
     .ioSpiSck       (ioSpiSck),
     .ioSpiMiso      (ioSpiMiso),        .ioSpiMosi      (ioSpiMosi),
     .ioSpiHold      (ioSpiHold),        .ioSpiWp        (ioSpiWp),
-    .oSpiCs1        (oSpiCs1),          .oSpiCs2        (oSpiCs2),
+    .ioSpiCs1       (ioSpiCs1),         .ioSpiCs2       (ioSpiCs2),
     .oSpiConfigCs   (oSpiConfigCs),
     // I2C Controller
-    .oI2CScl         (oI2CScl),           .ioI2CSda        (ioI2CSda),
+    .oI2CScl         (oI2CScl),         .ioI2CSda        (ioI2CSda),
     // Memory Primary
     .ioSrampDq      (ioSrampDq),        .ioSrampDqs     (ioSrampDqs),
     .oSrampClk      (oSrampClk),        .oSrampCs       (oSrampCs),
