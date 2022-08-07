@@ -249,6 +249,9 @@ I2CBlock #(
 reg  [lpBusLen:0]				qSUsiRd;
 reg  [lpBusSlaveConnectWidth:0]	qSUsiVd;
 // Master -> Slave
+reg  [31:0]						qMUsiWd;
+reg  [lpBusAdrsBit-1:0] 		qMUsiAdrs;
+reg  							qMUsiWCke;
 wire [31:0] 					wSUsiWd;
 wire [lpBusAdrsBit-1:0] 		wSUsiAdrs;
 wire 							wSUsiWCke;
@@ -270,9 +273,9 @@ UltraSimpleInterface #(
 ) USI_BUS (
 	.oMUsiRd			(wMUsiRd),
 	.oMUsiVd			(wMUsiVd),
-	.iMUsiWd			(wMUsiWd),
-	.iMUsiAdrs			(wMUsiAdrs),
-	.iMUsiWCke			(wMUsiWCke),
+	.iMUsiWd			(qMUsiWd),
+	.iMUsiAdrs			(qMUsiAdrs),
+	.iMUsiWCke			(qMUsiWCke),
 	.oSUsiWd			(wSUsiWd),
 	.oSUsiAdrs			(wSUsiAdrs),
 	.oSUsiWCke			(wSUsiWCke),
@@ -284,6 +287,10 @@ UltraSimpleInterface #(
 
 always @*
 begin
+	qMUsiWd			<= wMUsiWd;
+	qMUsiAdrs		<= wMUsiAdrs;
+	qMUsiWCke		<= wMUsiWCke;
+	//
 	qSUsiGpioWd		<= wSUsiWd;
 	qSUsiGpioAdrs 	<= wSUsiAdrs;
 	qSUsiGpioWCke	<= wSUsiWCke;

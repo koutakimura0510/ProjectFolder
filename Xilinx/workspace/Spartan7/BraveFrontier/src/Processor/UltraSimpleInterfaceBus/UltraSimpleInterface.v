@@ -52,26 +52,26 @@ module UltraSimpleInterface #(
 
 
 //----------------------------------------------------------
-// 手動でソースコードを変更しないで住むように Bit 指定を計算
+// 手動でソースコードを変更しないで済むように Bit 指定を計算
 //----------------------------------------------------------
-localparam lpGpioAdrsMsb = (pBusDataBit * pGpioAdrsMap) - 1;
-localparam lpGpioAdrsLsb = pBusDataBit  * (pGpioAdrsMap - 1);
-localparam lpPWMAdrsMsb = (pBusDataBit  * pPWMAdrsMap) - 1;
-localparam lpPWMAdrsLsb = pBusDataBit   * (pPWMAdrsMap - 1);
-localparam lpSPIAdrsMsb = (pBusDataBit  * pSPIAdrsMap) - 1;
-localparam lpSPIAdrsLsb = pBusDataBit   * (pSPIAdrsMap - 1);
-localparam lpI2CAdrsMsb = (pBusDataBit  * pI2CAdrsMap) - 1;
-localparam lpI2CAdrsLsb = pBusDataBit   * (pI2CAdrsMap - 1);
-localparam lpPGBAdrsMsb = (pBusDataBit  * pPGBAdrsMap) - 1;
-localparam lpPGBAdrsLsb = pBusDataBit   * (pPGBAdrsMap - 1);
-localparam lpAGBAdrsMsb = (pBusDataBit  * pAGBAdrsMap) - 1;
-localparam lpAGBAdrsLsb = pBusDataBit   * (pAGBAdrsMap - 1);
-localparam lpVDMAAdrsMsb = (pBusDataBit * pVDMAAdrsMap) - 1;
-localparam lpVDMAAdrsLsb = pBusDataBit  * (pVDMAAdrsMap - 1);
-localparam lpADMAAdrsMsb = (pBusDataBit * pADMAAdrsMap) - 1;
-localparam lpADMAAdrsLsb = pBusDataBit  * (pADMAAdrsMap - 1);
-localparam lpPSRAMAdrsMsb = (pBusDataBit * pPSRAMAdrsMap) - 1;
-localparam lpPSRAMAdrsLsb = pBusDataBit * (pPSRAMAdrsMap - 1);
+localparam lpGpioAdrsMsb 	= (pBusDataBit * pGpioAdrsMap) - 1;
+localparam lpGpioAdrsLsb 	=  pBusDataBit * (pGpioAdrsMap - 1);
+localparam lpPWMAdrsMsb 	= (pBusDataBit  * pPWMAdrsMap) - 1;
+localparam lpPWMAdrsLsb 	= pBusDataBit   * (pPWMAdrsMap - 1);
+localparam lpSPIAdrsMsb 	= (pBusDataBit  * pSPIAdrsMap) - 1;
+localparam lpSPIAdrsLsb 	= pBusDataBit   * (pSPIAdrsMap - 1);
+localparam lpI2CAdrsMsb 	= (pBusDataBit  * pI2CAdrsMap) - 1;
+localparam lpI2CAdrsLsb 	= pBusDataBit   * (pI2CAdrsMap - 1);
+localparam lpPGBAdrsMsb 	= (pBusDataBit  * pPGBAdrsMap) - 1;
+localparam lpPGBAdrsLsb 	= pBusDataBit   * (pPGBAdrsMap - 1);
+localparam lpAGBAdrsMsb 	= (pBusDataBit  * pAGBAdrsMap) - 1;
+localparam lpAGBAdrsLsb 	= pBusDataBit   * (pAGBAdrsMap - 1);
+localparam lpVDMAAdrsMsb 	= (pBusDataBit * pVDMAAdrsMap) - 1;
+localparam lpVDMAAdrsLsb 	= pBusDataBit  * (pVDMAAdrsMap - 1);
+localparam lpADMAAdrsMsb 	= (pBusDataBit * pADMAAdrsMap) - 1;
+localparam lpADMAAdrsLsb 	= pBusDataBit  * (pADMAAdrsMap - 1);
+localparam lpPSRAMAdrsMsb 	= (pBusDataBit * pPSRAMAdrsMap) - 1;
+localparam lpPSRAMAdrsLsb 	= pBusDataBit * (pPSRAMAdrsMap - 1);
 
 
 //----------------------------------------------------------

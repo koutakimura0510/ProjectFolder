@@ -7,7 +7,8 @@
 //----------------------------------------------------------
 module SPIUnit #(
 	// variable parameter
-	parameter 				pDivClk = 16
+	parameter				pBusAdrsBit	= 16,
+	parameter 				pDivClk 	= 16
 )(
 	// External Port
     inout	          		ioSpiSck,
@@ -19,13 +20,27 @@ module SPIUnit #(
     input	          		ioSpiCs1,
     input	          		ioSpiCs2,
     // Internal Port
-	input 					iSPIEn;
-	input 	[lpDivClk-1:0]	iSPIDiv;
-	input 	[31:0]			iSPIDeviceAdrs;
-	input 	[11:0]			iSPINeglength;
+	// Usi Bus Master to Slave Select
+	output 								oMUsiMonopoly,	// 0. Slave として機能 / 1. Master バスを独占
+	// Usi Bus Master Read
+	input	[31:0]						iMUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
+	// input	[pBusSlaveConnectWidth:0]	iMUsiVd,	// Slave アクセス可能時 Assert
+	// Usi Bus Master Write
+	output	[31:0]						oMUsiWd,	// 書き込みデータ
+	output	[pBusAdrsBit-1:0]			oMUsiAdrs,	// 書き込み元のアドレス指定
+	output								oMUsiWCke,	// コマンド有効時 Assert
+	// Ufi Bus Master Write
+
+	// Ufi Bus Master Read
+
+	// Csr
+	input 								iSPIEn;
+	input 	[lpDivClk-1:0]				iSPIDiv;
+	input 	[31:0]						iSPIDeviceAdrs;
+	input 	[11:0]						iSPINeglength;
     // CLK Reset
-    input           		iSysClk,
-    input           		iSysRst
+    input           					iSysClk,
+    input           					iSysRst
 );
 
 //----------------------------------------------------------
@@ -46,7 +61,7 @@ CkeGenerator #(
 
 
 //----------------------------------------------------------
-// I2C Master の送受信データと GPIO TriState 制御
+// 
 //----------------------------------------------------------
 wire 		wTriState;
 wire [7:0]	wSend;
@@ -55,14 +70,21 @@ wire 		wBufVd;
 wire 		wByteVd;
 wire [7:0] 	wSdaByte;
 
-I2CMasterMux I2C_MASTER_MUX (
-	.oI2CGetKeyPad	(oI2CGetKeyPad),
-	.oTriState		(wTriState),
-	.oI2CSend		(wSend),
-	.oI2CBufLen		(wBufLen),
-	.iI2CBufVd		(wBufVd),
-	.iI2CByteVd		(wByteVd),
-	.iSdaByte		(wSdaByte),
+SPISignalMux SPI_SIGNAL_MUX (
+	.iSMiso			(iSMiso),
+	.oSRd			(oSRd),
+	.oSAdrs			(oSAdrs),
+	.oSCmd			(oSCmd),
+	.oSDLen			(oSDLen),
+	.oSRdVd			(oSRdVd),
+	.iSPIEn			(iSPIEn),
+	.iDivCke		(wDivCke),
+	.iMWd			(iMWd),
+	.oMRd			(oMRd),
+	.oMRdVd			(oMRdVd),
+	.iMSpiCs1		(iMSpiCs1),
+	.iMSpiCs2		(iMSpiCs2),
+	.oMSSel			(oMSSel),
 	.iSysClk		(iSysClk),
 	.iSysRst		(iSysRst)
 );
@@ -71,19 +93,60 @@ I2CMasterMux I2C_MASTER_MUX (
 //----------------------------------------------------------
 // SPI 通信信号生成
 //----------------------------------------------------------
+// Slave Side
+reg		[31:0]	qSMiso;
+wire 	[31:0]	wSRd;
+wire 	[31:0]	wSAdrs;
+wire 	[1:0]	wSCmd;
+wire 	[15:0]	wSDLen;
+wire 			wSRdVd;
+// Master Side
+reg 	[7:0]	qMWd;
+wire 	[7:0]	wMRd;
+wire 			wMRdVd;
+reg 			qMSpiCs1;
+reg 			qMSpiCs2;
+// Master Slave Select
+wire 			wMSSel;
+
 SPISignal SPI_SIGNAL (
-	.oI2CScl		(oI2CScl),
-	.ioI2CSda		(ioI2CSda),
+	// External Port
+	.ioSpiSck		(ioSpiSck),
+	.ioSpiMiso		(ioSpiMiso),
+	.ioSpiMosi		(ioSpiMosi),
+	.ioSpiWp		(ioSpiWp),
+	.ioSpiHold		(ioSpiHold),
+	.oSpiConfigCs	(oSpiConfigCs),
+	.ioSpiCs1		(ioSpiCs1),
+	.ioSpiCs2		(ioSpiCs2),
+	// Internal Port Slave Side
+	.iSMiso			(qSMiso),
+	.oSRd			(wSRd),
+	.oSAdrs			(wSAdrs),
+	.oSCmd			(wSCmd),
+	.oSDLen			(wSDLen),
+	.oSRdVd			(wSRdVd),
+	// Internal Port Master Side
+	.iSPIEn			(iSPIEn),
 	.iDivCke		(wDivCke),
-	.iI2CEn			(iI2CEn),
-	.iTriState		(wTriState),
-	.iI2CSend		(wSend),
-	.iI2CBufLen		(wBufLen),
-	.oI2CBufVd		(wBufVd),
-	.oI2CByteVd		(wByteVd),
-	.oSdaByte		(wSdaByte),
+	.iMWd			(qMWd),
+	.oMRd			(wMRd),
+	.oMRdVd			(wMRdVd),
+	.iMSpiCs1		(qMSpiCs1),
+	.iMSpiCs2		(qMSpiCs2),
+	// Master Slave Select
+	.oMSSel			(wMSSel),
+	//
 	.iSysClk		(iSysClk),
 	.iSysRst		(iSysRst)
 );
+
+always @*
+begin
+	// qSMiso
+	// qMWd
+	// qMSpiCs1
+	// qMSpiCs2
+end
 
 endmodule

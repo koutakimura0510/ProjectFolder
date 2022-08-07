@@ -14,7 +14,7 @@ module SPISignal (
     inout           ioSpiHold,
     output          oSpiConfigCs,
     inout           ioSpiCs1,
-    inout           ioSpiCs2,
+    inout           ioSpiCs2,			// Master / Slave 切り替え
 	// Internal Port Slave Side
 	input	[31:0]	iSMiso,
 	output 	[31:0]	oSRd,
@@ -23,16 +23,14 @@ module SPISignal (
 	output 	[15:0]	oSDLen,
 	output 			oSRdVd,
 	// Internal Port Master Side
+    input           iSPIEn,             // 0. disconnect 1. active
+	input 			iDivCke,
     input  	[7:0]   iMWd,               // Master Write Data
     output 	[7:0]   oMRd,	            // Master Read Data
     output          oMRdVd,             // Master Byte Read Assert
 	input 			iMSpiCs1,
 	input 			iMSpiCs2,
-	// Csr
-    input           iSPIEn,             // 0. disconnect 1. active
-	input 			iDivCke,
-	// Master Slave Select
-	output 			oMSSel,
+
 	// CLK Reset
     input           iSysClk,
 	input 			iSyRst
@@ -256,11 +254,10 @@ localparam [3:0]
 	lpCsCapCntMax 	= 15,
 	lpCsCapCntClear = 0;
 
-reg [2:0] 	rSftCs2;
-reg [1:0] 	rTriStateMSet;
-reg [1:0] 	rCsCapture;
-reg [7:0] 	rCsCaptureCnt;
-reg 		rMSSel;						assign oMSSel = rMSSel;
+reg [2:0] rSftCs2;
+reg [1:0] rTriStateMSet;
+reg [1:0] rCsCapture;
+reg [7:0] rCsCaptureCnt;
 //
 reg qCsCaptureCke;
 
@@ -282,10 +279,6 @@ begin
 	// GPIO TriState 制御
 	if (qCsCaptureCke) 		rTriStateMSet <= rCsCapture;
 	else 					rTriStateMSet <= 2'b11;
-
-	// Master / Slave 選択
-	if (qCsCaptureCke) 		rMSSel <= rMSSel;
-	else 					rMSSel <= rSftCs2[2];
 end
 
 always @*

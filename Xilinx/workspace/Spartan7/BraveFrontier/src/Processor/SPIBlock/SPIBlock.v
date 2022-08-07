@@ -2,16 +2,21 @@
 // Create 2022/8/2
 // Author koutakimura
 // -
-// SPI の管理を司るブロック
+// バスシステムの Masterと SPI の管理を司るブロック
 // ioSpiCs2 GPIO は FPGA SPI の Master / Slave を切り替える役割も持つ
 // Reset 終了時の I/O の状態を確認し、High Master / Low Slave とする
-// 通常はフラッシュメモリと接続されるが、デバッグ時は RaspberryPi と接続するためこの機能を設けた。
+// 通常はフラッシュメモリと接続されるが、デバッグ時は 外部CPU と接続するためこの機能を設けた。
 // 
 //----------------------------------------------------------
 module SPIBlock #(
+	// variable parameter
 	parameter 						pBlockAdrsMap 	= 'd8,	// ブロックのアドレス幅を指定
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h03,
 	parameter						pBusAdrsBit		= 'd32	// 
+	parameter [3:0]					pBusSlaveConnect= 1,	// Busに接続する Slave数 最大16
+	parameter						pBusAdrsBit		= 16,
+	// Not Set Param
+	parameter [3:0]	pBusSlaveConnectWidth = pBusSlaveConnect - 1'b1	// Busに接続する Slave数 最大16
 )(
 	// External Port
     inout	          			ioSpiSck,
@@ -23,16 +28,29 @@ module SPIBlock #(
     input	          			ioSpiCs1,
     input	          			ioSpiCs2,
     // Internal Port
-	// Bus Slave Read
-	output	[31:0]				oSUsiRd,	// アドレス一致 かつ RCmd 発行時データ出力
-	output						oSUsiVd,	// アクセス可能時 Assert
-	// Bus Slave Write
-	input	[31:0]				iSUsiWd,	// Master からの書き込みデータ
-	input	[pBusAdrsBit-1:0]	iSUsiAdrs,	
-	input						iSUsiWCke,	// コマンド有効時 Assert
+	// Usi Bus Master to Slave Select
+	output 								oMUsiMonopoly,	// 0. Slave として機能 / 1. Master バスを独占
+	// Usi Bus Master Read
+	input	[31:0]						iMUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
+	input	[pBusSlaveConnectWidth:0]	iMUsiVd,	// Slave アクセス可能時 Assert
+	// Usi Bus Master Write
+	output	[31:0]						oMUsiWd,	// 書き込みデータ
+	output	[pBusAdrsBit-1:0]			oMUsiAdrs,	// 書き込み元のアドレス指定
+	output								oMUsiWCke,	// コマンド有効時 Assert
+	// Usi Bus Slave Read
+	output	[31:0]						oSUsiRd,	// アドレス一致 かつ RCmd 発行時データ出力
+	output								oSUsiVd,	// アクセス可能時 Assert
+	// Usi Bus Slave Write
+	input	[31:0]						iSUsiWd,	// Master からの書き込みデータ
+	input	[pBusAdrsBit-1:0]			iSUsiAdrs,	
+	input								iSUsiWCke,	// コマンド有効時 Assert
+	// Ufi Bus Master Write
+
+	// Ufi Bus Master Read
+
     // CLK Reset
-    input           			iSysClk,
-    input           			iSysRst
+    input           					iSysClk,
+    input           					iSysRst
 );
 
 
@@ -51,9 +69,10 @@ reg 	[31:0]				qSPIDeviceAdrsUnit;
 reg 	[11:0]				qSPINeglengthUnit;
 
 SPIUnit #(
+	.pBusAdrsBit	(pBusAdrsBit),
 	.pDivClk		(lpDivClk)
 ) SPI_UNIT (
-	.iioSpiSck		(iioSpiSck),
+	.ioSpiSck		(ioSpiSck),
 	.ioSpiMiso		(ioSpiMiso),
 	.ioSpiMosi		(ioSpiMosi),
 	.ioSpiWp		(ioSpiWp),
@@ -61,6 +80,13 @@ SPIUnit #(
 	.oSpiConfigCs	(oSpiConfigCs),
 	.ioSpiCs1		(ioSpiCs1),
 	.ioSpiCs2		(ioSpiCs2),
+	//
+	.oMUsiMonopoly	(oMUsiMonopoly),
+	.iMUsiRd		(iMUsiRd),
+	.oMUsiWd		(oMUsiWd),
+	.oMUsiAdrs		(oMUsiAdrs),
+	.oMUsiWCke		(oMUsiWCke),
+	//
 	.iSPIEn			(qSPIEnUnit),
 	.iSPIDiv		(qSPIDivUnit),
 	.iSPIDeviceAdrs	(qSPIDeviceAdrsUnit),
