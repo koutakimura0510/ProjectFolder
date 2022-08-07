@@ -7,18 +7,19 @@
 //----------------------------------------------------------
 module I2CUnit #(
 	// variable parameter
-	parameter 				pI2CDivClk = 16
+	parameter 					pI2CDivClk = 16
 )(
 	// External Port
-	output					oI2CScl,
-	inout 					ioI2CSda,
+	output						oI2CScl,
+	inout 						ioI2CSda,
     // Internal Port
-	input 					iI2CEn,
-	input 	[pI2CDivClk-1:0]iI2CDiv,
-	output 	[15:0]			oI2CGetKeyPad,
+	input 						iI2CEn,
+	input 	[pI2CDivClk-1:0]	iI2CDiv,
+	output 	[15:0]				oI2CGetKeyPad,
+	output 						oI2CSeqComp,
     // CLK Reset
-    input           		iSysClk,
-    input           		iSysRst
+    input           			iSysClk,
+    input           			iSysRst
 );
 
 //----------------------------------------------------------
@@ -50,6 +51,7 @@ wire [7:0] 	wSdaByte;
 wire 		wI2CEnMux;
 
 I2CMasterMux I2C_MASTER_MUX (
+	.oI2CSeqComp	(oI2CSeqComp),
 	.oI2CGetKeyPad	(oI2CGetKeyPad),
 	.oTriState		(wTriState),
 	.oI2CSend		(wSend),

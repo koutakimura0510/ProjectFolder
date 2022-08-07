@@ -9,27 +9,28 @@
 //----------------------------------------------------------
 module I2CCsr #(
 	// variable parameter
-	parameter 						pBlockAdrsMap 	= 'd8,
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h01,
-	parameter						pBusAdrsBit		= 'd32,
-	parameter 						pI2CDivClk 		= 'd16
+	parameter 						pBlockAdrsMap 	= 8,
+	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h04,
+	parameter						pBusAdrsBit		= 32,
+	parameter 						pI2CDivClk 		= 16
 )(
     // Internal Port
 	// Csr Read
-	output	[31:0]			oSUsiRd,
-	output 					oSUsiVd,
+	output	[31:0]				oSUsiRd,
+	output 						oSUsiVd,
 	// Csr Write
-	input	[31:0]			iSUsiWd,	// 書き込みデータ
-	input	[pBusAdrsBit-1:0]iSUsiAdrs,
-	input					iSUsiWCke,	// コマンド有効時 Assert
+	input	[31:0]				iSUsiWd,	// 書き込みデータ
+	input	[pBusAdrsBit-1:0]	iSUsiAdrs,
+	input						iSUsiWCke,	// コマンド有効時 Assert
 	// Csr Input
-	input 	[15:0]			iI2CGetKeyPad,
+	input 	[15:0]				iI2CGetKeyPad,
+	input 						iI2CSeqComp,
 	// Csr Output
-	output 					oI2CEn,
-	output 	[pI2CDivClk-1:0]oI2CDiv,
+	output 						oI2CEn,
+	output 	[pI2CDivClk-1:0]	oI2CDiv,
     // CLK Reset
-    input           		iSysClk,
-    input           		iSysRst
+    input           			iSysClk,
+    input           			iSysRst
 );
 
 
@@ -42,6 +43,7 @@ reg 					rI2CEn;				assign oI2CEn 	= rI2CEn;			// I2C 通信開始, Enable 1 の
 reg [pI2CDivClk-1:0]	rI2CDiv;			assign oI2CDiv 	= rI2CDiv;			// I2C CLK Division
 // Upper module Write
 reg [15:0]		rI2CGetKeyPad;		// Slave のコントローラーデータを保存
+reg [0:0] 		rI2CSeqComp;
 // reg [23:0]		rI2CGetGyro;	// Slave のジャイロセンサデータを保存
 //
 reg [pBusAdrsBit:0]	qCsrAdrs;
@@ -53,12 +55,14 @@ begin
 		rI2CEn			<= 1'b0;
 		rI2CDiv			<= {pI2CDivClk{1'b1}};
 		rI2CGetKeyPad	<= 16'd0;
+		rI2CSeqComp		<= 1'b0;
 	end
 	else
 	begin
 		rI2CEn			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[ 0:0] 			: rI2CEn;
 		rI2CDiv			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pI2CDivClk-1:0] 	: rI2CDiv;
 		rI2CGetKeyPad	<= iI2CGetKeyPad;
+		rI2CSeqComp		<= iI2CSeqComp;
 	end
 end
 
@@ -86,6 +90,7 @@ begin
 			'h100:		rSUsiRd <= {31'd0, rI2CEn};
 			'h104:		rSUsiRd <= {{(32 - pI2CDivClk){1'b0}}, rI2CDiv};	// パラメータ可変なので、可変に対応して0で埋めるようにした
 			'h180:		rSUsiRd <= {16'd0, rI2CGetKeyPad};
+			'h184:		rSUsiRd <= {31'd0, rI2CSeqComp};
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase
 	end
@@ -97,7 +102,7 @@ end
 
 always @*
 begin
-	qAdrsComp <= {iSUsiAdrs[pBlockAdrsMap + 3'd7:8] == pAdrsMap};
+	qAdrsComp <= {iSUsiAdrs[pBlockAdrsMap + 7:8] == pAdrsMap};
 end
 
 endmodule

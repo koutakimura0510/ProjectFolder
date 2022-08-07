@@ -12,20 +12,15 @@ localparam	lpSysClkCycle = 2;	// CLK サイクル
 // parameter [3:0]		pBusSlaveConnect		= 10; 				// Busに接続する Slave数 最大16
 // parameter [3:0]		pBusSlaveConnectWidth 	= pBusSlaveConnect - 1'b1;	// Busに接続する Slave数 最大16
 
-wire [31:0] 		wSUsiRd;
-wire 				wSUsiVd;
-
-
 //----------------------------------------------------------
 // Csr Settings State Machine
 //----------------------------------------------------------
-typedef enum logic [7:0] { 
-	eEN,
-	eDIV
-} EnumCsrState;
+// typedef enum logic [7:0] { 
+// 	eEN,
+// 	eDIV
+// } EnumCsrState;
 
-EnumCsrState csr_state;
-
+// EnumCsrState csr_state;
 
 //----------------------------------------------------------
 // 
@@ -60,6 +55,28 @@ begin
 end
 endtask //CsrSetting
 
+//----------------------------------------------------------
+// CSR Read
+//----------------------------------------------------------
+wire [31:0] 		wSUsiRd;
+wire 				wSUsiVd;
+
+task CsrReadWhile(
+	input [31:0] adrs,	// Csr Adrs
+	input [31:0] rdata	// 指定のデータがセットされるまで待機
+);
+begin
+	rSUsiAdrs = adrs[15:0];
+	$display("--- Adrs = %8d", rSUsiAdrs);
+	#(lpSysClkCycle);
+	#(lpSysClkCycle);
+	while (1)
+	begin
+		if (wSUsiRd == rdata)	#(lpSysClkCycle/2);
+		else					break;
+	end
+end
+endtask
 
 //----------------------------------------------------------
 // System Clk Generator
@@ -82,7 +99,13 @@ initial begin
 	#(lpSysClkCycle * 5);
 	CsrSetting(250, 'h0404);
 	CsrSetting(1, 'h0400);
-    #(lpSysClkCycle * 2000 * 4);
+	CsrReadWhile('h0484, 'h0);
+	CsrSetting(0, 'h0400);
+	//
+	CsrReadWhile('h0484, 'h1);
+	CsrSetting(250, 'h0404);
+	CsrSetting(1, 'h0400);
+    // #(lpSysClkCycle * 2000 * 4);
     $stop;
 end
 
@@ -93,7 +116,7 @@ end
 I2CBlock #(
 	.pBlockAdrsMap	(8),
 	.pAdrsMap		(4),
-	.pBusAdrsBit	(15)
+	.pBusAdrsBit	(16)
 ) I2C_BLOCK (
 	.oI2CScl	(wScl),
 	.ioI2CSda	(wSda),

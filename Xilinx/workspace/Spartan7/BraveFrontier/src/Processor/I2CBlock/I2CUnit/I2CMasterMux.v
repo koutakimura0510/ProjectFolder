@@ -15,6 +15,7 @@
 module I2CMasterMux (
 	// UpperModule
 	output	[15:0]	oI2CGetKeyPad,
+	output 			oI2CSeqComp,	// シーケンス終了時 Assign
 	// I2CMaster
 	output 			oTriState,		// 0. Sda Send / 1. Sda Hi-z
 	output 	[ 7:0]	oI2CSend,		// 送信データ
@@ -45,11 +46,13 @@ localparam [2:0]
 	lpDeviceComp	= 3'b100;		// Complete I2C シーケンス終了時 Csr Enable Low に切り替わるまで待機
 localparam lpByteCntWidth	= 4;
 //
-reg [15:0] 	rRecData;			assign oI2CGetKeyPad = rRecData;
-reg [7:0] 	rSendData;			assign oI2CSend 	 = rSendData;
-reg [7:0]	rI2CBufLen;			assign oI2CBufLen 	 = rI2CBufLen;
-reg 		rTriState;			assign oTriState	 = rTriState;
-reg 		rI2CEn;				assign oI2CEn		 = rI2CEn;
+reg [15:0] 	rRecData;			assign oI2CGetKeyPad 	= rRecData;
+reg 		rSeqComp;			assign oI2CSeqComp		= rSeqComp;
+//
+reg [7:0] 	rSendData;			assign oI2CSend 	 	= rSendData;
+reg [7:0]	rI2CBufLen;			assign oI2CBufLen 	 	= rI2CBufLen;
+reg 		rTriState;			assign oTriState	 	= rTriState;
+reg 		rI2CEn;				assign oI2CEn		 	= rI2CEn;
 //
 reg [2:0] 	rDeviceSel;
 //
@@ -66,6 +69,11 @@ begin
 		6'b0x_1_011:	rDeviceSel <= lpDeviceComp;
 		6'b00_x_100:	rDeviceSel <= lpDeviceStop;
 		default:		rDeviceSel <= rDeviceSel;
+	endcase
+
+	case (rDeviceSel[2:0])
+		3'b100:		rSeqComp <= 1'b1;
+		default:	rSeqComp <= 1'b0;
 	endcase
 
 	// I2C Enable

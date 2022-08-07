@@ -41,32 +41,28 @@ module SPISignal (
 // PSRAM 操作時は Data Length は最大 2048 byte とする
 // 
 //----------------------------------------------------------
-localparam [2:0]
+localparam [1:0]
 	lpSAdrsGet 	= 0,
 	lpSCmdGet 	= 1,
-	lpSDLenGet 	= 2,
-	lpSDataGet 	= 3;
-
+	lpSDataGet 	= 2;
 //
-reg [2:0] rSState;
+reg [1:0] rSState;	// 受信シーケンス
 //
 wire wSScl, wSMosi;
 reg  rSMiso;
 wire wSWp,  wSHold;
 wire wSCs1, wSCs2;
 //
-reg [2:0] 	rSftSScl;
-reg [2:0] 	rSftSMosi;
-reg [2:0]	rSftCs1;
+reg [2:0] 	rSftSScl, rSftSMosi, rSftCs1;
 //
 reg [7:0]	rSMiso;
-reg [7:0]	rSRd;
+reg [31:0]	rSRd;
 //
 reg [31:0]	rSAdrs;
 reg [7:0]	rSCmd;
 reg [15:0]	rSDLen;
 //
-reg [1:0]	rSSckCnt;
+reg [4:0]	rSSckCnt;
 //
 reg qPosScl, qNegScl;
 reg qSSckCke;
@@ -83,21 +79,33 @@ begin
 	else 			rSftCs1	<= {rSftCs1[1:0], 	wSCs1};
 
 	// 受信シーケンス・ステートマシン
-	casex ({rSftCs1[2], qSSckCke, qNegScl, rSState[2:0]})
-		6'b1_xx_xxx:	rSState	<= lpSAdrsGet;
-		6'b0_11_000:	rSState	<= lpSCmdGet;
-		6'b0_11_001:	rSState	<= lpSDLenGet;
-		6'b0_11_010:	rSState	<= lpSDataGet;
-		6'b0_11_011:	rSState	<= lpSAdrsGet;
+	casex ({rSftCs1[2], qSSckCke, qNegScl, rSState[1:0]})
+		5'b1_xx_xx:		rSState	<= lpSAdrsGet;
+		5'b0_11_00:		rSState	<= lpSCmdGet;
+		5'b0_11_01:		rSState	<= lpSDataGet;
+		5'b0_11_10:		rSState	<= lpSAdrsGet;
 		default:		rSState	<= rSState;
 	endcase
 
 	// 4byte 受信カウント
-	if (qNegScl)	rSSckCnt <= rSSckCnt + 1'b1;
-	else			rSSckCnt <= rSSckCnt;
+	if (qSSckCke)		rSSckCnt <= 0;
+	else if (qNegScl)	rSSckCnt <= rSSckCnt + 1'b1;
+	else				rSSckCnt <= rSSckCnt;
+
+	// アドレスの取得、PSRAM アクセスの場合のアドレス自動更新
+	casex ({rSftCs1[2], qSSckCke, qNegScl, rSState[1:0]})
+		5'b1_xx_xx:		rSAdrs	<= 'h0;
+		5'b0_11_00:		rSAdrs	<= rSRd;
+		5'b0_11_10:		rSAdrs	<= rSAdrs + 1'b1;
+		default:		rSAdrs	<= rSAdrs;
+	endcase
+
+	// CMD の取得
+
+	// Data Length の取得
 
 	// Posedge を検出し Master からの送信データを受信
-	if (qPosScl) 	rSRd <= {rSRd[6:0], rSftSMosi[1]};
+	if (qPosScl) 	rSRd <= {rSRd[30:0], rSftSMosi[1]};
 	else 			rSRd <= rSRd;
 
 	if (qNegScl)	rSMiso <= {rSMiso, };
@@ -118,7 +126,7 @@ begin
 	endcase
 
 	//
-	qSSckCke <= (rSSckCnt == 2'd3);
+	qSSckCke <= (rSSckCnt == 5'd31);
 end
 
 //----------------------------------------------------------

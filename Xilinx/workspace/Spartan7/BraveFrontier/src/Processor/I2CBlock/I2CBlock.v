@@ -36,18 +36,20 @@ localparam lpI2CDivClk = 16;	// SCL生成の分周値レジスタBit幅
 //----------------------------------------------------------
 // I2C Unit
 //----------------------------------------------------------
-reg 					qI2CUnitEn;
-reg [lpI2CDivClk-1:0]	qI2CUnitDiv;
-wire [15:0]				wI2CGetKeyPad;
+reg 						qI2CEnUnit;
+reg 	[lpI2CDivClk-1:0]	qI2CDivUnit;
+wire 	[15:0]				wI2CGetKeyPadUnit;
+wire 						wI2CSeqCompUnit;
 
 I2CUnit #(
 	.pI2CDivClk		(lpI2CDivClk)
 ) I2C_UNIT (
 	.oI2CScl		(oI2CScl),
 	.ioI2CSda		(ioI2CSda),
-	.iI2CEn			(qI2CUnitEn),
-	.iI2CDiv		(qI2CUnitDiv),
-	.oI2CGetKeyPad	(wI2CGetKeyPad),
+	.iI2CEn			(qI2CEnUnit),
+	.iI2CDiv		(qI2CDivUnit),
+	.oI2CGetKeyPad	(wI2CGetKeyPadUnit),
+	.oI2CSeqComp	(wI2CSeqCompUnit),
 	.iSysClk		(iSysClk),
 	.iSysRst		(iSysRst)
 );
@@ -56,9 +58,10 @@ I2CUnit #(
 //----------------------------------------------------------
 // Csr space
 //----------------------------------------------------------
-wire 						wI2CCsrEn;
-wire 	[lpI2CDivClk-1:0]	wI2CCsrDiv;
-reg		[15:0]				qI2CGetKeyPad;
+wire 						wI2CEnCsr;
+wire 	[lpI2CDivClk-1:0]	wI2CDivCsr;
+reg		[15:0]				qI2CGetKeyPadCsr;
+reg  						qI2CSeqCompCsr;
 
 I2CCsr #(
 	.pBlockAdrsMap	(pBlockAdrsMap),
@@ -71,18 +74,20 @@ I2CCsr #(
 	.iSUsiWd		(iSUsiWd),
 	.iSUsiAdrs		(iSUsiAdrs),
 	.iSUsiWCke		(iSUsiWCke),
-	.iI2CGetKeyPad	(qI2CGetKeyPad),
-	.oI2CEn			(wI2CCsrEn),
-	.oI2CDiv		(wI2CCsrDiv),
+	.iI2CGetKeyPad	(qI2CGetKeyPadCsr),
+	.iI2CSeqComp	(qI2CSeqCompCsr),
+	.oI2CEn			(wI2CEnCsr),
+	.oI2CDiv		(wI2CDivCsr),
 	.iSysClk		(iSysClk),
 	.iSysRst		(iSysRst)
 );
 
 always @*
 begin
-	qI2CUnitEn		<= wI2CCsrEn;
-	qI2CUnitDiv		<= wI2CCsrDiv;
-	qI2CGetKeyPad	<= wI2CGetKeyPad;
+	qI2CEnUnit			<= wI2CEnCsr;
+	qI2CDivUnit			<= wI2CDivCsr;
+	qI2CGetKeyPadCsr	<= wI2CGetKeyPadUnit;
+	qI2CSeqCompCsr		<= wI2CSeqCompUnit;
 end
 
 
