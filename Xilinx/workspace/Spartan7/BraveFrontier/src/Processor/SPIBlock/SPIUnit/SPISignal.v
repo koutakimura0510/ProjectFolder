@@ -101,8 +101,18 @@ begin
 	endcase
 
 	// CMD の取得
+	casex ({rSftCs1[2], qSSckCke, qNegScl, rSState[1:0]})
+		5'b1_xx_xx:		rSCmd	<= 8'h0;
+		5'b0_11_01:		rSCmd	<= rSRd[31:24];
+		default:		rSCmd	<= rSCmd;
+	endcase
 
 	// Data Length の取得
+	casex ({rSftCs1[2], qSSckCke, qNegScl, rSState[1:0]})
+		5'b1_xx_xx:		rSDLen	<= 16'h0;
+		5'b0_11_01:		rSDLen	<= rSRd[31:24];
+		default:		rSDLen	<= rSCmd;
+	endcase
 
 	// Posedge を検出し Master からの送信データを受信
 	if (qPosScl) 	rSRd <= {rSRd[30:0], rSftSMosi[1]};
