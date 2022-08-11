@@ -59,6 +59,7 @@
 *.txt
 *.type
 *.tree
+*.tile
 *.tdf
 *.udb
 *.wav
@@ -69,6 +70,7 @@
 *.wdm
 *.xpr
 *.xci
+*.xcf
 *.xml
 *.xmi
 *.xlsm

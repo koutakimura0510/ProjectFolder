@@ -16,10 +16,10 @@ Winbond W25N01GVxxIG 1Gbit 128MB
 -|-
 Sector      | 512 byte
 Spare Area  | 64 byte
-Page        | 2048 byte / 4 sector / 1 Spare Area
-Block       | 128 KB / 64 page * 1024
+Page        | 2112 byte = 4sector + 1Spare Area
+Block       | 128 KB    = 64page
 Column      | 2048 11bit
-all         | 65536 page / Column
+all         | 65536 page = 1024 Block
 </br>
 
 ## 3. レジスタマップ

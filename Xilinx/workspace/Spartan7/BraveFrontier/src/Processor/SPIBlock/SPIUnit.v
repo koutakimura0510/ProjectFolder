@@ -7,40 +7,41 @@
 //----------------------------------------------------------
 module SPIUnit #(
 	// variable parameter
-	parameter				pBusAdrsBit	= 16,
-	parameter 				pDivClk 	= 16
+	parameter					pBusAdrsBit	= 16,
+	parameter 					pDivClk 	= 16
 )(
 	// External Port
-    inout	          		ioSpiSck,
-    inout           		ioSpiMiso,
-    inout           		ioSpiMosi,
-    inout           		ioSpiWp,
-    inout           		ioSpiHold,
-    output          		oSpiConfigCs,
-    input	          		ioSpiCs1,
-    input	          		ioSpiCs2,
+    inout	          			ioSpiSck,
+    inout           			ioSpiMiso,
+    inout           			ioSpiMosi,
+    inout           			ioSpiWp,
+    inout           			ioSpiHold,
+    output          			oSpiConfigCs,
+    input	          			ioSpiCs1,
+    input	          			ioSpiCs2,
     // Internal Port
 	// Usi Bus Master to Slave Select
-	output 								oMUsiMonopoly,	// 0. Slave として機能 / 1. Master バスを独占
+	output 						oMUsiMonopoly,	// 0. Slave として機能 / 1. Master バスを独占
 	// Usi Bus Master Read
-	input	[31:0]						iMUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
+	input	[31:0]				iMUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
 	// input	[pBusSlaveConnectWidth:0]	iMUsiVd,	// Slave アクセス可能時 Assert
 	// Usi Bus Master Write
-	output	[31:0]						oMUsiWd,	// 書き込みデータ
-	output	[pBusAdrsBit-1:0]			oMUsiAdrs,	// 書き込み元のアドレス指定
-	output								oMUsiWCke,	// コマンド有効時 Assert
-	// Ufi Bus Master Write
-
-	// Ufi Bus Master Read
-
+	output	[31:0]				oMUsiWd,	// Write Data
+	output	[pBusAdrsBit-1:0]	oMUsiAdrs,	// R/W アドレス指定
+	output						oMUsiWEd,	// Write Assert / Read Low Fix
+	// Ufi Bus Master
+	output	[31:0]				oMUfiWd,	// Write Data
+	output	[31:0]				oMUfiAdrs,	// Write address
+	output						oMUfiWEd,	// Write Data Enable
+	output 						oMUfiWVd,	// 転送期間中 Assert
 	// Csr
-	input 								iSPIEn;
-	input 	[lpDivClk-1:0]				iSPIDiv;
-	input 	[31:0]						iSPIDeviceAdrs;
-	input 	[11:0]						iSPINeglength;
+	input 						iSPIEn,
+	input 	[lpDivClk-1:0]		iSPIDiv,
+	input 	[31:0]				iSPIDeviceAdrs,
+	input 	[11:0]				iSPINeglength,
     // CLK Reset
-    input           					iSysClk,
-    input           					iSysRst
+    input           			iSysClk,
+    input           			iSysRst
 );
 
 //----------------------------------------------------------
@@ -107,7 +108,7 @@ wire 			wMRdVd;
 reg 			qMSpiCs1;
 reg 			qMSpiCs2;
 // Master Slave Select
-wire 			wMSSel;
+wire 			wMSSel;					assign oMUsiMonopoly = wMSSel;
 
 SPISignal SPI_SIGNAL (
 	// External Port
@@ -119,14 +120,14 @@ SPISignal SPI_SIGNAL (
 	.oSpiConfigCs	(oSpiConfigCs),
 	.ioSpiCs1		(ioSpiCs1),
 	.ioSpiCs2		(ioSpiCs2),
-	// Internal Port Slave Side
+	// Internal Port FPGA Slave Side
 	.iSMiso			(qSMiso),
 	.oSRd			(wSRd),
 	.oSAdrs			(wSAdrs),
 	.oSCmd			(wSCmd),
 	.oSDLen			(wSDLen),
 	.oSRdVd			(wSRdVd),
-	// Internal Port Master Side
+	// Internal Port FPGA Master Side
 	.iSPIEn			(iSPIEn),
 	.iDivCke		(wDivCke),
 	.iMWd			(qMWd),
@@ -143,10 +144,12 @@ SPISignal SPI_SIGNAL (
 
 always @*
 begin
-	// qSMiso
-	// qMWd
-	// qMSpiCs1
-	// qMSpiCs2
+	 <= qSMiso;
+	 <= wSRd;
+	 <= wSAdrs;
+	 <= wSCmd;
+	 <= wSDLen;
+	 <= wSRdVd;
 end
 
 endmodule

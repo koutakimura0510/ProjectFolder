@@ -10,33 +10,30 @@
 //----------------------------------------------------------
 module SPIBlock #(
 	// variable parameter
-	parameter 						pBlockAdrsMap 	= 'd8,	// ブロックのアドレス幅を指定
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h03,
-	parameter						pBusAdrsBit		= 'd32	// 
-	parameter [3:0]					pBusSlaveConnect= 1,	// Busに接続する Slave数 最大16
-	parameter						pBusAdrsBit		= 16,
-	// Not Set Param
-	parameter [3:0]	pBusSlaveConnectWidth = pBusSlaveConnect - 1'b1	// Busに接続する Slave数 最大16
+	parameter 							pBlockAdrsMap 		= 'd8,	// ブロックのアドレス幅を指定
+	parameter [pBlockAdrsMap-1:0] 		pAdrsMap	  		= 'h03,
+	parameter							pBusAdrsBit			= 16,
+	parameter [3:0]						pBusSlaveConnect	= 1,	// Busに接続する Slave数 最大16
 )(
 	// External Port
-    inout	          			ioSpiSck,
-    inout           			ioSpiMiso,
-    inout           			ioSpiMosi,
-    inout           			ioSpiWp,
-    inout           			ioSpiHold,
-    output          			oSpiConfigCs,
-    input	          			ioSpiCs1,
-    input	          			ioSpiCs2,
+    inout	          					ioSpiSck,
+    inout           					ioSpiMiso,
+    inout           					ioSpiMosi,
+    inout           					ioSpiWp,
+    inout           					ioSpiHold,
+    output          					oSpiConfigCs,
+    input	          					ioSpiCs1,
+    input	          					ioSpiCs2,
     // Internal Port
 	// Usi Bus Master to Slave Select
 	output 								oMUsiMonopoly,	// 0. Slave として機能 / 1. Master バスを独占
 	// Usi Bus Master Read
 	input	[31:0]						iMUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
-	input	[pBusSlaveConnectWidth:0]	iMUsiVd,	// Slave アクセス可能時 Assert
+	input	[pBusSlaveConnect-1:0]		iMUsiVd,	// Slave アクセス可能時 Assert
 	// Usi Bus Master Write
 	output	[31:0]						oMUsiWd,	// 書き込みデータ
 	output	[pBusAdrsBit-1:0]			oMUsiAdrs,	// 書き込み元のアドレス指定
-	output								oMUsiWCke,	// コマンド有効時 Assert
+	output								oMUsiWEd,	// コマンド有効時 Assert
 	// Usi Bus Slave Read
 	output	[31:0]						oSUsiRd,	// アドレス一致 かつ RCmd 発行時データ出力
 	output								oSUsiVd,	// アクセス可能時 Assert
@@ -45,8 +42,6 @@ module SPIBlock #(
 	input	[pBusAdrsBit-1:0]			iSUsiAdrs,	
 	input								iSUsiWCke,	// コマンド有効時 Assert
 	// Ufi Bus Master Write
-
-	// Ufi Bus Master Read
 
     // CLK Reset
     input           					iSysClk,
@@ -85,7 +80,7 @@ SPIUnit #(
 	.iMUsiRd		(iMUsiRd),
 	.oMUsiWd		(oMUsiWd),
 	.oMUsiAdrs		(oMUsiAdrs),
-	.oMUsiWCke		(oMUsiWCke),
+	.oMUsiWEd		(oMUsiWEd),
 	//
 	.iSPIEn			(qSPIEnUnit),
 	.iSPIDiv		(qSPIDivUnit),

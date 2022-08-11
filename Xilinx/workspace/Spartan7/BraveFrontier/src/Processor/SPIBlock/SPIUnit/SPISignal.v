@@ -15,14 +15,14 @@ module SPISignal (
     output          oSpiConfigCs,
     inout           ioSpiCs1,
     inout           ioSpiCs2,
-	// Internal Port Slave Side
+	// Internal Port FPGA Slave Side
 	input	[31:0]	iSMiso,
 	output 	[31:0]	oSRd,
 	output 	[31:0]	oSAdrs,
 	output 	[1:0]	oSCmd,
 	output 	[15:0]	oSDLen,
 	output 			oSRdVd,
-	// Internal Port Master Side
+	// Internal Port FPGA Master Side
     input  	[7:0]   iMWd,               // Master Write Data
     output 	[7:0]   oMRd,	            // Master Read Data
     output          oMRdVd,             // Master Byte Read Assert
@@ -44,7 +44,7 @@ module SPISignal (
 // 4byte Adrs + Cmd + 2byte Data Length + dummy + nData... 
 // -
 // 最初に 8byte の命令シーケンスを受信する
-// Cmd : 0. Csr Read, 1. Csr Write, 2. PSRAM Read, 3. PSRAM Write
+// Cmd : 0. Csr Read, 1. Csr Write, 2. Non, 3. PSRAM Write
 // -
 // Csr 操作時は 連続アクセスは可能としない、必ず Data Length は 4byte 固定とする
 // PSRAM 操作時は Data Length は最大 2048 byte とする
@@ -108,7 +108,9 @@ begin
 	if (qPosScl) 		rSRd <= {rSRd[30:0], rSftSMosi[1]};
 	else 				rSRd <= rSRd;
 
-	// アドレスの取得、PSRAM アクセスの場合のアドレス自動更新
+	// アクセス開始アドレスの取得、PSRAM アクセスの場合のアドレス自動更新
+	// SPI は PSRAMに比べて極めて低速なため、上位モジュールでアドレスの更新を管理する必要はない。
+	// そのため、このロジックでアドレスを更新ようにした
 	casex ({rSRdVd, rSState[1:0]})
 		3'b1_00:		rSAdrs	<= rSRd;
 		3'b1_10:		rSAdrs	<= rSAdrs + 1'b1;
@@ -116,9 +118,10 @@ begin
 	endcase
 
 	// CMD の取得
-	casex ({qSSckCntNegCke, qNegScl, rSState[0]})
-		3'b11_1:		rSCmd	<= rSRd[25:24];
-		default:		rSCmd	<= rSCmd;
+	casex ({qSSckCntNegCke, qNegScl, rSState[1:0]})
+		4'b11_01:		rSCmd	<= rSRd[25:24];
+		4'bxx_10:		rSCmd	<= rSCmd;
+		default:		rSCmd	<= 2'd0;
 	endcase
 
 	// Data Length の取得
@@ -127,7 +130,7 @@ begin
 		default:		rSDLen	<= rSDLen;
 	endcase
 
-	// Data Bye 受信時の Assert 信号生成
+	// Data Byte 受信時の 4byte Assert 信号生成
 	casex ({qSSckCntNegCke, qNegScl, rSState[1:0]})
 		4'b11_10:		rSRdVd	<= 1'b1;
 		default:		rSRdVd	<= 1'b0;
@@ -160,13 +163,16 @@ begin
 end
 
 //----------------------------------------------------------
-// FPGA Master
+// FPGA Master Side
+// 1byte 送信のみ対応しており、4byte(32bit)のデータを送受信する場合は、
+// 上位モジュールの MUX で対応を行う。
+// このロジックはあくまで、1byte 送受信を行うだけにとどめる。
 //----------------------------------------------------------
 localparam [0:0]
     lpHolTimeIdle 		= 0,
     lpHoldTimeActive 	= 1;
 localparam [2:0]
-	lpHoldTimeMax   	= 2;
+	lpHoldTimeMax   	= 2,
 	lpHoldTimeClear 	= 0;
 //
 reg [7:0] 	rMRd;					assign oMRd		= rMRd;
@@ -176,18 +182,14 @@ reg 		rMScl;
 reg [7:0] 	rMMosi;
 wire 		wMMiso;
 //
-reg [2:0] 	rSckCnt;
+reg [2:0] 	rMSckNegCnt;
 //
-reg [2:0] 	rHoldTime;
-reg 		rHoldTimeState;
+reg [2:0] 	rMHoldTime;
+reg 		rMHoldTimeState;
 //
-reg 		qSckCntCke;			// Master CLK の立ち下がり最大カウント
-reg 		qHoldTimeCke;		// データ出力の Hold 時間経過
+reg 		qMSckCntCke;		// Master CLK の立ち下がり最大カウント
+reg 		qMHoldTimeCke;		// データ出力の Hold 時間経過
 //
-
-//----------------------------------------------------------
-// Master
-//----------------------------------------------------------
 always @(posedge iSysClk) 
 begin
 	// Sck の生成
@@ -197,46 +199,46 @@ begin
 
 	// Sck の立ち下がり回数カウント
 	casex ({iSPIEn, iDivCke, rMScl})
-		3'b0_xx:		rSckCnt	<= 3'd0;
-		3'b0_11:		rSckCnt	<= rSckCnt + 1'b1;
-		3'b1_00:		rSckCnt	<= rSckCnt;
+		3'b0_xx:		rMSckNegCnt	<= 3'd0;
+		3'b0_11:		rMSckNegCnt	<= rMSckNegCnt + 1'b1;
+		3'b1_00:		rMSckNegCnt	<= rMSckNegCnt;
 	endcase
 
 	// 1byteデータ送信完了
-	casex ({iSPIEn, qSckCntCke, iDivCke, rMScl})
+	casex ({iSPIEn, qMSckCntCke, iDivCke, rMScl})
 		4'b0_xxx:		rWdVd	<= 1'b0;
 		4'b0_111:		rWdVd	<= 1'b1;
 		4'b1_000:		rWdVd	<= 1'b0;
 	endcase
 
 	// Sck negedge 後の Hold time 生成 ステートマシン
-	casex (iSPIEn, qHoldTimeCke, rHoldTimeState[0], iDivCke, rMScl)
-		5'b0_xx_xx:    	rHoldTimeState <= lpHolTimeIdle;
-		5'b1_00_11:    	rHoldTimeState <= lpHoldTimeActive;
-		5'b1_11_xx:    	rHoldTimeState <= lpHolTimeIdle;
-		default: 		rHoldTimeState <= rHoldTimeState;
+	casex ({iSPIEn, qMHoldTimeCke, rMHoldTimeState[0], iDivCke, rMScl})
+		5'b0_xx_xx:    	rMHoldTimeState <= lpHolTimeIdle;
+		5'b1_00_11:    	rMHoldTimeState <= lpHoldTimeActive;
+		5'b1_11_xx:    	rMHoldTimeState <= lpHolTimeIdle;
+		default: 		rMHoldTimeState <= rMHoldTimeState;
 	endcase
 
 	// Sck Hold Time Generate -> min 15ns lpHoldTimeActive
 	// Sck の立下り時に Hold Time Count Start
-	case (qHoldTimeCke, rHoldTimeState)
-		2'b00:    		rHoldTime <= lpHoldTimeClear;
-		2'b01:    		rHoldTime <= rHoldTime + 1'b1;
-		default: 		rHoldTime <= lpHoldTimeClear;
+	case ({qMHoldTimeCke, rMHoldTimeState})
+		2'b00:    		rMHoldTime <= lpHoldTimeClear;
+		2'b01:    		rMHoldTime <= rMHoldTime + 1'b1;
+		default: 		rMHoldTime <= lpHoldTimeClear;
 	endcase
 
 	// MOSI 設定 Mode の Hold Time 経過後データ送信
     if (!iSPIEn)			rMMosi <= iMWd;
-    else if (qHoldTimeCke)  rMMosi <= {rMMosi[6:0], 1'b1};
+    else if (qMHoldTimeCke) rMMosi <= {rMMosi[6:0], 1'b1};
     else                    rMMosi <= rMMosi;
 
 	// MISO 設定 Mode の SCK エッジで受信
-	case (rMScl, iDivCke)
+	case ({rMScl, iDivCke})
 		2'b01:    		rMRd <= {rMRd[6:0], wMMiso};
 		default: 		rMRd <= rMRd;
 	endcase
 
-	case ({qSckCntCke, iDivCke, rMScl})
+	case ({qMSckCntCke, iDivCke, rMScl})
 		3'b111:			rMRdVd <= 1'b1;
 		default:		rMRdVd <= 1'b0;
 	endcase
@@ -244,13 +246,14 @@ end
 
 always @*
 begin
-	qSckCntCke 		<= (rSckCnt == 4'd7);
-    qHoldTimeCke 	<= (rHoldTime == lpHoldTimeMax);
+	qMSckCntCke		<= (rMSckNegCnt == 4'd7);
+    qMHoldTimeCke 	<= (rMHoldTime == lpHoldTimeMax);
 end
 
 
 //----------------------------------------------------------
 // Master / Slave TriState 設定
+// High FPGA Master / Low FPGA Slave
 //----------------------------------------------------------
 localparam [3:0]
 	lpCsCapCntMax 	= 15,
@@ -275,7 +278,7 @@ begin
 	if (qCsCaptureCke) 		rSftCs2 <= rSftCs2;
 	else 					rSftCs2	<= {rSftCs2[1:0], wSCs2};
 
-	// キャプチャーセレクト
+	// Master Slave Select
 	if (rSftCs2[2])			rCsCapture <= {1'b0, 1'b1};
 	else 					rCsCapture <= {1'b1, 1'b0};
 

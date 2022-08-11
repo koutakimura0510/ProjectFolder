@@ -24,7 +24,7 @@ module MicroControllerBlock #(
 	// Bus Master Write
 	output	[31:0]						oMUsiWd,	// 書き込みデータ
 	output	[pBusAdrsBit-1:0]			oMUsiAdrs,	// 書き込み元のアドレス指定
-	output								oMUsiWCke,	// コマンド有効時 Assert
+	output								oMUsiWEd,	// コマンド有効時 Assert
     // CLK Reset
     input           					iSysClk,
     input           					iSysRst
@@ -76,7 +76,7 @@ MicroControllerCsr #(
 	.iMUsiVd	(iMUsiVd),
 	.oMUsiWd	(oMUsiWd),
 	.oMUsiAdrs	(oMUsiAdrs),
-	.oMUsiWCke	(oMUsiWCke),
+	.oMUsiWEd	(oMUsiWEd),
 	.oMUsiRd	(wMcbAutoRd),
 	.oMUsiVd	(wMcbRd),
 	.iSysClk	(iSysClk),

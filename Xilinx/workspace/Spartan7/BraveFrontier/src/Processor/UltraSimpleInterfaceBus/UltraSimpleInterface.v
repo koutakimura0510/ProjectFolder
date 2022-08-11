@@ -37,7 +37,7 @@ module UltraSimpleInterface #(
 	// Bus Master Write
 	input 	[31:0]						iMUsiWd,	// 書き込みデータ
 	input 	[pBusAdrsBit-1:0]			iMUsiAdrs,	// {31:30} / 0.Cmd 無効, 1. WriteCmd, 2. ReadCmd, 3.WRCmd (*)未実装 / {23:16} Busアドレス / {15:0} Csrアドレス
-	input 								iMUsiWCke,	// コマンド有効時 Assert
+	input 								iMUsiWEd,	// コマンド有効時 Assert
 	// Bus Slave Read / Master In <- Slave Out
 	output	[31:0]						oSUsiWd,	// 書き込みデータ
 	output	[pBusAdrsBit-1:0]			oSUsiAdrs,	// {31:30} / 0.Cmd 無効, 1. WriteCmd, 2. ReadCmd, 3.WRCmd (*)未実装 / {23:16} Busアドレス / {15:0} Csrアドレス
@@ -80,7 +80,7 @@ localparam lpPSRAMAdrsLsb 	= pBusDataBit * (pPSRAMAdrsMap - 1);
 // Master -> Slave
 reg [31:0] 				rMUsiWd;				assign oSUsiWd		= rMUsiWd;
 reg [pBusAdrsBit-1:0]	rMUsiAdrs;				assign oSUsiAdrs	= rMUsiAdrs;
-reg 					rMUsiWCke;				assign oSUsiWCke	= rMUsiWCke;
+reg 					rMUsiWEd;				assign oSUsiWCke	= rMUsiWEd;
 // Slave -> Master
 reg [31:0] 				rSUsiRd;				assign oMUsiRd		= rSUsiRd;
 reg	[pBusSlaveConnectWidth:0]	rSUsiVd;		assign oMUsiVd		= rSUsiVd;
@@ -94,8 +94,8 @@ begin
 	if (iUsiRst) 	rMUsiAdrs <= {pBusDataBit{1'b0}};
 	else 			rMUsiAdrs <= iMUsiAdrs;
 
-	if (iUsiRst) 	rMUsiWCke <= {pBusSlaveConnectWidth{1'b0}};
-	else 			rMUsiWCke <= iMUsiWCke;
+	if (iUsiRst) 	rMUsiWEd <= {pBusSlaveConnectWidth{1'b0}};
+	else 			rMUsiWEd <= iMUsiWEd;
 
 	// Slave -> Master Side
 	if (iUsiRst) 	rSUsiVd <= {pBusSlaveConnectWidth{1'b0}};

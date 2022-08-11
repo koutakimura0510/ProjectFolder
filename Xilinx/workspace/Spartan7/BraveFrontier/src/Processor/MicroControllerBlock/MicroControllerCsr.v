@@ -37,7 +37,7 @@ module MicroControllerCsr #(
 	// Csr Master
 	output	[31:0]						oMUsiWd,	// 書き込みデータ
 	output	[pBusAdrsBit-1:0]			oMUsiAdrs,
-	output								oMUsiWCke,	// コマンド有効時 Assert
+	output								oMUsiWEd,	// コマンド有効時 Assert
 	// Csr Output
 	output	[31:0]						oMUsiRd,
 	output	[pBusSlaveConnectWidth:0]	oMUsiVd,
@@ -53,7 +53,7 @@ module MicroControllerCsr #(
 // Manual
 reg [31:0] 						rMUsiWd;		assign oMUsiWd   = rMUsiWd;		// Bus 書き込みデータ
 reg [pBusAdrsBit-1:0]			rMUsiAdrs;		assign oMUsiAdrs = rMUsiAdrs;	// Bus 書き込みアドレス
-reg [ 0:0]		 				rMUsiWCke;		assign oMUsiWCke = rMUsiWCke;	// Bus 書き込み Enable 自動で 0クリア
+reg [ 0:0]		 				rMUsiWEd;		assign oMUsiWEd = rMUsiWEd;	// Bus 書き込み Enable 自動で 0クリア
 // Auto
 reg [31:0]						rMUsiRd;		assign oMUsiRd	 = rMUsiRd;		// 
 reg [pBusSlaveConnectWidth:0] 	rMUsiVd;		assign oMUsiVd	 = rMUsiVd;		// 指定Bit が Assert されていればデータ書き込み可能と判断
@@ -66,7 +66,7 @@ begin
 	begin
 		rMUsiWd		<= 'h0;
 		rMUsiAdrs	<= {pBusAdrsBit{1'b0}};
-		rMUsiWCke	<= 1'b0;
+		rMUsiWEd	<= 1'b0;
 		rMUsiRd		<= 'h0;
 		rMUsiVd		<= {pBusSlaveConnectWidth{1'b0}};
 	end
@@ -75,7 +75,7 @@ begin
 		// Manual
 		rMUsiWd		<= (qCsrAdrs == 9'h100) ? iWd : rMUsiWd;
 		rMUsiAdrs	<= (qCsrAdrs == 9'h104) ? iWd[pBusAdrsBit-1:0] : rMUsiAdrs;
-		rMUsiWCke	<= (qCsrAdrs == 9'h108) ? iWd[0] : rMUsiWCke;		// TODO 自動クリアしたい
+		rMUsiWEd	<= (qCsrAdrs == 9'h108) ? iWd[0] : rMUsiWEd;		// TODO 自動クリアしたい
 		// Auto
 		rMUsiRd		<= iMUsiRd;
 		rMUsiVd		<= iMUsiVd;
@@ -109,7 +109,7 @@ begin
 		case (iAdrs)
 			'h00: 		rRd <= rMUsiWd;
 			'h04: 		rRd <= rMUsiAdrs;
-			'h08: 		rRd <= rMUsiWCke;
+			'h08: 		rRd <= rMUsiWEd;
 			default: 	rRd <= rRd;
 		endcase
 	end
