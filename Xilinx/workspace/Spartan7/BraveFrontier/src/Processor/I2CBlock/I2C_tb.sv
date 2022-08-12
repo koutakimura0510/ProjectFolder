@@ -59,7 +59,7 @@ endtask //CsrSetting
 // CSR Read
 //----------------------------------------------------------
 wire [31:0] 		wSUsiRd;
-wire 				wSUsiVd;
+wire 				wSUsiREd;
 
 task CsrReadWhile(
 	input [31:0] adrs,	// Csr Adrs
@@ -121,7 +121,7 @@ I2CBlock #(
 	.oI2CScl	(wScl),
 	.ioI2CSda	(wSda),
 	.oSUsiRd	(wSUsiRd),
-	.oSUsiVd	(wSUsiVd),
+	.oSUsiREd	(wSUsiREd),
 	.iSUsiWd	(rSUsiWd),
 	.iSUsiAdrs	(rSUsiAdrs),
 	.iSUsiWCke	(rSUsiWCke),

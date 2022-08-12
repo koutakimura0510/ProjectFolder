@@ -15,7 +15,7 @@ module PWMBlock #(
     // Internal Port
 	// Bus Slave Read
 	output	[31:0]				oSUsiRd,	// Read Data
-	output						oSUsiVd,	// Read Valid Assert
+	output						oSUsiREd,	// Read Valid Assert
 	// Bus Slave Write
 	input	[31:0]				iSUsiWd,	// Write Data
 	input	[pBusAdrsBit-1:0]	iSUsiAdrs,  // R/W Adrs
@@ -64,7 +64,7 @@ PWMCsr #(
 	.pIVtimerWidth	(lpIVtimerWidth)
 ) PWM_CSR (
 	.oSUsiRd		(oSUsiRd),
-	.oSUsiVd		(oSUsiVd),
+	.oSUsiREd		(oSUsiREd),
 	.iSUsiWd		(iSUsiWd),
 	.iSUsiAdrs		(iSUsiAdrs),
 	.iSUsiWCke		(iSUsiWCke),

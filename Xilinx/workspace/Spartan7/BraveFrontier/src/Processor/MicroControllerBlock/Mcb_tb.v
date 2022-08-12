@@ -18,7 +18,7 @@ parameter [3:0]		pBusSlaveConnectWidth 	= pBusSlaveConnect - 1'b1;	// Busに接�
 reg 				rSysClk = 0;
 reg 				rSysRst = 1;
 reg  [31:0] 		rSUsiRd;
-reg  [pBusSlaveConnectWidth:0] 	rSUsiVd;
+reg  [pBusSlaveConnectWidth:0] 	rSUsiREd;
 reg  [pBusSlaveConnectWidth:0] 	rSUsiCke;
 wire [31:0] 		wMUsiWd;
 wire [31:0] 		wMUsiAdrs;
@@ -28,7 +28,7 @@ MicroControllerBlock #(
 	.pBusSlaveConnect	(pBusSlaveConnect)
 ) MCB (
 	.iSUsiRd	(rSUsiRd),
-	.iSUsiVd	(rSUsiVd),
+	.iSUsiREd	(rSUsiREd),
 	.iSUsiCke	(rSUsiCke),
 	.oMUsiWd	(wMUsiWd),
 	.oMUsiAdrs	(wMUsiAdrs),
@@ -42,8 +42,8 @@ begin
 	if (rSysRst) 	rSUsiRd <= 0;
 	else 			rSUsiRd <= rSUsiRd + 1'b1;
 
-	if (rSysRst) 	rSUsiVd <= 0;
-	else 			rSUsiVd <= rSUsiVd + 1'b1;
+	if (rSysRst) 	rSUsiREd <= 0;
+	else 			rSUsiREd <= rSUsiREd + 1'b1;
 
 	if (rSysRst) 	rSUsiCke <= 0;
 	else 			rSUsiCke <= rSUsiCke + 1'b1;

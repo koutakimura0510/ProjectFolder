@@ -20,7 +20,7 @@ reg 				rSysRst = 1;
 wire [1:0]			wLedEdge;
 wire 				wLedClk;
 wire [31:0] 		wSUsiRd;
-wire 				wSUsiVd;
+wire 				wSUsiREd;
 reg [31:0] 			rSUsiWd;
 reg [31:0] 			rSUsiAdrs;
 reg 				rSUsiWCke;
@@ -29,7 +29,7 @@ GpioBlock GPIO_BLOCK (
 	.oLedEdge	(wLedEdge),
 	.oLedClk	(wLedClk),
 	.oSUsiRd	(wSUsiRd),
-	.oSUsiVd	(wSUsiVd),
+	.oSUsiREd	(wSUsiREd),
 	.iSUsiWd	(rSUsiWd),
 	.iSUsiAdrs	(rSUsiAdrs),
 	.iSUsiWCke	(rSUsiWCke),

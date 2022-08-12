@@ -17,14 +17,14 @@ module SPIUnit #(
     inout           			ioSpiWp,
     inout           			ioSpiHold,
     output          			oSpiConfigCs,
-    input	          			ioSpiCs1,
-    input	          			ioSpiCs2,
+    inout	          			ioSpiCs1,
+    inout	          			ioSpiCs2,
     // Internal Port
 	// Usi Bus Master to Slave Select
 	output 						oMUsiMonopoly,	// 0. Slave として機能 / 1. Master バスを独占
 	// Usi Bus Master Read
 	input	[31:0]				iMUsiRd,		// Csr Read
-	// input	[pBusSlaveConnectWidth:0]	iMUsiVd,	// Slave アクセス可能時 Assert
+	// input	[pBusSlaveConnectWidth:0]	iMUsiREd,	// Slave アクセス可能時 Assert
 	// Usi Bus Master Write
 	output	[31:0]				oMUsiWd,		// Write Data
 	output	[pBusAdrsBit-1:0]	oMUsiAdrs,		// R/W Adrs
@@ -42,7 +42,7 @@ module SPIUnit #(
 	input 						iMSpiCs2,
 	output	[7:0]				oMRd,
 	// Interrupt
-	output 						oMUsiRDe,
+	output 						oMUsiREd,
     // CLK Reset
     input           			iSysClk,
     input           			iSysRst
@@ -134,7 +134,7 @@ SPISignal SPI_SIGNAL (
 	.iDivCke		(wDivCke),
 	.iMWd			(iMWd),
 	.oMRd			(oMRd),
-	.oMUsiRDe			(oMUsiRDe),
+	.oMUsiREd			(oMUsiREd),
 	.iMSpiCs1		(iMSpiCs1),
 	.iMSpiCs2		(iMSpiCs2),
 	// Master Slave Select

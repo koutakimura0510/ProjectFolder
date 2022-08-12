@@ -13,7 +13,7 @@ localparam	lpSysClkCycle = 2;	// CLK サイクル
 // parameter [3:0]		pBusSlaveConnectWidth 	= pBusSlaveConnect - 1'b1;	// Busに接続する Slave数 最大16
 
 wire [31:0] 		wSUsiRd;
-wire 				wSUsiVd;
+wire 				wSUsiREd;
 wire 				wPwm;
 
 
@@ -77,7 +77,7 @@ PWMBlock #(
 ) PWM_BLOCK (
 	.oPwm		(wPwm),
 	.oSUsiRd	(wSUsiRd),
-	.oSUsiVd	(wSUsiVd),
+	.oSUsiREd	(wSUsiREd),
 	.iSUsiWd	(rSUsiWd),
 	.iSUsiAdrs	(rSUsiAdrs),
 	.iSUsiWCke	(rSUsiWCke),

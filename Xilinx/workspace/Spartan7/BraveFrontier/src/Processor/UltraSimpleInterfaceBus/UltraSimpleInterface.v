@@ -33,7 +33,7 @@ module UltraSimpleInterface #(
     // Internal Port
 	// Bus Master Read
 	output	[31:0]						oMUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
-	output	[pBusSlaveConnectWidth:0]	oMUsiVd,	// Slave アクセス可能時 Assert
+	output	[pBusSlaveConnectWidth:0]	oMUsiREd,	// Slave アクセス可能時 Assert
 	// Bus Master Write
 	input 	[31:0]						iMUsiWd,	// 書き込みデータ
 	input 	[pBusAdrsBit-1:0]			iMUsiAdrs,	// {31:30} / 0.Cmd 無効, 1. WriteCmd, 2. ReadCmd, 3.WRCmd (*)未実装 / {23:16} Busアドレス / {15:0} Csrアドレス
@@ -44,7 +44,7 @@ module UltraSimpleInterface #(
 	output								oSUsiWCke,	// コマンド有効時 Assert
 	// Bus Slave Write / Master Out -> Slave In
 	input	[pBusLen:0]					iSUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
-	input	[pBusSlaveConnectWidth:0]	iSUsiVd,	// Slave アクセス可能時 Assert
+	input	[pBusSlaveConnectWidth:0]	iSUsiREd,	// Slave アクセス可能時 Assert
     // CLK Reset
     input           					iUsiClk, 
     input           					iUsiRst
@@ -78,28 +78,28 @@ localparam lpPSRAMAdrsLsb 	= pBusDataBit * (pPSRAMAdrsMap - 1);
 // バスクロックで バス経由データ保存
 //----------------------------------------------------------
 // Master -> Slave
-reg [31:0] 				rMUsiWd;				assign oSUsiWd		= rMUsiWd;
-reg [pBusAdrsBit-1:0]	rMUsiAdrs;				assign oSUsiAdrs	= rMUsiAdrs;
-reg 					rMUsiWEd;				assign oSUsiWCke	= rMUsiWEd;
+reg [31:0] 						rMUsiWd;				assign oSUsiWd		= rMUsiWd;
+reg [pBusAdrsBit-1:0]			rMUsiAdrs;				assign oSUsiAdrs	= rMUsiAdrs;
+reg 							rMUsiWEd;				assign oSUsiWCke	= rMUsiWEd;
 // Slave -> Master
-reg [31:0] 				rSUsiRd;				assign oMUsiRd		= rSUsiRd;
-reg	[pBusSlaveConnectWidth:0]	rSUsiVd;		assign oMUsiVd		= rSUsiVd;
+reg [31:0] 						rSUsiRd;				assign oMUsiRd		= rSUsiRd;
+reg	[pBusSlaveConnectWidth:0]	rSUsiREd;				assign oMUsiREd		= rSUsiREd;
 
 always @(posedge iUsiClk)
 begin
 	// Master -> Slave Side
-	if (iUsiRst) 	rMUsiWd <= {pBusDataBit{1'b0}};
-	else 			rMUsiWd <= iMUsiWd;
+	if (iUsiRst) 	rMUsiWd 	<= {pBusDataBit{1'b0}};
+	else 			rMUsiWd 	<= iMUsiWd;
 
-	if (iUsiRst) 	rMUsiAdrs <= {pBusDataBit{1'b0}};
-	else 			rMUsiAdrs <= iMUsiAdrs;
+	if (iUsiRst) 	rMUsiAdrs 	<= {pBusDataBit{1'b0}};
+	else 			rMUsiAdrs 	<= iMUsiAdrs;
 
-	if (iUsiRst) 	rMUsiWEd <= {pBusSlaveConnectWidth{1'b0}};
-	else 			rMUsiWEd <= iMUsiWEd;
+	if (iUsiRst) 	rMUsiWEd 	<= {pBusSlaveConnectWidth{1'b0}};
+	else 			rMUsiWEd 	<= iMUsiWEd;
 
 	// Slave -> Master Side
-	if (iUsiRst) 	rSUsiVd <= {pBusSlaveConnectWidth{1'b0}};
-	else 			rSUsiVd <= iSUsiVd;
+	if (iUsiRst) 	rSUsiREd 	<= {pBusSlaveConnectWidth{1'b0}};
+	else 			rSUsiREd 	<= iSUsiREd;
 
 	case (iMUsiAdrs[pBlockAdrsMap + 3'd7:8])
 		pGpioAdrsMap:	rSUsiRd <= iSUsiRd[lpGpioAdrsMsb	:	lpGpioAdrsLsb];

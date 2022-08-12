@@ -19,7 +19,7 @@ module MicroControllerUnit #(
     // Internal Port
 	// Bus Master Read
 	input	[31:0]			iMUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
-	input	[pBusSlaveConnectWidth:0]	iMUsiVd,	// Slave アクセス可能時 Assert
+	input	[pBusSlaveConnectWidth:0]	iMUsiREd,	// Slave アクセス可能時 Assert
 	// Bus Master Write
 	output	[31:0]			oMUsiWd,	// 書き込みデータ
 	output	[31:0]			oMUsiAdrs,	// {31:30} / 0.Cmd 無効, 1. WriteCmd, 2. ReadCmd, 3.WRCmd (*)未実装 / {23:16} Busアドレス / {15:0} Csrアドレス

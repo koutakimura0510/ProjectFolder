@@ -51,7 +51,7 @@ begin
 	rMUsiAdrs	<= iSAdrs[pBusAdrsBit-1:0];
 
 	// Csr Write のみ判定
-	case (iSRdVd, iSCmd)
+	case ({iSRdVd, iSCmd})
 		3'b101:		rMUsiWEd <= 1'b1;
 		default 	rMUsiWEd <= 1'b0;
 	endcase
@@ -60,10 +60,10 @@ end
 //----------------------------------------------------------
 // UFI Bus
 //----------------------------------------------------------
-reg [31:0] 	rMUfiWd;				assign oMUfiWd		= rMUfiWd;
-reg [31:0] 	rMUfiAdrs;				assign oMUfiAdrs	= rMUfiAdrs;
-reg 		rMUfiWEd;				assign oMUfiWEd		= rMUfiWEd;
-reg  		rMUfiWVd;				assign oMUfiWVd		= rMUfiWVd;
+reg [31:0] 	rMUfiWd;					assign oMUfiWd		= rMUfiWd;
+reg [31:0] 	rMUfiAdrs;					assign oMUfiAdrs	= rMUfiAdrs;
+reg 		rMUfiWEd;					assign oMUfiWEd		= rMUfiWEd;
+reg  		rMUfiWVd;					assign oMUfiWVd		= rMUfiWVd;
 //
 reg 		qMUfiWVd;
 //
@@ -73,7 +73,7 @@ begin
 	rMUfiAdrs	<= iSAdrs;
 
 	// Data Enable
-	case (iSRdVd, iSCmd)
+	case ({iSRdVd, iSCmd})
 		3'b111:		rMUfiWEd <= 1'b1;
 		default 	rMUfiWEd <= 1'b0;
 	endcase

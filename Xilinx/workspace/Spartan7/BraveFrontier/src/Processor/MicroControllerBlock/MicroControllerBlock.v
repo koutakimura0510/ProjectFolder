@@ -20,7 +20,7 @@ module MicroControllerBlock #(
     // Internal Port
 	// Bus Master Read
 	input	[31:0]						iMUsiRd,	// CSR Read Data
-	input	[pBusSlaveConnectWidth:0]	iMUsiVd,	// Read Assert
+	input	[pBusSlaveConnectWidth:0]	iMUsiREd,	// Read Assert
 	// Bus Master Write
 	output	[31:0]						oMUsiWd,	// Write Data
 	output	[pBusAdrsBit-1:0]			oMUsiAdrs,	// Write address
@@ -73,12 +73,12 @@ MicroControllerCsr #(
 	.iCke		(qMcbCsrCke),
 	.oRd		(wMcbManualRd),
 	.iMUsiRd	(iMUsiRd),
-	.iMUsiVd	(iMUsiVd),
+	.iMUsiREd	(iMUsiREd),
 	.oMUsiWd	(oMUsiWd),
 	.oMUsiAdrs	(oMUsiAdrs),
 	.oMUsiWEd	(oMUsiWEd),
 	.oMUsiRd	(wMcbAutoRd),
-	.oMUsiVd	(wMcbRd),
+	.oMUsiREd	(wMcbRd),
 	.iSysClk	(iSysClk),
 	.iSysRst	(iSysRst)
 );

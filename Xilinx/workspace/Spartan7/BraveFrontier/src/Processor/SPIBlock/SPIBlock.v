@@ -15,31 +15,31 @@
 //----------------------------------------------------------
 module SPIBlock #(
 	// variable parameter
-	parameter 							pBlockAdrsMap 		= 'd8,	// ブロックのアドレス幅を指定
+	parameter 							pBlockAdrsMap 		= 8,	// ブロックのアドレス幅を指定
 	parameter [pBlockAdrsMap-1:0] 		pAdrsMap	  		= 'h03,
 	parameter							pBusAdrsBit			= 16,
-	parameter [3:0]						pBusSlaveConnect	= 1,	// Busに接続する Slave数 最大16
+	parameter [3:0]						pBusSlaveConnect	= 1		// Busに接続する Slave数 最大16
 )(
 	// External Port
-    inout	          					ioSpiSck,
-    inout           					ioSpiMiso,
-    inout           					ioSpiMosi,
-    inout           					ioSpiWp,
-    inout           					ioSpiHold,
-    output          					oSpiConfigCs,
-    input	          					ioSpiCs1,
-    input	          					ioSpiCs2,
+    inout								ioSpiSck,
+    inout								ioSpiMiso,
+    inout								ioSpiMosi,
+    inout								ioSpiWp,
+    inout								ioSpiHold,
+    output								oSpiConfigCs,
+    inout								ioSpiCs1,
+    inout								ioSpiCs2,
     // Internal Port
 	// Usi Bus Master Read
-	input	[31:0]						iMUsiRd,		// RCmd 発行時に各ブロックのCSR値が入力される
-	input	[pBusSlaveConnect-1:0]		iMUsiVd,		// Slave アクセス可能時 Assert
+	input	[31:0]						iMUsiRd,		// CSR Read Data
+	input	[pBusSlaveConnectWidth-1:0]	iMUsiREd,		// Read Assert
 	// Usi Bus Master Write
 	output	[31:0]						oMUsiWd,		// Write Data
 	output	[pBusAdrsBit-1:0]			oMUsiAdrs,		// R/W Adrs
 	output								oMUsiWEd,		// Write Enable
 	// Usi Bus Slave Read
-	output	[31:0]						oSUsiRd,		// アドレス一致時データ出力
-	output								oSUsiVd,		// データ出力中 Assert
+	output	[31:0]						oSUsiRd,		// Read Data
+	output								oSUsiREd,		// Read Data Enable
 	// Usi Bus Slave Write
 	input	[31:0]						iSUsiWd,		// Master Write Data
 	input	[pBusAdrsBit-1:0]			iSUsiAdrs,		// Csr Access Adrs
@@ -50,7 +50,7 @@ module SPIBlock #(
 	output								oMUfiWEd,		// Write Data Enable
 	output 								oMUfiWVd,		// 転送期間中 Assert
 	// Interrupt
-	output 								oMUsiRDe,
+	output 								oMUsiREd,		// FPGA Master Byte Read Data Enable
 	// Usi Bus Master to Slave Select
 	output 								oMUsiMonopoly,	// 0. Slave として機能 / 1. Master バスを独占
     // CLK Reset
@@ -110,7 +110,7 @@ SPIUnit #(
 	.iMSpiCs2			(qMSpiCs2Unit),
 	.oMRd				(wMRdUnit),
 	// Interrupt
-	.oMUsiRDe			(oMUsiRDe),
+	.oMUsiREd			(oMUsiREd),
 	// CLK Reset
 	.iSysClk			(iSysClk),
 	.iSysRst			(iSysRst)
@@ -136,7 +136,7 @@ SPICsr #(
 ) SPI_CSR (
 	// Usi Bus Slave
 	.oSUsiRd			(oSUsiRd),
-	.oSUsiVd			(oSUsiVd),
+	.oSUsiREd			(oSUsiREd),
 	.iSUsiWd			(iSUsiWd),
 	.iSUsiAdrs			(iSUsiAdrs),
 	.iSUsiWCke			(iSUsiWCke),

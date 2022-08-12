@@ -16,7 +16,7 @@ module GpioCsr #(
     // Internal Port
 	// Csr Read
 	output	[31:0]				oSUsiRd,	// Read Data
-	output						oSUsiVd,	// Read Valid Assert
+	output						oSUsiREd,	// Read Valid Assert
 	// Bus Slave Write
 	input	[31:0]				iSUsiWd,	// Write Data
 	input	[pBusAdrsBit-1:0]	iSUsiAdrs,  // R/W Adrs
@@ -61,7 +61,7 @@ end
 // Csr Read
 //----------------------------------------------------------
 reg [31:0]		rSUsiRd;		assign oSUsiRd = rSUsiRd;
-reg 			rSUsiVd;		assign oSUsiVd = rSUsiVd;
+reg 			rSUsiREd;		assign oSUsiREd = rSUsiREd;
 reg 			qAdrsComp;
 
 always @(posedge iSysClk)
@@ -69,7 +69,7 @@ begin
 	if (iSysRst)
 	begin
 		rSUsiRd <= 'h0;
-		rSUsiVd <= 1'b0;
+		rSUsiREd <= 1'b0;
 	end
 	else
 	begin
@@ -79,9 +79,9 @@ begin
 		endcase
 	end
 
-	if (iSysRst)		rSUsiVd <= 1'b0;
-	else if (qAdrsComp)	rSUsiVd <= 1'b1;
-	else				rSUsiVd <= 1'b0;
+	if (iSysRst)		rSUsiREd <= 1'b0;
+	else if (qAdrsComp)	rSUsiREd <= 1'b1;
+	else				rSUsiREd <= 1'b0;
 end
 
 always @*

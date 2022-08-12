@@ -17,7 +17,7 @@ module SPICsr #(
     // Internal Port
 	// Csr Read
 	output	[31:0]					oSUsiRd,
-	output 							oSUsiVd,
+	output 							oSUsiREd,
 	// Csr Write
 	input	[31:0]					iSUsiWd,
 	input	[pBusAdrsBit-1:0]		iSUsiAdrs,
@@ -80,7 +80,7 @@ end
 // Csr Read
 //----------------------------------------------------------
 reg [31:0]		rSUsiRd;		assign oSUsiRd = rSUsiRd;
-reg 			rSUsiVd;		assign oSUsiVd = rSUsiVd;
+reg 			rSUsiREd;		assign oSUsiREd = rSUsiREd;
 reg 			qAdrsComp;
 
 always @(posedge iSysClk)
@@ -101,9 +101,9 @@ begin
 		endcase
 	end
 
-	if (iSysRst)		rSUsiVd <= 1'b0;
-	else if (qAdrsComp)	rSUsiVd <= 1'b1;
-	else				rSUsiVd <= 1'b0;
+	if (iSysRst)		rSUsiREd <= 1'b0;
+	else if (qAdrsComp)	rSUsiREd <= 1'b1;
+	else				rSUsiREd <= 1'b0;
 end
 
 always @*

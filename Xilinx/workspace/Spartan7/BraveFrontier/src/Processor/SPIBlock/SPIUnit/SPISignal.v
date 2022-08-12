@@ -25,7 +25,7 @@ module SPISignal (
 	// Internal Port FPGA Master Side
     input  	[7:0]   iMWd,               // Master Write Data
     output 	[7:0]   oMRd,	            // Master Read Data
-    output          oMUsiRDe,             // Master Byte Read Assert
+    output          oMUsiREd,             // Master Byte Read Assert
 	input 			iMSpiCs1,
 	input 			iMSpiCs2,
 	// Csr
@@ -177,7 +177,7 @@ localparam [2:0]
 	lpHoldTimeClear 	= 0;
 //
 reg [7:0] 	rMRd;					assign oMRd		= rMRd;
-reg 		rMUsiRDe;					assign oMUsiRDe	= rMUsiRDe;
+reg 		rMUsiREd;					assign oMUsiREd	= rMUsiREd;
 //
 reg 		rMScl;
 reg [7:0] 	rMMosi;
@@ -240,8 +240,8 @@ begin
 	endcase
 
 	case ({qMSckCntCke, iDivCke, rMScl})
-		3'b111:			rMUsiRDe <= 1'b1;
-		default:		rMUsiRDe <= 1'b0;
+		3'b111:			rMUsiREd <= 1'b1;
+		default:		rMUsiREd <= 1'b0;
 	endcase
 end
 
