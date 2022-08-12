@@ -67,7 +67,7 @@ void terminal_info(MapchipWork *chip)
 	printf("z\n\n");
 
 	printf("◎　プログラム終了\n");
-	printf("m\n\n");
+	printf("m 連打\n\n");
 
 	if (chip->map_mode == MAP_CONFIG)
 	{
@@ -99,6 +99,8 @@ void terminal_str(char *s, char *path)
  */
 static void map_help(MapchipWork *chip)
 {
+	printf("矩形選択範囲　　　　　= (x:%3d y:%3d)\n", chip->dirx_loop, chip->diry_loop);
+	printf("\n\n");
 	printf("マップチップ座標　　　= (x:%3d y:%3d)\n", chip->chip_xpos, chip->chip_ypos);
 	printf("選択中のマップチップ　= %3d\n", chip->mapchip_id);
 	printf("◎　マップチップカーソル　上下左右移動\n");
@@ -127,10 +129,10 @@ static void map_help(MapchipWork *chip)
  */
 static void region_help(MapchipWork *chip, PosConf *pos)
 {
-	printf("リージョン番号　　　　= %3d\n", chip->region.id[0]);
-	printf("マスのリージョン番号　= %3d\n", chip->fbuf_reg[(pos->xpos + (pos->ypos * chip->xsize)) + (pos->xfield + (pos->yfield * chip->xsize))]);
-	printf("リージョンの桁数　　　= %3d\n", chip->region.digit[0]);
-	printf("矩形選択範囲　　　　　= (x:%3d y:%3d)\n", chip->dirx_loop, chip->diry_loop);
+	printf("リージョン番号　　　　 = %3d\n", chip->region.id[0]);
+	printf("マスのリージョン番号　 = %3d\n", chip->fbuf_reg[(pos->xpos + (pos->ypos * chip->xsize)) + (pos->xfield + (pos->yfield * chip->xsize))]);
+	printf("リージョンの桁数　　　 = %3d\n", chip->region.digit[0]);
+	printf("矩形選択範囲　　　　　 = (x:%3d y:%3d)\n", chip->dirx_loop, chip->diry_loop);
 	printf("\n\n");
 	printf("◎　リージョンID配置\n");
 	printf("q\n\n");
@@ -151,10 +153,10 @@ static void region_help(MapchipWork *chip, PosConf *pos)
  */
 static void npc_help(MapchipWork *chip, PosConf *pos)
 {
-	printf("NPC番号　　　　　　　= %3d\n", chip->region.id[1]);
-	printf("マスのNPC番号　　　　= %3d\n", chip->fbuf_npc[(pos->xpos + (pos->ypos * chip->xsize)) + (pos->xfield + (pos->yfield * chip->xsize))]);
-	printf("IDの桁数　　　　　　 = %3d\n", chip->region.digit[1]);
-	printf("矩形選択範囲　　　　 = (x:%3d y:%3d)\n", chip->dirx_loop, chip->diry_loop);
+	printf("NPC番号　　　　　　　 = %3d\n", chip->region.id[1]);
+	printf("マスのNPC番号　　　　 = %3d\n", chip->fbuf_npc[(pos->xpos + (pos->ypos * chip->xsize)) + (pos->xfield + (pos->yfield * chip->xsize))]);
+	printf("IDの桁数　　　　　　  = %3d\n", chip->region.digit[1]);
+	printf("矩形選択範囲　　　　  = (x:%3d y:%3d)\n", chip->dirx_loop, chip->diry_loop);
 	printf("\n\n");
 	printf("◎　NPCID配置\n");
 	printf("q\n\n");

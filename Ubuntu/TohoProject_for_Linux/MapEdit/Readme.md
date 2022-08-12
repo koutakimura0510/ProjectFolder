@@ -22,6 +22,9 @@ make install</br>
 ---
 
 ## 【OSがWindowsの場合】
-参考URL → (https://astherier.com/blog/2020/08/run-gui-apps-on-wsl2/)</br>
-細かいことはこの記事に全部書いてあるので、順番に設定すれば動く。
-読み進めてwsl_init.shを実行する
+windows11 から GUI が簡単に行えるようになった。</br>
+下記の項目をインストールすると実行できる。</br>
+
+wsl2 install</br>
+X server install</br>
+x11 install</br>

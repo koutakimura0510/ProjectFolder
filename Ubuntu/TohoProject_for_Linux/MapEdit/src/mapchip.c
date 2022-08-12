@@ -67,6 +67,7 @@ bool mapchip_init(MapchipWork *chip, char *path)
 	chip->fbuf_reg_backup = p->fbuf_reg_backup;
 	chip->region.digit[0] = 1;
 	chip->region.digit[1] = 1;
+	chip->isEnd = 0;
 	fprintf(stderr, "初期設定が完了しました\n");
 	fprintf(stderr, "マップデータの読み込みを行います\n");
 	mapf_read(chip);

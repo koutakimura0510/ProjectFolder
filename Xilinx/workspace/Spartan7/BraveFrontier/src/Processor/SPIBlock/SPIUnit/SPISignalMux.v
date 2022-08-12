@@ -86,6 +86,7 @@ begin
 		3'b111:		rMUfiWEd <= 1'b1;
 		default 	rMUfiWEd <= 1'b0;
 	endcase
+	// TODO wVd処理追加予定
 end
 
 //----------------------------------------------------------

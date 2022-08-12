@@ -79,7 +79,7 @@ bool mapf_read(MapchipWork *chip)
 			for (uint32_t n = 0; n < NUM(old); n++)
 			{
 				if (chip->fbuf_map[pos] == old[n]) {
-					printf("%d\n", chip->fbuf_map[pos]);
+					// printf("%d\n", chip->fbuf_map[pos]);
 					chip->fbuf_map[pos] = new[n];
 				}
 			}

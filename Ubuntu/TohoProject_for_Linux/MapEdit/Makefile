@@ -3,7 +3,8 @@
 # 1. sudo apt install build-essential
 # 2. make install
 # 3. make
-# 4. ./program
+# 4. ./program res/chip_xxx_png
+# 現状 前回のキーデータを覚えているおり起動直後に終了してしまうため、プログラム実行時は Left キーを長押ししておく。
 
 CC = gcc
 # CC = x86_64-w64-mingw32-gcc

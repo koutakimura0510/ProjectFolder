@@ -1,6 +1,0 @@
-png32bit.c:76:6:error_fprintf	32	static
-png32bit.c:89:5:system_init	48	static
-png32bit.c:155:10:rgb_generate	16	static
-png32bit.c:189:6:pixel_generate	112	static
-png32bit.c:288:13:sdl_init	32	static
-png32bit.c:307:5:main	32	static

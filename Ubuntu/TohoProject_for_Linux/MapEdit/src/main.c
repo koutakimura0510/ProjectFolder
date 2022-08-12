@@ -39,7 +39,8 @@ static bool load_texture(SDL_Renderer *renderer, SDL_Texture **p, char *path);
 /*
  * SDLキー入力操作
  */
-static void sdl_key_event(MapchipWork *chip);
+static bool sdl_key_event(MapchipWork *chip);
+static void sdl_key_ram_clear(void);
 
 
 /*
@@ -153,6 +154,7 @@ static void sdl_finish(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture
 	window    = NULL;
 	player_tx = NULL;
 	SDL_Quit();
+	printf("SDL の初期化に成功しました\r\n");
 }
 
 
@@ -300,16 +302,11 @@ static void map_config_key(MapchipWork *chip, int32_t key)
 {
 	switch (key)
 	{
-	case SDLK_UP: ypos_move_up(); 
-		break;
-	case SDLK_LEFT: xpos_move_left();
-		break;
-	case SDLK_DOWN: ypos_move_down(chip);
-		break;
-	case SDLK_RIGHT: xpos_move_right(chip); break;
-	case SDLK_q:
-		mapchip_rect_fill(chip, FILL_SQUARE, 'q');
-		break;
+	case SDLK_UP: ypos_move_up(); 		break;
+	case SDLK_LEFT: xpos_move_left();		break;
+	case SDLK_DOWN: ypos_move_down(chip);	break;
+	case SDLK_RIGHT: xpos_move_right(chip); 	break;
+	case SDLK_q:mapchip_rect_fill(chip, FILL_SQUARE, 'q');	break;
 	case SDLK_e: mapchip_rect_fill(chip, FILL_LOT, 'q'); break;
 	case SDLK_x: mapchip_rect_fill(chip, FILL_SQUARE, 'x'); break;
 	case SDLK_c: mapchip_rect_fill(chip, FILL_LOT, 'x'); break;
@@ -336,9 +333,9 @@ static void map_config_key(MapchipWork *chip, int32_t key)
 	case SDLK_6: chip->diry_loop = 2; break;
 	case SDLK_7: chip->diry_loop = 3; break;
 	case SDLK_8: chip->diry_loop = 4; break;
+	case SDLK_m: chip->isEnd++; break;
 	case SDLK_l: chip->map_mode = REGION_CONFIG; break;
-	case SDLK_m: chip->isEnd = 1; break;
-	default: break;
+	default: chip->isEnd = 0; break;
 	}
 }
 
@@ -390,8 +387,8 @@ static void region_config_key(MapchipWork *chip, int32_t key)
 	case SDLK_8: request_region_id(chip, 8, 0); break;
 	case SDLK_9: request_region_id(chip, 9, 0); break;
 	case SDLK_l: chip->map_mode = NPC_CONFIG; break;
-	case SDLK_m: chip->isEnd = 1; break;
-	default: break;
+	case SDLK_m: chip->isEnd++; break;
+	default: chip->isEnd = 0; break;
 	}
 }
 
@@ -443,8 +440,8 @@ static void npc_config_key(MapchipWork *chip, int32_t key)
 	case SDLK_8: request_region_id(chip, 8, 1); break;
 	case SDLK_9: request_region_id(chip, 9, 1); break;
 	case SDLK_l: chip->map_mode = MAP_CONFIG; break;
-	case SDLK_m: chip->isEnd = 1; break;
-	default: break;
+	case SDLK_m: chip->isEnd++; break;
+	default: chip->isEnd = 0; break;
 	}
 }
 
@@ -454,17 +451,17 @@ static void npc_config_key(MapchipWork *chip, int32_t key)
  * @note   
  * @retval None
  */
-static void sdl_key_event(MapchipWork *chip)
+static bool sdl_key_event(MapchipWork *chip)
 {
 	SDL_Event e;
 
 	while (SDL_PollEvent(&e)) {
 		if (e.type == SDL_QUIT) {
-			return;
+			return false;
 		}
 
 		if (e.type != SDL_KEYDOWN) {
-			return;
+			return false;
 		}
 
 		switch (chip->map_mode)
@@ -491,6 +488,28 @@ static void sdl_key_event(MapchipWork *chip)
 		{
 			terminal_info(chip);
 		}
+
+	}
+
+	return true;
+}
+
+
+/**----------------------------------------------------------
+ * 前回のプログラム実行のデータを削除するため、キー入力待機
+ *---------------------------------------------------------*/
+static void sdl_key_ram_clear(void)
+{
+	SDL_Event e;
+
+	printf("<- 左キーを押してください、押すとスタートです\r\n");
+
+	while (1) {
+		SDL_PollEvent(&e);
+		if (e.key.keysym.sym == SDLK_LEFT)
+		{
+			break;
+		}
 	}
 }
 
@@ -512,7 +531,6 @@ int main(int argc, char *argv[])
 	SDL_Texture  *player_tx;
 	SDL_Texture  *npc_tx;
 	MapchipWork  chip;
-
 
     /* マップチップデータ操作構造体の設定 */
     if (false == mapchip_init(&chip, argv[1]))
@@ -550,6 +568,7 @@ int main(int argc, char *argv[])
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
     /* デバッグ用端末の初期設定 */
+	sdl_key_ram_clear();
 	SET_PLACE(0, 0);
 
 	while (1)
@@ -561,14 +580,15 @@ int main(int argc, char *argv[])
 		player_draw(renderer, &player_tx);
 		SDL_RenderPresent(renderer);
 
-		if (chip.isEnd == 1)
+		if (chip.isEnd == 5)
 		{
 			break;
 		}
 	}
-
+	
 	map_texture_destroy(&map_tx);
 	sdl_finish(&window, &renderer, &player_tx, &npc_tx);
+	printf("プログラムを終了します\r\n");
 
 	return 0;
 }
