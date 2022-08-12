@@ -15,18 +15,18 @@ module GpioCsr #(
 )(
     // Internal Port
 	// Csr Read
-	output	[31:0]			oSUsiRd,
-	output 					oSUsiVd,
-	// Csr Write
-	input	[31:0]			iSUsiWd,	// 書き込みデータ
-	input	[pBusAdrsBit-1:0]iSUsiAdrs,
-	input					iSUsiWCke,	// コマンド有効時 Assert
+	output	[31:0]				oSUsiRd,	// Read Data
+	output						oSUsiVd,	// Read Valid Assert
+	// Bus Slave Write
+	input	[31:0]				iSUsiWd,	// Write Data
+	input	[pBusAdrsBit-1:0]	iSUsiAdrs,  // R/W Adrs
+	input						iSUsiWCke,	// Write Enable
 	// Csr Output
-	output 	[7:0]			oGpioLed,
-	output 	[7:0]			oGpioDiv,
+	output 	[7:0]				oGpioLed,
+	output 	[7:0]				oGpioDiv,
     // CLK Reset
-    input           		iSysClk,
-    input           		iSysRst
+    input           			iSysClk,
+    input           			iSysRst
 );
 
 

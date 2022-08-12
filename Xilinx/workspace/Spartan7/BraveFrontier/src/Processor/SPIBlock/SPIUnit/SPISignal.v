@@ -25,7 +25,7 @@ module SPISignal (
 	// Internal Port FPGA Master Side
     input  	[7:0]   iMWd,               // Master Write Data
     output 	[7:0]   oMRd,	            // Master Read Data
-    output          oMRdVd,             // Master Byte Read Assert
+    output          oMUsiRDe,             // Master Byte Read Assert
 	input 			iMSpiCs1,
 	input 			iMSpiCs2,
 	// Csr
@@ -44,7 +44,7 @@ module SPISignal (
 // 4byte Adrs + Cmd + 2byte Data Length + dummy + nData... 
 // -
 // 最初に 8byte の命令シーケンスを受信する
-// Cmd : 0. Csr Read, 1. Csr Write, 2. Non, 3. PSRAM Write
+// Cmd : 0. Non, 1. Csr Write, 2. Csr Read, 3. PSRAM Write
 // -
 // Csr 操作時は 連続アクセスは可能としない、必ず Data Length は 4byte 固定とする
 // PSRAM 操作時は Data Length は最大 2048 byte とする
@@ -125,9 +125,10 @@ begin
 	endcase
 
 	// Data Length の取得
-	casex ({qSSckCntNegCke, qNegScl, rSState[0]})
-		3'b11_1:		rSDLen	<= rSRd[23:8];
-		default:		rSDLen	<= rSDLen;
+	casex ({qSSckCntNegCke, qNegScl, rSState[1:0]})
+		4'b11_01:		rSDLen	<= rSRd[23:8];
+		4'b11_10:		rSDLen	<= rSDLen;
+		default:		rSDLen	<= 16'd0;
 	endcase
 
 	// Data Byte 受信時の 4byte Assert 信号生成
@@ -165,7 +166,7 @@ end
 //----------------------------------------------------------
 // FPGA Master Side
 // 1byte 送信のみ対応しており、4byte(32bit)のデータを送受信する場合は、
-// 上位モジュールの MUX で対応を行う。
+// 上位モジュールで対応を行う。
 // このロジックはあくまで、1byte 送受信を行うだけにとどめる。
 //----------------------------------------------------------
 localparam [0:0]
@@ -176,7 +177,7 @@ localparam [2:0]
 	lpHoldTimeClear 	= 0;
 //
 reg [7:0] 	rMRd;					assign oMRd		= rMRd;
-reg 		rMRdVd;					assign oMRdVd	= rMRdVd;
+reg 		rMUsiRDe;					assign oMUsiRDe	= rMUsiRDe;
 //
 reg 		rMScl;
 reg [7:0] 	rMMosi;
@@ -239,14 +240,14 @@ begin
 	endcase
 
 	case ({qMSckCntCke, iDivCke, rMScl})
-		3'b111:			rMRdVd <= 1'b1;
-		default:		rMRdVd <= 1'b0;
+		3'b111:			rMUsiRDe <= 1'b1;
+		default:		rMUsiRDe <= 1'b0;
 	endcase
 end
 
 always @*
 begin
-	qMSckCntCke		<= (rMSckNegCnt == 4'd7);
+	qMSckCntCke		<= (rMSckNegCnt == 3'd7);
     qMHoldTimeCke 	<= (rMHoldTime == lpHoldTimeMax);
 end
 
@@ -295,7 +296,8 @@ always @*
 begin
 	qCsCaptureCke <= (rCsCaptureCnt == lpCsCapCntMax);
 end
-
+//
+OBUF  SPI_CONCS	(.O (oSpiConfigCs), .I (1'b1));
 // 
 IOBUF SPI_SCL 	(.O (wSScl), 	.IO (ioSpiSck), 	.I (rMScl), 	.T (rTriStateMSet[1]));	// master output / slave input
 IOBUF SPI_MISO 	(.O (wMMiso),	.IO (ioSpiMiso), 	.I (rSMiso[7]),	.T (rTriStateMSet[0]));	// master input  / slave output

@@ -9,29 +9,30 @@
 //----------------------------------------------------------
 module SPICsr #(
 	// variable parameter
-	parameter 						pBlockAdrsMap 	= 'd8,
+	parameter 						pBlockAdrsMap 	= 8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h03,
-	parameter						pBusAdrsBit		= 'd32,
-	parameter 						pDivClk 		= 'd16
+	parameter						pBusAdrsBit		= 32,
+	parameter 						pDivClk 		= 16
 )(
     // Internal Port
 	// Csr Read
-	output	[31:0]				oSUsiRd,
-	output 						oSUsiVd,
+	output	[31:0]					oSUsiRd,
+	output 							oSUsiVd,
 	// Csr Write
-	input	[31:0]				iSUsiWd,	// 書き込みデータ
-	input	[pBusAdrsBit-1:0]	iSUsiAdrs,
-	input						iSUsiWCke,	// コマンド有効時 Assert
-	// Csr Input
-	// input 	[15:0]				iI2CGetKeyPad,
+	input	[31:0]					iSUsiWd,
+	input	[pBusAdrsBit-1:0]		iSUsiAdrs,
+	input							iSUsiWCke,
 	// Csr Output
-	output 						oSPIEn,
-	output 	[pDivClk-1:0]		oSPIDiv,
-	output	[31:0]				oDeviceAdrs,
-	output	[11:0]				oNeglength,
+	output 							oSPIEn,
+	output 	[pDivClk-1:0]			oSPIDiv,
+	output 	[7:0]					oMWd,
+	output 							oMSpiCs1,
+	output 							oMSpiCs2,
+	// Csr Input
+	input  	[7:0]					iMRd,
     // CLK Reset
-    input           			iSysClk,
-    input           			iSysRst
+    input           				iSysClk,
+    input           				iSysRst
 );
 
 
@@ -40,10 +41,12 @@ module SPICsr #(
 // Csr Write
 //----------------------------------------------------------
 // USI/F Write
-reg 					rSPIEn;				assign oSPIEn 		= rSPIEn;			// 通信開始, 一度 clearしなければ 通信を再開始できないようにする
-reg [pDivClk-1:0]		rSPIDiv;			assign oSPIDiv 		= rSPIDiv;			// CLK Division
-reg [31:0]				rDeviceAdrs;		assign oDeviceAdrs 	= rDeviceAdrs;		// Device のアクセスアドレス
-reg [11:0]				rNeglength;			assign oNeglength	= rNeglength;		// 一度に行うネゴシエーションの回数
+reg 					rSPIEn;				assign oSPIEn 		= rSPIEn;			// 通信開始
+reg 	[pDivClk-1:0]	rSPIDiv;			assign oSPIDiv 		= rSPIDiv;			// CLK Division
+reg 	[7:0]			rMWd;				assign oMWd			= rMWd;
+reg 	[1:0]			rMSpiCs;			assign {oMSpiCs2, oMSpiCs1}	= rMSpiCs;
+//
+reg 	[7:0]			rMRd;
 //
 reg [pBusAdrsBit:0]	qCsrAdrs;
 
@@ -53,14 +56,18 @@ begin
 	begin
 		rSPIEn			<= 1'b0;
 		rSPIDiv			<= {pDivClk{1'b1}};
-		rI2CGetKeyPad	<= 16'd0;
+		rMWd			<= 8'd0;
+		rMSpiCs			<= 2'b11;
+		//
+		rMRd			<= 8'd0;
 	end
 	else
 	begin
-		rSPIEn			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[ 0:0] 			: rSPIEn;
+		rSPIEn			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[0:0] 			: rSPIEn;
 		rSPIDiv			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pDivClk-1:0] 	: rSPIDiv;
-		rDeviceAdrs		<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h08}) ? iSUsiWd[31:0]			: rDeviceAdrs;
-		rNeglength		<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h0c}) ? iSUsiWd[11:0]		 	: rNeglength;
+		rMWd			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h08}) ? iSUsiWd[7:0]			 	: rMWd;
+		rMSpiCs			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h0c}) ? iSUsiWd[1:0]			 	: rMSpiCs;
+		rMRd			<= iMRd;
 	end
 end
 
@@ -87,9 +94,9 @@ begin
 		case ({qAdrsComp, iSUsiAdrs[7:0]})
 			'h100:		rSUsiRd <= {31'd0, rSPIEn};
 			'h104:		rSUsiRd <= {{(32 - pDivClk){1'b0}}, rSPIDiv};	// パラメータ可変なので、可変に対応して0で埋めるようにした
-			'h108:		rSUsiRd <= {rDeviceAdrs};
-			'h10c:		rSUsiRd <= {20'd0, rNeglength};
-			'h180:		rSUsiRd <= {16'd0, rI2CGetKeyPad};
+			'h108:		rSUsiRd <= {24'd0, rMWd};
+			'h10c:		rSUsiRd <= {30'd0, rMSpiCs};
+			'h180:		rSUsiRd <= {24'd0, rMRd};
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase
 	end

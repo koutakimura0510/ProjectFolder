@@ -19,12 +19,12 @@ module MicroControllerBlock #(
 	output 								oUartTx,
     // Internal Port
 	// Bus Master Read
-	input	[31:0]						iMUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
-	input	[pBusSlaveConnectWidth:0]	iMUsiVd,	// Slave アクセス可能時 Assert
+	input	[31:0]						iMUsiRd,	// CSR Read Data
+	input	[pBusSlaveConnectWidth:0]	iMUsiVd,	// Read Assert
 	// Bus Master Write
-	output	[31:0]						oMUsiWd,	// 書き込みデータ
-	output	[pBusAdrsBit-1:0]			oMUsiAdrs,	// 書き込み元のアドレス指定
-	output								oMUsiWEd,	// コマンド有効時 Assert
+	output	[31:0]						oMUsiWd,	// Write Data
+	output	[pBusAdrsBit-1:0]			oMUsiAdrs,	// Write address
+	output								oMUsiWEd,	// Write Data Enable
     // CLK Reset
     input           					iSysClk,
     input           					iSysRst

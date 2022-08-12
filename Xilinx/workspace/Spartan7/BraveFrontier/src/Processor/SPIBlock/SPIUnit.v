@@ -23,22 +23,26 @@ module SPIUnit #(
 	// Usi Bus Master to Slave Select
 	output 						oMUsiMonopoly,	// 0. Slave として機能 / 1. Master バスを独占
 	// Usi Bus Master Read
-	input	[31:0]				iMUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
+	input	[31:0]				iMUsiRd,		// Csr Read
 	// input	[pBusSlaveConnectWidth:0]	iMUsiVd,	// Slave アクセス可能時 Assert
 	// Usi Bus Master Write
-	output	[31:0]				oMUsiWd,	// Write Data
-	output	[pBusAdrsBit-1:0]	oMUsiAdrs,	// R/W アドレス指定
-	output						oMUsiWEd,	// Write Assert / Read Low Fix
+	output	[31:0]				oMUsiWd,		// Write Data
+	output	[pBusAdrsBit-1:0]	oMUsiAdrs,		// R/W Adrs
+	output						oMUsiWEd,		// Write Enable
 	// Ufi Bus Master
-	output	[31:0]				oMUfiWd,	// Write Data
-	output	[31:0]				oMUfiAdrs,	// Write address
-	output						oMUfiWEd,	// Write Data Enable
-	output 						oMUfiWVd,	// 転送期間中 Assert
+	output	[31:0]				oMUfiWd,		// Write Data
+	output	[31:0]				oMUfiAdrs,		// Write address
+	output						oMUfiWEd,		// Write Data Enable
+	output 						oMUfiWVd,		// 転送期間中 Assert
 	// Csr
 	input 						iSPIEn,
 	input 	[lpDivClk-1:0]		iSPIDiv,
-	input 	[31:0]				iSPIDeviceAdrs,
-	input 	[11:0]				iSPINeglength,
+	input 	[7:0]				iMWd,
+	input 						iMSpiCs1,
+	input 						iMSpiCs2,
+	output	[7:0]				oMRd,
+	// Interrupt
+	output 						oMUsiRDe,
     // CLK Reset
     input           			iSysClk,
     input           			iSysRst
@@ -50,42 +54,48 @@ module SPIUnit #(
 wire wDivCke;
 
 CkeGenerator #(
-	.pDivReg	("yes"),
-	.pDivWidth	(pDivClk)
+	.pDivReg		("yes"),
+	.pDivWidth		(pDivClk)
 ) I2C_CKE_GEN (
-	.iCke		(iSPIEn),
-	.iDiv		(iSPIDiv),
-	.oCke		(wDivCke),
-	.iSysClk	(iSysClk),
-	.iSysRst	(iSysRst)
+	.iCke			(iSPIEn),
+	.iDiv			(iSPIDiv),
+	.oCke			(wDivCke),
+	.iSysClk		(iSysClk),
+	.iSysRst		(iSysRst)
 );
 
 
 //----------------------------------------------------------
-// 
+// FPGA Slave の際の データ操作
 //----------------------------------------------------------
-wire 		wTriState;
-wire [7:0]	wSend;
-wire [7:0]	wBufLen;
-wire 		wBufVd;
-wire 		wByteVd;
-wire [7:0] 	wSdaByte;
+wire	[31:0]		wSMisoMux;
+reg 	[31:0]		qSRdMux;
+reg 	[31:0]		qSAdrsMux;
+reg 	[1:0]		qSCmdMux;
+reg 	[15:0]		qSDLenMux;
+reg 				qSRdVdMux;
 
-SPISignalMux SPI_SIGNAL_MUX (
-	.iSMiso			(iSMiso),
-	.oSRd			(oSRd),
-	.oSAdrs			(oSAdrs),
-	.oSCmd			(oSCmd),
-	.oSDLen			(oSDLen),
-	.oSRdVd			(oSRdVd),
-	.iSPIEn			(iSPIEn),
-	.iDivCke		(wDivCke),
-	.iMWd			(iMWd),
-	.oMRd			(oMRd),
-	.oMRdVd			(oMRdVd),
-	.iMSpiCs1		(iMSpiCs1),
-	.iMSpiCs2		(iMSpiCs2),
-	.oMSSel			(oMSSel),
+SPISignalMux # (
+	.pBusAdrsBit	(pBusAdrsBit)
+) SPI_SIGNAL_MUX (
+	// Internal Port FPGA Slave Side SPI Module Connect
+	.oSMiso			(wSMisoMux),
+	.iSRd			(qSRdMux),
+	.iSAdrs			(qSAdrsMux),
+	.iSCmd			(qSCmdMux),
+	.iSDLen			(qSDLenMux),
+	.iSRdVd			(qSRdVdMux),
+	// Internal Port FPGA Slave Side Upper Module Connect
+	.iMUsiRd		(iMUsiRd),
+	.oMUsiWd		(oMUsiWd),
+	.oMUsiAdrs		(oMUsiAdrs),
+	.oMUsiWEd		(oMUsiWEd),
+	// Ufi Bus Master Write
+	.oMUfiWd		(oMUfiWd),
+	.oMUfiAdrs		(oMUfiAdrs),
+	.oMUfiWEd		(oMUfiWEd),
+	.oMUfiWVd		(oMUfiWVd),
+	// CLK Reset
 	.iSysClk		(iSysClk),
 	.iSysRst		(iSysRst)
 );
@@ -94,21 +104,13 @@ SPISignalMux SPI_SIGNAL_MUX (
 //----------------------------------------------------------
 // SPI 通信信号生成
 //----------------------------------------------------------
-// Slave Side
-reg		[31:0]	qSMiso;
-wire 	[31:0]	wSRd;
-wire 	[31:0]	wSAdrs;
-wire 	[1:0]	wSCmd;
-wire 	[15:0]	wSDLen;
-wire 			wSRdVd;
-// Master Side
-reg 	[7:0]	qMWd;
-wire 	[7:0]	wMRd;
-wire 			wMRdVd;
-reg 			qMSpiCs1;
-reg 			qMSpiCs2;
-// Master Slave Select
-wire 			wMSSel;					assign oMUsiMonopoly = wMSSel;
+// FPGA Slave Side
+reg		[31:0]	qSMisoSig;
+wire 	[31:0]	wSRdSig;
+wire 	[31:0]	wSAdrsSig;
+wire 	[1:0]	wSCmdSig;
+wire 	[15:0]	wSDLenSig;
+wire 			wSRdVdSig;
 
 SPISignal SPI_SIGNAL (
 	// External Port
@@ -121,22 +123,22 @@ SPISignal SPI_SIGNAL (
 	.ioSpiCs1		(ioSpiCs1),
 	.ioSpiCs2		(ioSpiCs2),
 	// Internal Port FPGA Slave Side
-	.iSMiso			(qSMiso),
-	.oSRd			(wSRd),
-	.oSAdrs			(wSAdrs),
-	.oSCmd			(wSCmd),
-	.oSDLen			(wSDLen),
-	.oSRdVd			(wSRdVd),
+	.iSMiso			(qSMisoSig),
+	.oSRd			(wSRdSig),
+	.oSAdrs			(wSAdrsSig),
+	.oSCmd			(wSCmdSig),
+	.oSDLen			(wSDLenSig),
+	.oSRdVd			(wSRdVdSig),
 	// Internal Port FPGA Master Side
 	.iSPIEn			(iSPIEn),
 	.iDivCke		(wDivCke),
-	.iMWd			(qMWd),
-	.oMRd			(wMRd),
-	.oMRdVd			(wMRdVd),
-	.iMSpiCs1		(qMSpiCs1),
-	.iMSpiCs2		(qMSpiCs2),
+	.iMWd			(iMWd),
+	.oMRd			(oMRd),
+	.oMUsiRDe			(oMUsiRDe),
+	.iMSpiCs1		(iMSpiCs1),
+	.iMSpiCs2		(iMSpiCs2),
 	// Master Slave Select
-	.oMSSel			(wMSSel),
+	.oMSSel			(oMUsiMonopoly),
 	//
 	.iSysClk		(iSysClk),
 	.iSysRst		(iSysRst)
@@ -144,12 +146,12 @@ SPISignal SPI_SIGNAL (
 
 always @*
 begin
-	 <= qSMiso;
-	 <= wSRd;
-	 <= wSAdrs;
-	 <= wSCmd;
-	 <= wSDLen;
-	 <= wSRdVd;
+	qSMisoSig	<= wSMisoMux;
+	qSRdMux 	<= wSRdSig;
+	qSAdrsMux 	<= wSAdrsSig;
+	qSCmdMux 	<= wSCmdSig;
+	qSDLenMux 	<= wSDLenSig;
+	qSRdVdMux 	<= wSRdVdSig;
 end
 
 endmodule

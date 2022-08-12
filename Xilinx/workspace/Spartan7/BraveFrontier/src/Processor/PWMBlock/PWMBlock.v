@@ -14,12 +14,12 @@ module PWMBlock #(
 	output						oPwm,
     // Internal Port
 	// Bus Slave Read
-	output	[31:0]				oSUsiRd,	// アドレス一致 かつ RCmd 発行時データ出力
-	output						oSUsiVd,	// アクセス可能時 Assert
+	output	[31:0]				oSUsiRd,	// Read Data
+	output						oSUsiVd,	// Read Valid Assert
 	// Bus Slave Write
-	input	[31:0]				iSUsiWd,	// Master からの書き込みデータ
-	input	[pBusAdrsBit-1:0]	iSUsiAdrs,
-	input						iSUsiWCke,	// コマンド有効時 Assert
+	input	[31:0]				iSUsiWd,	// Write Data
+	input	[pBusAdrsBit-1:0]	iSUsiAdrs,  // R/W Adrs
+	input						iSUsiWCke,	// Write Enable
     // CLK Reset
     input           			iSysClk,
     input           			iSysRst
