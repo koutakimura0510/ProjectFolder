@@ -21,7 +21,7 @@ module SPISignal (
 	output 	[31:0]	oSAdrs,
 	output 	[1:0]	oSCmd,
 	output 	[15:0]	oSDLen,
-	output 			oSRdVd,
+	output 			oSREd,
 	// Internal Port FPGA Master Side
     input  	[7:0]   iMWd,               // Master Write Data
     output 	[7:0]   oMRd,	            // Master Read Data
@@ -40,7 +40,7 @@ module SPISignal (
 
 //----------------------------------------------------------
 // FPGA Slave
-// 4byte Adrs + Cmd + 2byte Data Length + dummy + n32bitData... 
+// 4byte Adrs + dummy + Cmd + 2byte Data Length + n32bitData... 
 // -
 // 最初に 8byte の命令シーケンスを受信する
 // Cmd : 0. Non, 1. Csr Write, 2. Csr Read, 3. PSRAM Write
@@ -69,23 +69,28 @@ reg [31:0]	rSRd;					assign oSRd   	= rSRd;
 reg [31:0]	rSAdrs;					assign oSAdrs	= rSAdrs;
 reg [1:0]	rSCmd;					assign oSCmd	= rSCmd;
 reg [15:0]	rSDLen;					assign oSDLen	= rSDLen;
-reg 		rSRdVd;					assign oSRdVd 	= rSRdVd;
+reg 		rSREd;					assign oSREd 	= rSREd;
 //
 reg [4:0]	rSSckCntNeg;
 //
 reg qPosScl, qNegScl;
 reg qSSckCntNegCke;
+reg qSActive;
 
 always @(posedge iSysClk)
 begin
 	// Master からの Signal をシフトレジスタで受信
-	rSftSMosi	<= {rSftSMosi[0:0], wSMosi};
+	if (iSysRst)		rSftSMosi <= 3'b000;
+	else if (qSActive)	rSftSMosi <= 3'b000;
+	else 				rSftSMosi <= {rSftSMosi[0:0], wSMosi};
 
-	if (iSysRst)	rSftSScl <= 3'b000;
-	else			rSftSScl <= {rSftSScl[1:0], wSScl};
+	if (iSysRst)		rSftSScl <= 3'b000;
+	else if (qSActive)	rSftSScl <= 3'b000;
+	else				rSftSScl <= {rSftSScl[1:0], wSScl};
 
-	if (iSysRst)	rSftCs	<= 3'b111;
-	else 			rSftCs	<= {rSftCs[1:0], 	wSCs};
+	if (iSysRst)		rSftCs	<= 3'b111;
+	else if (qSActive)	rSftCs	<= 3'b111;
+	else 				rSftCs	<= {rSftCs[1:0], 	wSCs};
 
 	// 受信シーケンス・ステートマシン
 	// シーケンス最後の DataGetモードは CS High になるまでデータを受信するだけなので、
@@ -99,41 +104,41 @@ begin
 	endcase
 
 	// 4byte 受信カウント
-	if (qSSckCntNegCke)	rSSckCntNeg <= 5'd0;
+	if (iSysRst)		rSSckCntNeg <= 5'd0;
 	else if (qNegScl)	rSSckCntNeg <= rSSckCntNeg + 1'b1;
 	else				rSSckCntNeg <= rSSckCntNeg;
 
 	// Posedge を検出し Master からの送信データを受信
-	if (qPosScl) 		rSRd <= {rSRd[30:0], rSftSMosi[1]};
+	if (qPosScl)		rSRd <= {rSRd[30:0], rSftSMosi[1]};
 	else 				rSRd <= rSRd;
 
 	// アクセス開始アドレスの取得、PSRAM アクセスの場合のアドレス自動更新
 	// SPI は PSRAMに比べて極めて低速なため、上位モジュールでアドレスの更新を管理する必要はない。
 	// そのため、このロジックでアドレスを更新ようにした
-	casex ({rSRdVd, rSState[1:0]})
-		3'b1_00:		rSAdrs	<= rSRd;
-		3'b1_10:		rSAdrs	<= rSAdrs + 1'b1;
+	casex ({qSSckCntNegCke, qNegScl, rSState[1:0]})
+		4'b11_00:		rSAdrs	<= rSRd;
+		4'b11_10:		rSAdrs	<= rSAdrs + 1'b1;
 		default:		rSAdrs	<= rSAdrs;
 	endcase
 
 	// CMD の取得
 	casex ({qSSckCntNegCke, qNegScl, rSState[1:0]})
-		4'b11_01:		rSCmd	<= rSRd[25:24];
+		4'b11_01:		rSCmd	<= rSRd[17:16];
 		4'bxx_10:		rSCmd	<= rSCmd;
 		default:		rSCmd	<= 2'd0;
 	endcase
 
 	// Data Length の取得
 	casex ({qSSckCntNegCke, qNegScl, rSState[1:0]})
-		4'b11_01:		rSDLen	<= rSRd[23:8];
-		4'b11_10:		rSDLen	<= rSDLen;
+		4'b11_01:		rSDLen	<= rSRd[15:0];
+		4'bxx_10:		rSDLen	<= rSDLen;
 		default:		rSDLen	<= 16'd0;
 	endcase
 
 	// Data Byte 受信時の 4byte Assert 信号生成
-	casex ({qSSckCntNegCke, qNegScl, rSState[1:0]})
-		4'b11_10:		rSRdVd	<= 1'b1;
-		default:		rSRdVd	<= 1'b0;
+	casex ({qSSckCntNegCke, qPosScl, rSState[1:0]})
+		4'b11_10:		rSREd	<= 1'b1;
+		default:		rSREd	<= 1'b0;
 	endcase
 
 	// CLK の立ち下がりで MISO データ更新 
@@ -200,8 +205,8 @@ begin
 	// Sck の立ち下がり回数カウント
 	casex ({iSPIEn, iDivCke, rMScl})
 		3'b0_xx:		rMSckNegCnt	<= 3'd0;
-		3'b0_11:		rMSckNegCnt	<= rMSckNegCnt + 1'b1;
-		3'b1_00:		rMSckNegCnt	<= rMSckNegCnt;
+		3'b1_11:		rMSckNegCnt	<= rMSckNegCnt + 1'b1;
+		default:		rMSckNegCnt	<= rMSckNegCnt;
 	endcase
 
 	// Sck negedge 後の Hold time 生成 ステートマシン
@@ -259,16 +264,22 @@ begin
 	else 			rMSSel <= {rMSSel[1:0], wMSSel};
 end
 
+always @*
+begin
+	qSActive <= (rMSSel[2] == 1'b0);
+	// qMActive <= (rMSSel[2] == 1'b1);
+end
+
 //
 OBUF  SPI_CONCS	(.O (oSpiConfigCs), .I (1'b1));
 //
 IBUF  SPI_MS_SEL(.O (wMSSel), .I (iMSSel));
 //
-IOBUF SPI_SCL 	(.O (wSScl), 	.IO (ioSpiSck), 	.I (rMScl), 	.T (rMSSel[2]));	// master output / slave input
-IOBUF SPI_MISO 	(.O (wMMiso),	.IO (ioSpiMiso), 	.I (rSMiso[31]),.T (rMSSel[2]));	// master input  / slave output
-IOBUF SPI_MOSI 	(.O (wSMosi), 	.IO (ioSpiMosi), 	.I (rMMosi[7]), .T (rMSSel[2]));	// master output / slave input
-IOBUF SPI_WP 	(.O (wSWp), 	.IO (ioSpiWp),   	.I (1'b1),		.T (rMSSel[2]));
-IOBUF SPI_HOLD 	(.O (wSHold),	.IO (ioSpiHold), 	.I (1'b1),		.T (rMSSel[2]));
-IOBUF SPI_CS 	(.O (wSCs), 	.IO (ioSpiCs), 		.I (iMSPICs),	.T (rMSSel[2]));	// master output / slave input
+IOBUF SPI_SCL 	(.O (wSScl), 	.IO (ioSpiSck), 	.I (rMScl), 		.T (rMSSel[2]));	// master output / slave input
+IOBUF SPI_MISO 	(.O (wMMiso),	.IO (ioSpiMiso), 	.I (rSMiso[31]),	.T (~rMSSel[2]));	// master input  / slave output
+IOBUF SPI_MOSI 	(.O (wSMosi), 	.IO (ioSpiMosi), 	.I (rMMosi[7]), 	.T (rMSSel[2]));	// master output / slave input
+IOBUF SPI_WP 	(.O (wSWp), 	.IO (ioSpiWp),   	.I (1'b1),			.T (rMSSel[2]));
+IOBUF SPI_HOLD 	(.O (wSHold),	.IO (ioSpiHold), 	.I (1'b1),			.T (rMSSel[2]));
+IOBUF SPI_CS 	(.O (wSCs), 	.IO (ioSpiCs), 		.I (iMSPICs),		.T (rMSSel[2]));	// master output / slave input
 
 endmodule

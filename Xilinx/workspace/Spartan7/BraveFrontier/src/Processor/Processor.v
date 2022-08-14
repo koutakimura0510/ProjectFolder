@@ -221,7 +221,7 @@ SPIBlock #(
 	//
 	.oMUsiMonopoly				(wMUsiMonopoly),
 	//
-	.oMSpiIntr				(wMSpiIntr),
+	.oMSpiIntr					(wMSpiIntr),
 	//
 	.iSysClk					(iSysClk),
 	.iSysRst					(iSysRst)
@@ -240,19 +240,19 @@ reg  [lpBusAdrsBit-1:0]	qSUsiAdrsI2c;
 reg  					qSUsiWCkeI2c;
 
 I2CBlock #(
-	.pBlockAdrsMap	(lpBlockAdrsMap),
-	.pAdrsMap	 	(lpGpioAdrsMap),
-	.pBusAdrsBit	(lpBusAdrsBit)
+	.pBlockAdrsMap		(lpBlockAdrsMap),
+	.pAdrsMap	 		(lpGpioAdrsMap),
+	.pBusAdrsBit		(lpBusAdrsBit)
 ) I2C_BLOCK (
-	.oI2CScl		(oI2CScl),
-	.ioI2CSda		(ioI2CSda),
-	.oSUsiRd		(wSUsiRdI2c),
-	.oSUsiREd		(wSUsiREdI2c),
-	.iSUsiWd		(qSUsiWdI2c),
-	.iSUsiAdrs		(qSUsiAdrsI2c),
-	.iSUsiWCke		(qSUsiWCkeI2c),
-	.iSysClk		(iSysClk),
-	.iSysRst		(iSysRst)
+	.oI2CScl			(oI2CScl),
+	.ioI2CSda			(ioI2CSda),
+	.oSUsiRd			(wSUsiRdI2c),
+	.oSUsiREd			(wSUsiREdI2c),
+	.iSUsiWd			(qSUsiWdI2c),
+	.iSUsiAdrs			(qSUsiAdrsI2c),
+	.iSUsiWCke			(qSUsiWCkeI2c),
+	.iSysClk			(iSysClk),
+	.iSysRst			(iSysRst)
 );
 
 //----------------------------------------------------------

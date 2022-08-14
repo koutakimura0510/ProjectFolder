@@ -55,7 +55,7 @@ wire wDivCke;
 CkeGenerator #(
 	.pDivReg		("yes"),
 	.pDivWidth		(pDivClk)
-) I2C_CKE_GEN (
+) SPI_CKE_GEN (
 	.iCke			(iSPIEn),
 	.iDiv			(iSPIDiv),
 	.oCke			(wDivCke),
@@ -72,7 +72,7 @@ reg 	[31:0]		qSRdMux;
 reg 	[31:0]		qSAdrsMux;
 reg 	[1:0]		qSCmdMux;
 reg 	[15:0]		qSDLenMux;
-reg 				qSRdVdMux;
+reg 				qSREdMux;
 
 SPISignalMux # (
 	.pBusAdrsBit	(pBusAdrsBit)
@@ -83,7 +83,7 @@ SPISignalMux # (
 	.iSAdrs			(qSAdrsMux),
 	.iSCmd			(qSCmdMux),
 	.iSDLen			(qSDLenMux),
-	.iSRdVd			(qSRdVdMux),
+	.iSREd			(qSREdMux),
 	// Internal Port FPGA Slave Side Upper Module Connect
 	.iMUsiRd		(iMUsiRd),
 	.oMUsiWd		(oMUsiWd),
@@ -109,7 +109,7 @@ wire 	[31:0]	wSRdSig;
 wire 	[31:0]	wSAdrsSig;
 wire 	[1:0]	wSCmdSig;
 wire 	[15:0]	wSDLenSig;
-wire 			wSRdVdSig;
+wire 			wSREdSig;
 
 SPISignal SPI_SIGNAL (
 	// External Port
@@ -127,7 +127,7 @@ SPISignal SPI_SIGNAL (
 	.oSAdrs			(wSAdrsSig),
 	.oSCmd			(wSCmdSig),
 	.oSDLen			(wSDLenSig),
-	.oSRdVd			(wSRdVdSig),
+	.oSREd			(wSREdSig),
 	// Internal Port FPGA Master Side
 	.iSPIEn			(iSPIEn),
 	.iDivCke		(wDivCke),
@@ -149,7 +149,7 @@ begin
 	qSAdrsMux 	<= wSAdrsSig;
 	qSCmdMux 	<= wSCmdSig;
 	qSDLenMux 	<= wSDLenSig;
-	qSRdVdMux 	<= wSRdVdSig;
+	qSREdMux 	<= wSREdSig;
 end
 
 endmodule

@@ -108,7 +108,7 @@ SPIUnit #(
 	.iMSPICs			(qMSpiCsUnit),
 	.oMRd				(wMRdUnit),
 	// Interrupt
-	.oMSpiIntr		(oMSpiIntr),
+	.oMSpiIntr			(oMSpiIntr),
 	// CLK Reset
 	.iSysClk			(iSysClk),
 	.iSysRst			(iSysRst)

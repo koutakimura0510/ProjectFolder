@@ -2,6 +2,7 @@
 //----------------------------------------------------------
 // Create  2022/08/12
 // Author  KoutaKimura
+// SPI の Master Slave を切り替えながらデータの送受信を行う。
 // 
 //----------------------------------------------------------
 module SPI_tb;
@@ -43,7 +44,7 @@ reg rioSpiMosi		= 1'b0;
 reg rioSpiWp		= 1'b1;
 reg rioSpiHold		= 1'b1;
 reg rioSpiCs		= 1'b1;
-reg riMSSel			= 1'b0;
+reg riMSSel			= 1'b1;
 //
 wire wioSpiSck;
 wire wioSpiMiso;
@@ -60,8 +61,8 @@ assign wioSpiMosi	= rioSpiMosi;
 assign wioSpiWp		= rioSpiWp;
 assign wioSpiHold	= rioSpiHold;
 assign wioSpiCs		= rioSpiCs;
-assign wiMSSel		= riMSSel;
 //
+wire wMSpiIntr;
 wire wMUsiMonopoly;
 //
 
@@ -150,7 +151,7 @@ task spi_send (
 begin
 	integer i;
 
-	for (i = 32; i >= 0; i = i - 1)
+	for (i = 31; i >= 0; i = i - 1)
 	begin
 		#(lpSysClkCycle * 2);
 		rioSpiMosi	= iMiso[i];
@@ -163,17 +164,82 @@ end
 endtask
 
 
+//----------------------------------------------------------
+// SPI Slave 
+// MSSel の状態で GPIO の設定
+// 
+// 本来であればシステムクロックでキャプチャしなければならないが、
+// 処理を書くのが面倒なので直接 SCK 駆動としている
+// 
+//----------------------------------------------------------
+reg [7:0] d = 8'h72;
+
+always @(negedge wioSpiSck)
+begin
+	if (wMUsiMonopoly) 	d <= 8'h72;
+	else 				d <= {d[6:0], 1'b0};
+
+	if (wMUsiMonopoly) 	rioSpiMiso <= 1'bz;
+	else 				rioSpiMiso <= d[7];
+end
+
+
+//----------------------------------------------------------
+// SPI 初期設定
+//----------------------------------------------------------
+// SPI Master 設定
+task spi_master_init;
+begin
+	rioSpiSck		= 1'b0;
+	rioSpiMiso		= 1'bz;
+	rioSpiMosi		= 1'b0;
+	rioSpiWp		= 1'b1;
+	rioSpiHold		= 1'b1;
+	rioSpiCs		= 1'b1;
+	riMSSel			= 1'b1;
+end
+endtask
+
+// SPI Slave 設定
+// SPI Master 設定
+task spi_slave_init;
+begin
+	rioSpiSck		= 1'bz;
+	rioSpiMiso		= 1'b0;
+	rioSpiMosi		= 1'bz;
+	rioSpiWp		= 1'bz;
+	rioSpiHold		= 1'bz;
+	rioSpiCs		= 1'bz;
+	riMSSel			= 1'b0;
+end
+endtask
+
 
 //----------------------------------------------------------
 // Simlation Start
 //----------------------------------------------------------
 initial begin
+	// 一度 Master の立場から、Csr の設定を行う
+	spi_master_init();
 	reset_init();
 	spi_cs(1'b0);
 	spi_send('h8765_0304);
-	spi_send('h0100_0100);
-	spi_send('h0000_000f);
+	spi_send('h0001_0001);
+	spi_send('h0000_0008);
 	spi_cs(1'b1);
+	spi_cs(1'b0);
+	spi_send('h0123_0308);
+	spi_send('h0001_0001);
+	spi_send('h0000_00aa);
+	spi_cs(1'b1);
+	spi_cs(1'b0);
+	spi_send('h0123_0300);
+	spi_send('h0001_0001);
+	spi_send('h0000_0001);
+	// spi_cs(1'b1);
+
+	// Csr の設定で FPGA Master 動作
+	spi_slave_init();
     $stop;
 end
 
@@ -195,7 +261,7 @@ SPIBlock #(
     .ioSpiHold			(wioSpiHold),
     .oSpiConfigCs		(wSpiConfigCs),
     .ioSpiCs			(wioSpiCs),
-    .iMSSel				(wiMSSel),
+    .iMSSel				(riMSSel),
     // Internal Port
 	// Usi Bus Master Read
 	.iMUsiRd			(rMUsiRd),		// CSR Read Data
@@ -217,7 +283,7 @@ SPIBlock #(
 	.oMUfiWEd			(wMUfiWEd),		// Write Data Enable
 	.oMUfiWVd			(wMUfiWVd),		// 転送期間中 Assert
 	// Interrupt
-	.oMUsiREd			(oMUsiREd),
+	.oMSpiIntr			(wMSpiIntr),
 	// Usi Bus Master to Slave Select
 	.oMUsiMonopoly		(wMUsiMonopoly),// 0. Slave として機能 / 1. Master バスを独占
 	// CLK Reset
