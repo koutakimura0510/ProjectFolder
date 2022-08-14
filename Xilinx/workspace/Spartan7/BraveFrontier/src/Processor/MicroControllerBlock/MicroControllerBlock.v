@@ -14,9 +14,6 @@ module MicroControllerBlock #(
 	// Not Set Param
 	parameter [3:0]	pBusSlaveConnectWidth 	= pBusSlaveConnect - 1'b1	// Busに接続する Slave数 最大16
 )(
-	// External Port
-	input 								iUartRx,
-	output 								oUartTx,
     // Internal Port
 	// Bus Master Read
 	input	[31:0]						iMUsiRd,	// CSR Read Data

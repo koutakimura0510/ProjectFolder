@@ -23,24 +23,24 @@ module BraveFrontier #(
     parameter       pBuffDepth      = 1024,      // Displayの横幅よりも大きいサイズを指定
     parameter       pDebug          = "off"
 )(
+	// Osc Clk
     input           iOscSystemClk,     // OSC  clk
     input           iOscAudioClk,      // OSC  clk
+	// SPI
     inout           ioSpiSck,
     inout           ioSpiMiso,
     inout           ioSpiMosi,
     inout           ioSpiWp,
     inout           ioSpiHold,
     output          oSpiConfigCs,
-    input           ioSpiCs1,
-    input           ioSpiCs2,
-    inout  [15:0]   ioSrampDq,
-    inout  [1:0]    ioSrampDqs,
-    output          oSrampClk,
-    output          oSrampCs,
-    inout  [15:0]   ioSramsDq,
-    inout  [1:0]    ioSramsDqs,
-    output          oSramsClk,
-    output          oSramsCs,
+    inout           ioSpiCs,
+    input           iMSSel,
+	// PSRAM
+    inout  [15:0]   ioSramDq,
+    inout  [1:0]    ioSramDqs,
+    output          oSramClk,
+    output          oSramCs,
+	// Display
     output [7:4]    oTftColorR,
     output [7:4]    oTftColorG,
     output [7:4]    oTftColorB,
@@ -50,16 +50,14 @@ module BraveFrontier #(
     output          oTftDe,
     output          oTftBackLight,
     output          oTftRst,
+	// I2C Controller
     output          oI2CScl,
     inout           ioI2CSda,
+	// I2S Audio
     output          oAudioMclk,
     output          oAudioBclk,
     output          oAudioCclk,
-    output          oAudioData,
-    output          oUartTx,
-    input           iUartRx,
-    output [1:0]    oLedEdge,
-    output          oLedClk
+    output          oAudioData
 );
 
 
@@ -146,20 +144,13 @@ Processer # (
     .ioSpiSck       (ioSpiSck),
     .ioSpiMiso      (ioSpiMiso),        .ioSpiMosi      (ioSpiMosi),
     .ioSpiHold      (ioSpiHold),        .ioSpiWp        (ioSpiWp),
-    .ioSpiCs1       (ioSpiCs1),         .ioSpiCs2       (ioSpiCs2),
+    .ioSpiCs		(ioSpiCs),			.iMSSel			(iMSSel),
     .oSpiConfigCs   (oSpiConfigCs),
     // I2C Controller
     .oI2CScl         (oI2CScl),         .ioI2CSda        (ioI2CSda),
     // Memory Primary
-    .ioSrampDq      (ioSrampDq),        .ioSrampDqs     (ioSrampDqs),
-    .oSrampClk      (oSrampClk),        .oSrampCs       (oSrampCs),
-    // Memory Secondary
-    .ioSramsDq      (ioSramsDq),        .ioSramsDqs     (ioSramsDqs),
-    .oSramsClk      (oSramsClk),        .oSramsCs       (oSramsCs),
-    // uart
-    .iUartRx        (iUartRx),          .oUartTx        (oUartTx),
-    // Led
-    .oLedClk        (oLedClk),          .oLedEdge       (oLedEdge),
+    .ioSramDq      (ioSramDq),        	.ioSramDqs     (ioSramDqs),
+    .oSramClk      (oSramClk),        	.oSramCs       (oSramCs),
 
     //----------------------------------------------------------
     // Internal Port

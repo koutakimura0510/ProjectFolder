@@ -23,6 +23,16 @@ always begin
     #(lpSysClkCycle/2);
     rSysClk = ~rSysClk;
 end
+//
+// Reset 処理
+task reset_init;
+begin
+	#(lpSysClkCycle * 5);
+	rSysRst = 0;
+	#(lpSysClkCycle * 5);
+end
+endtask //
+
 
 //----------------------------------------------------------
 // Gpio Connect
@@ -32,16 +42,16 @@ reg rioSpiMiso		= 1'bz;
 reg rioSpiMosi		= 1'b0;
 reg rioSpiWp		= 1'b1;
 reg rioSpiHold		= 1'b1;
-reg rioSpiCs1		= 1'b1;
-reg rioSpiCs2		= 1'b0;
+reg rioSpiCs		= 1'b1;
+reg riMSSel			= 1'b0;
 //
 wire wioSpiSck;
 wire wioSpiMiso;
 wire wioSpiMosi;
 wire wioSpiWp;
 wire wioSpiHold;
-wire wioSpiCs1;
-wire wioSpiCs2;
+wire wioSpiCs;
+wire wiMSSel;
 wire wSpiConfigCs;
 //
 assign wioSpiSck	= rioSpiSck;
@@ -49,8 +59,8 @@ assign wioSpiMiso	= rioSpiMiso;
 assign wioSpiMosi	= rioSpiMosi;
 assign wioSpiWp		= rioSpiWp;
 assign wioSpiHold	= rioSpiHold;
-assign wioSpiCs1	= rioSpiCs1;
-assign wioSpiCs2	= rioSpiCs2;
+assign wioSpiCs		= rioSpiCs;
+assign wiMSSel		= riMSSel;
 //
 wire wMUsiMonopoly;
 //
@@ -65,7 +75,7 @@ reg [31:0] 			rSUsiWd   	= 0;
 reg [15:0] 			rSUsiAdrs 	= 0;
 reg 				rSUsiWCke 	= 0;
 //
-task CsrSetting (
+task usi_csr_setting (
 	input [31:0] wd,
 	input [31:0] adrs
 );
@@ -78,7 +88,7 @@ begin
 	rSUsiWCke = 1'b0;
 	#(lpSysClkCycle);
 end
-endtask //CsrSetting
+endtask //usi_csr_setting
 
 // Slave Read データを Master に送信
 wire [31:0] 		wSUsiRd;
@@ -122,17 +132,25 @@ wire 		wMUfiWVd;
 //----------------------------------------------------------
 localparam lpSclCycle = (lpSysClkCycle * 8);
 
-task SpiMaster (
-	input integer iSendCnt,
-	input [7:0] iMiso
+// SPI CS 関数
+task spi_cs (
+	input iCs	// High / Low Sel
+);
+begin
+	#(lpSclCycle);
+	rioSpiCs = iCs;
+	#(lpSclCycle);
+end
+endtask
+
+// SPI 送信関数, 32bit 固定
+task spi_send (
+	input [31:0] iMiso
 );
 begin
 	integer i;
 
-	rioSpiCs1 = 1'b0;
-	#(lpSclCycle);
-
-	for (i = iSendCnt; i >= 0; i = i - 1)
+	for (i = 32; i >= 0; i = i - 1)
 	begin
 		#(lpSysClkCycle * 2);
 		rioSpiMosi	= iMiso[i];
@@ -141,9 +159,6 @@ begin
 		#(lpSclCycle);
 		rioSpiSck	= 1'b0;
 	end
-
-	#(lpSclCycle);
-	rioSpiCs1 = 1'b1;
 end
 endtask
 
@@ -153,11 +168,12 @@ endtask
 // Simlation Start
 //----------------------------------------------------------
 initial begin
-	#(lpSysClkCycle * 5);
-	rSysRst = 0;
-	#(lpSysClkCycle * 5);
-	SpiMaster();
-    #(lpSysClkCycle * 2000 * 4);
+	reset_init();
+	spi_cs(1'b0);
+	spi_send('h8765_0304);
+	spi_send('h0100_0100);
+	spi_send('h0000_000f);
+	spi_cs(1'b1);
     $stop;
 end
 
@@ -167,8 +183,8 @@ end
 //----------------------------------------------------------
 SPIBlock #(
 	.pBlockAdrsMap		(8),
-	.pAdrsMap			(4),
-	.pBusAdrsBit		(15),
+	.pAdrsMap			('h03),
+	.pBusAdrsBit		(16),
 	.pBusSlaveConnect	(1)
 ) SPI_BLOCK (
 	// External Port
@@ -178,8 +194,8 @@ SPIBlock #(
     .ioSpiWp			(wioSpiWp),
     .ioSpiHold			(wioSpiHold),
     .oSpiConfigCs		(wSpiConfigCs),
-    .ioSpiCs1			(wioSpiCs1),
-    .ioSpiCs2			(wioSpiCs2),
+    .ioSpiCs			(wioSpiCs),
+    .iMSSel				(wiMSSel),
     // Internal Port
 	// Usi Bus Master Read
 	.iMUsiRd			(rMUsiRd),		// CSR Read Data

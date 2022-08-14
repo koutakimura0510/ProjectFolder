@@ -48,10 +48,10 @@ end
 //----------------------------------------------------------
 reg  [15:0] rSrampDq    = 16'dz;
 reg  [1:0]  rSrampDqs   = 2'dz;
-wire [15:0] ioSrampDq;      assign ioSrampDq  = rSrampDq;
-wire [1:0]  ioSrampDqs;     assign ioSrampDqs = rSrampDqs;
-wire oSrampClk;
-wire oSrampCs;
+wire [15:0] ioSramDq;      assign ioSramDq  = rSrampDq;
+wire [1:0]  ioSramDqs;     assign ioSramDqs = rSrampDqs;
+wire oSramClk;
+wire oSramCs;
 
 reg  [15:0] rSramsDq    = 16'dz;
 reg  [1:0]  rSramsDqs   = 2'dz;
@@ -144,10 +144,10 @@ BraveFrontier #(
     .ioSpiHold          (ioSpiHold),
     .oSpiConfigCs       (oSpiConfigCs),
     .oSpiCs             (oSpiCs),
-    .ioSrampDq          (ioSrampDq),
-    .ioSrampDqs         (ioSrampDqs),
-    .oSrampClk          (oSrampClk),
-    .oSrampCs           (oSrampCs),
+    .ioSramDq          (ioSramDq),
+    .ioSramDqs         (ioSramDqs),
+    .oSramClk          (oSramClk),
+    .oSramCs           (oSramCs),
     .ioSramsDq          (ioSramsDq),
     .ioSramsDqs         (ioSramsDqs),
     .oSramsClk          (oSramsClk),

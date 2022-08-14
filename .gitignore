@@ -8,6 +8,8 @@
 *.cdb
 *.d
 *.dcp
+*.DS_Store
+*.dmg
 *.bda
 *.dbg
 *.dat

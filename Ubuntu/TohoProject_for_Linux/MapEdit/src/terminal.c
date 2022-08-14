@@ -129,10 +129,10 @@ static void map_help(MapchipWork *chip)
  */
 static void region_help(MapchipWork *chip, PosConf *pos)
 {
-	printf("リージョン番号　　　　 = %3d\n", chip->region.id[0]);
-	printf("マスのリージョン番号　 = %3d\n", chip->fbuf_reg[(pos->xpos + (pos->ypos * chip->xsize)) + (pos->xfield + (pos->yfield * chip->xsize))]);
-	printf("リージョンの桁数　　　 = %3d\n", chip->region.digit[0]);
-	printf("矩形選択範囲　　　　　 = (x:%3d y:%3d)\n", chip->dirx_loop, chip->diry_loop);
+	printf("リージョン番号　　　　= %3d\n", chip->region.id[0]);
+	printf("マスのリージョン番号　= %3d\n", chip->fbuf_reg[(pos->xpos + (pos->ypos * chip->xsize)) + (pos->xfield + (pos->yfield * chip->xsize))]);
+	printf("リージョンの桁数　　　= %3d\n", chip->region.digit[0]);
+	printf("矩形選択範囲　　　　　= (x:%3d y:%3d)\n", chip->dirx_loop, chip->diry_loop);
 	printf("\n\n");
 	printf("◎　リージョンID配置\n");
 	printf("q\n\n");

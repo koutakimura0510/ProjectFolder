@@ -17,8 +17,8 @@ module SPIUnit #(
     inout           			ioSpiWp,
     inout           			ioSpiHold,
     output          			oSpiConfigCs,
-    inout	          			ioSpiCs1,
-    inout	          			ioSpiCs2,
+    inout	          			ioSpiCs,
+    input	          			iMSSel,
     // Internal Port
 	// Usi Bus Master to Slave Select
 	output 						oMUsiMonopoly,	// 0. Slave として機能 / 1. Master バスを独占
@@ -36,13 +36,12 @@ module SPIUnit #(
 	output 						oMUfiWVd,		// 転送期間中 Assert
 	// Csr
 	input 						iSPIEn,
-	input 	[lpDivClk-1:0]		iSPIDiv,
+	input 	[pDivClk-1:0]		iSPIDiv,
 	input 	[7:0]				iMWd,
-	input 						iMSpiCs1,
-	input 						iMSpiCs2,
+	input 						iMSPICs,
 	output	[7:0]				oMRd,
 	// Interrupt
-	output 						oMUsiREd,
+	output 						oMSpiIntr,
     // CLK Reset
     input           			iSysClk,
     input           			iSysRst
@@ -120,8 +119,8 @@ SPISignal SPI_SIGNAL (
 	.ioSpiWp		(ioSpiWp),
 	.ioSpiHold		(ioSpiHold),
 	.oSpiConfigCs	(oSpiConfigCs),
-	.ioSpiCs1		(ioSpiCs1),
-	.ioSpiCs2		(ioSpiCs2),
+	.ioSpiCs		(ioSpiCs),
+	.iMSSel			(iMSSel),
 	// Internal Port FPGA Slave Side
 	.iSMiso			(qSMisoSig),
 	.oSRd			(wSRdSig),
@@ -134,9 +133,8 @@ SPISignal SPI_SIGNAL (
 	.iDivCke		(wDivCke),
 	.iMWd			(iMWd),
 	.oMRd			(oMRd),
-	.oMUsiREd			(oMUsiREd),
-	.iMSpiCs1		(iMSpiCs1),
-	.iMSpiCs2		(iMSpiCs2),
+	.oMSpiIntr		(oMSpiIntr),
+	.iMSPICs		(iMSPICs),
 	// Master Slave Select
 	.oMSSel			(oMUsiMonopoly),
 	//

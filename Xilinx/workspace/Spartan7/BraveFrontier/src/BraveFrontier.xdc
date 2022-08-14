@@ -55,94 +55,57 @@ set_property LOC MMCME2_ADV_X1Y0  [get_cells PRE_PROCESSER/CGB/MMCME2_BASE_CLK_G
 # Connected Config Memory and System Memory
 # Sck は Config 用の CCLK に直接つないでいるため、プリミティブを使用して通常ピンとして動作させる
 #-------------------------------------------------------------------------------
-set_property -dict { PACKAGE_PIN A10   IOSTANDARD LVCMOS18} [get_ports { iioSpiSck    }]
-set_property -dict { PACKAGE_PIN B12   IOSTANDARD LVCMOS18} [get_ports { ioSpiMiso   }]
-set_property -dict { PACKAGE_PIN B11   IOSTANDARD LVCMOS18} [get_ports { ioSpiMosi   }]
-set_property -dict { PACKAGE_PIN D10   IOSTANDARD LVCMOS18} [get_ports { ioSpiWp     }]
-set_property -dict { PACKAGE_PIN C10   IOSTANDARD LVCMOS18} [get_ports { ioSpiHold   }]
-set_property -dict { PACKAGE_PIN C11   IOSTANDARD LVCMOS18} [get_ports { oSpiConfigCs}]
-set_property -dict { PACKAGE_PIN M12   IOSTANDARD LVCMOS18} [get_ports { ioSpiCs1     }]
-set_property -dict { PACKAGE_PIN M11   IOSTANDARD LVCMOS18} [get_ports { ioSpiCs2     }]
-set_property PULLUP true [get_ports ioSpiWp]
-set_property PULLUP true [get_ports ioSpiHold]
-set_property PULLUP true [get_ports oSpiConfigCs]
-set_property PULLUP true [get_ports ioSpiCs1]
-set_property PULLUP true [get_ports ioSpiCs2]
+set_property -dict { PACKAGE_PIN A10   IOSTANDARD LVCMOS18} [get_ports { ioSpiSck    	}]
+set_property -dict { PACKAGE_PIN B12   IOSTANDARD LVCMOS18} [get_ports { ioSpiMiso   	}]
+set_property -dict { PACKAGE_PIN B11   IOSTANDARD LVCMOS18} [get_ports { ioSpiMosi   	}]
+set_property -dict { PACKAGE_PIN D10   IOSTANDARD LVCMOS18} [get_ports { ioSpiWp     	}]
+set_property -dict { PACKAGE_PIN C10   IOSTANDARD LVCMOS18} [get_ports { ioSpiHold   	}]
+set_property -dict { PACKAGE_PIN C11   IOSTANDARD LVCMOS18} [get_ports { oSpiConfigCs	}]
+set_property -dict { PACKAGE_PIN A12   IOSTANDARD LVCMOS18} [get_ports { ioSpiCs     	}]
+set_property -dict { PACKAGE_PIN A13   IOSTANDARD LVCMOS18} [get_ports { iMSSel     	}]
+# set_property PULLUP true [get_ports ioSpiWp]
+# set_property PULLUP true [get_ports ioSpiHold]
+# set_property PULLUP true [get_ports oSpiConfigCs]
+# set_property PULLUP true [get_ports ioSpiCs]
+# set_property PULLUP true [get_ports iMSSel]
 
 
 #-------------------------------------------------------------------------------
 # PSRAM Primary
 #-------------------------------------------------------------------------------
 # [7:0] Data and Adrs
-set_property -dict { PACKAGE_PIN B14} [get_ports { ioSrampDq[0]  }];
-set_property -dict { PACKAGE_PIN A13} [get_ports { ioSrampDq[1]  }];
-set_property -dict { PACKAGE_PIN E12} [get_ports { ioSrampDq[2]  }];
-set_property -dict { PACKAGE_PIN C14} [get_ports { ioSrampDq[3]  }];
-set_property -dict { PACKAGE_PIN D12} [get_ports { ioSrampDq[4]  }];
-set_property -dict { PACKAGE_PIN C12} [get_ports { ioSrampDq[5]  }];
-set_property -dict { PACKAGE_PIN B13} [get_ports { ioSrampDq[6]  }];
-set_property -dict { PACKAGE_PIN A12} [get_ports { ioSrampDq[7]  }];
-set_property -dict { PACKAGE_PIN D13} [get_ports { ioSrampDq[8]  }];
-set_property -dict { PACKAGE_PIN F13} [get_ports { ioSrampDq[9]  }];
-set_property -dict { PACKAGE_PIN G14} [get_ports { ioSrampDq[10] }];
-set_property -dict { PACKAGE_PIN H12} [get_ports { ioSrampDq[11] }];
-set_property -dict { PACKAGE_PIN G11} [get_ports { ioSrampDq[12] }];
-set_property -dict { PACKAGE_PIN F12} [get_ports { ioSrampDq[13] }];
-set_property -dict { PACKAGE_PIN F11} [get_ports { ioSrampDq[14] }];
-set_property -dict { PACKAGE_PIN E11} [get_ports { ioSrampDq[15] }];
-set_property IOSTANDARD HSTL_II_18    [get_ports { ioSrampDq[*]  }];
-set_property SLEW FAST                [get_ports { ioSrampDq[*]  }];
-# set_property IN_TERM UNTUNED_SPLIT_25 [get_ports { ioSrampDq[*]  }];
+set_property -dict { PACKAGE_PIN C14} [get_ports { ioSramDq[0]  }];
+set_property -dict { PACKAGE_PIN B14} [get_ports { ioSramDq[1]  }];
+set_property -dict { PACKAGE_PIN F14} [get_ports { ioSramDq[2]  }];
+set_property -dict { PACKAGE_PIN D14} [get_ports { ioSramDq[3]  }];
+set_property -dict { PACKAGE_PIN E13} [get_ports { ioSramDq[4]  }];
+set_property -dict { PACKAGE_PIN D13} [get_ports { ioSramDq[5]  }];
+set_property -dict { PACKAGE_PIN C12} [get_ports { ioSramDq[6]  }];
+set_property -dict { PACKAGE_PIN B13} [get_ports { ioSramDq[7]  }];
+set_property -dict { PACKAGE_PIN P13} [get_ports { ioSramDq[8]  }];
+set_property -dict { PACKAGE_PIN N14} [get_ports { ioSramDq[9]  }];
+set_property -dict { PACKAGE_PIN M13} [get_ports { ioSramDq[10] }];
+set_property -dict { PACKAGE_PIN J13} [get_ports { ioSramDq[11] }];
+set_property -dict { PACKAGE_PIN H14} [get_ports { ioSramDq[12] }];
+set_property -dict { PACKAGE_PIN H13} [get_ports { ioSramDq[13] }];
+set_property -dict { PACKAGE_PIN G14} [get_ports { ioSramDq[14] }];
+set_property -dict { PACKAGE_PIN F13} [get_ports { ioSramDq[15] }];
+set_property IOSTANDARD HSTL_II_18    [get_ports { ioSramDq[*]  }];
+set_property SLEW FAST                [get_ports { ioSramDq[*]  }];
+# set_property IN_TERM UNTUNED_SPLIT_25 [get_ports { ioSramDq[*]  }];
 # DQS Bus
-set_property -dict { PACKAGE_PIN D14} [get_ports { ioSrampDqs[0] }];
-set_property -dict { PACKAGE_PIN F14} [get_ports { ioSrampDqs[1] }];
-set_property IOSTANDARD HSTL_II_18    [get_ports { ioSrampDqs[*] }];
-set_property SLEW FAST                [get_ports { ioSrampDqs[*] }];
-# set_property IN_TERM UNTUNED_SPLIT_25 [get_ports { ioSrampDqs[*] }];
+set_property -dict { PACKAGE_PIN J14} [get_ports { ioSramDqs[0] }];
+set_property -dict { PACKAGE_PIN L14} [get_ports { ioSramDqs[1] }];
+set_property IOSTANDARD HSTL_II_18    [get_ports { ioSramDqs[*] }];
+set_property SLEW FAST                [get_ports { ioSramDqs[*] }];
+# set_property IN_TERM UNTUNED_SPLIT_25 [get_ports { ioSramDqs[*] }];
 # Clk Bus
-set_property -dict { PACKAGE_PIN E13   IOSTANDARD HSTL_II_18} [get_ports { oSrampClk     }];
-set_property SLEW FAST [get_ports {oSrampClk}];
-# set_property IN_TERM UNTUNED_SPLIT_25 [get_ports {oSrampClk}];
+set_property -dict { PACKAGE_PIN M14   IOSTANDARD HSTL_II_18} [get_ports { oSramClk     }];
+set_property SLEW FAST [get_ports {oSramClk}];
+# set_property IN_TERM UNTUNED_SPLIT_25 [get_ports {oSramClk}];
 # CS Bus
-set_property -dict { PACKAGE_PIN H11   IOSTANDARD LVCMOS18  } [get_ports { oSrampCs      }];
-set_property PULLUP true [get_ports oSrampCs];
-
-#-------------------------------------------------------------------------------
-# PSRAM Secondary
-#-------------------------------------------------------------------------------
-# [7:0] Data and Adrs
-set_property -dict { PACKAGE_PIN J12} [get_ports {ioSramsDq[0]  }];
-set_property -dict { PACKAGE_PIN H14} [get_ports {ioSramsDq[1]  }];
-set_property -dict { PACKAGE_PIN L12} [get_ports {ioSramsDq[2]  }];
-set_property -dict { PACKAGE_PIN J11} [get_ports {ioSramsDq[3]  }];
-set_property -dict { PACKAGE_PIN K12} [get_ports {ioSramsDq[4]  }];
-set_property -dict { PACKAGE_PIN J14} [get_ports {ioSramsDq[5]  }];
-set_property -dict { PACKAGE_PIN J13} [get_ports {ioSramsDq[6]  }];
-set_property -dict { PACKAGE_PIN H13} [get_ports {ioSramsDq[7]  }];
-set_property -dict { PACKAGE_PIN L13} [get_ports {ioSramsDq[8]  }];
-set_property -dict { PACKAGE_PIN P10} [get_ports {ioSramsDq[9]  }];
-set_property -dict { PACKAGE_PIN P11} [get_ports {ioSramsDq[10] }];
-set_property -dict { PACKAGE_PIN P13} [get_ports {ioSramsDq[11] }];
-set_property -dict { PACKAGE_PIN N14} [get_ports {ioSramsDq[12] }];
-set_property -dict { PACKAGE_PIN M13} [get_ports {ioSramsDq[13] }];
-set_property -dict { PACKAGE_PIN M14} [get_ports {ioSramsDq[14] }];
-set_property -dict { PACKAGE_PIN K11} [get_ports {ioSramsDq[15] }];
-set_property IOSTANDARD HSTL_II_18    [get_ports {ioSramsDq[*]  }];
-set_property SLEW FAST                [get_ports {ioSramsDq[*]  }];
-# set_property IN_TERM UNTUNED_SPLIT_25 [get_ports {ioSramsDq[*]  }];
-# DQS Bus
-set_property -dict { PACKAGE_PIN L14} [get_ports {ioSramsDqs[0]  }];
-set_property -dict { PACKAGE_PIN N11} [get_ports {ioSramsDqs[1]  }];
-set_property IOSTANDARD HSTL_II_18    [get_ports {ioSramsDqs[*]  }];
-set_property SLEW FAST                [get_ports {ioSramsDqs[*]}];
-# set_property IN_TERM UNTUNED_SPLIT_25 [get_ports {ioSramsDqs[*]}];
-# Clk Bus
-set_property -dict { PACKAGE_PIN N10   IOSTANDARD HSTL_II_18} [get_ports { oSramsClk }];
-set_property SLEW FAST [get_ports {oSramsClk}];
-# set_property IN_TERM UNTUNED_SPLIT_25 [get_ports {oSramsClk}];
-# CS Bus
-set_property -dict { PACKAGE_PIN P12   IOSTANDARD LVCMOS18  } [get_ports { oSramsCs  }];
-set_property PULLUP true [get_ports oSramsCs];
+set_property -dict { PACKAGE_PIN L13   IOSTANDARD LVCMOS18  } [get_ports { oSramCs      }];
+set_property PULLUP true [get_ports oSramCs];
 
 #-------------------------------------------------------------------------------
 # TFT Display
@@ -193,17 +156,17 @@ set_property -dict { PACKAGE_PIN P3    IOSTANDARD LVCMOS33  } [get_ports { oAudi
 #-------------------------------------------------------------------------------
 # UART
 #-------------------------------------------------------------------------------
-set_property -dict { PACKAGE_PIN L1    IOSTANDARD LVCMOS33  } [get_ports { oUartTx  }];
-set_property -dict { PACKAGE_PIN L2    IOSTANDARD LVCMOS33  } [get_ports { iUartRx  }];
-set_property PULLUP true [get_ports oUartTx]
-set_property PULLUP true [get_ports iUartRx]
+# set_property -dict { PACKAGE_PIN L1    IOSTANDARD LVCMOS33  } [get_ports { oUartTx  }];
+# set_property -dict { PACKAGE_PIN L2    IOSTANDARD LVCMOS33  } [get_ports { iUartRx  }];
+# set_property PULLUP true [get_ports oUartTx]
+# set_property PULLUP true [get_ports iUartRx]
 
 #-------------------------------------------------------------------------------
 # LED Port Shift Register
 #-------------------------------------------------------------------------------
-set_property -dict { PACKAGE_PIN B6    IOSTANDARD LVCMOS33  } [get_ports { oLedEdge[0] }];
-set_property -dict { PACKAGE_PIN C5    IOSTANDARD LVCMOS33  } [get_ports { oLedEdge[1] }];
-set_property -dict { PACKAGE_PIN E4    IOSTANDARD LVCMOS33  } [get_ports { oLedClk }];
-set_property DRIVE 4 [get_ports {oLedEdge[0]}];
-set_property DRIVE 4 [get_ports {oLedEdge[1]}];
-set_property DRIVE 4 [get_ports {oLedClk}];
+# set_property -dict { PACKAGE_PIN B6    IOSTANDARD LVCMOS33  } [get_ports { oLedEdge[0] }];
+# set_property -dict { PACKAGE_PIN C5    IOSTANDARD LVCMOS33  } [get_ports { oLedEdge[1] }];
+# set_property -dict { PACKAGE_PIN E4    IOSTANDARD LVCMOS33  } [get_ports { oLedClk }];
+# set_property DRIVE 4 [get_ports {oLedEdge[0]}];
+# set_property DRIVE 4 [get_ports {oLedEdge[1]}];
+# set_property DRIVE 4 [get_ports {oLedClk}];

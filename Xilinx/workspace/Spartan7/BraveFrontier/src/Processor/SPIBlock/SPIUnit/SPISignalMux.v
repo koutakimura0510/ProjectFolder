@@ -28,7 +28,7 @@ module SPISignalMux #(
 	output 						oMUfiWVd,	// 転送期間中 Assert
 	// CLK Reset
     input           			iSysClk,
-	input 						iSyRst
+	input 						iSysRst
 );
 
 

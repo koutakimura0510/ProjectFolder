@@ -19,26 +19,16 @@ module Processer #(
     inout           ioSpiWp,
     inout           ioSpiHold,
     output          oSpiConfigCs,
-    input	        ioSpiCs1,
-    input	        ioSpiCs2,
+    inout	        ioSpiCs,
+    input	        iMSSel,
     // PSRAM
-    inout  [15:0]   ioSrampDq,
-    inout  [1:0]    ioSrampDqs,
-    output          oSrampClk,
-    output          oSrampCs,
-    inout  [15:0]   ioSramsDq,
-    inout  [1:0]    ioSramsDqs,
-    output          oSramsClk,
-    output          oSramsCs,
+    inout  [15:0]   ioSramDq,
+    inout  [1:0]    ioSramDqs,
+    output          oSramClk,
+    output          oSramCs,
     // I2C
     output          oI2CScl,
     inout           ioI2CSda,
-    // UART
-    output          oUartTx,
-    input           iUartRx,
-    // LED
-    output [1:0]    oLedEdge,
-    output          oLedClk,
     // Internal Port
     // Video
     input           iPFvde,
@@ -57,12 +47,11 @@ module Processer #(
 );
 
 // 
-assign ioSrampDqs		= 2'bz;
-assign oSrampClk		= 1'b0;
-assign oSrampCs			= 1'b0;
-assign ioSramsDqs		= 2'bz;
-assign oSramsClk		= 1'b0;
-assign oSramsCs			= 1'b0;
+assign ioSramDq			= 16'bz;
+assign ioSramDqs		= 2'bz;
+assign oSramClk			= 1'b0;
+assign oSramCs			= 1'b0;
+//
 assign oPixelData		= 1'b0;
 assign oAudioData		= 1'b0;
 
@@ -97,24 +86,22 @@ localparam	lpBusAdrsBit		= 16;		// バスアドレス幅
 // MCB
 //----------------------------------------------------------
 // Slave -> Master
-wire [31:0] 					wMUsiMcbRd;
-wire [lpBusSlaveConnect-1:0]	wMUsiMcbVd;
+reg  [31:0] 					qMUsiRdMcb;
+reg  [lpBusSlaveConnect-1:0]	qMUsiVdMcb;
 // Master -> Slave
-wire [31:0] 					wMUsiMcbWd;
-wire [lpBusAdrsBit-1:0]			wMUsiMcbAdrs;
-wire 							wMUsiMcbWCke;
+wire [31:0] 					wMUsiWdMcb;
+wire [lpBusAdrsBit-1:0]			wMUsiAdrsMcb;
+wire 							wMUsiWCkeMcb;
 
 MicroControllerBlock #(
 	.pBusSlaveConnect	(lpBusSlaveConnect),
 	.pBusAdrsBit		(lpBusAdrsBit)
 ) MICRO_CONTROLLER_BLOCK (
-	.iUartRx			(iUartRx),
-	.oUartTx			(oUartTx),
-	.iMUsiRd			(wMUsiMcbRd),
-	.iMUsiREd			(wMUsiMcbVd),
-	.oMUsiWd			(wMUsiMcbWd),
-	.oMUsiAdrs			(wMUsiMcbAdrs),
-	.oMUsiWEd			(wMUsiMcbWCke),
+	.iMUsiRd			(qMUsiRdMcb),
+	.iMUsiREd			(qMUsiVdMcb),
+	.oMUsiWd			(wMUsiWdMcb),
+	.oMUsiAdrs			(wMUsiAdrsMcb),
+	.oMUsiWEd			(wMUsiWCkeMcb),
 	.iSysClk			(iSysClk),
 	.iSysRst			(iSysRst)
 );
@@ -124,35 +111,35 @@ MicroControllerBlock #(
 // GPIO Block
 //----------------------------------------------------------
 // Slave -> Master
-wire [31:0] 			wSUsiRdGpio;
-wire 					wSUsiVdGpio;
-// Master -> Slave
-reg  [31:0] 			qSUsiWdGpio;
-reg  [lpBusAdrsBit-1:0] qSUsiAdrsGpio;
-reg  					qSUsiWCkeGpio;
+// wire [31:0] 			wSUsiRdGpio;
+// wire 					wSUsiREdGpio;
+// // Master -> Slave
+// reg  [31:0] 			qSUsiWdGpio;
+// reg  [lpBusAdrsBit-1:0] qSUsiAdrsGpio;
+// reg  					qSUsiWCkeGpio;
 
-GpioBlock #(
-	.pBlockAdrsMap		(lpBlockAdrsMap),
-	.pAdrsMap	 		(lpGpioAdrsMap),
-	.pBusAdrsBit		(lpBusAdrsBit)
-) GPIO_BLOCK (
-	.oLedEdge			(oLedEdge),
-	.oLedClk			(oLedClk),
-	.oSUsiRd			(wSUsiRdGpio),
-	.oSUsiREd			(wSUsiVdGpio),
-	.iSUsiWd			(qSUsiWdGpio),
-	.iSUsiAdrs			(qSUsiAdrsGpio),
-	.iSUsiWCke			(qSUsiWCkeGpio),
-	.iSysClk			(iSysClk),
-	.iSysRst			(iSysRst)
-);
+// GpioBlock #(
+// 	.pBlockAdrsMap		(lpBlockAdrsMap),
+// 	.pAdrsMap	 		(lpGpioAdrsMap),
+// 	.pBusAdrsBit		(lpBusAdrsBit)
+// ) GPIO_BLOCK (
+// 	.oLedEdge			(oLedEdge),
+// 	.oLedClk			(oLedClk),
+// 	.oSUsiRd			(wSUsiRdGpio),
+// 	.oSUsiREd			(wSUsiREdGpio),
+// 	.iSUsiWd			(qSUsiWdGpio),
+// 	.iSUsiAdrs			(qSUsiAdrsGpio),
+// 	.iSUsiWCke			(qSUsiWCkeGpio),
+// 	.iSysClk			(iSysClk),
+// 	.iSysRst			(iSysRst)
+// );
 
 //----------------------------------------------------------
 // PWM BackLight
 //----------------------------------------------------------
 // Slave -> Master
 wire [31:0] 			wSUsiRdPwm;
-wire 					wSUsiVdPwm;
+wire 					wSUsiREdPwm;
 // Master -> Slave
 reg  [31:0] 			qSUsiWdPwm;
 reg  [lpBusAdrsBit-1:0]	qSUsiAdrsPwm;
@@ -165,7 +152,7 @@ PWMBlock #(
 ) PWM_BLOCK (
 	.oPwm				(oBackLightControl),
 	.oSUsiRd			(wSUsiRdPwm),
-	.oSUsiREd			(wSUsiVdPwm),
+	.oSUsiREd			(wSUsiREdPwm),
 	.iSUsiWd			(qSUsiWdPwm),
 	.iSUsiAdrs			(qSUsiAdrsPwm),
 	.iSUsiWCke			(qSUsiWCkePwm),
@@ -177,10 +164,10 @@ PWMBlock #(
 // External CPU Master SPI Block or Slave SPI Block
 //----------------------------------------------------------
 // Slave -> Master
-wire [31:0] 					wMUsiRdSpi;
-wire [lpBusSlaveConnect-1:0]	wMUsiVdSpi;
+reg  [31:0] 					qMUsiRdSpi;
+reg  [lpBusSlaveConnect-1:0]	qMUsiREdSpi;
 wire [31:0] 					wSUsiRdSpi;
-wire 							wSUsiVdSpi;
+wire 							wSUsiREdSpi;
 // Master -> Slave
 wire [31:0] 					wMUsiWdSpi;
 wire [lpBusAdrsBit-1:0]			wMUsiAdrsSpi;
@@ -196,7 +183,7 @@ wire 							wMUfiWVdSpi;
 // Master Select
 wire 							wMUsiMonopoly;
 // Interrupt
-wire 							wMUsiREd;
+wire 							wMSpiIntr;
 
 SPIBlock #(
 	.pBlockAdrsMap				(lpBlockAdrsMap),
@@ -210,18 +197,18 @@ SPIBlock #(
 	.ioSpiWp					(ioSpiWp),
 	.ioSpiHold					(ioSpiHold),
 	.oSpiConfigCs				(oSpiConfigCs),
-	.ioSpiCs1					(ioSpiCs1),
-	.ioSpiCs2					(ioSpiCs2),
+	.ioSpiCs					(ioSpiCs),
+	.iMSSel						(iMSSel),
 	//
-	.iMUsiRd					(wMUsiRdSpi),
-	.iMUsiREd					(wMUsiVdSpi),
+	.iMUsiRd					(qMUsiRdSpi),
+	.iMUsiREd					(qMUsiREdSpi),
 	//
 	.oMUsiWd					(wMUsiWdSpi),
 	.oMUsiAdrs					(wMUsiAdrsSpi),
 	.oMUsiWEd					(wMUsiWCkeSpi),
 	//
 	.oSUsiRd					(wSUsiRdSpi),
-	.oSUsiREd					(wSUsiVdSpi),
+	.oSUsiREd					(wSUsiREdSpi),
 	//
 	.iSUsiWd					(qSUsiWdSpi),
 	.iSUsiAdrs					(qSUsiAdrsSpi),
@@ -234,7 +221,8 @@ SPIBlock #(
 	//
 	.oMUsiMonopoly				(wMUsiMonopoly),
 	//
-	.oMUsiREd					(wMUsiREd),
+	.oMSpiIntr				(wMSpiIntr),
+	//
 	.iSysClk					(iSysClk),
 	.iSysRst					(iSysRst)
 );
@@ -245,7 +233,7 @@ SPIBlock #(
 //----------------------------------------------------------
 // Slave -> Master
 wire [31:0] 			wSUsiRdI2c;
-wire 					wSUsiVdI2c;
+wire 					wSUsiREdI2c;
 // Master -> Slave
 reg  [31:0] 			qSUsiWdI2c;
 reg  [lpBusAdrsBit-1:0]	qSUsiAdrsI2c;
@@ -259,7 +247,7 @@ I2CBlock #(
 	.oI2CScl		(oI2CScl),
 	.ioI2CSda		(ioI2CSda),
 	.oSUsiRd		(wSUsiRdI2c),
-	.oSUsiREd		(wSUsiVdI2c),
+	.oSUsiREd		(wSUsiREdI2c),
 	.iSUsiWd		(qSUsiWdI2c),
 	.iSUsiAdrs		(qSUsiAdrsI2c),
 	.iSUsiWCke		(qSUsiWCkeI2c),
@@ -342,18 +330,18 @@ UltraSimpleInterface #(
 
 always @*
 begin
-	wMUsiMcbRd		<= wMUsiRd;
-	wMUsiMcbVd		<= wMUsiREd;
-	wMUsiSpiRd		<= wMUsiRd;
-	wMUsiSpiVd		<= wMUsiREd;
+	qMUsiRdMcb		<= wMUsiRd;
+	qMUsiVdMcb		<= wMUsiREd;
+	qMUsiRdSpi		<= wMUsiRd;
+	qMUsiREdSpi		<= wMUsiREd;
 	//
-	qMUsiWd			<= wMUsiMonopoly ? wMUsiMcbWd	: wMUsiSpiWd;
-	qMUsiAdrs		<= wMUsiMonopoly ? wMUsiMcbAdrs	: wMUsiSpiAdrs;
-	qMUsiWEd		<= wMUsiMonopoly ? wMUsiMcbWCke	: wMUsiSpiWCke;
+	qMUsiWd			<= wMUsiMonopoly ? wMUsiWdMcb	: wMUsiWdSpi;
+	qMUsiAdrs		<= wMUsiMonopoly ? wMUsiAdrsMcb	: wMUsiAdrsSpi;
+	qMUsiWEd		<= wMUsiMonopoly ? wMUsiWCkeMcb	: wMUsiWCkeSpi;
 	//
-	qSUsiWdGpio		<= wSUsiWd;
-	qSUsiAdrsGpio 	<= wSUsiAdrs;
-	qSUsiWCkeGpio	<= wSUsiWCke;
+	// qSUsiWdGpio		<= wSUsiWd;
+	// qSUsiAdrsGpio 	<= wSUsiAdrs;
+	// qSUsiWCkeGpio	<= wSUsiWCke;
 	//
 	qSUsiWdPwm		<= wSUsiWd;
 	qSUsiAdrsPwm	<= wSUsiAdrs;
@@ -367,8 +355,8 @@ begin
 	qSUsiAdrsI2c	<= wSUsiAdrs;
 	qSUsiWCkeI2c	<= wSUsiWCke;
 	//
-	qSUsiRd			<= {{5{32'd0}}, wSUsiRdI2c, wSUsiRdSpi, wSUsiRdPwm, wSUsiRdGpio};
-	qSUsiREd		<= {{5{1'h0}},  wSUsiVdI2c, wSUsiVdSpi, wSUsiVdPwm, wSUsiVdGpio};
+	qSUsiRd			<= {{5{32'd0}}, wSUsiRdI2c, wSUsiRdSpi, wSUsiRdPwm, 32'd0/*wSUsiRdGpio*/};
+	qSUsiREd		<= {{5{1'h0}},  wSUsiREdI2c, wSUsiREdSpi, wSUsiREdPwm, 32'd0/*wSUsiREdGpio*/};
 end
 
 //----------------------------------------------------------

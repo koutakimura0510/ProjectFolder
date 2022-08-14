@@ -13,8 +13,8 @@ module SPISignal (
     inout           ioSpiWp,
     inout           ioSpiHold,
     output          oSpiConfigCs,
-    inout           ioSpiCs1,
-    inout           ioSpiCs2,
+    inout           ioSpiCs,
+    input           iMSSel,
 	// Internal Port FPGA Slave Side
 	input	[31:0]	iSMiso,
 	output 	[31:0]	oSRd,
@@ -25,9 +25,8 @@ module SPISignal (
 	// Internal Port FPGA Master Side
     input  	[7:0]   iMWd,               // Master Write Data
     output 	[7:0]   oMRd,	            // Master Read Data
-    output          oMUsiREd,             // Master Byte Read Assert
-	input 			iMSpiCs1,
-	input 			iMSpiCs2,
+    output          oMSpiIntr,          // Master Send/Rev Complete Interrupt
+	input 			iMSPICs,
 	// Csr
     input           iSPIEn,             // 0. disconnect 1. active
 	input 			iDivCke,
@@ -35,13 +34,13 @@ module SPISignal (
 	output 			oMSSel,
 	// CLK Reset
     input           iSysClk,
-	input 			iSyRst
+	input 			iSysRst
 );
 
 
 //----------------------------------------------------------
 // FPGA Slave
-// 4byte Adrs + Cmd + 2byte Data Length + dummy + nData... 
+// 4byte Adrs + Cmd + 2byte Data Length + dummy + n32bitData... 
 // -
 // 最初に 8byte の命令シーケンスを受信する
 // Cmd : 0. Non, 1. Csr Write, 2. Csr Read, 3. PSRAM Write
@@ -58,13 +57,13 @@ localparam [1:0]
 reg [1:0] rSState;	// 受信シーケンス
 //
 wire wSScl, wSMosi;
-reg  rSMiso;
-wire wSWp,  wSHold;
-wire wSCs1, wSCs2;
-//
-reg [2:0] 	rSftSScl, rSftSMosi, rSftCs1;
-//
 reg [31:0]	rSMiso;
+wire wSWp,  wSHold;
+wire wSCs, wSCs2;
+//
+reg [2:0] 	rSftSScl, rSftCs ;
+reg [1:0]	rSftSMosi;
+//
 //
 reg [31:0]	rSRd;					assign oSRd   	= rSRd;
 reg [31:0]	rSAdrs;					assign oSAdrs	= rSAdrs;
@@ -80,18 +79,18 @@ reg qSSckCntNegCke;
 always @(posedge iSysClk)
 begin
 	// Master からの Signal をシフトレジスタで受信
-	rSftSMosi	<= {rSftSMosi[1:0], wSMosi};
+	rSftSMosi	<= {rSftSMosi[0:0], wSMosi};
 
 	if (iSysRst)	rSftSScl <= 3'b000;
 	else			rSftSScl <= {rSftSScl[1:0], wSScl};
 
-	if (iSysRst)	rSftCs1	<= 3'b111;
-	else 			rSftCs1	<= {rSftCs1[1:0], 	wSCs1};
+	if (iSysRst)	rSftCs	<= 3'b111;
+	else 			rSftCs	<= {rSftCs[1:0], 	wSCs};
 
 	// 受信シーケンス・ステートマシン
 	// シーケンス最後の DataGetモードは CS High になるまでデータを受信するだけなので、
 	// 処理中には含めず default 扱いとする。
-	casex ({rSftCs1[2], qSSckCntNegCke, qNegScl, rSState[1:0]})
+	casex ({rSftCs[2], qSSckCntNegCke, qNegScl, rSState[1:0]})
 		5'b1_xx_xx:		rSState	<= lpSAdrsGet;
 		5'b0_11_00:		rSState	<= lpSCmdGet;
 		5'b0_11_01:		rSState	<= lpSDataGet;
@@ -148,14 +147,14 @@ end
 always @*
 begin
 	// posedge
-	case (rSftSScl[2:0])
-		3'b011:		qPosScl	<= 1'b1;
+	case ({rSftCs[2], rSftSScl[2:0]})
+		4'b0011:	qPosScl	<= 1'b1;
 		default:	qPosScl	<= 1'b0;
 	endcase
 
 	// negedge
-	case (rSftSScl[2:0])
-		3'b100:		qNegScl	<= 1'b1;
+	case ({rSftCs[2], rSftSScl[2:0]})
+		4'b0100:	qNegScl	<= 1'b1;
 		default:	qNegScl	<= 1'b0;
 	endcase
 
@@ -176,8 +175,8 @@ localparam [2:0]
 	lpHoldTimeMax   	= 2,
 	lpHoldTimeClear 	= 0;
 //
-reg [7:0] 	rMRd;					assign oMRd		= rMRd;
-reg 		rMUsiREd;					assign oMUsiREd	= rMUsiREd;
+reg [7:0] 	rMRd;					assign oMRd			= rMRd;
+reg 		rMSpiIntr;				assign oMSpiIntr	= rMSpiIntr;
 //
 reg 		rMScl;
 reg [7:0] 	rMMosi;
@@ -186,7 +185,7 @@ wire 		wMMiso;
 reg [2:0] 	rMSckNegCnt;
 //
 reg [2:0] 	rMHoldTime;
-reg 		rMHoldTimeState;
+reg [0:0]	rMHoldTimeState;
 //
 reg 		qMSckCntCke;		// Master CLK の立ち下がり最大カウント
 reg 		qMHoldTimeCke;		// データ出力の Hold 時間経過
@@ -205,15 +204,8 @@ begin
 		3'b1_00:		rMSckNegCnt	<= rMSckNegCnt;
 	endcase
 
-	// 1byteデータ送信完了
-	casex ({iSPIEn, qMSckCntCke, iDivCke, rMScl})
-		4'b0_xxx:		rWdVd	<= 1'b0;
-		4'b0_111:		rWdVd	<= 1'b1;
-		4'b1_000:		rWdVd	<= 1'b0;
-	endcase
-
 	// Sck negedge 後の Hold time 生成 ステートマシン
-	casex ({iSPIEn, qMHoldTimeCke, rMHoldTimeState[0], iDivCke, rMScl})
+	casex ({iSPIEn, qMHoldTimeCke, rMHoldTimeState[0:0], iDivCke, rMScl})
 		5'b0_xx_xx:    	rMHoldTimeState <= lpHolTimeIdle;
 		5'b1_00_11:    	rMHoldTimeState <= lpHoldTimeActive;
 		5'b1_11_xx:    	rMHoldTimeState <= lpHolTimeIdle;
@@ -239,9 +231,10 @@ begin
 		default: 		rMRd <= rMRd;
 	endcase
 
+	// 1byte データ操作完了の割り込み出力
 	case ({qMSckCntCke, iDivCke, rMScl})
-		3'b111:			rMUsiREd <= 1'b1;
-		default:		rMUsiREd <= 1'b0;
+		3'b111:			rMSpiIntr <= 1'b1;
+		default:		rMSpiIntr <= 1'b0;
 	endcase
 end
 
@@ -256,55 +249,26 @@ end
 // Master / Slave TriState 設定
 // High FPGA Master / Low FPGA Slave
 //----------------------------------------------------------
-localparam [3:0]
-	lpCsCapCntMax 	= 15,
-	lpCsCapCntClear = 0;
-
-reg [2:0] 	rSftCs2;
-reg [1:0] 	rTriStateMSet;
-reg [1:0] 	rCsCapture;
-reg [7:0] 	rCsCaptureCnt;
-reg 		rMSSel;						assign oMSSel = rMSSel;
+reg [2:0]	rMSSel;						assign oMSSel = rMSSel[2];
 //
-reg qCsCaptureCke;
-
+wire 		wMSSel;
+//
 always @(posedge iSysClk)
 begin
-	// Reset からの キャプチャー時間
-	if (iSysRst) 			rCsCaptureCnt <= lpCsCapCntClear;
-	else if (qCsCaptureCke)	rCsCaptureCnt <= rCsCaptureCnt;
-	else 					rCsCaptureCnt <= rCsCaptureCnt + 1'b1;
-
-	// カウント中にキャプチャーを行う
-	if (qCsCaptureCke) 		rSftCs2 <= rSftCs2;
-	else 					rSftCs2	<= {rSftCs2[1:0], wSCs2};
-
-	// Master Slave Select
-	if (rSftCs2[2])			rCsCapture <= {1'b0, 1'b1};
-	else 					rCsCapture <= {1'b1, 1'b0};
-
-	// GPIO TriState 制御
-	if (qCsCaptureCke) 		rTriStateMSet <= rCsCapture;
-	else 					rTriStateMSet <= 2'b11;
-
-	// Master / Slave 選択
-	if (qCsCaptureCke) 		rMSSel <= rMSSel;
-	else 					rMSSel <= rSftCs2[2];
+	if (iSysRst)	rMSSel <= 3'd0;
+	else 			rMSSel <= {rMSSel[1:0], wMSSel};
 end
 
-always @*
-begin
-	qCsCaptureCke <= (rCsCaptureCnt == lpCsCapCntMax);
-end
 //
 OBUF  SPI_CONCS	(.O (oSpiConfigCs), .I (1'b1));
-// 
-IOBUF SPI_SCL 	(.O (wSScl), 	.IO (ioSpiSck), 	.I (rMScl), 	.T (rTriStateMSet[1]));	// master output / slave input
-IOBUF SPI_MISO 	(.O (wMMiso),	.IO (ioSpiMiso), 	.I (rSMiso[7]),	.T (rTriStateMSet[0]));	// master input  / slave output
-IOBUF SPI_MOSI 	(.O (wSMosi), 	.IO (ioSpiMosi), 	.I (rMMosi[7]), .T (rTriStateMSet[1]));	// master output / slave input
-IOBUF SPI_WP 	(.O (wSWp), 	.IO (ioSpiWp),   	.I (1'b1),		.T (rTriStateMSet[1]));
-IOBUF SPI_HOLD 	(.O (wSHold),	.IO (ioSpiHold), 	.I (1'b1),		.T (rTriStateMSet[1]));
-IOBUF SPI_CS1 	(.O (wSCs1), 	.IO (ioSpiCs1), 	.I (iMSPICs1),	.T (rTriStateMSet[1]));	// master output / slave input
-IOBUF SPI_CS2 	(.O (wSCs2), 	.IO (ioSpiCs2), 	.I (iMSPICs2),	.T (rTriStateMSet[1]));	// master output / slave input
+//
+IBUF  SPI_MS_SEL(.O (wMSSel), .I (iMSSel));
+//
+IOBUF SPI_SCL 	(.O (wSScl), 	.IO (ioSpiSck), 	.I (rMScl), 	.T (rMSSel[2]));	// master output / slave input
+IOBUF SPI_MISO 	(.O (wMMiso),	.IO (ioSpiMiso), 	.I (rSMiso[31]),.T (rMSSel[2]));	// master input  / slave output
+IOBUF SPI_MOSI 	(.O (wSMosi), 	.IO (ioSpiMosi), 	.I (rMMosi[7]), .T (rMSSel[2]));	// master output / slave input
+IOBUF SPI_WP 	(.O (wSWp), 	.IO (ioSpiWp),   	.I (1'b1),		.T (rMSSel[2]));
+IOBUF SPI_HOLD 	(.O (wSHold),	.IO (ioSpiHold), 	.I (1'b1),		.T (rMSSel[2]));
+IOBUF SPI_CS 	(.O (wSCs), 	.IO (ioSpiCs), 		.I (iMSPICs),	.T (rMSSel[2]));	// master output / slave input
 
 endmodule

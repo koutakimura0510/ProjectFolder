@@ -3,7 +3,7 @@
 // Author koutakimura
 // -
 // バスシステムの Masterと SPI の管理を司るブロック
-// ioSpiCs2 GPIO は FPGA SPI の Master / Slave を切り替える役割も持つ
+// iMSSel GPIO は FPGA SPI の Master / Slave を切り替える役割も持つ
 // Reset 終了時の I/O の状態を確認し、High Master / Low Slave とする
 // 通常はフラッシュメモリと接続されるが、デバッグ時は 外部CPU と接続するためこの機能を設けた。
 // 
@@ -27,12 +27,12 @@ module SPIBlock #(
     inout								ioSpiWp,
     inout								ioSpiHold,
     output								oSpiConfigCs,
-    inout								ioSpiCs1,
-    inout								ioSpiCs2,
+    inout								ioSpiCs,
+    input								iMSSel,			// Master Slave Select / Default External PullUp
     // Internal Port
 	// Usi Bus Master Read
 	input	[31:0]						iMUsiRd,		// CSR Read Data
-	input	[pBusSlaveConnectWidth-1:0]	iMUsiREd,		// Read Assert
+	input	[pBusSlaveConnect-1:0]		iMUsiREd,		// Read Assert
 	// Usi Bus Master Write
 	output	[31:0]						oMUsiWd,		// Write Data
 	output	[pBusAdrsBit-1:0]			oMUsiAdrs,		// R/W Adrs
@@ -50,7 +50,7 @@ module SPIBlock #(
 	output								oMUfiWEd,		// Write Data Enable
 	output 								oMUfiWVd,		// 転送期間中 Assert
 	// Interrupt
-	output 								oMUsiREd,		// FPGA Master Byte Read Data Enable
+	output 								oMSpiIntr,		// FPGA Master Byte Read Data Enable
 	// Usi Bus Master to Slave Select
 	output 								oMUsiMonopoly,	// 0. Slave として機能 / 1. Master バスを独占
     // CLK Reset
@@ -72,8 +72,7 @@ localparam lpDivClk = 16;	// SCL生成の分周値レジスタBit幅
 reg 					qSPIEnUnit;
 reg 	[lpDivClk-1:0]	qSPIDivUnit;
 reg  	[7:0] 			qMWdUnit;
-reg  					qMSpiCs1Unit;
-reg  					qMSpiCs2Unit;
+reg  					qMSpiCsUnit;
 //
 wire 	[7:0]			wMRdUnit;
 
@@ -87,8 +86,8 @@ SPIUnit #(
 	.ioSpiWp			(ioSpiWp),
 	.ioSpiHold			(ioSpiHold),
 	.oSpiConfigCs		(oSpiConfigCs),
-	.ioSpiCs1			(ioSpiCs1),
-	.ioSpiCs2			(ioSpiCs2),
+	.ioSpiCs			(ioSpiCs),
+	.iMSSel				(iMSSel),
 	// Usi Bus Master to Slave Select
 	.oMUsiMonopoly		(oMUsiMonopoly),
 	// Usi Bus Master Read
@@ -106,11 +105,10 @@ SPIUnit #(
 	.iSPIEn				(qSPIEnUnit),
 	.iSPIDiv			(qSPIDivUnit),
 	.iMWd				(qMWdUnit),
-	.iMSpiCs1			(qMSpiCs1Unit),
-	.iMSpiCs2			(qMSpiCs2Unit),
+	.iMSPICs			(qMSpiCsUnit),
 	.oMRd				(wMRdUnit),
 	// Interrupt
-	.oMUsiREd			(oMUsiREd),
+	.oMSpiIntr		(oMSpiIntr),
 	// CLK Reset
 	.iSysClk			(iSysClk),
 	.iSysRst			(iSysRst)
@@ -123,8 +121,7 @@ SPIUnit #(
 wire 					wSPIEnCsr;
 wire 	[lpDivClk-1:0]	wSPIDivCsr;
 wire 	[7:0] 			wMWdCsr;
-wire 					wMSpiCs1Csr;
-wire 					wMSpiCs2Csr;
+wire 					wMSpiCsCsr;
 //
 reg 	[7:0]			qMRdCsr;
 
@@ -144,8 +141,7 @@ SPICsr #(
 	.oSPIEn				(wSPIEnCsr),
 	.oSPIDiv			(wSPIDivCsr),
 	.oMWd				(wMWdCsr),
-	.oMSpiCs1			(wMSpiCs1Csr),
-	.oMSpiCs2			(wMSpiCs2Csr),
+	.oMSpiCs			(wMSpiCsCsr),
 	// Csr Input
 	.iMRd				(qMRdCsr),
 	// CLK Reset
@@ -158,8 +154,7 @@ begin
 	qSPIEnUnit			<= wSPIEnCsr;
 	qSPIDivUnit			<= wSPIDivCsr;
 	qMWdUnit			<= wMWdCsr;
-	qMSpiCs1Unit		<= wMSpiCs1Csr;
-	qMSpiCs2Unit		<= wMSpiCs2Csr;
+	qMSpiCsUnit			<= wMSpiCsCsr;
 	qMRdCsr				<= wMRdUnit;
 end
 

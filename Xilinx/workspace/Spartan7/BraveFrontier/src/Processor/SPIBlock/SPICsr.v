@@ -26,8 +26,7 @@ module SPICsr #(
 	output 							oSPIEn,
 	output 	[pDivClk-1:0]			oSPIDiv,
 	output 	[7:0]					oMWd,
-	output 							oMSpiCs1,
-	output 							oMSpiCs2,
+	output 							oMSpiCs,
 	// Csr Input
 	input  	[7:0]					iMRd,
     // CLK Reset
@@ -43,8 +42,8 @@ module SPICsr #(
 // USI/F Write
 reg 					rSPIEn;				assign oSPIEn 		= rSPIEn;			// 通信開始
 reg 	[pDivClk-1:0]	rSPIDiv;			assign oSPIDiv 		= rSPIDiv;			// CLK Division
-reg 	[7:0]			rMWd;				assign oMWd			= rMWd;
-reg 	[1:0]			rMSpiCs;			assign {oMSpiCs2, oMSpiCs1}	= rMSpiCs;
+reg 	[7:0]			rMWd;				assign oMWd			= rMWd;				// Send Data
+reg 					rMSpiCs;			assign oMSpiCs		= rMSpiCs;			// chip select 
 //
 reg 	[7:0]			rMRd;
 //
@@ -57,7 +56,7 @@ begin
 		rSPIEn			<= 1'b0;
 		rSPIDiv			<= {pDivClk{1'b1}};
 		rMWd			<= 8'd0;
-		rMSpiCs			<= 2'b11;
+		rMSpiCs			<= 1'b1;
 		//
 		rMRd			<= 8'd0;
 	end
@@ -66,7 +65,7 @@ begin
 		rSPIEn			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[0:0] 			: rSPIEn;
 		rSPIDiv			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pDivClk-1:0] 	: rSPIDiv;
 		rMWd			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h08}) ? iSUsiWd[7:0]			 	: rMWd;
-		rMSpiCs			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h0c}) ? iSUsiWd[1:0]			 	: rMSpiCs;
+		rMSpiCs			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h0c}) ? iSUsiWd[0:0]			 	: rMSpiCs;
 		rMRd			<= iMRd;
 	end
 end
@@ -95,7 +94,7 @@ begin
 			'h100:		rSUsiRd <= {31'd0, rSPIEn};
 			'h104:		rSUsiRd <= {{(32 - pDivClk){1'b0}}, rSPIDiv};	// パラメータ可変なので、可変に対応して0で埋めるようにした
 			'h108:		rSUsiRd <= {24'd0, rMWd};
-			'h10c:		rSUsiRd <= {30'd0, rMSpiCs};
+			'h10c:		rSUsiRd <= {31'd0, rMSpiCs};
 			'h180:		rSUsiRd <= {24'd0, rMRd};
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase
