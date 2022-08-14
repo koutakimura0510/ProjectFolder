@@ -59,27 +59,26 @@ assign oAudioData		= 1'b0;
 //----------------------------------------------------------
 // バス接続の周辺機能アドレスマップ
 //----------------------------------------------------------
-localparam lpBlockAdrsMap = 'd8;
+localparam lpBusSlaveConnect  	= 6;		// 接続Slave数、最大16
+localparam lpBlockAdrsMap 		= 8;
 
 localparam [lpBlockAdrsMap-1'b1:0] 
-	lpGpioAdrsMap 	= 8'h01,
+	lpGpioAdrsMap	= 8'h01,
 	lpPWMAdrsMap 	= 8'h02,
 	lpSPIAdrsMap	= 8'h03,
 	lpI2CAdrsMap	= 8'h04,
 	lpPGBAdrsMap	= 8'h05,
 	lpAGBAdrsMap	= 8'h06,
-	lpVDMAAdrsMap	= 8'h07,
-	lpADMAAdrsMap	= 8'h08,
-	lpPSRAMAdrsMap 	= 8'h09;
+	lpPSRAMAdrsMap 	= 8'h07;
 
 
 //----------------------------------------------------------
 // バス幅を定義
 //----------------------------------------------------------
 // variable parameter
-localparam	lpBusSlaveConnect  	= 4'd9;		// 接続Slave数、最大16
 localparam	lpBusDataBit  		= 32;		// バスデータ幅
 localparam	lpBusAdrsBit		= 16;		// バスアドレス幅
+localparam  lpUfiBusWidth		= 16;
 
 
 //----------------------------------------------------------
@@ -189,7 +188,8 @@ SPIBlock #(
 	.pBlockAdrsMap				(lpBlockAdrsMap),
 	.pAdrsMap	 				(lpSPIAdrsMap),
 	.pBusAdrsBit				(lpBusAdrsBit),
-	.pBusSlaveConnect			(lpBusSlaveConnect)
+	.pBusSlaveConnect			(lpBusSlaveConnect),
+	.pUfiBusWidth				(lpUfiBusWidth)
 ) SPI_BLOCK (
 	.ioSpiSck					(ioSpiSck),
 	.ioSpiMiso					(ioSpiMiso),
@@ -265,20 +265,11 @@ I2CBlock #(
 //----------------------------------------------------------
 // AudioGenBlock AGB
 
-//----------------------------------------------------------
-// VDMA
-//----------------------------------------------------------
-// VDMABlock VDMA ()
-
-//----------------------------------------------------------
-// ADMA
-//----------------------------------------------------------
-// ADMABlock ADMA ()
 
 //----------------------------------------------------------
 // 外部 RAM を操作しシステムと協調動作させる
 //----------------------------------------------------------
-// PSRAMBlock PSRAM_BLOCK
+PSRAMBlock PSRAM_BLOCK
 
 //----------------------------------------------------------
 // USI/F BUS
@@ -304,7 +295,7 @@ UltraSimpleInterface #(
 	.pBusDataBit		(lpBusDataBit),
 	.pBusAdrsBit		(lpBusAdrsBit),
 	.pBlockAdrsMap		(lpBlockAdrsMap),
-	.pGpioAdrsMap		(lpGpioAdrsMap),
+	// .pGpioAdrsMap		(lpGpioAdrsMap),
 	.pPWMAdrsMap		(lpPWMAdrsMap),
 	.pSPIAdrsMap		(lpSPIAdrsMap),
 	.pI2CAdrsMap		(lpI2CAdrsMap),
@@ -355,8 +346,8 @@ begin
 	qSUsiAdrsI2c	<= wSUsiAdrs;
 	qSUsiWCkeI2c	<= wSUsiWCke;
 	//
-	qSUsiRd			<= {{5{32'd0}}, wSUsiRdI2c, wSUsiRdSpi, wSUsiRdPwm, 32'd0/*wSUsiRdGpio*/};
-	qSUsiREd		<= {{5{1'h0}},  wSUsiREdI2c, wSUsiREdSpi, wSUsiREdPwm, 32'd0/*wSUsiREdGpio*/};
+	qSUsiRd			<= {{3{32'd0}}, wSUsiRdI2c,  wSUsiRdSpi,  wSUsiRdPwm /*, wSUsiRdGpio*/};
+	qSUsiREd		<= {{3{1'h0}},  wSUsiREdI2c, wSUsiREdSpi, wSUsiREdPwm /*, wSUsiREdGpio*/};
 end
 
 //----------------------------------------------------------

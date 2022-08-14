@@ -7,8 +7,7 @@
 //----------------------------------------------------------
 module SPISignalMux #(
 	// variable parameter
-	parameter					pBusAdrsBit	= 16,
-	parameter					pUfiBusWidth= 16
+	parameter					pBusAdrsBit	= 16
 )(
 	// Internal Port FPGA Slave Side SPI Module Connect
 	output	[31:0]				oSMiso,
@@ -23,7 +22,7 @@ module SPISignalMux #(
 	output 	[pBusAdrsBit-1:0]	oMUsiAdrs,
 	output 						oMUsiWEd,
 	// Ufi Bus Master Write
-	output	[pUfiBusWidth-1:0]	oMUfiWd,	// Write Data
+	output	[31:0]				oMUfiWd,	// Write Data
 	output	[31:0]				oMUfiAdrs,	// Write address
 	output						oMUfiWEd,	// Write Data Enable
 	output 						oMUfiWVd,	// 転送期間中 Assert
@@ -61,16 +60,16 @@ end
 //----------------------------------------------------------
 // UFI Bus
 //----------------------------------------------------------
-reg [pUfiBusWidth-1:0] 	rMUfiWd;		assign oMUfiWd		= rMUfiWd;
-reg [31:0] 				rMUfiAdrs;		assign oMUfiAdrs	= rMUfiAdrs;
-reg 					rMUfiWEd;		assign oMUfiWEd		= rMUfiWEd;
-reg  					rMUfiWVd;		assign oMUfiWVd		= rMUfiWVd;
+reg [31:0] 	rMUfiWd;					assign oMUfiWd		= rMUfiWd;
+reg [31:0] 	rMUfiAdrs;					assign oMUfiAdrs	= rMUfiAdrs;
+reg 		rMUfiWEd;					assign oMUfiWEd		= rMUfiWEd;
+reg  		rMUfiWVd;					assign oMUfiWVd		= rMUfiWVd;
 //
-reg 					qMUfiWVd;
+reg 		qMUfiWVd;
 //
 always @(posedge iSysClk)
 begin
-	rMUfiWd		<= iSRd[pUfiBusWidth-1:0];
+	rMUfiWd		<= iSRd;
 	rMUfiAdrs	<= iSAdrs;
 
 	// Data Enable

@@ -102,14 +102,14 @@ begin
 	else 			rSUsiREd 	<= iSUsiREd;
 
 	case (iMUsiAdrs[pBlockAdrsMap + 3'd7:8])
-		pGpioAdrsMap:	rSUsiRd <= iSUsiRd[lpGpioAdrsMsb	:	lpGpioAdrsLsb];
+		// pGpioAdrsMap:	rSUsiRd <= iSUsiRd[lpGpioAdrsMsb	:	lpGpioAdrsLsb];
 		pPWMAdrsMap:	rSUsiRd <= iSUsiRd[lpPWMAdrsMsb		:	lpPWMAdrsLsb];
 		pSPIAdrsMap:	rSUsiRd <= iSUsiRd[lpSPIAdrsMsb		:	lpSPIAdrsLsb];
 		pI2CAdrsMap:	rSUsiRd <= iSUsiRd[lpI2CAdrsMsb		:	lpI2CAdrsLsb];
 		pPGBAdrsMap:	rSUsiRd <= iSUsiRd[lpPGBAdrsMsb		:	lpPGBAdrsLsb];
 		pAGBAdrsMap:	rSUsiRd <= iSUsiRd[lpAGBAdrsMsb		:	lpAGBAdrsLsb];
-		pVDMAAdrsMap:	rSUsiRd <= iSUsiRd[lpVDMAAdrsMsb	:	lpVDMAAdrsLsb];
-		pADMAAdrsMap:	rSUsiRd <= iSUsiRd[lpADMAAdrsMsb	:	lpADMAAdrsLsb];
+		// pVDMAAdrsMap:	rSUsiRd <= iSUsiRd[lpVDMAAdrsMsb	:	lpVDMAAdrsLsb];
+		// pADMAAdrsMap:	rSUsiRd <= iSUsiRd[lpADMAAdrsMsb	:	lpADMAAdrsLsb];
 		pPSRAMAdrsMap:	rSUsiRd <= iSUsiRd[lpPSRAMAdrsMsb	:	lpPSRAMAdrsLsb];
 		default:		rSUsiRd <= 'h1234_5678;		// アドレスの判定バグを分かりやすくするためのデータ
 	endcase

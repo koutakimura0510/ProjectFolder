@@ -1,15 +1,14 @@
 //----------------------------------------------------------
-// Create 2022/8/3
+// Create 2022/8/14
 // Author koutakimura
 // -
-// SPI 通信の制御を司るユニット
+// PSRAMの制御を司るユニット
 // 
 //----------------------------------------------------------
-module SPIUnit #(
+module PSRAMUnit #(
 	// variable parameter
 	parameter					pBusAdrsBit	= 16,
-	parameter 					pDivClk 	= 16,
-	parameter					pUfiBusWidth= 16
+	parameter 					pDivClk 	= 16
 )(
 	// External Port
     inout	          			ioSpiSck,
@@ -31,7 +30,7 @@ module SPIUnit #(
 	output	[pBusAdrsBit-1:0]	oMUsiAdrs,		// R/W Adrs
 	output						oMUsiWEd,		// Write Enable
 	// Ufi Bus Master
-	output	[pUfiBusWidth-1:0]	oMUfiWd,		// Write Data
+	output	[31:0]				oMUfiWd,		// Write Data
 	output	[31:0]				oMUfiAdrs,		// Write address
 	output						oMUfiWEd,		// Write Data Enable
 	output 						oMUfiWVd,		// 転送期間中 Assert
@@ -76,8 +75,7 @@ reg 	[15:0]		qSDLenMux;
 reg 				qSREdMux;
 
 SPISignalMux # (
-	.pBusAdrsBit	(pBusAdrsBit),
-	.pUfiBusWidth	(pUfiBusWidth)
+	.pBusAdrsBit	(pBusAdrsBit)
 ) SPI_SIGNAL_MUX (
 	// Internal Port FPGA Slave Side SPI Module Connect
 	.oSMiso			(wSMisoMux),

@@ -18,7 +18,8 @@ module SPIBlock #(
 	parameter 							pBlockAdrsMap 		= 8,	// ブロックのアドレス幅を指定
 	parameter [pBlockAdrsMap-1:0] 		pAdrsMap	  		= 'h03,
 	parameter							pBusAdrsBit			= 16,
-	parameter [3:0]						pBusSlaveConnect	= 1		// Busに接続する Slave数 最大16
+	parameter [3:0]						pBusSlaveConnect	= 1,	// Busに接続する Slave数 最大16
+	parameter							pUfiBusWidth		= 16
 )(
 	// External Port
     inout								ioSpiSck,
@@ -45,7 +46,7 @@ module SPIBlock #(
 	input	[pBusAdrsBit-1:0]			iSUsiAdrs,		// Csr Access Adrs
 	input								iSUsiWCke,		// Data Enable
 	// Ufi Bus Master Write
-	output	[31:0]						oMUfiWd,		// Write Data
+	output	[pUfiBusWidth-1:0]			oMUfiWd,		// Write Data
 	output	[31:0]						oMUfiAdrs,		// Write address
 	output								oMUfiWEd,		// Write Data Enable
 	output 								oMUfiWVd,		// 転送期間中 Assert
@@ -78,7 +79,8 @@ wire 	[7:0]			wMRdUnit;
 
 SPIUnit #(
 	.pBusAdrsBit		(pBusAdrsBit),
-	.pDivClk			(lpDivClk)
+	.pDivClk			(lpDivClk),
+	.pUfiBusWidth		(pUfiBusWidth)
 ) SPI_UNIT (
 	.ioSpiSck			(ioSpiSck),
 	.ioSpiMiso			(ioSpiMiso),
