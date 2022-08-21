@@ -86,7 +86,8 @@ always @(posedge iSysClk)
 begin
 	if (iSysRst)
 	begin
-		rSUsiRd <= 'h0;
+		rSUsiRd  <= 'h0;
+		rSUsiREd <= 1'b0;
 	end
 	else
 	begin

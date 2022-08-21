@@ -1,0 +1,28 @@
+//----------------------------------------------------------
+// gdb デバッグを行う場合は、gcc のオプションに -g3 を忘れずにつけること
+//----------------------------------------------------------
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "My debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/${fileBasenameNoExtension}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+			"miDebuggerPath": "/usr/bin/gdb",
+            "setupCommands": [
+                {
+                    "description": "gdb の再フォーマットを有効にする",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+            ],
+        }
+    ]
+}

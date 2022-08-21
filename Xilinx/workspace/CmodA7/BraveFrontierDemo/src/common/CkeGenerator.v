@@ -12,8 +12,8 @@ module CkeGenerator #(
     parameter 	pTimeCke 	= 1          // Enable 出力の時間指定
 )(
 	// Internal Clk
-	input [pDivWidth-1:0]	iDiv,		// レジスタ入力の分周値
-	input 					iCke,		// レジスた入力使用時 Cke制御を行う
+	input [pDivWidth-1:0]	iDiv,		// レジスタ入力の分周値, 0指定時常時 Cke ON
+	input 					iCke,		// レジスタ入力使用時 Cke制御を行う
     output  				oCke,
 	// Clk Reset
     input   				iSysClk, 
@@ -33,14 +33,14 @@ generate
 		reg [lpCtuCNTBits-1:0] rTmpCount;
 		reg qCke;
 
-		always_ff @( posedge iSysClk )
+		always @( posedge iSysClk )
 		begin
 			if (iSysRst)    rTmpCount <= 0;
 			else if (qCke)  rTmpCount <= 0;
 			else            rTmpCount <= rTmpCount + 1'b1;
 		end
 
-		always_comb
+		always @*
 		begin
 			qCke = rTmpCount == lpSysCnt;
 		end
@@ -51,7 +51,7 @@ generate
 		reg [7:0] rTimeCkeCnt;
 		reg qTimeCke;                               assign oCke = qTimeCke;
 
-		always_ff @( posedge iSysClk )
+		always @( posedge iSysClk )
 		begin
 			if (iSysRst)        rTimeCkeCnt <= 0;
 			else if (qTimeCke)  rTimeCkeCnt <= 0;
@@ -59,31 +59,35 @@ generate
 			else                rTimeCkeCnt <= rTimeCkeCnt;
 		end
 
-		always_comb
+		always @*
 		begin
 			qTimeCke <= pTimeCke == rTimeCkeCnt;
 		end
 	end
 	else
 	begin
-		//
-		localparam [pDivWidth-1:0] lpTmpClear = 'h0;
-
 		//----------------------------------------------------------
 		// Cke Counter
 		//----------------------------------------------------------
 		reg [pDivWidth-1:0] rTmpCount;
-		reg qCke;							assign oCke = qCke;
+		reg rCke;						assign oCke = rCke;
+		reg qCke;
 
-		always_ff @( posedge iSysClk )
+		always @( posedge iSysClk )
 		begin
-			if (iSysRst)    rTmpCount <= lpTmpClear;
-			else if (qCke)  rTmpCount <= lpTmpClear;
-			else if (iCke)	rTmpCount <= rTmpCount + 1'b1;
-			else			rTmpCount <= rTmpCount;
+			casex ({iSysRst,qCke,iCke})
+				3'b1xx: 	rTmpCount <= {pDivWidth{1'b0}};
+				3'b001: 	rTmpCount <= rTmpCount + 1'b1;
+				3'b011: 	rTmpCount <= {pDivWidth{1'b0}};
+				default: 	rTmpCount <= {pDivWidth{1'b0}};
+			endcase
+
+			if (iCke)		rCke <= 1'b0;
+			else if (qCke)  rCke <= 1'b1;
+			else 			rCke <= 1'b0;
 		end
 
-		always_comb
+		always @*
 		begin
 			qCke = (rTmpCount == iDiv);
 		end

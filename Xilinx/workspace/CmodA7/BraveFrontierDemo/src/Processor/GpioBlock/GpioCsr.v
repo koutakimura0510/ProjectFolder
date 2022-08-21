@@ -11,44 +11,48 @@
 module GpioCsr #(
 	parameter 						pBlockAdrsMap 	= 'd8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h01,
-	parameter						pBusAdrsBit		= 'd32
+	parameter						pBusAdrsBit		= 'd32,
+	parameter 						pPWMDutyWidth	= 'd16,	// PWM の分解能
+	parameter 						pIVtimerWidth	= 'd16	// インターバルタイマ分周値
 )(
     // Internal Port
 	// Csr Read
-	output	[31:0]				oSUsiRd,	// Read Data
-	output						oSUsiREd,	// Read Valid Assert
+	output	[31:0]					oSUsiRd,	// Read Data
+	output							oSUsiREd,	// Read Valid Assert
 	// Bus Slave Write
-	input	[31:0]				iSUsiWd,	// Write Data
-	input	[pBusAdrsBit-1:0]	iSUsiAdrs,  // R/W Adrs
-	input						iSUsiWCke,	// Write Enable
+	input	[31:0]					iSUsiWd,	// Write Data
+	input	[pBusAdrsBit-1:0]		iSUsiAdrs,  // R/W Adrs
+	input							iSUsiWCke,	// Write Enable
 	// Csr Output
-	output 	[7:0]				oGpioLed,
-	output 	[7:0]				oGpioDiv,
+	output 	[7:0]					oGpioEn,
+	output	[3:0]					oGpioFlashMode,
     // CLK Reset
-    input           			iSysClk,
-    input           			iSysRst
+    input           				iSysClk,
+    input           				iSysRst
 );
 
 
 //----------------------------------------------------------
 // レジスタマップ
 //----------------------------------------------------------
-reg [ 7:0]		rGpioLed;		assign oGpioLed  = rGpioLed;	// 汎用 GPIO ON/OFF 制御
-reg [ 7:0]		rGpioDiv;		assign oGpioDiv = rGpioDiv;	// 汎用 GPIO 動作周波数
+reg [ 7:0]					rGpioEn;			assign 	oGpioEn  		= rGpioEn;			// 汎用 GPIO ON/OFF 制御
+reg [ 3:0]					rGpioFlashMode;		assign 	oGpioFlashMode	= rGpioFlashMode;	// GPIO の点灯方法
+reg [(pPWMDutyWidth*2)-1:0] rGpioDuty;			assign	oGpioDuty		= rGpioDuty;
+reg [(pIVtimerWidth*2)-1:0] rGpioIVtimer;		assign	oGpioIVtimer	= rGpioIVtimer;
 //
 reg [pBusAdrsBit:0]		qCsrAdrs;
-
+//
 always @(posedge iSysClk)
 begin
 	if (iSysRst)
 	begin
-		rGpioLed	<= 8'hff;
-		rGpioDiv	<= 8'h5;	// default 50MHz / 5 = 10MHz
+		rGpioEn		<= 8'hff;
+		rGpioFlashMode 	<= 4'd0;
 	end
 	else
 	begin
-		// {rGpioDiv, rGpioLed}	<= (qCsrAdrs == 33'h1_0000_0100) ? iSUsiWd[15:0] : {rGpioDiv, rGpioLed};
-		{rGpioDiv, rGpioLed}	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[15:0] : {rGpioDiv, rGpioLed};
+		rGpioEn			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[7:0] : rGpioEn;
+		rGpioFlashMode	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[3:0] : rGpioFlashMode;
 	end
 end
 
@@ -60,7 +64,7 @@ end
 //----------------------------------------------------------
 // Csr Read
 //----------------------------------------------------------
-reg [31:0]		rSUsiRd;		assign oSUsiRd = rSUsiRd;
+reg [31:0]		rSUsiRd;		assign oSUsiRd  = rSUsiRd;
 reg 			rSUsiREd;		assign oSUsiREd = rSUsiREd;
 reg 			qAdrsComp;
 
@@ -74,7 +78,8 @@ begin
 	else
 	begin
 		case ({qAdrsComp, iSUsiAdrs[7:0]})
-			'h100:		rSUsiRd <= {16'd0, rGpioDiv, rGpioLed};
+			'h100:		rSUsiRd <= {24'd0, rGpioEn};
+			'h104:		rSUsiRd <= {28'd0, rGpioFlashMode};
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase
 	end

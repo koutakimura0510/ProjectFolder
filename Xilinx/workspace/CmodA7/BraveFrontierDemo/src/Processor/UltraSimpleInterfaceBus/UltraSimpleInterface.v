@@ -18,14 +18,11 @@ module UltraSimpleInterface #(
 	parameter							pBusAdrsBit				= 16,
 	parameter							pBlockAdrsMap			= 8,
 	parameter [pBlockAdrsMap-1:0]		pGpioAdrsMap			= 'h1,
-	parameter [pBlockAdrsMap-1:0]		pPWMAdrsMap				= 'h2,
-	parameter [pBlockAdrsMap-1:0]		pSPIAdrsMap				= 'h3,
-	parameter [pBlockAdrsMap-1:0]		pI2CAdrsMap				= 'h4,
-	parameter [pBlockAdrsMap-1:0]		pPGBAdrsMap				= 'h5,
-	parameter [pBlockAdrsMap-1:0]		pAGBAdrsMap				= 'h6,
-	parameter [pBlockAdrsMap-1:0]		pVDMAAdrsMap			= 'h7,
-	parameter [pBlockAdrsMap-1:0]		pADMAAdrsMap			= 'h8,
-	parameter [pBlockAdrsMap-1:0]		pPSRAMAdrsMap			= 'h9,
+	parameter [pBlockAdrsMap-1:0]		pSPIAdrsMap				= 'h2,
+	parameter [pBlockAdrsMap-1:0]		pI2CAdrsMap				= 'h3,
+	parameter [pBlockAdrsMap-1:0]		pPGBAdrsMap				= 'h4,
+	parameter [pBlockAdrsMap-1:0]		pAGBAdrsMap				= 'h5,
+	parameter [pBlockAdrsMap-1:0]		pRAMAdrsMap				= 'h6,
 	// Not variable parameter
 	parameter 							pBusLen 				= (pBusDataBit * pBusSlaveConnect) - 1'b1,
 	parameter [3:0]						pBusSlaveConnectWidth 	= pBusSlaveConnect - 1'b1
@@ -50,30 +47,27 @@ module UltraSimpleInterface #(
     input           					iUsiRst
 );
 
-
 //----------------------------------------------------------
 // 手動でソースコードを変更しないで済むように Bit 指定を計算
 //----------------------------------------------------------
-localparam lpGpioAdrsMsb 	= (pBusDataBit * pGpioAdrsMap) - 1;
-localparam lpGpioAdrsLsb 	=  pBusDataBit * (pGpioAdrsMap - 1);
-localparam lpPWMAdrsMsb 	= (pBusDataBit  * pPWMAdrsMap) - 1;
-localparam lpPWMAdrsLsb 	= pBusDataBit   * (pPWMAdrsMap - 1);
+localparam lpGpioAdrsMsb 	= (pBusDataBit	* pGpioAdrsMap) - 1;
+localparam lpGpioAdrsLsb 	=  pBusDataBit	* (pGpioAdrsMap - 1);
+//
 localparam lpSPIAdrsMsb 	= (pBusDataBit  * pSPIAdrsMap) - 1;
 localparam lpSPIAdrsLsb 	= pBusDataBit   * (pSPIAdrsMap - 1);
+//
 localparam lpI2CAdrsMsb 	= (pBusDataBit  * pI2CAdrsMap) - 1;
 localparam lpI2CAdrsLsb 	= pBusDataBit   * (pI2CAdrsMap - 1);
+//
 localparam lpPGBAdrsMsb 	= (pBusDataBit  * pPGBAdrsMap) - 1;
 localparam lpPGBAdrsLsb 	= pBusDataBit   * (pPGBAdrsMap - 1);
+//
 localparam lpAGBAdrsMsb 	= (pBusDataBit  * pAGBAdrsMap) - 1;
 localparam lpAGBAdrsLsb 	= pBusDataBit   * (pAGBAdrsMap - 1);
-localparam lpVDMAAdrsMsb 	= (pBusDataBit * pVDMAAdrsMap) - 1;
-localparam lpVDMAAdrsLsb 	= pBusDataBit  * (pVDMAAdrsMap - 1);
-localparam lpADMAAdrsMsb 	= (pBusDataBit * pADMAAdrsMap) - 1;
-localparam lpADMAAdrsLsb 	= pBusDataBit  * (pADMAAdrsMap - 1);
-localparam lpPSRAMAdrsMsb 	= (pBusDataBit * pPSRAMAdrsMap) - 1;
-localparam lpPSRAMAdrsLsb 	= pBusDataBit * (pPSRAMAdrsMap - 1);
-
-
+//
+localparam lpRAMAdrsMsb 	= (pBusDataBit 	* pRAMAdrsMap) - 1;
+localparam lpRAMAdrsLsb 	= pBusDataBit 	* (pRAMAdrsMap - 1);
+//
 //----------------------------------------------------------
 // バスクロックで バス経由データ保存
 //----------------------------------------------------------
@@ -102,15 +96,12 @@ begin
 	else 			rSUsiREd 	<= iSUsiREd;
 
 	case (iMUsiAdrs[pBlockAdrsMap + 3'd7:8])
-		// pGpioAdrsMap:	rSUsiRd <= iSUsiRd[lpGpioAdrsMsb	:	lpGpioAdrsLsb];
-		pPWMAdrsMap:	rSUsiRd <= iSUsiRd[lpPWMAdrsMsb		:	lpPWMAdrsLsb];
+		pGpioAdrsMap:	rSUsiRd <= iSUsiRd[lpGpioAdrsMsb	:	lpGpioAdrsLsb];
 		pSPIAdrsMap:	rSUsiRd <= iSUsiRd[lpSPIAdrsMsb		:	lpSPIAdrsLsb];
 		pI2CAdrsMap:	rSUsiRd <= iSUsiRd[lpI2CAdrsMsb		:	lpI2CAdrsLsb];
 		pPGBAdrsMap:	rSUsiRd <= iSUsiRd[lpPGBAdrsMsb		:	lpPGBAdrsLsb];
 		pAGBAdrsMap:	rSUsiRd <= iSUsiRd[lpAGBAdrsMsb		:	lpAGBAdrsLsb];
-		// pVDMAAdrsMap:	rSUsiRd <= iSUsiRd[lpVDMAAdrsMsb	:	lpVDMAAdrsLsb];
-		// pADMAAdrsMap:	rSUsiRd <= iSUsiRd[lpADMAAdrsMsb	:	lpADMAAdrsLsb];
-		pPSRAMAdrsMap:	rSUsiRd <= iSUsiRd[lpPSRAMAdrsMsb	:	lpPSRAMAdrsLsb];
+		pRAMAdrsMap:	rSUsiRd <= iSUsiRd[lpRAMAdrsMsb		:	lpRAMAdrsLsb];
 		default:		rSUsiRd <= 'h1234_5678;		// アドレスの判定バグを分かりやすくするためのデータ
 	endcase
 end

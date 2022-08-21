@@ -47,15 +47,15 @@ module cgbWrapper #(
 //----------------------------------------------------------
 localparam      lpBandWidth      = "OPTIMIZED"; // Rst Active High
 localparam      lpStartWait      = "FALSE";     // Delay DONE until PLL Locks, ("TRUE"/"FALSE")
-localparam real lpClkIn1Period   = 40.000;      // 25 [MHz]
-localparam      lpClkIn1Div      = 1;           // 25 [MHz] / 1 = 25 [MHz]
+localparam real lpClkIn1Period   = 83.333;      // 12 [MHz]
+localparam      lpClkIn1Div      = 1;           // 12 [MHz] / 1 = 12 [MHz]
 
 // VOC 分周回路設定
 // Spped Grade 1 = (600 ~ 1200MHz)
 localparam real lpClkOutMult     = 36.000;      // OSC MHz * Mult = VOC[MHz]
-localparam real lpClk0OutDivF    = 4.500;       // VOC MHz / DivF =  Clk0[MHz]
-localparam      lpClk1OutDiv     = 100;         // VOC MHz / Div  =  Clk1[MHz]
-localparam      lpClk2OutDiv     = 9;           // VOC MHz / Div  =  Clk2[MHz]
+localparam real lpClk0OutDivF    = 8.000;       // VOC MHz / DivF =  Clk0[MHz]
+localparam      lpClk1OutDiv     = 18;          // VOC MHz / Div  =  Clk1[MHz]
+localparam      lpClk2OutDiv     = 80;          // VOC MHz / Div  =  Clk2[MHz]
 localparam      lpClk3OutDiv     = 10;          // <Reserved>
 localparam      lpClk4OutDiv     = 10;          // <Reserved>
 localparam      lpClk5OutDiv     = 10;          // <Reserved>
@@ -159,7 +159,7 @@ generate
 
         BUFG BUFG_CLKO_0 (
             .O (wPixelClk),
-            .I (wClkOut[0])
+            .I (wClkOut[2])
         );
 
         BUFG BUFG_CLKO_1 (
@@ -169,7 +169,7 @@ generate
 
         BUFG BUFG_CLKO_2 (
             .O (wSysClk),
-            .I (wClkOut[2])
+            .I (wClkOut[0])
         );
 
         BUFG BUFG_SYSRST (
@@ -290,30 +290,34 @@ generate
     end
     else
     begin
-        wire wAudioLock;                     assign oAudioRst   = wAudioLock;
-        wire wAudioBufg;                     assign oAudioClk   = wAudioBufg;
-        wire wAudioClk;
+		// CmodA7 では I2S ではなく PWM のため、SystemCLK 使用
+        wire wAudioLock;                     assign oAudioRst   = 1'b0;
+        wire wAudioBufg;                     assign oAudioClk   = 1'b0;
 
-        IBUF # (
-            .IBUF_LOW_PWR   ("FALSE"),
-            .IOSTANDARD     ("DEFAULT")
-        ) IBUF_AudioClk (    
-            .O              (wAudioClk),
-            .I              (iAudioClk)
-        );
+        // wire wAudioLock;                     assign oAudioRst   = wAudioLock;
+        // wire wAudioBufg;                     assign oAudioClk   = wAudioBufg;
+        // wire wAudioClk;
 
-        BUFG BUFG_AudioClk (
-            .O              (wAudioBufg),
-            .I              (wAudioClk)
-        );
+        // IBUF # (
+        //     .IBUF_LOW_PWR   ("FALSE"),
+        //     .IOSTANDARD     ("DEFAULT")
+        // ) IBUF_AudioClk (    
+        //     .O              (wAudioClk),
+        //     .I              (iAudioClk)
+        // );
 
-        rstGen #(
-            .pRstFallTime   (100),
-			.pBufgUsed		("yes")
-        ) AUDIO_RST (
-            .iClk           (wAudioBufg),
-            .oRst           (wAudioLock)
-        );
+        // BUFG BUFG_AudioClk (
+        //     .O              (wAudioBufg),
+        //     .I              (wAudioClk)
+        // );
+
+        // rstGen #(
+        //     .pRstFallTime   (100),
+		// 	.pBufgUsed		("yes")
+        // ) AUDIO_RST (
+        //     .iClk           (wAudioBufg),
+        //     .oRst           (wAudioLock)
+        // );
     end
 endgenerate
 

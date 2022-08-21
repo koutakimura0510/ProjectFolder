@@ -25,7 +25,6 @@ module BraveFrontier #(
 )(
 	// Osc Clk
     input           iOscSystemClk,     // OSC  clk
-    input           iOscAudioClk,      // OSC  clk
 	// SPI
     inout           ioSpiSck,
     inout           ioSpiMiso,
@@ -35,15 +34,16 @@ module BraveFrontier #(
     output          oSpiConfigCs,
     inout           ioSpiCs,
     input           iMSSel,
-	// PSRAM
-    inout  [15:0]   ioSramDq,
-    inout  [1:0]    ioSramDqs,
-    output          oSramClk,
-    output          oSramCs,
+	// RAM
+	output 	[18:0]	oMemAdr,
+	inout	[7:0]	ioMemDq,
+	output 			oRamOE,
+	output 			oRamWE,
+	output 			oRamCE,
 	// Display
-    output [7:4]    oTftColorR,
-    output [7:4]    oTftColorG,
-    output [7:4]    oTftColorB,
+    output	[7:4]   oTftColorR,
+    output	[7:4]   oTftColorG,
+    output	[7:4]   oTftColorB,
     output          oTftDclk,
     output          oTftHsync,
     output          oTftVsync,
@@ -53,11 +53,15 @@ module BraveFrontier #(
 	// I2C Controller
     output          oI2CScl,
     inout           ioI2CSda,
-	// I2S Audio
+	// PWM Audio
     output          oAudioMclk,
-    output          oAudioBclk,
-    output          oAudioCclk,
-    output          oAudioData
+	// LED
+	output	[1:0]	oLed,
+	output 			oLedB,
+	output 			oLedG,
+	output 			oLedR,
+	// TestPort
+	output	[3:0]	oTestPort
 );
 
 
@@ -68,30 +72,14 @@ wire wMemClk, wPixelClk, wSysClk, wAudioClk;
 wire wSysRst, wAudioRst;
 wire wPreVde, wPreFe, wPreFvde, wPreHsync, wPreVsync;
 
-// 後段のモジュールに接続
-reg  qProSysClk;
-reg  qProMemClk;
-reg  qPostPixelClk, qProPixelClk;
-reg  qPostPixelRst, qProSysRst;
-reg  qPostAudioClk, qProAudioClk;
-reg  qPostAudioRst, qProAudioRst;
-
 PreProcesser #(
-    .pHdisplay      (pHdisplay),
-    .pHback         (pHback),
-    .pHfront        (pHfront),
-    .pHsync         (pHsync),
-    .pVdisplay      (pVdisplay),
-    .pVtop          (pVtop),
-    .pVbottom       (pVbottom),
-    .pVsync         (pVsync),
     .pSystemPll     ("on"),
     .pAudioPll      ("off")
 ) PRE_PROCESSER (
     //----------------------------------------------------------
     // External Port
     //----------------------------------------------------------
-    .iClk           (iOscSystemClk),    .iAudioClk      (iOscAudioClk),
+    .iClk           (iOscSystemClk),    .iAudioClk      (),
 
     //----------------------------------------------------------
     // Internal port
@@ -100,22 +88,7 @@ PreProcesser #(
     .oMemClk        (wMemClk),          .oPixelClk      (wPixelClk),
     .oSysClk        (wSysClk),          .oAudioClk      (wAudioClk),
     .oSysRst        (wSysRst),          .oAudioRst      (wAudioRst),
-
-    // Video Port
-    .oVde           (wPreVde),          .oFe            (wPreFe),
-    .oFvde          (wPreFvde),         .oHsync         (wPreHsync),
-    .oVsync         (wPreVsync)
 );
-
-always @*
-begin
-    qProSysClk	<= wSysClk;
-    qProMemClk	<= wMemClk;
-    {qPostPixelClk, qProPixelClk} <= {2{wPixelClk}};
-    {qPostAudioClk, qProAudioClk} <= {2{wAudioClk}};
-    {qPostPixelRst, qProSysRst}   <= {2{wSysRst}};
-    {qPostAudioRst, qProAudioRst} <= {2{wAudioRst}};
-end
 
 
 //----------------------------------------------------------
@@ -132,7 +105,13 @@ reg  qProAudioLRch;
 
 Processer # (
     .pHdisplay      (pHdisplay),
+    .pHback         (pHback),
+    .pHfront        (pHfront),
+    .pHsync         (pHsync),
     .pVdisplay      (pVdisplay),
+    .pVtop          (pVtop),
+    .pVbottom       (pVbottom),
+    .pVsync         (pVsync),
     .pPixelDebug    (pPixelDebug),
     .pBuffDepth     (pBuffDepth),
     .pDebug         (pDebug)
@@ -142,87 +121,39 @@ Processer # (
     //----------------------------------------------------------
     // SPI
     .ioSpiSck       (ioSpiSck),
-    .ioSpiMiso      (ioSpiMiso),        .ioSpiMosi      (ioSpiMosi),
-    .ioSpiHold      (ioSpiHold),        .ioSpiWp        (ioSpiWp),
+    .ioSpiMiso      (ioSpiMiso),        .ioSpiMosi    	(ioSpiMosi),
+    .ioSpiHold      (ioSpiHold),        .ioSpiWp      	(ioSpiWp),
     .ioSpiCs		(ioSpiCs),			.iMSSel			(iMSSel),
     .oSpiConfigCs   (oSpiConfigCs),
     // I2C Controller
-    .oI2CScl         (oI2CScl),         .ioI2CSda        (ioI2CSda),
-    // Memory Primary
-    .ioSramDq      (ioSramDq),        	.ioSramDqs     (ioSramDqs),
-    .oSramClk      (oSramClk),        	.oSramCs       (oSramCs),
+    .oI2CScl        (oI2CScl),         .ioI2CSda        (ioI2CSda),
+    // Memory
+	.oMemAdr		(oMemAdr),			.ioMemDq		(ioMemDq),
+	.oRamOE			(oRamOE),			.oRamWE			(oRamWE),
+	.oRamCE			(oRamCE),
+	// TFT Display
+	.oTftColorR		(oTftColorR),		.oTftColorG		(oTftColorG),
+	.oTftColorB		(oTftColorB),
+	.oTftDclk		(oTftDclk),			.oTftHsync		(oTftHsync),
+	.oTftVsync		(oTftVsync),
+	.oTftDe			(oTftDe),
+	.oTftBackLight	(oTftBackLight),	.oTftRst		(oTftRst),
+	// Audio PWM
+	.oAudioMclk		(oAudioMclk),
+	// Cmod A7 LED
+	.oLed			(oLed),				.oLedB			(oLedB),
+	.oLedG			(oLedG),			.oLedR			(oLedR),
+	// TestPort
+	.oTestPort		(oTestPort),
 
     //----------------------------------------------------------
     // Internal Port
     //----------------------------------------------------------
-    // Video Port
-    .iPFvde         (qProFvde),         .oPixelData     (wProPixel),
-    .oBackLightControl  (wProBackLightControl),
-    // Audio Port
-    .iAudioLRch     (qProAudioLRch),    .oAudioData     (wProAudioData),
     // Clk Reset Port
-    .iPixelClk      (qProPixelClk),     .iMemClk        (qProMemClk),
-    .iSysClk        (qProSysClk),       .iAudioClk      (qProAudioClk),
-    .iSysRst        (qProSysRst),       .iAudioRst      (qProAudioRst)
+    .iPixelClk      (wPixelClk),     .iMemClk        (wMemClk),
+    .iSysClk        (wSysClk),       .iAudioClk      (wAudioClk),
+    .iSysRst        (wSysRst),       .iAudioRst      (wAudioRst)
 );
-
-always @*
-begin
-    qProFvde <= wPreFvde;
-end
-
-
-//----------------------------------------------------------
-// Video / Audio output
-//----------------------------------------------------------
-// Video 
-reg  [11:0] qPostPixel;
-reg  qPostVde;
-reg  qPostHsync;
-reg  qPostVsync;
-reg  qPostBackLightControl;
-
-// Audio
-reg  [31:0] qPostAudioData;
-wire wPostAudioLRch;
-
-PostProcesser POST_PROCESSER (
-    //----------------------------------------------------------
-    // External Port
-    //----------------------------------------------------------
-    // Video Port
-	.oTftColorR		    (oTftColorR),       .oTftColorG		    (oTftColorG),
-	.oTftColorB		    (oTftColorB),
-	.oTftDclk		    (oTftDclk),         .oTftRst		    (oTftRst),
-	.oTftHsync		    (oTftHsync),        .oTftVsync		    (oTftVsync),
-	.oTftDe			    (oTftDe),           .oTftBackLight	    (oTftBackLight),
-    // Audio Port
-	.oAudioMclk		    (oAudioMclk),       .oAudioBclk		    (oAudioBclk),
-	.oAudioCclk		    (oAudioCclk),       .oAudioData		    (oAudioData),
-
-    //----------------------------------------------------------
-    // Internal Port
-    //----------------------------------------------------------
-    // Video Port
-    .iPixelClk          (qPostPixelClk),    .iSysRst            (qPostPixelRst),
-    .iPixelData         (qPostPixel),       .iVde               (qPostVde),
-    .iHsync             (qPostHsync),       .iVsync             (qPostVsync),
-    .iBackLightControl  (qPostBackLightControl),
-    // Audio Port
-    .iAudioClk          (qPostAudioClk),    .iAudioRst		    (qPostAudioRst),
-	.iAudioData		    (qPostAudioData),   .oAudioLRch         (wPostAudioLRch)
-);
-
-always @*
-begin
-    qPostPixel              <= wProPixel[11:0];
-    qPostVde                <= wPreVde;
-    qPostHsync              <= wPreHsync;
-    qPostVsync              <= wPreVsync;
-    qPostAudioData          <= wProAudioData;
-    qPostBackLightControl   <= wProBackLightControl;
-    qProAudioLRch           <= wPostAudioLRch;
-end
 
 
 endmodule

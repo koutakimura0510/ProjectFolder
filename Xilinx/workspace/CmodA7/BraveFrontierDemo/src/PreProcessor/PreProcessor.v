@@ -7,15 +7,6 @@
 // 
 //----------------------------------------------------------
 module PreProcesser #(
-    parameter       pHdisplay       = 640,
-    parameter       pHback          =  48,
-    parameter       pHfront         =  16,
-    parameter       pHsync          =  96,
-    parameter       pVdisplay       = 480,
-    parameter       pVtop           =  31,
-    parameter       pVbottom        =  11,
-    parameter       pVsync          =   2,
-    parameter       pPixelDebug     = "off",
     parameter       pSystemPll      = "on",
     parameter       pAudioPll       = "on"
 )(
@@ -28,12 +19,7 @@ module PreProcesser #(
     output          oSysClk,
     output          oAudioClk,
     output          oSysRst,        // Active High Sync Reset
-    output          oAudioRst,      // Active High Sync Reset
-    output          oVde,
-    output          oFe,
-    output          oFvde,
-    output          oHsync,
-    output          oVsync
+    output          oAudioRst		// Active High Sync Reset
 );
 
 
@@ -57,35 +43,5 @@ cgbWrapper # (
     .oAudioClk  (wAudioClk)
 );
 
-
-//----------------------------------------------------------
-// Display Timing Block 
-//----------------------------------------------------------
-wire wVde, wFe, wFvde, wHsync, wVsync;
-
-assign oVde     = wVde;
-assign oFe      = wFe;
-assign oFvde    = wFvde;
-assign oHsync   = wHsync;
-assign oVsync   = wVsync;
-
-dtbWrapper #(
-    .pHdisplay  (pHdisplay),
-    .pHback     (pHback),
-    .pHfront    (pHfront),
-    .pHsync     (pHsync),
-    .pVdisplay  (pVdisplay),
-    .pVtop      (pVtop),
-    .pVbottom   (pVbottom),
-    .pVsync     (pVsync)
-) DTP (
-    .iClk       (wPixelClk),
-    .iRst       (wSysRst),
-    .oVde       (wVde),
-    .oFe        (wFe),
-    .oFvde      (wFvde),
-    .oHsync     (wHsync),
-    .oVsync     (wVsync)
-);
 
 endmodule

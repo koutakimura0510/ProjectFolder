@@ -83,11 +83,13 @@ localparam lpBlockAdrsMap 		= 8;
 
 localparam [lpBlockAdrsMap-1'b1:0] 
 	lpGpioAdrsMap	= 8'h01,
-	lpSPIAdrsMap	= 8'h02,
-	lpI2CAdrsMap	= 8'h03,
-	lpPGBAdrsMap	= 8'h04,
-	lpAGBAdrsMap	= 8'h05,
-	lpRAMAdrsMap 	= 8'h06;
+	lpPWMAdrsMap 	= 8'h02,
+	lpSPIAdrsMap	= 8'h03,
+	lpI2CAdrsMap	= 8'h04,
+	lpPGBAdrsMap	= 8'h05,
+	lpAGBAdrsMap	= 8'h06,
+	lpRAMAdrsMap 	= 8'h07,
+	lpTFTAdrsMap 	= 8'h08;
 
 
 //----------------------------------------------------------
@@ -140,10 +142,8 @@ GpioBlock #(
 	.pAdrsMap	 		(lpGpioAdrsMap),
 	.pBusAdrsBit		(lpBusAdrsBit)
 ) GPIO_BLOCK (
-	.oLed				(oLed),
-	.oLedB				(oLedB),
-	.oLedG				(oLedG),
-	.oLedR				(oLedR),
+	.oLedEdge			(oLedEdge),
+	.oLedClk			(oLedClk),
 	.oSUsiRd			(wSUsiRdGpio),
 	.oSUsiREd			(wSUsiREdGpio),
 	.iSUsiWd			(qSUsiWdGpio),
@@ -153,6 +153,31 @@ GpioBlock #(
 	.iSysRst			(iSysRst)
 );
 
+//----------------------------------------------------------
+// PWM BackLight
+//----------------------------------------------------------
+// Slave -> Master
+wire [31:0] 			wSUsiRdPwm;
+wire 					wSUsiREdPwm;
+// Master -> Slave
+reg  [31:0] 			qSUsiWdPwm;
+reg  [lpBusAdrsBit-1:0]	qSUsiAdrsPwm;
+reg  					qSUsiWCkePwm;
+
+PWMBlock #(
+	.pBlockAdrsMap		(lpBlockAdrsMap),
+	.pAdrsMap	 		(lpPWMAdrsMap),
+	.pBusAdrsBit		(lpBusAdrsBit)
+) PWM_BLOCK (
+	.oPwm				(oBackLightControl),
+	.oSUsiRd			(wSUsiRdPwm),
+	.oSUsiREd			(wSUsiREdPwm),
+	.iSUsiWd			(qSUsiWdPwm),
+	.iSUsiAdrs			(qSUsiAdrsPwm),
+	.iSUsiWCke			(qSUsiWCkePwm),
+	.iSysClk			(iSysClk),
+	.iSysRst			(iSysRst)
+);
 
 //----------------------------------------------------------
 // External CPU Master SPI Block or Slave SPI Block
@@ -254,64 +279,41 @@ I2CBlock #(
 // PGB
 //----------------------------------------------------------
 // PixelGenBlock PGB
-// PixelGenBlock #(
-// 	.pHdisplay			(pHdisplay),
-// 	.pHback				(pHback),
-// 	.pHfront			(pHfront),
-// 	.pHsync				(pHsync),
-// 	.pVdisplay			(pVdisplay),
-// 	.pVtop				(pVtop),
-// 	.pVbottom			(pVbottom),
-// 	.pVsync				(pVsync)
-// ) PGB (
-// 	// External port
-// 	.oTftColorR			(oTftColorR),
-// 	.oTftColorG			(oTftColorG),
-// 	.oTftColorB			(oTftColorB),
-// 	.oTftDclk			(oTftDclk),
-// 	.oTftHsync			(oTftHsync),
-// 	.oTftVsync			(oTftVsync),
-// 	.oTftDe				(oTftDe),
-// 	.oTftBackLight		(oTftBackLight),
-// 	.oTftRst			(oTftRst),
-// 	// Intenal port
-// 	// CLK Rst
-// 	.iPixelClk 			(iPixelClk),
-// 	.iSysRst			(iSysRst),
-// );
-
 
 //----------------------------------------------------------
-// Audio Gen
+// AGB
 //----------------------------------------------------------
-// Slave -> Master
-wire [31:0] 			wSUsiRdAudio;
-wire 					wSUsiREdAudio;
-// Master -> Slave
-reg  [31:0] 			qSUsiWdAudio;
-reg  [lpBusAdrsBit-1:0]	qSUsiAdrsAudio;
-reg  					qSUsiWCkeAudio;
-
-AudioGenBlock #(
-	.pBlockAdrsMap		(lpBlockAdrsMap),
-	.pAdrsMap	 		(lpAGBAdrsMap),
-	.pBusAdrsBit		(lpBusAdrsBit)
-) AUDIO_GEN_BLOCK (
-	.oAudio				(oBackLightControl),
-	.oSUsiRd			(wSUsiRdAudio),
-	.oSUsiREd			(wSUsiREdAudio),
-	.iSUsiWd			(qSUsiWdAudio),
-	.iSUsiAdrs			(qSUsiAdrsAudio),
-	.iSUsiWCke			(qSUsiWCkeAudio),
-	.iSysClk			(iSysClk),
-	.iSysRst			(iSysRst)
-);
+// AudioGenBlock AGB
 
 
 //----------------------------------------------------------
 // 外部 RAM を操作しシステムと協調動作させる
 //----------------------------------------------------------
 // RAMBlock RAM_BLOCK
+
+
+//---------------------------------------------------------------------------
+// TFT Display 送信
+//---------------------------------------------------------------------------
+tftWrapper TFT_WRAPPER (
+	.oTftColorR			(oTftColorR),
+	.oTftColorG			(oTftColorG),
+	.oTftColorB			(oTftColorB),
+	.oTftDclk			(oTftDclk),
+	.oTftHsync			(oTftHsync),
+	.oTftVsync			(oTftVsync),
+	.oTftDe				(oTftDe),
+	.oTftBackLight		(oTftBackLight),
+	.oTftRst			(oTftRst),
+	.iPixelClk 			(iPixelClk),
+	.iSysRst			(iSysRst),
+	.iPixelData			(iPixelData),
+	.iVde				(iVde),
+	.iHsync				(iHsync),
+	.iVsync				(iVsync),
+	.iBackLightControl 	(iBackLightControl)
+);
+
 
 
 //----------------------------------------------------------
@@ -338,26 +340,25 @@ UltraSimpleInterface #(
 	.pBusDataBit		(lpBusDataBit),
 	.pBusAdrsBit		(lpBusAdrsBit),
 	.pBlockAdrsMap		(lpBlockAdrsMap),
-	.pGpioAdrsMap		(lpGpioAdrsMap),
+	// .pGpioAdrsMap		(lpGpioAdrsMap),
+	.pPWMAdrsMap		(lpPWMAdrsMap),
 	.pSPIAdrsMap		(lpSPIAdrsMap),
 	.pI2CAdrsMap		(lpI2CAdrsMap),
 	.pPGBAdrsMap		(lpPGBAdrsMap),
 	.pAGBAdrsMap		(lpAGBAdrsMap),
 	.pRAMAdrsMap		(lpRAMAdrsMap),
+	.pTFTAdrsMap		(lpTFTAdrsMap),
 ) USI_BUS (
-	// Slave to Master
 	.oMUsiRd			(wMUsiRd),
 	.oMUsiREd			(wMUsiREd),
-	.iSUsiRd			(qSUsiRd),
-	.iSUsiREd			(qSUsiREd),
-	// Master to Slave
 	.iMUsiWd			(qMUsiWd),
 	.iMUsiAdrs			(qMUsiAdrs),
 	.iMUsiWEd			(qMUsiWEd),
 	.oSUsiWd			(wSUsiWd),
 	.oSUsiAdrs			(wSUsiAdrs),
 	.oSUsiWCke			(wSUsiWCke),
-	// Clk Rst
+	.iSUsiRd			(qSUsiRd),
+	.iSUsiREd			(qSUsiREd),
 	.iUsiClk 			(iSysClk),
 	.iUsiRst			(iSysRst)
 );
@@ -373,9 +374,13 @@ begin
 	qMUsiAdrs		<= wMUsiMonopoly ? wMUsiAdrsMcb	: wMUsiAdrsSpi;
 	qMUsiWEd		<= wMUsiMonopoly ? wMUsiWCkeMcb	: wMUsiWCkeSpi;
 	//
-	qSUsiWdGpio		<= wSUsiWd;
-	qSUsiAdrsGpio 	<= wSUsiAdrs;
-	qSUsiWCkeGpio	<= wSUsiWCke;
+	// qSUsiWdGpio		<= wSUsiWd;
+	// qSUsiAdrsGpio 	<= wSUsiAdrs;
+	// qSUsiWCkeGpio	<= wSUsiWCke;
+	//
+	qSUsiWdPwm		<= wSUsiWd;
+	qSUsiAdrsPwm	<= wSUsiAdrs;
+	qSUsiWCkePwm	<= wSUsiWCke;
 	//
 	qSUsiWdSpi		<= wSUsiWd;
 	qSUsiAdrsSpi	<= wSUsiAdrs;
@@ -385,12 +390,8 @@ begin
 	qSUsiAdrsI2c	<= wSUsiAdrs;
 	qSUsiWCkeI2c	<= wSUsiWCke;
 	//
-	qSUsiWdAudio	<= wSUsiWd;
-	qSUsiAdrsAudio	<= wSUsiAdrs;
-	qSUsiWCkeAudio	<= wSUsiWCke;
-	//
-	qSUsiRd			<= {32'd0, wSUsiRdAudio,  32'd0, wSUsiRdI2c,  wSUsiRdSpi,  wSUsiRdGpio	};
-	qSUsiREd		<= { 1'h0, wSUsiREdAudio,  1'd0, wSUsiREdI2c, wSUsiREdSpi, wSUsiREdGpio	};
+	qSUsiRd			<= {{4{32'd0}}, wSUsiRdI2c,  wSUsiRdSpi,  wSUsiRdPwm,  wSUsiRdGpio	};
+	qSUsiREd		<= {{4{1'h0}},  wSUsiREdI2c, wSUsiREdSpi, wSUsiREdPwm, wSUsiREdGpio	};
 end
 
 //----------------------------------------------------------

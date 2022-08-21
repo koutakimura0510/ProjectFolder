@@ -2,7 +2,7 @@
 // Create 2022/8/2
 // Author koutakimura
 // -
-// バスシステムの Masterと SPI の管理を司るブロック
+// バスシステムの Masterと SPI I/F の管理を司るブロック
 // iMSSel GPIO は FPGA SPI の Master / Slave を切り替える役割も持つ
 // Reset 終了時の I/O の状態を確認し、High Master / Low Slave とする
 // 通常はフラッシュメモリと接続されるが、デバッグ時は 外部CPU と接続するためこの機能を設けた。

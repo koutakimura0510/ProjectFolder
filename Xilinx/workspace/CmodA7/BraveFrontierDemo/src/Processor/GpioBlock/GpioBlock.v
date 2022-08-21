@@ -1,8 +1,8 @@
 //----------------------------------------------------------
-// Create 2022/7/24
+// Create 2022/8/21
 // Author koutakimura
 // -
-// 汎用 GPIO の操作を司るブロック
+// 汎用 GPIO の管理を司るブロック
 // 
 //----------------------------------------------------------
 module GpioBlock #(
@@ -11,8 +11,10 @@ module GpioBlock #(
 	parameter						pBusAdrsBit		= 'd32
 )(
 	// External Port
-	output	[1:0]				oLedEdge,
-	output 						oLedClk,
+	output	[1:0]				oLed,
+	output 						oLedB,
+	output 						oLedG,
+	output 						oLedR,
     // Internal Port
 	// Bus Slave Read
 	output	[31:0]				oSUsiRd,	// Read Data
@@ -28,18 +30,30 @@ module GpioBlock #(
 
 
 //----------------------------------------------------------
+// localparam
+//----------------------------------------------------------
+localparam lpPWMDutyWidth = 16;		// 最大 16bit
+localparam lpIVtimerWidth = 16;		// 最大 16bit
+
+
+//----------------------------------------------------------
 // GPIO UNIT
 //----------------------------------------------------------
-wire [7:0] 	wGpioLed;
-wire [7:0] 	wGpioDiv;
+wire [7:0] 	wGpioLedCsr;
+wire [3:0] 	wGpioFlashModeCsr;
 
-GpioUnit GPIO_UNIT (
-	.oSftEdge	(oLedEdge),
-	.oSftClk	(oLedClk),
-	.iGpioLed	(wGpioLed),
-	.iGpioDiv	(wGpioDiv),
-	.iSysClk	(iSysClk),
-	.iSysRst	(iSysRst)
+GpioUnit #(
+	.pPWMDutyWidth	(pPWMDutyWidth),
+	.pIVtimerWidth	(pIVtimerWidth)
+) GPIO_UNIT (
+	.oLed			(oLed),
+	.oLedB			(oLedB),
+	.oLedG			(oLedG),
+	.oLedR			(oLedR),
+	.iGpioLed		(wGpioLedCsr),
+	.iGpioFlashMode	(wGpioFlashModeCsr),
+	.iSysClk		(iSysClk),
+	.iSysRst		(iSysRst)
 );
 
 //----------------------------------------------------------
@@ -48,17 +62,19 @@ GpioUnit GPIO_UNIT (
 GpioCsr #(
 	.pBlockAdrsMap	(pBlockAdrsMap),
 	.pAdrsMap		(pAdrsMap),
-	.pBusAdrsBit	(pBusAdrsBit)
+	.pBusAdrsBit	(pBusAdrsBit),
+	.pPWMDutyWidth	(pPWMDutyWidth),
+	.pIVtimerWidth	(pIVtimerWidth)
 ) GPIO_CSR (
-	.oSUsiRd	(oSUsiRd),
-	.oSUsiREd	(oSUsiREd),
-	.iSUsiWd	(iSUsiWd),
-	.iSUsiAdrs	(iSUsiAdrs),
-	.iSUsiWCke	(iSUsiWCke),
-	.oGpioLed 	(wGpioLed),
-	.oGpioDiv	(wGpioDiv),
-	.iSysClk	(iSysClk),
-	.iSysRst	(iSysRst)
+	.oSUsiRd		(oSUsiRd),
+	.oSUsiREd		(oSUsiREd),
+	.iSUsiWd		(iSUsiWd),
+	.iSUsiAdrs		(iSUsiAdrs),
+	.iSUsiWCke		(iSUsiWCke),
+	.oGpioLed 		(wGpioLedCsr),
+	.oGpioFlashMode	(wGpioFlashModeCsr),
+	.iSysClk		(iSysClk),
+	.iSysRst		(iSysRst)
 );
 
 

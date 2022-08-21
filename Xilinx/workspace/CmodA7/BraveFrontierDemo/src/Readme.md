@@ -16,7 +16,8 @@ CmodA7 を使用し、本番に向けたデバッグ用基板を作成した。<
 </br>
 
 ## 2. ハードウェア構成
-![回路図](https://github.com/koutakimura0510/ProjectFolder/tree/master/Xilinx\workspace\CmodA7\BraveFrontierDemo\doc\GameDemoKit.pdf)
+準備中
+<!-- ![回路図](https://github.com/koutakimura0510/ProjectFolder/tree/master/Xilinx\workspace\CmodA7\BraveFrontierDemo\doc\GameDemoKit.pdf) -->
 
 ## 3. コーディング規則
 - parameter locparama は小文字 p, lp から開始し、なるべく詳細な命名を行う</br>
@@ -30,23 +31,21 @@ CmodA7 を使用し、本番に向けたデバッグ用基板を作成した。<
 ディレクトリ | 詳細
 -|-
 common | 汎用モジュール
-PreProcessor | PostProcessor・Processor で使用する CLK 信号を生成
-PostProcessor | Processor の結果を外部機器 I/F に変換し出力
-Processor | R/W が必要な外部機器と通信を行い、システム駆動を司る
+PreProcessor | Processor で使用する CLK 信号を生成
+Processor | 外部機器と通信を行い、システム駆動を司る
 </br>
 
 ## 5. アドレス構成
 機能名 | アドレス | 詳細
 -|-|-
-GPIO  | 0x0100 | 外部 LED の操作を行う
-PWM   | 0x0200 | ディスプレイのバックライトの調光を行う
-SPI   | 0x0300 | 外部フラッシュメモリと通信を行う
-I2C   | 0x0400 | 外部マイコン2つ + 加速度センサと通信を行う
-PGB   | 0x0500 | ドットデータの生成・合成など、表示データの操作を行う
-AGB   | 0x0600 | サウンドの生成・合成など、音源データの操作を行う
-RAM   | 0x0700 | 外部 RAM と通信を行う
+GPIO  | 0x0100 | 汎用 GPIO の制御を司る
+SPI   | 0x0200 | 外部 SPI I/F のデバイス・ホストの制御を司る
+I2C   | 0x0300 | 外部 I2C I/F のデバイスの制御を司る
+PGB   | 0x0400 | ドットデータの生成・合成など、表示データの制御を司る
+AGB   | 0x0500 | サウンドの生成・合成など、音源データの制御を司る
+RAM   | 0x0600 | 外部 RAM の制御を司る
 USI/F | 0x1000 | 汎用バスシステムの一つ、ペリフェラルのレジスタ操作と調停を行う
-UFI/F | 0x1100 | 専用バスシステムの一つ、DMA 操作の調停を行う
+UFI/F | 0x1100 | 専用バスシステムの一つ、メモリ操作の調停を行う
 MCB   | 0x1200 | Master としてプロセッサーの制御を行う
 </br>
 

@@ -29,14 +29,14 @@ localparam [lpCtuCNTBits-1:0] 	lpRstCnt 	= 0;
 reg [lpCtuCNTBits-1:0] rTmpCount;
 reg qCke;
 
-always_ff @( posedge iSysClk )
+always @( posedge iSysClk )
 begin
     if (iSysRst)    rTmpCount <= lpRstCnt;
     else if (qCke)  rTmpCount <= lpRstCnt;
     else            rTmpCount <= rTmpCount + 1'b1;
 end
 
-always_comb
+always @*
 begin
     qCke = rTmpCount == lpSysCnt;
 end
@@ -47,7 +47,7 @@ end
 reg [7:0] rTimeCkeCnt;
 reg qTimeCke;
 
-always_ff @( posedge iSysClk )
+always @( posedge iSysClk )
 begin
     if (iSysRst)        rTimeCkeCnt <= 8'd0;
     else if (qTimeCke)  rTimeCkeCnt <= 8'd0;
@@ -55,7 +55,7 @@ begin
     else                rTimeCkeCnt <= rTimeCkeCnt;
 end
 
-always_comb
+always @*
 begin
     qTimeCke <= pTimeCke == rTimeCkeCnt;
 end
@@ -65,7 +65,7 @@ end
 //----------------------------------------------------------
 reg  rPulse;			assign oPulse = rPulse;
 
-always_ff @(posedge iSysClk)
+always @(posedge iSysClk)
 begin
 	if (iSysRst) 		rPulse <= pStartPulse;
 	else if (qTimeCke)	rPulse <= ~rPulse;
