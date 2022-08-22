@@ -9,55 +9,80 @@
 module Gpio_tb;
 
 //----------------------------------------------------------
-// Top Module Connect
+// System Clk Generator
 //----------------------------------------------------------
-parameter 			CYCLE 		= 2;				// CLK サイクル
-parameter [3:0]		pBusSlaveConnect		= 10; 				// Busに接続する Slave数 最大16
-parameter [3:0]		pBusSlaveConnectWidth 	= pBusSlaveConnect - 1'b1;	// Busに接続する Slave数 最大16
+localparam 	lpClkCycle = 2;
+//
+wire 		wSysClk;
+wire 		wSysRst;
+//
+SimSystemClk #(
+	.pSystemClkCycle	(lpClkCycle)
+) SIM_SYSTEM_CLK (
+	.oSysClk			(wSysClk),
+	.oSysRst			(wSysRst)
+);
 
-reg 				rSysClk = 0;
-reg 				rSysRst = 1;
-wire [1:0]			wLedEdge;
-wire 				wLedClk;
+
+//----------------------------------------------------------
+// Usi Buf 経由の CSR 設定
+//----------------------------------------------------------
 wire [31:0] 		wSUsiRd;
 wire 				wSUsiREd;
+//
 reg [31:0] 			rSUsiWd;
 reg [31:0] 			rSUsiAdrs;
 reg 				rSUsiWCke;
+//
+task usi_csr_setting (
+	input [31:0] wd,
+	input [31:0] adrs
+);
+begin
+	rSUsiWd   = wd;
+	rSUsiAdrs = adrs[15:0];
+	#(lpSysClkCycle);
+	rSUsiWCke = 1'b1;
+	#(lpSysClkCycle);
+	rSUsiWCke = 1'b0;
+	#(lpSysClkCycle);
+end
+endtask //usi_csr_setting
 
-GpioBlock GPIO_BLOCK (
-	.oLedEdge	(wLedEdge),
-	.oLedClk	(wLedClk),
-	.oSUsiRd	(wSUsiRd),
-	.oSUsiREd	(wSUsiREd),
-	.iSUsiWd	(rSUsiWd),
-	.iSUsiAdrs	(rSUsiAdrs),
-	.iSUsiWCke	(rSUsiWCke),
-	.iSysClk	(rSysClk),
-	.iSysRst	(rSysRst)
+//----------------------------------------------------------
+// comment
+//----------------------------------------------------------
+//
+wire 				wLed;
+wire 				wLedB;
+wire 				wLedG;
+wire 				wLedR;
+//
+GpioBlock #(
+	.pBlockAdrsMap	(8),
+	.pAdrsMap		(1),
+	.pBusAdrsBit	(16)
+) GPIO_BLOCK (
+	.oLed			(wLed),
+	.oLedB			(wLedB),
+	.oLedG			(wLedG),
+	.oLedR			(wLedR),
+	.oSUsiRd		(wSUsiRd),
+	.oSUsiREd		(wSUsiREd),
+	.iSUsiWd		(rSUsiWd),
+	.iSUsiAdrs		(rSUsiAdrs),
+	.iSUsiWCke		(rSUsiWCke),
+	.iSysClk		(wSysClk),
+	.iSysRst		(wSysRst)
 );
 
-always @(posedge rSysClk)
-begin
-	if (rSysRst) 	rSUsiWd <= 32'h0289;
-	else 			rSUsiWd <= rSUsiWd;
-
-	if (rSysRst) 	rSUsiAdrs <= 32'h0100;
-	else 			rSUsiAdrs <= rSUsiAdrs;
-
-	if (rSysRst) 	rSUsiWCke <= 1'b1;
-	else 			rSUsiWCke <= rSUsiWCke;
-end
-
-always begin
-    #(CYCLE);
-    rSysClk = ~rSysClk;
-end
-
+//----------------------------------------------------------
+// 
+//----------------------------------------------------------
 initial begin
-	#(CYCLE * 5);
-	rSysRst = 0;
-    #(CYCLE * 2000 * 4);
+	while (wSysRst);
+	usi_csr_setting('b10101, 'h0100);
+    #(lpClkCycle * 2000 * 4);
     $stop;
 end
 

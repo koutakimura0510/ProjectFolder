@@ -8,7 +8,7 @@
 module GpioBlock #(
 	parameter 						pBlockAdrsMap 	= 'd8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h01,
-	parameter						pBusAdrsBit		= 'd32
+	parameter						pBusAdrsBit		= 'd16
 )(
 	// External Port
 	output	[1:0]				oLed,
@@ -32,17 +32,23 @@ module GpioBlock #(
 //----------------------------------------------------------
 // localparam
 //----------------------------------------------------------
-localparam lpPWMDutyWidth = 16;		// 最大 16bit
-localparam lpIVtimerWidth = 16;		// 最大 16bit
+localparam lpExLedNumber 	= 5;			// 外部 LED の数
+localparam lpExLedFlashMode = 2;			// モード数の Bit幅
+localparam lpPWMDutyWidth	= (16*2);		// Full Color LED + Single Led, Max 16bit まで
+localparam lpIVtimerWidth	= (16*2);		// Duty 比と合わせて Bit幅は 2 の乗数で設定する
 
 
 //----------------------------------------------------------
 // GPIO UNIT
 //----------------------------------------------------------
-wire [7:0] 	wGpioLedCsr;
-wire [3:0] 	wGpioFlashModeCsr;
+wire [lpExLedNumber-1:0] 	wGpioLedCsr;
+wire [lpExLedFlashMode-1:0]	wGpioFlashModeCsr;
+wire [pPWMDutyWidth-1:0]	wGpioDutyCsr;
+wire [pIVtimerWidth-1:0]	wGpioIVtimerCsr;
 
 GpioUnit #(
+	.pExLedNumber	(lpExLedNumber),
+	.pExLedFlashMode(lpExLedFlashMode),
 	.pPWMDutyWidth	(pPWMDutyWidth),
 	.pIVtimerWidth	(pIVtimerWidth)
 ) GPIO_UNIT (
@@ -52,6 +58,8 @@ GpioUnit #(
 	.oLedR			(oLedR),
 	.iGpioLed		(wGpioLedCsr),
 	.iGpioFlashMode	(wGpioFlashModeCsr),
+	.iGpioDuty		(wGpioDutyCsr),
+	.iGpioIVtimer	(wGpioIVtimerCsr),
 	.iSysClk		(iSysClk),
 	.iSysRst		(iSysRst)
 );
@@ -63,6 +71,9 @@ GpioCsr #(
 	.pBlockAdrsMap	(pBlockAdrsMap),
 	.pAdrsMap		(pAdrsMap),
 	.pBusAdrsBit	(pBusAdrsBit),
+	//
+	.pExLedNumber	(lpExLedNumber),
+	.pExLedFlashMode(lpExLedFlashMode),
 	.pPWMDutyWidth	(pPWMDutyWidth),
 	.pIVtimerWidth	(pIVtimerWidth)
 ) GPIO_CSR (
@@ -73,6 +84,8 @@ GpioCsr #(
 	.iSUsiWCke		(iSUsiWCke),
 	.oGpioLed 		(wGpioLedCsr),
 	.oGpioFlashMode	(wGpioFlashModeCsr),
+	.oGpioDuty		(wGpioDutyCsr),
+	.oGpioIVtimer	(wGpioIVtimerCsr),
 	.iSysClk		(iSysClk),
 	.iSysRst		(iSysRst)
 );

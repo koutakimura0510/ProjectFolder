@@ -5,77 +5,112 @@
 // GPIO ポートの制御を司るユニット
 // 
 //----------------------------------------------------------
-module GpioUnit (
+module GpioUnit #(
+	// Variable
+	parameter 						pExLedNumber	= 5,
+	parameter 						pExLedFlashMode	= 2,
+	parameter 						pPWMDutyWidth	= 16,
+	parameter 						pIVtimerWidth	= 16,
+)(
 	// External port
-	output	[1:0]			oLed,
-	output 					oLedB,
-	output 					oLedG,
-	output 					oLedR,
+	output	[1:0]					oLed,
+	output 							oLedB,
+	output 							oLedG,
+	output 							oLedR,
 	// Internal Port
-	input  [7:0]			iGpioLed,
-	input  [3:0]			iGpioFlashMode,
+	input  [pExLedNumber-1:0]		iGpioLed,
+	input  [pExLedFlashMode-1:0]	iGpioFlashMode,
+	input  [pPWMDutyWidth-1:0]		iGpioDuty,
+	input  [pIVtimerWidth-1:0]		iGpioIVtimer,
     // CLK Reset
-    input           		iSysClk,
-    input           		iSysRst
+    input           				iSysClk,
+    input           				iSysRst
 );
 
 
 //----------------------------------------------------------
-// 点灯パターン
+// タイマービット幅
 //----------------------------------------------------------
-localparam [3:0]
-	lpGpioModeDefault 	= 4'h00,	// GpioLed のデータで点灯
-	lpGpioModeBlink   	= 4'h01,	// GpioLed のデータで点滅
-	lpGpioModeOrder		= 4'h02,	// 自動で順番に点灯
-	lpGpioModePwm		= 4'h03;	// 自動でランダムに調光
+localparam lpPWMDutyWidth = pPWMDutyWidth / 2;
+localparam lpIVtimerWidth = pIVtimerWidth / 2;
 
 
 //----------------------------------------------------------
-// 
+// Duty信号生成
 //----------------------------------------------------------
-reg [1:0]	rLed;
-reg 		rLedB, rLedG, rLedR;
+
+wire [1:0] wPwm;
 //
-always @(posedge iSysClk)
-begin
-	if (iSysRst) 	rLed <= 2'd0;
-	else 			rLed <= iGpioLed[1:0];
-
-	if (iSysRst) 	rLed <= 1'd0;
-	else 			rLed <= iGpioLed[1:0];
-
-	case (iGpioFlashMode)
-		lpGpioModeDefault:
-		lpGpioModeBlink:
-		lpGpioModeOrder:
-		lpGpioModePwm:
-		default: 
-	endcase
-end
-
+genvar i;
 
 generate
-	DutyGenerator #(
-		.pPWMDutyWidth	(pPWMDutyWidth),
-		.pIVtimerWidth	(pIVtimerWidth)
-	) DUTY_GPIO (
-		.oPwm			(oPwm),
-		.iPWMEn			(iPWMEn),
-		.iPWMDuty		(iPWMDuty),
-		.iIVtimer		(iIVtimer),
-	);
+	for (i = 0; i < 2; i = i + 1)
+	begin
+		DutyGenerator #(
+			.pPWMDutyWidth	(lpPWMDutyWidth),
+			.pIVtimerWidth	(lpIVtimerWidth)
+		) DUTY_GPIO (
+			.oPwm			(wPwm[i]),
+			.iPWMEn			(1'b1),
+			.iPWMDuty		(iGpioDuty[(lpPWMDutyWidth << i)-1 : lpPWMDutyWidth * i]),
+			.iIVtimer		(iGpioIVtimer[(lpIVtimerWidth << i)-1 : lpIVtimerWidth * i]),
+			.iSysClk		(iSysClk),
+			.iSysRst		(iSysRst)
+		);
+	end
 endgenerate
 
 
 //----------------------------------------------------------
+// RGB は負論理
+//----------------------------------------------------------
+localparam [pExLedFlashMode-1:0]
+	lpGpioModeDefault 	= 0,	// GpioLed のデータで点灯
+	lpGpioModeBlink   	= 1,	// GpioLed のデータで点滅
+	lpGpioModePwm		= 2;	// GpioLed のデータで調光
+//
+reg [pExLedNumber-1:0]	rLed;
+//
+always @(posedge iSysClk)
+begin
+	case (iGpioFlashMode)
+		lpGpioModeDefault:
+		begin
+			rLed 	<= iGpioLed;
+		end
+
+		lpGpioModeBlink:
+		begin
+			rLed[0]	<= iGpioLed[0] ? ~rLed[0] : 1'b0;
+			rLed[1]	<= iGpioLed[1] ? ~rLed[1] : 1'b0;
+			rLed[2]	<= iGpioLed[2] ? ~rLed[2] : 1'b1;
+			rLed[3]	<= iGpioLed[3] ? ~rLed[3] : 1'b1;
+			rLed[4]	<= iGpioLed[4] ? ~rLed[4] : 1'b1;
+		end
+
+		lpGpioModePwm:
+		begin
+			rLed[0]	<= iGpioLed[0] ? wPwm[0] : 1'b0;
+			rLed[1]	<= iGpioLed[1] ? wPwm[1] : 1'b0;
+			rLed[2]	<= iGpioLed[2] ? wPwm[1] : 1'b1;
+			rLed[3]	<= iGpioLed[3] ? wPwm[0] : 1'b1;
+			rLed[4]	<= iGpioLed[4] ? wPwm[1] : 1'b1;
+		end
+
+		default:
+		begin
+			rLed 	<= iGpioLed;
+		end
+	endcase
+end
+
+//----------------------------------------------------------
 // ポート接続
 //----------------------------------------------------------
-OBUF GPIO_SFT_CLK 	(.O (oLed),	  .I (rLed));
-OBUF GPIO_SFT_AND1 	(.O (oLedB),  .I (rLedB));
-OBUF GPIO_SFT_AND2 	(.O (oLedG),  .I (rLedG));
-OBUF GPIO_SFT_AND2 	(.O (oLedR),  .I (rLedR));
-
-
-
+OBUF GPIO_LED 	(.O (oLed[0]),.I (rLed[0]));
+OBUF GPIO_LED 	(.O (oLed[1]),.I (rLed[1]));
+OBUF GPIO_LED_R	(.O (oLedR),  .I (rLed[2]));
+OBUF GPIO_LED_G	(.O (oLedG),  .I (rLed[3]));
+OBUF GPIO_LED_B	(.O (oLedB),  .I (rLed[4]));
 
 endmodule
