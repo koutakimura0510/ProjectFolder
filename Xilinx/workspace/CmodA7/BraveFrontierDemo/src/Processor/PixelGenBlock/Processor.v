@@ -96,7 +96,7 @@ localparam [lpBlockAdrsMap-1'b1:0]
 // バス幅を定義
 //----------------------------------------------------------
 // variable parameter
-localparam	lpBusDataBit  		= 32;		// バスデータ幅
+localparam	lpUsiBusWidth  		= 32;		// バスデータ幅
 localparam	lpBusAdrsBit		= 16;		// バスアドレス幅
 localparam  lpUfiBusWidth		= 16;
 
@@ -320,7 +320,7 @@ tftWrapper TFT_WRAPPER (
 // USI/F BUS
 //----------------------------------------------------------
 // not variable parameter
-localparam	lpBusLen = (lpBusDataBit * lpBusSlaveConnect) - 1'b1;
+localparam	lpBusLen = (lpUsiBusWidth * lpBusSlaveConnect) - 1'b1;
 
 // Slave -> Master
 wire [31:0] 					wMUsiRd;
@@ -337,7 +337,7 @@ wire 							wSUsiWCke;
 
 UltraSimpleInterface #(
 	.pBusSlaveConnect	(lpBusSlaveConnect),
-	.pBusDataBit		(lpBusDataBit),
+	.pUsiBusWidth		(lpUsiBusWidth),
 	.pBusAdrsBit		(lpBusAdrsBit),
 	.pBlockAdrsMap		(lpBlockAdrsMap),
 	// .pGpioAdrsMap		(lpGpioAdrsMap),

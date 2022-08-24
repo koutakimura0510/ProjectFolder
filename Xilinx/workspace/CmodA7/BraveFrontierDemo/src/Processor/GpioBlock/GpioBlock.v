@@ -6,9 +6,15 @@
 // 
 //----------------------------------------------------------
 module GpioBlock #(
+	// variable
 	parameter 						pBlockAdrsMap 	= 'd8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h01,
-	parameter						pBusAdrsBit		= 'd16
+	parameter						pBusAdrsBit		= 'd16,
+	// variable csr bit width
+	parameter						pExLedNumber	= 5,
+	parameter						pExLedFlashMode	= 2,
+	parameter						pPWMDutyWidth	= 16,
+	parameter						pIVtimerWidth	= 32
 )(
 	// External Port
 	output	[1:0]				oLed,
@@ -30,25 +36,24 @@ module GpioBlock #(
 
 
 //----------------------------------------------------------
-// localparam
-//----------------------------------------------------------
-localparam lpExLedNumber 	= 5;			// 外部 LED の数
-localparam lpExLedFlashMode = 2;			// モード数の Bit幅
-localparam lpPWMDutyWidth	= (16*2);		// Full Color LED + Single Led, Max 16bit まで
-localparam lpIVtimerWidth	= (16*2);		// Duty 比と合わせて Bit幅は 2 の乗数で設定する
-
-
-//----------------------------------------------------------
 // GPIO UNIT
 //----------------------------------------------------------
-wire [lpExLedNumber-1:0] 	wGpioLedCsr;
-wire [lpExLedFlashMode-1:0]	wGpioFlashModeCsr;
-wire [pPWMDutyWidth-1:0]	wGpioDutyCsr;
-wire [pIVtimerWidth-1:0]	wGpioIVtimerCsr;
+wire [pExLedNumber-1:0] 	wGpioEnCsr;
+wire [pExLedFlashMode-1:0]	wGpioFlashModeCsr;
+wire [pPWMDutyWidth-1:0]	wGpioDuty0Csr;
+wire [pPWMDutyWidth-1:0]	wGpioDuty1Csr;
+wire [pPWMDutyWidth-1:0]	wGpioDuty2Csr;
+wire [pPWMDutyWidth-1:0]	wGpioDuty3Csr;
+wire [pPWMDutyWidth-1:0]	wGpioDuty4Csr;
+wire [pIVtimerWidth-1:0]	wGpioIVtimer0Csr;
+wire [pIVtimerWidth-1:0]	wGpioIVtimer1Csr;
+wire [pIVtimerWidth-1:0]	wGpioIVtimer2Csr;
+wire [pIVtimerWidth-1:0]	wGpioIVtimer3Csr;
+wire [pIVtimerWidth-1:0]	wGpioIVtimer4Csr;
 
 GpioUnit #(
-	.pExLedNumber	(lpExLedNumber),
-	.pExLedFlashMode(lpExLedFlashMode),
+	.pExLedNumber	(pExLedNumber),
+	.pExLedFlashMode(pExLedFlashMode),
 	.pPWMDutyWidth	(pPWMDutyWidth),
 	.pIVtimerWidth	(pIVtimerWidth)
 ) GPIO_UNIT (
@@ -56,10 +61,18 @@ GpioUnit #(
 	.oLedB			(oLedB),
 	.oLedG			(oLedG),
 	.oLedR			(oLedR),
-	.iGpioLed		(wGpioLedCsr),
+	.iGpioEn		(wGpioEnCsr),
 	.iGpioFlashMode	(wGpioFlashModeCsr),
-	.iGpioDuty		(wGpioDutyCsr),
-	.iGpioIVtimer	(wGpioIVtimerCsr),
+	.iGpioDuty0		(wGpioDuty0Csr),
+	.iGpioDuty1		(wGpioDuty1Csr),
+	.iGpioDuty2		(wGpioDuty2Csr),
+	.iGpioDuty3		(wGpioDuty3Csr),
+	.iGpioDuty4		(wGpioDuty4Csr),
+	.iGpioIVtimer0	(wGpioIVtimer0Csr),
+	.iGpioIVtimer1	(wGpioIVtimer1Csr),
+	.iGpioIVtimer2	(wGpioIVtimer2Csr),
+	.iGpioIVtimer3	(wGpioIVtimer3Csr),
+	.iGpioIVtimer4	(wGpioIVtimer4Csr),
 	.iSysClk		(iSysClk),
 	.iSysRst		(iSysRst)
 );
@@ -72,8 +85,8 @@ GpioCsr #(
 	.pAdrsMap		(pAdrsMap),
 	.pBusAdrsBit	(pBusAdrsBit),
 	//
-	.pExLedNumber	(lpExLedNumber),
-	.pExLedFlashMode(lpExLedFlashMode),
+	.pExLedNumber	(pExLedNumber),
+	.pExLedFlashMode(pExLedFlashMode),
 	.pPWMDutyWidth	(pPWMDutyWidth),
 	.pIVtimerWidth	(pIVtimerWidth)
 ) GPIO_CSR (
@@ -82,10 +95,18 @@ GpioCsr #(
 	.iSUsiWd		(iSUsiWd),
 	.iSUsiAdrs		(iSUsiAdrs),
 	.iSUsiWCke		(iSUsiWCke),
-	.oGpioLed 		(wGpioLedCsr),
+	.oGpioEn 		(wGpioEnCsr),
 	.oGpioFlashMode	(wGpioFlashModeCsr),
-	.oGpioDuty		(wGpioDutyCsr),
-	.oGpioIVtimer	(wGpioIVtimerCsr),
+	.oGpioDuty0		(wGpioDuty0Csr),
+	.oGpioDuty1		(wGpioDuty1Csr),
+	.oGpioDuty2		(wGpioDuty2Csr),
+	.oGpioDuty3		(wGpioDuty3Csr),
+	.oGpioDuty4		(wGpioDuty4Csr),
+	.oGpioIVtimer0	(wGpioIVtimer0Csr),
+	.oGpioIVtimer1	(wGpioIVtimer1Csr),
+	.oGpioIVtimer2	(wGpioIVtimer2Csr),
+	.oGpioIVtimer3	(wGpioIVtimer3Csr),
+	.oGpioIVtimer4	(wGpioIVtimer4Csr),
 	.iSysClk		(iSysClk),
 	.iSysRst		(iSysRst)
 );

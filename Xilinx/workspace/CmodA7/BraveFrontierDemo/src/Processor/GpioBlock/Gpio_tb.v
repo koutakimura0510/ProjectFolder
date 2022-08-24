@@ -1,27 +1,33 @@
 `timescale 1ns / 1ps
 //----------------------------------------------------------
-// Create  2022/07/23
+// Create  2022/08/24
 // Author  KoutaKimura
 // -
-// MCB 専用のテストベンチ
-// 
 //----------------------------------------------------------
 module Gpio_tb;
 
 //----------------------------------------------------------
 // System Clk Generator
 //----------------------------------------------------------
-localparam 	lpClkCycle = 2;
+localparam 	lpSysClkCycle = 2;
 //
 wire 		wSysClk;
-wire 		wSysRst;
+reg  		rSysRst;
 //
 SimSystemClk #(
-	.pSystemClkCycle	(lpClkCycle)
+	.pSystemClkCycle	(lpSysClkCycle)
 ) SIM_SYSTEM_CLK (
-	.oSysClk			(wSysClk),
-	.oSysRst			(wSysRst)
+	.oSysClk			(wSysClk)
 );
+//
+task system_reset();
+begin
+	rSysRst <= 1'b1;
+	#(lpSysClkCycle);
+	rSysRst <= 1'b0;
+	#(lpSysClkCycle);
+end
+endtask
 
 
 //----------------------------------------------------------
@@ -30,9 +36,9 @@ SimSystemClk #(
 wire [31:0] 		wSUsiRd;
 wire 				wSUsiREd;
 //
-reg [31:0] 			rSUsiWd;
-reg [31:0] 			rSUsiAdrs;
-reg 				rSUsiWCke;
+reg [31:0] 			rSUsiWd = 0;
+reg [31:0] 			rSUsiAdrs = 0;
+reg 				rSUsiWCke = 0;
 //
 task usi_csr_setting (
 	input [31:0] wd,
@@ -50,7 +56,7 @@ end
 endtask //usi_csr_setting
 
 //----------------------------------------------------------
-// comment
+// Block に接続
 //----------------------------------------------------------
 //
 wire 				wLed;
@@ -61,7 +67,9 @@ wire 				wLedR;
 GpioBlock #(
 	.pBlockAdrsMap	(8),
 	.pAdrsMap		(1),
-	.pBusAdrsBit	(16)
+	.pBusAdrsBit	(16),
+	.pPWMDutyWidth	(8),
+	.pIVtimerWidth	(32)
 ) GPIO_BLOCK (
 	.oLed			(wLed),
 	.oLedB			(wLedB),
@@ -73,16 +81,19 @@ GpioBlock #(
 	.iSUsiAdrs		(rSUsiAdrs),
 	.iSUsiWCke		(rSUsiWCke),
 	.iSysClk		(wSysClk),
-	.iSysRst		(wSysRst)
+	.iSysRst		(rSysRst)
 );
 
 //----------------------------------------------------------
 // 
 //----------------------------------------------------------
 initial begin
-	while (wSysRst);
+	system_reset();
 	usi_csr_setting('b10101, 'h0100);
-    #(lpClkCycle * 2000 * 4);
+	usi_csr_setting('h0001,  'h0104);
+	usi_csr_setting('h0020,  'h0108);
+	usi_csr_setting('h0008,  'h011c);
+    #(lpSysClkCycle * 2000 * 4);
     $stop;
 end
 

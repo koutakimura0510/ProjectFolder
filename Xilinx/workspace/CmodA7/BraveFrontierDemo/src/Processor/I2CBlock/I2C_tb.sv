@@ -26,7 +26,7 @@ localparam	lpSysClkCycle = 2;	// CLK サイクル
 // 
 //----------------------------------------------------------
 reg rScl = 1'bz;
-reg rSda = 1'b1;
+reg rSda = 1'bz;
 wire wScl, wSda;
 
 assign wScl = rScl;

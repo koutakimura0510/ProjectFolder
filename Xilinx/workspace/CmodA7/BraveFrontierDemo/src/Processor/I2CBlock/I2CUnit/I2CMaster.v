@@ -39,8 +39,8 @@ localparam [2:0]
 localparam [3:0] 
 	lpSclCntNull 		= 4'd0,
 	lpSclCntMax			= 4'd8;		// 1byte + Ack
-localparam [4:0]
-	lpStoplssueCntMax	= 5'd30;	// StopCondition 保持時間
+localparam [7:0]
+	lpStoplssueCntMax	= 250;	// StopCondition 保持時間
 localparam [5:0]
 	lpDelayCntClear		= 6'd0,
 	lpDelayCntStart		= 6'd1,
@@ -54,7 +54,7 @@ reg  rScl, rOSda;
 wire wISda;
 //
 reg [2:0] 	rI2CState;
-reg [4:0]	rStoplssueCnt;	// Stop Condition 保持時間
+reg [7:0]	rStoplssueCnt;	// Stop Condition 保持時間
 reg [3:0] 	rSclPoseCnt;	// SCL 立ち上がり回数カウント
 reg [7:0] 	rBufLenCnt;		// 1byte送信回数カウント
 reg [5:0]  	rSdaDelayCnt;	// 遅延時間カウント
@@ -83,7 +83,7 @@ begin
 	// Stop Condition 保持時間生成
 	casex ({rI2CState})
 		'b110:	 	rStoplssueCnt <= rStoplssueCnt + 1'b1;
-		default:	rStoplssueCnt <= 5'd0;
+		default:	rStoplssueCnt <= 8'd0;
 	endcase
 
 	// Start Condition + Device アクセス中の SCL 立ち下がり回数カウント

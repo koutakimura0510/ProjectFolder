@@ -87,7 +87,7 @@ PreProcesser #(
     // CLK, Reset Port
     .oMemClk        (wMemClk),          .oPixelClk      (wPixelClk),
     .oSysClk        (wSysClk),          .oAudioClk      (wAudioClk),
-    .oSysRst        (wSysRst),          .oAudioRst      (wAudioRst),
+    .oSysRst        (wSysRst),          .oAudioRst      (wAudioRst)
 );
 
 

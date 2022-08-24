@@ -52,7 +52,7 @@ localparam      lpClkIn1Div      = 1;           // 12 [MHz] / 1 = 12 [MHz]
 
 // VOC 分周回路設定
 // Spped Grade 1 = (600 ~ 1200MHz)
-localparam real lpClkOutMult     = 36.000;      // OSC MHz * Mult = VOC[MHz]
+localparam real lpClkOutMult     = 60.000;      // OSC MHz * Mult = VOC[MHz]
 localparam real lpClk0OutDivF    = 8.000;       // VOC MHz / DivF =  Clk0[MHz]
 localparam      lpClk1OutDiv     = 18;          // VOC MHz / Div  =  Clk1[MHz]
 localparam      lpClk2OutDiv     = 80;          // VOC MHz / Div  =  Clk2[MHz]

@@ -82,7 +82,7 @@ generate
 				default: 	rTmpCount <= {pDivWidth{1'b0}};
 			endcase
 
-			if (iCke)		rCke <= 1'b0;
+			if (!iCke)		rCke <= 1'b0;
 			else if (qCke)  rCke <= 1'b1;
 			else 			rCke <= 1'b0;
 		end

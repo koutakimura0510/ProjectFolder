@@ -66,13 +66,23 @@ module Processer #(
 );
 
 // 
-assign ioSramDq			= 16'bz;
-assign ioSramDqs		= 2'bz;
-assign oSramClk			= 1'b0;
-assign oSramCs			= 1'b0;
+assign oMemAdr			= 19'd0;
+assign ioMemDq			= 8'dz;
+assign oRamOE			= 1'b1;
+assign oRamWE			= 1'b1;
+assign oRamCE			= 1'b1;
 //
-assign oPixelData		= 1'b0;
-assign oAudioData		= 1'b0;
+assign oTftColorR		= 4'd0;
+assign oTftColorG		= 4'd0;
+assign oTftColorB		= 4'd0;
+assign oTftDclk			= 1'd0;
+assign oTftHsync		= 1'd0;
+assign oTftVsync		= 1'd0;
+assign oTftDe			= 1'd0;
+assign oTftBackLight	= 1'd0;
+assign oTftRst			= 1'd0;
+// 
+assign oTestPort 		= 4'd0;
 
 
 //----------------------------------------------------------
@@ -94,7 +104,7 @@ localparam [lpBlockAdrsMap-1'b1:0]
 // バス幅を定義
 //----------------------------------------------------------
 // variable parameter
-localparam	lpBusDataBit  		= 32;		// バスデータ幅
+localparam	lpUsiBusWidth  		= 32;		// バスデータ幅
 localparam	lpBusAdrsBit		= 16;		// バスアドレス幅
 localparam  lpUfiBusWidth		= 16;
 
@@ -170,7 +180,7 @@ reg  [31:0] 					qSUsiWdSpi;
 reg  [lpBusAdrsBit-1:0]			qSUsiAdrsSpi;
 reg  							qSUsiWCkeSpi;
 // 
-wire [31:0]						wMUfiWdSpi;
+wire [lpUfiBusWidth-1:0]		wMUfiWdSpi;
 wire [31:0]						wMUfiAdrsSpi;
 wire 							wMUfiWEdSpi;
 wire 							wMUfiWVdSpi;
@@ -297,7 +307,7 @@ AudioGenBlock #(
 	.pAdrsMap	 		(lpAGBAdrsMap),
 	.pBusAdrsBit		(lpBusAdrsBit)
 ) AUDIO_GEN_BLOCK (
-	.oAudio				(oBackLightControl),
+	.oAudioMclk			(oAudioMclk),
 	.oSUsiRd			(wSUsiRdAudio),
 	.oSUsiREd			(wSUsiREdAudio),
 	.iSUsiWd			(qSUsiWdAudio),
@@ -318,7 +328,7 @@ AudioGenBlock #(
 // USI/F BUS
 //----------------------------------------------------------
 // not variable parameter
-localparam	lpBusLen = (lpBusDataBit * lpBusSlaveConnect) - 1'b1;
+localparam	lpBusLen = (lpUsiBusWidth * lpBusSlaveConnect) - 1'b1;
 
 // Slave -> Master
 wire [31:0] 					wMUsiRd;
@@ -335,7 +345,7 @@ wire 							wSUsiWCke;
 
 UltraSimpleInterface #(
 	.pBusSlaveConnect	(lpBusSlaveConnect),
-	.pBusDataBit		(lpBusDataBit),
+	.pUsiBusWidth		(lpUsiBusWidth),
 	.pBusAdrsBit		(lpBusAdrsBit),
 	.pBlockAdrsMap		(lpBlockAdrsMap),
 	.pGpioAdrsMap		(lpGpioAdrsMap),
@@ -343,7 +353,7 @@ UltraSimpleInterface #(
 	.pI2CAdrsMap		(lpI2CAdrsMap),
 	.pPGBAdrsMap		(lpPGBAdrsMap),
 	.pAGBAdrsMap		(lpAGBAdrsMap),
-	.pRAMAdrsMap		(lpRAMAdrsMap),
+	.pRAMAdrsMap		(lpRAMAdrsMap)
 ) USI_BUS (
 	// Slave to Master
 	.oMUsiRd			(wMUsiRd),

@@ -14,7 +14,7 @@
 module UltraSimpleInterface #(
 	// variable parameter
 	parameter [3:0]						pBusSlaveConnect 		= 1,				// Busに接続する Slave数 最大16
-	parameter 							pBusDataBit				= 32,				// Bus幅
+	parameter 							pUsiBusWidth				= 32,				// Bus幅
 	parameter							pBusAdrsBit				= 16,
 	parameter							pBlockAdrsMap			= 8,
 	parameter [pBlockAdrsMap-1:0]		pGpioAdrsMap			= 'h1,
@@ -24,7 +24,7 @@ module UltraSimpleInterface #(
 	parameter [pBlockAdrsMap-1:0]		pAGBAdrsMap				= 'h5,
 	parameter [pBlockAdrsMap-1:0]		pRAMAdrsMap				= 'h6,
 	// Not variable parameter
-	parameter 							pBusLen 				= (pBusDataBit * pBusSlaveConnect) - 1'b1,
+	parameter 							pBusLen 				= (pUsiBusWidth * pBusSlaveConnect) - 1'b1,
 	parameter [3:0]						pBusSlaveConnectWidth 	= pBusSlaveConnect - 1'b1
 )(
     // Internal Port
@@ -50,23 +50,23 @@ module UltraSimpleInterface #(
 //----------------------------------------------------------
 // 手動でソースコードを変更しないで済むように Bit 指定を計算
 //----------------------------------------------------------
-localparam lpGpioAdrsMsb 	= (pBusDataBit	* pGpioAdrsMap) - 1;
-localparam lpGpioAdrsLsb 	=  pBusDataBit	* (pGpioAdrsMap - 1);
+localparam lpGpioAdrsMsb 	= (pUsiBusWidth	* pGpioAdrsMap) - 1;
+localparam lpGpioAdrsLsb 	=  pUsiBusWidth	* (pGpioAdrsMap - 1);
 //
-localparam lpSPIAdrsMsb 	= (pBusDataBit  * pSPIAdrsMap) - 1;
-localparam lpSPIAdrsLsb 	= pBusDataBit   * (pSPIAdrsMap - 1);
+localparam lpSPIAdrsMsb 	= (pUsiBusWidth  * pSPIAdrsMap) - 1;
+localparam lpSPIAdrsLsb 	= pUsiBusWidth   * (pSPIAdrsMap - 1);
 //
-localparam lpI2CAdrsMsb 	= (pBusDataBit  * pI2CAdrsMap) - 1;
-localparam lpI2CAdrsLsb 	= pBusDataBit   * (pI2CAdrsMap - 1);
+localparam lpI2CAdrsMsb 	= (pUsiBusWidth  * pI2CAdrsMap) - 1;
+localparam lpI2CAdrsLsb 	= pUsiBusWidth   * (pI2CAdrsMap - 1);
 //
-localparam lpPGBAdrsMsb 	= (pBusDataBit  * pPGBAdrsMap) - 1;
-localparam lpPGBAdrsLsb 	= pBusDataBit   * (pPGBAdrsMap - 1);
+localparam lpPGBAdrsMsb 	= (pUsiBusWidth  * pPGBAdrsMap) - 1;
+localparam lpPGBAdrsLsb 	= pUsiBusWidth   * (pPGBAdrsMap - 1);
 //
-localparam lpAGBAdrsMsb 	= (pBusDataBit  * pAGBAdrsMap) - 1;
-localparam lpAGBAdrsLsb 	= pBusDataBit   * (pAGBAdrsMap - 1);
+localparam lpAGBAdrsMsb 	= (pUsiBusWidth  * pAGBAdrsMap) - 1;
+localparam lpAGBAdrsLsb 	= pUsiBusWidth   * (pAGBAdrsMap - 1);
 //
-localparam lpRAMAdrsMsb 	= (pBusDataBit 	* pRAMAdrsMap) - 1;
-localparam lpRAMAdrsLsb 	= pBusDataBit 	* (pRAMAdrsMap - 1);
+localparam lpRAMAdrsMsb 	= (pUsiBusWidth 	* pRAMAdrsMap) - 1;
+localparam lpRAMAdrsLsb 	= pUsiBusWidth 	* (pRAMAdrsMap - 1);
 //
 //----------------------------------------------------------
 // バスクロックで バス経由データ保存
@@ -82,10 +82,10 @@ reg	[pBusSlaveConnectWidth:0]	rSUsiREd;				assign oMUsiREd		= rSUsiREd;
 always @(posedge iUsiClk)
 begin
 	// Master -> Slave Side
-	if (iUsiRst) 	rMUsiWd 	<= {pBusDataBit{1'b0}};
+	if (iUsiRst) 	rMUsiWd 	<= {pUsiBusWidth{1'b0}};
 	else 			rMUsiWd 	<= iMUsiWd;
 
-	if (iUsiRst) 	rMUsiAdrs 	<= {pBusDataBit{1'b0}};
+	if (iUsiRst) 	rMUsiAdrs 	<= {pUsiBusWidth{1'b0}};
 	else 			rMUsiAdrs 	<= iMUsiAdrs;
 
 	if (iUsiRst) 	rMUsiWEd 	<= {pBusSlaveConnectWidth{1'b0}};

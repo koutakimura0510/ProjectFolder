@@ -1,0 +1,13 @@
+#
+# プロジェクト名に応じて変更を行い自身で書いたソースコードのみ管理されるようにする
+#
+
+.settings
+.Xil
+Drivers
+.cproject
+.project
+.mxproject
+*.ioc
+*.ld
+Core/Startup

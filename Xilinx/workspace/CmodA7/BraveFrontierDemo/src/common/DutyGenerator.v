@@ -11,7 +11,8 @@ module DutyGenerator #(
 )(
     // Internal Port
 	output						oPwm,
-	input 						iPWMEn,		// PWM 出力
+	output 						oCke,
+	input 						iPWMEn,		// PWM 出力 Enable
 	input 	[pPWMDutyWidth-1:0]	iPWMDuty,	// Duty 比入力
 	input 	[pIVtimerWidth-1:0]	iIVtimer,	// PWM 周期
     // CLK Reset
@@ -23,7 +24,7 @@ module DutyGenerator #(
 //----------------------------------------------------------
 // PWM インターバルタイマ
 //----------------------------------------------------------
-wire wDivCke;
+wire wDivCke;					assign oCke = wDivCke;
 
 CkeGenerator #(
 	.pDivReg	("yes"),

@@ -8,7 +8,7 @@
 module I2CBlock #(
 	parameter 						pBlockAdrsMap 	= 'd8,	// ブロックのアドレス幅を指定
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h04,	
-	parameter						pBusAdrsBit		= 'd32	// 32bit ならば (32-1)31 を指定
+	parameter						pBusAdrsBit		= 'd32	//
 )(
 	// External Port
 	output						oI2CScl,
