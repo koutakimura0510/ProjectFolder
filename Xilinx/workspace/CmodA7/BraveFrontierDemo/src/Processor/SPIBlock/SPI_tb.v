@@ -63,7 +63,7 @@ assign wioSpiHold	= rioSpiHold;
 assign wioSpiCs		= rioSpiCs;
 //
 wire wMSpiIntr;
-wire wMUsiMonopoly;
+wire wMUsiSel;
 //
 
 //----------------------------------------------------------
@@ -176,10 +176,10 @@ reg [7:0] d = 8'h72;
 
 always @(negedge wioSpiSck)
 begin
-	if (wMUsiMonopoly) 	d <= 8'h72;
+	if (wMUsiSel) 	d <= 8'h72;
 	else 				d <= {d[6:0], 1'b0};
 
-	if (wMUsiMonopoly) 	rioSpiMiso <= 1'bz;
+	if (wMUsiSel) 	rioSpiMiso <= 1'bz;
 	else 				rioSpiMiso <= d[7];
 end
 
@@ -285,7 +285,7 @@ SPIBlock #(
 	// Interrupt
 	.oMSpiIntr			(wMSpiIntr),
 	// Usi Bus Master to Slave Select
-	.oMUsiMonopoly		(wMUsiMonopoly),// 0. Slave として機能 / 1. Master バスを独占
+	.oMUsiSel		(wMUsiSel),// 0. Slave として機能 / 1. Master バスを独占
 	// CLK Reset
 	.iSysClk			(rSysClk),
 	.iSysRst			(rSysRst)

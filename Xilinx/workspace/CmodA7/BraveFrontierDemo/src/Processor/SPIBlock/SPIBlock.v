@@ -53,7 +53,7 @@ module SPIBlock #(
 	// Interrupt
 	output 								oMSpiIntr,		// FPGA Master Byte Read Data Enable
 	// Usi Bus Master to Slave Select
-	output 								oMUsiMonopoly,	// 0. Slave として機能 / 1. Master バスを独占
+	output 								oMUsiSel,	// 0. Slave として機能 / 1. Master バスを独占
     // CLK Reset
     input           					iSysClk,
     input           					iSysRst
@@ -91,7 +91,7 @@ SPIUnit #(
 	.ioSpiCs			(ioSpiCs),
 	.iMSSel				(iMSSel),
 	// Usi Bus Master to Slave Select
-	.oMUsiMonopoly		(oMUsiMonopoly),
+	.oMUsiSel		(oMUsiSel),
 	// Usi Bus Master Read
 	.iMUsiRd			(iMUsiRd),
 	// Usi Bus Master Write

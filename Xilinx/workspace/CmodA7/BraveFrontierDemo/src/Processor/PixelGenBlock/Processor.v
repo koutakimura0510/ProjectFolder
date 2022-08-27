@@ -200,7 +200,7 @@ wire [31:0]						wMUfiAdrsSpi;
 wire 							wMUfiWEdSpi;
 wire 							wMUfiWVdSpi;
 // Master Select
-wire 							wMUsiMonopoly;
+wire 							wMUsiSel;
 // Interrupt
 wire 							wMSpiIntr;
 
@@ -239,7 +239,7 @@ SPIBlock #(
 	.oMUfiWEd					(wMUfiWEdSpi),
 	.oMUfiWVd					(wMUfiWVdSpi),
 	//
-	.oMUsiMonopoly				(wMUsiMonopoly),
+	.oMUsiSel				(wMUsiSel),
 	//
 	.oMSpiIntr					(wMSpiIntr),
 	//
@@ -370,9 +370,9 @@ begin
 	qMUsiRdSpi		<= wMUsiRd;
 	qMUsiREdSpi		<= wMUsiREd;
 	//
-	qMUsiWd			<= wMUsiMonopoly ? wMUsiWdMcb	: wMUsiWdSpi;
-	qMUsiAdrs		<= wMUsiMonopoly ? wMUsiAdrsMcb	: wMUsiAdrsSpi;
-	qMUsiWEd		<= wMUsiMonopoly ? wMUsiWCkeMcb	: wMUsiWCkeSpi;
+	qMUsiWd			<= wMUsiSel ? wMUsiWdMcb	: wMUsiWdSpi;
+	qMUsiAdrs		<= wMUsiSel ? wMUsiAdrsMcb	: wMUsiAdrsSpi;
+	qMUsiWEd		<= wMUsiSel ? wMUsiWCkeMcb	: wMUsiWCkeSpi;
 	//
 	// qSUsiWdGpio		<= wSUsiWd;
 	// qSUsiAdrsGpio 	<= wSUsiAdrs;

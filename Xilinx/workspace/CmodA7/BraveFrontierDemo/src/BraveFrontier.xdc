@@ -71,9 +71,9 @@ set_property -dict { PACKAGE_PIN A14   IOSTANDARD LVCMOS33} [get_ports { ioSpiHo
 set_property -dict { PACKAGE_PIN J3    IOSTANDARD LVCMOS33} [get_ports { oSpiConfigCs	}]; # PIO10 空きポートに接続
 set_property -dict { PACKAGE_PIN N3    IOSTANDARD LVCMOS33} [get_ports { ioSpiCs     	}];
 set_property -dict { PACKAGE_PIN N2    IOSTANDARD LVCMOS33} [get_ports { iMSSel     	}];
-set_property PULLDOWN true [get_ports ioSpiWp]
-set_property PULLDOWN true [get_ports ioSpiHold]
-set_property PULLDOWN true [get_ports oSpiConfigCs]
+set_property PULLUP true [get_ports ioSpiWp]
+set_property PULLUP true [get_ports ioSpiHold]
+set_property PULLUP true [get_ports oSpiConfigCs]
 set_property PULLUP true [get_ports ioSpiCs]
 set_property PULLUP true [get_ports iMSSel]
 

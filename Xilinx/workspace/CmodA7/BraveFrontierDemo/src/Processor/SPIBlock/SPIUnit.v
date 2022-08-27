@@ -22,7 +22,7 @@ module SPIUnit #(
     input	          			iMSSel,
     // Internal Port
 	// Usi Bus Master to Slave Select
-	output 						oMUsiMonopoly,	// 0. Slave として機能 / 1. Master バスを独占
+	output 						oMUsiSel,	// 0. Slave として機能 / 1. Master バスを独占
 	// Usi Bus Master Read
 	input	[31:0]				iMUsiRd,		// Csr Read
 	// input	[pBusSlaveConnectWidth:0]	iMUsiREd,	// Slave アクセス可能時 Assert
@@ -138,7 +138,7 @@ SPISignal SPI_SIGNAL (
 	.oMSpiIntr		(oMSpiIntr),
 	.iMSPICs		(iMSPICs),
 	// Master Slave Select
-	.oMSSel			(oMUsiMonopoly),
+	.oMSSel			(oMUsiSel),
 	//
 	.iSysClk		(iSysClk),
 	.iSysRst		(iSysRst)
