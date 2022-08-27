@@ -4,12 +4,6 @@
 // -
 // SPI 通信の Master / Slave の信号生成 モジュール
 // Mode0 固定
-// -
-// 2022-08-27 : ILA を入れて RaspberryPi の SPI 信号をデバッグした
-// 				Write のみだったら 10MHz 動作可能だが、Read の場合は 4MHz 程度の動作となった
-// 				取り合えず動作はして Unit ととして独立はしているので、
-// 				速度改善が必要になったら修正することにする。
-// 
 //----------------------------------------------------------
 module SPISignal (
 	// External Port
@@ -282,10 +276,37 @@ end
 OBUF  SPI_CONCS	(.O (oSpiConfigCs), .I (1'b1));
 IBUF  SPI_MS_SEL(.O (wMSSel), .I (iMSSel));
 //
+// IBUF  SPI_SCL 	(.O (wSScl), 	.I (ioSpiSck) 		);	// master output / slave input
+// OBUF  SPI_MISO 	(.O (ioSpiMiso),.I (rSMiso[3])		);	// master input  / slave output
+// IBUF  SPI_MOSI 	(.O (wSMosi), 	.I (ioSpiMosi)	 	);	// master output / slave input
+// IBUF  SPI_WP 	(.O (wSWp), 	.I (ioSpiWp)		);
+// IBUF  SPI_HOLD 	(.O (wSHold),	.I (ioSpiHold)		);
+// IBUF  SPI_CS 	(.O (wSCs), 	.I (ioSpiCs)		);	// master output / slave input
 IOBUF SPI_CS 	(.O (wSCs), 	.IO (ioSpiCs), 		.I (iMSPICs),		.T (rMSSel[2])	);	// master output / slave input
 IOBUF SPI_SCL 	(.O (wSScl), 	.IO (ioSpiSck), 	.I (rMScl), 		.T (rMSSel[2])	);	// master output / slave input
 IOBUF SPI_MISO 	(.O (wMMiso),	.IO (ioSpiMiso), 	.I (rSMiso[31]),	.T (~rMSSel[2])	);	// master input  / slave output
 IOBUF SPI_MOSI 	(.O (wSMosi), 	.IO (ioSpiMosi), 	.I (rMMosi[7]), 	.T (rMSSel[2])	);	// master output / slave input
 IOBUF SPI_WP 	(.O (wSWp), 	.IO (ioSpiWp),   	.I (1'b1),			.T (rMSSel[2])	);
 IOBUF SPI_HOLD 	(.O (wSHold),	.IO (ioSpiHold), 	.I (1'b1),			.T (rMSSel[2])	);
+//
+DbgIla Ila(
+	.clk	(iSysClk),
+	.probe0	(rSftSScl[1]),
+	.probe1	(rSftSMosi[1]),
+	.probe2	(rSftCs[1]),
+	.probe3 (rSState[1:0]),
+	.probe4 (rSSckCntNeg[4:0]),
+	.probe5 (rSAdrs[31:0]),
+	.probe6 (rSCmd[1:0]),
+	.probe7 (rSDLen[15:0]),
+	.probe8 (rSRd[31:0]),
+	.probe9 (rSMiso[31:0]),
+	.probe10(rSREd),
+	.probe11(qPosScl),
+	.probe12(qNegScl),
+	.probe13(qSSckCntNegCke),
+	.probe14(rMSSel[2:0])
+);
+
+
 endmodule

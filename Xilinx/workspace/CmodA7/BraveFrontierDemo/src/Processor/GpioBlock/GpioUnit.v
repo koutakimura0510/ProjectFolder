@@ -87,26 +87,38 @@ begin
 	case (iGpioFlashMode)
 		lpGpioModeDefault:
 		begin
-			rLed 	<= iGpioEn;
+			rLed[0]	<=  iGpioEn[0];
+			rLed[1]	<=  iGpioEn[1];
+			rLed[2]	<= ~iGpioEn[2];
+			rLed[3]	<= ~iGpioEn[3];
+			rLed[4]	<= ~iGpioEn[4];
 		end
 
 		lpGpioModeBlink:
 		begin
-			rLed[0]	<= wCke[0] ? ~rLed[0] : rLed[0] & iGpioEn[0];
-			rLed[1]	<= wCke[1] ? ~rLed[1] : rLed[1] & iGpioEn[1];
-			rLed[2]	<= wCke[2] ? ~rLed[2] : rLed[2] & iGpioEn[2];
-			rLed[3]	<= wCke[3] ? ~rLed[3] : rLed[3] & iGpioEn[3];
-			rLed[4]	<= wCke[4] ? ~rLed[4] : rLed[4] & iGpioEn[4];
+			rLed[0]	<= (iGpioEn[0] & wCke[0]) ? ~rLed[0] : 1'b0;
+			rLed[1]	<= (iGpioEn[1] & wCke[1]) ? ~rLed[1] : 1'b0;
+			rLed[2]	<= (iGpioEn[2] & wCke[2]) ? ~rLed[2] : 1'b1;
+			rLed[3]	<= (iGpioEn[3] & wCke[3]) ? ~rLed[3] : 1'b1;
+			rLed[4]	<= (iGpioEn[4] & wCke[4]) ? ~rLed[4] : 1'b1;
 		end
 
 		lpGpioModePwm:
 		begin
-			rLed <= iGpioEn & wPwm;
+			rLed[0]	<= iGpioEn[0] ? wPwm[0] : 1'b0;
+			rLed[1]	<= iGpioEn[1] ? wPwm[1] : 1'b0;
+			rLed[2]	<= iGpioEn[2] ? wPwm[2] : 1'b1;
+			rLed[3]	<= iGpioEn[3] ? wPwm[3] : 1'b1;
+			rLed[4]	<= iGpioEn[4] ? wPwm[4] : 1'b1;
 		end
 
 		default:
 		begin
-			rLed 	<= iGpioEn;
+			rLed[0]	<= iGpioEn[0];
+			rLed[1]	<= iGpioEn[1];
+			rLed[2]	<= ~iGpioEn[2];
+			rLed[3]	<= ~iGpioEn[3];
+			rLed[4]	<= ~iGpioEn[4];
 		end
 	endcase
 end
