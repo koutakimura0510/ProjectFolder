@@ -89,7 +89,7 @@ generate
 
 		always @*
 		begin
-			qCke = (rTmpCount == iDiv);
+			qCke = (iDiv < rTmpCount);
 		end
 	end
 endgenerate

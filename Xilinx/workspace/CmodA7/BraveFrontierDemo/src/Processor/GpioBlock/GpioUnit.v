@@ -9,7 +9,7 @@ module GpioUnit #(
 	// Variable
 	parameter 						pExLedNumber	= 5,
 	parameter 						pExLedFlashMode	= 2,
-	parameter 						pPWMDutyWidth	= 16,
+	parameter 						pPWMDutyWidth	= 8,
 	parameter 						pIVtimerWidth	= 16
 )(
 	// External port
@@ -20,11 +20,6 @@ module GpioUnit #(
 	// Internal Port
 	input  [pExLedNumber-1:0]		iGpioEn,
 	input  [pExLedFlashMode-1:0]	iGpioFlashMode,
-	input  [pPWMDutyWidth-1:0]		iGpioDuty0,
-	input  [pPWMDutyWidth-1:0]		iGpioDuty1,
-	input  [pPWMDutyWidth-1:0]		iGpioDuty2,
-	input  [pPWMDutyWidth-1:0]		iGpioDuty3,
-	input  [pPWMDutyWidth-1:0]		iGpioDuty4,
 	input  [pIVtimerWidth-1:0]		iGpioIVtimer0,
 	input  [pIVtimerWidth-1:0]		iGpioIVtimer1,
 	input  [pIVtimerWidth-1:0]		iGpioIVtimer2,
@@ -39,14 +34,16 @@ module GpioUnit #(
 //----------------------------------------------------------
 // タイマー信号生成
 //----------------------------------------------------------
-reg [(pPWMDutyWidth * pExLedNumber)-1:0] qGpioDuty;
-reg [(pIVtimerWidth * pExLedNumber)-1:0] qGpioIVtimer;
+reg [pPWMDutyWidth-1:0] rGpioDuty 		[pExLedNumber-1:0];
+reg [pIVtimerWidth-1:0] qGpioIVtimer 	[pExLedNumber-1:0];
+reg [pExLedNumber-1:0] qDutyEn;
 //
 wire [pExLedNumber-1:0] wPwm;
-wire [pExLedNumber-1:0] wCke;
+wire [pExLedNumber-1:0] wDutyCycleCke;
+wire [pExLedNumber-1:0] wIVCke;
 //
 genvar i;
-
+//
 generate
 	for (i = 0; i < pExLedNumber; i = i + 1)
 	begin
@@ -55,20 +52,36 @@ generate
 			.pIVtimerWidth	(pIVtimerWidth)
 		) DUTY_GPIO (
 			.oPwm			(wPwm[i]),
-			.oCke			(wCke[i]),
-			.iPWMEn			(iGpioEn[i]),
-			.iPWMDuty		(qGpioDuty[		(pPWMDutyWidth * (i+1))-1 : pPWMDutyWidth * i]),
-			.iIVtimer		(qGpioIVtimer[	(pIVtimerWidth * (i+1))-1 : pIVtimerWidth * i]),
+			.oDutyCycleCke	(wDutyCycleCke[i]),
+			.oIVCke			(wIVCke[i]),
+			.iPWMEn			(qDutyEn[i]),
+			.iPWMDuty		(rGpioDuty[i]),
+			.iIVtimer		(qGpioIVtimer[i]),
 			.iSysClk		(iSysClk),
 			.iSysRst		(iSysRst)
 		);
+
+		always @(posedge iSysClk)
+		begin
+			if (iSysRst) 				rGpioDuty[i] <= {pPWMDutyWidth{1'b0}};
+			else if (wDutyCycleCke[i])	rGpioDuty[i] <= rGpioDuty[i] + 1'b1;
+			else 						rGpioDuty[i] <= rGpioDuty[i];
+		end
+
+		always @*
+		begin
+			qDutyEn[i] <= iGpioEn[i] & (iGpioFlashMode[0] | iGpioFlashMode[1]);
+		end
 	end
 endgenerate
-
+//
 always @*
 begin
-	qGpioDuty 	 <= {iGpioDuty4, iGpioDuty3, iGpioDuty2, iGpioDuty1, iGpioDuty0};
-	qGpioIVtimer <= {iGpioIVtimer4, iGpioIVtimer3, iGpioIVtimer2, iGpioIVtimer1, iGpioIVtimer0};
+	qGpioIVtimer[0] <= iGpioIVtimer0;
+	qGpioIVtimer[1] <= iGpioIVtimer1;
+	qGpioIVtimer[2] <= iGpioIVtimer2;
+	qGpioIVtimer[3] <= iGpioIVtimer3;
+	qGpioIVtimer[4] <= iGpioIVtimer4;
 end
 
 
@@ -96,20 +109,20 @@ begin
 
 		lpGpioModeBlink:
 		begin
-			rLed[0]	<= (iGpioEn[0] & wCke[0]) ? ~rLed[0] : 1'b0;
-			rLed[1]	<= (iGpioEn[1] & wCke[1]) ? ~rLed[1] : 1'b0;
-			rLed[2]	<= (iGpioEn[2] & wCke[2]) ? ~rLed[2] : 1'b1;
-			rLed[3]	<= (iGpioEn[3] & wCke[3]) ? ~rLed[3] : 1'b1;
-			rLed[4]	<= (iGpioEn[4] & wCke[4]) ? ~rLed[4] : 1'b1;
+			rLed[0]	<= wIVCke[0] ? (~rLed[0] & iGpioEn[0]) : rLed[0];
+			rLed[1]	<= wIVCke[1] ? (~rLed[1] & iGpioEn[1]) : rLed[1];
+			rLed[2]	<= wIVCke[2] ? (~rLed[2] & iGpioEn[2]) : rLed[2];
+			rLed[3]	<= wIVCke[3] ? (~rLed[3] & iGpioEn[3]) : rLed[3];
+			rLed[4]	<= wIVCke[4] ? (~rLed[4] & iGpioEn[4]) : rLed[4];
 		end
 
 		lpGpioModePwm:
 		begin
-			rLed[0]	<= iGpioEn[0] ? wPwm[0] : 1'b0;
-			rLed[1]	<= iGpioEn[1] ? wPwm[1] : 1'b0;
-			rLed[2]	<= iGpioEn[2] ? wPwm[2] : 1'b1;
-			rLed[3]	<= iGpioEn[3] ? wPwm[3] : 1'b1;
-			rLed[4]	<= iGpioEn[4] ? wPwm[4] : 1'b1;
+			rLed[0]	<=  wPwm[0];
+			rLed[1]	<=  wPwm[1];
+			rLed[2]	<= ~wPwm[2];
+			rLed[3]	<= ~wPwm[3];
+			rLed[4]	<= ~wPwm[4];
 		end
 
 		default:

@@ -13,7 +13,7 @@ module GpioBlock #(
 	// variable csr bit width
 	parameter						pExLedNumber	= 5,
 	parameter						pExLedFlashMode	= 2,
-	parameter						pPWMDutyWidth	= 16,
+	parameter						pPWMDutyWidth	= 8,
 	parameter						pIVtimerWidth	= 32
 )(
 	// External Port
@@ -40,11 +40,6 @@ module GpioBlock #(
 //----------------------------------------------------------
 wire [pExLedNumber-1:0] 	wGpioEnCsr;
 wire [pExLedFlashMode-1:0]	wGpioFlashModeCsr;
-wire [pPWMDutyWidth-1:0]	wGpioDuty0Csr;
-wire [pPWMDutyWidth-1:0]	wGpioDuty1Csr;
-wire [pPWMDutyWidth-1:0]	wGpioDuty2Csr;
-wire [pPWMDutyWidth-1:0]	wGpioDuty3Csr;
-wire [pPWMDutyWidth-1:0]	wGpioDuty4Csr;
 wire [pIVtimerWidth-1:0]	wGpioIVtimer0Csr;
 wire [pIVtimerWidth-1:0]	wGpioIVtimer1Csr;
 wire [pIVtimerWidth-1:0]	wGpioIVtimer2Csr;
@@ -63,11 +58,6 @@ GpioUnit #(
 	.oLedR			(oLedR),
 	.iGpioEn		(wGpioEnCsr),
 	.iGpioFlashMode	(wGpioFlashModeCsr),
-	.iGpioDuty0		(wGpioDuty0Csr),
-	.iGpioDuty1		(wGpioDuty1Csr),
-	.iGpioDuty2		(wGpioDuty2Csr),
-	.iGpioDuty3		(wGpioDuty3Csr),
-	.iGpioDuty4		(wGpioDuty4Csr),
 	.iGpioIVtimer0	(wGpioIVtimer0Csr),
 	.iGpioIVtimer1	(wGpioIVtimer1Csr),
 	.iGpioIVtimer2	(wGpioIVtimer2Csr),
@@ -87,7 +77,6 @@ GpioCsr #(
 	//
 	.pExLedNumber	(pExLedNumber),
 	.pExLedFlashMode(pExLedFlashMode),
-	.pPWMDutyWidth	(pPWMDutyWidth),
 	.pIVtimerWidth	(pIVtimerWidth)
 ) GPIO_CSR (
 	.oSUsiRd		(oSUsiRd),
@@ -97,11 +86,6 @@ GpioCsr #(
 	.iSUsiWCke		(iSUsiWCke),
 	.oGpioEn 		(wGpioEnCsr),
 	.oGpioFlashMode	(wGpioFlashModeCsr),
-	.oGpioDuty0		(wGpioDuty0Csr),
-	.oGpioDuty1		(wGpioDuty1Csr),
-	.oGpioDuty2		(wGpioDuty2Csr),
-	.oGpioDuty3		(wGpioDuty3Csr),
-	.oGpioDuty4		(wGpioDuty4Csr),
 	.oGpioIVtimer0	(wGpioIVtimer0Csr),
 	.oGpioIVtimer1	(wGpioIVtimer1Csr),
 	.oGpioIVtimer2	(wGpioIVtimer2Csr),
