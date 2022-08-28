@@ -40,6 +40,11 @@ module GpioBlock #(
 //----------------------------------------------------------
 wire [pExLedNumber-1:0] 	wGpioEnCsr;
 wire [pExLedFlashMode-1:0]	wGpioFlashModeCsr;
+wire [pPWMDutyWidth-1:0]	wGpioDutyRatio0Csr;
+wire [pPWMDutyWidth-1:0]	wGpioDutyRatio1Csr;
+wire [pPWMDutyWidth-1:0]	wGpioDutyRatio2Csr;
+wire [pPWMDutyWidth-1:0]	wGpioDutyRatio3Csr;
+wire [pPWMDutyWidth-1:0]	wGpioDutyRatio4Csr;
 wire [pIVtimerWidth-1:0]	wGpioIVtimer0Csr;
 wire [pIVtimerWidth-1:0]	wGpioIVtimer1Csr;
 wire [pIVtimerWidth-1:0]	wGpioIVtimer2Csr;
@@ -58,6 +63,11 @@ GpioUnit #(
 	.oLedR			(oLedR),
 	.iGpioEn		(wGpioEnCsr),
 	.iGpioFlashMode	(wGpioFlashModeCsr),
+	.iGpioDutyRatio0(wGpioDutyRatio0Csr),
+	.iGpioDutyRatio1(wGpioDutyRatio1Csr),
+	.iGpioDutyRatio2(wGpioDutyRatio2Csr),
+	.iGpioDutyRatio3(wGpioDutyRatio3Csr),
+	.iGpioDutyRatio4(wGpioDutyRatio4Csr),
 	.iGpioIVtimer0	(wGpioIVtimer0Csr),
 	.iGpioIVtimer1	(wGpioIVtimer1Csr),
 	.iGpioIVtimer2	(wGpioIVtimer2Csr),
@@ -77,6 +87,7 @@ GpioCsr #(
 	//
 	.pExLedNumber	(pExLedNumber),
 	.pExLedFlashMode(pExLedFlashMode),
+	.pPWMDutyWidth	(pPWMDutyWidth),
 	.pIVtimerWidth	(pIVtimerWidth)
 ) GPIO_CSR (
 	.oSUsiRd		(oSUsiRd),
@@ -85,6 +96,11 @@ GpioCsr #(
 	.iSUsiAdrs		(iSUsiAdrs),
 	.iSUsiWCke		(iSUsiWCke),
 	.oGpioEn 		(wGpioEnCsr),
+	.oGpioDutyRatio0(wGpioDutyRatio0Csr),
+	.oGpioDutyRatio1(wGpioDutyRatio1Csr),
+	.oGpioDutyRatio2(wGpioDutyRatio2Csr),
+	.oGpioDutyRatio3(wGpioDutyRatio3Csr),
+	.oGpioDutyRatio4(wGpioDutyRatio4Csr),
 	.oGpioFlashMode	(wGpioFlashModeCsr),
 	.oGpioIVtimer0	(wGpioIVtimer0Csr),
 	.oGpioIVtimer1	(wGpioIVtimer1Csr),

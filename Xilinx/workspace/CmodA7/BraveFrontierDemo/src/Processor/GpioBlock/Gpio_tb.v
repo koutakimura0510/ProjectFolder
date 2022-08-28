@@ -89,10 +89,9 @@ GpioBlock #(
 //----------------------------------------------------------
 initial begin
 	system_reset();
-	usi_csr_setting('b10101, 'h0100);
-	usi_csr_setting('h0001,  'h0104);
-	usi_csr_setting('h0020,  'h0108);
-	usi_csr_setting('h0008,  'h011c);
+	usi_csr_setting('h001f, 'h0100);
+	usi_csr_setting('h0001, 'h0104);
+	usi_csr_setting('h0008, 'h011c);
     #(lpSysClkCycle * 2000 * 4);
     $stop;
 end

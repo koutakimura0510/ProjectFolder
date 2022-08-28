@@ -1,9 +1,9 @@
 CC = gcc
 CFLAG = -std=c11 -Wall
-SRC = file.c
+SRC = file2.c
 
 
-all: clean build run win
+all: clean build run
 
 build:
 	$(CC) $(CFLAG) -o program $(SRC)

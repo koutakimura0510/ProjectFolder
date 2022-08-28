@@ -20,6 +20,11 @@ module GpioUnit #(
 	// Internal Port
 	input  [pExLedNumber-1:0]		iGpioEn,
 	input  [pExLedFlashMode-1:0]	iGpioFlashMode,
+	input  [pPWMDutyWidth-1:0]		iGpioDutyRatio0,
+	input  [pPWMDutyWidth-1:0]		iGpioDutyRatio1,
+	input  [pPWMDutyWidth-1:0]		iGpioDutyRatio2,
+	input  [pPWMDutyWidth-1:0]		iGpioDutyRatio3,
+	input  [pPWMDutyWidth-1:0]		iGpioDutyRatio4,
 	input  [pIVtimerWidth-1:0]		iGpioIVtimer0,
 	input  [pIVtimerWidth-1:0]		iGpioIVtimer1,
 	input  [pIVtimerWidth-1:0]		iGpioIVtimer2,
@@ -34,7 +39,7 @@ module GpioUnit #(
 //----------------------------------------------------------
 // タイマー信号生成
 //----------------------------------------------------------
-reg [pPWMDutyWidth-1:0] rGpioDuty 		[pExLedNumber-1:0];
+reg [pPWMDutyWidth-1:0] qGpioDutyRatio	[pExLedNumber-1:0];
 reg [pIVtimerWidth-1:0] qGpioIVtimer 	[pExLedNumber-1:0];
 reg [pExLedNumber-1:0] qDutyEn;
 //
@@ -55,18 +60,11 @@ generate
 			.oDutyCycleCke	(wDutyCycleCke[i]),
 			.oIVCke			(wIVCke[i]),
 			.iPWMEn			(qDutyEn[i]),
-			.iPWMDuty		(rGpioDuty[i]),
+			.iDutyRatio		(qGpioDutyRatio[i]),
 			.iIVtimer		(qGpioIVtimer[i]),
 			.iSysClk		(iSysClk),
 			.iSysRst		(iSysRst)
 		);
-
-		always @(posedge iSysClk)
-		begin
-			if (iSysRst) 				rGpioDuty[i] <= {pPWMDutyWidth{1'b0}};
-			else if (wDutyCycleCke[i])	rGpioDuty[i] <= rGpioDuty[i] + 1'b1;
-			else 						rGpioDuty[i] <= rGpioDuty[i];
-		end
 
 		always @*
 		begin
@@ -77,6 +75,12 @@ endgenerate
 //
 always @*
 begin
+	qGpioDutyRatio[0] <= iGpioDutyRatio0;
+	qGpioDutyRatio[1] <= iGpioDutyRatio1;
+	qGpioDutyRatio[2] <= iGpioDutyRatio2;
+	qGpioDutyRatio[3] <= iGpioDutyRatio3;
+	qGpioDutyRatio[4] <= iGpioDutyRatio4;
+	//
 	qGpioIVtimer[0] <= iGpioIVtimer0;
 	qGpioIVtimer[1] <= iGpioIVtimer1;
 	qGpioIVtimer[2] <= iGpioIVtimer2;

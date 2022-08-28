@@ -15,6 +15,7 @@ module GpioCsr #(
 	// variable csr bit width
 	parameter 						pExLedNumber	= 5,	// 外部 LED の数
 	parameter 						pExLedFlashMode	= 2,	// モード数の Bit幅
+	parameter 						pPWMDutyWidth	= 8,
 	parameter 						pIVtimerWidth	= 16	// インターバルタイマ分周値
 )(
     // Internal Port
@@ -28,6 +29,11 @@ module GpioCsr #(
 	// Csr Output
 	output 	[pExLedNumber-1:0]		oGpioEn,
 	output	[pExLedFlashMode-1:0]	oGpioFlashMode,
+	output  [pPWMDutyWidth-1:0]		oGpioDutyRatio0,
+	output  [pPWMDutyWidth-1:0]		oGpioDutyRatio1,
+	output  [pPWMDutyWidth-1:0]		oGpioDutyRatio2,
+	output  [pPWMDutyWidth-1:0]		oGpioDutyRatio3,
+	output  [pPWMDutyWidth-1:0]		oGpioDutyRatio4,
 	output  [pIVtimerWidth-1:0]		oGpioIVtimer0,
 	output  [pIVtimerWidth-1:0]		oGpioIVtimer1,
 	output  [pIVtimerWidth-1:0]		oGpioIVtimer2,
@@ -44,6 +50,12 @@ module GpioCsr #(
 //----------------------------------------------------------
 reg [pExLedNumber-1:0]		rGpioEn;			assign 	oGpioEn  		= rGpioEn;			// 汎用 GPIO ON/OFF 制御
 reg [pExLedFlashMode-1:0]	rGpioFlashMode;		assign 	oGpioFlashMode	= rGpioFlashMode;	// GPIO の点灯方法
+reg [pPWMDutyWidth-1:0]		rGpioDutyRatio0;	assign	oGpioDutyRatio0	= rGpioDutyRatio0;	// インターバルタイマ 分周器
+reg [pPWMDutyWidth-1:0]		rGpioDutyRatio1;	assign	oGpioDutyRatio1	= rGpioDutyRatio1;
+reg [pPWMDutyWidth-1:0]		rGpioDutyRatio2;	assign	oGpioDutyRatio2	= rGpioDutyRatio2;
+reg [pPWMDutyWidth-1:0]		rGpioDutyRatio3;	assign	oGpioDutyRatio3	= rGpioDutyRatio3;
+reg [pPWMDutyWidth-1:0]		rGpioDutyRatio4;	assign	oGpioDutyRatio4	= rGpioDutyRatio4;
+
 reg [pIVtimerWidth-1:0]		rGpioIVtimer0;		assign	oGpioIVtimer0	= rGpioIVtimer0;	// インターバルタイマ 分周器
 reg [pIVtimerWidth-1:0]		rGpioIVtimer1;		assign	oGpioIVtimer1	= rGpioIVtimer1;
 reg [pIVtimerWidth-1:0]		rGpioIVtimer2;		assign	oGpioIVtimer2	= rGpioIVtimer2;
@@ -58,6 +70,11 @@ begin
 	begin
 		rGpioEn			<= {pExLedNumber{1'b0}};
 		rGpioFlashMode 	<= {pExLedFlashMode{1'b0}};
+		rGpioDutyRatio0 <= {pPWMDutyWidth{1'b0}};
+		rGpioDutyRatio1 <= {pPWMDutyWidth{1'b0}};
+		rGpioDutyRatio2 <= {pPWMDutyWidth{1'b0}};
+		rGpioDutyRatio3 <= {pPWMDutyWidth{1'b0}};
+		rGpioDutyRatio4 <= {pPWMDutyWidth{1'b0}};
 		rGpioIVtimer0	<= {pIVtimerWidth{1'b1}};
 		rGpioIVtimer1	<= {pIVtimerWidth{1'b1}};
 		rGpioIVtimer2	<= {pIVtimerWidth{1'b1}};
@@ -68,6 +85,11 @@ begin
 	begin
 		rGpioEn			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[pExLedNumber-1:0] 	: rGpioEn;
 		rGpioFlashMode	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pExLedFlashMode-1:0] : rGpioFlashMode;
+		rGpioDutyRatio0	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h08}) ? iSUsiWd[pPWMDutyWidth-1:0] 	: rGpioDutyRatio0;
+		rGpioDutyRatio1	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h0c}) ? iSUsiWd[pPWMDutyWidth-1:0] 	: rGpioDutyRatio1;
+		rGpioDutyRatio2	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h10}) ? iSUsiWd[pPWMDutyWidth-1:0] 	: rGpioDutyRatio2;
+		rGpioDutyRatio3	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h14}) ? iSUsiWd[pPWMDutyWidth-1:0] 	: rGpioDutyRatio3;
+		rGpioDutyRatio4	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h18}) ? iSUsiWd[pPWMDutyWidth-1:0] 	: rGpioDutyRatio4;
 		rGpioIVtimer0	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h1c}) ? iSUsiWd[pIVtimerWidth-1:0] 	: rGpioIVtimer0;
 		rGpioIVtimer1	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h20}) ? iSUsiWd[pIVtimerWidth-1:0] 	: rGpioIVtimer1;
 		rGpioIVtimer2	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h24}) ? iSUsiWd[pIVtimerWidth-1:0] 	: rGpioIVtimer2;
@@ -101,6 +123,11 @@ begin
 		case ({qAdrsComp, iSUsiAdrs[7:0]})
 			'h100:		rSUsiRd <= {{(32 - pExLedNumber		){1'b0}}, rGpioEn};
 			'h104:		rSUsiRd <= {{(32 - pExLedFlashMode	){1'b0}}, rGpioFlashMode};
+			'h108:		rSUsiRd <= {{(32 - pPWMDutyWidth	){1'b0}}, rGpioDutyRatio0};
+			'h10c:		rSUsiRd <= {{(32 - pPWMDutyWidth	){1'b0}}, rGpioDutyRatio1};
+			'h110:		rSUsiRd <= {{(32 - pPWMDutyWidth	){1'b0}}, rGpioDutyRatio2};
+			'h114:		rSUsiRd <= {{(32 - pPWMDutyWidth	){1'b0}}, rGpioDutyRatio3};
+			'h118:		rSUsiRd <= {{(32 - pPWMDutyWidth	){1'b0}}, rGpioDutyRatio4};
 			'h11c:		rSUsiRd <= {rGpioIVtimer0};
 			'h120:		rSUsiRd <= {rGpioIVtimer1};
 			'h124:		rSUsiRd <= {rGpioIVtimer2};
