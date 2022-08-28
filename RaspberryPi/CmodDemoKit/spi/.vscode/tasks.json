@@ -1,0 +1,46 @@
+//----------------------------------------------------------
+// Linux で使用する tasks.json 設定ファイル
+// Linux 特有の Makefile を実行する書式にし、Ctrl + shift + B で選択する
+// 
+// プロジェクトのフォルダ構造は下記のようとする
+// .vscode
+// |---tasks.json
+// src
+// |---.c
+// include
+// |---.h
+// Makefile
+// 
+//----------------------------------------------------------
+{
+	"version": "2.0.0",
+    "tasks": [
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "make build",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "run",
+			"type": "shell",
+			"command": "make run",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+        {
+            "label": "all",
+            "type": "shell",
+            "command": "make all",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+    ]
+}
