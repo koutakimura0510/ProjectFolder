@@ -1,0 +1,8 @@
+{
+	"files.associations": {
+		"*.v": "verilog",
+		"bcm2835.h": "c",
+		"gpio_bcm_macro.h": "c",
+		"gpio_bcm_external.h": "c"
+	}
+}
