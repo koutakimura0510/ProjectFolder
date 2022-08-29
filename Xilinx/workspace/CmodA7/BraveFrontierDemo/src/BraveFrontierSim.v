@@ -76,8 +76,8 @@ wire [7:4] oTftColorR;
 wire [7:4] oTftColorG;
 wire [7:4] oTftColorB;
 wire oTftDclk;
-wire oTftHsync;
-wire oTftVsync;
+wire oTftHSync;
+wire oTftVSync;
 wire oTftDe;
 wire oTftBackLight;
 wire oTftRst;
@@ -126,11 +126,11 @@ BraveFrontier #(
     .pHdisplay      (50),
     .pHback         (2),
     .pHfront        (2),
-    .pHsync         (2),
+    .pHpulse         (2),
     .pVdisplay      (50),
-    .pVtop          (2),
-    .pVbottom       (2),
-    .pVsync         (2),
+    .pVfront          (2),
+    .pVback       (2),
+    .pVpulse         (2),
     .pPixelDebug    ("yes"),
     .pBuffDepth     (32),
     .pDebug         ("on")
@@ -156,8 +156,8 @@ BraveFrontier #(
     .oTftColorG         (oTftColorG),
     .oTftColorB         (oTftColorB),
     .oTftDclk           (oTftDclk),
-    .oTftHsync          (oTftHsync),
-    .oTftVsync          (oTftVsync),
+    .oTftHSync          (oTftHSync),
+    .oTftVSync          (oTftVSync),
     .oTftDe             (oTftDe),
     .oTftBackLight      (oTftBackLight),
     .oTftRst            (oTftRst),

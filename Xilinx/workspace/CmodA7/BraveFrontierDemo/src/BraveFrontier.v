@@ -14,11 +14,11 @@ module BraveFrontier #(
     parameter       pHdisplay       = 480,
     parameter       pHback          =  43,
     parameter       pHfront         =   8,
-    parameter       pHsync          =  30,
+    parameter       pHpulse          =  30,
     parameter       pVdisplay       = 272,
-    parameter       pVtop           =  12,
-    parameter       pVbottom        =   4,
-    parameter       pVsync          =  10,
+    parameter       pVfront           =  12,
+    parameter       pVback        =   4,
+    parameter       pVpulse          =  10,
     parameter       pPixelDebug     = "off",
     parameter       pBuffDepth      = 1024,      // Displayの横幅よりも大きいサイズを指定
     parameter       pDebug          = "off"
@@ -45,8 +45,8 @@ module BraveFrontier #(
     output	[7:4]   oTftColorG,
     output	[7:4]   oTftColorB,
     output          oTftDclk,
-    output          oTftHsync,
-    output          oTftVsync,
+    output          oTftHSync,
+    output          oTftVSync,
     output          oTftDe,
     output          oTftBackLight,
     output          oTftRst,
@@ -70,7 +70,7 @@ module BraveFrontier #(
 //----------------------------------------------------------
 wire wMemClk, wPixelClk, wSysClk, wAudioClk;
 wire wSysRst, wAudioRst;
-wire wPreVde, wPreFe, wPreFvde, wPreHsync, wPreVsync;
+wire wPreVde, wPreFe, wPreFvde, wPreHSync, wPreVSync;
 
 PreProcesser #(
     .pSystemPll     ("on"),
@@ -107,11 +107,11 @@ Processer # (
     .pHdisplay      (pHdisplay),
     .pHback         (pHback),
     .pHfront        (pHfront),
-    .pHsync         (pHsync),
+    .pHpulse        (pHpulse),
     .pVdisplay      (pVdisplay),
-    .pVtop          (pVtop),
-    .pVbottom       (pVbottom),
-    .pVsync         (pVsync),
+    .pVfront        (pVfront),
+    .pVback         (pVback),
+    .pVpulse        (pVpulse),
     .pPixelDebug    (pPixelDebug),
     .pBuffDepth     (pBuffDepth),
     .pDebug         (pDebug)
@@ -134,8 +134,8 @@ Processer # (
 	// TFT Display
 	.oTftColorR		(oTftColorR),		.oTftColorG		(oTftColorG),
 	.oTftColorB		(oTftColorB),
-	.oTftDclk		(oTftDclk),			.oTftHsync		(oTftHsync),
-	.oTftVsync		(oTftVsync),
+	.oTftDclk		(oTftDclk),			.oTftHSync		(oTftHSync),
+	.oTftVSync		(oTftVSync),
 	.oTftDe			(oTftDe),
 	.oTftBackLight	(oTftBackLight),	.oTftRst		(oTftRst),
 	// Audio PWM

@@ -8,38 +8,38 @@ module dtbWrapper #(
     parameter       pHdisplay       = 640,
     parameter       pHback          =  48,
     parameter       pHfront         =  16,
-    parameter       pHsync          =  96,
+    parameter       pHpulse         =  96,
     parameter       pVdisplay       = 480,
-    parameter       pVtop           =  31,
-    parameter       pVbottom        =  11,
-    parameter       pVsync          =   2
+    parameter       pVfront           =  31,
+    parameter       pVback        =  11,
+    parameter       pVpulse         =   2
 )(
     input           iClk,           // clk
     input           iRst,           // Active High to sync rst
     output          oVde,           // video enable signal
     output          oFe,            // frame end
     output          oFvde,          // fast vde
-    output          oHsync,
-    output          oVsync
+    output          oHSync,
+    output          oVSync
 );
 
 //----------------------------------------------------------
 // ディスプレイ制御信号生成
 //----------------------------------------------------------
-hvsyncGen #(
+hVSyncGen #(
     .pHdisplay  (pHdisplay),
     .pVdisplay  (pVdisplay),
     .pHback     (pHback),
-    .pVtop      (pVtop),
+    .pVfront      (pVfront),
     .pHfront    (pHfront),
-    .pVbottom   (pVbottom),
-    .pHsync     (pHsync),
-    .pVsync     (pVsync)
-) HVSYNC_GEN (
+    .pVback   (pVback),
+    .pHpulse     (pHpulse),
+    .pVpulse     (pVpulse)
+) HVSync_GEN (
     .iClk       (iClk),
     .iRst       (iRst),
-    .oHsync     (oHsync),
-    .oVsync     (oVsync),
+    .oHSync     (oHSync),
+    .oVSync     (oVSync),
     .oVde       (oVde),
     .oFe        (oFe),
     .oFvde      (oFvde)

@@ -6,13 +6,13 @@
 //----------------------------------------------------------
 module Processer #(
     parameter       pHdisplay     = 480,
-    parameter       pHback        =  43,
     parameter       pHfront       =   8,
-    parameter       pHsync        =  30,
+    parameter       pHback        =  43,
+    parameter       pHpulse       =  30,
     parameter       pVdisplay     = 272,
-    parameter       pVtop         =  12,
-    parameter       pVbottom      =   4,
-    parameter       pVsync        =  10,
+    parameter       pVfront       =  12,
+    parameter       pVback        =   4,
+    parameter       pVpulse       =  10,
     parameter       pPixelDebug   = "yes",
     parameter       pBuffDepth    = 1024,
     parameter       pDebug        = "off"
@@ -38,8 +38,8 @@ module Processer #(
     output	[7:4]   oTftColorG,
     output	[7:4]   oTftColorB,
     output          oTftDclk,
-    output          oTftHsync,
-    output          oTftVsync,
+    output          oTftHSync,
+    output          oTftVSync,
     output          oTftDe,
     output          oTftBackLight,
     output          oTftRst,
@@ -72,16 +72,6 @@ assign oRamOE			= 1'b1;
 assign oRamWE			= 1'b1;
 assign oRamCE			= 1'b1;
 //
-assign oTftColorR		= 4'd0;
-assign oTftColorG		= 4'd0;
-assign oTftColorB		= 4'd0;
-assign oTftDclk			= 1'd0;
-assign oTftHsync		= 1'd0;
-assign oTftVsync		= 1'd0;
-assign oTftDe			= 1'd0;
-assign oTftBackLight	= 1'd0;
-assign oTftRst			= 1'd0;
-// 
 assign oTestPort 		= 4'd0;
 
 
@@ -150,10 +140,12 @@ GpioBlock #(
 	.pAdrsMap	 		(lpGpioAdrsMap),
 	.pBusAdrsBit		(lpBusAdrsBit)
 ) GPIO_BLOCK (
+	// External Port
 	.oLed				(oLed),
 	.oLedB				(oLedB),
 	.oLedG				(oLedG),
 	.oLedR				(oLedR),
+	// Internal Port
 	.oSUsiRd			(wSUsiRdGpio),
 	.oSUsiREd			(wSUsiREdGpio),
 	.iSUsiWd			(qSUsiWdGpio),
@@ -196,6 +188,7 @@ SPIBlock #(
 	.pBusSlaveConnect			(lpBusSlaveConnect),
 	.pUfiBusWidth				(lpUfiBusWidth)
 ) SPI_BLOCK (
+	// External Port
 	.ioSpiSck					(ioSpiSck),
 	.ioSpiMiso					(ioSpiMiso),
 	.ioSpiMosi					(ioSpiMosi),
@@ -204,27 +197,27 @@ SPIBlock #(
 	.oSpiConfigCs				(oSpiConfigCs),
 	.ioSpiCs					(ioSpiCs),
 	.iMSSel						(iMSSel),
-	//
+	// Slave -> Master
 	.iMUsiRd					(qMUsiRdSpi),
 	.iMUsiREd					(qMUsiREdSpi),
-	//
+	// Master -> Slave
 	.oMUsiWd					(wMUsiWdSpi),
 	.oMUsiAdrs					(wMUsiAdrsSpi),
 	.oMUsiWEd					(wMUsiWCkeSpi),
-	//
+	// Slave -> Master
 	.oSUsiRd					(wSUsiRdSpi),
 	.oSUsiREd					(wSUsiREdSpi),
-	//
+	// Master -> Slave
 	.iSUsiWd					(qSUsiWdSpi),
 	.iSUsiAdrs					(qSUsiAdrsSpi),
 	.iSUsiWCke					(qSUsiWCkeSpi),
-	//
+	// 
 	.oMUfiWd					(wMUfiWdSpi),
 	.oMUfiAdrs					(wMUfiAdrsSpi),
 	.oMUfiWEd					(wMUfiWEdSpi),
 	.oMUfiWVd					(wMUfiWVdSpi),
 	//
-	.oMUsiSel				(wMUsiSel),
+	.oMUsiSel					(wMUsiSel),
 	//
 	.oMSpiIntr					(wMSpiIntr),
 	//
@@ -249,8 +242,10 @@ I2CBlock #(
 	.pAdrsMap	 		(lpGpioAdrsMap),
 	.pBusAdrsBit		(lpBusAdrsBit)
 ) I2C_BLOCK (
+	// External Port
 	.oI2CScl			(oI2CScl),
 	.ioI2CSda			(ioI2CSda),
+	// Internal Port
 	.oSUsiRd			(wSUsiRdI2c),
 	.oSUsiREd			(wSUsiREdI2c),
 	.iSUsiWd			(qSUsiWdI2c),
@@ -263,32 +258,56 @@ I2CBlock #(
 //----------------------------------------------------------
 // PGB
 //----------------------------------------------------------
-// PixelGenBlock PGB
-// PixelGenBlock #(
-// 	.pHdisplay			(pHdisplay),
-// 	.pHback				(pHback),
-// 	.pHfront			(pHfront),
-// 	.pHsync				(pHsync),
-// 	.pVdisplay			(pVdisplay),
-// 	.pVtop				(pVtop),
-// 	.pVbottom			(pVbottom),
-// 	.pVsync				(pVsync)
-// ) PGB (
-// 	// External port
-// 	.oTftColorR			(oTftColorR),
-// 	.oTftColorG			(oTftColorG),
-// 	.oTftColorB			(oTftColorB),
-// 	.oTftDclk			(oTftDclk),
-// 	.oTftHsync			(oTftHsync),
-// 	.oTftVsync			(oTftVsync),
-// 	.oTftDe				(oTftDe),
-// 	.oTftBackLight		(oTftBackLight),
-// 	.oTftRst			(oTftRst),
-// 	// Intenal port
-// 	// CLK Rst
-// 	.iPixelClk 			(iPixelClk),
-// 	.iSysRst			(iSysRst),
-// );
+// Slave -> Master
+wire [31:0] 			wSUsiRdPgb;
+wire 					wSUsiREdPgb;
+// Master -> Slave
+reg  [31:0] 			qSUsiWdPgb;
+reg  [lpBusAdrsBit-1:0] qSUsiAdrsPgb;
+reg  					qSUsiWCkePgb;
+
+PixelGenBlock #(
+	.pBlockAdrsMap		(lpBlockAdrsMap),
+	.pAdrsMap			(lpPGBAdrsMap),
+	.pBusAdrsBit		(lpBusAdrsBit),
+	.pHdisplay			(pHdisplay),
+	.pHfront			(pHfront),
+	.pHback				(pHback),
+	.pHpulse			(pHpulse),
+	.pVdisplay			(pVdisplay),
+	.pVfront			(pVfront),
+	.pVback				(pVback),
+	.pVpulse			(pVpulse),
+	.pHdisplayWidth		(11),
+	.pHfrontWidth		(7),
+	.pHbackWidth		(7),
+	.pHpulseWidth		(7),
+	.pVdisplayWidth		(11),
+	.pVfrontWidth		(5),
+	.pVbackWidth		(5),
+	.pVpulseWidth		(5)
+) PGB (
+	// External port
+	.oTftColorR			(oTftColorR),
+	.oTftColorG			(oTftColorG),
+	.oTftColorB			(oTftColorB),
+	.oTftDclk			(oTftDclk),
+	.oTftHSync			(oTftHSync),
+	.oTftVSync			(oTftVSync),
+	.oTftDe				(oTftDe),
+	.oTftBackLight		(oTftBackLight),
+	.oTftRst			(oTftRst),
+	// Intenal port
+	.oSUsiRd			(wSUsiRdPgb),
+	.oSUsiREd			(wSUsiREdPgb),
+	.iSUsiWd			(qSUsiWdPgb),
+	.iSUsiAdrs			(qSUsiAdrsPgb),
+	.iSUsiWCke			(qSUsiWCkePgb),
+	// CLK Rst
+	.iSysClk			(iSysClk),
+	.iPixelClk 			(iPixelClk),
+	.iSysRst			(iSysRst)
+);
 
 
 //----------------------------------------------------------
@@ -307,7 +326,9 @@ AudioGenBlock #(
 	.pAdrsMap	 		(lpAGBAdrsMap),
 	.pBusAdrsBit		(lpBusAdrsBit)
 ) AUDIO_GEN_BLOCK (
+	// External Port
 	.oAudioMclk			(oAudioMclk),
+	// Internal Port
 	.oSUsiRd			(wSUsiRdAudio),
 	.oSUsiREd			(wSUsiREdAudio),
 	.iSUsiWd			(qSUsiWdAudio),
@@ -395,12 +416,16 @@ begin
 	qSUsiAdrsI2c	<= wSUsiAdrs;
 	qSUsiWCkeI2c	<= wSUsiWCke;
 	//
+	qSUsiWdPgb		<= wSUsiWd;
+	qSUsiAdrsPgb	<= wSUsiAdrs;
+	qSUsiWCkePgb	<= wSUsiWCke;
+	//
 	qSUsiWdAudio	<= wSUsiWd;
 	qSUsiAdrsAudio	<= wSUsiAdrs;
 	qSUsiWCkeAudio	<= wSUsiWCke;
 	//
-	qSUsiRd			<= {32'd0, wSUsiRdAudio,  32'd0, wSUsiRdI2c,  wSUsiRdSpi,  wSUsiRdGpio	};
-	qSUsiREd		<= { 1'h0, wSUsiREdAudio,  1'd0, wSUsiREdI2c, wSUsiREdSpi, wSUsiREdGpio	};
+	qSUsiRd			<= {32'd0, wSUsiRdAudio,  wSUsiRdPgb,  wSUsiRdI2c,  wSUsiRdSpi,  wSUsiRdGpio	};
+	qSUsiREd		<= { 1'h0, wSUsiREdAudio, wSUsiREdPgb, wSUsiREdI2c, wSUsiREdSpi, wSUsiREdGpio	};
 end
 
 //----------------------------------------------------------

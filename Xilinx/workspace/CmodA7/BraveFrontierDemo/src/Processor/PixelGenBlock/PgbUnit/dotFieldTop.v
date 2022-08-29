@@ -55,7 +55,7 @@ assign oFieldNumber    = o_field_number;
 // フィールドアニメーション座標に応じてマップチップデータ生成用のアドレス取得方法を変更する
 //----------------------------------------------------------
 function [4:0] getAddr (
-    input [4:0] hvpos,      // hsync or vsync
+    input [4:0] hvpos,      // HSync or VSync
     input [4:0] fpos        // field pos
 );
 begin

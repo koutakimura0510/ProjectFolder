@@ -5,23 +5,23 @@
  * Build  Vivado20.2
  * Board  My Board Spartan7
  * -
- * Hsync Vsync 生成モジュール
+ * HSync VSync 生成モジュール
  */
-module hvsyncGen 
+module hVSyncGen 
 #(
     parameter       pHdisplay       = 640,   // horizontal display width
     parameter       pHback          =  48,   // horizontal left border (back porch)
     parameter       pHfront         =  16,   // horizontal right border (front porch)
-    parameter       pHsync          =  96,   // horizontal sync width
+    parameter       pHpulse          =  96,   // horizontal sync width
     parameter       pVdisplay       = 480,   // vertical display height
-    parameter       pVtop           =  31,   // vertical top border
-    parameter       pVbottom        =  11,   // vertical bottom border
-    parameter       pVsync          =   2    // vertical sync # lines
+    parameter       pVfront           =  31,   // vertical top border
+    parameter       pVback        =  11,   // vertical bottom border
+    parameter       pVpulse          =   2    // vertical sync # lines
 )(
     input           iClk,               // clk
     input           iRst,               // system rst
-    output          oHsync,             // horizontal area 水平同期信号
-    output          oVsync,             // vertical area 垂直同期信号
+    output          oHSync,             // horizontal area 水平同期信号
+    output          oVSync,             // vertical area 垂直同期信号
     output          oVde,               // video data enable 描画エリア時High
     output          oFvde,              // fast video enable oVDEより1clk早くHigh
     output          oFe                 // frame end
@@ -30,12 +30,12 @@ module hvsyncGen
 // declarations for TV-simulator sync parameters
 // horizontal constants
 // derived constants
-localparam lpHsyncstart     = pHdisplay + pHfront;
-localparam lpHsyncend       = pHdisplay + pHfront + pHsync  - 1;
-localparam lpHmax           = pHdisplay + pHback  + pHfront + pHsync - 1;
-localparam lpVsyncstart     = pVdisplay + pVbottom;
-localparam lpVsyncend       = pVdisplay + pVbottom + pVsync   - 1;
-localparam lpVmax           = pVdisplay + pVtop    + pVbottom + pVsync - 1;
+localparam lpHpulsestart     = pHdisplay + pHfront;
+localparam lpHpulseend       = pHdisplay + pHfront + pHpulse  - 1;
+localparam lpHmax           = pHdisplay + pHback  + pHfront + pHpulse - 1;
+localparam lpVpulsestart     = pVdisplay + pVback;
+localparam lpVpulseend       = pVdisplay + pVback + pVpulse   - 1;
+localparam lpVmax           = pVdisplay + pVfront    + pVback + pVpulse - 1;
 localparam lpHdisplay       = pHdisplay;
 localparam lpVdisplay       = pVdisplay;
 localparam lpHbitWidth      = fBitWidth(pHdisplay);
@@ -45,7 +45,7 @@ localparam lpVbitWidth      = fBitWidth(pVdisplay);
 //----------------------------------------------------------
 // 水平同期カウンター、信号動作
 //----------------------------------------------------------
-reg rHsync[0:1];             assign oHsync = rHsync[1];
+reg rHSync[0:1];             assign oHSync = rHSync[1];
 reg [lpHbitWidth:0] rHpos;
 reg qHmatch, qHrange;
 
@@ -58,21 +58,21 @@ end
 
 always @(posedge iClk)
 begin 
-    if (iRst)           {rHsync[1], rHsync[0]} <= 2'b00;
-    else                {rHsync[1], rHsync[0]} <= {rHsync[0], qHrange};
+    if (iRst)           {rHSync[1], rHSync[0]} <= 2'b00;
+    else                {rHSync[1], rHSync[0]} <= {rHSync[0], qHrange};
 end
 
 always @*
 begin
     qHmatch <= (rHpos == lpHmax);
-    qHrange <= (lpHsyncstart <= rHpos && rHpos <= lpHsyncend);
+    qHrange <= (lpHpulsestart <= rHpos && rHpos <= lpHpulseend);
 end
 
 ////////////////////////////////////////////////////////////
 //----------------------------------------------------------
 // 垂直同期カウンター、信号動作
 //----------------------------------------------------------
-reg rVsync[0:1];                assign oVsync   = rVsync[1];
+reg rVSync[0:1];                assign oVSync   = rVSync[1];
 reg qVde, rVde;                 assign oVde     = rVde;
 reg qFe, rFe;                   assign oFe      = rFe;
 reg [lpVbitWidth:0] rVpos;
@@ -87,8 +87,8 @@ end
 
 always @(posedge iClk) 
 begin
-    if (iRst)           {rVsync[1], rVsync[0]} <= 2'b00;
-    else                {rVsync[1], rVsync[0]} <= {rVsync[0], qVrange};
+    if (iRst)           {rVSync[1], rVSync[0]} <= 2'b00;
+    else                {rVSync[1], rVSync[0]} <= {rVSync[0], qVrange};
 end
 
 always @(posedge iClk) 
@@ -106,7 +106,7 @@ end
 always @*
 begin
     qVmatch <= rVpos == lpVmax;
-    qVrange <= (lpVsyncstart <= rVpos) && (rVpos <= lpVsyncend);
+    qVrange <= (lpVpulsestart <= rVpos) && (rVpos <= lpVpulseend);
     qVde    <= (rHpos  < lpHdisplay) && (rVpos  < lpVdisplay);
     qFe     <= (rHpos == lpHdisplay) && (rVpos == lpVdisplay);
 end

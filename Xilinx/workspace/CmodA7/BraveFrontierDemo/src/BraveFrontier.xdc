@@ -148,8 +148,8 @@ set_property -dict { PACKAGE_PIN U5    IOSTANDARD LVCMOS33  } [get_ports { oTftC
 set_property -dict { PACKAGE_PIN U2    IOSTANDARD LVCMOS33  } [get_ports { oTftColorB[6]    }]; 
 set_property -dict { PACKAGE_PIN W6    IOSTANDARD LVCMOS33  } [get_ports { oTftColorB[7]    }]; 
 set_property -dict { PACKAGE_PIN U3    IOSTANDARD LVCMOS33  } [get_ports { oTftDclk         }]; 
-set_property -dict { PACKAGE_PIN W7    IOSTANDARD LVCMOS33  } [get_ports { oTftHsync        }]; 
-set_property -dict { PACKAGE_PIN U8    IOSTANDARD LVCMOS33  } [get_ports { oTftVsync        }]; 
+set_property -dict { PACKAGE_PIN W7    IOSTANDARD LVCMOS33  } [get_ports { oTftHSync        }]; 
+set_property -dict { PACKAGE_PIN U8    IOSTANDARD LVCMOS33  } [get_ports { oTftVSync        }]; 
 set_property -dict { PACKAGE_PIN V8    IOSTANDARD LVCMOS33  } [get_ports { oTftDe           }]; 
 set_property -dict { PACKAGE_PIN T2    IOSTANDARD LVCMOS33  } [get_ports { oTftBackLight    }]; 
 set_property -dict { PACKAGE_PIN U7    IOSTANDARD LVCMOS33  } [get_ports { oTftRst          }]; 
