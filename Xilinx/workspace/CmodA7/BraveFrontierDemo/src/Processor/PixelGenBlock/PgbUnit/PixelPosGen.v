@@ -2,8 +2,7 @@
 // Create 2022/8/29
 // Author koutakimura
 // -
-// システムクロックで内部でのみ使用するピクセル座標データを生成
-// 内部のみで使用するため Blank期間は必要ない。
+// 指定範囲でアクティブエリアの座標を生成する
 // 
 //----------------------------------------------------------
 module PixelPosGen
@@ -17,9 +16,9 @@ module PixelPosGen
     output 	[pVdisplayWidth-1:0]	oVpos,
     output                      	oFrameEnd,
     // CLK Reset
+    input           				iRst,
     input                       	iCke,
-    input           				iSysClk,
-    input           				iSysRst
+    input           				iClk
 );
 
 
@@ -29,9 +28,9 @@ module PixelPosGen
 reg [pHdisplayWidth-1:0] rHpos;           assign oHpos = rHpos;
 reg qHposMuxSel;
 
-always @(posedge iSysClk) 
+always @(posedge iClk) 
 begin 
-    if (iSysRst)		rHpos <= {pHdisplayWidth{1'b0}};
+    if (iRst)			rHpos <= {pHdisplayWidth{1'b0}};
     else if (iCke)		rHpos <= qHposMuxSel ? {pHdisplayWidth{1'b0}} : rHpos + 1'b1;
     else            	rHpos <= rHpos;
 end
@@ -48,9 +47,9 @@ end
 reg [pVdisplayWidth-1:0] rVpos;           assign oVpos = rVpos;
 reg qVposMuxSel;
 
-always @(posedge iSysClk) 
+always @(posedge iClk) 
 begin
-    if (iSysRst)    	rVpos <= {pVdisplayWidth{1'b0}};
+    if (iRst)    		rVpos <= {pVdisplayWidth{1'b0}};
     else if (iCke)		rVpos <= qVposMuxSel ? {pVdisplayWidth{1'b0}} : rVpos + qHposMuxSel;
     else                rVpos <= rVpos;
 end
@@ -67,10 +66,10 @@ end
 reg rFrameEnd;                   assign oFrameEnd = rFrameEnd;
 reg qFe;
 
-always @(posedge iSysClk) 
+always @(posedge iClk) 
 begin
-    if (iSysRst) 		rFrameEnd <= 1'b0;
-    else      			rFrameEnd <= qFe;
+    if (iRst) 		rFrameEnd <= 1'b0;
+    else     		rFrameEnd <= qFe;
 end
 
 always @*

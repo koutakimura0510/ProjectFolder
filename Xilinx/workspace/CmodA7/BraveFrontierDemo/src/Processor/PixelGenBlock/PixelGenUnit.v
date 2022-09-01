@@ -29,6 +29,9 @@ module PixelGenUnit #(
 	input	[pVdisplayWidth:0]		iVSyncStart,
 	input	[pVdisplayWidth:0]		iVSyncEnd,
 	input	[pVdisplayWidth:0]		iVSyncMax,
+	//
+	input 							iDisplayRst,
+	input 	[7:0]					iBlDutyRatio,
     // CLK Reset
     input           				iSysClk,
 	input 							iPixelClk,
@@ -36,27 +39,26 @@ module PixelGenUnit #(
 );
 
 
-
 //-----------------------------------------------------------------------------
-// システムクロックで内部で使用する座標データ生成
+// 1pixel毎の描画データ生成
 //-----------------------------------------------------------------------------
-wire [pHdisplayWidth-1:0] wHpos;
-wire [pVdisplayWidth-1:0] wVpos;
-
-PixelPosGen #(
-	.pHdisplayWidth	(pHdisplayWidth),
-	.pVdisplayWidth	(pVdisplayWidth)
-) PIXEL_POS_GEN (
-	.iHdisplay		(iHdisplay),
-	.iVdisplay		(iVdisplay),
-	.oHpos			(wHpos),
-	.oVpos			(wVpos),
-	.oFrameEnd		(oFrameEnd),
-	.iCke			(iCke),
-	.iSysClk		(iSysClk),
-	.iSysRst		(iSysRst)
+PixelDotGen #(
+	.pHdisplayWidth		(pHdisplayWidth),
+	.pVdisplayWidth		(pVdisplayWidth),
+	.pColorRGBDepth		(pColorRGBDepth),
+) PIXEL_DOT_GEN (
+	.iHdisplay			(iHdisplay),
+	.iVdisplay			(iVdisplay),
+	.oPixel				(oPixel),
+	.oVd				(oVd),
+	.iRst				(iSysRst),
+	.iClk				(iSysClk)
 );
 
+
+//-----------------------------------------------------------------------------
+// SystemClk <=> VideoClk Dual Clk FIFO
+//-----------------------------------------------------------------------------
 
 
 //-----------------------------------------------------------------------------
@@ -67,10 +69,10 @@ wire wVSync;
 wire wVde;
 wire wFe;
 
-PixelSyncGen #(
+VideoSyncGen #(
 	.pHdisplayWidth	(pHdisplayWidth),
 	.pVdisplayWidth	(pVdisplayWidth)
-) PIXEL_SYNC_GEN (
+) VIDEO_SYNC_GEN (
 	.iHdisplay		(iHdisplay),
 	.iVdisplay		(iVdisplay),
 	.iHSyncStart	(iHSyncStart),
@@ -88,8 +90,24 @@ PixelSyncGen #(
 );
 
 
-// ここで DualFIFO
-// 出力タイミングに合わせて、Sync系統シフトレジスタに入れる
+//-----------------------------------------------------------------------------
+// バックライト調光
+//-----------------------------------------------------------------------------
+wire wTftBackLight;
+
+DutyGenerator #(
+	.pPWMDutyWidth	(8),
+	.pIVtimerWidth	(7)
+) BL_GEN (
+	.oPwm			(wTftBackLight),
+	.oDutyCycleCke	(),
+	.oIVCke			(),
+	.iPWMEn			(1'b1),
+	.iDutyRatio		(iBlDutyRatio),
+	.iIVtimer		(100),
+	.iSysClk		(iSysClk),
+	.iSysRst		(iSysRst)
+);
 
 
 //---------------------------------------------------------------------------
@@ -111,8 +129,8 @@ generate
 	OBUF TFT_HSync 	(.O (oTftHSync),		.I (wHSync));
 	OBUF TFT_VSync 	(.O (oTftVSync),		.I (wVSync));
 	OBUF TFT_VDE 	(.O (oTftDe),			.I (wVde));
-	OBUF TFT_BL 	(.O (oTftBackLight),	.I (1'b1));
-	OBUF TFT_RST 	(.O (oTftRst),			.I (~iSysRst));
+	OBUF TFT_BL 	(.O (oTftBackLight),	.I (wTftBackLight));
+	OBUF TFT_RST 	(.O (oTftRst),			.I (iDisplayRst));
 endgenerate
 
 endmodule

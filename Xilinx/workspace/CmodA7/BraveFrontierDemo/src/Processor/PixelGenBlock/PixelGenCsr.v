@@ -48,6 +48,9 @@ module PixelGenCsr #(
 	output	[pVdisplayWidth:0]		oVSyncStart,
 	output	[pVdisplayWidth:0]		oVSyncEnd,
 	output	[pVdisplayWidth:0]		oVSyncMax,
+	//
+	output  						oDisplayRst,
+	output	[7:0]					oBlDutyRatio,
     // CLK Reset
     input           				iSysClk,
     input           				iSysRst
@@ -65,6 +68,10 @@ reg [pVdisplayWidth-1:0] 	rVdisplay;			assign oVdisplay 	= rVdisplay;		// 垂直
 reg [pVfrontWidth-1:0] 		rVfront;													// 垂直フロントポーチ
 reg [pVbackWidth-1:0] 		rVback;														// 垂直バックポーチ
 reg [pVpulseWidth-1:0] 		rVpulse;													// 垂直同期信号幅
+reg 						r
+reg 						r
+reg 						rDisplayRst;		assign oDisplayRst	= rDisplayRst;		// ディスプレイのリセット信号
+reg [7:0]					rBlDutyRatio;		assign oBlDutyRatio = rBlDutyRatio;		// ディスプレイバックライトの調光
 //
 reg [pHdisplayWidth:0]		rHSyncStart;		assign oHSyncStart 	= rHSyncStart;		// アクティブエリア から 同期信号まで
 reg [pHdisplayWidth:0]		rHSyncEnd;			assign oHSyncEnd 	= rHSyncEnd;		// 同期信号 から バックポーチまで
@@ -93,17 +100,17 @@ begin
 		rVSyncStart		<= pVdisplay + pVfront;
 		rVSyncEnd		<= pVdisplay + pVfront + pVpulse - 1'b1;
 		rVSyncMax		<= pVdisplay + pVfront + pVpulse + pVback - 1'b1;
+		rDisplayRst		<= 1'b0;
+		rBlDutyRatio	<= 8'd0;
 	end
 	else
 	begin
-		rHdisplay		<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pHdisplayWidth-1:0] 	: rHdisplay;
-		rHback			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h08}) ? iSUsiWd[pHbackWidth-1:0] 	: rHback;
-		rHfront			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h0c}) ? iSUsiWd[pHfrontWidth-1:0] 	: rHfront;
-		rHpulse			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h10}) ? iSUsiWd[pHpulseWidth-1:0] 	: rHpulse;
-		rVdisplay		<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h14}) ? iSUsiWd[pVdisplayWidth-1:0] 	: rVdisplay;
-		rVfront			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h18}) ? iSUsiWd[pVfrontWidth-1:0]	: rVfront;
-		rVback			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h1c}) ? iSUsiWd[pVbackWidth-1:0] 	: rVback;
-		rVpulse			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h20}) ? iSUsiWd[pVpulseWidth-1:0] 	: rVpulse;
+		{rVdisplay,rHdisplay}	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? {iSUsiWd[pVdisplayWidth-1:0],iSUsiWd[pHdisplayWidth-1:0]	} 	: {rVdisplay,rHdisplay};
+		{rVback,rHback		}	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? {iSUsiWd[pVbackWidth-1:0],	iSUsiWd[pHbackWidth-1:0]}		: {rVback,rHback};
+		{rVfront,rHfront	}	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h08}) ? {iSUsiWd[pVfrontWidth-1:0],	iSUsiWd[pHfrontWidth-1:0]} 		: {rVfront,rHfront};
+		{rVpulse,rHpulse	}	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h0c}) ? {iSUsiWd[pVpulseWidth-1:0],	iSUsiWd[pHpulseWidth-1:0]}		: {rVpulse,rHpulse};
+		rDisplayRst				<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h10}) ? iSUsiWd[0:0]	: rDisplayRst;
+		rBlDutyRatio			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h14}) ? iSUsiWd[7:0] : rBlDutyRatio;
 		//
 		rHSyncStart 	<= rHdisplay + rHfront;
 		rHSyncEnd		<= rHdisplay + rHfront + rHpulse - 1'b1;
@@ -137,21 +144,16 @@ begin
 	begin
 		// {{(32 - パラメータ名	){1'b0}}, レジスタ名} -> パラメータ可変に対応し 0 で埋められるように設定
 		case ({qAdrsComp, iSUsiAdrs[7:0]})
-			'h104:		rHdisplay	<= {{(32 - pHdisplayWidth	){1'b0}}, rHdisplay	};
-			'h108:		rHback		<= {{(32 - pHbackWidth		){1'b0}}, rHback	};
-			'h10c:		rHfront		<= {{(32 - pHfrontWidth		){1'b0}}, rHfront	};
-			'h110:		rHpulse		<= {{(32 - pHpulseWidth		){1'b0}}, rHpulse	};
-			'h114:		rVdisplay	<= {{(32 - pVdisplayWidth	){1'b0}}, rVdisplay	};
-			'h118:		rVfront		<= {{(32 - pVfrontWidth		){1'b0}}, rVfront	};
-			'h11c:		rVback		<= {{(32 - pVbackWidth		){1'b0}}, rVback	};
-			'h120:		rVpulse		<= {{(32 - pVpulseWidth		){1'b0}}, rVpulse	};
+			'h100:		rSUsiRd	<= {{(16 - pVdisplayWidth	){1'b0}}, rVdisplay, 	{(16 - pHdisplayWidth	){1'b0}}, rHdisplay		};
+			'h104:		rSUsiRd	<= {{(16 - pVbackWidth		){1'b0}}, rVback,		{(16 - pHbackWidth		){1'b0}}, rHback		};
+			'h108:		rSUsiRd	<= {{(16 - pVfrontWidth		){1'b0}}, rVfront,		{(16 - pHfrontWidth		){1'b0}}, rHfront		};
+			'h10c:		rSUsiRd	<= {{(16 - pVpulseWidth		){1'b0}}, rVpulse,		{(16 - pHpulseWidth		){1'b0}}, rHpulse		};
+			'h110:		rSUsiRd	<= {{(32 - 1				){1'b0}}, rDisplayRst	};
+			'h114:		rSUsiRd	<= {{(32 - 8				){1'b0}}, rBlDutyRatio	};
 			//
-			'h180:		rHSyncStart	<= {{(32 - pHdisplayWidth +1){1'b0}}, rHSyncStart	};
-			'h184:		rHSyncEnd	<= {{(32 - pHdisplayWidth +1){1'b0}}, rHSyncEnd		};
-			'h188:		rHSyncMax	<= {{(32 - pHdisplayWidth +1){1'b0}}, rHSyncMax		};
-			'h18c:		rVSyncStart	<= {{(32 - pVdisplayWidth +1){1'b0}}, rVSyncStart	};
-			'h190:		rVSyncEnd	<= {{(32 - pVdisplayWidth +1){1'b0}}, rVSyncEnd		};
-			'h194:		rVSyncMax	<= {{(32 - pVdisplayWidth +1){1'b0}}, rVSyncMax		};
+			'h180:		rSUsiRd	<= {{(16 - pVdisplayWidth +1){1'b0}}, rVSyncStart,	{(16 - pHdisplayWidth +1){1'b0}}, rHSyncStart	};
+			'h184:		rSUsiRd	<= {{(16 - pVdisplayWidth +1){1'b0}}, rVSyncEnd,	{(16 - pHdisplayWidth +1){1'b0}}, rHSyncEnd		};
+			'h188:		rSUsiRd	<= {{(16 - pVdisplayWidth +1){1'b0}}, rVSyncMax,	{(16 - pHdisplayWidth +1){1'b0}}, rHSyncMax		};
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase
 	end

@@ -2,14 +2,15 @@
 // Create 2022/8/28
 // Author koutakimura
 // -
-// 設定パラメータから Video Sync 信号を生成する
+// 指定タイミングの Video Sync 信号を生成する
 // 
 //----------------------------------------------------------
-module PixelSyncGen 
-#(
+module VideoSyncGen #(
     parameter       				pHdisplayWidth	= 11,
     parameter       				pVdisplayWidth	= 11
 )(
+	// Internal Port
+	//
 	input	[pHdisplayWidth-1:0]	iHdisplay,
 	input	[pVdisplayWidth-1:0]	iVdisplay,
 	input	[pHdisplayWidth:0]		iHSyncStart,

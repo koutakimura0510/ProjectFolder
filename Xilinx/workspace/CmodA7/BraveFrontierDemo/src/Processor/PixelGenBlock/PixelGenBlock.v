@@ -65,6 +65,8 @@ wire [pHdisplayWidth:0]		wHSyncMaxCsr;
 wire [pVdisplayWidth:0]		wVSyncStartCsr;
 wire [pVdisplayWidth:0]		wVSyncEndCsr;
 wire [pVdisplayWidth:0]		wVSyncMaxCsr;
+wire 						wDisplayRstCsr;
+wire [7:0]					wBlDutyRatioCsr;
 
 PixelGenUnit #(
     .pHdisplayWidth		(pHdisplayWidth),
@@ -89,6 +91,9 @@ PixelGenUnit #(
 	.iVSyncEnd			(wVSyncEndCsr),
 	.iVSyncMax			(wVSyncMaxCsr),
 	//
+	.iDisplayRst		(wDisplayRstCsr),
+	.iBlDutyRatio		(wBlDutyRatioCsr),
+	//
 	.iSysClk			(iSysClk),
 	.iPixelClk			(iPixelClk),
 	.iSysRst			(iSysRst)
@@ -96,7 +101,7 @@ PixelGenUnit #(
 
 
 //-----------------------------------------------------------------------------
-// Csr
+// Video Sync Generator Csr
 //-----------------------------------------------------------------------------
 PixelGenCsr #(
 	.pBlockAdrsMap		(pBlockAdrsMap),
@@ -132,8 +137,11 @@ PixelGenCsr #(
 	.oVSyncStart		(wVSyncStartCsr),
 	.oVSyncEnd			(wVSyncEndCsr),
 	.oVSyncMax			(wVSyncMaxCsr),
+	.oDisplayRst		(wDisplayRstCsr),
+	.oBlDutyRatio		(wBlDutyRatioCsr),
 	.iSysClk			(iSysClk),
 	.iSysRst			(iSysRst)
 );
+
 
 endmodule
