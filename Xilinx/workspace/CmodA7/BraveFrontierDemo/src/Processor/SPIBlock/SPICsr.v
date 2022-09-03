@@ -9,10 +9,12 @@
 //----------------------------------------------------------
 module SPICsr #(
 	// variable parameter
-	parameter 						pBlockAdrsMap 	= 8,
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h03,
-	parameter						pBusAdrsBit		= 32,
-	parameter 						pDivClk 		= 16
+	parameter 						pBlockAdrsMap 		= 8,
+	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  		= 'h03,
+	parameter 						pCsrAdrsWidth		= 8,
+	parameter 						pCsrActiveWidth		= 8,
+	parameter						pBusAdrsBit			= 32,
+	parameter 						pDivClk 			= 16
 )(
     // Internal Port
 	// Csr Read
@@ -40,14 +42,17 @@ module SPICsr #(
 // Csr Write
 //----------------------------------------------------------
 // USI/F Write
-reg 					rSPIEn;				assign oSPIEn 		= rSPIEn;			// 通信開始
-reg 	[pDivClk-1:0]	rSPIDiv;			assign oSPIDiv 		= rSPIDiv;			// CLK Division
-reg 	[7:0]			rMWd;				assign oMWd			= rMWd;				// Send Data
-reg 					rMSpiCs;			assign oMSpiCs		= rMSpiCs;			// chip select 
+reg 				rSPIEn;				assign oSPIEn 		= rSPIEn;			// 通信開始
+reg [pDivClk-1:0]	rSPIDiv;			assign oSPIDiv 		= rSPIDiv;			// CLK Division
+reg [7:0]			rMWd;				assign oMWd			= rMWd;				// Send Data
+reg 				rMSpiCs;			assign oMSpiCs		= rMSpiCs;			// chip select 
 //
-reg 	[7:0]			rMRd;
+reg [7:0]			rMRd;
 //
-reg [pBusAdrsBit:0]	qCsrAdrs;
+reg 				qCsrWCke00;
+reg 				qCsrWCke04;
+reg 				qCsrWCke08;
+reg 				qCsrWCke0c;
 
 always @(posedge iSysClk)
 begin
@@ -62,17 +67,20 @@ begin
 	end
 	else
 	begin
-		rSPIEn			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[0:0] 			: rSPIEn;
-		rSPIDiv			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pDivClk-1:0] 	: rSPIDiv;
-		rMWd			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h08}) ? iSUsiWd[7:0]			 	: rMWd;
-		rMSpiCs			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h0c}) ? iSUsiWd[0:0]			 	: rMSpiCs;
+		rSPIEn			<= qCsrWCke00 ? iSUsiWd[0:0] 			: rSPIEn;
+		rSPIDiv			<= qCsrWCke04 ? iSUsiWd[pDivClk-1:0] 	: rSPIDiv;
+		rMWd			<= qCsrWCke08 ? iSUsiWd[7:0]			: rMWd;
+		rMSpiCs			<= qCsrWCke0c ? iSUsiWd[0:0]			: rMSpiCs;
 		rMRd			<= iMRd;
 	end
 end
 
 always @*
 begin
-	qCsrAdrs <= {iSUsiWCke, iSUsiAdrs};
+	qCsrWCke00 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
+	qCsrWCke04 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
+	qCsrWCke08 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
+	qCsrWCke0c <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h000c});
 end
 
 //----------------------------------------------------------
@@ -91,12 +99,12 @@ begin
 	end
 	else
 	begin
-		case ({qAdrsComp, iSUsiAdrs[7:0]})
-			'h100:		rSUsiRd <= {31'd0, rSPIEn};
-			'h104:		rSUsiRd <= {{(32 - pDivClk){1'b0}}, rSPIDiv};	// パラメータ可変なので、可変に対応して0で埋めるようにした
-			'h108:		rSUsiRd <= {24'd0, rMWd};
-			'h10c:		rSUsiRd <= {31'd0, rMSpiCs};
-			'h180:		rSUsiRd <= {24'd0, rMRd};
+		case (iSUsiAdrs[pCsrActiveWidth-1:0])
+			8'h00:		rSUsiRd <= {31'd0, rSPIEn};
+			8'h04:		rSUsiRd <= {{(32 - pDivClk){1'b0}}, rSPIDiv};	// パラメータ可変なので、可変に対応して0で埋めるようにした
+			8'h08:		rSUsiRd <= {24'd0, rMWd};
+			8'h0c:		rSUsiRd <= {31'd0, rMSpiCs};
+			8'h80:		rSUsiRd <= {24'd0, rMRd};
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase
 	end
@@ -108,7 +116,7 @@ end
 
 always @*
 begin
-	qAdrsComp <= {iSUsiAdrs[pBlockAdrsMap + 3'd7:8] == pAdrsMap};
+	qAdrsComp <= {iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:pCsrAdrsWidth] == pAdrsMap};
 end
 
 endmodule

@@ -5,7 +5,7 @@
 // Video信号の制御を司るユニット
 // 
 //----------------------------------------------------------
-module PixelGenUnit #(
+module VideoTxUnit #(
 	// Variable
     parameter       				pHdisplayWidth	= 11,
     parameter       				pVdisplayWidth	= 11
@@ -30,6 +30,8 @@ module PixelGenUnit #(
 	input	[pVdisplayWidth:0]		iVSyncEnd,
 	input	[pVdisplayWidth:0]		iVSyncMax,
 	//
+	input 							iVtbSystemRst,
+	input 							iVtbVideoRst,
 	input 							iDisplayRst,
 	input 	[7:0]					iBlDutyRatio,
     // CLK Reset

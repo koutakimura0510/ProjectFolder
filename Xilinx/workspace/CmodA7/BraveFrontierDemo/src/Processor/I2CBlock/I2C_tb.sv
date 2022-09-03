@@ -9,8 +9,8 @@ module I2C_tb;
 // Top Module Connect
 //----------------------------------------------------------
 localparam	lpSysClkCycle = 2;	// CLK サイクル
-// parameter [3:0]		pBusSlaveConnect		= 10; 				// Busに接続する Slave数 最大16
-// parameter [3:0]		pBusSlaveConnectWidth 	= pBusSlaveConnect - 1'b1;	// Busに接続する Slave数 最大16
+// parameter [3:0]		pBusBlockConnect		= 10; 				// Busに接続する Slave数 最大16
+// parameter [3:0]		pBusBlockConnectWidth 	= pBusBlockConnect - 1'b1;	// Busに接続する Slave数 最大16
 
 //----------------------------------------------------------
 // Csr Settings State Machine

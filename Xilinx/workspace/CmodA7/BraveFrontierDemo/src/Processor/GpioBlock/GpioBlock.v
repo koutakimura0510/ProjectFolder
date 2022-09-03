@@ -7,9 +7,11 @@
 //----------------------------------------------------------
 module GpioBlock #(
 	// variable
-	parameter 						pBlockAdrsMap 	= 'd8,
+	parameter 						pBlockAdrsMap 	= 8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h01,
-	parameter						pBusAdrsBit		= 'd16,
+	parameter						pBusAdrsBit		= 16,
+	parameter 						pCsrAdrsWidth 	= 8,
+	parameter						pCsrActiveWidth = 8,
 	// variable csr bit width
 	parameter						pExLedNumber	= 5,
 	parameter						pExLedFlashMode	= 2,
@@ -84,7 +86,8 @@ GpioCsr #(
 	.pBlockAdrsMap	(pBlockAdrsMap),
 	.pAdrsMap		(pAdrsMap),
 	.pBusAdrsBit	(pBusAdrsBit),
-	//
+	.pCsrAdrsWidth	(pCsrAdrsWidth),
+	.pCsrActiveWidth(pCsrActiveWidth),
 	.pExLedNumber	(pExLedNumber),
 	.pExLedFlashMode(pExLedFlashMode),
 	.pPWMDutyWidth	(pPWMDutyWidth),

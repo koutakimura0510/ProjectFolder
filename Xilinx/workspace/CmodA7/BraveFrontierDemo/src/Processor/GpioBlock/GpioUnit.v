@@ -3,6 +3,10 @@
 // Author koutakimura
 // -
 // GPIO ポートの制御を司るユニット
+// -
+// 本プロジェクトでは CmodA7 付属の LED を操作する。
+// Csr の インターバルタイマーと Duty比から PWM 制御を行い、
+// 色々な点灯パターンの再現を行う。
 // 
 //----------------------------------------------------------
 module GpioUnit #(
@@ -37,15 +41,14 @@ module GpioUnit #(
 
 
 //----------------------------------------------------------
-// タイマー信号生成
+// Blink 動作用の Enable信号と、PWM 調光動作用の Duty信号の生成
 //----------------------------------------------------------
-reg [pPWMDutyWidth-1:0] qGpioDutyRatio	[pExLedNumber-1:0];
-reg [pIVtimerWidth-1:0] qGpioIVtimer 	[pExLedNumber-1:0];
-reg [pExLedNumber-1:0] qDutyEn;
-//
-wire [pExLedNumber-1:0] wPwm;
-wire [pExLedNumber-1:0] wDutyCycleCke;
-wire [pExLedNumber-1:0] wIVCke;
+reg  [pPWMDutyWidth-1:0] 	qGpioDutyRatio	[pExLedNumber-1:0];
+reg  [pIVtimerWidth-1:0] 	qGpioIVtimer 	[pExLedNumber-1:0];
+reg  [pExLedNumber-1:0]		qDutyEn;
+wire [pExLedNumber-1:0] 	wPwm;
+wire [pExLedNumber-1:0] 	wDutyCycleCke;
+wire [pExLedNumber-1:0] 	wIVCke;
 //
 genvar i;
 //

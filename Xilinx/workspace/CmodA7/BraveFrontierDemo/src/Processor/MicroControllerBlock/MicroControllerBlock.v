@@ -9,15 +9,15 @@
 // リソース削減のため、コマンドとアドレスは同じ Port を使用する
 //----------------------------------------------------------
 module MicroControllerBlock #(
-	parameter [3:0]	pBusSlaveConnect 	= 1,				// Busに接続する Slave数 最大16
+	parameter [3:0]	pBusBlockConnect 	= 1,				// Busに接続する Slave数 最大16
 	parameter		pBusAdrsBit			= 16,
 	// Not Set Param
-	parameter [3:0]	pBusSlaveConnectWidth 	= pBusSlaveConnect - 1'b1	// Busに接続する Slave数 最大16
+	parameter [3:0]	pBusBlockConnectWidth 	= pBusBlockConnect - 1'b1	// Busに接続する Slave数 最大16
 )(
     // Internal Port
 	// Bus Master Read
 	input	[31:0]						iMUsiRd,	// CSR Read Data
-	input	[pBusSlaveConnectWidth:0]	iMUsiREd,	// Read Assert
+	input	[pBusBlockConnectWidth:0]	iMUsiREd,	// Read Assert
 	// Bus Master Write
 	output	[31:0]						oMUsiWd,	// Write Data
 	output	[pBusAdrsBit-1:0]			oMUsiAdrs,	// Write address
@@ -36,7 +36,7 @@ wire [ 7:0] 		wMcsAdrs;
 wire 				wMcsCke;
 reg  [31:0]			qMcsManualRd;
 reg  [31:0]			qMcsAutoRd;
-reg  [pBusSlaveConnectWidth:0] 	qMcsRd;
+reg  [pBusBlockConnectWidth:0] 	qMcsRd;
 
 // microblaze_mcs_0 MCS (
 // 	.Clk			(iSysClk),
@@ -56,13 +56,13 @@ reg  [pBusSlaveConnectWidth:0] 	qMcsRd;
 //----------------------------------------------------------
 wire [31:0]						wMcbManualRd;
 wire [31:0]						wMcbAutoRd;
-wire [pBusSlaveConnectWidth:0] 	wMcbRd;
+wire [pBusBlockConnectWidth:0] 	wMcbRd;
 reg  [31:0] 					qMcbCsrWd;
 reg  [ 7:0]						qMcbCsrAdrs;
 reg  							qMcbCsrCke;
 
 MicroControllerCsr #(
-	.pBusSlaveConnectWidth	(pBusSlaveConnectWidth),
+	.pBusBlockConnectWidth	(pBusBlockConnectWidth),
 	.pBusAdrsBit			(pBusAdrsBit)
 ) MICRO_CONTROLLER_CSR (
 	.iWd		(qMcbCsrWd),

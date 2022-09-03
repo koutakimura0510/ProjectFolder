@@ -11,6 +11,7 @@ module PSRAMBlock #(
 	parameter 							pBlockAdrsMap 		= 8,	// ブロックのアドレス幅を指定
 	parameter [pBlockAdrsMap-1:0] 		pAdrsMap	  		= 'h08,
 	parameter							pBusAdrsBit			= 16,
+	parameter 							pCsrAdrsWidth	 	= 8,
 	parameter							pUfiBusWidth		= 16
 )(
 	// External Port

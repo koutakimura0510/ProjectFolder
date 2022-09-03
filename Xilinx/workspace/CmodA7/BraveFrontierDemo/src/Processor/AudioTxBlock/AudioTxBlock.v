@@ -5,10 +5,11 @@
 // Audio の管理を司るブロック
 // 
 //----------------------------------------------------------
-module AudioGenBlock #(
-	parameter 						pBlockAdrsMap 	= 8,	// ブロックのアドレス幅を指定
+module AudioTxBlock #(
+	parameter 						pBlockAdrsMap 	= 8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h05,
-	parameter						pBusAdrsBit		= 32	// 32bit ならば (32-1)31 を指定
+	parameter						pBusAdrsBit		= 32,
+	parameter 						pCsrAdrsWidth 	= 8,
 )(
 	// External Port
 	output							oAudioMclk,

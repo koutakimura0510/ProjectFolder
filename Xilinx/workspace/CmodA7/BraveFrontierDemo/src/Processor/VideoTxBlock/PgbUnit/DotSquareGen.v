@@ -20,8 +20,8 @@ module DotSquareGen #(
     output [pColorDepth-1:0]    	oPixel,		// 出力ピクセルデータ
     output                      	oVd 		// 有効データ出力時High
 	// Clk rst
-    input                       	iClk,		// 
-    input                       	iRst		// Active High
+    input                       	iRst,		// Active High
+    input                       	iClk		// 
 );
 
 

@@ -18,7 +18,9 @@ module SPIBlock #(
 	parameter 							pBlockAdrsMap 		= 8,	// ブロックのアドレス幅を指定
 	parameter [pBlockAdrsMap-1:0] 		pAdrsMap	  		= 'h03,
 	parameter							pBusAdrsBit			= 16,
-	parameter [3:0]						pBusSlaveConnect	= 1,	// Busに接続する Slave数 最大16
+	parameter 							pCsrAdrsWidth	 	= 8,
+	parameter 							pCsrActiveWidth		= 8,
+	parameter [3:0]						pBusBlockConnect	= 1,	// Busに接続する Slave数 最大16
 	parameter							pUfiBusWidth		= 16
 )(
 	// External Port
@@ -33,7 +35,7 @@ module SPIBlock #(
     // Internal Port
 	// Usi Bus Master Read
 	input	[31:0]						iMUsiRd,		// CSR Read Data
-	input	[pBusSlaveConnect-1:0]		iMUsiREd,		// Read Assert
+	input	[pBusBlockConnect-1:0]		iMUsiREd,		// Read Assert
 	// Usi Bus Master Write
 	output	[31:0]						oMUsiWd,		// Write Data
 	output	[pBusAdrsBit-1:0]			oMUsiAdrs,		// R/W Adrs
@@ -131,6 +133,8 @@ SPICsr #(
 	.pBlockAdrsMap		(pBlockAdrsMap),
 	.pAdrsMap			(pAdrsMap),
 	.pBusAdrsBit		(pBusAdrsBit),
+	.pCsrAdrsWidth		(pCsrAdrsWidth),
+	.pCsrActiveWidth	(pCsrActiveWidth),
 	.pDivClk			(lpDivClk)
 ) SPI_CSR (
 	// Usi Bus Slave

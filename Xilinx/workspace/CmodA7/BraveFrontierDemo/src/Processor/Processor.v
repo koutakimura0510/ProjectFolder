@@ -75,27 +75,55 @@ assign oRamCE			= 1'b1;
 assign oTestPort 		= 4'd0;
 
 
-//----------------------------------------------------------
-// バス接続の周辺機能アドレスマップ
-//----------------------------------------------------------
-localparam lpBusSlaveConnect  	= 6;		// 接続Slave数、最大16
-localparam lpBlockAdrsMap 		= 8;
+//-----------------------------------------------------------------------------
+// 現在接続している ブロックの個数
+//-----------------------------------------------------------------------------
+localparam lpBusBlockConnect = 6;
 
-localparam [lpBlockAdrsMap-1'b1:0] 
-	lpGpioAdrsMap	= 8'h01,
-	lpSPIAdrsMap	= 8'h02,
-	lpI2CAdrsMap	= 8'h03,
-	lpPGBAdrsMap	= 8'h04,
-	lpAGBAdrsMap	= 8'h05,
-	lpRAMAdrsMap 	= 8'h06;
+
+//-----------------------------------------------------------------------------
+// ブロックアドレスの Bit幅、接続中のブロック数に応じて切り替える
+//-----------------------------------------------------------------------------
+localparam lpBlockAdrsMap = 4;	// 2022-09-03 4bit だと 最大16個のブロック接続
+
+
+//-----------------------------------------------------------------------------
+// ブロックアドレスマッピング ※プロジェクトの Readme.md 参照
+//-----------------------------------------------------------------------------
+localparam [lpBlockAdrsMap-1:0] 
+	lpGpioAdrsMap	= 'h01,
+	lpSPIAdrsMap	= 'h02,
+	lpI2CAdrsMap	= 'h03,
+	lpVTBAdrsMap	= 'h04,
+	lpAGBAdrsMap	= 'h05,
+	lpRAMAdrsMap 	= 'h06;
+
+
+//-----------------------------------------------------------------------------
+// ブロック内 Csr のアドレス幅
+// 基本となる lpCsrAdrsWidth のアドレス幅で Csr を利用しない場合は、
+// ロジック削減のため各ブロックで有効なアドレス幅のパラメータを設定する
+// 
+// 下記パラメータに関しては、USI I/F Bus のアドレス幅を個々に対応して変更するのが
+// 難しいと感じたため用意した。
+// 
+//-----------------------------------------------------------------------------
+localparam lpCsrAdrsWidth	= 16;
+localparam 
+	lpGpioCsrActiveWidth = 8,
+	lpSPICsrActiveWidth  = 8,
+	lpI2CCsrActiveWidth  = 8,
+	lpVTBCsrActiveWidth  = 16,		// 2022-09-03 現在 VTB だけ 16bit幅で使用している
+	lpAGBCsrActiveWidth  = 8,
+	lpRAMCsrActiveWidth  = 8;
 
 
 //----------------------------------------------------------
 // バス幅を定義
 //----------------------------------------------------------
 // variable parameter
-localparam	lpUsiBusWidth  		= 32;		// バスデータ幅
-localparam	lpBusAdrsBit		= 16;		// バスアドレス幅
+localparam	lpUsiBusWidth  		= 32;		// Usi バスデータ幅
+localparam	lpBusAdrsBit		= 32;		// バスアドレス幅, Usi/Ufi 共通
 localparam  lpUfiBusWidth		= 16;
 
 
@@ -104,14 +132,14 @@ localparam  lpUfiBusWidth		= 16;
 //----------------------------------------------------------
 // Slave -> Master
 reg  [31:0] 					qMUsiRdMcb;
-reg  [lpBusSlaveConnect-1:0]	qMUsiVdMcb;
+reg  [lpBusBlockConnect-1:0]	qMUsiVdMcb;
 // Master -> Slave
 wire [31:0] 					wMUsiWdMcb;
 wire [lpBusAdrsBit-1:0]			wMUsiAdrsMcb;
 wire 							wMUsiWCkeMcb;
 
 MicroControllerBlock #(
-	.pBusSlaveConnect	(lpBusSlaveConnect),
+	.pBusBlockConnect	(lpBusBlockConnect),
 	.pBusAdrsBit		(lpBusAdrsBit)
 ) MICRO_CONTROLLER_BLOCK (
 	.iMUsiRd			(qMUsiRdMcb),
@@ -138,7 +166,9 @@ reg  					qSUsiWCkeGpio;
 GpioBlock #(
 	.pBlockAdrsMap		(lpBlockAdrsMap),
 	.pAdrsMap	 		(lpGpioAdrsMap),
-	.pBusAdrsBit		(lpBusAdrsBit)
+	.pBusAdrsBit		(lpBusAdrsBit),
+	.pCsrAdrsWidth		(lpCsrAdrsWidth),
+	.pCsrActiveWidth	(lpGpioCsrActiveWidth)
 ) GPIO_BLOCK (
 	// External Port
 	.oLed				(oLed),
@@ -161,7 +191,7 @@ GpioBlock #(
 //----------------------------------------------------------
 // Slave -> Master
 reg  [31:0] 					qMUsiRdSpi;
-reg  [lpBusSlaveConnect-1:0]	qMUsiREdSpi;
+reg  [lpBusBlockConnect-1:0]	qMUsiREdSpi;
 wire [31:0] 					wSUsiRdSpi;
 wire 							wSUsiREdSpi;
 // Master -> Slave
@@ -185,7 +215,9 @@ SPIBlock #(
 	.pBlockAdrsMap				(lpBlockAdrsMap),
 	.pAdrsMap	 				(lpSPIAdrsMap),
 	.pBusAdrsBit				(lpBusAdrsBit),
-	.pBusSlaveConnect			(lpBusSlaveConnect),
+	.pCsrAdrsWidth				(lpCsrAdrsWidth),
+	.pCsrActiveWidth			(lpSPICsrActiveWidth)
+	.pBusBlockConnect			(lpBusBlockConnect),
 	.pUfiBusWidth				(lpUfiBusWidth)
 ) SPI_BLOCK (
 	// External Port
@@ -240,7 +272,9 @@ reg  					qSUsiWCkeI2c;
 I2CBlock #(
 	.pBlockAdrsMap		(lpBlockAdrsMap),
 	.pAdrsMap	 		(lpGpioAdrsMap),
-	.pBusAdrsBit		(lpBusAdrsBit)
+	.pBusAdrsBit		(lpBusAdrsBit),
+	.pCsrAdrsWidth		(lpCsrAdrsWidth),
+	.pCsrActiveWidth	(lpI2CCsrActiveWidth)
 ) I2C_BLOCK (
 	// External Port
 	.oI2CScl			(oI2CScl),
@@ -256,20 +290,22 @@ I2CBlock #(
 );
 
 //----------------------------------------------------------
-// PGB
+// VTB
 //----------------------------------------------------------
 // Slave -> Master
-wire [31:0] 			wSUsiRdPgb;
-wire 					wSUsiREdPgb;
+wire [31:0] 			wSUsiRdVtb;
+wire 					wSUsiREdVtb;
 // Master -> Slave
-reg  [31:0] 			qSUsiWdPgb;
-reg  [lpBusAdrsBit-1:0] qSUsiAdrsPgb;
-reg  					qSUsiWCkePgb;
+reg  [31:0] 			qSUsiWdVtb;
+reg  [lpBusAdrsBit-1:0] qSUsiAdrsVtb;
+reg  					qSUsiWCkeVtb;
 
-PixelGenBlock #(
+VideoTxBlock #(
 	.pBlockAdrsMap		(lpBlockAdrsMap),
-	.pAdrsMap			(lpPGBAdrsMap),
+	.pAdrsMap			(lpVTBAdrsMap),
 	.pBusAdrsBit		(lpBusAdrsBit),
+	.pCsrAdrsWidth		(lpCsrAdrsWidth),
+	.pCsrActiveWidth	(lpVTBCsrActiveWidth),
 	.pHdisplay			(pHdisplay),
 	.pHfront			(pHfront),
 	.pHback				(pHback),
@@ -286,7 +322,7 @@ PixelGenBlock #(
 	.pVfrontWidth		(5),
 	.pVbackWidth		(5),
 	.pVpulseWidth		(5)
-) PGB (
+) VTB (
 	// External port
 	.oTftColorR			(oTftColorR),
 	.oTftColorG			(oTftColorG),
@@ -298,20 +334,20 @@ PixelGenBlock #(
 	.oTftBackLight		(oTftBackLight),
 	.oTftRst			(oTftRst),
 	// Intenal port
-	.oSUsiRd			(wSUsiRdPgb),
-	.oSUsiREd			(wSUsiREdPgb),
-	.iSUsiWd			(qSUsiWdPgb),
-	.iSUsiAdrs			(qSUsiAdrsPgb),
-	.iSUsiWCke			(qSUsiWCkePgb),
+	.oSUsiRd			(wSUsiRdVtb),
+	.oSUsiREd			(wSUsiREdVtb),
+	.iSUsiWd			(qSUsiWdVtb),
+	.iSUsiAdrs			(qSUsiAdrsVtb),
+	.iSUsiWCke			(qSUsiWCkeVtb),
 	// CLK Rst
-	.iSysClk			(iSysClk),
+	.iSysRst			(iSysRst),
 	.iPixelClk 			(iPixelClk),
-	.iSysRst			(iSysRst)
+	.iSysClk			(iSysClk)
 );
 
 
 //----------------------------------------------------------
-// Audio Gen
+// Audio Tx Block
 //----------------------------------------------------------
 // Slave -> Master
 wire [31:0] 			wSUsiRdAudio;
@@ -321,11 +357,13 @@ reg  [31:0] 			qSUsiWdAudio;
 reg  [lpBusAdrsBit-1:0]	qSUsiAdrsAudio;
 reg  					qSUsiWCkeAudio;
 
-AudioGenBlock #(
+AudioTxBlock #(
 	.pBlockAdrsMap		(lpBlockAdrsMap),
 	.pAdrsMap	 		(lpAGBAdrsMap),
-	.pBusAdrsBit		(lpBusAdrsBit)
-) AUDIO_GEN_BLOCK (
+	.pBusAdrsBit		(lpBusAdrsBit),
+	.pCsrAdrsWidth		(lpCsrAdrsWidth),
+	.pCsrActiveWidth	(lpATBCsrActiveWidth)
+) AUDIO_TX_BLOCK (
 	// External Port
 	.oAudioMclk			(oAudioMclk),
 	// Internal Port
@@ -334,8 +372,8 @@ AudioGenBlock #(
 	.iSUsiWd			(qSUsiWdAudio),
 	.iSUsiAdrs			(qSUsiAdrsAudio),
 	.iSUsiWCke			(qSUsiWCkeAudio),
-	.iSysClk			(iSysClk),
-	.iSysRst			(iSysRst)
+	.iSysRst			(iSysRst),
+	.iSysClk			(iSysClk)
 );
 
 
@@ -349,13 +387,13 @@ AudioGenBlock #(
 // USI/F BUS
 //----------------------------------------------------------
 // not variable parameter
-localparam	lpBusLen = (lpUsiBusWidth * lpBusSlaveConnect) - 1'b1;
+localparam	lpBusLen = (lpUsiBusWidth * lpBusBlockConnect) - 1'b1;
 
 // Slave -> Master
 wire [31:0] 					wMUsiRd;
-wire [lpBusSlaveConnect-1:0]	wMUsiREd;
+wire [lpBusBlockConnect-1:0]	wMUsiREd;
 reg  [lpBusLen:0]				qSUsiRd;
-reg  [lpBusSlaveConnect-1:0]	qSUsiREd;
+reg  [lpBusBlockConnect-1:0]	qSUsiREd;
 // Master -> Slave
 reg  [31:0]						qMUsiWd;
 reg  [lpBusAdrsBit-1:0] 		qMUsiAdrs;
@@ -365,16 +403,17 @@ wire [lpBusAdrsBit-1:0] 		wSUsiAdrs;
 wire 							wSUsiWCke;
 
 UltraSimpleInterface #(
-	.pBusSlaveConnect	(lpBusSlaveConnect),
+	.pBusBlockConnect	(lpBusBlockConnect),
 	.pUsiBusWidth		(lpUsiBusWidth),
 	.pBusAdrsBit		(lpBusAdrsBit),
 	.pBlockAdrsMap		(lpBlockAdrsMap),
 	.pGpioAdrsMap		(lpGpioAdrsMap),
 	.pSPIAdrsMap		(lpSPIAdrsMap),
 	.pI2CAdrsMap		(lpI2CAdrsMap),
-	.pPGBAdrsMap		(lpPGBAdrsMap),
+	.pVTBAdrsMap		(lpVTBAdrsMap),
 	.pAGBAdrsMap		(lpAGBAdrsMap),
-	.pRAMAdrsMap		(lpRAMAdrsMap)
+	.pRAMAdrsMap		(lpRAMAdrsMap),
+	.pCsrAdrsWidth		(pCsrAdrsWidth)
 ) USI_BUS (
 	// Slave to Master
 	.oMUsiRd			(wMUsiRd),
@@ -416,16 +455,16 @@ begin
 	qSUsiAdrsI2c	<= wSUsiAdrs;
 	qSUsiWCkeI2c	<= wSUsiWCke;
 	//
-	qSUsiWdPgb		<= wSUsiWd;
-	qSUsiAdrsPgb	<= wSUsiAdrs;
-	qSUsiWCkePgb	<= wSUsiWCke;
+	qSUsiWdVtb		<= wSUsiWd;
+	qSUsiAdrsVtb	<= wSUsiAdrs;
+	qSUsiWCkeVtb	<= wSUsiWCke;
 	//
 	qSUsiWdAudio	<= wSUsiWd;
 	qSUsiAdrsAudio	<= wSUsiAdrs;
 	qSUsiWCkeAudio	<= wSUsiWCke;
 	//
-	qSUsiRd			<= {32'd0, wSUsiRdAudio,  wSUsiRdPgb,  wSUsiRdI2c,  wSUsiRdSpi,  wSUsiRdGpio	};
-	qSUsiREd		<= { 1'h0, wSUsiREdAudio, wSUsiREdPgb, wSUsiREdI2c, wSUsiREdSpi, wSUsiREdGpio	};
+	qSUsiRd			<= {32'd0, wSUsiRdAudio,  wSUsiRdVtb,  wSUsiRdI2c,  wSUsiRdSpi,  wSUsiRdGpio	};
+	qSUsiREd		<= { 1'h0, wSUsiREdAudio, wSUsiREdVtb, wSUsiREdI2c, wSUsiREdSpi, wSUsiREdGpio	};
 end
 
 //----------------------------------------------------------

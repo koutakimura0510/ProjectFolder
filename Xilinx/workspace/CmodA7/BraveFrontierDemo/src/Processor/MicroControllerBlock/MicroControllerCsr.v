@@ -22,7 +22,7 @@
 // 上位モジュールへの output port は必ずレジスタ経由で出力する。
 //----------------------------------------------------------
 module MicroControllerCsr #(
-	parameter 		pBusSlaveConnectWidth	= 8,
+	parameter 		pBusBlockConnectWidth	= 8,
 	parameter		pBusAdrsBit				= 16
 )(
     // Internal Port
@@ -33,14 +33,14 @@ module MicroControllerCsr #(
 	output 	[31:0]						oRd,		// Read Data
 	// Csr Slave
 	input	[31:0]						iMUsiRd,
-	input  	[pBusSlaveConnectWidth:0]	iMUsiREd,
+	input  	[pBusBlockConnectWidth:0]	iMUsiREd,
 	// Csr Master
 	output	[31:0]						oMUsiWd,	// 書き込みデータ
 	output	[pBusAdrsBit-1:0]			oMUsiAdrs,
 	output								oMUsiWEd,	// コマンド有効時 Assert
 	// Csr Output
 	output	[31:0]						oMUsiRd,
-	output	[pBusSlaveConnectWidth:0]	oMUsiREd,
+	output	[pBusBlockConnectWidth:0]	oMUsiREd,
     // CLK Reset
     input           					iSysClk,
     input           					iSysRst
@@ -56,7 +56,7 @@ reg [pBusAdrsBit-1:0]			rMUsiAdrs;		assign oMUsiAdrs = rMUsiAdrs;	// Bus 書き�
 reg [ 0:0]		 				rMUsiWEd;		assign oMUsiWEd = rMUsiWEd;	// Bus 書き込み Enable 自動で 0クリア
 // Auto
 reg [31:0]						rMUsiRd;		assign oMUsiRd	 = rMUsiRd;		// 
-reg [pBusSlaveConnectWidth:0] 	rMUsiREd;		assign oMUsiREd	 = rMUsiREd;		// 指定Bit が Assert されていればデータ書き込み可能と判断
+reg [pBusBlockConnectWidth:0] 	rMUsiREd;		assign oMUsiREd	 = rMUsiREd;		// 指定Bit が Assert されていればデータ書き込み可能と判断
 // Access Address
 reg [ 8:0] 						qCsrAdrs;
 
@@ -68,7 +68,7 @@ begin
 		rMUsiAdrs	<= {pBusAdrsBit{1'b0}};
 		rMUsiWEd	<= 1'b0;
 		rMUsiRd		<= 'h0;
-		rMUsiREd		<= {pBusSlaveConnectWidth{1'b0}};
+		rMUsiREd		<= {pBusBlockConnectWidth{1'b0}};
 	end
 	else
 	begin

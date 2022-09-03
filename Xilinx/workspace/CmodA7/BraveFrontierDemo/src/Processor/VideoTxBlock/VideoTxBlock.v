@@ -2,15 +2,17 @@
 // Create  2022/08/27
 // Author  KoutaKimura
 // -
-// Video 信号の管理を司るブロック
+// Video Tx Block
 // 
 //----------------------------------------------------------
-module PixelGenBlock #(
+module VideoTxBlock #(
 	// variable
 	parameter 						pBlockAdrsMap 	= 8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h05,
 	parameter						pBusAdrsBit		= 16,
-	//
+	parameter 						pCsrAdrsWidth   = 16,
+	parameter						pCsrActiveWidth = 16,
+	// Display Size
     parameter       				pHdisplay		= 480,
     parameter       				pHback			= 43,
     parameter       				pHfront			= 8,
@@ -19,7 +21,7 @@ module PixelGenBlock #(
     parameter       				pVfront			= 12,
     parameter       				pVback			= 4,
     parameter       				pVpulse			= 10,
-	//
+	// Register Width
 	parameter 						pHdisplayWidth	= 11,
 	parameter 						pHfrontWidth	= 7,
 	parameter 						pHbackWidth		= 7,
@@ -47,9 +49,9 @@ module PixelGenBlock #(
 	input	[pBusAdrsBit-1:0]		iSUsiAdrs,  // R/W Adrs
 	input							iSUsiWCke,	// Write Enable
 	// CLK Rst
+	input  							iSysRst,
 	input 							iSysClk,
-	input 							iPixelClk,
-	input  							iSysRst
+	input 							iPixelClk
 );
 
 
@@ -65,13 +67,15 @@ wire [pHdisplayWidth:0]		wHSyncMaxCsr;
 wire [pVdisplayWidth:0]		wVSyncStartCsr;
 wire [pVdisplayWidth:0]		wVSyncEndCsr;
 wire [pVdisplayWidth:0]		wVSyncMaxCsr;
+wire 						wVtbSystemRstCsr;
+wire 						wVtbVideoRstCsr;
 wire 						wDisplayRstCsr;
 wire [7:0]					wBlDutyRatioCsr;
 
-PixelGenUnit #(
+VideoTxUnit #(
     .pHdisplayWidth		(pHdisplayWidth),
     .pVdisplayWidth		(pVdisplayWidth)
-) PIXEL_GEN_UNIT (
+) VIDEO_TX_UNIT (
 	.oTftColorR			(oTftColorR),
 	.oTftColorG			(oTftColorG),
 	.oTftColorB			(oTftColorB),
@@ -91,6 +95,8 @@ PixelGenUnit #(
 	.iVSyncEnd			(wVSyncEndCsr),
 	.iVSyncMax			(wVSyncMaxCsr),
 	//
+	.iVtbSystemRst		(wVtbSystemRstCsr),
+	.iVtbVideoRst		(wVtbVideoRstCsr),
 	.iDisplayRst		(wDisplayRstCsr),
 	.iBlDutyRatio		(wBlDutyRatioCsr),
 	//
@@ -101,12 +107,14 @@ PixelGenUnit #(
 
 
 //-----------------------------------------------------------------------------
-// Video Sync Generator Csr
+// Video Tx Generator Csr
 //-----------------------------------------------------------------------------
-PixelGenCsr #(
+VideoTxCsr #(
 	.pBlockAdrsMap		(pBlockAdrsMap),
 	.pAdrsMap			(pAdrsMap),	
 	.pBusAdrsBit		(pBusAdrsBit),
+	.pCsrAdrsWidth		(pCsrAdrsWidth),
+	.pCsrActiveWidth	(pCsrActiveWidth),
     .pHdisplay			(pHdisplay),
     .pHfront			(pHfront),
     .pHback				(pHback),
@@ -123,7 +131,7 @@ PixelGenCsr #(
     .pVfrontWidth		(pVfrontWidth),
     .pVbackWidth		(pVbackWidth),
     .pVpulseWidth		(pVpulseWidth)
-) PIXEL_GEN_CSR (
+) VIDEO_SYNC_CSR (
 	.oSUsiRd			(oSUsiRd),
 	.oSUsiREd			(oSUsiREd),
 	.iSUsiWd			(iSUsiWd),
@@ -137,6 +145,8 @@ PixelGenCsr #(
 	.oVSyncStart		(wVSyncStartCsr),
 	.oVSyncEnd			(wVSyncEndCsr),
 	.oVSyncMax			(wVSyncMaxCsr),
+	.oVtbSystemRst		(wVtbSystemRstCsr),
+	.oVtbVideoRst		(wVtbVideoRstCsr),
 	.oDisplayRst		(wDisplayRstCsr),
 	.oBlDutyRatio		(wBlDutyRatioCsr),
 	.iSysClk			(iSysClk),

@@ -2,13 +2,15 @@
 // Create 2022/7/25
 // Author koutakimura
 // -
-// I2C I/F の管理を司るブロック
+// I2CBlock
 // 
 //----------------------------------------------------------
 module I2CBlock #(
-	parameter 						pBlockAdrsMap 	= 'd8,	// ブロックのアドレス幅を指定
+	parameter 						pBlockAdrsMap 	= 8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h04,	
-	parameter						pBusAdrsBit		= 'd32	//
+	parameter						pBusAdrsBit		= 16
+	parameter 						pCsrAdrsWidth 	= 8,
+	parameter 						pCsrActiveWidth	= 8
 )(
 	// External Port
 	output						oI2CScl,
@@ -67,6 +69,8 @@ I2CCsr #(
 	.pBlockAdrsMap	(pBlockAdrsMap),
 	.pAdrsMap		(pAdrsMap),
 	.pBusAdrsBit	(pBusAdrsBit),
+	.pCsrAdrsWidth	(pCsrAdrsWidth),
+	.pCsrActiveWidth(pCsrActiveWidth),
 	.pI2CDivClk		(lpI2CDivClk)
 ) I2C_CSR (
 	.oSUsiRd		(oSUsiRd),

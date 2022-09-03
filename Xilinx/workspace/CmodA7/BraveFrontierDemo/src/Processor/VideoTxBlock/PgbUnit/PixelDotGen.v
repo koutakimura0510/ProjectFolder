@@ -51,6 +51,7 @@ PixelPosGen #(
 // 本来はメモリからバス経由で描画データを受信して四角形を生成するが、
 // まだそこまでいっていないため、レジスタ経由にしている
 //-----------------------------------------------------------------------------
+generate
 DotSquareGen #(
 	.pHdisplayWidth		(pHdisplayWidth),
 	.pVdisplayWidth		(pVdisplayWidth),

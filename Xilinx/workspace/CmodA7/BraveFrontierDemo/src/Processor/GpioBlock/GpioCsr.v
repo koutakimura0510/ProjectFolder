@@ -9,9 +9,11 @@
 // 上位モジュールへの output port は必ずレジスタ経由で出力する。
 //----------------------------------------------------------
 module GpioCsr #(
-	parameter 						pBlockAdrsMap 	= 'd8,
+	parameter 						pBlockAdrsMap 	= 8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h01,
-	parameter						pBusAdrsBit		= 'd32,
+	parameter						pBusAdrsBit		= 16,
+	parameter 						pCsrAdrsWidth	= 8,
+	parameter						pCsrActiveWidth = 8,
 	// variable csr bit width
 	parameter 						pExLedNumber	= 5,	// 外部 LED の数
 	parameter 						pExLedFlashMode	= 2,	// モード数の Bit幅
@@ -49,20 +51,31 @@ module GpioCsr #(
 // レジスタマップ
 //----------------------------------------------------------
 reg [pExLedNumber-1:0]		rGpioEn;			assign 	oGpioEn  		= rGpioEn;			// 汎用 GPIO ON/OFF 制御
-reg [pExLedFlashMode-1:0]	rGpioFlashMode;		assign 	oGpioFlashMode	= rGpioFlashMode;	// GPIO の点灯方法
-reg [pPWMDutyWidth-1:0]		rGpioDutyRatio0;	assign	oGpioDutyRatio0	= rGpioDutyRatio0;	// インターバルタイマ 分周器
-reg [pPWMDutyWidth-1:0]		rGpioDutyRatio1;	assign	oGpioDutyRatio1	= rGpioDutyRatio1;
-reg [pPWMDutyWidth-1:0]		rGpioDutyRatio2;	assign	oGpioDutyRatio2	= rGpioDutyRatio2;
-reg [pPWMDutyWidth-1:0]		rGpioDutyRatio3;	assign	oGpioDutyRatio3	= rGpioDutyRatio3;
-reg [pPWMDutyWidth-1:0]		rGpioDutyRatio4;	assign	oGpioDutyRatio4	= rGpioDutyRatio4;
+reg [pExLedFlashMode-1:0]	rGpioFlashMode;		assign 	oGpioFlashMode	= rGpioFlashMode;	// 汎用 GPIO の点灯方法
+reg [pPWMDutyWidth-1:0]		rGpioDutyRatio0;	assign	oGpioDutyRatio0	= rGpioDutyRatio0;	// Duty 比率 0
+reg [pPWMDutyWidth-1:0]		rGpioDutyRatio1;	assign	oGpioDutyRatio1	= rGpioDutyRatio1;	// Duty 比率 1
+reg [pPWMDutyWidth-1:0]		rGpioDutyRatio2;	assign	oGpioDutyRatio2	= rGpioDutyRatio2;	// Duty 比率 2
+reg [pPWMDutyWidth-1:0]		rGpioDutyRatio3;	assign	oGpioDutyRatio3	= rGpioDutyRatio3;	// Duty 比率 3
+reg [pPWMDutyWidth-1:0]		rGpioDutyRatio4;	assign	oGpioDutyRatio4	= rGpioDutyRatio4;	// Duty 比率 4
 
-reg [pIVtimerWidth-1:0]		rGpioIVtimer0;		assign	oGpioIVtimer0	= rGpioIVtimer0;	// インターバルタイマ 分周器
-reg [pIVtimerWidth-1:0]		rGpioIVtimer1;		assign	oGpioIVtimer1	= rGpioIVtimer1;
-reg [pIVtimerWidth-1:0]		rGpioIVtimer2;		assign	oGpioIVtimer2	= rGpioIVtimer2;
-reg [pIVtimerWidth-1:0]		rGpioIVtimer3;		assign	oGpioIVtimer3	= rGpioIVtimer3;
-reg [pIVtimerWidth-1:0]		rGpioIVtimer4;		assign	oGpioIVtimer4	= rGpioIVtimer4;
+reg [pIVtimerWidth-1:0]		rGpioIVtimer0;		assign	oGpioIVtimer0	= rGpioIVtimer0;	// インターバルタイマ0 分周器
+reg [pIVtimerWidth-1:0]		rGpioIVtimer1;		assign	oGpioIVtimer1	= rGpioIVtimer1;	// インターバルタイマ1 分周器
+reg [pIVtimerWidth-1:0]		rGpioIVtimer2;		assign	oGpioIVtimer2	= rGpioIVtimer2;	// インターバルタイマ2 分周器
+reg [pIVtimerWidth-1:0]		rGpioIVtimer3;		assign	oGpioIVtimer3	= rGpioIVtimer3;	// インターバルタイマ3 分周器
+reg [pIVtimerWidth-1:0]		rGpioIVtimer4;		assign	oGpioIVtimer4	= rGpioIVtimer4;	// インターバルタイマ4 分周器
 //
-reg [pBusAdrsBit:0]		qCsrAdrs; // CKE + Adrs
+reg 						qCsrWCke00;
+reg 						qCsrWCke04;
+reg 						qCsrWCke08;
+reg 						qCsrWCke0c;
+reg 						qCsrWCke10;
+reg 						qCsrWCke14;
+reg 						qCsrWCke18;
+reg 						qCsrWCke1c;
+reg 						qCsrWCke20;
+reg 						qCsrWCke24;
+reg 						qCsrWCke28;
+reg 						qCsrWCke2c;
 //
 always @(posedge iSysClk)
 begin
@@ -83,24 +96,35 @@ begin
 	end
 	else
 	begin
-		rGpioEn			<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h00}) ? iSUsiWd[pExLedNumber-1:0] 	: rGpioEn;
-		rGpioFlashMode	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h04}) ? iSUsiWd[pExLedFlashMode-1:0] : rGpioFlashMode;
-		rGpioDutyRatio0	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h08}) ? iSUsiWd[pPWMDutyWidth-1:0] 	: rGpioDutyRatio0;
-		rGpioDutyRatio1	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h0c}) ? iSUsiWd[pPWMDutyWidth-1:0] 	: rGpioDutyRatio1;
-		rGpioDutyRatio2	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h10}) ? iSUsiWd[pPWMDutyWidth-1:0] 	: rGpioDutyRatio2;
-		rGpioDutyRatio3	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h14}) ? iSUsiWd[pPWMDutyWidth-1:0] 	: rGpioDutyRatio3;
-		rGpioDutyRatio4	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h18}) ? iSUsiWd[pPWMDutyWidth-1:0] 	: rGpioDutyRatio4;
-		rGpioIVtimer0	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h1c}) ? iSUsiWd[pIVtimerWidth-1:0] 	: rGpioIVtimer0;
-		rGpioIVtimer1	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h20}) ? iSUsiWd[pIVtimerWidth-1:0] 	: rGpioIVtimer1;
-		rGpioIVtimer2	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h24}) ? iSUsiWd[pIVtimerWidth-1:0] 	: rGpioIVtimer2;
-		rGpioIVtimer3	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h28}) ? iSUsiWd[pIVtimerWidth-1:0] 	: rGpioIVtimer3;
-		rGpioIVtimer4	<= (qCsrAdrs == {1'b1, pAdrsMap, 8'h2c}) ? iSUsiWd[pIVtimerWidth-1:0] 	: rGpioIVtimer4;
+		rGpioEn			<= qCsrWCke00 ? iSUsiWd[pExLedNumber-1:0] 	: rGpioEn;
+		rGpioFlashMode	<= qCsrWCke04 ? iSUsiWd[pExLedFlashMode-1:0] : rGpioFlashMode;
+		rGpioDutyRatio0	<= qCsrWCke08 ? iSUsiWd[pPWMDutyWidth-1:0] 	: rGpioDutyRatio0;
+		rGpioDutyRatio1	<= qCsrWCke0c ? iSUsiWd[pPWMDutyWidth-1:0] 	: rGpioDutyRatio1;
+		rGpioDutyRatio2	<= qCsrWCke10 ? iSUsiWd[pPWMDutyWidth-1:0] 	: rGpioDutyRatio2;
+		rGpioDutyRatio3	<= qCsrWCke14 ? iSUsiWd[pPWMDutyWidth-1:0] 	: rGpioDutyRatio3;
+		rGpioDutyRatio4	<= qCsrWCke18 ? iSUsiWd[pPWMDutyWidth-1:0] 	: rGpioDutyRatio4;
+		rGpioIVtimer0	<= qCsrWCke1c ? iSUsiWd[pIVtimerWidth-1:0] 	: rGpioIVtimer0;
+		rGpioIVtimer1	<= qCsrWCke20 ? iSUsiWd[pIVtimerWidth-1:0] 	: rGpioIVtimer1;
+		rGpioIVtimer2	<= qCsrWCke24 ? iSUsiWd[pIVtimerWidth-1:0] 	: rGpioIVtimer2;
+		rGpioIVtimer3	<= qCsrWCke28 ? iSUsiWd[pIVtimerWidth-1:0] 	: rGpioIVtimer3;
+		rGpioIVtimer4	<= qCsrWCke2c ? iSUsiWd[pIVtimerWidth-1:0] 	: rGpioIVtimer4;
 	end
 end
 
 always @*
 begin
-	qCsrAdrs <= {iSUsiWCke, iSUsiAdrs};
+	qCsrWCke00 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
+	qCsrWCke04 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
+	qCsrWCke08 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
+	qCsrWCke0c <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h000c});
+	qCsrWCke10 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0010});
+	qCsrWCke14 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
+	qCsrWCke18 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
+	qCsrWCke1c <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
+	qCsrWCke20 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
+	qCsrWCke24 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
+	qCsrWCke28 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
+	qCsrWCke2c <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
 end
 
 //----------------------------------------------------------
@@ -120,19 +144,19 @@ begin
 	else
 	begin
 		// {{(32 - パラメータ名	){1'b0}}, レジスタ名} -> パラメータ可変に対応し 0 で埋められるように設定
-		case ({qAdrsComp, iSUsiAdrs[7:0]})
-			'h100:		rSUsiRd <= {{(32 - pExLedNumber		){1'b0}}, rGpioEn};
-			'h104:		rSUsiRd <= {{(32 - pExLedFlashMode	){1'b0}}, rGpioFlashMode};
-			'h108:		rSUsiRd <= {{(32 - pPWMDutyWidth	){1'b0}}, rGpioDutyRatio0};
-			'h10c:		rSUsiRd <= {{(32 - pPWMDutyWidth	){1'b0}}, rGpioDutyRatio1};
-			'h110:		rSUsiRd <= {{(32 - pPWMDutyWidth	){1'b0}}, rGpioDutyRatio2};
-			'h114:		rSUsiRd <= {{(32 - pPWMDutyWidth	){1'b0}}, rGpioDutyRatio3};
-			'h118:		rSUsiRd <= {{(32 - pPWMDutyWidth	){1'b0}}, rGpioDutyRatio4};
-			'h11c:		rSUsiRd <= {rGpioIVtimer0};
-			'h120:		rSUsiRd <= {rGpioIVtimer1};
-			'h124:		rSUsiRd <= {rGpioIVtimer2};
-			'h128:		rSUsiRd <= {rGpioIVtimer3};
-			'h12c:		rSUsiRd <= {rGpioIVtimer4};
+		case (iSUsiAdrs[pCsrActiveWidth-1:0])
+			'h00:		rSUsiRd <= {{(32 - pExLedNumber		){1'b0}}, rGpioEn};
+			'h04:		rSUsiRd <= {{(32 - pExLedFlashMode	){1'b0}}, rGpioFlashMode};
+			'h08:		rSUsiRd <= {{(32 - pPWMDutyWidth	){1'b0}}, rGpioDutyRatio0};
+			'h0c:		rSUsiRd <= {{(32 - pPWMDutyWidth	){1'b0}}, rGpioDutyRatio1};
+			'h10:		rSUsiRd <= {{(32 - pPWMDutyWidth	){1'b0}}, rGpioDutyRatio2};
+			'h14:		rSUsiRd <= {{(32 - pPWMDutyWidth	){1'b0}}, rGpioDutyRatio3};
+			'h18:		rSUsiRd <= {{(32 - pPWMDutyWidth	){1'b0}}, rGpioDutyRatio4};
+			'h1c:		rSUsiRd <= {rGpioIVtimer0};
+			'h20:		rSUsiRd <= {rGpioIVtimer1};
+			'h24:		rSUsiRd <= {rGpioIVtimer2};
+			'h28:		rSUsiRd <= {rGpioIVtimer3};
+			'h2c:		rSUsiRd <= {rGpioIVtimer4};
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase
 	end
@@ -144,7 +168,7 @@ end
 
 always @*
 begin
-	qAdrsComp <= {iSUsiAdrs[pBlockAdrsMap + 3'd7:8] == pAdrsMap};
+	qAdrsComp <= {iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1 : pCsrAdrsWidth] == pAdrsMap};
 end
 
 endmodule
