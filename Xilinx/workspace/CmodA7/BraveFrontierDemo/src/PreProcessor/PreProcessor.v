@@ -15,7 +15,7 @@ module PreProcesser #(
     input           iAudioClk,
 	// Internal Port
     output          oMemClk,
-    output          oPixelClk,
+    output          oVideoClk,
     output          oSysClk,
     output          oAudioClk,
     output          oSysRst,        // Active High Sync Reset
@@ -26,7 +26,7 @@ module PreProcesser #(
 //----------------------------------------------------------
 // Clock Generate Block
 //----------------------------------------------------------
-wire wMemClk, wPixelClk, wSysClk, wAudioClk;    assign {oMemClk, oPixelClk, oSysClk, oAudioClk} = {wMemClk, wPixelClk, wSysClk, wAudioClk};
+wire wMemClk, wVideoClk, wSysClk, wAudioClk;    assign {oMemClk, oVideoClk, oSysClk, oAudioClk} = {wMemClk, wVideoClk, wSysClk, wAudioClk};
 wire wSysRst, wAudioRst;                        assign {oSysRst, oAudioRst} = {wSysRst, wAudioRst};
 
 cgbWrapper # (
@@ -38,7 +38,7 @@ cgbWrapper # (
     .oRst       (wSysRst),
     .oAudioRst  (wAudioRst),
     .oMemClk    (wMemClk),
-    .oPixelClk  (wPixelClk),
+    .oVideoClk  (wVideoClk),
     .oSysClk    (wSysClk),
     .oAudioClk  (wAudioClk)
 );

@@ -132,9 +132,9 @@ begin
 		{rVfront,rHfront	}	<= qCsrWCke08 ? {iSUsiWd[pVfrontWidth-1:0],		iSUsiWd[pHfrontWidth-1:0]} 		: {rVfront,rHfront};
 		{rVpulse,rHpulse	}	<= qCsrWCke0c ? {iSUsiWd[pVpulseWidth-1:0],		iSUsiWd[pHpulseWidth-1:0]}		: {rVpulse,rHpulse};
 		//
-		rVtbSystemRst			<= qCsrWCke10 ? iSUsiWd[0:0] : VtbSystemRst;
+		rVtbSystemRst			<= qCsrWCke10 ? iSUsiWd[0:0] : rVtbSystemRst;
 		rVtbVideoRst			<= qCsrWCke10 ? iSUsiWd[1:1] : rVtbVideoRst;
-		rDisplayRst				<= qCsrWCke10 ? iSUsiWd[2:2] : rDisplayRstr;
+		rDisplayRst				<= qCsrWCke10 ? iSUsiWd[2:2] : rDisplayRst;
 		rBlDutyRatio			<= qCsrWCke14 ? iSUsiWd[7:0] : rBlDutyRatio;
 		//
 		rHSyncStart 			<= rHdisplay + rHfront;

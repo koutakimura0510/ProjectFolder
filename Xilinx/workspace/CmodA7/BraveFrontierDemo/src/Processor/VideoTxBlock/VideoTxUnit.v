@@ -6,9 +6,13 @@
 // 
 //----------------------------------------------------------
 module VideoTxUnit #(
-	// Variable
+	// Display Size
     parameter       				pHdisplayWidth	= 11,
-    parameter       				pVdisplayWidth	= 11
+    parameter       				pVdisplayWidth	= 11,
+	// Color Depth ARGB:4444
+	parameter						pColorDepth		= 16,
+	// Dual Clk FIFO Depth
+	parameter						pDualClkFifoDepth = 1024
 )(
 	// External port
 	output [7:4] 					oTftColorR,
@@ -36,7 +40,7 @@ module VideoTxUnit #(
 	input 	[7:0]					iBlDutyRatio,
     // CLK Reset
     input           				iSysClk,
-	input 							iPixelClk,
+	input 							iVideoClk,
     input           				iSysRst
 );
 
@@ -44,23 +48,23 @@ module VideoTxUnit #(
 //-----------------------------------------------------------------------------
 // 1pixel毎の描画データ生成
 //-----------------------------------------------------------------------------
-PixelDotGen #(
+wire [pColorDepth-1:0] wDrawPixel;
+wire wDrawPixelVd;
+reg  qVideoDualFifoFull;
+
+VideoPixelGen #(
 	.pHdisplayWidth		(pHdisplayWidth),
 	.pVdisplayWidth		(pVdisplayWidth),
-	.pColorRGBDepth		(pColorRGBDepth),
-) PIXEL_DOT_GEN (
+	.pColorDepth		(pColorDepth)
+) VIDEO_PIXEL_GEN (
 	.iHdisplay			(iHdisplay),
 	.iVdisplay			(iVdisplay),
-	.oPixel				(oPixel),
-	.oVd				(oVd),
-	.iRst				(iSysRst),
+	.oPixel				(wDrawPixel),
+	.oVd				(wDrawPixelVd),
+	.iRst				(iVtbSystemRst),
+	.iCke				(qVideoDualFifoFull),
 	.iClk				(iSysClk)
 );
-
-
-//-----------------------------------------------------------------------------
-// SystemClk <=> VideoClk Dual Clk FIFO
-//-----------------------------------------------------------------------------
 
 
 //-----------------------------------------------------------------------------
@@ -87,9 +91,55 @@ VideoSyncGen #(
 	.oVSync			(wVSync),
 	.oVde			(wVde),
 	.oFe			(wFe),
-	.iPixelClk		(iPixelClk),
-	.iSysRst		(iSysRst)
+	.iVideoClk		(iVideoClk),
+	.iSysRst		(iVtbVideoRst)
 );
+
+
+//-----------------------------------------------------------------------------
+// SystemClk <=> VideoClk Dual Clk FIFO
+//-----------------------------------------------------------------------------
+localparam lpDualFifoWidth = pColorDepth - (pColorDepth / 4); // Alpha の ビット幅を除いた数値
+//
+wire [lpDualFifoWidth-1:0] 	wVideoDualFifoRd;
+wire 						wVideoDualFifoFull;
+
+VideoDualClkFIFO #(
+	.pBuffDepth		(pDualClkFifoDepth),
+	.pBitWidth		(lpDualFifoWidth)
+) VIDEO_DUAL_CLK_FIFO (
+	.iWd			(wDrawPixel),
+	.iWe			(wDrawPixelVd),
+	.ofull			(wVideoDualFifoFull),
+	.oRd			(wVideoDualFifoRd),
+	.iRe			(wVde),
+	.iRst			(iSysRst),
+	.iSrcClk		(iSysClk),
+	.iDstClk		(iVideoClk)
+);
+
+always @*
+begin
+	qVideoDualFifoFull <= wVideoDualFifoFull;
+end
+//
+// Dual Clk Fifo 経由で 3レイテンシ遅延が発生するため、
+// Sync系統も同様に遅らせる
+reg [2:0] rVideoHSync;
+reg [2:0] rVideoVSync;
+reg [2:0] rVideoVde;
+
+always @(posedge iVideoClk)
+begin
+	if (iVtbVideoRst) 	rVideoHSync <= 3'b111;
+	else 				rVideoHSync <= {rVideoHSync[1:0], wHSync};
+
+	if (iVtbVideoRst) 	rVideoVSync <= 3'b111;
+	else 				rVideoVSync <= {rVideoVSync[1:0], wVSync};
+
+	if (iVtbVideoRst) 	rVideoVde <= 3'b111;
+	else 				rVideoVde <= {rVideoVde[1:0], wVde};
+end
 
 
 //-----------------------------------------------------------------------------
@@ -120,17 +170,14 @@ genvar i;
 generate
 	for (i = 0; i < 4; i = i + 1)
 	begin
-		OBUF TFT_R (.O (oTftColorR[4+i]),	.I (1'b0));
-		OBUF TFT_G (.O (oTftColorG[4+i]),	.I (1'b1));
-		OBUF TFT_B (.O (oTftColorB[4+i]),	.I (1'b0));
-		// OBUF TFT_R (.O (oTftColorR[4+i]),	.I (iPixelData[8+i]));
-		// OBUF TFT_G (.O (oTftColorG[4+i]),	.I (iPixelData[4+i]));
-		// OBUF TFT_B (.O (oTftColorB[4+i]),	.I (iPixelData[0+i]));
+		OBUF TFT_R (.O (oTftColorR[4+i]),	.I (wVideoDualFifoRd[0+i]));
+		OBUF TFT_G (.O (oTftColorG[4+i]),	.I (wVideoDualFifoRd[4+i]));
+		OBUF TFT_B (.O (oTftColorB[4+i]),	.I (wVideoDualFifoRd[8+i]));
 	end
-	OBUF TFT_DCLK 	(.O (oTftDclk),			.I (iPixelClk));
-	OBUF TFT_HSync 	(.O (oTftHSync),		.I (wHSync));
-	OBUF TFT_VSync 	(.O (oTftVSync),		.I (wVSync));
-	OBUF TFT_VDE 	(.O (oTftDe),			.I (wVde));
+	OBUF TFT_DCLK 	(.O (oTftDclk),			.I (iVideoClk));
+	OBUF TFT_HSync 	(.O (oTftHSync),		.I (rVideoHSync[2]));
+	OBUF TFT_VSync 	(.O (oTftVSync),		.I (rVideoVSync[2]));
+	OBUF TFT_VDE 	(.O (oTftDe),			.I (rVideoVde[2]));
 	OBUF TFT_BL 	(.O (oTftBackLight),	.I (wTftBackLight));
 	OBUF TFT_RST 	(.O (oTftRst),			.I (iDisplayRst));
 endgenerate

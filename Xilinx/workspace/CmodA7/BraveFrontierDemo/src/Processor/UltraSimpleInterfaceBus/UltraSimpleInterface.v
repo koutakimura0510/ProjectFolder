@@ -21,7 +21,7 @@ module UltraSimpleInterface #(
 	parameter [pBlockAdrsMap-1:0]		pSPIAdrsMap				= 'h2,
 	parameter [pBlockAdrsMap-1:0]		pI2CAdrsMap				= 'h3,
 	parameter [pBlockAdrsMap-1:0]		pVTBAdrsMap				= 'h4,
-	parameter [pBlockAdrsMap-1:0]		pAGBAdrsMap				= 'h5,
+	parameter [pBlockAdrsMap-1:0]		pATBAdrsMap				= 'h5,
 	parameter [pBlockAdrsMap-1:0]		pRAMAdrsMap				= 'h6,
 	parameter 							pCsrAdrsWidth			= 8,
 	// Not variable parameter
@@ -63,8 +63,8 @@ localparam lpI2CAdrsLsb 	= pUsiBusWidth   * (pI2CAdrsMap - 1);
 localparam lpPGBAdrsMsb 	= (pUsiBusWidth  * pVTBAdrsMap) - 1;
 localparam lpPGBAdrsLsb 	= pUsiBusWidth   * (pVTBAdrsMap - 1);
 //
-localparam lpAGBAdrsMsb 	= (pUsiBusWidth  * pAGBAdrsMap) - 1;
-localparam lpAGBAdrsLsb 	= pUsiBusWidth   * (pAGBAdrsMap - 1);
+localparam lpAGBAdrsMsb 	= (pUsiBusWidth  * pATBAdrsMap) - 1;
+localparam lpAGBAdrsLsb 	= pUsiBusWidth   * (pATBAdrsMap - 1);
 //
 localparam lpRAMAdrsMsb 	= (pUsiBusWidth 	* pRAMAdrsMap) - 1;
 localparam lpRAMAdrsLsb 	= pUsiBusWidth 	* (pRAMAdrsMap - 1);
@@ -103,7 +103,7 @@ begin
 		pSPIAdrsMap:	rSUsiRd <= iSUsiRd[lpSPIAdrsMsb		:	lpSPIAdrsLsb];
 		pI2CAdrsMap:	rSUsiRd <= iSUsiRd[lpI2CAdrsMsb		:	lpI2CAdrsLsb];
 		pVTBAdrsMap:	rSUsiRd <= iSUsiRd[lpPGBAdrsMsb		:	lpPGBAdrsLsb];
-		pAGBAdrsMap:	rSUsiRd <= iSUsiRd[lpAGBAdrsMsb		:	lpAGBAdrsLsb];
+		pATBAdrsMap:	rSUsiRd <= iSUsiRd[lpAGBAdrsMsb		:	lpAGBAdrsLsb];
 		pRAMAdrsMap:	rSUsiRd <= iSUsiRd[lpRAMAdrsMsb		:	lpRAMAdrsLsb];
 		default:		rSUsiRd <= 'h1234_5678;		// アドレスの判定バグを分かりやすくするためのデータ
 	endcase

@@ -10,6 +10,7 @@ module AudioTxBlock #(
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h05,
 	parameter						pBusAdrsBit		= 32,
 	parameter 						pCsrAdrsWidth 	= 8,
+	parameter						pCsrActiveWidth = 8
 )(
 	// External Port
 	output							oAudioMclk,

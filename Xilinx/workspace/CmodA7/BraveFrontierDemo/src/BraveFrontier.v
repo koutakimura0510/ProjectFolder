@@ -68,7 +68,7 @@ module BraveFrontier #(
 //----------------------------------------------------------
 // System Clk / Display Timing Clk Generate
 //----------------------------------------------------------
-wire wMemClk, wPixelClk, wSysClk, wAudioClk;
+wire wMemClk, wVideoClk, wSysClk, wAudioClk;
 wire wSysRst, wAudioRst;
 wire wPreVde, wPreFe, wPreFvde, wPreHSync, wPreVSync;
 
@@ -85,7 +85,7 @@ PreProcesser #(
     // Internal port
     //----------------------------------------------------------
     // CLK, Reset Port
-    .oMemClk        (wMemClk),          .oPixelClk      (wPixelClk),
+    .oMemClk        (wMemClk),          .oVideoClk      (wVideoClk),
     .oSysClk        (wSysClk),          .oAudioClk      (wAudioClk),
     .oSysRst        (wSysRst),          .oAudioRst      (wAudioRst)
 );
@@ -150,7 +150,7 @@ Processer # (
     // Internal Port
     //----------------------------------------------------------
     // Clk Reset Port
-    .iPixelClk      (wPixelClk),     .iMemClk        (wMemClk),
+    .iVideoClk      (wVideoClk),     .iMemClk        (wMemClk),
     .iSysClk        (wSysClk),       .iAudioClk      (wAudioClk),
     .iSysRst        (wSysRst),       .iAudioRst      (wAudioRst)
 );

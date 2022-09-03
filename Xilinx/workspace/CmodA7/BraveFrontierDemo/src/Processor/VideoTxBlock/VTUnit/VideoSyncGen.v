@@ -6,6 +6,7 @@
 // 
 //----------------------------------------------------------
 module VideoSyncGen #(
+	// Display Size
     parameter       				pHdisplayWidth	= 11,
     parameter       				pVdisplayWidth	= 11
 )(
@@ -25,7 +26,7 @@ module VideoSyncGen #(
     output          				oVde,				// video data enable 描画エリア時High
     output          				oFe,				// frame end
 	//
-	input 							iPixelClk,
+	input 							iVideoClk,
     input           				iSysRst
 );
 
@@ -37,15 +38,15 @@ reg rHSync;             		assign oHSync = rHSync;
 reg [pHdisplayWidth:0] 	rHpos;
 reg qHMaxCntCke, qHSync;
 
-always @(posedge iPixelClk)
+always @(posedge iVideoClk)
 begin 
     if (iSysRst)        	rHpos <= {(pHdisplayWidth+1){1'b0}};
     else if (qHMaxCntCke)  	rHpos <= {(pHdisplayWidth+1){1'b0}};
     else                	rHpos <= rHpos + 1'b1;
 
-    if (iSysRst)        	rHSync <= 1'b0;
-	else if (qHSync)		rHSync <= 1'b1;
-    else                	rHSync <= 1'b0;
+    if (iSysRst)        	rHSync <= 1'b1;
+	else if (qHSync)		rHSync <= 1'b0;
+    else                	rHSync <= 1'b1;
 end
 
 always @*
@@ -62,7 +63,7 @@ reg rVSync;		                assign oVSync   = rVSync;
 reg [pVdisplayWidth:0] rVpos;
 reg qVMaxCntCke, qVSync;
 
-always @(posedge iPixelClk) 
+always @(posedge iVideoClk) 
 begin
 	casex ({iSysRst, qVMaxCntCke, qHMaxCntCke})
 		3'b1xx:			rVpos <= {(pVdisplayWidth+1){1'b0}};
@@ -71,9 +72,9 @@ begin
 		default: 		rVpos <= rVpos;
 	endcase
 
-    if (iSysRst)		rVSync <= 1'b0;
-	else if (qVSync)	rVSync <= 1'b1;
-    else                rVSync <= 1'b0;
+    if (iSysRst)		rVSync <= 1'b1;
+	else if (qVSync)	rVSync <= 1'b0;
+    else                rVSync <= 1'b1;
 end
 
 always @*
@@ -89,7 +90,7 @@ end
 reg rVde, rFe;					assign {oVde,oFe} = {rVde,rFe};
 reg qVde, qFe;
 
-always @(posedge iPixelClk) 
+always @(posedge iVideoClk) 
 begin
     if (iSysRst)           	rVde <= 1'b0;
 	else if (qVde)			rVde <= 1'b1;

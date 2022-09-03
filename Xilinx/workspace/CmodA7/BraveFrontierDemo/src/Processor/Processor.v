@@ -58,7 +58,7 @@ module Processer #(
     // Internal Port
     // CLK Reset
     input           iSysClk,
-    input           iPixelClk,
+    input           iVideoClk,
     input           iMemClk,
     input           iAudioClk,
     input           iSysRst,
@@ -95,7 +95,7 @@ localparam [lpBlockAdrsMap-1:0]
 	lpSPIAdrsMap	= 'h02,
 	lpI2CAdrsMap	= 'h03,
 	lpVTBAdrsMap	= 'h04,
-	lpAGBAdrsMap	= 'h05,
+	lpATBAdrsMap	= 'h05,
 	lpRAMAdrsMap 	= 'h06;
 
 
@@ -114,7 +114,7 @@ localparam
 	lpSPICsrActiveWidth  = 8,
 	lpI2CCsrActiveWidth  = 8,
 	lpVTBCsrActiveWidth  = 16,		// 2022-09-03 現在 VTB だけ 16bit幅で使用している
-	lpAGBCsrActiveWidth  = 8,
+	lpATBCsrActiveWidth  = 8,
 	lpRAMCsrActiveWidth  = 8;
 
 
@@ -216,7 +216,7 @@ SPIBlock #(
 	.pAdrsMap	 				(lpSPIAdrsMap),
 	.pBusAdrsBit				(lpBusAdrsBit),
 	.pCsrAdrsWidth				(lpCsrAdrsWidth),
-	.pCsrActiveWidth			(lpSPICsrActiveWidth)
+	.pCsrActiveWidth			(lpSPICsrActiveWidth),
 	.pBusBlockConnect			(lpBusBlockConnect),
 	.pUfiBusWidth				(lpUfiBusWidth)
 ) SPI_BLOCK (
@@ -341,7 +341,7 @@ VideoTxBlock #(
 	.iSUsiWCke			(qSUsiWCkeVtb),
 	// CLK Rst
 	.iSysRst			(iSysRst),
-	.iPixelClk 			(iPixelClk),
+	.iVideoClk 			(iVideoClk),
 	.iSysClk			(iSysClk)
 );
 
@@ -359,7 +359,7 @@ reg  					qSUsiWCkeAudio;
 
 AudioTxBlock #(
 	.pBlockAdrsMap		(lpBlockAdrsMap),
-	.pAdrsMap	 		(lpAGBAdrsMap),
+	.pAdrsMap	 		(lpATBAdrsMap),
 	.pBusAdrsBit		(lpBusAdrsBit),
 	.pCsrAdrsWidth		(lpCsrAdrsWidth),
 	.pCsrActiveWidth	(lpATBCsrActiveWidth)
@@ -411,9 +411,9 @@ UltraSimpleInterface #(
 	.pSPIAdrsMap		(lpSPIAdrsMap),
 	.pI2CAdrsMap		(lpI2CAdrsMap),
 	.pVTBAdrsMap		(lpVTBAdrsMap),
-	.pAGBAdrsMap		(lpAGBAdrsMap),
+	.pATBAdrsMap		(lpATBAdrsMap),
 	.pRAMAdrsMap		(lpRAMAdrsMap),
-	.pCsrAdrsWidth		(pCsrAdrsWidth)
+	.pCsrAdrsWidth		(lpCsrAdrsWidth)
 ) USI_BUS (
 	// Slave to Master
 	.oMUsiRd			(wMUsiRd),

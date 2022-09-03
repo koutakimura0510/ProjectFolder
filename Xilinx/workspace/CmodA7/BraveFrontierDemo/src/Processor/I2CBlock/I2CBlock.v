@@ -7,8 +7,8 @@
 //----------------------------------------------------------
 module I2CBlock #(
 	parameter 						pBlockAdrsMap 	= 8,
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h04,	
-	parameter						pBusAdrsBit		= 16
+	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h04,
+	parameter						pBusAdrsBit		= 16,
 	parameter 						pCsrAdrsWidth 	= 8,
 	parameter 						pCsrActiveWidth	= 8
 )(

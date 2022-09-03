@@ -21,6 +21,10 @@ module VideoTxBlock #(
     parameter       				pVfront			= 12,
     parameter       				pVback			= 4,
     parameter       				pVpulse			= 10,
+	// Color Depth
+	parameter						pColorDepth		= 16,
+	// Dual Clk FIFO Depth
+	parameter						pDualClkFifoDepth = 1024,
 	// Register Width
 	parameter 						pHdisplayWidth	= 11,
 	parameter 						pHfrontWidth	= 7,
@@ -51,7 +55,7 @@ module VideoTxBlock #(
 	// CLK Rst
 	input  							iSysRst,
 	input 							iSysClk,
-	input 							iPixelClk
+	input 							iVideoClk
 );
 
 
@@ -74,7 +78,9 @@ wire [7:0]					wBlDutyRatioCsr;
 
 VideoTxUnit #(
     .pHdisplayWidth		(pHdisplayWidth),
-    .pVdisplayWidth		(pVdisplayWidth)
+    .pVdisplayWidth		(pVdisplayWidth),
+	.pColorDepth		(pColorDepth),
+	.pDualClkFifoDepth	(pDualClkFifoDepth)
 ) VIDEO_TX_UNIT (
 	.oTftColorR			(oTftColorR),
 	.oTftColorG			(oTftColorG),
@@ -101,7 +107,7 @@ VideoTxUnit #(
 	.iBlDutyRatio		(wBlDutyRatioCsr),
 	//
 	.iSysClk			(iSysClk),
-	.iPixelClk			(iPixelClk),
+	.iVideoClk			(iVideoClk),
 	.iSysRst			(iSysRst)
 );
 

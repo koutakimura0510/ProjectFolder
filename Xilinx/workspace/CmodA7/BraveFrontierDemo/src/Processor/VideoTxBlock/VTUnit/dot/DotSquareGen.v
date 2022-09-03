@@ -18,7 +18,7 @@ module DotSquareGen #(
     input  [pVdisplayWidth-1:0]     iDye,		// 描画終了 Y座標 Draw Y End
     input  [pColorDepth-1:0]		iPixel,		// 描画色
     output [pColorDepth-1:0]    	oPixel,		// 出力ピクセルデータ
-    output                      	oVd 		// 有効データ出力時High
+    output                      	oVd, 		// 有効データ出力時High
 	// Clk rst
     input                       	iRst,		// Active High
     input                       	iClk		// 

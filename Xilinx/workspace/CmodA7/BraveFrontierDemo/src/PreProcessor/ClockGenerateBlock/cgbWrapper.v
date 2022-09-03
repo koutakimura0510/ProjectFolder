@@ -36,7 +36,7 @@ module cgbWrapper #(
     output          oRst,           // Active High
     output          oAudioRst,
     output          oMemClk,
-    output          oPixelClk,
+    output          oVideoClk,
     output          oSysClk,
     output          oAudioClk
 );
@@ -153,11 +153,11 @@ generate
         // Buffer経由して使用
         //---------------------------------------------------------------------------
         wire wMemClk;                      assign oMemClk   = wMemClk;
-        wire wPixelClk;                    assign oPixelClk = wPixelClk;
+        wire wVideoClk;                    assign oVideoClk = wVideoClk;
         wire wSysClk;                      assign oSysClk   = wSysClk;
 
         BUFG BUFG_CLKO_0 (
-            .O (wPixelClk),
+            .O (wVideoClk),
             .I (wClkOut[2])
         );
 
