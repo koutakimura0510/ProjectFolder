@@ -18,7 +18,8 @@ module VideoDualClkFIFO #(
     output [pBitWidth-1:0]  oRd,		// Read Data
     input                   iRe,		// Read Enable
 	// clk rst
-    input                   iRst,		// Active High
+    input                   iSrcRst,	// Active High
+    input                   iDstRst,	// Active High
     input                   iSrcClk,	// Source side clk
     input                   iDstClk		// Dest side clk
 );
@@ -46,9 +47,10 @@ fifoDualControllerGray # (
     .oRVD           (wRVd),
     .oFLL           (ofull),
     .oEMP           (),
-    .iRst           (iRst),
-    .iClkA          (iSrcClk),
-    .iClkB          (iDstClk)
+    .iSrcRst        (iSrcRst),
+    .iDstRst        (iDstRst),
+    .iSrcClk        (iSrcClk),
+    .iDstClk        (iDstClk)
 );
 
 initial
@@ -59,7 +61,7 @@ end
 always @(posedge iDstClk)
 begin
     if (wRVd) 	rRd <= wRd;
-    else		rRd <= rRd;
+    else		rRd <= {pBitWidth{1'b0}};	// 読み込みタイミングエラー用に 黒色指定
 end
 
 endmodule

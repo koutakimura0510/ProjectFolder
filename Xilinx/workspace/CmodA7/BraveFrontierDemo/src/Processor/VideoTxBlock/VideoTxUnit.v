@@ -41,14 +41,21 @@ module VideoTxUnit #(
     // CLK Reset
     input           				iSysClk,
 	input 							iVideoClk,
-    input           				iSysRst
+    input           				iSysRst,
+	// debug
+	output 							oFe
 );
+
+//-----------------------------------------------------------------------------
+// // Alpha の ビット幅を除いた数値
+//-----------------------------------------------------------------------------
+localparam lpDualFifoWidth = pColorDepth - (pColorDepth / 4);
 
 
 //-----------------------------------------------------------------------------
 // 1pixel毎の描画データ生成
 //-----------------------------------------------------------------------------
-wire [pColorDepth-1:0] wDrawPixel;
+wire [lpDualFifoWidth-1:0] wDrawPixel;
 wire wDrawPixelVd;
 reg  qVideoDualFifoFull;
 
@@ -73,7 +80,7 @@ VideoPixelGen #(
 wire wHSync;
 wire wVSync;
 wire wVde;
-wire wFe;
+wire wFe;							assign oFe = wFe;
 
 VideoSyncGen #(
 	.pHdisplayWidth	(pHdisplayWidth),
@@ -99,7 +106,6 @@ VideoSyncGen #(
 //-----------------------------------------------------------------------------
 // SystemClk <=> VideoClk Dual Clk FIFO
 //-----------------------------------------------------------------------------
-localparam lpDualFifoWidth = pColorDepth - (pColorDepth / 4); // Alpha の ビット幅を除いた数値
 //
 wire [lpDualFifoWidth-1:0] 	wVideoDualFifoRd;
 wire 						wVideoDualFifoFull;
@@ -113,32 +119,35 @@ VideoDualClkFIFO #(
 	.ofull			(wVideoDualFifoFull),
 	.oRd			(wVideoDualFifoRd),
 	.iRe			(wVde),
-	.iRst			(iSysRst),
+	.iSrcRst		(iVtbSystemRst),
+	.iDstRst		(iVtbVideoRst),
 	.iSrcClk		(iSysClk),
 	.iDstClk		(iVideoClk)
 );
 
 always @*
 begin
-	qVideoDualFifoFull <= wVideoDualFifoFull;
+	qVideoDualFifoFull <= (~wVideoDualFifoFull);
 end
 //
 // Dual Clk Fifo 経由で 3レイテンシ遅延が発生するため、
 // Sync系統も同様に遅らせる
-reg [2:0] rVideoHSync;
-reg [2:0] rVideoVSync;
-reg [2:0] rVideoVde;
+localparam lpSyncLatancy = 4;
+
+reg [lpSyncLatancy-1:0] rVideoHSync;
+reg [lpSyncLatancy-1:0] rVideoVSync;
+reg [lpSyncLatancy-1:0] rVideoVde;
 
 always @(posedge iVideoClk)
 begin
-	if (iVtbVideoRst) 	rVideoHSync <= 3'b111;
-	else 				rVideoHSync <= {rVideoHSync[1:0], wHSync};
+	if (iVtbVideoRst) 	rVideoHSync <= {lpSyncLatancy{1'b0}};
+	else 				rVideoHSync <= {rVideoHSync[lpSyncLatancy-2:0], wHSync};
 
-	if (iVtbVideoRst) 	rVideoVSync <= 3'b111;
-	else 				rVideoVSync <= {rVideoVSync[1:0], wVSync};
+	if (iVtbVideoRst) 	rVideoVSync <= {lpSyncLatancy{1'b0}};
+	else 				rVideoVSync <= {rVideoVSync[lpSyncLatancy-2:0], wVSync};
 
-	if (iVtbVideoRst) 	rVideoVde <= 3'b111;
-	else 				rVideoVde <= {rVideoVde[1:0], wVde};
+	if (iVtbVideoRst) 	rVideoVde <= {lpSyncLatancy{1'b0}};
+	else 				rVideoVde <= {rVideoVde[lpSyncLatancy-2:0], wVde};
 end
 
 
@@ -170,14 +179,14 @@ genvar i;
 generate
 	for (i = 0; i < 4; i = i + 1)
 	begin
-		OBUF TFT_R (.O (oTftColorR[4+i]),	.I (wVideoDualFifoRd[0+i]));
+		OBUF TFT_R (.O (oTftColorR[4+i]),	.I (wVideoDualFifoRd[8+i]));
 		OBUF TFT_G (.O (oTftColorG[4+i]),	.I (wVideoDualFifoRd[4+i]));
-		OBUF TFT_B (.O (oTftColorB[4+i]),	.I (wVideoDualFifoRd[8+i]));
+		OBUF TFT_B (.O (oTftColorB[4+i]),	.I (wVideoDualFifoRd[0+i]));
 	end
 	OBUF TFT_DCLK 	(.O (oTftDclk),			.I (iVideoClk));
-	OBUF TFT_HSync 	(.O (oTftHSync),		.I (rVideoHSync[2]));
-	OBUF TFT_VSync 	(.O (oTftVSync),		.I (rVideoVSync[2]));
-	OBUF TFT_VDE 	(.O (oTftDe),			.I (rVideoVde[2]));
+	OBUF TFT_HSync 	(.O (oTftHSync),		.I (rVideoHSync[lpSyncLatancy-1]));
+	OBUF TFT_VSync 	(.O (oTftVSync),		.I (rVideoVSync[lpSyncLatancy-1]));
+	OBUF TFT_VDE 	(.O (oTftDe),			.I (rVideoVde[lpSyncLatancy-1]));
 	OBUF TFT_BL 	(.O (oTftBackLight),	.I (wTftBackLight));
 	OBUF TFT_RST 	(.O (oTftRst),			.I (iDisplayRst));
 endgenerate

@@ -77,10 +77,10 @@ end
 
 always @*
 begin
-	qCsrWCke00 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
-	qCsrWCke04 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
-	qCsrWCke08 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
-	qCsrWCke0c <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h000c});
+	qCsrWCke00 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
+	qCsrWCke04 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
+	qCsrWCke08 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
+	qCsrWCke0c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h000c});
 end
 
 //----------------------------------------------------------

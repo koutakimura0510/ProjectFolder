@@ -10,7 +10,7 @@
 //----------------------------------------------------------
 module VideoTxCsr #(
 	parameter 						pBlockAdrsMap 	= 8,
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h05,
+	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h04,
 	parameter						pBusAdrsBit		= 16,
 	parameter 						pCsrAdrsWidth   = 16,
 	parameter						pCsrActiveWidth = 16,
@@ -120,10 +120,10 @@ begin
 		rVSyncStart		<= lpVSyncStart;
 		rVSyncEnd		<= lpVSyncEnd;
 		rVSyncMax		<= lpVSyncMax;
-		rVtbSystemRst	<= 1'b1;
-		rVtbVideoRst	<= 1'b1;
-		rDisplayRst		<= 1'b0;
-		rBlDutyRatio	<= 8'd0;
+		rVtbSystemRst	<= 1'b1;		// Active High
+		rVtbVideoRst	<= 1'b1;		// Active High
+		rDisplayRst		<= 1'b1;		// Active Low
+		rBlDutyRatio	<= 8'd0;		// 0xff Max Flash
 	end
 	else
 	begin
@@ -148,12 +148,12 @@ end
 
 always @*
 begin
-	qCsrWCke00 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
-	qCsrWCke04 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
-	qCsrWCke08 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
-	qCsrWCke0c <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h000c});
-	qCsrWCke10 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0010});
-	qCsrWCke14 <= iSUsiWCke & (iSUsiAdrs[pAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
+	qCsrWCke00 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
+	qCsrWCke04 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
+	qCsrWCke08 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
+	qCsrWCke0c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h000c});
+	qCsrWCke10 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0010});
+	qCsrWCke14 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
 end
 
 //----------------------------------------------------------
@@ -181,9 +181,9 @@ begin
 			'h0010:		rSUsiRd	<= {{(32 - 3				){1'b0}}, rDisplayRst,rVtbVideoRst,rVtbSystemRst	};
 			'h0014:		rSUsiRd	<= {{(32 - 8				){1'b0}}, rBlDutyRatio	};
 			//
-			'h0080:		rSUsiRd	<= {{(16 - pVdisplayWidth +1){1'b0}}, rVSyncStart,	{(16 - pHdisplayWidth +1){1'b0}}, rHSyncStart	};
-			'h0084:		rSUsiRd	<= {{(16 - pVdisplayWidth +1){1'b0}}, rVSyncEnd,	{(16 - pHdisplayWidth +1){1'b0}}, rHSyncEnd		};
-			'h0088:		rSUsiRd	<= {{(16 - pVdisplayWidth +1){1'b0}}, rVSyncMax,	{(16 - pHdisplayWidth +1){1'b0}}, rHSyncMax		};
+			'h0080:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncStart,{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncStart		};
+			'h0084:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncEnd,	{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncEnd		};
+			'h0088:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncMax,	{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncMax		};
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase
 	end

@@ -21,6 +21,7 @@ module DotSquareGen #(
     output                      	oVd, 		// 有効データ出力時High
 	// Clk rst
     input                       	iRst,		// Active High
+	input 							iCke,
     input                       	iClk		// 
 );
 
@@ -35,45 +36,28 @@ begin
     rPixel <= iPixel;
 end
 
+
 //----------------------------------------------------------
-// Stage 1
 // 選択範囲内時 CKE 発行
 //----------------------------------------------------------
-reg [3:0] rCke;
-reg [3:0] qCke;
-
-always @(posedge iClk)
-begin
-    if (iRst)   rCke <= 4'd0;
-    else        rCke <= qCke;
-end
-
-always @*
-begin
-    qCke[0] <= (iDxs  <= iHpos);
-    qCke[1] <= (iHpos <= iDxe);
-    qCke[2] <= (iDys  <= iVpos);
-    qCke[3] <= (iVpos <= iDye);
-end
-
-//----------------------------------------------------------
-// Stage 2
-// 組み合わせ回路で上記の CKE 回路で 1clk で処理をしてもよいが、
-// 後々に解像度が上がった時の配線遅延対策のため、1段レジスタ処理にしている
-//----------------------------------------------------------
 reg rVd;								assign oVd = rVd;
-reg qVd;
+reg qCke;
+reg [3:0] qPosMatch;
 
 always @(posedge iClk)
 begin
-    if (iRst)   	rVd <= 1'b0;
-	else if (qVd)	rVd <= 1'b1;
-    else        	rVd <= 1'b0;
+    if (iRst)   	rVd <= 1'd0;
+	else if (iCke)	rVd <= qCke;
+    else        	rVd <= 1'd0;
 end
 
 always @*
 begin
-    qVd <= &rCke;
+    qPosMatch[0] <= (iDxs  <= iHpos);
+    qPosMatch[1] <= (iHpos <= iDxe);
+    qPosMatch[2] <= (iDys  <= iVpos);
+    qPosMatch[3] <= (iVpos <= iDye);
+	qCke <= &(qPosMatch);
 end
 
 endmodule

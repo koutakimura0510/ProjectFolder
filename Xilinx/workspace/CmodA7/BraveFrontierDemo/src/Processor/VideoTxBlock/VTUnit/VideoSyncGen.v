@@ -103,7 +103,7 @@ end
 
 always @*
 begin
-    qVde    <= (rHpos  < iHdisplay) && (rVpos  < iVdisplay);
+    qVde    <= (rHpos  < iHdisplay) && (rVpos  < (iVdisplay-1'b1));
     qFe     <= (rHpos == iHdisplay) && (rVpos == iVdisplay);
 end
 

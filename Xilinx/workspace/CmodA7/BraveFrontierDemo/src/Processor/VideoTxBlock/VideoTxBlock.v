@@ -8,7 +8,7 @@
 module VideoTxBlock #(
 	// variable
 	parameter 						pBlockAdrsMap 	= 8,
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h05,
+	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h04,
 	parameter						pBusAdrsBit		= 16,
 	parameter 						pCsrAdrsWidth   = 16,
 	parameter						pCsrActiveWidth = 16,
@@ -108,7 +108,9 @@ VideoTxUnit #(
 	//
 	.iSysClk			(iSysClk),
 	.iVideoClk			(iVideoClk),
-	.iSysRst			(iSysRst)
+	.iSysRst			(iSysRst),
+	// debug
+	.oFe 				()
 );
 
 

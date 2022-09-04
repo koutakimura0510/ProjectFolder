@@ -10,13 +10,13 @@ module userFifoDual #(
     parameter pBitWidth  = 32,     // bitサイズ
     parameter pAddrWidth = 16      // addr size
 )(
-    input                      iClkA,   // write side
-    input                      iClkB,   // read side
-    input   [pBitWidth-1:0]    iWD,     // write data
-    input   [pAddrWidth-1:0]   iWA,     // write addr
-    input                      iWE,     // write enable
-    output  [pBitWidth-1:0]    oRD,     // read data
-    input   [pAddrWidth-1:0]   iRA      // read address
+    input   [pBitWidth-1:0]    iWD,		// write data
+    input   [pAddrWidth-1:0]   iWA,		// write addr
+    input                      iWE,		// write enable
+    output  [pBitWidth-1:0]    oRD,		// read data
+    input   [pAddrWidth-1:0]   iRA,		// read address
+    input                      iSrcClk, // write side
+    input                      iDstClk  // read side
 );
 
 localparam [pAddrWidth-1:0] pDepth = pBuffDepth - 1;
@@ -26,13 +26,13 @@ reg [pBitWidth-1:0] rd;     assign oRD = rd;
 // assign oRD = fifo[iRA];
 
 // write side
-always @(posedge iClkA)
+always @(posedge iSrcClk)
 begin
     if (iWE) fifo[iWA] <= iWD;
 end
 
 // read side
-always @(posedge iClkB)
+always @(posedge iDstClk)
 begin
     rd <= fifo[iRA];
 end

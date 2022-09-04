@@ -10,7 +10,9 @@ module VideoPixelGen #(
     parameter       				pHdisplayWidth	= 11,
     parameter       				pVdisplayWidth	= 11,
 	// Color Depth
-	parameter						pColorDepth		= 16
+	parameter						pColorDepth		= 16,
+	// non valiable
+	parameter						pOutColorDepth	= pColorDepth - (pColorDepth / 4) // alpha値を除いたbit幅
 )(
 	// Internal Port
 	// Ufi
@@ -18,16 +20,14 @@ module VideoPixelGen #(
 	input	[pHdisplayWidth-1:0]	iHdisplay,
 	input	[pVdisplayWidth-1:0]	iVdisplay,
 	//
-	output	[pColorDepth-1:0]		oPixel,
+	output	[pOutColorDepth-1:0]	oPixel,
     output                       	oVd,
-	// output 							o
     // CLK Reset
     input           				iRst,
 	input 							iCke,
     input           				iClk
 );
 
-assign oPixel = 16'h00f0;
 
 //-----------------------------------------------------------------------------
 // Csr レジスタ入力値を配線遅延など考慮して一度レジスタで受信する
@@ -83,11 +83,9 @@ PixelDrawPosition #(
 // 本来はメモリからバス経由で描画データを受信して四角形を生成するが、
 // まだそこまでいっていないため、レジスタ経由にしている
 //-----------------------------------------------------------------------------
-wire [pColorDepth-1:0] 	wDotSquare;				assign oPixel = wDotSquare;
-wire 					wPixelVd;				assign oVd 	  = wPixelVd;
+wire [pColorDepth-1:0] 	wDotSquare;
+wire 					wPixelVd;
 
-
-// generate
 DotSquareGen #(
 	.pHdisplayWidth		(pHdisplayWidth),
 	.pVdisplayWidth		(pVdisplayWidth),
@@ -95,14 +93,40 @@ DotSquareGen #(
 ) DOT_SQUARE_GEN (
 	.iHpos				(wPixelDrawHpos),
 	.iVpos				(wPixelDrawVpos),
-	.iDxs				(0),
+	.iDxs				(1),
 	.iDxe				(32),
-	.iDys				(0),
+	.iDys				(1),
 	.iDye				(32),
 	.iPixel				(16'h0f00),
 	.oPixel				(wDotSquare),
-	.oVd				(wPixelVd)
+	.oVd				(wPixelVd),
+	.iRst				(iRst),
+	.iCke				(iCke),
+	.iClk				(iClk)
 );
 
+
+//-----------------------------------------------------------------------------
+// 
+//-----------------------------------------------------------------------------
+reg [pOutColorDepth-1:0] rPixel;		assign oPixel = rPixel;
+wire wVd;								assign oVd 	  = wVd;
+
+always @(posedge iClk)
+begin
+	if (wPixelVd)	rPixel <= wDotSquare[pOutColorDepth-1:0];
+	else 			rPixel <= {pOutColorDepth{1'b1}};
+end
+
+SftReg #(
+	.pBitWidth		(1),
+	.pSftRegDepth	(1),
+	.pLutRam		("no")
+) COLOR_SFT_REG (
+	.iD				(iCke),
+	.oQ				(wVd),
+	.iRst			(iRst),
+	.iClk			(iClk)
+);
 
 endmodule
