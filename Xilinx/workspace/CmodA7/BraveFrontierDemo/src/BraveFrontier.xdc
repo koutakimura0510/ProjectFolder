@@ -41,10 +41,13 @@ create_clock -add -name iOscAudioClk -period 83.33 -waveform {0 41.66} [get_port
 #-------------------------------------------------------------------------------
 # FPGA PLL MMCM
 #-------------------------------------------------------------------------------
-create_generated_clock -name VideoClk [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT0];
+create_generated_clock -name SysClk   [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT0];
 create_generated_clock -name MemClk   [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT1];
-create_generated_clock -name SysClk   [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT2];
+create_generated_clock -name VideoClk [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT2];
+create_generated_clock -name AudioClk [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT3];
 # create_generated_clock -name AudioClk [get_pins PREPROCESSER/CGB/PLLE2_ADV_CLK_GEN/CLKOUT0]
+# set_false_path -from [PRE_PROCESSER/CGB/rRst_reg] -to [PROCESSER/AUDIO_TX_BLOCK/AudioTxUnit/AudioToneIndex/rDecIndex_reg[*]]
+# set_false_path -from [PRE_PROCESSER/CGB/rRst_reg] -to [PROCESSER/AUDIO_TX_BLOCK/AudioTxUnit/AudioToneIndex/rIntIndex_reg[*]]
 
 #-------------------------------------------------------------------------------
 # 手動配置

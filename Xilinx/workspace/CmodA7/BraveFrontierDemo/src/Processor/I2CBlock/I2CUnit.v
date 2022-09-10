@@ -30,12 +30,12 @@ wire wDivCke;
 CkeGenerator #(
 	.pDivReg	("yes"),
 	.pDivWidth	(pI2CDivClk)
-) I2C_CKE_GEN (
+) I2CCkeGen (
 	.iDiv		(iI2CDiv),
 	.iCke		(iI2CEn),
 	.oCke		(wDivCke),
-	.iSysClk	(iSysClk),
-	.iSysRst	(iSysRst)
+	.iClk		(iSysClk),
+	.iRst		(iSysRst)
 );
 
 
@@ -50,7 +50,7 @@ wire 		wByteVd;
 wire [7:0] 	wSdaByte;
 wire 		wI2CEnMux;
 
-I2CMasterMux I2C_MASTER_MUX (
+I2CMasterMux I2CMasterMux (
 	.oI2CSeqComp	(oI2CSeqComp),
 	.oI2CGetKeyPad	(oI2CGetKeyPad),
 	.oTriState		(wTriState),
@@ -69,7 +69,7 @@ I2CMasterMux I2C_MASTER_MUX (
 //----------------------------------------------------------
 // Master I2C 通信信号生成
 //----------------------------------------------------------
-I2CMaster I2C_MASTER (
+I2CMaster I2CMaster (
 	.oI2CScl		(oI2CScl),
 	.ioI2CSda		(ioI2CSda),
 	.iDivCke		(wDivCke),

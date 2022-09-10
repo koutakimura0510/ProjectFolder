@@ -16,8 +16,8 @@ module CkeGenerator #(
 	input 					iCke,		// レジスタ入力使用時 Cke制御を行う
     output  				oCke,
 	// Clk Reset
-    input   				iSysClk, 
-    input   				iSysRst
+    input   				iRst,
+    input   				iClk
 );
 
 
@@ -33,9 +33,9 @@ generate
 		reg [lpCtuCNTBits-1:0] rTmpCount;
 		reg qCke;
 
-		always @( posedge iSysClk )
+		always @( posedge iClk )
 		begin
-			if (iSysRst)    rTmpCount <= 0;
+			if (iRst)    	rTmpCount <= 0;
 			else if (qCke)  rTmpCount <= 0;
 			else            rTmpCount <= rTmpCount + 1'b1;
 		end
@@ -51,9 +51,9 @@ generate
 		reg [7:0] rTimeCkeCnt;
 		reg qTimeCke;                               assign oCke = qTimeCke;
 
-		always @( posedge iSysClk )
+		always @( posedge iClk )
 		begin
-			if (iSysRst)        rTimeCkeCnt <= 0;
+			if (iRst)        	rTimeCkeCnt <= 0;
 			else if (qTimeCke)  rTimeCkeCnt <= 0;
 			else if (qCke)      rTimeCkeCnt <= rTimeCkeCnt + 1'b1;
 			else                rTimeCkeCnt <= rTimeCkeCnt;
@@ -73,9 +73,9 @@ generate
 		reg rCke;						assign oCke = rCke;
 		reg qCke;
 
-		always @( posedge iSysClk )
+		always @( posedge iClk )
 		begin
-			casex ({iSysRst,qCke,iCke})
+			casex ({iRst,qCke,iCke})
 				3'b1xx: 	rTmpCount <= {pDivWidth{1'b0}};
 				3'b001: 	rTmpCount <= rTmpCount + 1'b1;
 				3'b011: 	rTmpCount <= {pDivWidth{1'b0}};

@@ -56,12 +56,12 @@ wire wDivCke;
 CkeGenerator #(
 	.pDivReg		("yes"),
 	.pDivWidth		(pDivClk)
-) SPI_CKE_GEN (
+) SpiCkeGen (
 	.iCke			(iSPIEn),
 	.iDiv			(iSPIDiv),
 	.oCke			(wDivCke),
-	.iSysClk		(iSysClk),
-	.iSysRst		(iSysRst)
+	.iClk			(iSysClk),
+	.iRst			(iSysRst)
 );
 
 
@@ -78,7 +78,7 @@ reg 				qSREdMux;
 SPISignalMux # (
 	.pBusAdrsBit	(pBusAdrsBit),
 	.pUfiBusWidth	(pUfiBusWidth)
-) SPI_SIGNAL_MUX (
+) SPISignalMux (
 	// Internal Port FPGA Slave Side SPI Module Connect
 	.oSMiso			(wSMisoMux),
 	.iSRd			(qSRdMux),
@@ -113,7 +113,7 @@ wire 	[1:0]	wSCmdSig;
 wire 	[15:0]	wSDLenSig;
 wire 			wSREdSig;
 
-SPISignal SPI_SIGNAL (
+SPISignal SPISignal (
 	// External Port
 	.ioSpiSck		(ioSpiSck),
 	.ioSpiMiso		(ioSpiMiso),

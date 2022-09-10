@@ -1,16 +1,18 @@
 //----------------------------------------------------------
-// Create 2022/8/24
+// Create 2022/9/9
 // Author koutakimura
 // -
 // Audio の管理を司るブロック
 // 
 //----------------------------------------------------------
 module AudioTxBlock #(
-	parameter 						pBlockAdrsMap 	= 8,
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h05,
-	parameter						pBusAdrsBit		= 32,
-	parameter 						pCsrAdrsWidth 	= 8,
-	parameter						pCsrActiveWidth = 8
+	parameter 						pBlockAdrsMap 		= 8,
+	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  		= 'h05,
+	parameter						pBusAdrsBit			= 32,
+	parameter 						pCsrAdrsWidth 		= 8,
+	parameter						pCsrActiveWidth 	= 8,
+	//
+	parameter						pSamplingBitWidth	= 8	// 分解能
 )(
 	// External Port
 	output							oAudioMclk,
@@ -23,55 +25,55 @@ module AudioTxBlock #(
 	input	[pBusAdrsBit-1:0]		iSUsiAdrs,  // R/W Adrs
 	input							iSUsiWCke,	// Write Enable
     // CLK Reset
+    input           				iSysRst,
     input           				iSysClk,
-    input           				iSysRst
+    input           				iAudioRst,
+	input 							iAudioClk
 );
 
 
-assign oAudioMclk 	= 1'b0;
-assign oSUsiRd		= 32'd0;
-assign oSUsiREd		= 1'b0;
+//----------------------------------------------------------
+// AudioTxUnit
+//----------------------------------------------------------
+wire 				wAudioCkeCsr;
+wire 	[ 6:0]		wAudioToneCsr;
+wire 				wAudioSelCsr;
+wire 	[ 7:0]		wAudioDutyCsr;
+
+AudioTxUnit #(
+	.pSamplingBitWidth	(pSamplingBitWidth)
+) AudioTxUnit (
+	.oAudioMclk			(oAudioMclk),
+	.iAudioCke			(wAudioCkeCsr),
+	.iAudioTone			(wAudioToneCsr),
+	.iAudioSel			(wAudioSelCsr),
+	.iAudioDuty			(wAudioDutyCsr),
+	.iAudioRst			(iAudioRst),
+	.iAudioClk			(iAudioClk)
+);
+
 
 //----------------------------------------------------------
-// I2C Unit
+// Csr space
 //----------------------------------------------------------
-// wire 							wPWMEnCsr;
-// wire 	[lpPWMDutyWidth-1:0]	wPWMDutyCsr;
-// wire 	[lpIVtimerWidth-1:0]	wIVtimerCsr;
-
-// PWMUnit #(
-// 	.pPWMDutyWidth	(lpPWMDutyWidth),
-// 	.pIVtimerWidth	(lpIVtimerWidth)
-// ) PWM_UNIT (
-// 	.oPwm			(oAudioMclk),
-// 	.iPWMEn			(wPWMEnCsr),
-// 	.iPWMDuty		(wPWMDutyCsr),
-// 	.iIVtimer		(wIVtimerCsr),
-// 	.iSysClk		(iSysClk),
-// 	.iSysRst		(iSysRst)
-// );
-
-
-// //----------------------------------------------------------
-// // Csr space
-// //----------------------------------------------------------
-// PWMCsr #(
-// 	.pBlockAdrsMap	(pBlockAdrsMap),
-// 	.pAdrsMap		(pAdrsMap),
-// 	.pBusAdrsBit	(pBusAdrsBit),
-// 	.pPWMDutyWidth	(lpPWMDutyWidth),
-// 	.pIVtimerWidth	(lpIVtimerWidth)
-// ) PWM_CSR (
-// 	.oSUsiRd		(oSUsiRd),
-// 	.oSUsiREd		(oSUsiREd),
-// 	.iSUsiWd		(iSUsiWd),
-// 	.iSUsiAdrs		(iSUsiAdrs),
-// 	.iSUsiWCke		(iSUsiWCke),
-// 	.oPWMEn			(wPWMEnCsr),
-// 	.oPWMDuty		(wPWMDutyCsr),
-// 	.oIVtimer		(wIVtimerCsr),
-// 	.iSysClk		(iSysClk),
-// 	.iSysRst		(iSysRst)
-// );
+AudioTxCsr #(
+	.pBlockAdrsMap		(pBlockAdrsMap),
+	.pAdrsMap			(pAdrsMap),
+	.pBusAdrsBit		(pBusAdrsBit),
+	.pCsrAdrsWidth		(pCsrAdrsWidth),
+	.pCsrActiveWidth	(pCsrActiveWidth)
+) AudioTxCsr (
+	.oSUsiRd			(oSUsiRd),
+	.oSUsiREd			(oSUsiREd),
+	.iSUsiWd			(iSUsiWd),
+	.iSUsiAdrs			(iSUsiAdrs),
+	.iSUsiWCke			(iSUsiWCke),
+	.oAudioCke			(wAudioCkeCsr),
+	.oAudioTone			(wAudioToneCsr),
+	.oAudioSel			(wAudioSelCsr),
+	.oAudioDuty			(wAudioDutyCsr),
+	.iSysRst			(iSysRst),
+	.iSysClk			(iSysClk)
+);
 
 endmodule

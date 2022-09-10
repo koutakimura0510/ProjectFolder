@@ -98,8 +98,8 @@ VideoSyncGen #(
 	.oVSync			(wVSync),
 	.oVde			(wVde),
 	.oFe			(wFe),
-	.iVideoClk		(iVideoClk),
-	.iSysRst		(iVtbVideoRst)
+	.iRst			(iVtbVideoRst),
+	.iVideoClk		(iVideoClk)
 );
 
 
@@ -130,9 +130,9 @@ begin
 	qVideoDualFifoFull <= (~wVideoDualFifoFull);
 end
 //
-// Dual Clk Fifo 経由で 3レイテンシ遅延が発生するため、
+// Dual Clk Fifo 経由で 2レイテンシ遅延が発生するため、
 // Sync系統も同様に遅らせる
-localparam lpSyncLatancy = 4;
+localparam lpSyncLatancy = 2;
 
 reg [lpSyncLatancy-1:0] rVideoHSync;
 reg [lpSyncLatancy-1:0] rVideoVSync;
@@ -166,8 +166,8 @@ DutyGenerator #(
 	.iPWMEn			(1'b1),
 	.iDutyRatio		(iBlDutyRatio),
 	.iIVtimer		(100),
-	.iSysClk		(iSysClk),
-	.iSysRst		(iSysRst)
+	.iClk			(iSysClk),
+	.iRst			(iSysRst)
 );
 
 

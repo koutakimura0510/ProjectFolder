@@ -65,11 +65,11 @@ endtask
 //----------------------------------------------------------
 parameter   lpHdisplayWidth	= 11;
 parameter	lpVdisplayWidth	= 11;
-localparam	lpHdisplay		= 100;
+localparam	lpHdisplay		= 32;
 localparam	lpHfront		= 8;
 localparam	lpHback			= 43;
 localparam	lpHpulse		= 30;
-localparam	lpVdisplay		= 100;
+localparam	lpVdisplay		= 32;
 localparam	lpVfront		= 12;
 localparam	lpVback			= 4;
 localparam	lpVpulse		= 10;

@@ -292,6 +292,15 @@ I2CBlock #(
 //----------------------------------------------------------
 // VTB
 //----------------------------------------------------------
+// ディスプレイ制御レジスタの Bit幅
+localparam lpHdisplayWidth	= 11;
+localparam lpHfrontWidth	= 7;
+localparam lpHbackWidth		= 7;
+localparam lpHpulseWidth	= 7;
+localparam lpVdisplayWidth	= 11;
+localparam lpVfrontWidth	= 5;
+localparam lpVbackWidth		= 5;
+localparam lpVpulseWidth	= 5;
 // Slave -> Master
 wire [31:0] 			wSUsiRdVtb;
 wire 					wSUsiREdVtb;
@@ -314,14 +323,14 @@ VideoTxBlock #(
 	.pVfront			(pVfront),
 	.pVback				(pVback),
 	.pVpulse			(pVpulse),
-	.pHdisplayWidth		(11),
-	.pHfrontWidth		(7),
-	.pHbackWidth		(7),
-	.pHpulseWidth		(7),
-	.pVdisplayWidth		(11),
-	.pVfrontWidth		(5),
-	.pVbackWidth		(5),
-	.pVpulseWidth		(5)
+	.pHdisplayWidth		(lpHdisplayWidth),
+	.pHfrontWidth		(lpHfrontWidth),
+	.pHbackWidth		(lpHbackWidth),
+	.pHpulseWidth		(lpHpulseWidth),
+	.pVdisplayWidth		(lpVdisplayWidth),
+	.pVfrontWidth		(lpVfrontWidth),
+	.pVbackWidth		(lpVbackWidth),
+	.pVpulseWidth		(lpVpulseWidth)
 ) VTB (
 	// External port
 	.oTftColorR			(oTftColorR),
@@ -373,7 +382,9 @@ AudioTxBlock #(
 	.iSUsiAdrs			(qSUsiAdrsAudio),
 	.iSUsiWCke			(qSUsiWCkeAudio),
 	.iSysRst			(iSysRst),
-	.iSysClk			(iSysClk)
+	.iSysClk			(iSysClk),
+	.iAudioRst			(iAudioRst),
+	.iAudioClk			(iAudioClk)
 );
 
 

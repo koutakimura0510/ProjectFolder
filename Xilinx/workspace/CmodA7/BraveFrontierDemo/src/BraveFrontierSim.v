@@ -118,6 +118,8 @@ wire oLedClk;
 //----------------------------------------------------------
 // Top Module Connect
 //----------------------------------------------------------
+wire oAudio;
+
 BraveFrontier #(
     // .H_DISPLAY  (640),      .H_BACK     (48),
     // .H_FRONT    (16),       .H_SYNC     (96),
@@ -126,61 +128,51 @@ BraveFrontier #(
     .pHdisplay      (50),
     .pHback         (2),
     .pHfront        (2),
-    .pHpulse         (2),
+    .pHpulse        (2),
     .pVdisplay      (50),
-    .pVfront          (2),
-    .pVback       (2),
-    .pVpulse         (2),
-    .pPixelDebug    ("yes"),
+    .pVfront        (2),
+    .pVback       	(2),
+    .pVpulse        (2),
+    .pPixelDebug    ("no"),
     .pBuffDepth     (32),
-    .pDebug         ("on")
+    .pDebug         ("off")
 ) TOP (
     .iOscSystemClk      (rSysClk),
-    .iOscAudioClk       (rAudioClk),
-    // .ioSpiSck            (),
-    .ioSpiMiso          (ioSpiMiso),
-    .ioSpiMosi          (ioSpiMosi),
-    .ioSpiWp            (ioSpiWp),
-    .ioSpiHold          (ioSpiHold),
-    .oSpiConfigCs       (oSpiConfigCs),
-    .oSpiCs             (oSpiCs),
-    .ioSramDq          (ioSramDq),
-    .ioSramDqs         (ioSramDqs),
-    .oSramClk          (oSramClk),
-    .oSramCs           (oSramCs),
-    .ioSramsDq          (ioSramsDq),
-    .ioSramsDqs         (ioSramsDqs),
-    .oSramsClk          (oSramsClk),
-    .oSramsCs           (oSramsCs),
-    .oTftColorR         (oTftColorR),
-    .oTftColorG         (oTftColorG),
-    .oTftColorB         (oTftColorB),
-    .oTftDclk           (oTftDclk),
-    .oTftHSync          (oTftHSync),
-    .oTftVSync          (oTftVSync),
-    .oTftDe             (oTftDe),
-    .oTftBackLight      (oTftBackLight),
-    .oTftRst            (oTftRst),
-    .oI2CScl             (oI2CScl),
-    .ioI2CSda            (ioI2CSda),
-    .oAudioMclk         (oAudioMclk),
-    .oAudioBclk         (oAudioBclk),
-    .oAudioCclk         (oAudioCclk),
-    .oAudioData         (oAudioData),
-    .oUartTx            (oUartTx),
-    .iUartRx            (rUartRx),
-    .oLedEdge           (oLedEdge),
-    .oLedClk            (oLedClk)
+	.ioSpiSck			(),
+	.ioSpiMiso			(),
+	.ioSpiMosi			(),
+	.ioSpiWp			(),
+	.ioSpiHold			(),
+	.oSpiConfigCs		(),
+	.ioSpiCs			(),
+	.iMSSel				(),
+	.oMemAdr			(),
+	.ioMemDq			(),
+	.oRamOE				(),
+	.oRamWE				(),
+	.oRamCE				(),
+	.oTftColorR			(),
+	.oTftColorG			(),
+	.oTftColorB			(),
+	.oTftDclk			(),
+	.oTftHSync			(),
+	.oTftVSync			(),
+	.oTftDe				(),
+	.oTftBackLight		(),
+	.oTftRst			(),
+	.oI2CScl			(),
+	.ioI2CSda			(),
+	.oAudioMclk			(oAudio),
+	.oLed				(),
+	.oLedB				(),
+	.oLedG				(),
+	.oLedR				(),
+	.oTestPort			()
 );
 
 always begin
     #(CYCLE/5);
     rSysClk = ~rSysClk;
-end
-
-always begin
-    #(CYCLE/4);
-    rAudioClk = ~rAudioClk;
 end
 
 initial begin

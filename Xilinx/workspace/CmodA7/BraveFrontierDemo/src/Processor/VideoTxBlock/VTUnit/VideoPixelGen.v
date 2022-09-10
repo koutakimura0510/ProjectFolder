@@ -4,6 +4,21 @@
 // -
 // 1pixel毎の描画データ生成
 // 
+// レイヤーの並び順は下記の通りである。
+// 遠景
+// 背景
+// フィールド
+// NPC
+// プレイヤー
+// 前オブジェクト
+// エフェクト
+// 前景
+// メニュー
+// シーン
+// -
+// 上記の並び順で各 module を前後のレイヤーと接続する。
+// module を平行に並べるため、一番レイテンシが大きいブロックで処理速度が決定する。
+// 
 //----------------------------------------------------------
 module VideoPixelGen #(
 	// Display Size
@@ -31,6 +46,7 @@ module VideoPixelGen #(
 
 //-----------------------------------------------------------------------------
 // Csr レジスタ入力値を配線遅延など考慮して一度レジスタで受信する
+// 横幅 480 の場合、0 ~ 479 の範囲を使用するため、設定値から -1 した値を各 module で利用する
 //-----------------------------------------------------------------------------
 reg	[pHdisplayWidth-1:0] rHdisplay;
 reg	[pVdisplayWidth-1:0] rVdisplay;
@@ -56,13 +72,13 @@ begin
 end
 
 
-
 //-----------------------------------------------------------------------------
 // 描画座標の生成
 //-----------------------------------------------------------------------------
 wire [pHdisplayWidth-1:0] 	wPixelDrawHpos;
 wire [pVdisplayWidth-1:0] 	wPixelDrawVpos;
 wire 						wAFE;
+reg 						qPixelDrawPositionCke;
 
 PixelDrawPosition #(
 	.pHdisplayWidth	(pHdisplayWidth),
@@ -74,59 +90,131 @@ PixelDrawPosition #(
 	.oVpos			(wPixelDrawVpos),
 	.oAFE			(wAFE),
 	.iRst			(iRst),
-	.iCke			(iCke),
+	.iCke			(qPixelDrawPositionCke),
 	.iClk			(iClk)
 );
 
 
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 // 本来はメモリからバス経由で描画データを受信して四角形を生成するが、
 // まだそこまでいっていないため、レジスタ経由にしている
+//---------------------------------------------------------------------------
+
 //-----------------------------------------------------------------------------
-wire [pColorDepth-1:0] 	wDotSquare;
-wire 					wPixelVd;
+// DistantView Draw
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// Background Draw
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// Field Draw
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// NPC Draw
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// Player Draw
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// Object Draw
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// Effect Draw
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// Foreground Draw
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// Menu Draw
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// Scene Draw
+//-----------------------------------------------------------------------------
+localparam lpDotSquareGenFifoDepth = 32;
+localparam lpDxs = 30;
+localparam lpDxe = lpDxs + 16;
+localparam lpDys = 30;
+localparam lpDye = lpDys + 16;
+//
+reg  					qDotSquareEdd;
+reg 					qDotSquareEds;
+wire [pColorDepth-1:0] 	wDotSquareDd;
+wire 					wDotSquareVdd;
+wire 					wDotSquareEmp;
+wire 					wDotSquareFull;
 
 DotSquareGen #(
 	.pHdisplayWidth		(pHdisplayWidth),
 	.pVdisplayWidth		(pVdisplayWidth),
-	.pColorDepth		(pColorDepth)
+	.pColorDepth		(pColorDepth),
+	.pFifoDepth			(lpDotSquareGenFifoDepth),
+	.pFifoBitWidth		(pColorDepth)
 ) DOT_SQUARE_GEN (
+	.iPixel				(16'h0f00),
 	.iHpos				(wPixelDrawHpos),
 	.iVpos				(wPixelDrawVpos),
-	.iDxs				(1),
-	.iDxe				(32),
-	.iDys				(1),
-	.iDye				(32),
-	.iPixel				(16'h0f00),
-	.oPixel				(wDotSquare),
-	.oVd				(wPixelVd),
+	.iDxs				(lpDxs),
+	.iDxe				(lpDxe),
+	.iDys				(lpDys),
+	.iDye				(lpDye),
+	.iEds 				(qDotSquareEds),
+	.oFull				(wDotSquareFull),
+	.oDd				(wDotSquareDd),
+	.oVdd				(wDotSquareVdd),
+	.iEdd				(qDotSquareEdd),
+	.oEmp				(wDotSquareEmp),
 	.iRst				(iRst),
-	.iCke				(iCke),
 	.iClk				(iClk)
 );
 
-
-//-----------------------------------------------------------------------------
-// 
-//-----------------------------------------------------------------------------
-reg [pOutColorDepth-1:0] rPixel;		assign oPixel = rPixel;
-wire wVd;								assign oVd 	  = wVd;
-
-always @(posedge iClk)
+always @*
 begin
-	if (wPixelVd)	rPixel <= wDotSquare[pOutColorDepth-1:0];
-	else 			rPixel <= {pOutColorDepth{1'b1}};
+	qDotSquareEds			<= (~wDotSquareFull);
+	qPixelDrawPositionCke 	<= (~wDotSquareFull);
 end
 
-SftReg #(
-	.pBitWidth		(1),
-	.pSftRegDepth	(1),
-	.pLutRam		("no")
-) COLOR_SFT_REG (
-	.iD				(iCke),
-	.oQ				(wVd),
+
+//-----------------------------------------------------------------------------
+// Final Stage ドットデータを結合し一つのピクセルデータに変換する
+//-----------------------------------------------------------------------------
+wire [pOutColorDepth-1:0] wPixelMargeDd;		assign oPixel = wPixelMargeDd;
+wire  wPixelMargeVdd;							assign oVd 	  = wPixelMargeVdd;
+wire  wPixelMargeFull;
+wire  wPixelMargeEmp;
+reg   qPixelMargeEds;
+reg   qPixelMargeEdd;
+
+DotMargeToPixelConverter #(
+	.pColorDepth	(pColorDepth),
+	.pFifoDepth		(16),
+	.pFifoBitWidth	(pOutColorDepth)
+) DMT_PIXEL_CONVERTER (
+	.iDistantground	({pColorDepth{1'b0}}),
+	.iBackground	(wDotSquareDd),
+	.iField			({pColorDepth{1'b0}}),
+	.iNpc			({pColorDepth{1'b0}}),
+	.iPlayer		({pColorDepth{1'b0}}),
+	.iObject		({pColorDepth{1'b0}}),
+	.iEffect1		({pColorDepth{1'b0}}),
+	.iEffect2		({pColorDepth{1'b0}}),
+	.iForeground	({pColorDepth{1'b0}}),
+	.iMenuWindow	({pColorDepth{1'b0}}),
+	.iEds			(qPixelMargeEds),
+	.oFull			(wPixelMargeFull),
+	.oDd			(wPixelMargeDd),
+	.oVdd			(wPixelMargeVdd),
+	.iEdd			(qPixelMargeEdd),
+	.oEmp			(wPixelMargeEmp),
 	.iRst			(iRst),
 	.iClk			(iClk)
 );
+
+always @*
+begin
+	qPixelMargeEds	<= wDotSquareVdd;
+	qPixelMargeEdd 	<= (~wPixelMargeEmp) & iCke;
+	qDotSquareEdd	<= (~wPixelMargeFull);
+end
+
 
 endmodule

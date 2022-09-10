@@ -59,7 +59,7 @@ end
 
 always @*
 begin
-    qVposMuxSel <= (rVpos == iVdisplay);
+    qVposMuxSel <= (rVpos == iVdisplay) & qHposMuxSel;
 	qVposMux	<= qVposMuxSel ? {pVdisplayWidth{1'b0}} : rVpos + qHposMuxSel;
 end
 
@@ -78,6 +78,7 @@ end
 
 always @*
 begin
-    qAFE <= (qVposMuxSel & qHposMuxSel);
+    // qAFE <= (qVposMuxSel & qHposMuxSel);
+    qAFE <= qVposMuxSel;
 end
 endmodule

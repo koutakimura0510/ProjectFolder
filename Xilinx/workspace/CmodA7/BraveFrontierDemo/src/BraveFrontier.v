@@ -14,11 +14,11 @@ module BraveFrontier #(
     parameter       pHdisplay       = 480,
     parameter       pHback          =  43,
     parameter       pHfront         =   8,
-    parameter       pHpulse          =  30,
-    parameter       pVdisplay       = 272,
-    parameter       pVfront           =  12,
-    parameter       pVback        =   4,
-    parameter       pVpulse          =  10,
+    parameter       pHpulse         =  30,
+    parameter       pVdisplay		= 272,
+    parameter       pVfront			=  12,
+    parameter       pVback        	=   4,
+    parameter       pVpulse         =  10,
     parameter       pPixelDebug     = "off",
     parameter       pBuffDepth      = 1024,      // Displayの横幅よりも大きいサイズを指定
     parameter       pDebug          = "off"

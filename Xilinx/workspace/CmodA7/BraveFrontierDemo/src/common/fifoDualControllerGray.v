@@ -55,7 +55,7 @@ reg qWE;
 
 always @(posedge iSrcClk)
 begin
-    if (iSrcRst)    rWA <= 0;
+    if (iSrcRst)    rWA <= {lpAddrWidth{1'b0}};
     else if (qWE)   rWA <= rWA + 1'b1;
     else            rWA <= rWA;
 end
@@ -73,10 +73,10 @@ reg qRE;
 
 always @(posedge iDstClk)
 begin
-    if (iDstRst)    rORP <= 0;
+    if (iDstRst)    rORP <= {lpAddrWidth{1'b0}};
     else            rORP <= rRA;
 
-    if (iDstRst)	rRA <= 0;
+    if (iDstRst)	rRA <= {lpAddrWidth{1'b0}};
     else if (qRE)   rRA <= rRA + 1'b1;
     else            rRA <= rRA;
 end

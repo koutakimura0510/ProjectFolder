@@ -35,8 +35,8 @@ module GpioUnit #(
 	input  [pIVtimerWidth-1:0]		iGpioIVtimer3,
 	input  [pIVtimerWidth-1:0]		iGpioIVtimer4,
     // CLK Reset
-    input           				iSysClk,
-    input           				iSysRst
+    input           				iSysRst,
+    input           				iSysClk
 );
 
 
@@ -65,8 +65,8 @@ generate
 			.iPWMEn			(qDutyEn[i]),
 			.iDutyRatio		(qGpioDutyRatio[i]),
 			.iIVtimer		(qGpioIVtimer[i]),
-			.iSysClk		(iSysClk),
-			.iSysRst		(iSysRst)
+			.iClk			(iSysClk),
+			.iRst			(iSysRst)
 		);
 
 		always @*
