@@ -33,8 +33,8 @@ module SPIUnit #(
 	// Ufi Bus Master
 	output	[pUfiBusWidth-1:0]	oMUfiWd,		// Write Data
 	output	[31:0]				oMUfiAdrs,		// Write address
-	output						oMUfiWEd,		// Write Data Enable
-	output 						oMUfiWVd,		// 転送期間中 Assert
+	output						oMUfiEd,		// Write Data Enable
+	output 						oMUfiVd,		// 転送期間中 Assert
 	// Csr
 	input 						iSPIEn,
 	input 	[pDivClk-1:0]		iSPIDiv,
@@ -45,7 +45,9 @@ module SPIUnit #(
 	output 						oMSpiIntr,
     // CLK Reset
     input           			iSysClk,
-    input           			iSysRst
+    input           			iSysRst,
+	//
+	output [3:0]				oTestPort
 );
 
 //----------------------------------------------------------
@@ -94,8 +96,8 @@ SPISignalMux # (
 	// Ufi Bus Master Write
 	.oMUfiWd		(oMUfiWd),
 	.oMUfiAdrs		(oMUfiAdrs),
-	.oMUfiWEd		(oMUfiWEd),
-	.oMUfiWVd		(oMUfiWVd),
+	.oMUfiEd		(oMUfiEd),
+	.oMUfiVd		(oMUfiVd),
 	// CLK Reset
 	.iSysClk		(iSysClk),
 	.iSysRst		(iSysRst)
@@ -141,7 +143,9 @@ SPISignal SPISignal (
 	.oMSSel			(oMUsiSel),
 	//
 	.iSysClk		(iSysClk),
-	.iSysRst		(iSysRst)
+	.iSysRst		(iSysRst),
+	//
+	.oTestPort		(oTestPort)
 );
 
 always @*

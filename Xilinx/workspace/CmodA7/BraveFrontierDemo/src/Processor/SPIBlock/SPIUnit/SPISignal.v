@@ -40,7 +40,9 @@ module SPISignal (
 	output 			oMSSel,
 	// CLK Reset
     input           iSysClk,
-	input 			iSysRst
+	input 			iSysRst,
+	//
+	output [3:0]	oTestPort
 );
 
 
@@ -52,7 +54,7 @@ module SPISignal (
 // Cmd : 0. Non, 1. Csr Write, 2. Csr Read, 3. PSRAM Write
 // -
 // Csr 操作時は 連続アクセスは可能としない、必ず Data Length は 4byte 固定とする
-// PSRAM 操作時は Data Length は最大 2048 byte とする
+// ※ PSRAM 操作時は Data Length は最大 4096 byte とする 2022-09-11 時点
 // 
 //----------------------------------------------------------
 localparam [1:0]
@@ -121,7 +123,7 @@ begin
 	else 				rSRd <= rSRd;
 
 	// アクセス開始アドレスの取得、PSRAM アクセスの場合のアドレス自動更新
-	// SPI は PSRAMに比べて極めて低速なため、上位モジュールでアドレスの更新を管理する必要はない。
+	// SPI は RAMに比べて極めて低速なため、上位モジュールでアドレスの更新を管理する必要はない。
 	// そのため、このロジックでアドレスを更新ようにした
 	casex ({qSSckCntNegCke, qNegScl, rSState[1:0]})
 		4'b11_00:		rSAdrs	<= rSRd;
@@ -288,4 +290,9 @@ IOBUF SPI_MISO 	(.O (wMMiso),	.IO (ioSpiMiso), 	.I (rSMiso[31]),	.T (~rMSSel[2])
 IOBUF SPI_MOSI 	(.O (wSMosi), 	.IO (ioSpiMosi), 	.I (rMMosi[7]), 	.T (rMSSel[2])	);	// master output / slave input
 IOBUF SPI_WP 	(.O (wSWp), 	.IO (ioSpiWp),   	.I (1'b1),			.T (rMSSel[2])	);
 IOBUF SPI_HOLD 	(.O (wSHold),	.IO (ioSpiHold), 	.I (1'b1),			.T (rMSSel[2])	);
+//
+OBUF TestPort0	(.O (oTestPort[0]),	.I (wSScl));
+OBUF TestPort1	(.O (oTestPort[1]),	.I (rSMiso[31]));
+OBUF TestPort2	(.O (oTestPort[2]),	.I (wSMosi));
+OBUF TestPort3	(.O (oTestPort[3]),	.I (wSCs));
 endmodule

@@ -25,8 +25,8 @@ module SPISignalMux #(
 	// Ufi Bus Master Write
 	output	[pUfiBusWidth-1:0]	oMUfiWd,	// Write Data
 	output	[31:0]				oMUfiAdrs,	// Write address
-	output						oMUfiWEd,	// Write Data Enable
-	output 						oMUfiWVd,	// 転送期間中 Assert
+	output						oMUfiEd,	// Write Data Enable
+	output 						oMUfiVd,	// 転送期間中 Assert
 	// CLK Reset
     input           			iSysClk,
 	input 						iSysRst
@@ -36,7 +36,7 @@ module SPISignalMux #(
 //----------------------------------------------------------
 // Master Cmd で RW を判定し Cke を発行するため、1clk 遅延する
 // タイミングを合わせるため、データバスもレジスタ経由にする
-// Cmd のデータ構造は SPI module 参照
+// Cmd のデータ構造は SPISignal module 参照
 //----------------------------------------------------------
 
 //----------------------------------------------------------
@@ -63,10 +63,10 @@ end
 //----------------------------------------------------------
 reg [pUfiBusWidth-1:0] 	rMUfiWd;		assign oMUfiWd		= rMUfiWd;
 reg [31:0] 				rMUfiAdrs;		assign oMUfiAdrs	= rMUfiAdrs;
-reg 					rMUfiWEd;		assign oMUfiWEd		= rMUfiWEd;
-reg  					rMUfiWVd;		assign oMUfiWVd		= rMUfiWVd;
+reg 					rMUfiEd;		assign oMUfiEd		= rMUfiEd;
+reg  					rMUfiVd;		assign oMUfiVd		= rMUfiVd;
 //
-reg 					qMUfiWVd;
+reg 					qMUfiVd;
 //
 always @(posedge iSysClk)
 begin
@@ -75,18 +75,18 @@ begin
 
 	// Data Enable
 	case ({iSREd, iSCmd})
-		3'b111:		rMUfiWEd <= 1'b1;
-		default 	rMUfiWEd <= 1'b0;
+		3'b111:		rMUfiEd <= 1'b1;
+		default 	rMUfiEd <= 1'b0;
 	endcase
 
 	// wVd SDLen を取得したら 転送期間中とする
-	if (qMUfiWVd) 	rMUfiWVd <= 1'b0;
-	else			rMUfiWVd <= 1'b1;
+	if (qMUfiVd) 	rMUfiVd <= 1'b0;
+	else			rMUfiVd <= 1'b1;
 end
 
 always @*
 begin
-	qMUfiWVd <= (iSDLen == 16'd0);
+	qMUfiVd <= (iSDLen == 16'd0);
 end
 
 

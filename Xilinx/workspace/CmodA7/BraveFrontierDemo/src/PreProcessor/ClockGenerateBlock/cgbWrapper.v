@@ -53,10 +53,10 @@ localparam      lpClkIn1Div      = 1;           // 12 [MHz] / 1 = 12 [MHz]
 // VOC 分周回路設定
 // Spped Grade 1 = (600 ~ 1200MHz)
 localparam real lpClkOutMult     = 60.000;      // OSC MHz * Mult = VOC[MHz]
-localparam real lpClk0OutDivF    = 8.000;       // VOC MHz / DivF =  Clk0[MHz]
-localparam      lpClk1OutDiv     = 18;          // VOC MHz / Div  =  Clk1[MHz]
-localparam      lpClk2OutDiv     = 80;          // VOC MHz / Div  =  Clk2[MHz]
-localparam      lpClk3OutDiv     = 29;          // VOC MHz / Div  =  Clk3[MHz]
+localparam real lpClk0OutDivF    = 29.375;      // VOC MHz / DivF = Clk0[MHz]
+localparam      lpClk1OutDiv     = 20;          // VOC MHz / Div  = Clk1[MHz]
+localparam      lpClk2OutDiv     = 80;          // VOC MHz / Div  = Clk2[MHz]
+localparam      lpClk3OutDiv     =  8;          // VOC MHz / Div  = Clk3[MHz]
 localparam      lpClk4OutDiv     = 10;          // <Reserved>
 localparam      lpClk5OutDiv     = 10;          // <Reserved>
 
@@ -157,7 +157,7 @@ generate
         wire wSysClk;                      assign oSysClk   = wSysClk;
         wire wAudioClk;                    assign oAudioClk = wAudioClk;
 
-        BUFG BUFG_CLKO_0 (
+        BUFG BUFG_CLKO_2 (
             .O (wVideoClk),
             .I (wClkOut[2])
         );
@@ -167,14 +167,14 @@ generate
             .I (wClkOut[1])
         );
 
-        BUFG BUFG_CLKO_2 (
+        BUFG BUFG_CLKO_3 (
             .O (wSysClk),
-            .I (wClkOut[0])
+            .I (wClkOut[3])
         );
 
-        BUFG BUFG_CLKO_3 (
+        BUFG BUFG_CLKO_0 (
             .O (wAudioClk),
-            .I (wClkOut[3])
+            .I (wClkOut[0])
         );
 		//
         wire 	wSysRst;                   assign oRst 		= wSysRst;

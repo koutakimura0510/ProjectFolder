@@ -9,10 +9,11 @@
 // リソース削減のため、コマンドとアドレスは同じ Port を使用する
 //----------------------------------------------------------
 module MicroControllerBlock #(
-	parameter [3:0]	pBusBlockConnect 	= 1,				// Busに接続する Slave数 最大16
-	parameter		pBusAdrsBit			= 16,
+	parameter [3:0]						pBusBlockConnect 		= 1,				// Busに接続する Slave数 最大16
+	parameter							pBusAdrsBit				= 32,
+	parameter							pUfiBusWidth			= 8,
 	// Not Set Param
-	parameter [3:0]	pBusBlockConnectWidth 	= pBusBlockConnect - 1'b1	// Busに接続する Slave数 最大16
+	parameter [3:0]						pBusBlockConnectWidth 	= pBusBlockConnect - 1'b1	// Busに接続する Slave数 最大16
 )(
     // Internal Port
 	// Bus Master Read
@@ -22,9 +23,14 @@ module MicroControllerBlock #(
 	output	[31:0]						oMUsiWd,	// Write Data
 	output	[pBusAdrsBit-1:0]			oMUsiAdrs,	// Write address
 	output								oMUsiWEd,	// Write Data Enable
+	//
+	output	[pUfiBusWidth-1:0]			oMUfiWdMcs,
+	output	[pBusAdrsBit-1:0]			oMUfiAdrsMcs,
+	output								oMUfiEdMcs,
+	output								oMUfiVdMcs,
     // CLK Reset
-    input           					iSysClk,
-    input           					iSysRst
+    input           					iSysRst,
+    input           					iSysClk
 );
 
 

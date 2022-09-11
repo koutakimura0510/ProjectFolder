@@ -28,11 +28,11 @@ module Processer #(
     inout           ioSpiCs,
     input           iMSSel,
 	// RAM
-	output 	[18:0]	oMemAdr,
+	output 	[18:0]	oMemAdrs,
 	inout	[7:0]	ioMemDq,
-	output 			oRamOE,
-	output 			oRamWE,
-	output 			oRamCE,
+	output 			oMemOE,
+	output 			oMemWE,
+	output 			oMemCE,
 	// Display
     output	[7:4]   oTftColorR,
     output	[7:4]   oTftColorG,
@@ -64,15 +64,6 @@ module Processer #(
     input           iSysRst,
     input           iAudioRst
 );
-
-// 
-assign oMemAdr			= 19'd0;
-assign ioMemDq			= 8'dz;
-assign oRamOE			= 1'b1;
-assign oRamWE			= 1'b1;
-assign oRamCE			= 1'b1;
-//
-assign oTestPort 		= 4'd0;
 
 
 //-----------------------------------------------------------------------------
@@ -124,7 +115,7 @@ localparam
 // variable parameter
 localparam	lpUsiBusWidth  		= 32;		// Usi バスデータ幅
 localparam	lpBusAdrsBit		= 32;		// バスアドレス幅, Usi/Ufi 共通
-localparam  lpUfiBusWidth		= 16;
+localparam  lpUfiBusWidth		= 8;
 
 
 //----------------------------------------------------------
@@ -137,16 +128,26 @@ reg  [lpBusBlockConnect-1:0]	qMUsiVdMcb;
 wire [31:0] 					wMUsiWdMcb;
 wire [lpBusAdrsBit-1:0]			wMUsiAdrsMcb;
 wire 							wMUsiWCkeMcb;
+//
+wire [pUfiBusWidth-1:0]			wMUfiWdMcs;
+wire [lpBusAdrsBit-1:0]			wMUfiAdrsMcs;
+wire 							wMUfiEdMcs;
+wire 							wMUfiVdMcs;
 
 MicroControllerBlock #(
 	.pBusBlockConnect	(lpBusBlockConnect),
-	.pBusAdrsBit		(lpBusAdrsBit)
-) MICRO_CONTROLLER_BLOCK (
+	.pBusAdrsBit		(lpBusAdrsBit),
+	.pUfiBusWidth		(pUfiBusWidth)
+) MicroControllerBlock (
 	.iMUsiRd			(qMUsiRdMcb),
 	.iMUsiREd			(qMUsiVdMcb),
 	.oMUsiWd			(wMUsiWdMcb),
 	.oMUsiAdrs			(wMUsiAdrsMcb),
 	.oMUsiWEd			(wMUsiWCkeMcb),
+	.oMUfiWdMcs			(wMUfiWdMcs),
+	.oMUfiAdrsMcs		(wMUfiAdrsMcs),
+	.oMUfiEdMcs			(wMUfiEdMcs),
+	.oMUfiVdMcs			(wMUfiVdMcs),
 	.iSysClk			(iSysClk),
 	.iSysRst			(iSysRst)
 );
@@ -169,7 +170,7 @@ GpioBlock #(
 	.pBusAdrsBit		(lpBusAdrsBit),
 	.pCsrAdrsWidth		(lpCsrAdrsWidth),
 	.pCsrActiveWidth	(lpGpioCsrActiveWidth)
-) GPIO_BLOCK (
+) GpioBlock (
 	// External Port
 	.oLed				(oLed),
 	.oLedB				(oLedB),
@@ -203,9 +204,9 @@ reg  [lpBusAdrsBit-1:0]			qSUsiAdrsSpi;
 reg  							qSUsiWCkeSpi;
 // 
 wire [lpUfiBusWidth-1:0]		wMUfiWdSpi;
-wire [31:0]						wMUfiAdrsSpi;
-wire 							wMUfiWEdSpi;
-wire 							wMUfiWVdSpi;
+wire [lpBusAdrsBit-1:0]			wMUfiAdrsSpi;
+wire 							wMUfiEdSpi;
+wire 							wMUfiVdSpi;
 // Master Select
 wire 							wMUsiSel;
 // Interrupt
@@ -219,7 +220,7 @@ SPIBlock #(
 	.pCsrActiveWidth			(lpSPICsrActiveWidth),
 	.pBusBlockConnect			(lpBusBlockConnect),
 	.pUfiBusWidth				(lpUfiBusWidth)
-) SPI_BLOCK (
+) SPIBlock (
 	// External Port
 	.ioSpiSck					(ioSpiSck),
 	.ioSpiMiso					(ioSpiMiso),
@@ -243,18 +244,19 @@ SPIBlock #(
 	.iSUsiWd					(qSUsiWdSpi),
 	.iSUsiAdrs					(qSUsiAdrsSpi),
 	.iSUsiWCke					(qSUsiWCkeSpi),
-	// 
+	// Master -> Slave
 	.oMUfiWd					(wMUfiWdSpi),
 	.oMUfiAdrs					(wMUfiAdrsSpi),
-	.oMUfiWEd					(wMUfiWEdSpi),
-	.oMUfiWVd					(wMUfiWVdSpi),
-	//
+	.oMUfiEd					(wMUfiEdSpi),
+	.oMUfiVd					(wMUfiVdSpi),
+	// MUsi 制御信号
 	.oMUsiSel					(wMUsiSel),
-	//
 	.oMSpiIntr					(wMSpiIntr),
 	//
 	.iSysClk					(iSysClk),
-	.iSysRst					(iSysRst)
+	.iSysRst					(iSysRst),
+	//
+	.oTestPort					(oTestPort)
 );
 
 
@@ -275,7 +277,7 @@ I2CBlock #(
 	.pBusAdrsBit		(lpBusAdrsBit),
 	.pCsrAdrsWidth		(lpCsrAdrsWidth),
 	.pCsrActiveWidth	(lpI2CCsrActiveWidth)
-) I2C_BLOCK (
+) I2CBlock (
 	// External Port
 	.oI2CScl			(oI2CScl),
 	.ioI2CSda			(ioI2CSda),
@@ -290,7 +292,7 @@ I2CBlock #(
 );
 
 //----------------------------------------------------------
-// VTB
+// Video Tx Block
 //----------------------------------------------------------
 // ディスプレイ制御レジスタの Bit幅
 localparam lpHdisplayWidth	= 11;
@@ -308,11 +310,21 @@ wire 					wSUsiREdVtb;
 reg  [31:0] 			qSUsiWdVtb;
 reg  [lpBusAdrsBit-1:0] qSUsiAdrsVtb;
 reg  					qSUsiWCkeVtb;
-
+//
+reg  [pUfiBusWidth-1:0]	qMUfiRdVtb;
+reg  					qMUfiREdVtb;
+wire [pUfiBusWidth-1:0]	wMUfiWdVtb;
+wire [lpBusAdrsBit-1:0]	wMUfiAdrsVtb;
+wire 					wMUfiEdVtb;
+wire 					wMUfiVdVtb;
+wire 					wMUfiCmdVtb;
+wire  					wMUfiRdyVtb;
+//
 VideoTxBlock #(
 	.pBlockAdrsMap		(lpBlockAdrsMap),
 	.pAdrsMap			(lpVTBAdrsMap),
 	.pBusAdrsBit		(lpBusAdrsBit),
+	.pUfiBusWidth		(pUfiBusWidth),
 	.pCsrAdrsWidth		(lpCsrAdrsWidth),
 	.pCsrActiveWidth	(lpVTBCsrActiveWidth),
 	.pHdisplay			(pHdisplay),
@@ -331,7 +343,7 @@ VideoTxBlock #(
 	.pVfrontWidth		(lpVfrontWidth),
 	.pVbackWidth		(lpVbackWidth),
 	.pVpulseWidth		(lpVpulseWidth)
-) VTB (
+) VideoTxBlock (
 	// External port
 	.oTftColorR			(oTftColorR),
 	.oTftColorG			(oTftColorG),
@@ -348,6 +360,17 @@ VideoTxBlock #(
 	.iSUsiWd			(qSUsiWdVtb),
 	.iSUsiAdrs			(qSUsiAdrsVtb),
 	.iSUsiWCke			(qSUsiWCkeVtb),
+	//
+	.iMUfiRd			(qMUfiRdVtb),
+	.iMUfiREd			(qMUfiREdVtb),
+	//
+	.oMUfiWd			(wMUfiWdVtb),
+	.oMUfiAdrs			(wMUfiAdrsVtb),
+	.oMUfiEd			(wMUfiEdVtb),
+	.oMUfiVd			(wMUfiVdVtb),
+	.oMUfiCmd			(wMUfiCmdVtb),
+	//
+	.iMUfiRdy			(wMUfiRdyVtb),
 	// CLK Rst
 	.iSysRst			(iSysRst),
 	.iVideoClk 			(iVideoClk),
@@ -365,14 +388,23 @@ wire 					wSUsiREdAudio;
 reg  [31:0] 			qSUsiWdAudio;
 reg  [lpBusAdrsBit-1:0]	qSUsiAdrsAudio;
 reg  					qSUsiWCkeAudio;
+//
+reg  [pUfiBusWidth-1:0]	qMUfiRdAtb;
+reg  					qMUfiREdAtb;
+//
+wire [lpBusAdrsBit-1:0]	wMUfiAdrsAtb;
+wire 					wMUfiEdAtb;
+wire 					wMUfiVdAtb;
+wire 					wMUfiRdyAtb;
 
 AudioTxBlock #(
 	.pBlockAdrsMap		(lpBlockAdrsMap),
 	.pAdrsMap	 		(lpATBAdrsMap),
 	.pBusAdrsBit		(lpBusAdrsBit),
 	.pCsrAdrsWidth		(lpCsrAdrsWidth),
-	.pCsrActiveWidth	(lpATBCsrActiveWidth)
-) AUDIO_TX_BLOCK (
+	.pCsrActiveWidth	(lpATBCsrActiveWidth),
+	.pSamplingBitWidth	(8)
+) AudioTxBlock (
 	// External Port
 	.oAudioMclk			(oAudioMclk),
 	// Internal Port
@@ -381,6 +413,15 @@ AudioTxBlock #(
 	.iSUsiWd			(qSUsiWdAudio),
 	.iSUsiAdrs			(qSUsiAdrsAudio),
 	.iSUsiWCke			(qSUsiWCkeAudio),
+	//
+	.iMUfiRd			(qMUfiRdAtb),
+	.iMUfiREd			(qMUfiREdAtb),
+	//
+	.oMUfiAdrs			(wMUfiAdrsAtb),
+	.oMUfiEd			(wMUfiEdAtb),
+	.oMUfiVd			(wMUfiVdAtb),
+	.iMUfiRdy			(wMUfiRdyAtb),
+	//
 	.iSysRst			(iSysRst),
 	.iSysClk			(iSysClk),
 	.iAudioRst			(iAudioRst),
@@ -389,9 +430,57 @@ AudioTxBlock #(
 
 
 //----------------------------------------------------------
-// 外部 RAM を操作しシステムと協調動作させる
+// RAMBlock
 //----------------------------------------------------------
-// RAMBlock RAM_BLOCK
+// USI Bus
+wire [31:0] 			wSUsiRdRam;
+wire 					wSUsiREdRam;
+reg  [31:0] 			qSUsiWdRam;
+reg  [lpBusAdrsBit-1:0]	qSUsiAdrsRam;
+reg  					qSUsiWCkeRam;
+// UFI Bus
+reg [lpUfiBusWidth-1:0] qSUfiWdRam;
+reg 					qSUfiEdRam;
+wire [lpUfiBusWidth-1:0]wSUfiRdRam;
+wire 					wSUfiREdRam;
+reg  [lpBusAdrsBit-1:0]	qSUfiAdrsRam;
+reg  					qSUfiCmd;
+
+RAMBlock #(
+	.pBlockAdrsMap		(lpBlockAdrsMap),
+	.pAdrsMap	 		(lpRAMAdrsMap),
+	.pBusAdrsBit		(lpBusAdrsBit),
+	.pCsrAdrsWidth		(lpCsrAdrsWidth),
+	.pCsrActiveWidth	(lpRAMCsrActiveWidth)
+) RamBlock (
+	// External Port
+	.oMemAdrs			(oMemAdrs),
+	.ioMemDq			(ioMemDq),
+	.oMemOE				(oMemOE),
+	.oMemWE				(oMemWE),
+	.oMemCE				(oMemCE),
+	// Internal Port
+	// Slave -> Master
+	.oSUsiRd			(wSUsiRdRam),
+	.oSUsiREd			(wSUsiREdRam),
+	// Master -> Slave
+	.iSUsiWd			(qSUsiWdRam),
+	.iSUsiAdrs			(qSUsiAdrsRam),
+	.iSUsiWCke			(qSUsiWCkeRam),
+	// Master -> Slave
+	.iSUfiWd			(qSUfiWdRam),
+	.iSUfiEd			(qSUfiEdRam),
+	// Slave -> Master
+	.oSUfiRd			(wSUfiRdRam),
+	.oSUfiREd			(wSUfiREdRam),
+	// Ufi common
+	.iSUfiAdrs			(qSUfiAdrsRam),
+	.iSUfiCmd			(qSUfiCmd),
+	//
+	.iSysRst			(iSysRst),
+	.iSysClk			(iSysClk),
+	.iMemClk			(iMemClk)
+);
 
 
 //----------------------------------------------------------
@@ -414,33 +503,33 @@ wire [lpBusAdrsBit-1:0] 		wSUsiAdrs;
 wire 							wSUsiWCke;
 
 UltraSimpleInterface #(
-	.pBusBlockConnect	(lpBusBlockConnect),
-	.pUsiBusWidth		(lpUsiBusWidth),
-	.pBusAdrsBit		(lpBusAdrsBit),
-	.pBlockAdrsMap		(lpBlockAdrsMap),
-	.pGpioAdrsMap		(lpGpioAdrsMap),
-	.pSPIAdrsMap		(lpSPIAdrsMap),
-	.pI2CAdrsMap		(lpI2CAdrsMap),
-	.pVTBAdrsMap		(lpVTBAdrsMap),
-	.pATBAdrsMap		(lpATBAdrsMap),
-	.pRAMAdrsMap		(lpRAMAdrsMap),
-	.pCsrAdrsWidth		(lpCsrAdrsWidth)
-) USI_BUS (
+	.pBusBlockConnect			(lpBusBlockConnect),
+	.pUsiBusWidth				(lpUsiBusWidth),
+	.pBusAdrsBit				(lpBusAdrsBit),
+	.pBlockAdrsMap				(lpBlockAdrsMap),
+	.pGpioAdrsMap				(lpGpioAdrsMap),
+	.pSPIAdrsMap				(lpSPIAdrsMap),
+	.pI2CAdrsMap				(lpI2CAdrsMap),
+	.pVTBAdrsMap				(lpVTBAdrsMap),
+	.pATBAdrsMap				(lpATBAdrsMap),
+	.pRAMAdrsMap				(lpRAMAdrsMap),
+	.pCsrAdrsWidth				(lpCsrAdrsWidth)
+) UsiBus (
 	// Slave to Master
-	.oMUsiRd			(wMUsiRd),
-	.oMUsiREd			(wMUsiREd),
-	.iSUsiRd			(qSUsiRd),
-	.iSUsiREd			(qSUsiREd),
+	.oMUsiRd					(wMUsiRd),
+	.oMUsiREd					(wMUsiREd),
+	.iSUsiRd					(qSUsiRd),
+	.iSUsiREd					(qSUsiREd),
 	// Master to Slave
-	.iMUsiWd			(qMUsiWd),
-	.iMUsiAdrs			(qMUsiAdrs),
-	.iMUsiWEd			(qMUsiWEd),
-	.oSUsiWd			(wSUsiWd),
-	.oSUsiAdrs			(wSUsiAdrs),
-	.oSUsiWCke			(wSUsiWCke),
+	.iMUsiWd					(qMUsiWd),
+	.iMUsiAdrs					(qMUsiAdrs),
+	.iMUsiWEd					(qMUsiWEd),
+	.oSUsiWd					(wSUsiWd),
+	.oSUsiAdrs					(wSUsiAdrs),
+	.oSUsiWCke					(wSUsiWCke),
 	// Clk Rst
-	.iUsiClk 			(iSysClk),
-	.iUsiRst			(iSysRst)
+	.iUsiRst					(iSysRst),
+	.iUsiClk 					(iSysClk)
 );
 
 always @*
@@ -474,14 +563,78 @@ begin
 	qSUsiAdrsAudio	<= wSUsiAdrs;
 	qSUsiWCkeAudio	<= wSUsiWCke;
 	//
-	qSUsiRd			<= {32'd0, wSUsiRdAudio,  wSUsiRdVtb,  wSUsiRdI2c,  wSUsiRdSpi,  wSUsiRdGpio	};
-	qSUsiREd		<= { 1'h0, wSUsiREdAudio, wSUsiREdVtb, wSUsiREdI2c, wSUsiREdSpi, wSUsiREdGpio	};
+	qSUsiWdRam		<= wSUsiWd;
+	qSUsiAdrsRam	<= wSUsiAdrs;
+	qSUsiWCkeRam	<= wSUsiWCke;
+	//
+	qSUsiRd			<= {wSUsiRdRam,  wSUsiRdAudio,  wSUsiRdVtb,  wSUsiRdI2c,  wSUsiRdSpi,  wSUsiRdGpio	};
+	qSUsiREd		<= {wSUsiREdRam, wSUsiREdAudio, wSUsiREdVtb, wSUsiREdI2c, wSUsiREdSpi, wSUsiREdGpio	};
 end
+
 
 //----------------------------------------------------------
 // UFI/F BUS
 //----------------------------------------------------------
-// UltraFastInterface UFI_BUS
+wire [pUfiBusWidth-1:0]	wSUfiWdRam;
+wire [pUfiBusWidth-1:0]	wSUfiAdrsRam;
+wire 					wSUfiEdRam;
+wire 					wSUfiCmd;
+//
+wire [pUfiBusWidth-1:0] wMUfiRd;
+wire wMUfiREd;
 
+UltraFastInterface #(
+	.pUfiBusWidth	(pUfiBusWidth),
+	.pBusAdrsBit	(pBusAdrsBit)
+) UfiBus (
+	.iMUfiWdMcs		(wMUfiWdMcs),
+	.iMUfiAdrsMcs	(wMUfiAdrsMcs),
+	.iMUfiEdMcs		(wMUfiEdMcs),
+	.iMUfiVdMcs		(wMUfiVdMcs),
+	//
+	.iMUfiWdSpi		(wMUfiWdSpi),
+	.iMUfiAdrsSpi	(wMUfiAdrsSpi),
+	.iMUfiEdSpi		(wMUfiEdSpi),
+	.iMUfiVdSpi		(wMUfiVdSpi),
+	//
+	.iMUfiWdVtb		(wMUfiWdVtb),
+	.iMUfiAdrsVtb	(wMUfiAdrsVtb),
+	.iMUfiEdVtb		(wMUfiEdVtb),
+	.iMUfiVdVtb		(wMUfiVdVtb),
+	.iMUfiCmdVtb	(wMUfiCmdVtb),
+	.oMUfiRdyVtb	(wMUfiRdyVtb),
+	//
+	.iMUfiAdrsAtb	(wMUfiAdrsAtb),
+	.iMUfiEdAtb		(wMUfiEdAtb),
+	.iMUfiVdAtb		(wMUfiVdAtb),
+	.oMUfiRdyAtb	(wMUfiRdyAtb),
+	//
+	.oMUfiRd		(wMUfiRd),
+	.oMUfiREd		(wMUfiREd),
+	//
+	.oSUfiWdRam		(wSUfiWdRam),
+	.oSUfiAdrsRam	(wSUfiAdrsRam),
+	.oSUfiEdRam		(wSUfiEdRam),
+	.oSUfiCmd		(wSUfiCmd),
+	//
+	.iSUfiRdRam		(wSUfiRdRam),
+	.iSUfiREdRam	(wSUfiREdRam),
+	//
+	.iUfiRst		(iUfiRst),
+	.iUfiClk		(iUfiClk)
+);
+
+always @*
+begin
+	qSUfiWdRam	<= wSUfiWdRam;
+	qSUfiAdrsRam<= wSUfiAdrsRam;
+	qSUfiEdRam	<= wSUfiEdRam;
+	qSUfiCmd	<= wSUfiCmd;
+	//
+	qMUfiRdVtb 	<= wMUfiRd;
+	qMUfiREdVtb <= wMUfiREd;
+	qMUfiRdAtb	<= wMUfiRd;
+	qMUfiREdAtb	<= wMUfiREd;
+end
 
 endmodule

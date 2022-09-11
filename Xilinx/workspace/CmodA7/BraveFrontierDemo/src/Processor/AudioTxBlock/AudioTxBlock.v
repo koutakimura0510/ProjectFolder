@@ -9,6 +9,7 @@ module AudioTxBlock #(
 	parameter 						pBlockAdrsMap 		= 8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  		= 'h05,
 	parameter						pBusAdrsBit			= 32,
+	parameter						pUfiBusWidth		= 16,
 	parameter 						pCsrAdrsWidth 		= 8,
 	parameter						pCsrActiveWidth 	= 8,
 	//
@@ -24,12 +25,24 @@ module AudioTxBlock #(
 	input	[31:0]					iSUsiWd,	// Write Data
 	input	[pBusAdrsBit-1:0]		iSUsiAdrs,  // R/W Adrs
 	input							iSUsiWCke,	// Write Enable
+	// Ufi Master Read
+	input 	[pUfiBusWidth-1:0]		iMUfiRd,	// Read Data
+	input 							iMUfiREd,	// Read Data Enable
+	// Ufi Master Write
+	output 	[pBusAdrsBit-1:0]		oMUfiAdrs,
+	output 							oMUfiEd,
+	output 							oMUfiVd,
+	input							iMUfiRdy,
     // CLK Reset
     input           				iSysRst,
     input           				iSysClk,
     input           				iAudioRst,
 	input 							iAudioClk
 );
+
+assign oMUfiAdrs	= {pBusAdrsBit{1'b0}};
+assign oMUfiEd		= 1'b0;
+assign oMUfiVd		= 1'b0;
 
 
 //----------------------------------------------------------

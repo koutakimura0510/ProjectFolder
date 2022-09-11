@@ -49,16 +49,18 @@ module SPIBlock #(
 	input								iSUsiWCke,		// Data Enable
 	// Ufi Bus Master Write
 	output	[pUfiBusWidth-1:0]			oMUfiWd,		// Write Data
-	output	[31:0]						oMUfiAdrs,		// Write address
-	output								oMUfiWEd,		// Write Data Enable
-	output 								oMUfiWVd,		// 転送期間中 Assert
+	output	[pBusAdrsBit-1:0]			oMUfiAdrs,		// Write address
+	output								oMUfiEd,		// Write Data Enable
+	output 								oMUfiVd,		// 転送期間中 Assert
 	// Interrupt
 	output 								oMSpiIntr,		// FPGA Master Byte Read Data Enable
 	// Usi Bus Master to Slave Select
-	output 								oMUsiSel,	// 0. Slave として機能 / 1. Master バスを独占
+	output 								oMUsiSel,		// 0. Slave として機能 / 1. Master バスを独占
     // CLK Reset
+    input           					iSysRst,
     input           					iSysClk,
-    input           					iSysRst
+	//
+	output [3:0]						oTestPort
 );
 
 
@@ -103,8 +105,8 @@ SPIUnit #(
 	// Ufi Bus Master
 	.oMUfiWd			(oMUfiWd),
 	.oMUfiAdrs			(oMUfiAdrs),
-	.oMUfiWEd			(oMUfiWEd),
-	.oMUfiWVd			(oMUfiWVd),
+	.oMUfiEd			(oMUfiEd),
+	.oMUfiVd			(oMUfiVd),
 	// Csr
 	.iSPIEn				(qSPIEnUnit),
 	.iSPIDiv			(qSPIDivUnit),
@@ -115,7 +117,9 @@ SPIUnit #(
 	.oMSpiIntr			(oMSpiIntr),
 	// CLK Reset
 	.iSysClk			(iSysClk),
-	.iSysRst			(iSysRst)
+	.iSysRst			(iSysRst),
+	//
+	.oTestPort			(oTestPort)
 );
 
 

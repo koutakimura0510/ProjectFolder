@@ -35,11 +35,11 @@ module BraveFrontier #(
     inout           ioSpiCs,
     input           iMSSel,
 	// RAM
-	output 	[18:0]	oMemAdr,
+	output 	[18:0]	oMemAdrs,
 	inout	[7:0]	ioMemDq,
-	output 			oRamOE,
-	output 			oRamWE,
-	output 			oRamCE,
+	output 			oMemOE,
+	output 			oMemWE,
+	output 			oMemCE,
 	// Display
     output	[7:4]   oTftColorR,
     output	[7:4]   oTftColorG,
@@ -128,9 +128,9 @@ Processer # (
     // I2C Controller
     .oI2CScl        (oI2CScl),         .ioI2CSda        (ioI2CSda),
     // Memory
-	.oMemAdr		(oMemAdr),			.ioMemDq		(ioMemDq),
-	.oRamOE			(oRamOE),			.oRamWE			(oRamWE),
-	.oRamCE			(oRamCE),
+	.oMemAdrs		(oMemAdrs),			.ioMemDq		(ioMemDq),
+	.oMemOE			(oMemOE),			.oMemWE			(oMemWE),
+	.oMemCE			(oMemCE),
 	// TFT Display
 	.oTftColorR		(oTftColorR),		.oTftColorG		(oTftColorG),
 	.oTftColorB		(oTftColorB),

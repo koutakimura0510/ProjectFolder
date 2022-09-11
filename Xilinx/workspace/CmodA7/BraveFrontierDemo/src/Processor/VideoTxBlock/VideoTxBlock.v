@@ -10,6 +10,7 @@ module VideoTxBlock #(
 	parameter 						pBlockAdrsMap 	= 8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h04,
 	parameter						pBusAdrsBit		= 16,
+	parameter						pUfiBusWidth	= 16,
 	parameter 						pCsrAdrsWidth   = 16,
 	parameter						pCsrActiveWidth = 16,
 	// Display Size
@@ -46,18 +47,35 @@ module VideoTxBlock #(
 	output 							oTftBackLight,
 	output 							oTftRst,
 	// Internal Port
+	// Ufi Slave Read
 	output	[31:0]					oSUsiRd,	// Read Data
 	output							oSUsiREd,	// Read Valid Assert
-	// Bus Slave Write
+	// Ufi Slave Write
 	input	[31:0]					iSUsiWd,	// Write Data
 	input	[pBusAdrsBit-1:0]		iSUsiAdrs,  // R/W Adrs
 	input							iSUsiWCke,	// Write Enable
+	// Ufi Master Read
+	input 	[pUfiBusWidth-1:0]		iMUfiRd,	// Read Data
+	input 							iMUfiREd,	// Read Data Enable
+	// Ufi Master Write
+	output [pUfiBusWidth-1:0]		oMUfiWd,
+	output [pBusAdrsBit-1:0]		oMUfiAdrs,
+	output 							oMUfiEd,	// Adrs Data Enable
+	output 							oMUfiVd,	// Data Valid
+	output 							oMUfiCmd,	// High Read, Low Write
+	// Ufi Master Common
+	input 							iMUfiRdy,	// メモリと通信可能時 High
 	// CLK Rst
 	input  							iSysRst,
 	input 							iSysClk,
 	input 							iVideoClk
 );
 
+assign oMUfiWd		= {pUfiBusWidth{1'b0}};
+assign oMUfiAdrs	= {pBusAdrsBit{1'b0}};
+assign oMUfiEd		= 1'b0;
+assign oMUfiVd		= 1'b0;
+assign oMUfiCmd		= 1'b0;
 
 
 //-----------------------------------------------------------------------------
@@ -81,7 +99,7 @@ VideoTxUnit #(
     .pVdisplayWidth		(pVdisplayWidth),
 	.pColorDepth		(pColorDepth),
 	.pDualClkFifoDepth	(pDualClkFifoDepth)
-) VIDEO_TX_UNIT (
+) VideoTxUnit (
 	.oTftColorR			(oTftColorR),
 	.oTftColorG			(oTftColorG),
 	.oTftColorB			(oTftColorB),
@@ -139,7 +157,7 @@ VideoTxCsr #(
     .pVfrontWidth		(pVfrontWidth),
     .pVbackWidth		(pVbackWidth),
     .pVpulseWidth		(pVpulseWidth)
-) VIDEO_SYNC_CSR (
+) VideoTxCsr (
 	.oSUsiRd			(oSUsiRd),
 	.oSUsiREd			(oSUsiREd),
 	.iSUsiWd			(iSUsiWd),
