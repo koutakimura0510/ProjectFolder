@@ -33,13 +33,13 @@ module RAMBlock #(
 	input								iSUsiWCke,		// Data Enable
 	// Ufi Bus Slave Write
 	input	[pUfiBusWidth-1:0]			iSUfiWd,		// Write Data
-	input								iSUfiWEd,		// Write Data Enable
+	input	[pBusAdrsBit-1:0]			iSUfiAdrs,		// Ufi address
+	input								iSUfiEd,		// Adrs Enable
+	input   							iSUfiCmd,		// High Read, Low Write
+	output 								oSUfiRdy,
 	// Ufi Bus Slave Read
 	output	[pUfiBusWidth-1:0]			oSUfiRd,		// Read Data
 	output								oSUfiREd,		// Read Data Enable
-	//Ufi Bus Slave Common
-	input	[pBusAdrsBit-1:0]			iSUfiAdrs,		// Ufi address
-	input   							iSUfiCmd,		// High Read, Low Write
     // CLK Reset
     input           					iSysRst,
     input           					iSysClk,
@@ -50,13 +50,11 @@ module RAMBlock #(
 //----------------------------------------------------------
 // RAM Unit
 //----------------------------------------------------------
-wire [pRamAdrsWidth-1:0]	wMemAdrsCsr;
-wire [pRamDqWidth-1:0]		wMemWdCsr;
-wire 						wMemCECsr;
-wire 						wMemCmdCsr;
-wire [pRamDqWidth-1:0]		wMemRdCsr;
+reg [pUfiBusWidth-1:0]	qMemRdCsr;
 
 RAMUnit #(
+	.pUfiBusWidth	(pUfiBusWidth),
+	.pBusAdrsBit	(pBusAdrsBit),
 	.pRamFifoDepth	(pRamFifoDepth),
 	.pRamAdrsWidth	(pRamAdrsWidth),
 	.pRamDqWidth	(pRamDqWidth)
@@ -66,11 +64,15 @@ RAMUnit #(
 	.oMemOE			(oMemOE),
 	.oMemWE			(oMemWE),
 	.oMemCE			(oMemCE),
-	.iMemAdrs		(wMemAdrsCsr),
-	.iMemWd			(wMemWdCsr),
-	.iMemCE			(wMemCECsr),
-	.iMemCmd		(wMemCmdCsr),
-	.oMemRd			(wMemRdCsr),
+	//
+	.iSUfiWd		(iSUfiWd),
+	.iSUfiAdrs		(iSUfiAdrs),
+	.iSUfiEd		(iSUfiEd),
+	.iSUfiCmd		(iSUfiCmd),
+	.oSUfiRdy		(oSUfiRdy),
+	.oSUfiRd		(oSUfiRd),
+	.oSUfiREd		(oSUfiREd),
+	//
 	.iSysRst		(iSysRst),
 	.iSysClk		(iSysClk),
 	.iMemClk		(iMemClk)
@@ -91,16 +93,20 @@ RAMCsr #(
 ) RamCsr (
 	.oSUsiRd			(oSUsiRd),
 	.oSUsiREd			(oSUsiREd),
+	//
 	.iSUsiWd			(iSUsiWd),
 	.iSUsiAdrs			(iSUsiAdrs),
 	.iSUsiWCke			(iSUsiWCke),
-	.oMemAdrs			(wMemAdrsCsr),
-	.oMemWd				(wMemWdCsr),
-	.oMemCE				(wMemCECsr),
-	.oMemCmd			(wMemCmdCsr),
-	.iMemRd				(wMemRdCsr),
+	//
+	.iMemRd				(qMemRdCsr),
+	//
 	.iSysClk			(iSysClk),
 	.iSysRst			(iSysRst)
 );
+
+always @*
+begin
+	qMemRdCsr <= oSUfiRd;
+end
 
 endmodule

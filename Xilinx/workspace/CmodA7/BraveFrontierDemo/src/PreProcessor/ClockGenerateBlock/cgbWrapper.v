@@ -54,7 +54,7 @@ localparam      lpClkIn1Div      = 1;           // 12 [MHz] / 1 = 12 [MHz]
 // Spped Grade 1 = (600 ~ 1200MHz)
 localparam real lpClkOutMult     = 60.000;      // OSC MHz * Mult = VOC[MHz]
 localparam real lpClk0OutDivF    = 29.375;      // VOC MHz / DivF = Clk0[MHz]
-localparam      lpClk1OutDiv     = 20;          // VOC MHz / Div  = Clk1[MHz]
+localparam      lpClk1OutDiv     =120;          // VOC MHz / Div  = Clk1[MHz]
 localparam      lpClk2OutDiv     = 80;          // VOC MHz / Div  = Clk2[MHz]
 localparam      lpClk3OutDiv     =  8;          // VOC MHz / Div  = Clk3[MHz]
 localparam      lpClk4OutDiv     = 10;          // <Reserved>

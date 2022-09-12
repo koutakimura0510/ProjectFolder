@@ -32,7 +32,7 @@ begin
 	rSysRst = 0;
 	#(lpSysClkCycle * 5);
 end
-endtask //
+endtask
 
 
 //----------------------------------------------------------
@@ -112,10 +112,13 @@ end
 //----------------------------------------------------------
 // Ufi Bus
 //----------------------------------------------------------
-wire [31:0]	wMUfiWd;
-wire [31:0]	wMUfiAdrs;
-wire 		wMUfiWEd;
-wire 		wMUfiWVd;
+localparam lpUfiBusWidth = 8;
+
+wire [lpUfiBusWidth-1:0]	wMUfiWd;
+wire [31:0]					wMUfiAdrs;
+wire 						wMUfiEd;
+wire 						wMUfiVd;
+wire 						wMUfiCmd;
 
 
 //----------------------------------------------------------
@@ -132,6 +135,7 @@ wire 		wMUfiWVd;
 // 
 //----------------------------------------------------------
 localparam lpSclCycle = (lpSysClkCycle * 8);
+integer i;
 
 // SPI CS 関数
 task spi_cs (
@@ -149,7 +153,6 @@ task spi_send (
 	input [31:0] iMiso
 );
 begin
-	integer i;
 
 	for (i = 31; i >= 0; i = i - 1)
 	begin
@@ -177,18 +180,18 @@ reg [7:0] d = 8'h72;
 always @(negedge wioSpiSck)
 begin
 	if (wMUsiSel) 	d <= 8'h72;
-	else 				d <= {d[6:0], 1'b0};
+	else			d <= {d[6:0], 1'b0};
 
 	if (wMUsiSel) 	rioSpiMiso <= 1'bz;
-	else 				rioSpiMiso <= d[7];
+	else			rioSpiMiso <= d[7];
 end
 
 
 //----------------------------------------------------------
 // SPI 初期設定
 //----------------------------------------------------------
-// SPI Master 設定
-task spi_master_init;
+// FPGA Slave 設定
+task spi_slave_init;
 begin
 	rioSpiSck		= 1'b0;
 	rioSpiMiso		= 1'bz;
@@ -200,9 +203,8 @@ begin
 end
 endtask
 
-// SPI Slave 設定
-// SPI Master 設定
-task spi_slave_init;
+// FPGA Master 設定
+task spi_master_init;
 begin
 	rioSpiSck		= 1'bz;
 	rioSpiMiso		= 1'b0;
@@ -218,28 +220,21 @@ endtask
 //----------------------------------------------------------
 // Simlation Start
 //----------------------------------------------------------
-initial begin
-	// 一度 Master の立場から、Csr の設定を行う
-	spi_master_init();
+initial
+begin
+	// FPGA Slave
+	spi_slave_init();
 	reset_init();
 	spi_cs(1'b0);
-	spi_send('h8765_0304);
-	spi_send('h0001_0001);
-	spi_send('h0000_0008);
-	spi_cs(1'b1);
-	spi_cs(1'b0);
-	spi_send('h0123_0308);
-	spi_send('h0001_0001);
+	spi_send('h0000_0004);
+	spi_send('h0003_0004);
 	spi_send('h0000_00aa);
 	spi_cs(1'b1);
 	spi_cs(1'b0);
-	spi_send('h0123_0300);
-	spi_send('h0001_0001);
-	spi_send('h0000_0001);
-	// spi_cs(1'b1);
-
-	// Csr の設定で FPGA Master 動作
-	spi_slave_init();
+	spi_send('h0000_0004);
+	spi_send('h0004_0004);
+	spi_send('h0000_0000);
+	spi_cs(1'b1);
     $stop;
 end
 
@@ -250,7 +245,9 @@ end
 SPIBlock #(
 	.pBlockAdrsMap		(8),
 	.pAdrsMap			('h03),
-	.pBusAdrsBit		(16),
+	.pBusAdrsBit		(32),
+	.pCsrAdrsWidth		(16),
+	.pUfiBusWidth		(lpUfiBusWidth),
 	.pBusBlockConnect	(1)
 ) SPI_BLOCK (
 	// External Port
@@ -280,15 +277,18 @@ SPIBlock #(
 	// Ufi Bus Master Write
 	.oMUfiWd			(wMUfiWd),		// Write Data
 	.oMUfiAdrs			(wMUfiAdrs),	// Write address
-	.oMUfiWEd			(wMUfiWEd),		// Write Data Enable
-	.oMUfiWVd			(wMUfiWVd),		// 転送期間中 Assert
+	.oMUfiEd			(wMUfiEd),		// Write Data Enable
+	.oMUfiVd			(wMUfiVd),		// 転送期間中 Assert
+	.oMUfiCmd			(wMUfiCmd),		// High.Read / Low.Write
 	// Interrupt
 	.oMSpiIntr			(wMSpiIntr),
 	// Usi Bus Master to Slave Select
-	.oMUsiSel		(wMUsiSel),// 0. Slave として機能 / 1. Master バスを独占
+	.oMUsiSel			(wMUsiSel),		// 1. FPGA Slave 0. FPGA Master
 	// CLK Reset
 	.iSysClk			(rSysClk),
-	.iSysRst			(rSysRst)
+	.iSysRst			(rSysRst),
+	//
+	.oTestPort			()
 );
 
 endmodule

@@ -25,7 +25,7 @@ module SPISignal (
 	input	[31:0]	iSMiso,
 	output 	[31:0]	oSRd,
 	output 	[31:0]	oSAdrs,
-	output 	[1:0]	oSCmd,
+	output 	[2:0]	oSCmd,
 	output 	[15:0]	oSDLen,
 	output 			oSREd,
 	// Internal Port FPGA Master Side
@@ -51,7 +51,7 @@ module SPISignal (
 // 4byte Adrs + dummy + Cmd + 2byte Data Length + n32bitData... 
 // -
 // 最初に 8byte の命令シーケンスを受信する
-// Cmd : 0. Non, 1. Csr Write, 2. Csr Read, 3. PSRAM Write
+// Cmd : 0. Non, 1. Csr Write, 2. Csr Read, 3. PSRAM Write, 4. PSRAM Read
 // -
 // Csr 操作時は 連続アクセスは可能としない、必ず Data Length は 4byte 固定とする
 // ※ PSRAM 操作時は Data Length は最大 4096 byte とする 2022-09-11 時点
@@ -75,7 +75,7 @@ reg [1:0]	rSftSMosi;
 //
 reg [31:0]	rSRd;					assign oSRd   	= rSRd;
 reg [31:0]	rSAdrs;					assign oSAdrs	= rSAdrs;
-reg [1:0]	rSCmd;					assign oSCmd	= rSCmd;
+reg [2:0]	rSCmd;					assign oSCmd	= rSCmd;
 reg [15:0]	rSDLen;					assign oSDLen	= rSDLen;
 reg 		rSREd;					assign oSREd 	= rSREd;
 //
@@ -133,9 +133,9 @@ begin
 
 	// CMD の取得
 	casex ({qSSckCntNegCke, qNegScl, rSState[1:0]})
-		4'b11_01:		rSCmd	<= rSRd[17:16];
+		4'b11_01:		rSCmd	<= rSRd[18:16];
 		4'bxx_10:		rSCmd	<= rSCmd;
-		default:		rSCmd	<= 2'd0;
+		default:		rSCmd	<= 3'd0;
 	endcase
 
 	// Data Length の取得
@@ -291,7 +291,7 @@ IOBUF SPI_MOSI 	(.O (wSMosi), 	.IO (ioSpiMosi), 	.I (rMMosi[7]), 	.T (rMSSel[2])
 IOBUF SPI_WP 	(.O (wSWp), 	.IO (ioSpiWp),   	.I (1'b1),			.T (rMSSel[2])	);
 IOBUF SPI_HOLD 	(.O (wSHold),	.IO (ioSpiHold), 	.I (1'b1),			.T (rMSSel[2])	);
 //
-OBUF TestPort0	(.O (oTestPort[0]),	.I (wSScl));
+OBUF TestPort0	(.O (oTestPort[0]),	.I (iSysRst));
 OBUF TestPort1	(.O (oTestPort[1]),	.I (rSMiso[31]));
 OBUF TestPort2	(.O (oTestPort[2]),	.I (wSMosi));
 OBUF TestPort3	(.O (oTestPort[3]),	.I (wSCs));

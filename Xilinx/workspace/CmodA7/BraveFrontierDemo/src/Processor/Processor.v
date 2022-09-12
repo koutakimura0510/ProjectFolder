@@ -129,7 +129,7 @@ wire [31:0] 					wMUsiWdMcb;
 wire [lpBusAdrsBit-1:0]			wMUsiAdrsMcb;
 wire 							wMUsiWCkeMcb;
 //
-wire [pUfiBusWidth-1:0]			wMUfiWdMcs;
+wire [lpUfiBusWidth-1:0]		wMUfiWdMcs;
 wire [lpBusAdrsBit-1:0]			wMUfiAdrsMcs;
 wire 							wMUfiEdMcs;
 wire 							wMUfiVdMcs;
@@ -137,7 +137,7 @@ wire 							wMUfiVdMcs;
 MicroControllerBlock #(
 	.pBusBlockConnect	(lpBusBlockConnect),
 	.pBusAdrsBit		(lpBusAdrsBit),
-	.pUfiBusWidth		(pUfiBusWidth)
+	.pUfiBusWidth		(lpUfiBusWidth)
 ) MicroControllerBlock (
 	.iMUsiRd			(qMUsiRdMcb),
 	.iMUsiREd			(qMUsiVdMcb),
@@ -207,6 +207,7 @@ wire [lpUfiBusWidth-1:0]		wMUfiWdSpi;
 wire [lpBusAdrsBit-1:0]			wMUfiAdrsSpi;
 wire 							wMUfiEdSpi;
 wire 							wMUfiVdSpi;
+wire 							wMUfiCmdSpi;
 // Master Select
 wire 							wMUsiSel;
 // Interrupt
@@ -249,6 +250,7 @@ SPIBlock #(
 	.oMUfiAdrs					(wMUfiAdrsSpi),
 	.oMUfiEd					(wMUfiEdSpi),
 	.oMUfiVd					(wMUfiVdSpi),
+	.oMUfiCmd					(wMUfiCmdSpi),
 	// MUsi 制御信号
 	.oMUsiSel					(wMUsiSel),
 	.oMSpiIntr					(wMSpiIntr),
@@ -311,9 +313,9 @@ reg  [31:0] 			qSUsiWdVtb;
 reg  [lpBusAdrsBit-1:0] qSUsiAdrsVtb;
 reg  					qSUsiWCkeVtb;
 //
-reg  [pUfiBusWidth-1:0]	qMUfiRdVtb;
+reg  [lpUfiBusWidth-1:0]qMUfiRdVtb;
 reg  					qMUfiREdVtb;
-wire [pUfiBusWidth-1:0]	wMUfiWdVtb;
+wire [lpUfiBusWidth-1:0]wMUfiWdVtb;
 wire [lpBusAdrsBit-1:0]	wMUfiAdrsVtb;
 wire 					wMUfiEdVtb;
 wire 					wMUfiVdVtb;
@@ -324,7 +326,7 @@ VideoTxBlock #(
 	.pBlockAdrsMap		(lpBlockAdrsMap),
 	.pAdrsMap			(lpVTBAdrsMap),
 	.pBusAdrsBit		(lpBusAdrsBit),
-	.pUfiBusWidth		(pUfiBusWidth),
+	.pUfiBusWidth		(lpUfiBusWidth),
 	.pCsrAdrsWidth		(lpCsrAdrsWidth),
 	.pCsrActiveWidth	(lpVTBCsrActiveWidth),
 	.pHdisplay			(pHdisplay),
@@ -389,7 +391,7 @@ reg  [31:0] 			qSUsiWdAudio;
 reg  [lpBusAdrsBit-1:0]	qSUsiAdrsAudio;
 reg  					qSUsiWCkeAudio;
 //
-reg  [pUfiBusWidth-1:0]	qMUfiRdAtb;
+reg  [lpUfiBusWidth-1:0]qMUfiRdAtb;
 reg  					qMUfiREdAtb;
 //
 wire [lpBusAdrsBit-1:0]	wMUfiAdrsAtb;
@@ -439,18 +441,20 @@ reg  [31:0] 			qSUsiWdRam;
 reg  [lpBusAdrsBit-1:0]	qSUsiAdrsRam;
 reg  					qSUsiWCkeRam;
 // UFI Bus
-reg [lpUfiBusWidth-1:0] qSUfiWdRam;
+reg  [lpUfiBusWidth-1:0]qSUfiWdRam;
 reg 					qSUfiEdRam;
-wire [lpUfiBusWidth-1:0]wSUfiRdRam;
-wire 					wSUfiREdRam;
 reg  [lpBusAdrsBit-1:0]	qSUfiAdrsRam;
 reg  					qSUfiCmd;
+wire 					wSUfiRdy;
+wire [lpUfiBusWidth-1:0]wSUfiRdRam;
+wire 					wSUfiREdRam;
 
 RAMBlock #(
 	.pBlockAdrsMap		(lpBlockAdrsMap),
 	.pAdrsMap	 		(lpRAMAdrsMap),
 	.pBusAdrsBit		(lpBusAdrsBit),
 	.pCsrAdrsWidth		(lpCsrAdrsWidth),
+	.pUfiBusWidth		(lpUfiBusWidth),
 	.pCsrActiveWidth	(lpRAMCsrActiveWidth)
 ) RamBlock (
 	// External Port
@@ -470,12 +474,12 @@ RAMBlock #(
 	// Master -> Slave
 	.iSUfiWd			(qSUfiWdRam),
 	.iSUfiEd			(qSUfiEdRam),
+	.iSUfiAdrs			(qSUfiAdrsRam),
+	.iSUfiCmd			(qSUfiCmd),
+	.oSUfiRdy			(wSUfiRdy),
 	// Slave -> Master
 	.oSUfiRd			(wSUfiRdRam),
 	.oSUfiREd			(wSUfiREdRam),
-	// Ufi common
-	.iSUfiAdrs			(qSUfiAdrsRam),
-	.iSUfiCmd			(qSUfiCmd),
 	//
 	.iSysRst			(iSysRst),
 	.iSysClk			(iSysClk),
@@ -575,17 +579,17 @@ end
 //----------------------------------------------------------
 // UFI/F BUS
 //----------------------------------------------------------
-wire [pUfiBusWidth-1:0]	wSUfiWdRam;
-wire [pUfiBusWidth-1:0]	wSUfiAdrsRam;
+wire [lpUfiBusWidth-1:0]wSUfiWdRam;
+wire [lpBusAdrsBit-1:0]	wSUfiAdrsRam;
 wire 					wSUfiEdRam;
 wire 					wSUfiCmd;
 //
-wire [pUfiBusWidth-1:0] wMUfiRd;
+wire [lpUfiBusWidth-1:0]wMUfiRd;
 wire wMUfiREd;
 
 UltraFastInterface #(
-	.pUfiBusWidth	(pUfiBusWidth),
-	.pBusAdrsBit	(pBusAdrsBit)
+	.pUfiBusWidth	(lpUfiBusWidth),
+	.pBusAdrsBit	(lpBusAdrsBit)
 ) UfiBus (
 	.iMUfiWdMcs		(wMUfiWdMcs),
 	.iMUfiAdrsMcs	(wMUfiAdrsMcs),
@@ -596,6 +600,7 @@ UltraFastInterface #(
 	.iMUfiAdrsSpi	(wMUfiAdrsSpi),
 	.iMUfiEdSpi		(wMUfiEdSpi),
 	.iMUfiVdSpi		(wMUfiVdSpi),
+	.iMUfiCmdSpi	(wMUfiCmdSpi),
 	//
 	.iMUfiWdVtb		(wMUfiWdVtb),
 	.iMUfiAdrsVtb	(wMUfiAdrsVtb),
@@ -616,12 +621,13 @@ UltraFastInterface #(
 	.oSUfiAdrsRam	(wSUfiAdrsRam),
 	.oSUfiEdRam		(wSUfiEdRam),
 	.oSUfiCmd		(wSUfiCmd),
+	.iSUfiRdy		(wSUfiRdy),
 	//
 	.iSUfiRdRam		(wSUfiRdRam),
 	.iSUfiREdRam	(wSUfiREdRam),
 	//
-	.iUfiRst		(iUfiRst),
-	.iUfiClk		(iUfiClk)
+	.iUfiRst		(iSysRst),
+	.iUfiClk		(iSysClk)
 );
 
 always @*

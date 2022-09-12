@@ -33,6 +33,11 @@ module MicroControllerBlock #(
     input           					iSysClk
 );
 
+assign oMUfiWdMcs		= {pUfiBusWidth{1'b0}};
+assign oMUfiAdrsMcs		= {pBusAdrsBit{1'b0}};
+assign oMUfiEdMcs		= 1'b0;
+assign oMUfiVdMcs		= 1'b0;
+
 
 //----------------------------------------------------------
 // デバッグ用 MicroBlaze

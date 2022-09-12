@@ -35,6 +35,7 @@ module SPIUnit #(
 	output	[31:0]				oMUfiAdrs,		// Write address
 	output						oMUfiEd,		// Write Data Enable
 	output 						oMUfiVd,		// 転送期間中 Assert
+	output 						oMUfiCmd,
 	// Csr
 	input 						iSPIEn,
 	input 	[pDivClk-1:0]		iSPIDiv,
@@ -73,7 +74,7 @@ CkeGenerator #(
 wire	[31:0]		wSMisoMux;
 reg 	[31:0]		qSRdMux;
 reg 	[31:0]		qSAdrsMux;
-reg 	[1:0]		qSCmdMux;
+reg 	[2:0]		qSCmdMux;
 reg 	[15:0]		qSDLenMux;
 reg 				qSREdMux;
 
@@ -98,6 +99,7 @@ SPISignalMux # (
 	.oMUfiAdrs		(oMUfiAdrs),
 	.oMUfiEd		(oMUfiEd),
 	.oMUfiVd		(oMUfiVd),
+	.oMUfiCmd		(oMUfiCmd),
 	// CLK Reset
 	.iSysClk		(iSysClk),
 	.iSysRst		(iSysRst)
@@ -111,7 +113,7 @@ SPISignalMux # (
 reg		[31:0]	qSMisoSig;
 wire 	[31:0]	wSRdSig;
 wire 	[31:0]	wSAdrsSig;
-wire 	[1:0]	wSCmdSig;
+wire 	[2:0]	wSCmdSig;
 wire 	[15:0]	wSDLenSig;
 wire 			wSREdSig;
 

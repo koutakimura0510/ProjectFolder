@@ -7,29 +7,63 @@
 //----------------------------------------------------------
 module RAMUnit #(
 	// variable parameter
-	parameter		pRamFifoDepth	= 16,
-	parameter		pRamAdrsWidth	= 19,
-	parameter		pRamDqWidth		= 8
+	parameter					pUfiBusWidth	= 16,
+	parameter					pBusAdrsBit		= 32,
+	parameter					pRamFifoDepth	= 16,
+	parameter					pRamDqWidth		= 8,
+	parameter					pRamAdrsWidth	= 19
 )(
 	// External Port
-	output 	[pRamAdrsWidth-1:0]	oMemAdrs,
 	inout	[pRamDqWidth-1:0]	ioMemDq,
+	output 	[pRamAdrsWidth-1:0]	oMemAdrs,
 	output 						oMemOE,			// Output Enable
 	output 						oMemWE,			// Write Enable
 	output 						oMemCE,			// Chip Select
+	// Ufi Bus Slave Write
+	input	[pUfiBusWidth-1:0]	iSUfiWd,		// Write Data
+	input	[pBusAdrsBit-1:0]	iSUfiAdrs,		// Ufi address
+	input   					iSUfiCmd,		// High Read, Low Write
+	input						iSUfiEd,		// Adrs Enable
+	output 						oSUfiRdy,		// Active Assert
+	// Ufi Bus Slave Read
+	output	[pUfiBusWidth-1:0]	oSUfiRd,		// Read Data
+	output						oSUfiREd,		// Read Data Enable
 	//
-	input	[pRamAdrsWidth-1:0]	iMemAdrs,
-	input	[pRamDqWidth-1:0]	iMemWd,
-	input						iMemCE,
-	input						iMemCmd,
-	output 	[pRamDqWidth-1:0]	oMemRd,
-    // Internal Port
     input						iSysRst,
     input						iSysClk,
     input						iMemClk
 );
 
 
+//-----------------------------------------------------------------------------
+// System Clk <-> Memory Clk
+//-----------------------------------------------------------------------------
+wire [pUfiBusWidth-1:0]	wMemWd;
+wire [pRamAdrsWidth-1:0]wMemAdrs;
+wire 					wMemCmd;
+wire 					wRVd;
+wire 					wEmp;
+
+RAMDualClkFifo #(
+	.pDualClkFifoDepth (256),
+	.pRamDqWidth	(pRamDqWidth),
+	.pRamAdrsWidth	(pRamAdrsWidth)
+) RamDualClkFifo (
+	.iWd			(iSUfiWd),
+	.iAdrs			(iSUfiAdrs[pRamAdrsWidth-1:0]),
+	.iCmd			(iSUfiCmd),
+	.iWEd			(iSUfiEd),
+	.oFull			(oSUfiRdy),
+	.oWd			(wMemWd),
+	.oAdrs			(wMemAdrs),
+	.oCmd			(wMemCmd),
+	.iREd			(~wEmp),
+	.oEmp 			(wEmp),
+	.oRVd			(wRVd),
+	.iRst			(iSysRst),
+	.iSysClk		(iSysClk),
+	.iMemClk		(iMemClk)
+);
 
 
 //-----------------------------------------------------------------------------
@@ -45,15 +79,16 @@ RAMIf #(
 	.oMemWE			(oMemWE),
 	.oMemCE			(oMemCE),
 	//
-	.iAdrs			(iMemAdrs),
-	.iWd			(iMemWd),
-	.oRd			(oMemRd),
-	.oRVd			(oMemRVd),
-	.iCE			(iMemCE),
-	.iCmd			(iMemCmd),
+	.iWd			(wMemWd),
+	.iAdrs			(wMemAdrs),
+	.iCE			(~wRVd),
+	.iCmd			(wMemCmd),
+	.oRd			(oSUfiRd),
+	.oREd			(oSUfiREd),
 	//
 	.iRst			(iSysRst),
-	.iClk			(iMemClk)
+    .iSysClk		(iSysClk),
+	.iMemClk		(iMemClk)
 );
 
 

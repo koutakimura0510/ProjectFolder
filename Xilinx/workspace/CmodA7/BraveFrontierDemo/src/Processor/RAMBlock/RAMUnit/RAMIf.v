@@ -27,14 +27,14 @@ module RAMIf #(
 	//
 	input	[pRamAdrsWidth-1:0]		iAdrs,
 	input 	[pRamDqWidth-1:0]		iWd,
-	output 	[pRamDqWidth-1:0]		oRd,
-	output 							oRVd,
-	//
 	input 							iCE,			// Low Active
 	input 							iCmd,			// High Read, Low Write
+	output 	[pRamDqWidth-1:0]		oRd,
+	output 							oREd,
     // Internal Port
     input							iRst,
-    input							iClk
+	input 							iSysClk,
+    input							iMemClk
 );
 
 
@@ -47,13 +47,13 @@ module RAMIf #(
 reg  [pRamAdrsWidth-1:0]	rAdrs;
 reg  [pRamDqWidth-1:0]	 	rWd;
 reg  [pRamDqWidth-1:0] 		rRd;				assign oRd  = rRd;
-reg 						rRVd;				assign oRVd = rRVd;
+reg 						rREd;				assign oREd = rREd;
 reg 						rOE;
 reg 						rWE;
 reg 						rCE;
 wire [pRamDqWidth-1:0] 		wRd;
 
-always @(posedge iClk)
+always @(posedge iMemClk)
 begin
 	// 初期状態が Active でも問題ないため、外部制御信号に Reset は付けない
 	rOE 	<= ~iCmd;
@@ -65,9 +65,9 @@ begin
 	if (rWE)	rRd <= wRd;
 	else  		rRd <= rRd;
 
-	if (iRst)		rRVd <= 1'b0;
-	else if (rWE) 	rRVd <= 1'b1;
-	else  			rRVd <= 1'b0;
+	if (iRst)		rREd <= 1'b0;
+	else if (rWE) 	rREd <= 1'b1;
+	else  			rREd <= 1'b0;
 end
 
 //-----------------------------------------------------------------------------

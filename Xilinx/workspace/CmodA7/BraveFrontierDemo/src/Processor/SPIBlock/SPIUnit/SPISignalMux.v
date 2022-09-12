@@ -14,7 +14,7 @@ module SPISignalMux #(
 	output	[31:0]				oSMiso,
 	input 	[31:0]				iSRd,
 	input 	[31:0]				iSAdrs,
-	input 	[1:0]				iSCmd,
+	input 	[2:0]				iSCmd,
 	input 	[15:0]				iSDLen,
 	input 						iSREd,
 	// Internal Port FPGA Slave Side Upper Module Connect
@@ -27,6 +27,7 @@ module SPISignalMux #(
 	output	[31:0]				oMUfiAdrs,	// Write address
 	output						oMUfiEd,	// Write Data Enable
 	output 						oMUfiVd,	// 転送期間中 Assert
+	output 						oMUfiCmd,	// High Read, Low Write
 	// CLK Reset
     input           			iSysClk,
 	input 						iSysRst
@@ -53,7 +54,7 @@ begin
 
 	// Csr Write のみ判定
 	case ({iSREd, iSCmd})
-		3'b101:		rMUsiWEd <= 1'b1;
+		4'b1001:	rMUsiWEd <= 1'b1;
 		default 	rMUsiWEd <= 1'b0;
 	endcase
 end
@@ -65,6 +66,7 @@ reg [pUfiBusWidth-1:0] 	rMUfiWd;		assign oMUfiWd		= rMUfiWd;
 reg [31:0] 				rMUfiAdrs;		assign oMUfiAdrs	= rMUfiAdrs;
 reg 					rMUfiEd;		assign oMUfiEd		= rMUfiEd;
 reg  					rMUfiVd;		assign oMUfiVd		= rMUfiVd;
+reg  					rMUfiCmd;		assign oMUfiCmd		= rMUfiCmd;
 //
 reg 					qMUfiVd;
 //
@@ -75,8 +77,15 @@ begin
 
 	// Data Enable
 	case ({iSREd, iSCmd})
-		3'b111:		rMUfiEd <= 1'b1;
+		4'b1011:	rMUfiEd <= 1'b1;
+		4'b1100:	rMUfiEd <= 1'b1;
 		default 	rMUfiEd <= 1'b0;
+	endcase
+
+	// Cmd
+	case ({iSCmd})
+		3'b011:		rMUfiCmd <= 1'b0;
+		default 	rMUfiCmd <= 1'b1;
 	endcase
 
 	// wVd SDLen を取得したら 転送期間中とする

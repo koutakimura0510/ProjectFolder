@@ -5,9 +5,9 @@
 // メモリ専用バスシステム I/F モジュール
 // 
 //----------------------------------------------------------
-module UltraSimpleInterface #(
+module UltraFastInterface #(
 	// variable parameter
-	parameter 							pUfiBusWidth	= 32,	// Bus幅
+	parameter 							pUfiBusWidth	= 16,	// Bus幅
 	parameter							pBusAdrsBit		= 32	// アドレスBit幅
 )(
     // Internal Port
@@ -21,6 +21,7 @@ module UltraSimpleInterface #(
 	input [pBusAdrsBit-1:0] 			iMUfiAdrsSpi,
 	input 								iMUfiEdSpi,
 	input 								iMUfiVdSpi,
+	input 								iMUfiCmdSpi,
 	//
 	input [pUfiBusWidth-1:0] 			iMUfiWdVtb,
 	input [pBusAdrsBit-1:0] 			iMUfiAdrsVtb,
@@ -41,6 +42,7 @@ module UltraSimpleInterface #(
 	output [pBusAdrsBit-1:0]			oSUfiAdrsRam,	// Slave に対する R/W 共通のアドレス指定バス
 	output 								oSUfiEdRam,		// Slave に対する書き込み有効信号
 	output 								oSUfiCmd,		// Slave に対する Assert Read, Low Write
+	input 								iSUfiRdy,
 	input  [pUfiBusWidth-1:0] 			iSUfiRdRam,		// Master に対する 読み込みデータ 
 	input  								iSUfiREdRam,	// Master に対する 読み込み有効信号
     // CLK Reset
@@ -50,8 +52,6 @@ module UltraSimpleInterface #(
 
 
 //----------------------------------------------------------
-// バスクロックで バス経由データ保存
-// 
 // ATB は VTB の Rdy 信号を、 VTB は ATB の Rdy 信号を確認し、
 // Valid 受信中でも、どちらかの動作が終了するまで待機するようにした。
 // 
@@ -73,7 +73,7 @@ reg 					rMUfiRdyVtb;		assign oMUfiRdyVtb  = rMUfiRdyVtb;
 
 always @(posedge iUfiClk)
 begin
-	case ({iMUfiVdMcs, iMUfiVdSpi, iMUfiVdVtb, iMUfiVdAtb, rMUfiRdyVtb, rMUfiRdyAtb})
+	casex ({iMUfiVdMcs, iMUfiVdSpi, iMUfiVdVtb, iMUfiVdAtb, rMUfiRdyVtb, rMUfiRdyAtb})
 		'b1xxxxx:
 		begin
 			rMUfiWd 	<= iMUfiWdMcs;
@@ -88,7 +88,7 @@ begin
 			rMUfiWd 	<= iMUfiWdSpi;
 			rMUfiAdrs 	<= iMUfiAdrsSpi;
 			rMUfiEd 	<= iMUfiEdSpi;
-			rMUfiCmd 	<= 1'b0;		// spi は 書き込み固定
+			rMUfiCmd 	<= iMUfiCmdSpi;	// debug 用に R/W 両方
 			rMUfiRdyAtb <= 1'b0;
 			rMUfiRdyVtb <= 1'b0;
 		end

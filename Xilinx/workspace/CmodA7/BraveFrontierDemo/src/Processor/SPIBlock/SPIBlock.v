@@ -52,6 +52,7 @@ module SPIBlock #(
 	output	[pBusAdrsBit-1:0]			oMUfiAdrs,		// Write address
 	output								oMUfiEd,		// Write Data Enable
 	output 								oMUfiVd,		// 転送期間中 Assert
+	output 								oMUfiCmd,
 	// Interrupt
 	output 								oMSpiIntr,		// FPGA Master Byte Read Data Enable
 	// Usi Bus Master to Slave Select
@@ -95,7 +96,7 @@ SPIUnit #(
 	.ioSpiCs			(ioSpiCs),
 	.iMSSel				(iMSSel),
 	// Usi Bus Master to Slave Select
-	.oMUsiSel		(oMUsiSel),
+	.oMUsiSel			(oMUsiSel),
 	// Usi Bus Master Read
 	.iMUsiRd			(iMUsiRd),
 	// Usi Bus Master Write
@@ -107,6 +108,7 @@ SPIUnit #(
 	.oMUfiAdrs			(oMUfiAdrs),
 	.oMUfiEd			(oMUfiEd),
 	.oMUfiVd			(oMUfiVd),
+	.oMUfiCmd			(oMUfiCmd),
 	// Csr
 	.iSPIEn				(qSPIEnUnit),
 	.iSPIDiv			(qSPIDivUnit),
