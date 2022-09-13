@@ -33,7 +33,6 @@ module RAMIf #(
 	output 							oREd,
     // Internal Port
     input							iRst,
-	input 							iSysClk,
     input							iMemClk
 );
 
@@ -79,7 +78,7 @@ genvar i,j;
 generate
 	for (i = 0; i < pRamDqWidth; i = i + 1)
 	begin
-		IOBUF MemDq	(.I(rWd[i]), .O(wRd[i]), .IO(ioMemDq[i]), .T(iCmd));
+		IOBUF MemDq	(.I(rWd[i]), .O(wRd[i]), .IO(ioMemDq[i]), .T(rWE));
 	end
 
 	for (j = 0; j < pRamAdrsWidth; j = j + 1)
