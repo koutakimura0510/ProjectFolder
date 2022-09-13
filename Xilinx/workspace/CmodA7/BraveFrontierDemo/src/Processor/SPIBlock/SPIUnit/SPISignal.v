@@ -54,7 +54,7 @@ module SPISignal (
 // Cmd : 0. Non, 1. Csr Write, 2. Csr Read, 3. PSRAM Write, 4. PSRAM Read
 // -
 // Csr 操作時は 連続アクセスは可能としない、必ず Data Length は 4byte 固定とする
-// ※ PSRAM 操作時は Data Length は最大 4096 byte とする 2022-09-11 時点
+// ※ RAM 操作時は Data Length は最大 4096 byte とする 2022-09-11 時点
 // 
 //----------------------------------------------------------
 localparam [1:0]
@@ -124,7 +124,7 @@ begin
 
 	// アクセス開始アドレスの取得、PSRAM アクセスの場合のアドレス自動更新
 	// SPI は RAMに比べて極めて低速なため、上位モジュールでアドレスの更新を管理する必要はない。
-	// そのため、このロジックでアドレスを更新ようにした
+	// そのため、このロジックでアドレスを更新するようにした
 	casex ({qSSckCntNegCke, qNegScl, rSState[1:0]})
 		4'b11_00:		rSAdrs	<= rSRd;
 		4'b11_10:		rSAdrs	<= rSAdrs + 1'b1;

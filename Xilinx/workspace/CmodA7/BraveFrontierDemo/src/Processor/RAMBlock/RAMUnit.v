@@ -87,7 +87,6 @@ RAMIf #(
 	.oREd			(oSUfiREd),
 	//
 	.iRst			(iSysRst),
-    .iSysClk		(iSysClk),
 	.iMemClk		(iMemClk)
 );
 

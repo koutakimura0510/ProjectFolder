@@ -2,7 +2,7 @@
 // Create 2022/9/12
 // Author koutakimura
 // -
-// System Clk と Memory Clk の クロック変換
+// System Clk と Memory Clk の クロック変換用途
 // 
 //----------------------------------------------------------
 module RAMDualClkFifo #(

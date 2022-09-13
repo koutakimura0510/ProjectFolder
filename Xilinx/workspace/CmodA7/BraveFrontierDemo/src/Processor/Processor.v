@@ -315,6 +315,7 @@ reg  					qSUsiWCkeVtb;
 //
 reg  [lpUfiBusWidth-1:0]qMUfiRdVtb;
 reg  					qMUfiREdVtb;
+reg 					qMUfiRdyVtb;
 wire [lpUfiBusWidth-1:0]wMUfiWdVtb;
 wire [lpBusAdrsBit-1:0]	wMUfiAdrsVtb;
 wire 					wMUfiEdVtb;
@@ -393,6 +394,7 @@ reg  					qSUsiWCkeAudio;
 //
 reg  [lpUfiBusWidth-1:0]qMUfiRdAtb;
 reg  					qMUfiREdAtb;
+reg 					qMUfiRdyAtb;
 //
 wire [lpBusAdrsBit-1:0]	wMUfiAdrsAtb;
 wire 					wMUfiEdAtb;
@@ -579,13 +581,14 @@ end
 //----------------------------------------------------------
 // UFI/F BUS
 //----------------------------------------------------------
+wire [lpUfiBusWidth-1:0]wMUfiRd;
+wire wMUfiREd;
+wire wMUfiRdy;
+//
 wire [lpUfiBusWidth-1:0]wSUfiWdRam;
 wire [lpBusAdrsBit-1:0]	wSUfiAdrsRam;
 wire 					wSUfiEdRam;
 wire 					wSUfiCmd;
-//
-wire [lpUfiBusWidth-1:0]wMUfiRd;
-wire wMUfiREd;
 
 UltraFastInterface #(
 	.pUfiBusWidth	(lpUfiBusWidth),
@@ -616,15 +619,16 @@ UltraFastInterface #(
 	//
 	.oMUfiRd		(wMUfiRd),
 	.oMUfiREd		(wMUfiREd),
+	.oMUfiRdy		(wMUfiRdy),
 	//
 	.oSUfiWdRam		(wSUfiWdRam),
 	.oSUfiAdrsRam	(wSUfiAdrsRam),
 	.oSUfiEdRam		(wSUfiEdRam),
 	.oSUfiCmd		(wSUfiCmd),
-	.iSUfiRdy		(wSUfiRdy),
 	//
 	.iSUfiRdRam		(wSUfiRdRam),
 	.iSUfiREdRam	(wSUfiREdRam),
+	.iSUfiRdyRam	(wSUfiRdy),
 	//
 	.iUfiRst		(iSysRst),
 	.iUfiClk		(iSysClk)
@@ -639,8 +643,10 @@ begin
 	//
 	qMUfiRdVtb 	<= wMUfiRd;
 	qMUfiREdVtb <= wMUfiREd;
+	qMUfiRdyVtb <= wMUfiRdy;
 	qMUfiRdAtb	<= wMUfiRd;
 	qMUfiREdAtb	<= wMUfiREd;
+	qMUfiRdyAtb <= wMUfiRdy;
 end
 
 endmodule

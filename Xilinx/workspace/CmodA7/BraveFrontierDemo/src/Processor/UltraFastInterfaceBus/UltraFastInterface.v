@@ -35,16 +35,17 @@ module UltraFastInterface #(
 	input 								iMUfiVdAtb,
 	output 								oMUfiRdyAtb,
 	// 
-	output [pUfiBusWidth-1:0] 			oMUfiRd,		// Master に対する読み込みデータ
-	output 								oMUfiREd,		// Master に対する読み込み有効信号
+	output [pUfiBusWidth-1:0] 			oMUfiRd,		// Master に対する 読み込みデータ
+	output 								oMUfiREd,		// Master に対する 読み込み有効信号
+	output 								oMUfiRdy,		// Master に対する Ready 信号
 	// Slave Memory Block Side
-	output [pUfiBusWidth-1:0] 			oSUfiWdRam,		// Slave に対する書き込みデータ
+	output [pUfiBusWidth-1:0] 			oSUfiWdRam,		// Slave に対する 書き込みデータ
 	output [pBusAdrsBit-1:0]			oSUfiAdrsRam,	// Slave に対する R/W 共通のアドレス指定バス
-	output 								oSUfiEdRam,		// Slave に対する書き込み有効信号
+	output 								oSUfiEdRam,		// Slave に対する 書き込み有効信号
 	output 								oSUfiCmd,		// Slave に対する Assert Read, Low Write
-	input 								iSUfiRdy,
 	input  [pUfiBusWidth-1:0] 			iSUfiRdRam,		// Master に対する 読み込みデータ 
 	input  								iSUfiREdRam,	// Master に対する 読み込み有効信号
+	input 								iSUfiRdyRam,	// Master に対する Ready 信号
     // CLK Reset
     input								iUfiRst,
     input								iUfiClk 
@@ -55,6 +56,15 @@ module UltraFastInterface #(
 // ATB は VTB の Rdy 信号を、 VTB は ATB の Rdy 信号を確認し、
 // Valid 受信中でも、どちらかの動作が終了するまで待機するようにした。
 // 
+// また RCmd 発行後 から 実際のデータ読み込みまでタイムラグがあり、
+// いくつかのレイテンシが発生する。RAM 側で アドレスを判定して
+// ATB や VTB にデータを振り分ける制御線を作ってもよかったが、
+// アクセスするブロックが増えた場合にソース管理が面倒になるので止めた。
+// 
+// 解決策として、ATB,VTB ブロック内に、RCmd 発行回数とデータの読み込み回数の
+// カウンタを用意しておき、比較することで指定回数受信したことを判定するようにする。
+// こうするとブロック内で変更を完結できるようになる。
+// 
 // メモリアクセス優先順位
 // 1.MCS
 // 2.SPI
@@ -63,6 +73,7 @@ module UltraFastInterface #(
 //----------------------------------------------------------
 reg [pUfiBusWidth-1:0] 	rMUfiRd;			assign oMUfiRd  	= rMUfiRd;
 reg 					rMUfiREd;			assign oMUfiREd 	= rMUfiREd;
+reg 					rMUfiRdy;			assign oMUfiRdy 	= rMUfiRdy;
 //
 reg [pUfiBusWidth-1:0]	rMUfiWd;			assign oSUfiWdRam 	= rMUfiWd;
 reg [pBusAdrsBit-1:0]	rMUfiAdrs;			assign oSUfiAdrsRam = rMUfiAdrs;
@@ -98,7 +109,7 @@ begin
 			rMUfiAdrs 	<= iMUfiAdrsAtb;
 			rMUfiEd 	<= iMUfiEdAtb;
 			rMUfiCmd 	<= 1'b1;		// Atb は 読み込み固定
-			rMUfiRdyAtb	<= 1'b1;
+			rMUfiRdyAtb	<= 1'b1;		// Atb 動作中
 			rMUfiRdyVtb	<= 1'b0;
 		end
 		'b001xx0:
@@ -108,7 +119,7 @@ begin
 			rMUfiEd 	<= iMUfiEdVtb;
 			rMUfiCmd 	<= iMUfiCmdVtb;	// フレームバッファの R/W があるため 両対応
 			rMUfiRdyAtb	<= 1'b0;
-			rMUfiRdyVtb	<= 1'b1;
+			rMUfiRdyVtb	<= 1'b1;		// Vtb 動作中
 		end
 		default:
 		begin
@@ -116,17 +127,17 @@ begin
 			rMUfiEd 	<= 1'b0;
 			rMUfiAdrs 	<= 'hffffffff;
 			rMUfiCmd 	<= 1'b1;
-			rMUfiRdyAtb <= 1'b0;
+			rMUfiRdyAtb <= 1'b0;		// 両方受付可能
 			rMUfiRdyVtb <= 1'b0;
 		end
 	endcase
 	//
-	rMUfiRd	<= iSUfiRdRam;
+	rMUfiRd		<= iSUfiRdRam;
+	rMUfiRdy 	<= iSUfiRdyRam;
 
 	if (iUfiRst) 			rMUfiREd <= 1'b0;
 	else if (iSUfiREdRam)	rMUfiREd <= 1'b1;
 	else 					rMUfiREd <= 1'b0;
 end
-
 
 endmodule
