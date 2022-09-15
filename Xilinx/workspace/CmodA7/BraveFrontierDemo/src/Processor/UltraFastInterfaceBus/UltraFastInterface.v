@@ -3,11 +3,12 @@
 // Author koutakimura
 // -
 // メモリ専用バスシステム I/F モジュール
+// バスのデータ幅は、使用する外部RAMのデータ幅と合わせている。 2022-09-14 現在
 // 
 //----------------------------------------------------------
 module UltraFastInterface #(
 	// variable parameter
-	parameter 							pUfiBusWidth	= 16,	// Bus幅
+	parameter 							pUfiBusWidth	=  8,	// Bus幅
 	parameter							pBusAdrsBit		= 32	// アドレスBit幅
 )(
     // Internal Port
@@ -20,20 +21,20 @@ module UltraFastInterface #(
 	input [pUfiBusWidth-1:0] 			iMUfiWdSpi,
 	input [pBusAdrsBit-1:0] 			iMUfiAdrsSpi,
 	input 								iMUfiEdSpi,
-	input 								iMUfiVdSpi,
-	input 								iMUfiCmdSpi,
+	input 								iMUfiVdSpi,		// 転送期間中 Assert
+	input 								iMUfiCmdSpi,	// High Read / Lor Write
 	//
 	input [pUfiBusWidth-1:0] 			iMUfiWdVtb,
 	input [pBusAdrsBit-1:0] 			iMUfiAdrsVtb,
 	input 								iMUfiEdVtb,
-	input 								iMUfiVdVtb,
-	input 								iMUfiCmdVtb,
-	output 								oMUfiRdyVtb,
+	input 								iMUfiVdVtb,		// 転送期間中 Assert
+	input 								iMUfiCmdVtb,	// High Read / Lor Write
+	output 								oMUfiRdyVtb,	// Vtb に対する Ready 信号
 	//
 	input [pBusAdrsBit-1:0] 			iMUfiAdrsAtb,
 	input 								iMUfiEdAtb,
-	input 								iMUfiVdAtb,
-	output 								oMUfiRdyAtb,
+	input 								iMUfiVdAtb,		// 転送期間中 Assert
+	output 								oMUfiRdyAtb,	// Atb に対する Ready 信号
 	// 
 	output [pUfiBusWidth-1:0] 			oMUfiRd,		// Master に対する 読み込みデータ
 	output 								oMUfiREd,		// Master に対する 読み込み有効信号
@@ -42,7 +43,7 @@ module UltraFastInterface #(
 	output [pUfiBusWidth-1:0] 			oSUfiWdRam,		// Slave に対する 書き込みデータ
 	output [pBusAdrsBit-1:0]			oSUfiAdrsRam,	// Slave に対する R/W 共通のアドレス指定バス
 	output 								oSUfiEdRam,		// Slave に対する 書き込み有効信号
-	output 								oSUfiCmd,		// Slave に対する Assert Read, Low Write
+	output 								oSUfiCmd,		// Slave に対する High Read, Low Write
 	input  [pUfiBusWidth-1:0] 			iSUfiRdRam,		// Master に対する 読み込みデータ 
 	input  								iSUfiREdRam,	// Master に対する 読み込み有効信号
 	input 								iSUfiRdyRam,	// Master に対する Ready 信号
@@ -58,7 +59,7 @@ module UltraFastInterface #(
 // 
 // また RCmd 発行後 から 実際のデータ読み込みまでタイムラグがあり、
 // いくつかのレイテンシが発生する。RAM 側で アドレスを判定して
-// ATB や VTB にデータを振り分ける制御線を作ってもよかったが、
+// タイミングがずれていても ATB や VTB にデータを振り分ける制御線を作ってもよかったが、
 // アクセスするブロックが増えた場合にソース管理が面倒になるので止めた。
 // 
 // 解決策として、ATB,VTB ブロック内に、RCmd 発行回数とデータの読み込み回数の
@@ -85,7 +86,7 @@ reg 					rMUfiRdyVtb;		assign oMUfiRdyVtb  = rMUfiRdyVtb;
 always @(posedge iUfiClk)
 begin
 	casex ({iMUfiVdMcs, iMUfiVdSpi, iMUfiVdVtb, iMUfiVdAtb, rMUfiRdyVtb, rMUfiRdyAtb})
-		'b1xxxxx:
+		'b1xxxxx:	// MCS は優先して制御
 		begin
 			rMUfiWd 	<= iMUfiWdMcs;
 			rMUfiAdrs 	<= iMUfiAdrsMcs;
@@ -94,7 +95,7 @@ begin
 			rMUfiRdyAtb <= 1'b0;
 			rMUfiRdyVtb <= 1'b0;
 		end
-		'b01xxxx:
+		'b01xxxx:	// SPI は優先して制御
 		begin
 			rMUfiWd 	<= iMUfiWdSpi;
 			rMUfiAdrs 	<= iMUfiAdrsSpi;
@@ -103,7 +104,7 @@ begin
 			rMUfiRdyAtb <= 1'b0;
 			rMUfiRdyVtb <= 1'b0;
 		end
-		'b00x10x:
+		'b00x10x:	// Vtb 稼働中 OFF
 		begin
 			rMUfiWd 	<= 'h00000000;
 			rMUfiAdrs 	<= iMUfiAdrsAtb;
@@ -112,7 +113,7 @@ begin
 			rMUfiRdyAtb	<= 1'b1;		// Atb 動作中
 			rMUfiRdyVtb	<= 1'b0;
 		end
-		'b001xx0:
+		'b001xx0:	// Atb 稼働中 OFF
 		begin
 			rMUfiWd 	<= iMUfiWdVtb;
 			rMUfiAdrs 	<= iMUfiAdrsVtb;
@@ -127,7 +128,7 @@ begin
 			rMUfiEd 	<= 1'b0;
 			rMUfiAdrs 	<= 'hffffffff;
 			rMUfiCmd 	<= 1'b1;
-			rMUfiRdyAtb <= 1'b0;		// 両方受付可能
+			rMUfiRdyAtb <= 1'b0;
 			rMUfiRdyVtb <= 1'b0;
 		end
 	endcase

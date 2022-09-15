@@ -46,8 +46,16 @@ create_generated_clock -name MemClk   [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CL
 create_generated_clock -name VideoClk [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT2];
 create_generated_clock -name AudioClk [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT3];
 # create_generated_clock -name AudioClk [get_pins PREPROCESSER/CGB/PLLE2_ADV_CLK_GEN/CLKOUT0]
-# set_false_path -from [PRE_PROCESSER/CGB/rRst_reg] -to [PROCESSER/AUDIO_TX_BLOCK/AudioTxUnit/AudioToneIndex/rDecIndex_reg[*]]
-# set_false_path -from [PRE_PROCESSER/CGB/rRst_reg] -to [PROCESSER/AUDIO_TX_BLOCK/AudioTxUnit/AudioToneIndex/rIntIndex_reg[*]]
+# set_false_path -from [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT3] -to [all_registers]
+# set_false_path -from [get_clocks SysClk] -to [get_clocks AudioClk]
+# set_false_path -from [get_clocks AudioClk] -to [get_clocks SysClk]
+set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioCke_reg/C]
+set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioTone_reg[*]/C]
+set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioSel_reg/C]
+set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioDuty_reg[*]/C]
+set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioDmaAdrs_reg[*]/C]
+set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioDmaLen_reg[*]/C]
+set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioDmaEn_reg/C]
 
 #-------------------------------------------------------------------------------
 # 手動配置
@@ -210,6 +218,8 @@ set_property -dict { PACKAGE_PIN K2    IOSTANDARD LVCMOS33  } [get_ports { oTest
 set_property -dict { PACKAGE_PIN L1    IOSTANDARD LVCMOS33  } [get_ports { oTestPort[1] }];
 set_property -dict { PACKAGE_PIN L2    IOSTANDARD LVCMOS33  } [get_ports { oTestPort[2] }];
 set_property -dict { PACKAGE_PIN M1    IOSTANDARD LVCMOS33  } [get_ports { oTestPort[3] }];
+
+
 
 
 ## This file is a general .xdc for the CmodA7 rev. B

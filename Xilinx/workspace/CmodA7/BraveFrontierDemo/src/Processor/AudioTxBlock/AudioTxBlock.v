@@ -13,7 +13,8 @@ module AudioTxBlock #(
 	parameter 						pCsrAdrsWidth 		= 8,
 	parameter						pCsrActiveWidth 	= 8,
 	//
-	parameter						pSamplingBitWidth	= 8	// 分解能
+	parameter						pSamplingBitWidth	= 8,	// 分解能
+	parameter						pMemBitWidth		= 19
 )(
 	// External Port
 	output							oAudioMclk,
@@ -32,6 +33,7 @@ module AudioTxBlock #(
 	output 	[pBusAdrsBit-1:0]		oMUfiAdrs,
 	output 							oMUfiEd,
 	output 							oMUfiVd,
+	// Ufi Master Common
 	input							iMUfiRdy,
     // CLK Reset
     input           				iSysRst,
@@ -48,19 +50,26 @@ assign oMUfiVd		= 1'b0;
 //----------------------------------------------------------
 // AudioTxUnit
 //----------------------------------------------------------
-wire 				wAudioCkeCsr;
-wire 	[ 6:0]		wAudioToneCsr;
-wire 				wAudioSelCsr;
-wire 	[ 7:0]		wAudioDutyCsr;
+wire 						wAudioCkeCsr;
+wire 	[ 6:0]				wAudioToneCsr;
+wire 						wAudioSelCsr;
+wire 	[ 7:0]				wAudioDutyCsr;
+wire 	[ pMemBitWidth-1:0] wAudioDmaAdrsCsr;
+wire 	[ pMemBitWidth-1:0] wAudioDmaLenCsr;
+wire 						wAudioDmaEnCsr;
 
 AudioTxUnit #(
-	.pSamplingBitWidth	(pSamplingBitWidth)
+	.pSamplingBitWidth	(pSamplingBitWidth),
+	.pMemBitWidth		(pMemBitWidth)
 ) AudioTxUnit (
 	.oAudioMclk			(oAudioMclk),
 	.iAudioCke			(wAudioCkeCsr),
 	.iAudioTone			(wAudioToneCsr),
 	.iAudioSel			(wAudioSelCsr),
 	.iAudioDuty			(wAudioDutyCsr),
+	.iAudioDmaAdrs		(wAudioDmaAdrsCsr),
+	.iAudioDmaLen		(wAudioDmaLenCsr),
+	.iAudioDmaEn		(wAudioDmaEnCsr),
 	.iAudioRst			(iAudioRst),
 	.iAudioClk			(iAudioClk)
 );
@@ -74,7 +83,8 @@ AudioTxCsr #(
 	.pAdrsMap			(pAdrsMap),
 	.pBusAdrsBit		(pBusAdrsBit),
 	.pCsrAdrsWidth		(pCsrAdrsWidth),
-	.pCsrActiveWidth	(pCsrActiveWidth)
+	.pCsrActiveWidth	(pCsrActiveWidth),
+	.pMemBitWidth		(pMemBitWidth)
 ) AudioTxCsr (
 	.oSUsiRd			(oSUsiRd),
 	.oSUsiREd			(oSUsiREd),
@@ -85,6 +95,9 @@ AudioTxCsr #(
 	.oAudioTone			(wAudioToneCsr),
 	.oAudioSel			(wAudioSelCsr),
 	.oAudioDuty			(wAudioDutyCsr),
+	.oAudioDmaAdrs		(wAudioDmaAdrsCsr),
+	.oAudioDmaLen		(wAudioDmaLenCsr),
+	.oAudioDmaEn		(wAudioDmaEnCsr),
 	.iSysRst			(iSysRst),
 	.iSysClk			(iSysClk)
 );

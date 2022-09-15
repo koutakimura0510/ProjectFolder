@@ -64,7 +64,7 @@ module VideoTxBlock #(
 	output 							oMUfiVd,	// Data Valid
 	output 							oMUfiCmd,	// High Read, Low Write
 	// Ufi Master Common
-	input 							iMUfiRdy,	// メモリと通信可能時 High
+	input 							iMUfiRdy,	// Ufi Bus 転送可能時 Assert
 	// CLK Rst
 	input  							iSysRst,
 	input 							iSysClk,

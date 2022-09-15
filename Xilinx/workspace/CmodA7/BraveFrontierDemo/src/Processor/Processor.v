@@ -315,13 +315,13 @@ reg  					qSUsiWCkeVtb;
 //
 reg  [lpUfiBusWidth-1:0]qMUfiRdVtb;
 reg  					qMUfiREdVtb;
-reg 					qMUfiRdyVtb;
+//
 wire [lpUfiBusWidth-1:0]wMUfiWdVtb;
 wire [lpBusAdrsBit-1:0]	wMUfiAdrsVtb;
 wire 					wMUfiEdVtb;
 wire 					wMUfiVdVtb;
 wire 					wMUfiCmdVtb;
-wire  					wMUfiRdyVtb;
+reg  					qMUfiRdyVtb;
 //
 VideoTxBlock #(
 	.pBlockAdrsMap		(lpBlockAdrsMap),
@@ -373,7 +373,7 @@ VideoTxBlock #(
 	.oMUfiVd			(wMUfiVdVtb),
 	.oMUfiCmd			(wMUfiCmdVtb),
 	//
-	.iMUfiRdy			(wMUfiRdyVtb),
+	.iMUfiRdy			(qMUfiRdyVtb),
 	// CLK Rst
 	.iSysRst			(iSysRst),
 	.iVideoClk 			(iVideoClk),
@@ -394,12 +394,12 @@ reg  					qSUsiWCkeAudio;
 //
 reg  [lpUfiBusWidth-1:0]qMUfiRdAtb;
 reg  					qMUfiREdAtb;
-reg 					qMUfiRdyAtb;
 //
 wire [lpBusAdrsBit-1:0]	wMUfiAdrsAtb;
 wire 					wMUfiEdAtb;
 wire 					wMUfiVdAtb;
-wire 					wMUfiRdyAtb;
+//
+reg 					qMUfiRdyAtb;
 
 AudioTxBlock #(
 	.pBlockAdrsMap		(lpBlockAdrsMap),
@@ -424,7 +424,8 @@ AudioTxBlock #(
 	.oMUfiAdrs			(wMUfiAdrsAtb),
 	.oMUfiEd			(wMUfiEdAtb),
 	.oMUfiVd			(wMUfiVdAtb),
-	.iMUfiRdy			(wMUfiRdyAtb),
+	//
+	.iMUfiRdy			(qMUfiRdyAtb),
 	//
 	.iSysRst			(iSysRst),
 	.iSysClk			(iSysClk),
@@ -436,6 +437,10 @@ AudioTxBlock #(
 //----------------------------------------------------------
 // RAMBlock
 //----------------------------------------------------------
+localparam lpRamFifoDepth 	= 1024;
+localparam lpRamAdrsWidth	= 19;
+localparam lpRamDqWidth		= 8;
+
 // USI Bus
 wire [31:0] 			wSUsiRdRam;
 wire 					wSUsiREdRam;
@@ -456,8 +461,11 @@ RAMBlock #(
 	.pAdrsMap	 		(lpRAMAdrsMap),
 	.pBusAdrsBit		(lpBusAdrsBit),
 	.pCsrAdrsWidth		(lpCsrAdrsWidth),
+	.pCsrActiveWidth	(lpRAMCsrActiveWidth),
 	.pUfiBusWidth		(lpUfiBusWidth),
-	.pCsrActiveWidth	(lpRAMCsrActiveWidth)
+	.pRamFifoDepth		(lpRamFifoDepth),
+	.pRamAdrsWidth		(lpRamAdrsWidth),
+	.pRamDqWidth		(lpRamDqWidth)
 ) RamBlock (
 	// External Port
 	.oMemAdrs			(oMemAdrs),
@@ -582,13 +590,17 @@ end
 // UFI/F BUS
 //----------------------------------------------------------
 wire [lpUfiBusWidth-1:0]wMUfiRd;
-wire wMUfiREd;
-wire wMUfiRdy;
+wire 					wMUfiREd;
+//
 //
 wire [lpUfiBusWidth-1:0]wSUfiWdRam;
 wire [lpBusAdrsBit-1:0]	wSUfiAdrsRam;
 wire 					wSUfiEdRam;
 wire 					wSUfiCmd;
+wire 					wMUfiRdyVtb;
+wire 					wMUfiRdyAtb;
+//
+wire					wMUfiRdy;
 
 UltraFastInterface #(
 	.pUfiBusWidth	(lpUfiBusWidth),
@@ -643,10 +655,11 @@ begin
 	//
 	qMUfiRdVtb 	<= wMUfiRd;
 	qMUfiREdVtb <= wMUfiREd;
-	qMUfiRdyVtb <= wMUfiRdy;
+	qMUfiRdyVtb <= &{wMUfiRdyVtb,wMUfiRdy};
+	//
 	qMUfiRdAtb	<= wMUfiRd;
 	qMUfiREdAtb	<= wMUfiREd;
-	qMUfiRdyAtb <= wMUfiRdy;
+	qMUfiRdyAtb <= &{wMUfiRdyAtb,wMUfiRdy};
 end
 
 endmodule

@@ -8,18 +8,18 @@ module RAMBlock #(
 	// variable parameter
 	parameter 							pBlockAdrsMap 		= 8,
 	parameter [pBlockAdrsMap-1:0] 		pAdrsMap	  		= 'h06,
-	parameter							pBusAdrsBit			= 16,
-	parameter 							pCsrAdrsWidth	 	= 8,
+	parameter							pBusAdrsBit			= 32,
+	parameter 							pCsrAdrsWidth	 	= 16,
 	parameter							pCsrActiveWidth 	= 8,
-	parameter							pUfiBusWidth		= 16,
+	parameter							pUfiBusWidth		= 8,
 	//
-	parameter							pRamFifoDepth		= 16,
-	parameter							pRamAdrsWidth		= 19,
-	parameter							pRamDqWidth			= 8
+	parameter							pRamFifoDepth		= 256,	// Dual Clk FIFO の深さ
+	parameter							pRamAdrsWidth		= 19,	// GPIO アドレス幅
+	parameter							pRamDqWidth			= 8		// GPIO データ幅
 )(
 	// External Port
-	output 	[18:0]						oMemAdrs,
-	inout	[7:0]						ioMemDq,
+	output 	[pRamAdrsWidth-1:0]			oMemAdrs,
+	inout	[pRamDqWidth-1:0]			ioMemDq,
 	output 								oMemOE,			// Output Enable
 	output 								oMemWE,			// Write Enable
 	output 								oMemCE,			// Chip Select

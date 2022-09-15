@@ -43,26 +43,27 @@ wire [pRamAdrsWidth-1:0]wMemAdrs;
 wire 					wMemCmd;
 wire 					wRVd;
 wire 					wEmp;
+wire 					wFull;					assign oSUfiRdy = ~wFull;
 
 RAMDualClkFifo #(
-	.pDualClkFifoDepth (256),
-	.pRamDqWidth	(pRamDqWidth),
-	.pRamAdrsWidth	(pRamAdrsWidth)
+	.pDualClkFifoDepth 	(pRamFifoDepth),
+	.pRamDqWidth		(pRamDqWidth),
+	.pRamAdrsWidth		(pRamAdrsWidth)
 ) RamDualClkFifo (
-	.iWd			(iSUfiWd),
-	.iAdrs			(iSUfiAdrs[pRamAdrsWidth-1:0]),
-	.iCmd			(iSUfiCmd),
-	.iWEd			(iSUfiEd),
-	.oFull			(oSUfiRdy),
-	.oWd			(wMemWd),
-	.oAdrs			(wMemAdrs),
-	.oCmd			(wMemCmd),
-	.iREd			(~wEmp),
-	.oEmp 			(wEmp),
-	.oRVd			(wRVd),
-	.iRst			(iSysRst),
-	.iSysClk		(iSysClk),
-	.iMemClk		(iMemClk)
+	.iWd				(iSUfiWd),
+	.iAdrs				(iSUfiAdrs[pRamAdrsWidth-1:0]),
+	.iCmd				(iSUfiCmd),
+	.iWEd				(iSUfiEd),
+	.oFull				(wFull),
+	.oWd				(wMemWd),
+	.oAdrs				(wMemAdrs),
+	.oCmd				(wMemCmd),
+	.iREd				(~wEmp),
+	.oEmp 				(wEmp),
+	.oRVd				(wRVd),
+	.iRst				(iSysRst),
+	.iSysClk			(iSysClk),
+	.iMemClk			(iMemClk)
 );
 
 

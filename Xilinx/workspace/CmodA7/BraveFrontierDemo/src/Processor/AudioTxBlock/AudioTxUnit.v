@@ -6,7 +6,8 @@
 // 
 //----------------------------------------------------------
 module AudioTxUnit #(
-	parameter					pSamplingBitWidth	= 8	// 分解能
+	parameter					pSamplingBitWidth	= 8,	// 分解能
+	parameter					pMemBitWidth		= 19
 )(
     // Internal Port
 	output 						oAudioMclk,
@@ -14,6 +15,9 @@ module AudioTxUnit #(
 	input [ 6:0]				iAudioTone,
 	input 						iAudioSel,
 	input [ 7:0]				iAudioDuty,
+	input [pMemBitWidth-1:0]	iAudioDmaAdrs,
+	input [pMemBitWidth-1:0]	iAudioDmaLen,
+	input 						iAudioDmaEn,
     // CLK Reset
 	input 						iAudioRst,
 	input 						iAudioClk
@@ -28,7 +32,7 @@ wire [ 6:0]	wAudioTone;
 
 SftReg #(
 	.pBitWidth		(1),
-	.pSftRegDepth	(5),
+	.pSftRegDepth	(3),
 	.pLutRam		("no")
 ) AudioCkeSft (
 	.iD				(iAudioCke),
@@ -39,7 +43,7 @@ SftReg #(
 
 SftReg #(
 	.pBitWidth		(7),
-	.pSftRegDepth	(5),
+	.pSftRegDepth	(3),
 	.pLutRam		("no")
 ) AudioToneSft (
 	.iD				(iAudioTone),
