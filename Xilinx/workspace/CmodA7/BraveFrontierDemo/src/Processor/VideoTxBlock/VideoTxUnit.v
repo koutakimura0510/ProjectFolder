@@ -6,13 +6,17 @@
 // 
 //----------------------------------------------------------
 module VideoTxUnit #(
+	parameter						pBusAdrsBit			= 16,
+	parameter						pUfiBusWidth		= 16,
+	parameter						pMemAdrsWidth		= 19,
 	// Display Size
-    parameter       				pHdisplayWidth	= 11,
-    parameter       				pVdisplayWidth	= 11,
+    parameter       				pHdisplayWidth		= 11,
+    parameter       				pVdisplayWidth		= 11,
 	// Color Depth ARGB:4444
-	parameter						pColorDepth		= 16,
+	parameter						pColorDepth			= 16,
 	// Dual Clk FIFO Depth
-	parameter						pDualClkFifoDepth = 1024
+	parameter						pDualClkFifoDepth 	= 1024,
+	parameter						pDmaFifoDepth		= 1024
 )(
 	// External port
 	output [7:4] 					oTftColorR,
@@ -24,6 +28,17 @@ module VideoTxUnit #(
 	output 							oTftDe,
 	output 							oTftBackLight,
 	output 							oTftRst,
+	// Ufi Master Read
+	input 	[pUfiBusWidth-1:0]		iMUfiRd,	// Read Data
+	input 							iMUfiREd,	// Read Data Enable
+	// Ufi Master Write
+	output [pUfiBusWidth-1:0]		oMUfiWd,
+	output [pBusAdrsBit-1:0]		oMUfiAdrs,
+	output 							oMUfiEd,	// Adrs Data Enable
+	output 							oMUfiVd,	// Data Valid
+	output 							oMUfiCmd,	// High Read, Low Write
+	// Ufi Master Common
+	input 							iMUfiRdy,	// Ufi Bus 転送可能時 Assert
 	// Internal Port
 	input	[pHdisplayWidth-1:0]	iHdisplay,
 	input	[pVdisplayWidth-1:0]	iVdisplay,
@@ -38,6 +53,12 @@ module VideoTxUnit #(
 	input 							iVtbVideoRst,
 	input 							iDisplayRst,
 	input 	[7:0]					iBlDutyRatio,
+	//
+	input 	[pMemAdrsWidth-1:0]		iDmaWAdrs,
+	input 	[pMemAdrsWidth-1:0]		iDmaRAdrs,
+	input 	[pMemAdrsWidth-1:0]		iDmaWLen,
+	input 	[pMemAdrsWidth-1:0]		iDmaRLen,
+	input 							iDmaEn,
     // CLK Reset
     input           				iSysClk,
 	input 							iVideoClk,
@@ -57,22 +78,67 @@ localparam lpDualFifoWidth = pColorDepth - (pColorDepth / 4);
 //-----------------------------------------------------------------------------
 wire [lpDualFifoWidth-1:0] wDrawPixel;
 wire wDrawPixelVd;
-reg  qVideoDualFifoFull;
+reg  qVideoPixelGenCke;
 
 VideoPixelGen #(
 	.pHdisplayWidth		(pHdisplayWidth),
 	.pVdisplayWidth		(pVdisplayWidth),
 	.pColorDepth		(pColorDepth)
-) VIDEO_PIXEL_GEN (
+) VideoPixelGen (
 	.iHdisplay			(iHdisplay),
 	.iVdisplay			(iVdisplay),
 	.oPixel				(wDrawPixel),
 	.oVd				(wDrawPixelVd),
 	.iRst				(iVtbSystemRst),
-	.iCke				(qVideoDualFifoFull),
+	.iCke				(qVideoPixelGenCke),
 	.iClk				(iSysClk)
 );
 
+
+//-----------------------------------------------------------------------------
+// Video DMA
+//-----------------------------------------------------------------------------
+wire 					wDmaFull;
+wire [pUfiBusWidth-1:0]	wDmaRd;
+wire 					wDmaREd;
+reg						qDmaRe;
+
+VideoDmaUnit #(
+	.pUfiBusWidth		(pUfiBusWidth),
+	.pBusAdrsBit		(pBusAdrsBit),
+	.pMemAdrsWidth		(pMemAdrsWidth),
+	.pFifoDepth			(pDmaFifoDepth)
+) VideoDmaUnit (
+	.iMUfiRd			(iMUfiRd),
+	.iMUfiREd			(iMUfiREd),
+	.oMUfiWd			(oMUfiWd),
+	.oMUfiAdrs			(oMUfiAdrs),
+	.oMUfiEd			(oMUfiEd),
+	.oMUfiVd			(oMUfiVd),
+	.oMUfiCmd			(oMUfiCmd),
+	.iMUfiRdy			(iMUfiRdy),
+	//
+	.iDmaWd				(wDrawPixel[7:0]),
+	.iDmaWEd			(wDrawPixelVd),
+	.oDmaFull			(wDmaFull),
+	.oDmaRd				(wDmaRd),
+	.oDmaREd			(wDmaREd),
+	.iDmaRe				(qDmaRe),
+	//
+	.iDmaWAdrs			(iDmaWAdrs),
+	.iDmaRAdrs			(iDmaRAdrs),
+	.iDmaWLen			(iDmaWLen),
+	.iDmaRLen			(iDmaRLen),
+	.iDmaEn				(iDmaEn),
+	//
+	.iRst				(iSysRst),
+	.iClk				(iSysClk)
+);
+
+always @*
+begin
+	qVideoPixelGenCke <= (~wDmaFull);
+end
 
 //-----------------------------------------------------------------------------
 // Video Sync Gen
@@ -114,8 +180,8 @@ VideoDualClkFIFO #(
 	.pBuffDepth		(pDualClkFifoDepth),
 	.pBitWidth		(lpDualFifoWidth)
 ) VIDEO_DUAL_CLK_FIFO (
-	.iWd			(wDrawPixel),
-	.iWe			(wDrawPixelVd),
+	.iWd			({4'd0, wDmaRd}),
+	.iWe			(wDmaREd),
 	.ofull			(wVideoDualFifoFull),
 	.oRd			(wVideoDualFifoRd),
 	.iRe			(wVde),
@@ -127,7 +193,7 @@ VideoDualClkFIFO #(
 
 always @*
 begin
-	qVideoDualFifoFull <= (~wVideoDualFifoFull);
+	qDmaRe <= (~wVideoDualFifoFull);
 end
 //
 // Dual Clk Fifo 経由で 2レイテンシ遅延が発生するため、

@@ -53,9 +53,9 @@ set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioCke_reg/C
 set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioTone_reg[*]/C]
 set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioSel_reg/C]
 set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioDuty_reg[*]/C]
-set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioDmaAdrs_reg[*]/C]
-set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioDmaLen_reg[*]/C]
-set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioDmaEn_reg/C]
+# set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioDmaAdrs_reg[*]/C]
+# set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioDmaLen_reg[*]/C]
+# set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioDmaEn_reg/C]
 
 #-------------------------------------------------------------------------------
 # 手動配置

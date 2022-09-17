@@ -80,8 +80,12 @@ localparam [lpVdisplayWidth:0] lpVSyncStart	= lpVdisplay + lpVfront;
 localparam [lpVdisplayWidth:0] lpVSyncEnd	= lpVdisplay + lpVfront + lpVpulse - 1'b1;
 localparam [lpVdisplayWidth:0] lpVSyncMax	= lpVdisplay + lpVfront + lpVpulse + lpVback - 1'b1;
 //
-localparam lpColorDepth 	= 16;
-localparam pDualClkFifoDepth= 32;
+localparam lpBusAdrsBit			= 32;
+localparam lpUfiBusWidth		= 8;
+localparam lpMemAdrsWidth		= 19;
+localparam lpColorDepth 		= 16;
+localparam lpDualClkFifoDepth	= 32;
+localparam lpDmaFifoDepth		= 32;
 //
 wire [7:0]	wTftColorR;
 wire [7:0]	wTftColorG;
@@ -99,10 +103,14 @@ assign wTftColorG[3:0] = 4'b0000;
 assign wTftColorB[3:0] = 4'b0000;
 //
 VideoTxUnit #(
+	.pBusAdrsBit		(lpBusAdrsBit),
+	.pUfiBusWidth		(lpUfiBusWidth),
+	.pMemAdrsWidth		(lpMemAdrsWidth),
 	.pHdisplayWidth		(lpHdisplayWidth),
 	.pVdisplayWidth		(lpVdisplayWidth),
 	.pColorDepth		(lpColorDepth),
-	.pDualClkFifoDepth	(pDualClkFifoDepth)
+	.pDualClkFifoDepth	(lpDualClkFifoDepth),
+	.pDmaFifoDepth		(lpDmaFifoDepth)
 ) VIDEO_TX_UNIt (
 	.oTftColorR			(wTftColorR[7:4]),
 	.oTftColorG			(wTftColorG[7:4]),
@@ -113,6 +121,14 @@ VideoTxUnit #(
 	.oTftDe				(wTftDe),
 	.oTftBackLight		(wTftBackLight),
 	.oTftRst			(wTftRst),
+	.iMUfiRd			(),
+	.iMUfiREd			(),
+	.iMUfiRdy			(),
+	.oMUfiWd			(),
+	.oMUfiAdrs			(),
+	.oMUfiEd			(),
+	.oMUfiVd			(),
+	.oMUfiCmd			(),
 	.iHdisplay			(lpHdisplay),
 	.iVdisplay			(lpVdisplay),
 	.iHSyncStart		(lpHSyncStart),
@@ -125,11 +141,21 @@ VideoTxUnit #(
 	.iVtbVideoRst		(rVtbVideoRst),
 	.iDisplayRst		(1'b0),
 	.iBlDutyRatio		(127),
+	.iDmaWAdrs			(0),
+	.iDmaRAdrs			(1024),
+	.iDmaWLen			(1024),
+	.iDmaRLen			(2048),
+	.iDmaEn				(1'b1),
 	.iSysClk			(wSysClk),
 	.iVideoClk			(wVideoClk),
 	.iSysRst			(rSysRst),
 	.oFe				(wAFE)
 );
+
+
+//-----------------------------------------------------------------------------
+// UfiBus
+//-----------------------------------------------------------------------------
 
 
 //-----------------------------------------------------------------------------

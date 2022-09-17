@@ -9,7 +9,8 @@ module SPIUnit #(
 	// variable parameter
 	parameter					pBusAdrsBit	= 16,
 	parameter 					pDivClk 	= 16,
-	parameter					pUfiBusWidth= 16
+	parameter					pUfiBusWidth= 16,
+	parameter					pTestPortUsed = "no"
 )(
 	// External Port
     inout	          			ioSpiSck,
@@ -117,7 +118,9 @@ wire 	[2:0]	wSCmdSig;
 wire 	[15:0]	wSDLenSig;
 wire 			wSREdSig;
 
-SPISignal SPISignal (
+SPISignal # (
+	.pTestPortUsed	(pTestPortUsed)
+) SPISignal (
 	// External Port
 	.ioSpiSck		(ioSpiSck),
 	.ioSpiMiso		(ioSpiMiso),

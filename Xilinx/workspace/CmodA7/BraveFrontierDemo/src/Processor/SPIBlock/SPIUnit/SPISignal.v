@@ -11,7 +11,9 @@
 // 				速度改善が必要になったら修正することにする。
 // 
 //----------------------------------------------------------
-module SPISignal (
+module SPISignal # (
+	parameter		pTestPortUsed = "no"
+)(
 	// External Port
     inout           ioSpiSck,
     inout           ioSpiMiso,
@@ -291,8 +293,18 @@ IOBUF SPI_MOSI 	(.O (wSMosi), 	.IO (ioSpiMosi), 	.I (rMMosi[7]), 	.T (rMSSel[2])
 IOBUF SPI_WP 	(.O (wSWp), 	.IO (ioSpiWp),   	.I (1'b1),			.T (rMSSel[2])	);
 IOBUF SPI_HOLD 	(.O (wSHold),	.IO (ioSpiHold), 	.I (1'b1),			.T (rMSSel[2])	);
 //
-OBUF TestPort0	(.O (oTestPort[0]),	.I (iSysRst));
-OBUF TestPort1	(.O (oTestPort[1]),	.I (rSMiso[31]));
-OBUF TestPort2	(.O (oTestPort[2]),	.I (wSMosi));
-OBUF TestPort3	(.O (oTestPort[3]),	.I (wSCs));
+
+generate
+	if (pTestPortUsed == "yes")
+	begin
+		OBUF TestPort0	(.O (oTestPort[0]),	.I (iSysRst));
+		OBUF TestPort1	(.O (oTestPort[1]),	.I (rSMiso[31]));
+		OBUF TestPort2	(.O (oTestPort[2]),	.I (wSMosi));
+		OBUF TestPort3	(.O (oTestPort[3]),	.I (wSCs));
+	end
+	else
+	begin
+		assign oTestPort = 4'd0;
+	end
+endgenerate
 endmodule

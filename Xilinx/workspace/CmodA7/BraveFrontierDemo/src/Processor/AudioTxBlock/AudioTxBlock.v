@@ -8,13 +8,14 @@
 module AudioTxBlock #(
 	parameter 						pBlockAdrsMap 		= 8,
 	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  		= 'h05,
-	parameter						pBusAdrsBit			= 32,
 	parameter						pUfiBusWidth		= 16,
+	parameter						pBusAdrsBit			= 32,
 	parameter 						pCsrAdrsWidth 		= 8,
 	parameter						pCsrActiveWidth 	= 8,
 	//
 	parameter						pSamplingBitWidth	= 8,	// 分解能
-	parameter						pMemBitWidth		= 19
+	parameter						pMemBitWidth		= 19,
+	parameter						pTestPortUsed		= "no"
 )(
 	// External Port
 	output							oAudioMclk,
@@ -30,21 +31,19 @@ module AudioTxBlock #(
 	input 	[pUfiBusWidth-1:0]		iMUfiRd,	// Read Data
 	input 							iMUfiREd,	// Read Data Enable
 	// Ufi Master Write
-	output 	[pBusAdrsBit-1:0]		oMUfiAdrs,
-	output 							oMUfiEd,
+	output [pBusAdrsBit-1:0]		oMUfiAdrs,
+	output 							oMUfiEd,	// Adrs Data Enable
 	output 							oMUfiVd,
 	// Ufi Master Common
-	input							iMUfiRdy,
+	input 							iMUfiRdy,	// Ufi Bus 転送可能時 Assert
     // CLK Reset
     input           				iSysRst,
     input           				iSysClk,
     input           				iAudioRst,
-	input 							iAudioClk
+	input 							iAudioClk,
+	//
+	output [3:0]					oTestPort
 );
-
-assign oMUfiAdrs	= {pBusAdrsBit{1'b0}};
-assign oMUfiEd		= 1'b0;
-assign oMUfiVd		= 1'b0;
 
 
 //----------------------------------------------------------
@@ -60,9 +59,18 @@ wire 						wAudioDmaEnCsr;
 
 AudioTxUnit #(
 	.pSamplingBitWidth	(pSamplingBitWidth),
-	.pMemBitWidth		(pMemBitWidth)
+	.pMemBitWidth		(pMemBitWidth),
+	.pTestPortUsed		(pTestPortUsed)
 ) AudioTxUnit (
 	.oAudioMclk			(oAudioMclk),
+	//
+	.iMUfiRd			(iMUfiRd),
+	.iMUfiREd			(iMUfiREd),
+	.oMUfiAdrs			(oMUfiAdrs),
+	.oMUfiEd			(oMUfiEd),
+	.oMUfiVd			(oMUfiVd),
+	.iMUfiRdy			(iMUfiRdy),
+	//
 	.iAudioCke			(wAudioCkeCsr),
 	.iAudioTone			(wAudioToneCsr),
 	.iAudioSel			(wAudioSelCsr),
@@ -70,8 +78,12 @@ AudioTxUnit #(
 	.iAudioDmaAdrs		(wAudioDmaAdrsCsr),
 	.iAudioDmaLen		(wAudioDmaLenCsr),
 	.iAudioDmaEn		(wAudioDmaEnCsr),
+    .iSysRst			(iSysRst),
+	.iSysClk 			(iSysClk),
 	.iAudioRst			(iAudioRst),
-	.iAudioClk			(iAudioClk)
+	.iAudioClk			(iAudioClk),
+	//
+	.oTestPort			(oTestPort)
 );
 
 

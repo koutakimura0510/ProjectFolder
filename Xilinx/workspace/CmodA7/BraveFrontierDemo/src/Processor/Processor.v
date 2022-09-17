@@ -118,6 +118,13 @@ localparam	lpBusAdrsBit		= 32;		// バスアドレス幅, Usi/Ufi 共通
 localparam  lpUfiBusWidth		= 8;
 
 
+//-----------------------------------------------------------------------------
+// TestPort の使用・不使用
+//-----------------------------------------------------------------------------
+localparam lpTestPortSpi 	= "no";
+localparam lpTestPortAudio 	= "yes";
+
+
 //----------------------------------------------------------
 // MCB
 //----------------------------------------------------------
@@ -220,7 +227,8 @@ SPIBlock #(
 	.pCsrAdrsWidth				(lpCsrAdrsWidth),
 	.pCsrActiveWidth			(lpSPICsrActiveWidth),
 	.pBusBlockConnect			(lpBusBlockConnect),
-	.pUfiBusWidth				(lpUfiBusWidth)
+	.pUfiBusWidth				(lpUfiBusWidth),
+	.pTestPortUsed 				(lpTestPortSpi)
 ) SPIBlock (
 	// External Port
 	.ioSpiSck					(ioSpiSck),
@@ -258,7 +266,7 @@ SPIBlock #(
 	.iSysClk					(iSysClk),
 	.iSysRst					(iSysRst),
 	//
-	.oTestPort					(oTestPort)
+	.oTestPort					(/*oTestPort*/)
 );
 
 
@@ -407,7 +415,8 @@ AudioTxBlock #(
 	.pBusAdrsBit		(lpBusAdrsBit),
 	.pCsrAdrsWidth		(lpCsrAdrsWidth),
 	.pCsrActiveWidth	(lpATBCsrActiveWidth),
-	.pSamplingBitWidth	(8)
+	.pSamplingBitWidth	(8),
+	.pTestPortUsed		(lpTestPortAudio)
 ) AudioTxBlock (
 	// External Port
 	.oAudioMclk			(oAudioMclk),
@@ -430,7 +439,9 @@ AudioTxBlock #(
 	.iSysRst			(iSysRst),
 	.iSysClk			(iSysClk),
 	.iAudioRst			(iAudioRst),
-	.iAudioClk			(iAudioClk)
+	.iAudioClk			(iAudioClk),
+	//
+	.oTestPort			(oTestPort)
 );
 
 

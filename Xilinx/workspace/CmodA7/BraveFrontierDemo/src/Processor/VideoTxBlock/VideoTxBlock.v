@@ -13,6 +13,7 @@ module VideoTxBlock #(
 	parameter						pUfiBusWidth	= 16,
 	parameter 						pCsrAdrsWidth   = 16,
 	parameter						pCsrActiveWidth = 16,
+	parameter						pMemAdrsWidth	= 19,
 	// Display Size
     parameter       				pHdisplay		= 480,
     parameter       				pHback			= 43,
@@ -71,12 +72,6 @@ module VideoTxBlock #(
 	input 							iVideoClk
 );
 
-assign oMUfiWd		= {pUfiBusWidth{1'b0}};
-assign oMUfiAdrs	= {pBusAdrsBit{1'b0}};
-assign oMUfiEd		= 1'b0;
-assign oMUfiVd		= 1'b0;
-assign oMUfiCmd		= 1'b0;
-
 
 //-----------------------------------------------------------------------------
 // Unit
@@ -93,8 +88,16 @@ wire 						wVtbSystemRstCsr;
 wire 						wVtbVideoRstCsr;
 wire 						wDisplayRstCsr;
 wire [7:0]					wBlDutyRatioCsr;
+wire [pMemAdrsWidth-1:0]	wDmaWAdrsCsr;
+wire [pMemAdrsWidth-1:0]	wDmaRAdrsCsr;
+wire [pMemAdrsWidth-1:0]	wDmaWLenCsr;
+wire [pMemAdrsWidth-1:0]	wDmaRLenCsr;
+wire 						wDmaEnCsr;
 
 VideoTxUnit #(
+	.pBusAdrsBit		(pBusAdrsBit),
+	.pUfiBusWidth		(pUfiBusWidth),
+	.pMemAdrsWidth		(pMemAdrsWidth),
     .pHdisplayWidth		(pHdisplayWidth),
     .pVdisplayWidth		(pVdisplayWidth),
 	.pColorDepth		(pColorDepth),
@@ -110,6 +113,15 @@ VideoTxUnit #(
 	.oTftBackLight		(oTftBackLight),
 	.oTftRst			(oTftRst),
 	//
+	.iMUfiRd			(iMUfiRd),
+	.iMUfiREd			(iMUfiREd),
+	.oMUfiWd			(oMUfiWd),
+	.oMUfiAdrs			(oMUfiAdrs),
+	.oMUfiEd			(oMUfiEd),
+	.oMUfiVd			(oMUfiVd),
+	.oMUfiCmd			(oMUfiCmd),
+	.iMUfiRdy			(iMUfiRdy),
+	//
 	.iHdisplay			(wHdisplayCsr),
 	.iVdisplay			(wVdisplayCsr),
 	.iHSyncStart		(wHSyncStartCsr),
@@ -124,6 +136,12 @@ VideoTxUnit #(
 	.iDisplayRst		(wDisplayRstCsr),
 	.iBlDutyRatio		(wBlDutyRatioCsr),
 	//
+	.iDmaWAdrs			(wDmaWAdrsCsr),
+	.iDmaRAdrs			(wDmaRAdrsCsr),
+	.iDmaWLen			(wDmaWLenCsr),
+	.iDmaRLen			(wDmaRLenCsr),
+	.iDmaEn				(wDmaEnCsr),
+	//
 	.iSysClk			(iSysClk),
 	.iVideoClk			(iVideoClk),
 	.iSysRst			(iSysRst),
@@ -133,7 +151,7 @@ VideoTxUnit #(
 
 
 //-----------------------------------------------------------------------------
-// Video Tx Generator Csr
+// Video Tx Csr Space
 //-----------------------------------------------------------------------------
 VideoTxCsr #(
 	.pBlockAdrsMap		(pBlockAdrsMap),
@@ -141,6 +159,7 @@ VideoTxCsr #(
 	.pBusAdrsBit		(pBusAdrsBit),
 	.pCsrAdrsWidth		(pCsrAdrsWidth),
 	.pCsrActiveWidth	(pCsrActiveWidth),
+	.pMemAdrsWidth		(pMemAdrsWidth),
     .pHdisplay			(pHdisplay),
     .pHfront			(pHfront),
     .pHback				(pHback),
@@ -175,9 +194,13 @@ VideoTxCsr #(
 	.oVtbVideoRst		(wVtbVideoRstCsr),
 	.oDisplayRst		(wDisplayRstCsr),
 	.oBlDutyRatio		(wBlDutyRatioCsr),
+	.oDmaWAdrs			(wDmaWAdrsCsr),
+	.oDmaRAdrs			(wDmaRAdrsCsr),
+	.oDmaWLen			(wDmaWLenCsr),
+	.oDmaRLen			(wDmaRLenCsr),
+	.oDmaEn				(wDmaEnCsr),
 	.iSysClk			(iSysClk),
 	.iSysRst			(iSysRst)
 );
-
 
 endmodule

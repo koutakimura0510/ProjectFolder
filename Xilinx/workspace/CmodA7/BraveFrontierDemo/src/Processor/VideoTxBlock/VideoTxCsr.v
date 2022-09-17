@@ -14,6 +14,7 @@ module VideoTxCsr #(
 	parameter						pBusAdrsBit		= 16,
 	parameter 						pCsrAdrsWidth   = 16,
 	parameter						pCsrActiveWidth = 16,
+	parameter						pMemAdrsWidth	= 19,
 	//
     parameter       				pHdisplay		= 480,
     parameter       				pHfront			= 8,
@@ -55,6 +56,12 @@ module VideoTxCsr #(
 	output							oVtbVideoRst,
 	output  						oDisplayRst,
 	output	[7:0]					oBlDutyRatio,
+	//
+	output 	[pMemAdrsWidth-1:0]		oDmaWAdrs,
+	output 	[pMemAdrsWidth-1:0]		oDmaRAdrs,
+	output 	[pMemAdrsWidth-1:0]		oDmaWLen,
+	output 	[pMemAdrsWidth-1:0]		oDmaRLen,
+	output 							oDmaEn,
     // CLK Reset
     input           				iSysRst,
     input           				iSysClk
@@ -86,7 +93,12 @@ reg [pVpulseWidth-1:0] 		rVpulse;													// 垂直同期信号幅
 reg 						rVtbSystemRst;		assign oVtbSystemRst= rVtbSystemRst;	// システムクロックロジック側のリセット信号
 reg 						rVtbVideoRst;		assign oVtbVideoRst = rVtbVideoRst;		// ビデオクロックロジック側のリセット信号
 reg 						rDisplayRst;		assign oDisplayRst	= rDisplayRst;		// ディスプレイのリセット信号
+reg 						rDmaEn;				assign oDmaEn		= rDmaEn;			// DMA Enable
 reg [7:0]					rBlDutyRatio;		assign oBlDutyRatio = rBlDutyRatio;		// ディスプレイバックライトの調光
+reg [pMemAdrsWidth-1:0]		rDmaWAdrs;			assign oDmaWAdrs	= rDmaWAdrs;		// FrameBuffer領域 Wriet DMA の開始アドレス
+reg [pMemAdrsWidth-1:0]		rDmaRAdrs;			assign oDmaRAdrs	= rDmaRAdrs;		// FrameBuffer領域 Read DMA の開始アドレス
+reg [pMemAdrsWidth-1:0]		rDmaWLen;			assign oDmaWLen		= rDmaWLen;			// Wriet DMA のアクセスサイズ
+reg [pMemAdrsWidth-1:0]		rDmaRLen;			assign oDmaRLen		= rDmaRLen;			// Read DMA のアクセスサイズ
 //
 reg [pHdisplayWidth:0]		rHSyncStart;		assign oHSyncStart 	= rHSyncStart;		// アクティブエリア から 同期信号まで
 reg [pHdisplayWidth:0]		rHSyncEnd;			assign oHSyncEnd 	= rHSyncEnd;		// 同期信号 から バックポーチまで
@@ -101,6 +113,10 @@ reg 						qCsrWCke08;
 reg 						qCsrWCke0c;
 reg 						qCsrWCke10;
 reg 						qCsrWCke14;
+reg 						qCsrWCke18;
+reg 						qCsrWCke1c;
+reg 						qCsrWCke20;
+reg 						qCsrWCke24;
 //
 always @(posedge iSysClk)
 begin
@@ -123,7 +139,12 @@ begin
 		rVtbSystemRst	<= 1'b1;		// Active High
 		rVtbVideoRst	<= 1'b1;		// Active High
 		rDisplayRst		<= 1'b1;		// Active Low
+		rDmaEn			<= 1'b0;
 		rBlDutyRatio	<= 8'd0;		// 0xff Max Flash
+		rDmaWAdrs		<= {pMemAdrsWidth{1'b0}};
+		rDmaRAdrs		<= {pMemAdrsWidth{1'b0}};
+		rDmaWLen		<= 'h1fe00;
+		rDmaRLen		<= 'h3fc00;
 	end
 	else
 	begin
@@ -132,10 +153,15 @@ begin
 		{rVfront,rHfront	}	<= qCsrWCke08 ? {iSUsiWd[pVfrontWidth-1:0],		iSUsiWd[pHfrontWidth-1:0]} 		: {rVfront,rHfront};
 		{rVpulse,rHpulse	}	<= qCsrWCke0c ? {iSUsiWd[pVpulseWidth-1:0],		iSUsiWd[pHpulseWidth-1:0]}		: {rVpulse,rHpulse};
 		//
-		rVtbSystemRst			<= qCsrWCke10 ? iSUsiWd[0:0] : rVtbSystemRst;
-		rVtbVideoRst			<= qCsrWCke10 ? iSUsiWd[1:1] : rVtbVideoRst;
-		rDisplayRst				<= qCsrWCke10 ? iSUsiWd[2:2] : rDisplayRst;
-		rBlDutyRatio			<= qCsrWCke14 ? iSUsiWd[7:0] : rBlDutyRatio;
+		rVtbSystemRst			<= qCsrWCke10 ? iSUsiWd[0:0] 				: rVtbSystemRst;
+		rVtbVideoRst			<= qCsrWCke10 ? iSUsiWd[1:1] 				: rVtbVideoRst;
+		rDisplayRst				<= qCsrWCke10 ? iSUsiWd[2:2] 				: rDisplayRst;
+		rDmaEn					<= qCsrWCke10 ? iSUsiWd[3:3] 				: rDmaEn;
+		rBlDutyRatio			<= qCsrWCke14 ? iSUsiWd[7:0] 				: rBlDutyRatio;
+		rDmaWAdrs				<= qCsrWCke18 ? iSUsiWd[pMemAdrsWidth-1:0] 	: rDmaWAdrs;
+		rDmaRAdrs				<= qCsrWCke1c ? iSUsiWd[pMemAdrsWidth-1:0] 	: rDmaRAdrs;
+		rDmaWLen				<= qCsrWCke20 ? iSUsiWd[pMemAdrsWidth-1:0] 	: rDmaWLen;
+		rDmaRLen				<= qCsrWCke24 ? iSUsiWd[pMemAdrsWidth-1:0] 	: rDmaRLen;
 		//
 		rHSyncStart 			<= rHdisplay + rHfront;
 		rHSyncEnd				<= rHdisplay + rHfront + rHpulse - 1'b1;
@@ -154,6 +180,10 @@ begin
 	qCsrWCke0c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h000c});
 	qCsrWCke10 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0010});
 	qCsrWCke14 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
+	qCsrWCke18 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0018});
+	qCsrWCke1c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h001c});
+	qCsrWCke20 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0020});
+	qCsrWCke24 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0024});
 end
 
 //----------------------------------------------------------
@@ -178,8 +208,12 @@ begin
 			'h0004:		rSUsiRd	<= {{(16 - pVbackWidth		){1'b0}}, rVback,		{(16 - pHbackWidth		){1'b0}}, rHback		};
 			'h0008:		rSUsiRd	<= {{(16 - pVfrontWidth		){1'b0}}, rVfront,		{(16 - pHfrontWidth		){1'b0}}, rHfront		};
 			'h000c:		rSUsiRd	<= {{(16 - pVpulseWidth		){1'b0}}, rVpulse,		{(16 - pHpulseWidth		){1'b0}}, rHpulse		};
-			'h0010:		rSUsiRd	<= {{(32 - 3				){1'b0}}, rDisplayRst,rVtbVideoRst,rVtbSystemRst	};
+			'h0010:		rSUsiRd	<= {{(32 - 4				){1'b0}}, rDmaEn,rDisplayRst,rVtbVideoRst,rVtbSystemRst	};
 			'h0014:		rSUsiRd	<= {{(32 - 8				){1'b0}}, rBlDutyRatio	};
+			'h0018:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rDmaWAdrs	};
+			'h001c:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rDmaRAdrs	};
+			'h0020:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rDmaWLen	};
+			'h0024:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rDmaRLen	};
 			//
 			'h0080:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncStart,{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncStart		};
 			'h0084:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncEnd,	{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncEnd		};
