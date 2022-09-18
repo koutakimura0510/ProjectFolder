@@ -34,12 +34,13 @@ module RAMBlock #(
 	// Ufi Bus Slave Write
 	input	[pUfiBusWidth-1:0]			iSUfiWd,		// Write Data
 	input	[pBusAdrsBit-1:0]			iSUfiAdrs,		// Ufi address
-	input								iSUfiEd,		// Adrs Enable
+	input								iSUfiWEd,		// Adrs Enable
+	input								iSUfiREd,		// Adrs Enable
 	input   							iSUfiCmd,		// High Read, Low Write
-	output 								oSUfiRdy,
 	// Ufi Bus Slave Read
 	output	[pUfiBusWidth-1:0]			oSUfiRd,		// Read Data
 	output								oSUfiREd,		// Read Data Enable
+	output 								oSUfiRdy,
     // CLK Reset
     input           					iSysRst,
     input           					iSysClk,
@@ -67,11 +68,12 @@ RAMUnit #(
 	//
 	.iSUfiWd		(iSUfiWd),
 	.iSUfiAdrs		(iSUfiAdrs),
-	.iSUfiEd		(iSUfiEd),
+	.iSUfiWEd		(iSUfiWEd),
+	.iSUfiREd		(iSUfiREd),
 	.iSUfiCmd		(iSUfiCmd),
-	.oSUfiRdy		(oSUfiRdy),
 	.oSUfiRd		(oSUfiRd),
 	.oSUfiREd		(oSUfiREd),
+	.oSUfiRdy		(oSUfiRdy),
 	//
 	.iSysRst		(iSysRst),
 	.iSysClk		(iSysClk),

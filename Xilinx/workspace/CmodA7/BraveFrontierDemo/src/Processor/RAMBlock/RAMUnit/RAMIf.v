@@ -55,9 +55,18 @@ wire [pRamDqWidth-1:0] 		wRd;
 always @(posedge iMemClk)
 begin
 	// 初期状態が Active でも問題ないため、外部制御信号に Reset は付けない
-	rOE 	<= ~iCmd;
-	rWE 	<= iCmd;
-	rCE		<= iCE;
+	if (iCE)
+	begin
+		rOE 	<= 1'b0;
+		rWE 	<= 1'b0;
+		rCE		<= 1'b1;
+	end
+	else
+	begin
+		rOE 	<= ~iCmd;
+		rWE 	<= iCmd;
+		rCE		<= 1'b0;
+	end
 	rAdrs 	<= iAdrs;
 	rWd		<= iWd;
 

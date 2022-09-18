@@ -22,6 +22,15 @@ module RAMDualClkFifo #(
 	input 							iREd,
 	output 							oEmp,
 	output 							oRVd,
+	// 
+	// Memory からの ReadData
+	input 	[pRamDqWidth-1:0]		iMemWd,
+	input 							iMemWEd,
+	output 	[pRamDqWidth-1:0]		oMemRd,
+	output 							oMemREd,
+	input 							iMemRe,
+	output 							oMemFull,
+
     // Internal Port
     input							iRst,
 	input 							iSysClk,
@@ -33,6 +42,8 @@ module RAMDualClkFifo #(
 // FIFO の制御信号は、各FIFO が同じタイミングで動作することを
 // 前提とするため一つのみ使用する。
 //-----------------------------------------------------------------------------
+
+// SysCLK -> MemClk 変換
 fifoDualControllerGray #(
 	.pBuffDepth	(pDualClkFifoDepth),
 	.pBitWidth	(pRamDqWidth)
@@ -82,6 +93,26 @@ fifoDualControllerGray #(
 	.iDstRst	(iRst),
 	.iSrcClk	(iSysClk),
 	.iDstClk	(iMemClk)
+);
+
+// MemClk -> SysClk 変換
+// Memory からの書き込みよりも読み出しが速く、
+// FIFO が Full にならない前提で処理を行う。
+fifoDualControllerGray2 #(
+	.pBuffDepth	(pDualClkFifoDepth),
+	.pBitWidth	(pRamDqWidth)
+) RamDualClkFifoRd (
+	.iWD		(iMemWd),
+	.iWE		(iMemWEd),
+	.oFLL		(oMemFull),
+	.oRD		(oMemRd),
+	.iRE		(iMemRe),
+	.oRVD		(oMemREd),
+	.oEMP		(),
+	.iSrcRst	(iRst),
+	.iDstRst	(iRst),
+	.iSrcClk	(iMemClk),
+	.iDstClk	(iSysClk)
 );
 
 endmodule

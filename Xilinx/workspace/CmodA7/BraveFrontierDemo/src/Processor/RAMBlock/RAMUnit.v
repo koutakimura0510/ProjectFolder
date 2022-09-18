@@ -22,8 +22,9 @@ module RAMUnit #(
 	// Ufi Bus Slave Write
 	input	[pUfiBusWidth-1:0]	iSUfiWd,		// Write Data
 	input	[pBusAdrsBit-1:0]	iSUfiAdrs,		// Ufi address
+	input						iSUfiWEd,		// Adrs Enable
+	input						iSUfiREd,		// Adrs Enable
 	input   					iSUfiCmd,		// High Read, Low Write
-	input						iSUfiEd,		// Adrs Enable
 	output 						oSUfiRdy,		// Active Assert
 	// Ufi Bus Slave Read
 	output	[pUfiBusWidth-1:0]	oSUfiRd,		// Read Data
@@ -38,12 +39,17 @@ module RAMUnit #(
 //-----------------------------------------------------------------------------
 // System Clk <-> Memory Clk
 //-----------------------------------------------------------------------------
-wire [pUfiBusWidth-1:0]	wMemWd;
-wire [pRamAdrsWidth-1:0]wMemAdrs;
-wire 					wMemCmd;
-wire 					wRVd;
-wire 					wEmp;
-wire 					wFull;					assign oSUfiRdy = ~wFull;
+wire 	[pUfiBusWidth-1:0]	wMemWd;
+wire 	[pRamAdrsWidth-1:0]	wMemAdrs;
+wire 						wMemCmd;
+wire 						wRVd;
+wire 						wEmp;
+reg 						qEmp;
+wire 						wFull;			assign oSUfiRdy = ~wFull;
+//
+wire 	[pUfiBusWidth-1:0]	wMemRdIf;
+wire 						wMemREdIf;
+wire 						wMemFull;
 
 RAMDualClkFifo #(
 	.pDualClkFifoDepth 	(pRamFifoDepth),
@@ -53,18 +59,29 @@ RAMDualClkFifo #(
 	.iWd				(iSUfiWd),
 	.iAdrs				(iSUfiAdrs[pRamAdrsWidth-1:0]),
 	.iCmd				(iSUfiCmd),
-	.iWEd				(iSUfiEd),
+	.iWEd				(iSUfiWEd),
 	.oFull				(wFull),
 	.oWd				(wMemWd),
 	.oAdrs				(wMemAdrs),
 	.oCmd				(wMemCmd),
-	.iREd				(~wEmp),
+	.iREd				(qEmp),
 	.oEmp 				(wEmp),
 	.oRVd				(wRVd),
+	.iMemWd				(wMemRdIf),
+	.iMemWEd			(wMemREdIf),
+	.oMemRd				(oSUfiRd),
+	.oMemREd			(oSUfiREd),
+	.iMemRe				(iSUfiREd),
+	.oMemFull 			(wMemFull),
 	.iRst				(iSysRst),
 	.iSysClk			(iSysClk),
 	.iMemClk			(iMemClk)
 );
+
+always @*
+begin
+	qEmp <= (~wEmp) & (~wMemFull);
+end
 
 
 //-----------------------------------------------------------------------------
@@ -84,8 +101,8 @@ RAMIf #(
 	.iAdrs			(wMemAdrs),
 	.iCE			(~wRVd),
 	.iCmd			(wMemCmd),
-	.oRd			(oSUfiRd),
-	.oREd			(oSUfiREd),
+	.oRd			(wMemRdIf),
+	.oREd			(wMemREdIf),
 	//
 	.iRst			(iSysRst),
 	.iMemClk		(iMemClk)

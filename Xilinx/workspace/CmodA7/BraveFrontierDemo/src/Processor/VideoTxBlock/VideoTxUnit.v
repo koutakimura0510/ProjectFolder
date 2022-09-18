@@ -34,7 +34,8 @@ module VideoTxUnit #(
 	// Ufi Master Write
 	output [pUfiBusWidth-1:0]		oMUfiWd,
 	output [pBusAdrsBit-1:0]		oMUfiAdrs,
-	output 							oMUfiEd,	// Adrs Data Enable
+	output 							oMUfiWEd,	// Adrs Data Enable
+	output 							oMUfiREd,	// Adrs Data Enable
 	output 							oMUfiVd,	// Data Valid
 	output 							oMUfiCmd,	// High Read, Low Write
 	// Ufi Master Common
@@ -113,12 +114,13 @@ VideoDmaUnit #(
 	.iMUfiREd			(iMUfiREd),
 	.oMUfiWd			(oMUfiWd),
 	.oMUfiAdrs			(oMUfiAdrs),
-	.oMUfiEd			(oMUfiEd),
+	.oMUfiWEd			(oMUfiWEd),
+	.oMUfiREd			(oMUfiREd),
 	.oMUfiVd			(oMUfiVd),
 	.oMUfiCmd			(oMUfiCmd),
 	.iMUfiRdy			(iMUfiRdy),
 	//
-	.iDmaWd				(wDrawPixel[7:0]),
+	.iDmaWd				(wDrawPixel[pUfiBusWidth-1:0]),
 	.iDmaWEd			(wDrawPixelVd),
 	.oDmaFull			(wDmaFull),
 	.oDmaRd				(wDmaRd),
@@ -180,7 +182,7 @@ VideoDualClkFIFO #(
 	.pBuffDepth		(pDualClkFifoDepth),
 	.pBitWidth		(lpDualFifoWidth)
 ) VIDEO_DUAL_CLK_FIFO (
-	.iWd			({4'd0, wDmaRd}),
+	.iWd			(wDmaRd),
 	.iWe			(wDmaREd),
 	.ofull			(wVideoDualFifoFull),
 	.oRd			(wVideoDualFifoRd),

@@ -131,9 +131,9 @@ PixelDrawPosition #(
 // Scene Draw
 //-----------------------------------------------------------------------------
 localparam lpDotSquareGenFifoDepth = 32;
-localparam lpDxs = 30;
+localparam lpDxs = 0;
 localparam lpDxe = lpDxs + 16;
-localparam lpDys = 30;
+localparam lpDys = 0;
 localparam lpDye = lpDys + 16;
 //
 reg  					qDotSquareEdd;
@@ -150,7 +150,7 @@ DotSquareGen #(
 	.pFifoDepth			(lpDotSquareGenFifoDepth),
 	.pFifoBitWidth		(pColorDepth)
 ) DOT_SQUARE_GEN (
-	.iPixel				(16'h0f00),
+	.iPixel				(16'h0f33),
 	.iHpos				(wPixelDrawHpos),
 	.iVpos				(wPixelDrawVpos),
 	.iDxs				(lpDxs),

@@ -20,7 +20,8 @@ module VideoDmaUnit #(
 	// Ufi Master Write
 	output	[pUfiBusWidth-1:0]	oMUfiWd,
 	output 	[pBusAdrsBit-1:0]	oMUfiAdrs,
-	output 						oMUfiEd,
+	output 						oMUfiWEd,
+	output 						oMUfiREd,
 	output 						oMUfiVd,
 	output 						oMUfiCmd,	// High Read, Low Write
 	// Ufi Master Common
@@ -33,7 +34,7 @@ module VideoDmaUnit #(
 	// DMA Read Side
 	output 	[pUfiBusWidth-1:0]	oDmaRd,		// 後段への Read Data
 	output 						oDmaREd,	// DMA Read Valid Data
-	input 						iDmaRe,	// DMA Read Enable Data
+	input 						iDmaRe,		// DMA Read Enable Data
 	//
 	input [pMemAdrsWidth-1:0]	iDmaWAdrs,
 	input [pMemAdrsWidth-1:0]	iDmaRAdrs,
@@ -50,14 +51,15 @@ module VideoDmaUnit #(
 // DMA を使用して UFIB 経由で RAM に書き込むデータを保持
 // 前段のブロックとのタイミング調停も兼ねる
 //-----------------------------------------------------------------------------
-reg 	[pUfiBusWidth-1:0]	qMUfiRd;		assign oDmaRd		= qMUfiRd;
-reg 						qMUfiREd;		assign oDmaREd		= qMUfiREd;
-reg		[pFifoBitWidth-1:0]	qMUfiWd;		assign oMUfiWd		= qMUfiWd;
+reg 	[pUfiBusWidth-1:0]	qDmaRd;			assign oDmaRd		= qDmaRd;
+reg 						qDmaREd;		assign oDmaREd		= qDmaREd;
+reg		[pUfiBusWidth-1:0]	qMUfiWd;		assign oMUfiWd		= qMUfiWd;
 reg		[pMemAdrsWidth-1:0]	qMUfiAdrs;		assign oMUfiAdrs	= qMUfiAdrs;
-reg							qMUfiEd;		assign oMUfiEd		= qMUfiEd;
+reg							qMUfiWEd;		assign oMUfiWEd		= qMUfiWEd;
+reg							qMUfiREd;		assign oMUfiREd		= qMUfiREd;
 reg							qMUfiVd;		assign oMUfiVd		= qMUfiVd;
 reg							qMUfiCmd;		assign oMUfiCmd		= qMUfiCmd;
-wire 	[pFifoBitWidth-1:0] wDmaFifoRd;
+wire 	[pUfiBusWidth-1:0]  wDmaFifoRd;
 wire 						wRvd;
 wire 						wEmp;
 reg 						qDmaFifoRe;
@@ -90,47 +92,56 @@ reg 						qDmaRAdrsMatch;
 
 always @(posedge iClk)
 begin
-	casex ({qDmaWAdrsOverCheck, qDmaWAdrsMatch, iMUfiRdy, iDmaEn})
-		'bxxx0:		rDmaWAdrsSel <= 1'b0;
-		'b0111:		rDmaWAdrsSel <= ~rDmaWAdrsSel;
-		default: 	rDmaWAdrsSel <=  rDmaWAdrsSel;
-	endcase
+	// casex ({qDmaWAdrsOverCheck, qDmaWAdrsMatch, wRvd, iDmaEn})
+	// 	'bxxx0:		rDmaWAdrsSel <= 1'b0;
+	// 	'b0111:		rDmaWAdrsSel <= ~rDmaWAdrsSel;
+	// 	default: 	rDmaWAdrsSel <=  rDmaWAdrsSel;
+	// endcase
 
-	casex ({qDmaWAdrsOverCheck, qDmaRAdrsMatch, iMUfiRdy, iDmaEn})
-		'bxxx0:		rDmaRAdrsSel <= 1'b0;
-		'b0111:		rDmaRAdrsSel <= ~rDmaRAdrsSel;
-		default: 	rDmaRAdrsSel <=  rDmaRAdrsSel;
-	endcase
+	// casex ({qDmaWAdrsOverCheck, qDmaRAdrsMatch, iMUfiRdy, iDmaEn})
+	// 	'bxxx0:		rDmaRAdrsSel <= 1'b0;
+	// 	'b0111:		rDmaRAdrsSel <= ~rDmaRAdrsSel;
+	// 	default: 	rDmaRAdrsSel <=  rDmaRAdrsSel;
+	// endcase
 
-	casex ({rDmaWAdrsSel, qDmaWAdrsMatch, iDmaRe, iMUfiRdy, iDmaEn})
-		'bxxxx0:	rDmaWAdrs <= iDmaWAdrs;
-		'bx0011:	rDmaWAdrs <= rDmaWAdrs + 1'b1;
-		'b01011:	rDmaWAdrs <= iDmaRAdrs;
-		'b11011:	rDmaWAdrs <= iDmaWAdrs;
-		default: 	rDmaWAdrs <= rDmaWAdrs;
-	endcase
+	// casex ({rDmaWAdrsSel, qDmaWAdrsOverCheck, qDmaWAdrsMatch, iDmaRe, wRvd, iDmaEn})
+	// 	'bxxxxx0:	rDmaWAdrs <= iDmaWAdrs;
+	// 	'bx00011:	rDmaWAdrs <= rDmaWAdrs + 1'b1;
+	// 	'b001011:	rDmaWAdrs <= iDmaRAdrs;
+	// 	'b101011:	rDmaWAdrs <= iDmaWAdrs;
+	// 	default: 	rDmaWAdrs <= rDmaWAdrs;
+	// endcase
 
-	casex ({rDmaRAdrsSel, qDmaRAdrsMatch, iDmaRe, iMUfiRdy, iDmaEn})
-		'bxxxx0:	rDmaRAdrs <= iDmaRAdrs;
-		'bx0011:	rDmaRAdrs <= rDmaRAdrs + 1'b1;
-		'b01011:	rDmaRAdrs <= iDmaWAdrs;
-		'b11011:	rDmaRAdrs <= iDmaRAdrs;
-		default: 	rDmaRAdrs <= rDmaRAdrs;
-	endcase
+	// casex ({rDmaRAdrsSel, qDmaRAdrsMatch, iDmaRe, iMUfiRdy, iDmaEn})
+	// 	'bxxxx0:	rDmaRAdrs <= iDmaRAdrs;
+	// 	'bx0111:	rDmaRAdrs <= rDmaRAdrs + 1'b1;
+	// 	'b01111:	rDmaRAdrs <= iDmaWAdrs;
+	// 	'b11111:	rDmaRAdrs <= iDmaRAdrs;
+	// 	default: 	rDmaRAdrs <= rDmaRAdrs;
+	// endcase
+	
+	// casex ({rDmaWAdrsSel, qDmaWAdrsOverCheck, qDmaWAdrsMatch, iDmaRe, wRvd, iDmaEn})
+	// 	'bxxxxx0:	rDmaWAdrs <= iDmaWAdrs;
+	// 	'bx00011:	rDmaWAdrs <= rDmaWAdrs + 1'b1;
+	// 	'b001011:	rDmaWAdrs <= iDmaRAdrs;
+	// 	'b101011:	rDmaWAdrs <= iDmaWAdrs;
+	// 	default: 	rDmaWAdrs <= rDmaWAdrs;
+	// endcase
 end
 
 //
 always @*
 begin
-	qDmaWAdrsOverCheck 	<= (rDmaWAdrs == rDmaRAdrs);	// WAdrs が RAdrs を越さないようにする
-	qDmaWAdrsMatch 		<= (rDmaWAdrs == iDmaWLen);
-	qDmaRAdrsMatch 		<= (rDmaRAdrs == iDmaRLen);
+	qDmaWAdrsOverCheck 	<= ((rDmaWAdrs+1'b1) == rDmaRAdrs);	// WAdrs が RAdrs を越さないようにする
+	qDmaWAdrsMatch 		<= (rDmaWAdrs == iDmaWLen) | (rDmaWAdrs == iDmaRLen);
+	qDmaRAdrsMatch 		<= (rDmaRAdrs == iDmaWLen) | (rDmaRAdrs == iDmaRLen);
 	//
-	qMUfiRd		<= iMUfiRd;
-	qMUfiREd	<= iMUfiRdy ? iMUfiREd : 1'b0;
-	qMUfiWd		<= wDmaFifoRd;
+	qDmaRd		<= iMUfiRd;
+	qDmaREd		<= iMUfiRdy ? iMUfiREd : 1'b0;
+	qMUfiWd		<= iDmaRe ? 8'haa : wDmaFifoRd;
 	qMUfiAdrs	<= iDmaRe ? rDmaRAdrs : rDmaWAdrs;
-	qMUfiEd		<= (iDmaRe | wRvd)  & iDmaEn;			// RW 発行
+	qMUfiWEd	<= (iDmaRe | wRvd)  & iDmaEn & iMUfiRdy;// RW 発行
+	qMUfiREd	<= iDmaRe & iDmaEn;						// RW 発行
 	qMUfiVd		<= (iDmaRe | (~wEmp))  & iDmaEn;		// 空でなければ Ufi 転送要求とする
 	qMUfiCmd	<= iDmaRe;								// 後段から Read要求がなければ、WCMD とする
 	qDmaFifoRe	<= (~iDmaRe) & iMUfiRdy & iDmaEn;

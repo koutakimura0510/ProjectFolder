@@ -326,7 +326,8 @@ reg  					qMUfiREdVtb;
 //
 wire [lpUfiBusWidth-1:0]wMUfiWdVtb;
 wire [lpBusAdrsBit-1:0]	wMUfiAdrsVtb;
-wire 					wMUfiEdVtb;
+wire 					wMUfiWEdVtb;
+wire 					wMUfiREdVtb;
 wire 					wMUfiVdVtb;
 wire 					wMUfiCmdVtb;
 reg  					qMUfiRdyVtb;
@@ -377,7 +378,8 @@ VideoTxBlock #(
 	//
 	.oMUfiWd			(wMUfiWdVtb),
 	.oMUfiAdrs			(wMUfiAdrsVtb),
-	.oMUfiEd			(wMUfiEdVtb),
+	.oMUfiWEd			(wMUfiWEdVtb),
+	.oMUfiREd			(wMUfiREdVtb),
 	.oMUfiVd			(wMUfiVdVtb),
 	.oMUfiCmd			(wMUfiCmdVtb),
 	//
@@ -460,12 +462,13 @@ reg  [lpBusAdrsBit-1:0]	qSUsiAdrsRam;
 reg  					qSUsiWCkeRam;
 // UFI Bus
 reg  [lpUfiBusWidth-1:0]qSUfiWdRam;
-reg 					qSUfiEdRam;
+reg 					qSUfiWEdRam;
+reg 					qSUfiREdRam;
 reg  [lpBusAdrsBit-1:0]	qSUfiAdrsRam;
 reg  					qSUfiCmd;
 wire 					wSUfiRdy;
 wire [lpUfiBusWidth-1:0]wSUfiRdRam;
-wire 					wSUfiREdRam;
+wire 					wSUfiREdRamI;
 
 RAMBlock #(
 	.pBlockAdrsMap		(lpBlockAdrsMap),
@@ -494,13 +497,14 @@ RAMBlock #(
 	.iSUsiWCke			(qSUsiWCkeRam),
 	// Master -> Slave
 	.iSUfiWd			(qSUfiWdRam),
-	.iSUfiEd			(qSUfiEdRam),
 	.iSUfiAdrs			(qSUfiAdrsRam),
+	.iSUfiWEd			(qSUfiWEdRam),
+	.iSUfiREd			(qSUfiREdRam),
 	.iSUfiCmd			(qSUfiCmd),
 	.oSUfiRdy			(wSUfiRdy),
 	// Slave -> Master
 	.oSUfiRd			(wSUfiRdRam),
-	.oSUfiREd			(wSUfiREdRam),
+	.oSUfiREd			(wSUfiREdRamI),
 	//
 	.iSysRst			(iSysRst),
 	.iSysClk			(iSysClk),
@@ -606,7 +610,8 @@ wire 					wMUfiREd;
 //
 wire [lpUfiBusWidth-1:0]wSUfiWdRam;
 wire [lpBusAdrsBit-1:0]	wSUfiAdrsRam;
-wire 					wSUfiEdRam;
+wire 					wSUfiWEdRam;
+wire 					wSUfiREdRamO;
 wire 					wSUfiCmd;
 wire 					wMUfiRdyVtb;
 wire 					wMUfiRdyAtb;
@@ -630,7 +635,8 @@ UltraFastInterface #(
 	//
 	.iMUfiWdVtb		(wMUfiWdVtb),
 	.iMUfiAdrsVtb	(wMUfiAdrsVtb),
-	.iMUfiEdVtb		(wMUfiEdVtb),
+	.iMUfiWEdVtb	(wMUfiWEdVtb),
+	.iMUfiREdVtb	(wMUfiREdVtb),
 	.iMUfiVdVtb		(wMUfiVdVtb),
 	.iMUfiCmdVtb	(wMUfiCmdVtb),
 	.oMUfiRdyVtb	(wMUfiRdyVtb),
@@ -646,11 +652,12 @@ UltraFastInterface #(
 	//
 	.oSUfiWdRam		(wSUfiWdRam),
 	.oSUfiAdrsRam	(wSUfiAdrsRam),
-	.oSUfiEdRam		(wSUfiEdRam),
+	.oSUfiWEdRam	(wSUfiWEdRam),
+	.oSUfiREdRam	(wSUfiREdRamO),
 	.oSUfiCmd		(wSUfiCmd),
 	//
 	.iSUfiRdRam		(wSUfiRdRam),
-	.iSUfiREdRam	(wSUfiREdRam),
+	.iSUfiREdRam	(wSUfiREdRamI),
 	.iSUfiRdyRam	(wSUfiRdy),
 	//
 	.iUfiRst		(iSysRst),
@@ -661,7 +668,8 @@ always @*
 begin
 	qSUfiWdRam	<= wSUfiWdRam;
 	qSUfiAdrsRam<= wSUfiAdrsRam;
-	qSUfiEdRam	<= wSUfiEdRam;
+	qSUfiWEdRam	<= wSUfiWEdRam;
+	qSUfiREdRam	<= wSUfiREdRamO;
 	qSUfiCmd	<= wSUfiCmd;
 	//
 	qMUfiRdVtb 	<= wMUfiRd;

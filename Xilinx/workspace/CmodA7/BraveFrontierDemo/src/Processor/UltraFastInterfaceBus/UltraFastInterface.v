@@ -26,7 +26,8 @@ module UltraFastInterface #(
 	//
 	input [pUfiBusWidth-1:0] 			iMUfiWdVtb,
 	input [pBusAdrsBit-1:0] 			iMUfiAdrsVtb,
-	input 								iMUfiEdVtb,
+	input 								iMUfiWEdVtb,
+	input 								iMUfiREdVtb,
 	input 								iMUfiVdVtb,		// 転送期間中 Assert
 	input 								iMUfiCmdVtb,	// High Read / Lor Write
 	output 								oMUfiRdyVtb,	// Vtb に対する Ready 信号
@@ -42,7 +43,8 @@ module UltraFastInterface #(
 	// Slave Memory Block Side
 	output [pUfiBusWidth-1:0] 			oSUfiWdRam,		// Slave に対する 書き込みデータ
 	output [pBusAdrsBit-1:0]			oSUfiAdrsRam,	// Slave に対する R/W 共通のアドレス指定バス
-	output 								oSUfiEdRam,		// Slave に対する 書き込み有効信号
+	output 								oSUfiWEdRam,	// Slave に対する 書き込み有効信号
+	output 								oSUfiREdRam,	// Slave に対する 書き込み有効信号
 	output 								oSUfiCmd,		// Slave に対する High Read, Low Write
 	input  [pUfiBusWidth-1:0] 			iSUfiRdRam,		// Master に対する 読み込みデータ 
 	input  								iSUfiREdRam,	// Master に対する 読み込み有効信号
@@ -76,10 +78,11 @@ reg [pUfiBusWidth-1:0] 	rMUfiRd;			assign oMUfiRd  	= rMUfiRd;
 reg 					rMUfiREd;			assign oMUfiREd 	= rMUfiREd;
 reg 					rMUfiRdy;			assign oMUfiRdy 	= rMUfiRdy;
 //
-reg [pUfiBusWidth-1:0]	rMUfiWd;			assign oSUfiWdRam 	= rMUfiWd;
-reg [pBusAdrsBit-1:0]	rMUfiAdrs;			assign oSUfiAdrsRam = rMUfiAdrs;
-reg 					rMUfiEd;			assign oSUfiEdRam	= rMUfiEd;
-reg 					rMUfiCmd;			assign oSUfiCmd 	= rMUfiCmd;
+reg [pUfiBusWidth-1:0]	rMUfiWdRam;			assign oSUfiWdRam 	= rMUfiWdRam;
+reg [pBusAdrsBit-1:0]	rMUfiAdrsRam;		assign oSUfiAdrsRam = rMUfiAdrsRam;
+reg 					rMUfiWEdRam;		assign oSUfiWEdRam	= rMUfiWEdRam;
+reg 					rMUfiREdRam;		assign oSUfiREdRam	= rMUfiREdRam;
+reg 					rMUfiCmdRam;		assign oSUfiCmd 	= rMUfiCmdRam;
 reg 					rMUfiRdyAtb;		assign oMUfiRdyAtb  = rMUfiRdyAtb;
 reg 					rMUfiRdyVtb;		assign oMUfiRdyVtb  = rMUfiRdyVtb;
 
@@ -88,48 +91,53 @@ begin
 	casex ({iMUfiVdMcs, iMUfiVdSpi, iMUfiVdVtb, iMUfiVdAtb, rMUfiRdyVtb, rMUfiRdyAtb})
 		'b1xxxxx:	// MCS は優先して制御
 		begin
-			rMUfiWd 	<= iMUfiWdMcs;
-			rMUfiAdrs 	<= iMUfiAdrsMcs;
-			rMUfiEd 	<= iMUfiEdMcs;
-			rMUfiCmd 	<= 1'b0;		// mcs は 書き込み固定
-			rMUfiRdyAtb <= 1'b0;
-			rMUfiRdyVtb <= 1'b0;
+			rMUfiWdRam 		<= iMUfiWdMcs;
+			rMUfiAdrsRam 	<= iMUfiAdrsMcs;
+			rMUfiWEdRam 	<= iMUfiEdMcs;
+			rMUfiREdRam 	<= 1'b0;
+			rMUfiCmdRam 	<= 1'b0;		// mcs は 書き込み固定
+			rMUfiRdyAtb 	<= 1'b0;
+			rMUfiRdyVtb 	<= 1'b0;
 		end
 		'b01xxxx:	// SPI は優先して制御
 		begin
-			rMUfiWd 	<= iMUfiWdSpi;
-			rMUfiAdrs 	<= iMUfiAdrsSpi;
-			rMUfiEd 	<= iMUfiEdSpi;
-			rMUfiCmd 	<= iMUfiCmdSpi;	// debug 用に R/W 両方
-			rMUfiRdyAtb <= 1'b0;
-			rMUfiRdyVtb <= 1'b0;
+			rMUfiWdRam 		<= iMUfiWdSpi;
+			rMUfiAdrsRam 	<= iMUfiAdrsSpi;
+			rMUfiWEdRam 	<= iMUfiEdSpi;
+			rMUfiREdRam 	<= 1'b0;
+			rMUfiCmdRam 	<= iMUfiCmdSpi;	// debug 用に R/W 両方
+			rMUfiRdyAtb 	<= 1'b0;
+			rMUfiRdyVtb 	<= 1'b0;
 		end
 		'b00x10x:	// Vtb 稼働中 OFF
 		begin
-			rMUfiWd 	<= 'h00000000;
-			rMUfiAdrs 	<= iMUfiAdrsAtb;
-			rMUfiEd 	<= iMUfiEdAtb;
-			rMUfiCmd 	<= 1'b1;		// Atb は 読み込み固定
-			rMUfiRdyAtb	<= 1'b1;		// Atb 動作中
-			rMUfiRdyVtb	<= 1'b0;
+			rMUfiWdRam	 	<= 'h00000000;
+			rMUfiAdrsRam 	<= iMUfiAdrsAtb;
+			rMUfiWEdRam 	<= iMUfiEdAtb;
+			rMUfiREdRam 	<= 1'b0;
+			rMUfiCmdRam 	<= 1'b1;		// Atb は 読み込み固定
+			rMUfiRdyAtb		<= 1'b1;		// Atb 動作中
+			rMUfiRdyVtb		<= 1'b0;
 		end
 		'b001xx0:	// Atb 稼働中 OFF
 		begin
-			rMUfiWd 	<= iMUfiWdVtb;
-			rMUfiAdrs 	<= iMUfiAdrsVtb;
-			rMUfiEd 	<= iMUfiEdVtb;
-			rMUfiCmd 	<= iMUfiCmdVtb;	// フレームバッファの R/W があるため 両対応
-			rMUfiRdyAtb	<= 1'b0;
-			rMUfiRdyVtb	<= 1'b1;		// Vtb 動作中
+			rMUfiWdRam	 	<= iMUfiWdVtb;
+			rMUfiAdrsRam 	<= iMUfiAdrsVtb;
+			rMUfiWEdRam 	<= iMUfiWEdVtb;
+			rMUfiREdRam 	<= iMUfiREdVtb;
+			rMUfiCmdRam 	<= iMUfiCmdVtb;	// フレームバッファの R/W があるため 両対応
+			rMUfiRdyAtb		<= 1'b0;
+			rMUfiRdyVtb		<= 1'b1;		// Vtb 動作中
 		end
 		default:
 		begin
-			rMUfiWd 	<= 'h12345678;
-			rMUfiEd 	<= 1'b0;
-			rMUfiAdrs 	<= 'hffffffff;
-			rMUfiCmd 	<= 1'b1;
-			rMUfiRdyAtb <= 1'b0;
-			rMUfiRdyVtb <= 1'b0;
+			rMUfiWdRam 		<= 'h12345678;
+			rMUfiAdrsRam 	<= 'hffffffff;
+			rMUfiWEdRam 	<= 1'b0;
+			rMUfiREdRam 	<= 1'b0;
+			rMUfiCmdRam 	<= 1'b1;
+			rMUfiRdyAtb 	<= 1'b0;
+			rMUfiRdyVtb 	<= 1'b0;
 		end
 	endcase
 	//
