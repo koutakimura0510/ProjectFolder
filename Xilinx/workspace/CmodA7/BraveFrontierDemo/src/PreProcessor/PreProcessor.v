@@ -6,7 +6,7 @@
 // Processor. PostProcesser のシステムを動作させるための CLK を生成する
 // 
 //----------------------------------------------------------
-module PreProcesser #(
+module PreProcessor #(
     parameter       pSystemPll      = "on",
     parameter       pAudioPll       = "on"
 )(
@@ -15,12 +15,12 @@ module PreProcesser #(
     input           iAudioClk,
 	// Internal Port
     output          oSysRst,        // Active High Sync Reset
-    output          oAudioRst		// Active High Sync Reset
+    output          oAudioRst,		// Active High Sync Reset
     output          oMemClk,
     output          oVideoClk,
     output          oSysClk,
     output          oAudioClk,
-	output 			oUfibClk,
+	output 			oUfibClk
 );
 
 

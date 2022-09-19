@@ -41,26 +41,24 @@ create_clock -add -name iOscAudioClk -period 83.33 -waveform {0 41.66} [get_port
 #-------------------------------------------------------------------------------
 # FPGA PLL MMCM
 #-------------------------------------------------------------------------------
-create_generated_clock -name SysClk   [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT0];
-create_generated_clock -name MemClk   [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT1];
-create_generated_clock -name VideoClk [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT2];
-create_generated_clock -name AudioClk [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT3];
+create_generated_clock -name AudioClk [get_pins PreProcessor/CGB/MMCME2_BASE_CLK_GEN/CLKOUT0];
+create_generated_clock -name MemClk   [get_pins PreProcessor/CGB/MMCME2_BASE_CLK_GEN/CLKOUT1];
+create_generated_clock -name VideoClk [get_pins PreProcessor/CGB/MMCME2_BASE_CLK_GEN/CLKOUT2];
+create_generated_clock -name SysClk   [get_pins PreProcessor/CGB/MMCME2_BASE_CLK_GEN/CLKOUT3];
+create_generated_clock -name UfibClk  [get_pins PreProcessor/CGB/MMCME2_BASE_CLK_GEN/CLKOUT4];
 # create_generated_clock -name AudioClk [get_pins PREPROCESSER/CGB/PLLE2_ADV_CLK_GEN/CLKOUT0]
-# set_false_path -from [get_pins PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN/CLKOUT3] -to [all_registers]
-# set_false_path -from [get_clocks SysClk] -to [get_clocks AudioClk]
-# set_false_path -from [get_clocks AudioClk] -to [get_clocks SysClk]
-set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioCke_reg/C]
-set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioTone_reg[*]/C]
-set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioSel_reg/C]
-set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioDuty_reg[*]/C]
-# set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioDmaAdrs_reg[*]/C]
-# set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioDmaLen_reg[*]/C]
-# set_false_path -from [get_pins PROCESSER/AudioTxBlock/AudioTxCsr/rAudioDmaEn_reg/C]
+set_false_path -from [get_pins Processor/AudioTxBlock/AudioTxCsr/rAudioCke_reg/C]
+set_false_path -from [get_pins Processor/AudioTxBlock/AudioTxCsr/rAudioTone_reg[*]/C]
+set_false_path -from [get_pins Processor/AudioTxBlock/AudioTxCsr/rAudioSel_reg/C]
+set_false_path -from [get_pins Processor/AudioTxBlock/AudioTxCsr/rAudioDuty_reg[*]/C]
+
+set_false_path -to [get_pins Processor/AudioTxBlock/AudioTxUnit/AudioToneIndex/rIntIndex_reg[*]/D]
+set_false_path -to [get_pins Processor/AudioTxBlock/AudioTxUnit/AudioToneIndex/rDecIndex_reg[*]/D]
 
 #-------------------------------------------------------------------------------
 # 手動配置
 #-------------------------------------------------------------------------------
-set_property LOC MMCME2_ADV_X0Y0  [get_cells PRE_PROCESSER/CGB/MMCME2_BASE_CLK_GEN];
+set_property LOC MMCME2_ADV_X0Y0  [get_cells PreProcessor/CGB/MMCME2_BASE_CLK_GEN];
 # set_property LOC PLLE2_ADV_X1Y0   [get_cells PREPROCESSER/CGB/PLLE2_ADV_CLK_GEN]
 # # set_property LOC RAMB18_X8Y55 [get_cells BASE/PFB/ASYNC_PIXEL_BUFFER/USER_FIFO_DUAL/fifo_reg]
 # set_property LOC RAMB36_X2Y8 [get_cells PROCESSER/PFB/ASYNC_PIXEL_BUFFER/USER_FIFO_DUAL/fifo_reg]

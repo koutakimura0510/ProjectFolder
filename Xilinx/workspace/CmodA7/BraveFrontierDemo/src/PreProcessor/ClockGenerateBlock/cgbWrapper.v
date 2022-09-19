@@ -53,12 +53,12 @@ localparam      lpClkIn1Div      = 1;           // 12 [MHz] / 1 = 12 [MHz]
 
 // VOC 分周回路設定
 // Spped Grade 1 = (600 ~ 1200MHz)
-localparam real lpClkOutMult     = 75.000;      // OSC MHz * Mult = VOC[MHz]
-localparam real lpClk0OutDivF    = 36.625;      // VOC MHz / DivF = Clk0[MHz] Audio
-localparam      lpClk1OutDiv     = 30;          // VOC MHz / Div  = Clk1[MHz] Memory
-localparam      lpClk2OutDiv     =100;          // VOC MHz / Div  = Clk2[MHz] Video
-localparam      lpClk3OutDiv     = 20;          // VOC MHz / Div  = Clk3[MHz] System
-localparam      lpClk4OutDiv     = 10;          // VOC MHz / Div  = Clk4[MHz] UFIB
+localparam real lpClkOutMult     = 60.000;      // OSC MHz * Mult = VOC[MHz]
+localparam real lpClk0OutDivF    = 29.375;      // VOC MHz / DivF = Clk0[MHz] Audio
+localparam      lpClk1OutDiv     = 24;          // VOC MHz / Div  = Clk1[MHz] Memory
+localparam      lpClk2OutDiv     = 80;          // VOC MHz / Div  = Clk2[MHz] Video
+localparam      lpClk3OutDiv     = 12;          // VOC MHz / Div  = Clk3[MHz] System
+localparam      lpClk4OutDiv     =  4;          // VOC MHz / Div  = Clk4[MHz] UFIB
 localparam      lpClk5OutDiv     = 10;          // <Reserved>
 
 generate
@@ -159,30 +159,30 @@ generate
         wire wAudioClk;                    assign oAudioClk = wAudioClk;
         wire wUfibClk;	                   assign oUfibClk  = wUfibClk;
 
-        BUFG BUFG_CLKO_0 (
+        BUFG BufgAudioClk (
             .O (wAudioClk),
             .I (wClkOut[0])
         );
 
-        BUFG BUFG_CLKO_1 (
+        BUFG BufgMemClk (
             .O (wMemClk),
             .I (wClkOut[1])
         );
 
-        BUFG BUFG_CLKO_2 (
+        BUFG BufgVideoClk (
             .O (wVideoClk),
             .I (wClkOut[2])
         );
 
 
-        BUFG BUFG_CLKO_3 (
+        BUFG BufgSysClk (
             .O (wSysClk),
             .I (wClkOut[3])
         );
 
-        BUFG BUFG_CLKO_4 (
+        BUFG BufgUfibClk (
             .O (wUfibClk),
-            .I (wClkOut[3])
+            .I (wClkOut[4])
         );
 
 		//

@@ -72,10 +72,10 @@ wire wMemClk, wVideoClk, wSysClk, wAudioClk, wUfibClk;
 wire wSysRst, wAudioRst;
 wire wPreVde, wPreFe, wPreFvde, wPreHSync, wPreVSync;
 
-PreProcesser #(
+PreProcessor #(
     .pSystemPll     ("on"),
     .pAudioPll      ("off")
-) PRE_PROCESSER (
+) PreProcessor (
     //----------------------------------------------------------
     // External Port
     //----------------------------------------------------------
@@ -104,7 +104,7 @@ reg  qProFvde;
 wire [31:0] wProAudioData;
 reg  qProAudioLRch;
 
-Processer # (
+Processor # (
     .pHdisplay      (pHdisplay),
     .pHback         (pHback),
     .pHfront        (pHfront),
@@ -116,7 +116,7 @@ Processer # (
     .pPixelDebug    (pPixelDebug),
     .pBuffDepth     (pBuffDepth),
     .pDebug         (pDebug)
-) PROCESSER (
+) Processor (
     //----------------------------------------------------------
     // External Port
     //----------------------------------------------------------

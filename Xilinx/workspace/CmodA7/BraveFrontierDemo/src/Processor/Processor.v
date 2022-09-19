@@ -4,7 +4,7 @@
 // -
 // CPU システムの管理を司るモジュール
 //----------------------------------------------------------
-module Processer #(
+module Processor #(
     parameter       pHdisplay     = 480,
     parameter       pHfront       =   8,
     parameter       pHback        =  43,

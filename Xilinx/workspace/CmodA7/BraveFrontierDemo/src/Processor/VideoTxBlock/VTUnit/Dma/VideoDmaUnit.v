@@ -36,10 +36,10 @@ module VideoDmaUnit #(
 	output 						oDmaREd,	// DMA Read Valid Data
 	input 						iDmaRe,		// DMA Read Enable Data
 	//
-	input [pMemAdrsWidth-1:0]	iDmaWAdrs,
-	input [pMemAdrsWidth-1:0]	iDmaRAdrs,
-	input [pMemAdrsWidth-1:0]	iDmaWLen,
-	input [pMemAdrsWidth-1:0]	iDmaRLen,
+	input [pMemAdrsWidth-1:0]	iDmaWAdrs,	// DMA 書き込み開始アドレス
+	input [pMemAdrsWidth-1:0]	iDmaRAdrs,	// DMA 読み込み開始アドレス
+	input [pMemAdrsWidth-1:0]	iDmaWLen,	// DMA 書き込み長さ
+	input [pMemAdrsWidth-1:0]	iDmaRLen,	// DMA 読み込み長さ
 	input 						iDmaEn,
     // CLK Reset
 	input 						iRst,
@@ -52,7 +52,7 @@ module VideoDmaUnit #(
 // 前段のブロックとのタイミング調停も兼ねる
 //-----------------------------------------------------------------------------
 wire 	[pUfiBusWidth-1:0]  wDmaFifoRd;
-wire 						wRvd;
+wire 						wRVd;
 wire 						wEmp;
 reg 						rDmaFifoRe;
 reg 						qDmaFifoRe;
@@ -66,7 +66,7 @@ fifoController #(
 	.oFull			(oDmaFull),
 	.oRd			(wDmaFifoRd),
 	.iRe			(rDmaFifoRe),
-	.oRvd			(wRvd),
+	.oRvd			(wRVd),
 	.oEmp			(wEmp),
 	.iRst			(iRst),
 	.iClk			(iClk)
@@ -99,64 +99,57 @@ reg 						qDmaRAdrsMatch;
 
 always @(posedge iClk)
 begin
-	// TOD 取り合えず Read 転送のみ実装する
-	// casex ({qDmaWAdrsOverCheck, qDmaWAdrsMatch, wRvd, iDmaEn})
-	// 	'bxxx0:		rDmaWAdrsSel <= 1'b0;
-	// 	'b0111:		rDmaWAdrsSel <= ~rDmaWAdrsSel;
-	// 	default: 	rDmaWAdrsSel <=  rDmaWAdrsSel;
-	// endcase
+	// Frame Buffer 領域の切り替え
+	casex ({qDmaWAdrsOverCheck, qDmaWAdrsMatch, wRVd, iDmaEn})
+		'bxxx0:		rDmaWAdrsSel <= 1'b0;
+		'b0111:		rDmaWAdrsSel <= ~rDmaWAdrsSel;
+		default: 	rDmaWAdrsSel <=  rDmaWAdrsSel;
+	endcase
 
-	casex ({qDmaRAdrsMatch, iMUfiRdy, iDmaEn})
-		'bxx0:		rDmaRAdrsSel <= 1'b0;
-		'b111:		rDmaRAdrsSel <= ~rDmaRAdrsSel;
+	casex ({qDmaRAdrsMatch, iDmaRe, iMUfiRdy, iDmaEn})
+		'bxxx0:		rDmaRAdrsSel <= 1'b0;
+		'b1111:		rDmaRAdrsSel <= ~rDmaRAdrsSel;
 		default: 	rDmaRAdrsSel <=  rDmaRAdrsSel;
 	endcase
 
-	// casex ({rDmaWAdrsSel, qDmaWAdrsOverCheck, qDmaWAdrsMatch, iDmaRe, wRvd, iDmaEn})
-	// 	'bxxxxx0:	rDmaWAdrs <= iDmaWAdrs;
-	// 	'bx00011:	rDmaWAdrs <= rDmaWAdrs + 1'b1;
-	// 	'b001011:	rDmaWAdrs <= iDmaRAdrs;
-	// 	'b101011:	rDmaWAdrs <= iDmaWAdrs;
-	// 	default: 	rDmaWAdrs <= rDmaWAdrs;
-	// endcase
+	// アドレスの更新
+	casex ({rDmaWAdrsSel, qDmaWAdrsOverCheck, qDmaWAdrsMatch, wRVd, iDmaEn})
+		'bxxxx0:	rDmaWAdrs <= iDmaWAdrs;
+		'bxx011:	rDmaWAdrs <= rDmaWAdrs + 1'b1;
+		'b00111:	rDmaWAdrs <= iDmaRAdrs;
+		'b10111:	rDmaWAdrs <= iDmaWAdrs;
+		default: 	rDmaWAdrs <= rDmaWAdrs;
+	endcase
 
-	// casex ({rDmaRAdrsSel, qDmaRAdrsMatch, iDmaRe, iMUfiRdy, iDmaEn})
-	// 	'bxxxx0:	rDmaRAdrs <= iDmaRAdrs;
-	// 	'bx0111:	rDmaRAdrs <= rDmaRAdrs + 1'b1;
-	// 	'b01111:	rDmaRAdrs <= iDmaWAdrs;
-	// 	'b11111:	rDmaRAdrs <= iDmaRAdrs;
-	// 	default: 	rDmaRAdrs <= rDmaRAdrs;
-	// endcase
-
-	casex ({rDmaRAdrsSel, qDmaRAdrsMatch, iDmaRe, iMUfiRdy, iDmaEn})
-		'bxxxx0:	rDmaRAdrs <= iDmaRAdrs;
-		'bx0111:	rDmaRAdrs <= rDmaRAdrs + 1'b1;
-		'b01111:	rDmaRAdrs <= iDmaWAdrs;
-		'b11111:	rDmaRAdrs <= iDmaRAdrs;
+	casex ({rDmaRAdrsSel, qDmaRAdrsMatch, iDmaRe, wRVd, iMUfiRdy, iDmaEn})
+		'bxxxxx0:	rDmaRAdrs <= iDmaRAdrs;
+		'bx01011:	rDmaRAdrs <= rDmaRAdrs + 1'b1;
+		'b011011:	rDmaRAdrs <= iDmaWAdrs;
+		'b111011:	rDmaRAdrs <= iDmaRAdrs;
 		default: 	rDmaRAdrs <= rDmaRAdrs;
 	endcase
 
-	if (iDmaRe) 	rMUfiWd 	<= 12'haaa;					// Read サイクル時はゴミデータ送信
-	else			rMUfiWd 	<= {pUfiBusWidth{1'b0}};	// 一応 Writeサイクル時を示すデータにしておく
+	if (wRVd)		rMUfiWd		<= wDmaFifoRd;
+	else 			rMUfiWd		<= 12'haaa;
 
-	if (iDmaRe) 	rMUfiAdrs	<= rDmaRAdrs;
-	else 			rMUfiAdrs	<= rMUfiAdrs; // 本来はここに Writeアドレスが代入される
+	if (wRVd) 		rMUfiAdrs	<= rDmaWAdrs;
+	else 			rMUfiAdrs	<= rDmaRAdrs;
 
-	if (iDmaEn)		rMUfiWEd   <= qMUfiWEd;
-	else			rMUfiWEd   <= 1'b0;
+	if (iDmaEn)		rMUfiWEd	<= qMUfiWEd;
+	else			rMUfiWEd	<= 1'b0;
 
-	if (iDmaEn)		rMUfiREd   <= qMUfiREd;
-	else 			rMUfiREd   <= 1'b0;
+	if (iDmaEn)		rMUfiREd	<= qMUfiREd;
+	else 			rMUfiREd	<= 1'b0;
 
-	if (iDmaEn)		rMUfiVd    <= qMUfiVd;
-	else			rMUfiVd    <= 1'b0;
+	if (iDmaEn)		rMUfiVd 	<= qMUfiVd;
+	else			rMUfiVd 	<= 1'b0;
 
-	if (iDmaEn)		rMUfiCmd   <= qMUfiCmd;
-	else 			rMUfiCmd   <= 1'b1;
+	if (iDmaEn)		rMUfiCmd	<= qMUfiCmd;
+	else 			rMUfiCmd	<= 1'b1;
 	//
-	rDmaFifoRe <= qDmaFifoRe;
+	if (iDmaEn)		rDmaFifoRe	<= qDmaFifoRe;
+	else 			rDmaFifoRe	<= 1'b0;
 
-	//
 	// 後段ブロックへの処理
 	rDmaRd	<= iMUfiRd;
 	rDmaREd	<= iMUfiREd;
@@ -165,28 +158,31 @@ end
 //
 always @*
 begin
-	// qDmaWAdrsOverCheck 	<= ((rDmaWAdrs+1'b1) == rDmaRAdrs);	// WAdrs が RAdrs を越さないようにする
-	// qDmaWAdrsMatch 		<= (rDmaWAdrs == iDmaWLen) | (rDmaWAdrs == iDmaRLen);
+	qDmaWAdrsOverCheck 	<=  ((rDmaWAdrs + 1'd1) == rDmaRAdrs) |
+							((rDmaWAdrs + 2'd2) == rDmaRAdrs) |
+							((rDmaWAdrs + 2'd3) == rDmaRAdrs) |
+							((rDmaWAdrs + 3'd4) == rDmaRAdrs) |
+							((rDmaWAdrs + 3'd5) == rDmaRAdrs) |
+							((iDmaWAdrs <= rDmaRAdrs) && (rDmaRAdrs < (iDmaWAdrs + 3'd5))) |
+							((iDmaRAdrs <= rDmaRAdrs) && (rDmaRAdrs < (iDmaRAdrs + 3'd5))) ;
+	qDmaWAdrsMatch 		<= (rDmaWAdrs == iDmaWLen) | (rDmaWAdrs == iDmaRLen);
 	qDmaRAdrsMatch 		<= (rDmaRAdrs == iDmaWLen) | (rDmaRAdrs == iDmaRLen);
 	//
-	// qDmaRd		<= iMUfiRd;
-	// qDmaREd		<= iMUfiRdy ? iMUfiREd : 1'b0;
-	// qMUfiWd		<= iDmaRe ? 8'haa : wDmaFifoRd;
-	// qMUfiAdrs	<= iDmaRe ? rDmaRAdrs : rDmaWAdrs;
+	qMUfiWEd	<= (iDmaRe & iMUfiRdy) | wRVd;
+	qMUfiREd	<= iDmaRe;						// 後段がデータ受付可能であれば Read 要求とする
+	qMUfiVd		<= (iDmaRe | (~wEmp));			// 空でなければ Ufi 転送要求とする
+	qMUfiCmd	<= (iDmaRe & (~wRVd));			// 後段から Read要求がなければ、WCMD とする
+	qDmaFifoRe	<= (~iDmaRe) & iMUfiRdy & (~qDmaWAdrsOverCheck);
 
-	// qMUfiWEd	<= (iDmaRe | wRvd)  & iDmaEn & iMUfiRdy;// RW 発行
-	qMUfiWEd	<= iDmaRe & iMUfiRdy;
-	qMUfiREd	<= iDmaRe;
-	// qMUfiVd		<= (iDmaRe | (~wEmp))  & iDmaEn;	// 空でなければ Ufi 転送要求とする
-	qMUfiVd		<= iDmaRe;						// 空でなければ Ufi 転送要求とする
-	qMUfiCmd	<= iDmaRe;								// 後段から Read要求がなければ、WCMD とする
-	// qDmaFifoRe	<= (~iDmaRe) & iMUfiRdy & iDmaEn;
-	qDmaFifoRe	<= 1'b0; // RDMA デバッグのため、書き込み側のデータは必要ない
+	// DMA Read のみのデバッグの残り
+	// qMUfiWEd		<= iDmaRe & iMUfiRdy;
+	// qMUfiVd		<= iDmaRe;						// 空でなければ Ufi 転送要求とする
+	// qDmaFifoRe	<= 1'b0; // RDMA デバッグのため、書き込み側のデータは必要ない
 end
 
 /*
  DMA サイクル
- まず前提として、FrameBuffer の書き込みは、Read よりも早くなければならない。FPS 確保のため。
+ まず前提として、FrameBuffer への書き込みは、Read よりも早くなければならない。
  1.DualFrameBuufer 構造として、WDMA,RDMA は別々のアドレスを指定する。
  2.起動時は、後段の DualClkFifo が Full になるまで RAM の何も書かれていない領域から 0 を Read する。
  3.Full になると iDmaRe が Deassert されるので、WDMA に切り替え前段の FIFO からの入力データを UFI 経由で RAM に書き込みを行う。

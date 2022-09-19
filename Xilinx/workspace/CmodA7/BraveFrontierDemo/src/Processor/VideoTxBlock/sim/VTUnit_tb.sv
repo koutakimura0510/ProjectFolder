@@ -19,10 +19,10 @@ localparam lpRawFileSave	= "d:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDe
 // Clk Generator
 // ・バスクロックはシステムクロックの 2倍の周波数でなければならない。
 //----------------------------------------------------------
-localparam 	lpSysClkCycle 	= 8;	// 
-localparam 	lpBusClkCycle 	= 4;	//
-localparam 	lpVideoClkCycle = 32;	//
-localparam 	lpMemClkCycle 	= 24;	//
+localparam 	lpSysClkCycle 	= 10;	// 
+localparam 	lpBusClkCycle 	= 2;	//
+localparam 	lpVideoClkCycle = 24;	//
+localparam 	lpMemClkCycle 	= 8;	//
 //
 wire 		wSysClk;
 wire 		wBusClk;
@@ -133,9 +133,13 @@ localparam [lpVdisplayWidth:0] lpVSyncEnd	= lpVdisplay + lpVfront + lpVpulse - 1
 localparam [lpVdisplayWidth:0] lpVSyncMax	= lpVdisplay + lpVfront + lpVpulse + lpVback - 1'b1;
 //
 localparam lpColorDepth 		= 16;
-localparam lpDualClkFifoDepth	= 32;	// FIFO サイズを可変して、あらゆるサイズで動作可能か検討する
-localparam lpDmaFifoDepth		= 32;	// 上記同文
+localparam lpDualClkFifoDepth	= 16;	// FIFO サイズを可変して、あらゆるサイズで動作可能か検討する
+localparam lpDmaFifoDepth		= 16;	// 上記同文
 localparam lpFrameSize 			= lpHdisplay * lpVdisplay * 2; // ダブルフレームバッファ構造
+localparam lpDmaAdrs1			= 0;
+localparam lpDmaAdrs2			= lpHdisplay * lpVdisplay;
+localparam lpDmaLen1			= (lpHdisplay * lpVdisplay) - 1;
+localparam lpDmaLen2			= (lpHdisplay * lpVdisplay * 2) - 1;
 //
 wire [7:0]	wTftColorR;
 wire [7:0]	wTftColorG;
@@ -194,10 +198,10 @@ VideoTxUnit #(
 	.iVtbVideoRst		(rVtbVideoRst),
 	.iDisplayRst		(1'b0),
 	.iBlDutyRatio		(127),
-	.iDmaWAdrs			(0),
-	.iDmaRAdrs			(1024),
-	.iDmaWLen			(1024-1),
-	.iDmaRLen			(2048-1),
+	.iDmaWAdrs			(lpDmaAdrs1),
+	.iDmaRAdrs			(lpDmaAdrs2),
+	.iDmaWLen			(lpDmaLen1),
+	.iDmaRLen			(lpDmaLen2),
 	.iDmaEn				(rDmaEn),
 	.iSysClk			(wSysClk),
 	.iVideoClk			(wVideoClk),
@@ -214,7 +218,7 @@ end
 //----------------------------------------------------------
 // RAM Unit
 //----------------------------------------------------------
-localparam lpRamFifoDepth	= 32;
+localparam lpRamFifoDepth	= 16;
 localparam lpRamDqWidth		= lpUfiBusWidth;
 //
 reg  [lpRamDqWidth-1:0] 	rMem	[0:lpFrameSize-1];	// RW フレームバッファ領域
@@ -374,7 +378,7 @@ endtask
 // TestBench 動作
 // lpFrameCnt 画像出力の回数を指定可能、複数回ループさせて正しく raw 画像が出れば OK
 //-----------------------------------------------------------------------------
-localparam lpFrameCnt = 2;
+localparam lpFrameCnt = 4;
 integer n;
 
 initial

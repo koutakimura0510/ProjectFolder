@@ -13,7 +13,7 @@ module RAMBlock #(
 	parameter							pCsrActiveWidth 	= 8,
 	parameter							pUfiBusWidth		= 8,
 	//
-	parameter							pRamFifoDepth		= 256,	// Dual Clk FIFO の深さ
+	parameter							pRamFifoDepth		= 1024,	// Dual Clk FIFO の深さ
 	parameter							pRamAdrsWidth		= 19,	// GPIO アドレス幅
 	parameter							pRamDqWidth			= 8		// GPIO データ幅
 )(
