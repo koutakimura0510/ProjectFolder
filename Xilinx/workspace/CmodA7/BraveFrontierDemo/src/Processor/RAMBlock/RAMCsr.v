@@ -10,7 +10,7 @@
 //----------------------------------------------------------
 module RAMCsr #(
 	parameter 						pBlockAdrsMap 	= 8,
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h05,
+	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h06,
 	parameter						pBusAdrsBit		= 16,
 	parameter 						pCsrAdrsWidth   = 16,
 	parameter						pCsrActiveWidth = 8,
@@ -27,6 +27,9 @@ module RAMCsr #(
 	input	[pBusAdrsBit-1:0]		iSUsiAdrs,  // R/W Adrs
 	input							iSUsiWCke,	// Write Enable
 	// Csr Output
+	output 							oRamDualFifoSrcRst,
+	output 							oRamDualFifoDstRst,
+	//
 	input 	[pRamDqWidth-1:0]		iMemRd,
     // CLK Reset
     input           				iSysRst,
@@ -37,9 +40,12 @@ module RAMCsr #(
 //----------------------------------------------------------
 // レジスタマップ
 //----------------------------------------------------------
+reg 						rRamDualFifoSrcRst;				assign oRamDualFifoSrcRst = rRamDualFifoSrcRst;
+reg 						rRamDualFifoDstRst;				assign oRamDualFifoDstRst = rRamDualFifoDstRst;
+//
 reg [pRamDqWidth-1:0]		rMemRd;
 //
-// reg 						qCsrWCke00;
+reg 						qCsrWCke00;
 // reg 						qCsrWCke04;
 // reg 						qCsrWCke08;
 // reg 						qCsrWCke0c;
@@ -48,17 +54,21 @@ always @(posedge iSysClk)
 begin
 	if (iSysRst)
 	begin
-		rMemRd		<= {pRamDqWidth{1'b0}};
+		rRamDualFifoSrcRst	<= 1'b1;
+		rRamDualFifoDstRst	<= 1'b1;
+		rMemRd				<= {pRamDqWidth{1'b0}};
 	end
 	else
 	begin
-		rMemRd			<= iMemRd;
+		rRamDualFifoSrcRst	<= qCsrWCke00 ? iSUsiWd[0:0] : rRamDualFifoSrcRst;
+		rRamDualFifoDstRst	<= qCsrWCke00 ? iSUsiWd[1:1] : rRamDualFifoDstRst;
+		rMemRd				<= iMemRd;
 	end
 end
 
 always @*
 begin
-	// qCsrWCke00 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
+	qCsrWCke00 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
 	// qCsrWCke04 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
 	// qCsrWCke08 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
 	// qCsrWCke0c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h000c});
@@ -83,6 +93,7 @@ begin
 		// {{(32 - パラメータ名	){1'b0}}, レジスタ名} -> パラメータ可変に対応し 0 で埋められるように設定
 		case (iSUsiAdrs[pCsrActiveWidth - 1:0])
 			//
+			'h0000:		rSUsiRd	<= {{(32 - 2){1'b0}}, rRamDualFifoDstRst, rRamDualFifoSrcRst};
 			'h0080:		rSUsiRd	<= {{(32 - pRamDqWidth){1'b0}},		rMemRd		};
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase

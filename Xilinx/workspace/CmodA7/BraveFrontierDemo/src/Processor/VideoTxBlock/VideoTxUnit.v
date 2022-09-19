@@ -133,7 +133,7 @@ VideoDmaUnit #(
 	.iDmaRLen			(iDmaRLen),
 	.iDmaEn				(iDmaEn),
 	//
-	.iRst				(iSysRst),
+	.iRst				(iVtbSystemRst),
 	.iClk				(iSysClk)
 );
 
@@ -172,9 +172,18 @@ VideoSyncGen #(
 
 
 //-----------------------------------------------------------------------------
+// あまり入れたくはないが 処理が間に合わない時の FPS 調整機能
+//-----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// Read フレームの Pixel に加工を施す場合は Dual FIFO 前段で行う
+//-----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
 // SystemClk <=> VideoClk Dual Clk FIFO
 //-----------------------------------------------------------------------------
-//
 wire [lpDualFifoWidth-1:0] 	wVideoDualFifoRd;
 wire 						wVideoDualFifoFull;
 
@@ -197,14 +206,19 @@ always @*
 begin
 	qDmaRe <= (~wVideoDualFifoFull);
 end
-//
+
 // Dual Clk Fifo 経由で 2レイテンシ遅延が発生するため、
 // Sync系統も同様に遅らせる
-localparam lpSyncLatancy = 2;
+// ※2022-09-20 何故か 6レイテンシ遅延が発生しているため応急措置、原因はわかっていない
+// 更にたまに、5レイテンシ遅延の場合があるので質が悪い
+localparam lpSyncLatancy = 6;
 
 reg [lpSyncLatancy-1:0] rVideoHSync;
 reg [lpSyncLatancy-1:0] rVideoVSync;
 reg [lpSyncLatancy-1:0] rVideoVde;
+reg qVideoHSync;
+reg qVideoVSync;
+reg qVideoVde;
 
 always @(posedge iVideoClk)
 begin
@@ -218,6 +232,15 @@ begin
 	else 				rVideoVde <= {rVideoVde[lpSyncLatancy-2:0], wVde};
 end
 
+always @*
+begin
+	// qVideoHSync	<= wHSync;
+	// qVideoVSync	<= wVSync;
+	// qVideoVde	<= wVde;
+	qVideoHSync	<= rVideoHSync[lpSyncLatancy-1];
+	qVideoVSync	<= rVideoVSync[lpSyncLatancy-1];
+	qVideoVde	<= rVideoVde[lpSyncLatancy-1];
+end
 
 //-----------------------------------------------------------------------------
 // バックライト調光
@@ -252,9 +275,9 @@ generate
 		OBUF TFT_B (.O (oTftColorB[4+i]),	.I (wVideoDualFifoRd[0+i]));
 	end
 	OBUF TFT_DCLK 	(.O (oTftDclk),			.I (iVideoClk));
-	OBUF TFT_HSync 	(.O (oTftHSync),		.I (rVideoHSync[lpSyncLatancy-1]));
-	OBUF TFT_VSync 	(.O (oTftVSync),		.I (rVideoVSync[lpSyncLatancy-1]));
-	OBUF TFT_VDE 	(.O (oTftDe),			.I (rVideoVde[lpSyncLatancy-1]));
+	OBUF TFT_HSync 	(.O (oTftHSync),		.I (qVideoHSync));
+	OBUF TFT_VSync 	(.O (oTftVSync),		.I (qVideoVSync));
+	OBUF TFT_VDE 	(.O (oTftDe),			.I (qVideoVde));
 	OBUF TFT_BL 	(.O (oTftBackLight),	.I (wTftBackLight));
 	OBUF TFT_RST 	(.O (oTftRst),			.I (iDisplayRst));
 endgenerate

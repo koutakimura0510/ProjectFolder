@@ -30,9 +30,10 @@ module RAMDualClkFifo #(
 	output 							oMemREd,
 	input 							iMemRe,
 	output 							oMemFull,
-
+	//
+	input 							iSrcRst,
+	input 							iDstRst,
     // Internal Port
-    input							iRst,
 	input 							iSysClk,
     input							iMemClk
 );
@@ -55,8 +56,8 @@ fifoDualControllerGray #(
 	.iRE		(iREd),
 	.oRVD		(oRVd),
 	.oEMP		(oEmp),
-	.iSrcRst	(iRst),
-	.iDstRst	(iRst),
+	.iSrcRst	(iSrcRst),
+	.iDstRst	(iDstRst),
 	.iSrcClk	(iSysClk),
 	.iDstClk	(iMemClk)
 );
@@ -72,8 +73,8 @@ fifoDualControllerGray #(
 	.iRE		(iREd),
 	.oRVD		(),
 	.oEMP		(),
-	.iSrcRst	(iRst),
-	.iDstRst	(iRst),
+	.iSrcRst	(iSrcRst),
+	.iDstRst	(iDstRst),
 	.iSrcClk	(iSysClk),
 	.iDstClk	(iMemClk)
 );
@@ -89,8 +90,8 @@ fifoDualControllerGray #(
 	.iRE		(iREd),
 	.oRVD		(),
 	.oEMP		(),
-	.iSrcRst	(iRst),
-	.iDstRst	(iRst),
+	.iSrcRst	(iSrcRst),
+	.iDstRst	(iDstRst),
 	.iSrcClk	(iSysClk),
 	.iDstClk	(iMemClk)
 );
@@ -109,8 +110,8 @@ fifoDualControllerGray #(
 	.iRE		(iMemRe),
 	.oRVD		(oMemREd),
 	.oEMP		(),
-	.iSrcRst	(iRst),
-	.iDstRst	(iRst),
+	.iSrcRst	(iSrcRst),
+	.iDstRst	(iDstRst),
 	.iSrcClk	(iMemClk),
 	.iDstClk	(iSysClk)
 );

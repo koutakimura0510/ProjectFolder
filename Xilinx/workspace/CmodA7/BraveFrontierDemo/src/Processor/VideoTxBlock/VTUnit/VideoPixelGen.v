@@ -130,11 +130,11 @@ PixelDrawPosition #(
 //-----------------------------------------------------------------------------
 // Scene Draw
 //-----------------------------------------------------------------------------
-localparam lpDotSquareGenFifoDepth = 32;
+localparam lpDotSquareGenFifoDepth = 1024;
 localparam lpDxs = 0;
-localparam lpDxe = lpDxs + 16;
-localparam lpDys = 0;
-localparam lpDye = lpDys + 16;
+localparam lpDxe = lpDxs + 2;
+localparam lpDys = 2;
+localparam lpDye = lpDys + 2;
 //
 reg  					qDotSquareEdd;
 reg 					qDotSquareEds;
@@ -150,7 +150,7 @@ DotSquareGen #(
 	.pFifoDepth			(lpDotSquareGenFifoDepth),
 	.pFifoBitWidth		(pColorDepth)
 ) DOT_SQUARE_GEN (
-	.iPixel				(16'h0f33),
+	.iPixel				(16'h0000),
 	.iHpos				(wPixelDrawHpos),
 	.iVpos				(wPixelDrawVpos),
 	.iDxs				(lpDxs),
@@ -186,7 +186,7 @@ reg   qPixelMargeEdd;
 
 DotMargeToPixelConverter #(
 	.pColorDepth	(pColorDepth),
-	.pFifoDepth		(16),
+	.pFifoDepth		(1024),
 	.pFifoBitWidth	(pOutColorDepth)
 ) DMT_PIXEL_CONVERTER (
 	.iDistantground	({pColorDepth{1'b0}}),

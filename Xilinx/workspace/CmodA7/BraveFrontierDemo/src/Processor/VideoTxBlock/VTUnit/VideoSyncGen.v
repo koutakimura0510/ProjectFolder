@@ -72,7 +72,7 @@ begin
 		default: 		rVpos <= rVpos;
 	endcase
 
-    if (iRst)		rVSync <= 1'b1;
+    if (iRst)			rVSync <= 1'b1;
 	else if (qVSync)	rVSync <= 1'b0;
     else                rVSync <= 1'b1;
 end

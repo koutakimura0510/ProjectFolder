@@ -130,29 +130,35 @@ begin
 	endcase
 
 	if (wRVd)		rMUfiWd		<= wDmaFifoRd;
-	else 			rMUfiWd		<= 12'haaa;
+	else 			rMUfiWd		<= 8'h0f;
 
 	if (wRVd) 		rMUfiAdrs	<= rDmaWAdrs;
 	else 			rMUfiAdrs	<= rDmaRAdrs;
 
-	if (iDmaEn)		rMUfiWEd	<= qMUfiWEd;
+	if (iRst)		rMUfiWEd	<= 1'b0;
+	else if (iDmaEn)rMUfiWEd	<= qMUfiWEd;
 	else			rMUfiWEd	<= 1'b0;
 
-	if (iDmaEn)		rMUfiREd	<= qMUfiREd;
+	if (iRst)		rMUfiREd	<= 1'b0;
+	else if (iDmaEn)rMUfiREd	<= qMUfiREd;
 	else 			rMUfiREd	<= 1'b0;
 
-	if (iDmaEn)		rMUfiVd 	<= qMUfiVd;
+	if (iRst)		rMUfiVd		<= 1'b0;
+	else if (iDmaEn)rMUfiVd 	<= qMUfiVd;
 	else			rMUfiVd 	<= 1'b0;
 
 	if (iDmaEn)		rMUfiCmd	<= qMUfiCmd;
 	else 			rMUfiCmd	<= 1'b1;
-	//
-	if (iDmaEn)		rDmaFifoRe	<= qDmaFifoRe;
+
+	if (iRst)		rDmaFifoRe	<= 1'b0;
+	else if (iDmaEn)rDmaFifoRe	<= qDmaFifoRe;
 	else 			rDmaFifoRe	<= 1'b0;
 
 	// 後段ブロックへの処理
 	rDmaRd	<= iMUfiRd;
-	rDmaREd	<= iMUfiREd;
+
+	if (iRst)		rDmaREd	<= 1'b0;
+	else			rDmaREd	<= iMUfiREd;
 end
 
 //

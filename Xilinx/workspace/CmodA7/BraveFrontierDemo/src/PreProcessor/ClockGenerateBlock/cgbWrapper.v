@@ -55,7 +55,7 @@ localparam      lpClkIn1Div      = 1;           // 12 [MHz] / 1 = 12 [MHz]
 // Spped Grade 1 = (600 ~ 1200MHz)
 localparam real lpClkOutMult     = 60.000;      // OSC MHz * Mult = VOC[MHz]
 localparam real lpClk0OutDivF    = 29.375;      // VOC MHz / DivF = Clk0[MHz] Audio
-localparam      lpClk1OutDiv     = 24;          // VOC MHz / Div  = Clk1[MHz] Memory
+localparam      lpClk1OutDiv     = 12;          // VOC MHz / Div  = Clk1[MHz] Memory
 localparam      lpClk2OutDiv     = 80;          // VOC MHz / Div  = Clk2[MHz] Video
 localparam      lpClk3OutDiv     = 12;          // VOC MHz / Div  = Clk3[MHz] System
 localparam      lpClk4OutDiv     =  4;          // VOC MHz / Div  = Clk4[MHz] UFIB
@@ -70,7 +70,7 @@ generate
         wire [8:0] wunused;
 
         MMCME2_BASE # (
-            // 入力クロック (Div 1 ~ 56)
+            // 入力クロック (0.000 ~ 100.000)
             .CLKIN1_PERIOD        (lpClkIn1Period),
             .DIVCLK_DIVIDE        (lpClkIn1Div),
 

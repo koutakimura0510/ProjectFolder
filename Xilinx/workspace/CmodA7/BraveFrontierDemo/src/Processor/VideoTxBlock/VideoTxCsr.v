@@ -140,9 +140,9 @@ begin
 		rVtbVideoRst	<= 1'b1;		// Active High
 		rDisplayRst		<= 1'b1;		// Active Low
 		rDmaEn			<= 1'b0;
-		rBlDutyRatio	<= 8'd0;		// 0xff Max Flash
+		rBlDutyRatio	<= 8'h00;		// 0xff Max Flash
 		rDmaWAdrs		<= {pMemAdrsWidth{1'b0}};
-		rDmaRAdrs		<= {pMemAdrsWidth{1'b0}};
+		rDmaRAdrs		<= 'h1fe00;
 		rDmaWLen		<= 'h1fe00;
 		rDmaRLen		<= 'h3fc00;
 	end

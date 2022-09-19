@@ -51,6 +51,8 @@ module RAMBlock #(
 //----------------------------------------------------------
 // RAM Unit
 //----------------------------------------------------------
+wire wRamDualFifoSrcRstCsr;
+wire wRamDualFifoDstRstCsr;
 reg [pUfiBusWidth-1:0]	qMemRdCsr;
 
 RAMUnit #(
@@ -74,6 +76,9 @@ RAMUnit #(
 	.oSUfiRd		(oSUfiRd),
 	.oSUfiREd		(oSUfiREd),
 	.oSUfiRdy		(oSUfiRdy),
+	//
+	.iRamDualFifoSrcRst	(wRamDualFifoSrcRstCsr),
+	.iRamDualFifoDstRst	(wRamDualFifoDstRstCsr),
 	//
 	.iSysRst		(iSysRst),
 	.iSysClk		(iSysClk),
@@ -99,6 +104,9 @@ RAMCsr #(
 	.iSUsiWd			(iSUsiWd),
 	.iSUsiAdrs			(iSUsiAdrs),
 	.iSUsiWCke			(iSUsiWCke),
+	//
+	.oRamDualFifoSrcRst	(wRamDualFifoSrcRstCsr),
+	.oRamDualFifoDstRst	(wRamDualFifoDstRstCsr),
 	//
 	.iMemRd				(qMemRdCsr),
 	//

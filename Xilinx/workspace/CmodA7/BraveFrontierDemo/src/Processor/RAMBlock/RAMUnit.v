@@ -30,6 +30,9 @@ module RAMUnit #(
 	output	[pUfiBusWidth-1:0]	oSUfiRd,		// Read Data
 	output						oSUfiREd,		// Read Data Enable
 	//
+	input 						iRamDualFifoSrcRst,
+	input 						iRamDualFifoDstRst,
+	//
     input						iSysRst,
     input						iSysClk,
     input						iMemClk
@@ -73,7 +76,8 @@ RAMDualClkFifo #(
 	.oMemREd			(oSUfiREd),
 	.iMemRe				(iSUfiREd),
 	.oMemFull 			(wMemFull),
-	.iRst				(iSysRst),
+	.iSrcRst			(iRamDualFifoSrcRst),
+	.iDstRst			(iRamDualFifoDstRst),
 	.iSysClk			(iSysClk),
 	.iMemClk			(iMemClk)
 );

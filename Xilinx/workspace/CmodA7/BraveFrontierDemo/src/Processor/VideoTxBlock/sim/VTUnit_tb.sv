@@ -17,21 +17,29 @@ localparam lpRawFileSave	= "d:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDe
 
 //----------------------------------------------------------
 // Clk Generator
-// ・バスクロックはシステムクロックの 2倍の周波数でなければならない。
+// ・システムクロックはビデオクロックの 2倍以上の周波数でなければならない
+// ・メモリクロックはビデオクロックの 2.5倍以上の周波数でなければならない
+// ・バスクロックはシステムクロックの 2.5倍以上の周波数でなければならない。
 //----------------------------------------------------------
-localparam 	lpSysClkCycle 	= 10;	// 
-localparam 	lpBusClkCycle 	= 2;	//
-localparam 	lpVideoClkCycle = 24;	//
-localparam 	lpMemClkCycle 	= 8;	//
+localparam 	lpSysClkCycle 	= 12;
+localparam 	lpBusClkCycle 	= 6;
+localparam 	lpVideoClkCycle = 40;
+localparam 	lpMemClkCycle 	= 18;	// ※ 2022-09-20 やはり外部メモリはバトルネックになる
 //
 wire 		wSysClk;
 wire 		wBusClk;
 wire 		wVideoClk;
 wire 		wMemClk;
+//
 reg  		rSysRst;
 reg 		rVtbSystemRst;
 reg 		rVtbVideoRst;
+reg 		rRamSrcRst;
+reg 		rRamDstRst;
 reg 		rDmaEn;
+//
+reg 		rRamSrcRst;
+reg 		rRamDstRst;
 //
 SimSystemClk #(
 	.pSystemClkCycle	(lpSysClkCycle)
@@ -68,13 +76,16 @@ begin
 	rSysRst 		<= 1'b1;
 	rVtbSystemRst 	<= 1'b1;
 	rVtbVideoRst 	<= 1'b1;
+	rRamSrcRst		<= 1'b1;
+	rRamDstRst		<= 1'b1;
 	rDmaEn  		<= 1'b0;
-	#(lpMemClkCycle*2);
+	#(lpMemClkCycle * 2);
 	rSysRst 		<= 1'b0;
 	#(lpSysClkCycle * 10);
 	rDmaEn  		<= 1'b1;
-	#(lpSysClkCycle * 10);
 	rVtbSystemRst 	<= 1'b0;
+	rRamSrcRst		<= 1'b0;
+	rRamDstRst		<= 1'b0;
 	#(lpSysClkCycle * 10);
 	rVtbVideoRst 	<= 1'b0;
 end
@@ -117,11 +128,11 @@ wire 							wSUfiRdyRam;	// Master に対する Ready 信号
 //----------------------------------------------------------
 localparam  lpHdisplayWidth	= 11;
 localparam	lpVdisplayWidth	= 11;
-localparam	lpHdisplay		= 32;
+localparam	lpHdisplay		= 480;
 localparam	lpHfront		= 8;
 localparam	lpHback			= 43;
 localparam	lpHpulse		= 30;
-localparam	lpVdisplay		= 32;
+localparam	lpVdisplay		= 272;
 localparam	lpVfront		= 12;
 localparam	lpVback			= 4;
 localparam	lpVpulse		= 10;
@@ -232,30 +243,33 @@ wire 						wMemCE;
 assign wMemDq = qMemDq;
 
 RAMUnit #(
-	.pUfiBusWidth	(lpUfiBusWidth),
-	.pBusAdrsBit	(lpBusAdrsBit),
-	.pRamFifoDepth	(lpRamFifoDepth),
-	.pRamAdrsWidth	(lpMemAdrsWidth),
-	.pRamDqWidth	(lpRamDqWidth)
+	.pUfiBusWidth		(lpUfiBusWidth),
+	.pBusAdrsBit		(lpBusAdrsBit),
+	.pRamFifoDepth		(lpRamFifoDepth),
+	.pRamAdrsWidth		(lpMemAdrsWidth),
+	.pRamDqWidth		(lpRamDqWidth)
 ) RamUnit (
-	.oMemAdrs		(wMemAdrs),
-	.ioMemDq		(wMemDq),
-	.oMemOE			(wMemOE),
-	.oMemWE			(wMemWE),
-	.oMemCE			(wMemCE),
+	.oMemAdrs			(wMemAdrs),
+	.ioMemDq			(wMemDq),
+	.oMemOE				(wMemOE),
+	.oMemWE				(wMemWE),
+	.oMemCE				(wMemCE),
 	//
-	.iSUfiWd		(wSUfiWdRam),
-	.iSUfiAdrs		(wSUfiAdrsRam),
-	.iSUfiWEd		(wSUfiWEdRam),
-	.iSUfiREd		(owSUfiREdRam),
-	.iSUfiCmd		(wSUfiCmdRam),
-	.oSUfiRd		(wSUfiRdRam),
-	.oSUfiREd		(iwSUfiREdRam),
-	.oSUfiRdy		(wSUfiRdyRam),
+	.iSUfiWd			(wSUfiWdRam),
+	.iSUfiAdrs			(wSUfiAdrsRam),
+	.iSUfiWEd			(wSUfiWEdRam),
+	.iSUfiREd			(owSUfiREdRam),
+	.iSUfiCmd			(wSUfiCmdRam),
+	.oSUfiRd			(wSUfiRdRam),
+	.oSUfiREd			(iwSUfiREdRam),
+	.oSUfiRdy			(wSUfiRdyRam),
 	//
-	.iSysRst		(rSysRst),
-	.iSysClk		(wSysClk),
-	.iMemClk		(wMemClk)
+	.iRamDualFifoSrcRst	(rRamSrcRst),
+	.iRamDualFifoDstRst	(rRamDstRst),
+	//
+	.iSysRst			(rSysRst),
+	.iSysClk			(wSysClk),
+	.iMemClk			(wMemClk)
 );
 //
 
