@@ -61,6 +61,7 @@ module Processer #(
     input           iVideoClk,
     input           iMemClk,
     input           iAudioClk,
+	input 			iUfibClk,
     input           iSysRst,
     input           iAudioRst
 );
@@ -661,7 +662,7 @@ UltraFastInterface #(
 	.iSUfiRdyRam	(wSUfiRdy),
 	//
 	.iUfiRst		(iSysRst),
-	.iUfiClk		(iSysClk)
+	.iUfiClk		(iUfibClk)
 );
 
 always @*

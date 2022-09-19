@@ -17,11 +17,12 @@ localparam lpRawFileSave	= "d:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDe
 
 //----------------------------------------------------------
 // Clk Generator
+// ・バスクロックはシステムクロックの 2倍の周波数でなければならない。
 //----------------------------------------------------------
-localparam 	lpSysClkCycle 	= 4;
-localparam 	lpBusClkCycle 	= 2;
-localparam 	lpVideoClkCycle = 16;
-localparam 	lpMemClkCycle 	= 8;
+localparam 	lpSysClkCycle 	= 8;	// 
+localparam 	lpBusClkCycle 	= 4;	//
+localparam 	lpVideoClkCycle = 32;	//
+localparam 	lpMemClkCycle 	= 24;	//
 //
 wire 		wSysClk;
 wire 		wBusClk;
@@ -132,8 +133,8 @@ localparam [lpVdisplayWidth:0] lpVSyncEnd	= lpVdisplay + lpVfront + lpVpulse - 1
 localparam [lpVdisplayWidth:0] lpVSyncMax	= lpVdisplay + lpVfront + lpVpulse + lpVback - 1'b1;
 //
 localparam lpColorDepth 		= 16;
-localparam lpDualClkFifoDepth	= 32;
-localparam lpDmaFifoDepth		= 32;
+localparam lpDualClkFifoDepth	= 32;	// FIFO サイズを可変して、あらゆるサイズで動作可能か検討する
+localparam lpDmaFifoDepth		= 32;	// 上記同文
 localparam lpFrameSize 			= lpHdisplay * lpVdisplay * 2; // ダブルフレームバッファ構造
 //
 wire [7:0]	wTftColorR;
@@ -147,9 +148,9 @@ wire 		wTftBackLight;
 wire 		wTftRst;
 wire 		wAFE;
 //
-assign wTftColorR[3:0] = 4'b0000;
-assign wTftColorG[3:0] = 4'b0000;
-assign wTftColorB[3:0] = 4'b0000;
+assign wTftColorR[3:0] = 4'b0000;	// GPIO 下位 4bit は GND 接続
+assign wTftColorG[3:0] = 4'b0000;	// GPIO 下位 4bit は GND 接続
+assign wTftColorB[3:0] = 4'b0000;	// GPIO 下位 4bit は GND 接続
 //
 VideoTxUnit #(
 	.pBusAdrsBit		(lpBusAdrsBit),
@@ -214,7 +215,7 @@ end
 // RAM Unit
 //----------------------------------------------------------
 localparam lpRamFifoDepth	= 32;
-localparam lpRamDqWidth		= 12;
+localparam lpRamDqWidth		= lpUfiBusWidth;
 //
 reg  [lpRamDqWidth-1:0] 	rMem	[0:lpFrameSize-1];	// RW フレームバッファ領域
 reg  [lpRamDqWidth-1:0]		qMemDq;
@@ -225,8 +226,6 @@ wire 						wMemWE;
 wire 						wMemCE;
 //
 assign wMemDq = qMemDq;
-//
-integer i;
 
 RAMUnit #(
 	.pUfiBusWidth	(lpUfiBusWidth),
@@ -254,18 +253,28 @@ RAMUnit #(
 	.iSysClk		(wSysClk),
 	.iMemClk		(wMemClk)
 );
+//
+
+integer i;
 
 initial
 begin
-	for (i = 0; i < lpFrameSize; i = i + 1)
+	for (i = 0; i < lpFrameSize; i = i + 1)		// 左右半分で色分けしたデータを初期値とする
 	begin
-		rMem[i] <= i;
+		if (i[4:0] < (lpHdisplay/2))
+		begin
+			rMem[i] <= 12'h0f0;
+		end
+		else
+		begin
+			rMem[i] <= 12'hfff;
+		end
 	end
 end
 
 always @(posedge wMemClk)
 begin
-	casex ({wMemWE, wMemCE})
+	casex ({wMemWE, wMemCE})	// フレームバッファにデータを書き込み
 		'b00:		rMem[wMemAdrs] <= wMemDq;
 		default:	rMem[wMemAdrs] <= rMem[wMemAdrs];
 	endcase
@@ -273,7 +282,7 @@ end
 
 always @*
 begin
-	casex ({wMemWE, wMemCE})
+	casex ({wMemWE, wMemCE})	// フレームバッファのデータを読み出し
 		'b00:		qMemDq <= {lpRamDqWidth{1'bz}};
 		'b10:		qMemDq <= rMem[wMemAdrs];
 		default:	qMemDq <= {lpRamDqWidth{1'bz}};
@@ -363,8 +372,9 @@ endtask
 
 //-----------------------------------------------------------------------------
 // TestBench 動作
+// lpFrameCnt 画像出力の回数を指定可能、複数回ループさせて正しく raw 画像が出れば OK
 //-----------------------------------------------------------------------------
-localparam lpFrameCnt = 1;
+localparam lpFrameCnt = 2;
 integer n;
 
 initial

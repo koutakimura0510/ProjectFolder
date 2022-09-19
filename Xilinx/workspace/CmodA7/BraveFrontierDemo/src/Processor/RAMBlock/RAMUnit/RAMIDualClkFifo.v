@@ -98,7 +98,7 @@ fifoDualControllerGray #(
 // MemClk -> SysClk 変換
 // Memory からの書き込みよりも読み出しが速く、
 // FIFO が Full にならない前提で処理を行う。
-fifoDualControllerGray2 #(
+fifoDualControllerGray #(
 	.pBuffDepth	(pDualClkFifoDepth),
 	.pBitWidth	(pRamDqWidth)
 ) RamDualClkFifoRd (

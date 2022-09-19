@@ -14,20 +14,27 @@ module PreProcesser #(
     input           iClk,
     input           iAudioClk,
 	// Internal Port
+    output          oSysRst,        // Active High Sync Reset
+    output          oAudioRst		// Active High Sync Reset
     output          oMemClk,
     output          oVideoClk,
     output          oSysClk,
     output          oAudioClk,
-    output          oSysRst,        // Active High Sync Reset
-    output          oAudioRst		// Active High Sync Reset
+	output 			oUfibClk,
 );
 
 
 //----------------------------------------------------------
 // Clock Generate Block
 //----------------------------------------------------------
-wire wMemClk, wVideoClk, wSysClk, wAudioClk;    assign {oMemClk, oVideoClk, oSysClk, oAudioClk} = {wMemClk, wVideoClk, wSysClk, wAudioClk};
-wire wSysRst, wAudioRst;                        assign {oSysRst, oAudioRst} = {wSysRst, wAudioRst};
+wire wSysRst;			assign oSysRst 		= wSysRst;
+wire wAudioRst;			assign oAudioRst 	= wAudioRst;
+//
+wire wMemClk;			assign oMemClk		= wMemClk;
+wire wVideoClk;			assign oVideoClk	= wVideoClk;
+wire wSysClk;			assign oSysClk		= wSysClk;
+wire wAudioClk;			assign oAudioClk 	= wAudioClk;
+wire wUfibClk;			assign oUfibClk 	= wUfibClk;
 
 cgbWrapper # (
     .pSystemPll (pSystemPll),
@@ -40,7 +47,8 @@ cgbWrapper # (
     .oMemClk    (wMemClk),
     .oVideoClk  (wVideoClk),
     .oSysClk    (wSysClk),
-    .oAudioClk  (wAudioClk)
+    .oAudioClk  (wAudioClk),
+    .oUfibClk   (wUfibClk)
 );
 
 
