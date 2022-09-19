@@ -99,7 +99,10 @@ begin
 
     if (iSrcRst)    rEmp <= 1'b0;
     else            rEmp <= qEmp;
+end
 
+always @(posedge iDstClk)
+begin
     if (iDstRst)    rRVd <= 1'b0;
     else            rRVd <= qRVd;
 end

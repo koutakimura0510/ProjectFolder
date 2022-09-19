@@ -13,6 +13,9 @@
 //
 // 2022-03-21
 // ReadEnableから 2レイテンシでデータ出力する構造に変更、ユーザが意識せずともハンドシェイクが上手く行く用に変更
+// 
+// 2022-09-19
+// oRVd のクロックを DstCLK に修正
 // -
 // 参考文献
 // 非同期FIFO Verilog ->    https://zenn.dev/sk6labo/articles/fd2bb32f6e570e
@@ -98,7 +101,10 @@ begin
 
     if (iSrcRst)    rEmp <= 1'b0;
     else            rEmp <= qEmp;
+end
 
+always @(posedge iDstClk)
+begin
     if (iDstRst)    rRVd <= 1'b0;
     else            rRVd <= qRVd;
 end
@@ -122,7 +128,8 @@ end
 //----------------------------------------------------------
 // FIFO動作
 //----------------------------------------------------------
-wire [pBitWidth-1:0] wRD;           assign oRD = wRD;
+reg  [pBitWidth-1:0] rRD;           assign oRD = rRD;
+wire [pBitWidth-1:0] wRD;
 
 userFifoDual #(
     .pBuffDepth    (pBuffDepth),
@@ -135,6 +142,11 @@ userFifoDual #(
     .iWA    (rWA),      .iRA    (rRA),
     .iWE    (qWE)
 );
+
+always @(posedge iDstClk)
+begin
+	rRD <= wRD;
+end
 
 
 ////////////////////////////////////////////////////////////
