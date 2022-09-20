@@ -8,6 +8,12 @@
 module BraveFrontierSim;
 
 
+//-----------------------------------------------------------------------------
+// ファイル名
+//-----------------------------------------------------------------------------
+localparam lpRawFileSave	= "d:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/sim/ImageData.raw";
+
+
 //----------------------------------------------------------
 // Top Module Connect
 //----------------------------------------------------------
@@ -134,28 +140,79 @@ end
 endtask
 
 
-//----------------------------------------------------------
-// RAM
-//----------------------------------------------------------
-wire [18:0] wMemAdrs;
-wire [ 7:0] wMemDq;
-wire 		wMemOE;
-wire 		wMemWE;
-wire 		wMemCE;
 
 
 //----------------------------------------------------------
 // TFT Display
 //----------------------------------------------------------
-wire [7:4] oTftColorR;
-wire [7:4] oTftColorG;
-wire [7:4] oTftColorB;
-wire oTftDclk;
-wire oTftHSync;
-wire oTftVSync;
-wire oTftDe;
-wire oTftBackLight;
-wire oTftRst;
+localparam	lpHdisplay		= 100;
+localparam	lpHfront		= 5;
+localparam	lpHback			= 5;
+localparam	lpHpulse		= 5;
+localparam	lpVdisplay		= 100;
+localparam	lpVfront		= 5;
+localparam	lpVback			= 4;
+localparam	lpVpulse		= 5;
+localparam  lpFrameSize		= lpHdisplay * lpVdisplay * 2; // ダブルフレームバッファ構造
+
+wire [7:0] 	wTftColorR;
+wire [7:0] 	wTftColorG;
+wire [7:0] 	wTftColorB;
+wire 		wTftDclk;
+wire 		wTftHSync;
+wire 		wTftVSync;
+wire 		wTftDe;
+wire 		wTftBackLight;
+wire 		wTftRst;
+
+
+//----------------------------------------------------------
+// RAM
+//----------------------------------------------------------
+localparam lpRamDqWidth		= 8;
+localparam lpMemAdrsWidth	= 19;
+
+reg  [lpRamDqWidth-1:0] 	rMem	[0:lpFrameSize-1];	// RW フレームバッファ領域
+reg  [lpRamDqWidth-1:0]		qMemDq;
+wire [lpMemAdrsWidth-1:0]	wMemAdrs;
+wire [lpRamDqWidth-1:0]		wMemDq;
+wire 						wMemOE;
+wire 						wMemWE;
+wire 						wMemCE;
+//
+assign wMemDq = qMemDq;
+
+integer i;
+
+initial
+begin
+	for (i = 0; i < lpFrameSize; i = i + 1)		// 左右半分で色分けしたデータを初期値とする
+	begin
+		if (i[4:0] < (lpHdisplay/2))
+		begin
+			rMem[i] <= 12'h0f0;
+		end
+		else
+		begin
+			rMem[i] <= 12'hfff;
+		end
+	end
+end
+
+
+always @*
+begin
+	casex ({wMemWE, wMemCE})	// フレームバッファにデータを書き込み
+		'b00:		rMem[wMemAdrs] <= wMemDq;
+		default:	rMem[wMemAdrs] <= rMem[wMemAdrs];
+	endcase
+
+	casex ({wMemWE, wMemCE})	// フレームバッファのデータを読み出し
+		'b00:		qMemDq <= {lpRamDqWidth{1'bz}};
+		'b10:		qMemDq <= rMem[wMemAdrs];
+		default:	qMemDq <= {lpRamDqWidth{1'bz}};
+	endcase
+end
 
 //----------------------------------------------------------
 // I2C
@@ -191,16 +248,49 @@ task rst_wait;
 begin
 	while (1)
 	begin
-		if (wTestPort[0] == 1)	#(lpSclCycle);
+		if (wTestPort[1] == 1)	#(lpSclCycle);
 		else				break;
 	end
 end
 endtask
 
 
+//-----------------------------------------------------------------------------
+// ファイル書き込み
+//-----------------------------------------------------------------------------
+wire wSaveEnd;
+
+RawFileSaver #(
+	.pRawFileSave (lpRawFileSave)
+) RAW_FILE_SAVER (
+	.iColorR	(wTftColorR),
+	.iColorG	(wTftColorG),
+	.iColorB	(wTftColorB),
+	.iVde		(wTftDe),
+	.iAFE		(wTestPort[0]),
+	.oSaveEnd	(wSaveEnd),
+	.iRst		(wTestPort[1]),
+	.iClk		(wTftDclk)
+);
+
+//
+task RawWriteWait(
+	input integer flag
+);
+begin
+	while (wSaveEnd == flag)
+	begin
+		#(lpSysClkCycle);
+	end
+end
+endtask
+
 //----------------------------------------------------------
 // Simlation Start
 //----------------------------------------------------------
+localparam lpFrameCnt = 4;
+integer n;
+
 initial
 begin
 	// FPGA Slave
@@ -208,16 +298,32 @@ begin
 	reset_init();
 	rst_wait();
 	spi_cs(1'b0);
-	spi_send('h0000_9999);
-	spi_send('h0003_0004);
-	spi_send('h0000_00aa);
-	spi_cs(1'b1);
-	spi_cs(1'b0);
-	spi_send('h0000_0004);
-	spi_send('h0004_0004);
+	spi_send('h0006_0000);
+	spi_send('h0001_0004);
 	spi_send('h0000_0000);
 	spi_cs(1'b1);
-    $stop;
+	spi_cs(1'b0);
+	spi_send('h0004_0010);
+	spi_send('h0001_0004);
+	spi_send('h0000_0000);
+	spi_cs(1'b1);
+	spi_cs(1'b0);
+	spi_send('h0004_0010);
+	spi_send('h0001_0004);
+	spi_send('h0000_000e);
+	spi_cs(1'b1);
+	spi_cs(1'b0);
+	spi_send('h0004_0010);
+	spi_send('h0001_0004);
+	spi_send('h0000_000c);
+	spi_cs(1'b1);
+
+	for (n = 0; n < lpFrameCnt; n = n + 1)
+	begin
+		RawWriteWait(0);
+		RawWriteWait(1);
+	end
+    $finish;
 end
 
 
@@ -225,18 +331,14 @@ end
 // Top Module Connect
 //----------------------------------------------------------
 BraveFrontier #(
-    // .H_DISPLAY  (640),      .H_BACK     (48),
-    // .H_FRONT    (16),       .H_SYNC     (96),
-    // .V_DISPLAY  (480),      .V_TOP      (31),
-    // .V_BOTTOM   (11),       .V_SYNC     (2),
-    .pHdisplay      (50),
-    .pHback         (2),
-    .pHfront        (2),
-    .pHpulse        (2),
-    .pVdisplay      (50),
-    .pVfront        (2),
-    .pVback       	(2),
-    .pVpulse        (2),
+    .pHdisplay      (lpHdisplay),
+    .pHback         (lpHfront),
+    .pHfront        (lpHback),
+    .pHpulse        (lpHpulse),
+    .pVdisplay      (lpVdisplay),
+    .pVfront        (lpVfront),
+    .pVback       	(lpVback),
+    .pVpulse        (lpVpulse),
     .pPixelDebug    ("no"),
     .pBuffDepth     (32),
     .pDebug         ("off")
@@ -255,15 +357,15 @@ BraveFrontier #(
 	.oMemOE				(wMemOE),
 	.oMemWE				(wMemWE),
 	.oMemCE				(wMemCE),
-	.oTftColorR			(),
-	.oTftColorG			(),
-	.oTftColorB			(),
-	.oTftDclk			(),
-	.oTftHSync			(),
-	.oTftVSync			(),
-	.oTftDe				(),
-	.oTftBackLight		(),
-	.oTftRst			(),
+	.oTftColorR			(wTftColorR),
+	.oTftColorG			(wTftColorG),
+	.oTftColorB			(wTftColorB),
+	.oTftDclk			(wTftDclk),
+	.oTftHSync			(wTftHSync),
+	.oTftVSync			(wTftVSync),
+	.oTftDe				(wTftDe),
+	.oTftBackLight		(wTftBackLight),
+	.oTftRst			(wTftRst),
 	.oI2CScl			(),
 	.ioI2CSda			(),
 	.oAudioMclk			(oAudioMclk),
