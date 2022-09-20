@@ -43,7 +43,9 @@ module VideoTxBlock #(
 	parameter 						pVdisplayWidth	= 11,
 	parameter 						pVfrontWidth	= 5,
 	parameter 						pVbackWidth		= 5,
-	parameter 						pVpulseWidth	= 5
+	parameter 						pVpulseWidth	= 5,
+	//
+	parameter						pTestPortUsed	= "no"
 )(
 	// External Port
 	output [7:4] 					oTftColorR,
@@ -78,7 +80,9 @@ module VideoTxBlock #(
 	// CLK Rst
 	input  							iSysRst,
 	input 							iSysClk,
-	input 							iVideoClk
+	input 							iVideoClk,
+	//
+	output [3:0]					oTestPort
 );
 
 
@@ -102,6 +106,7 @@ wire [pMemAdrsWidth-1:0]	wDmaRAdrsCsr;
 wire [pMemAdrsWidth-1:0]	wDmaWLenCsr;
 wire [pMemAdrsWidth-1:0]	wDmaRLenCsr;
 wire 						wDmaEnCsr;
+wire 						wFe;
 
 VideoTxUnit #(
 	.pBusAdrsBit		(pBusAdrsBit),
@@ -156,7 +161,7 @@ VideoTxUnit #(
 	.iVideoClk			(iVideoClk),
 	.iSysRst			(iSysRst),
 	// debug
-	.oFe 				()
+	.oFe 				(wFe)
 );
 
 
@@ -212,5 +217,25 @@ VideoTxCsr #(
 	.iSysClk			(iSysClk),
 	.iSysRst			(iSysRst)
 );
+
+
+
+//-----------------------------------------------------------------------------
+// TestPort
+//-----------------------------------------------------------------------------
+generate
+	if (pTestPortUsed == "yes")
+	begin
+		OBUF TestPort0	(.O (oTestPort[0]),	.I (wFe));
+		OBUF TestPort1	(.O (oTestPort[1]),	.I (iSysRst));
+		OBUF TestPort2	(.O (oTestPort[2]),	.I (1'b0));
+		OBUF TestPort3	(.O (oTestPort[3]),	.I (1'b0));
+	end
+	else
+	begin
+		assign oTestPort = 4'd0;
+	end
+endgenerate
+
 
 endmodule

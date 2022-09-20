@@ -77,6 +77,9 @@ localparam [pHdisplayWidth:0] lpHSyncMax	= pHdisplay + pHfront + pHpulse + pHbac
 localparam [pVdisplayWidth:0] lpVSyncStart	= pVdisplay + pVfront;
 localparam [pVdisplayWidth:0] lpVSyncEnd	= pVdisplay + pVfront + pVpulse - 1'b1;
 localparam [pVdisplayWidth:0] lpVSyncMax	= pVdisplay + pVfront + pVpulse + pVback - 1'b1;
+// Frame Buffer Size
+localparam [pVdisplayWidth:0] lpFbufSize1	= pHdisplay * pVdisplay;
+localparam [pVdisplayWidth:0] lpFbufSize2	= pHdisplay * pVdisplay * 2;
 
 
 //----------------------------------------------------------
@@ -142,9 +145,9 @@ begin
 		rDmaEn			<= 1'b0;
 		rBlDutyRatio	<= 8'h00;		// 0xff Max Flash
 		rDmaWAdrs		<= {pMemAdrsWidth{1'b0}};
-		rDmaRAdrs		<= 'h1fe00;
-		rDmaWLen		<= 'h1fe00;
-		rDmaRLen		<= 'h3fc00;
+		rDmaRAdrs		<= 'h1fe00-1;
+		rDmaWLen		<= 'h1fe00-1;
+		rDmaRLen		<= 'h3fc00-1;
 	end
 	else
 	begin

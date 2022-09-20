@@ -131,10 +131,11 @@ PixelDrawPosition #(
 // Scene Draw
 //-----------------------------------------------------------------------------
 localparam lpDotSquareGenFifoDepth = 1024;
-localparam lpDxs = 0;
-localparam lpDxe = lpDxs + 2;
-localparam lpDys = 2;
-localparam lpDye = lpDys + 2;
+localparam lpSquareSize	= 16;
+localparam lpDxs 		= 0;
+localparam lpDxe 		= lpDxs + lpSquareSize;
+localparam lpDys 		= 2;
+localparam lpDye 		= lpDys + lpSquareSize;
 //
 reg  					qDotSquareEdd;
 reg 					qDotSquareEds;

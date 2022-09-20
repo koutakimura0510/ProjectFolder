@@ -211,7 +211,7 @@ end
 // Sync系統も同様に遅らせる
 // ※2022-09-20 何故か 6レイテンシ遅延が発生しているため応急措置、原因はわかっていない
 // 更にたまに、5レイテンシ遅延の場合があるので質が悪い
-localparam lpSyncLatancy = 6;
+localparam lpSyncLatancy = 2;
 
 reg [lpSyncLatancy-1:0] rVideoHSync;
 reg [lpSyncLatancy-1:0] rVideoVSync;

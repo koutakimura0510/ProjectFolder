@@ -159,7 +159,7 @@ generate
 	if (pTestPortUsed == "yes")
 	begin
 		OBUF TestPort0	(.O (oTestPort[0]),	.I (wPwm));
-		OBUF TestPort1	(.O (oTestPort[1]),	.I (1'b0));
+		OBUF TestPort1	(.O (oTestPort[1]),	.I (iSysRst));
 		OBUF TestPort2	(.O (oTestPort[2]),	.I (1'b0));
 		OBUF TestPort3	(.O (oTestPort[3]),	.I (1'b0));
 	end

@@ -123,6 +123,7 @@ localparam  lpUfiBusWidth		= 8;
 // TestPort の使用・不使用
 //-----------------------------------------------------------------------------
 localparam lpTestPortSpi 	= "no";
+localparam lpTestPortVideo 	= "no";
 localparam lpTestPortAudio 	= "yes";
 
 
@@ -267,7 +268,7 @@ SPIBlock #(
 	.iSysClk					(iSysClk),
 	.iSysRst					(iSysRst),
 	//
-	.oTestPort					(/*oTestPort*/)
+	.oTestPort					(oTestPort)
 );
 
 
@@ -355,7 +356,8 @@ VideoTxBlock #(
 	.pVdisplayWidth		(lpVdisplayWidth),
 	.pVfrontWidth		(lpVfrontWidth),
 	.pVbackWidth		(lpVbackWidth),
-	.pVpulseWidth		(lpVpulseWidth)
+	.pVpulseWidth		(lpVpulseWidth),
+	.pTestPortUsed		(lpTestPortVideo)
 ) VideoTxBlock (
 	// External port
 	.oTftColorR			(oTftColorR),
@@ -388,7 +390,9 @@ VideoTxBlock #(
 	// CLK Rst
 	.iSysRst			(iSysRst),
 	.iVideoClk 			(iVideoClk),
-	.iSysClk			(iSysClk)
+	.iSysClk			(iSysClk),
+	//
+	.oTestPort			(/*oTestPort*/)
 );
 
 
@@ -444,7 +448,7 @@ AudioTxBlock #(
 	.iAudioRst			(iAudioRst),
 	.iAudioClk			(iAudioClk),
 	//
-	.oTestPort			(oTestPort)
+	.oTestPort			(/*oTestPort*/)
 );
 
 
