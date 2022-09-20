@@ -51,6 +51,7 @@ module VideoDmaUnit #(
 // DMA を使用して UFIB 経由で RAM に書き込むデータを保持
 // 前段のブロックとのタイミング調停も兼ねる
 //-----------------------------------------------------------------------------
+// TODO ここを 0レイテンシ構成の FIFO に変更する
 wire 	[pUfiBusWidth-1:0]  wDmaFifoRd;
 wire 						wRVd;
 wire 						wEmp;
@@ -148,7 +149,7 @@ begin
 	else			rMUfiVd 	<= 1'b0;
 
 	if (iDmaEn)		rMUfiCmd	<= qMUfiCmd;
-	else 			rMUfiCmd	<= 1'b1;
+	else 			rMUfiCmd	<= 1'b0;
 
 	if (iRst)		rDmaFifoRe	<= 1'b0;
 	else if (iDmaEn)rDmaFifoRe	<= qDmaFifoRe;
@@ -160,10 +161,13 @@ begin
 	if (iRst)		rDmaREd	<= 1'b0;
 	else			rDmaREd	<= iMUfiREd;
 end
-
-//
+  
 always @*
 begin
+	// TODO Dma R/Wアドレスが、フレームの端に達した時に、両アドレスを切り替えるようにする。
+	// どうせ Write の方が速くなくてはいけないので、Rアドレスを越さないようにするとか必要ない
+	// またフレームごとの待機とかにしておくと、他の UFIB との切り替えがやりやすくなる
+	// そのかわり DMA FIFO が　0レイテンシである必要がある
 	qDmaWAdrsOverCheck 	<=  ((rDmaWAdrs + 1'd1) == rDmaRAdrs) |
 							((rDmaWAdrs + 2'd2) == rDmaRAdrs) |
 							((rDmaWAdrs + 2'd3) == rDmaRAdrs) |
@@ -171,6 +175,11 @@ begin
 							((rDmaWAdrs + 3'd5) == rDmaRAdrs) |
 							((iDmaWAdrs <= rDmaRAdrs) && (rDmaRAdrs < (iDmaWAdrs + 3'd5))) |
 							((iDmaRAdrs <= rDmaRAdrs) && (rDmaRAdrs < (iDmaRAdrs + 3'd5))) ;
+
+	// TODO 比較ロジックに関して、アドレスとLEnの比較ではなく、DMA 内部カウンタとの比較の方が良いのでは？
+	// 現状、R/W それぞれで Len を用意しておくメリットが思い浮かばない、フレームバッファ領域なので同じでよさそう
+	// qDmaWCntMax 		<= (rWCnt == iDmaLen);
+	// qDmaRCntMax 		<= (rRCnt == iDmaLen);
 	qDmaWAdrsMatch 		<= (rDmaWAdrs == iDmaWLen) | (rDmaWAdrs == iDmaRLen);
 	qDmaRAdrsMatch 		<= (rDmaRAdrs == iDmaWLen) | (rDmaRAdrs == iDmaRLen);
 	//

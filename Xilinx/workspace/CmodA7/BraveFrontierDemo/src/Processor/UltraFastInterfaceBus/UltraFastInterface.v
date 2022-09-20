@@ -135,7 +135,7 @@ begin
 			rMUfiAdrsRam 	<= 'hffffffff;
 			rMUfiWEdRam 	<= 1'b0;
 			rMUfiREdRam 	<= 1'b0;
-			rMUfiCmdRam 	<= 1'b1;
+			rMUfiCmdRam 	<= 1'b0;
 			rMUfiRdyAtb 	<= 1'b0;
 			rMUfiRdyVtb 	<= 1'b0;
 		end
