@@ -10,7 +10,8 @@ module AudioTxUnit #(
 	parameter					pBusAdrsBit			= 32,
 	parameter					pSamplingBitWidth	= 8,	// 分解能
 	parameter					pMemBitWidth		= 19,	// 外部メモリアドレスサイズ
-	parameter					pTestPortUsed		= "no"
+	parameter					pTestPortUsed		= "no",
+	parameter					pTestPortNum		= 4
 )(
     // Internal Port
 	// Ufi Master Read
@@ -37,7 +38,7 @@ module AudioTxUnit #(
 	input 						iAudioRst,
 	input 						iAudioClk,
 	//
-	output [3:0]				oTestPort
+	output [pTestPortNum-1:0]	oTestPort
 );
 
 
@@ -158,14 +159,14 @@ OBUF AudioMclk (.I(wPwm), .O(oAudioMclk));
 generate
 	if (pTestPortUsed == "yes")
 	begin
-		OBUF TestPort0	(.O (oTestPort[0]),	.I (wPwm));
-		OBUF TestPort1	(.O (oTestPort[1]),	.I (iSysRst));
-		OBUF TestPort2	(.O (oTestPort[2]),	.I (1'b0));
-		OBUF TestPort3	(.O (oTestPort[3]),	.I (1'b0));
+		assign oTestPort[0] = wPwm;
+		assign oTestPort[1] = iSysRst;
+		assign oTestPort[2] = 1'b0;
+		assign oTestPort[3] = 1'b0;
 	end
 	else
 	begin
-		assign oTestPort = 4'd0;
+		assign oTestPort = {pTestPortNum{1'b0}};
 	end
 endgenerate
 

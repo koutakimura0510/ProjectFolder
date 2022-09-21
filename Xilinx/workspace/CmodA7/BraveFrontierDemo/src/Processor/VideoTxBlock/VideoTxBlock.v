@@ -45,7 +45,8 @@ module VideoTxBlock #(
 	parameter 						pVbackWidth		= 5,
 	parameter 						pVpulseWidth	= 5,
 	//
-	parameter						pTestPortUsed	= "no"
+	parameter						pTestPortUsed	= "no",
+	parameter						pTestPortNum	= 4
 )(
 	// External Port
 	output [7:4] 					oTftColorR,
@@ -82,7 +83,7 @@ module VideoTxBlock #(
 	input 							iSysClk,
 	input 							iVideoClk,
 	//
-	output [3:0]					oTestPort
+	output [pTestPortNum-1:0]		oTestPort
 );
 
 
@@ -226,14 +227,14 @@ VideoTxCsr #(
 generate
 	if (pTestPortUsed == "yes")
 	begin
-		OBUF TestPort0	(.O (oTestPort[0]),	.I (wFe));
-		OBUF TestPort1	(.O (oTestPort[1]),	.I (iSysRst));
-		OBUF TestPort2	(.O (oTestPort[2]),	.I (1'b0));
-		OBUF TestPort3	(.O (oTestPort[3]),	.I (1'b0));
+		assign oTestPort[0] = wFe;
+		assign oTestPort[1] = iSysRst;
+		assign oTestPort[2] = 1'b0;
+		assign oTestPort[3] = 1'b0;
 	end
 	else
 	begin
-		assign oTestPort = 4'd0;
+		assign oTestPort = {pTestPortNum{1'b0}};
 	end
 endgenerate
 

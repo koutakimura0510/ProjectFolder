@@ -7,10 +7,11 @@
 //----------------------------------------------------------
 module SPIUnit #(
 	// variable parameter
-	parameter					pBusAdrsBit	= 16,
-	parameter 					pDivClk 	= 16,
-	parameter					pUfiBusWidth= 16,
-	parameter					pTestPortUsed = "no"
+	parameter					pBusAdrsBit		= 16,
+	parameter 					pDivClk 		= 16,
+	parameter					pUfiBusWidth	= 16,
+	parameter					pTestPortUsed 	= "no",
+	parameter					pTestPortNum	= 4
 )(
 	// External Port
     inout	          			ioSpiSck,
@@ -49,7 +50,7 @@ module SPIUnit #(
     input           			iSysClk,
     input           			iSysRst,
 	//
-	output [3:0]				oTestPort
+	output [pTestPortNum-1:0]	oTestPort
 );
 
 //----------------------------------------------------------
@@ -119,7 +120,8 @@ wire 	[15:0]	wSDLenSig;
 wire 			wSREdSig;
 
 SPISignal # (
-	.pTestPortUsed	(pTestPortUsed)
+	.pTestPortUsed	(pTestPortUsed),
+	.pTestPortNum	(pTestPortNum)
 ) SPISignal (
 	// External Port
 	.ioSpiSck		(ioSpiSck),

@@ -12,7 +12,8 @@
 // 
 //----------------------------------------------------------
 module SPISignal # (
-	parameter		pTestPortUsed = "no"
+	parameter		pTestPortUsed 	= "no",
+	parameter		pTestPortNum	= 4
 )(
 	// External Port
     inout           ioSpiSck,
@@ -44,7 +45,7 @@ module SPISignal # (
     input           iSysClk,
 	input 			iSysRst,
 	//
-	output [3:0]	oTestPort
+	output [pTestPortNum-1:0]	oTestPort
 );
 
 
@@ -297,14 +298,14 @@ IOBUF SPI_HOLD 	(.O (wSHold),	.IO (ioSpiHold), 	.I (1'b1),			.T (rMSSel[2])	);
 generate
 	if (pTestPortUsed == "yes")
 	begin
-		OBUF TestPort0	(.O (oTestPort[0]),	.I (iSysRst));
-		OBUF TestPort1	(.O (oTestPort[1]),	.I (rSMiso[31]));
-		OBUF TestPort2	(.O (oTestPort[2]),	.I (wSMosi));
-		OBUF TestPort3	(.O (oTestPort[3]),	.I (wSCs));
+		assign oTestPort[0] = iSysRst;
+		assign oTestPort[1] = rSMiso;
+		assign oTestPort[2] = wSMosi;
+		assign oTestPort[3] = wSCs;
 	end
 	else
 	begin
-		assign oTestPort = 4'd0;
+		assign oTestPort = {pTestPortNum{1'b0}};
 	end
 endgenerate
 endmodule

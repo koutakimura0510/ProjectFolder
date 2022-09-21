@@ -22,7 +22,8 @@ module SPIBlock #(
 	parameter 							pCsrActiveWidth		= 8,
 	parameter [3:0]						pBusBlockConnect	= 1,	// Busに接続する Slave数 最大16
 	parameter							pUfiBusWidth		= 16,
-	parameter							pTestPortUsed		= "no"
+	parameter							pTestPortUsed		= "no",
+	parameter							pTestPortNum		= 4
 )(
 	// External Port
     inout								ioSpiSck,
@@ -62,7 +63,7 @@ module SPIBlock #(
     input           					iSysRst,
     input           					iSysClk,
 	//
-	output [3:0]						oTestPort
+	output [pTestPortNum-1:0]			oTestPort
 );
 
 
@@ -87,7 +88,8 @@ SPIUnit #(
 	.pBusAdrsBit		(pBusAdrsBit),
 	.pDivClk			(lpDivClk),
 	.pUfiBusWidth		(pUfiBusWidth),
-	.pTestPortUsed		(pTestPortUsed)
+	.pTestPortUsed		(pTestPortUsed),
+	.pTestPortNum		(pTestPortNum)
 ) SPI_UNIT (
 	.ioSpiSck			(ioSpiSck),
 	.ioSpiMiso			(ioSpiMiso),

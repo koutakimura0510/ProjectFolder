@@ -23,8 +23,8 @@ localparam lpRawFileSave	= "d:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDe
 //----------------------------------------------------------
 localparam 	lpSysClkCycle 	= 12;
 localparam 	lpBusClkCycle 	= 6;
-localparam 	lpVideoClkCycle = 40;
-localparam 	lpMemClkCycle 	= 18;	// ※ 2022-09-20 やはり外部メモリはバトルネックになる
+localparam 	lpVideoClkCycle = 48;
+localparam 	lpMemClkCycle 	= 12;	// ※ 2022-09-20 やはり外部メモリはバトルネックになる
 //
 wire 		wSysClk;
 wire 		wBusClk;

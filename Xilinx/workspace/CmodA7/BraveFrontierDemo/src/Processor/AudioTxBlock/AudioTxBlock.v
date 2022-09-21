@@ -15,7 +15,8 @@ module AudioTxBlock #(
 	//
 	parameter						pSamplingBitWidth	= 8,	// 分解能
 	parameter						pMemBitWidth		= 19,
-	parameter						pTestPortUsed		= "no"
+	parameter						pTestPortUsed		= "no",
+	parameter						pTestPortNum		= 4
 )(
 	// External Port
 	output							oAudioMclk,
@@ -42,7 +43,7 @@ module AudioTxBlock #(
     input           				iAudioRst,
 	input 							iAudioClk,
 	//
-	output [3:0]					oTestPort
+	output [pTestPortNum-1:0]		oTestPort
 );
 
 
@@ -60,7 +61,8 @@ wire 						wAudioDmaEnCsr;
 AudioTxUnit #(
 	.pSamplingBitWidth	(pSamplingBitWidth),
 	.pMemBitWidth		(pMemBitWidth),
-	.pTestPortUsed		(pTestPortUsed)
+	.pTestPortUsed		(pTestPortUsed),
+	.pTestPortNum		(pTestPortNum)
 ) AudioTxUnit (
 	.oAudioMclk			(oAudioMclk),
 	//

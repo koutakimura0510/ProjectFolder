@@ -68,6 +68,22 @@ module Processor #(
 
 
 //-----------------------------------------------------------------------------
+// TestPort の使用・不使用
+//-----------------------------------------------------------------------------
+localparam lpTestPortNum	= 4;
+localparam lpTestPortSpi 	= "no";
+localparam lpTestPortVideo 	= "no";
+localparam lpTestPortAudio 	= "yes";
+
+wire [lpTestPortNum-1:0] wTestPortGpio;
+wire [lpTestPortNum-1:0] wTestPortI2c;
+wire [lpTestPortNum-1:0] wTestPortSpi;
+wire [lpTestPortNum-1:0] wTestPortVideo;
+wire [lpTestPortNum-1:0] wTestPortAudio;
+wire [lpTestPortNum-1:0] wTestPortRam;
+
+
+//-----------------------------------------------------------------------------
 // 現在接続している ブロックの個数
 //-----------------------------------------------------------------------------
 localparam lpBusBlockConnect = 6;
@@ -117,14 +133,6 @@ localparam
 localparam	lpUsiBusWidth  		= 32;		// Usi バスデータ幅
 localparam	lpBusAdrsBit		= 32;		// バスアドレス幅, Usi/Ufi 共通
 localparam  lpUfiBusWidth		= 8;
-
-
-//-----------------------------------------------------------------------------
-// TestPort の使用・不使用
-//-----------------------------------------------------------------------------
-localparam lpTestPortSpi 	= "no";
-localparam lpTestPortVideo 	= "no";
-localparam lpTestPortAudio 	= "yes";
 
 
 //----------------------------------------------------------
@@ -230,7 +238,8 @@ SPIBlock #(
 	.pCsrActiveWidth			(lpSPICsrActiveWidth),
 	.pBusBlockConnect			(lpBusBlockConnect),
 	.pUfiBusWidth				(lpUfiBusWidth),
-	.pTestPortUsed 				(lpTestPortSpi)
+	.pTestPortUsed 				(lpTestPortSpi),
+	.pTestPortNum				(lpTestPortNum)
 ) SPIBlock (
 	// External Port
 	.ioSpiSck					(ioSpiSck),
@@ -268,7 +277,7 @@ SPIBlock #(
 	.iSysClk					(iSysClk),
 	.iSysRst					(iSysRst),
 	//
-	.oTestPort					(oTestPort)
+	.oTestPort					(wTestPortSpi)
 );
 
 
@@ -357,7 +366,8 @@ VideoTxBlock #(
 	.pVfrontWidth		(lpVfrontWidth),
 	.pVbackWidth		(lpVbackWidth),
 	.pVpulseWidth		(lpVpulseWidth),
-	.pTestPortUsed		(lpTestPortVideo)
+	.pTestPortUsed		(lpTestPortVideo),
+	.pTestPortNum		(lpTestPortNum)
 ) VideoTxBlock (
 	// External port
 	.oTftColorR			(oTftColorR),
@@ -392,7 +402,7 @@ VideoTxBlock #(
 	.iVideoClk 			(iVideoClk),
 	.iSysClk			(iSysClk),
 	//
-	.oTestPort			(/*oTestPort*/)
+	.oTestPort			(wTestPortVideo)
 );
 
 
@@ -423,7 +433,8 @@ AudioTxBlock #(
 	.pCsrAdrsWidth		(lpCsrAdrsWidth),
 	.pCsrActiveWidth	(lpATBCsrActiveWidth),
 	.pSamplingBitWidth	(8),
-	.pTestPortUsed		(lpTestPortAudio)
+	.pTestPortUsed		(lpTestPortAudio),
+	.pTestPortNum		(lpTestPortNum)
 ) AudioTxBlock (
 	// External Port
 	.oAudioMclk			(oAudioMclk),
@@ -448,7 +459,7 @@ AudioTxBlock #(
 	.iAudioRst			(iAudioRst),
 	.iAudioClk			(iAudioClk),
 	//
-	.oTestPort			(/*oTestPort*/)
+	.oTestPort			(wTestPortAudio)
 );
 
 

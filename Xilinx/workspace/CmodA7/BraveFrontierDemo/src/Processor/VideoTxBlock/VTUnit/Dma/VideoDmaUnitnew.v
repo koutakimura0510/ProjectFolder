@@ -51,23 +51,21 @@ module VideoDmaUnit #(
 // DMA を使用して UFIB 経由で RAM に書き込むデータを保持
 // 前段のブロックとのタイミング調停も兼ねる
 //-----------------------------------------------------------------------------
-// TODO ここを 0レイテンシ構成の FIFO に変更する
 wire 	[pUfiBusWidth-1:0]  wDmaFifoRd;
-wire 						wRVd;
 wire 						wEmp;
 reg 						rDmaFifoRe;
 reg 						qDmaFifoRe;
 
-fifoController #(
-	.pFifoDepth		(pFifoDepth),
-	.pFifoBitWidth	(pFifoBitWidth)
+fifoControllerLutRam #(
+	.pFifoDepth			(pFifoDepth),
+	.pFifoBitWidth		(pFifoBitWidth),
+	.pFifoFastOutValue	(3)
 ) VideoDmaFifo (
 	.iWd			(iDmaWd),
 	.iWe			(iDmaWEd),
 	.oFull			(oDmaFull),
 	.oRd			(wDmaFifoRd),
 	.iRe			(rDmaFifoRe),
-	.oRvd			(wRVd),
 	.oEmp			(wEmp),
 	.iRst			(iRst),
 	.iClk			(iClk)
@@ -92,41 +90,47 @@ reg							qMUfiCmd;
 //
 reg		[pMemAdrsWidth-1:0]	rDmaWAdrs;
 reg		[pMemAdrsWidth-1:0]	rDmaRAdrs;
-reg 						rDmaWAdrsSel;
-reg 						rDmaRAdrsSel;
-reg 						qDmaWAdrsOverCheck;
-reg 						qDmaWAdrsMatch;
-reg 						qDmaRAdrsMatch;
+reg 	[pMemAdrsWidth-1:0]	rWCnt;
+reg 	[pMemAdrsWidth-1:0]	rRCnt;
+reg 						rDmaAdrsSel;
+reg 						qDmaWCntMax;
+reg 						qDmaRCntMax;
 
 always @(posedge iClk)
 begin
 	// Frame Buffer 領域の切り替え
-	casex ({qDmaWAdrsOverCheck, qDmaWAdrsMatch, wRVd, iDmaEn})
-		'bxxx0:		rDmaWAdrsSel <= 1'b0;
-		'b0111:		rDmaWAdrsSel <= ~rDmaWAdrsSel;
-		default: 	rDmaWAdrsSel <=  rDmaWAdrsSel;
-	endcase
-
-	casex ({qDmaRAdrsMatch, iDmaRe, iMUfiRdy, iDmaEn})
-		'bxxx0:		rDmaRAdrsSel <= 1'b0;
-		'b1111:		rDmaRAdrsSel <= ~rDmaRAdrsSel;
-		default: 	rDmaRAdrsSel <=  rDmaRAdrsSel;
+	casex ({qDmaWCntMax, qDmaRCntMax, rDmaFifoRe, iDmaEn})
+		'bxxx0:		rDmaAdrsSel <= 1'b0;
+		'b0111:		rDmaAdrsSel <= ~rDmaAdrsSel;
+		default: 	rDmaAdrsSel <=  rDmaAdrsSel;
 	endcase
 
 	// アドレスの更新
-	casex ({rDmaWAdrsSel, qDmaWAdrsOverCheck, qDmaWAdrsMatch, wRVd, iDmaEn})
-		'bxxxx0:	rDmaWAdrs <= iDmaWAdrs;
-		'bxx011:	rDmaWAdrs <= rDmaWAdrs + 1'b1;
-		'b00111:	rDmaWAdrs <= iDmaRAdrs;
-		'b10111:	rDmaWAdrs <= iDmaWAdrs;
+	casex ({qDmaWCntMax, rDmaFifoRe, iDmaEn})
+		'bxx0:		rWCnt <= {pMemAdrsWidth{1'b0}};
+		'b011:		rWCnt <= rWCnt + 1'b1;
+		'b111:		rWCnt <= {pMemAdrsWidth{1'b0}};
+		default: 	rWCnt <= rWCnt;
+	endcase
+
+	casex ({qDmaRCntMax, rDmaFifoRe, iDmaEn})
+		'bxx0:		rRCnt <= {pMemAdrsWidth{1'b0}};
+		'b011:		rRCnt <= rRCnt + 1'b1;
+		'b111:		rRCnt <= {pMemAdrsWidth{1'b0}};
+		default: 	rRCnt <= rRCnt;
+	endcase
+
+	casex ({rDmaWAdrsSel, qDmaWAdrsOverCheck, qDmaWAdrsMatch, rDmaFifoRe})
+		'bxxxx:		rDmaWAdrs <= rDmaWAdrs + 1'b1;
+		'bxxxx:		rDmaWAdrs <= iDmaWAdrs;
+		'bxx01:		rDmaWAdrs <= iDmaRAdrs;
 		default: 	rDmaWAdrs <= rDmaWAdrs;
 	endcase
 
-	casex ({rDmaRAdrsSel, qDmaRAdrsMatch, iDmaRe, wRVd, iMUfiRdy, iDmaEn})
-		'bxxxxx0:	rDmaRAdrs <= iDmaRAdrs;
-		'bx01011:	rDmaRAdrs <= rDmaRAdrs + 1'b1;
-		'b011011:	rDmaRAdrs <= iDmaWAdrs;
-		'b111011:	rDmaRAdrs <= iDmaRAdrs;
+	casex ({rDmaRAdrsSel, qDmaRAdrsMatch, iDmaRe, rDmaFifoRe, iMUfiRdy})
+		'b01101:	rDmaRAdrs <= rDmaWAdrs + 1'b1;
+		'b01101:	rDmaRAdrs <= iDmaWAdrs;
+		'b11101:	rDmaRAdrs <= iDmaRAdrs;
 		default: 	rDmaRAdrs <= rDmaRAdrs;
 	endcase
 
@@ -161,57 +165,17 @@ begin
 	if (iRst)		rDmaREd	<= 1'b0;
 	else			rDmaREd	<= iMUfiREd;
 end
-//
-// FIFO レイテンシの違いを吸収するためのアドレスの先読み
-localparam lpAdrsAhead = 5;
-
-integer m;
-reg [pMemAdrsWidth-1:0] rDmaWAdrsAhead [0:lpAdrsAhead-1];
-
-generate
-always @(posedge iClk)
-begin
-		for (m = 1; m < lpAdrsAhead+1; m = m + 1)
-		begin
-			rDmaWAdrsAhead[m-1] <= rDmaWAdrs + m;
-		end
-end
-endgenerate
-//
   
 always @*
 begin
-	// TODO Dma R/Wアドレスが、フレームの端に達した時に、両アドレスを切り替えるようにする。
-	// そのかわり DMA FIFO が　0レイテンシである必要がある
-	// 
-	// 下記のアドレス加算処理は 前段の FIFO のデータ出力が 数レイテンシ遅れるため、
-	// 1クロック違いでの切り替えなどにすると、タイミングのずれが生じるため先読みでアドレスを確認している
-	qDmaWAdrsOverCheck 	<=  (rDmaWAdrsAhead[0] == rDmaRAdrs) |
-							(rDmaWAdrsAhead[1] == rDmaRAdrs) |
-							(rDmaWAdrsAhead[2] == rDmaRAdrs) |
-							(rDmaWAdrsAhead[3] == rDmaRAdrs) |
-							(rDmaWAdrsAhead[4] == rDmaRAdrs) |
-							((iDmaWAdrs <= rDmaRAdrs) && (rDmaRAdrs < (iDmaWAdrs + 3'd5))) |
-							((iDmaRAdrs <= rDmaRAdrs) && (rDmaRAdrs < (iDmaRAdrs + 3'd5))) ;
-
-	// TODO 比較ロジックに関して、アドレスとLEnの比較ではなく、DMA 内部カウンタとの比較の方が良いのでは？
-	// 現状、R/W それぞれで Len を用意しておくメリットが思い浮かばない、フレームバッファ領域なので同じでよさそうと思ったが
-	// 結局 cnt レジスタ用意しているから意味ないかも、あとhれーむバッファ数ひｔｐつでよくない？
-	// qDmaWCntMax 		<= (rWCnt == iDmaLen);
-	// qDmaRCntMax 		<= (rRCnt == iDmaLen);
-	qDmaWAdrsMatch 		<= (rDmaWAdrs == iDmaWLen) | (rDmaWAdrs == iDmaRLen);
-	qDmaRAdrsMatch 		<= (rDmaRAdrs == iDmaWLen) | (rDmaRAdrs == iDmaRLen);
-	//	
-	qMUfiWEd	<= (iDmaRe & iMUfiRdy) | wRVd;
+	qDmaWCntMax <= (rWCnt == iDmaLen);
+	qDmaRCntMax <= (rRCnt == iDmaLen);
+	//
+	qMUfiWEd	<= (iDmaRe | (~wEmp)) & iMUfiRdy;
 	qMUfiREd	<= iDmaRe;						// 後段がデータ受付可能であれば Read 要求とする
 	qMUfiVd		<= (iDmaRe | (~wEmp));			// 空でなければ Ufi 転送要求とする
 	qMUfiCmd	<= (iDmaRe & (~wRVd));			// 後段から Read要求がなければ、WCMD とする
-	qDmaFifoRe	<= (~iDmaRe) & iMUfiRdy & (~qDmaWAdrsOverCheck);
-
-	// DMA Read のみのデバッグの残り
-	// qMUfiWEd		<= iDmaRe & iMUfiRdy;
-	// qMUfiVd		<= iDmaRe;						// 空でなければ Ufi 転送要求とする
-	// qDmaFifoRe	<= 1'b0; // RDMA デバッグのため、書き込み側のデータは必要ない
+	qDmaFifoRe	<= (~iDmaRe) & iMUfiRdy & (~qDmaWAdrsOverCheck) & (~wEmp);
 end
 
 /*
