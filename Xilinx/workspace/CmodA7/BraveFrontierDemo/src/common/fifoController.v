@@ -22,8 +22,9 @@
 // 
 //----------------------------------------------------------
 module fifoController #(
-    parameter pFifoDepth        = 16,		// FIFO BRAMのサイズ指定
-    parameter pFifoBitWidth     = 8			// bitサイズ
+    parameter 	pFifoDepth        	= 16,		// FIFO BRAMのサイズ指定
+    parameter 	pFifoBitWidth     	= 8,		// bitサイズ
+	parameter	pFifoBlockRam		= "yes"		// yes BRAM, no reg
 )(
 	// src side
     input   [pFifoBitWidth-1:0] iWd,        // write data
@@ -112,9 +113,10 @@ wire [pFifoBitWidth-1:0] wRD;
 
 
 userFifo #(
-    .pBuffDepth    (pFifoDepth),
-    .pBitWidth     (pFifoBitWidth),
-    .pAddrWidth    (pAddrWidth)
+    .pBuffDepth    	(pFifoDepth),
+    .pBitWidth     	(pFifoBitWidth),
+    .pAddrWidth    	(pAddrWidth),
+	.pFifoBlockRam	(pFifoBlockRam)
 ) USER_FIFO (
     // write side       read side
     .iClk   (iClk),

@@ -7,9 +7,10 @@
 // 
 //----------------------------------------------------------
 module userFifo #(
-    parameter pBuffDepth = 256,    // FIFO BRAMのサイズ指定
-    parameter pBitWidth  = 32,     // bitサイズ
-    parameter pAddrWidth = 16      // addr size
+    parameter 	pBuffDepth 		= 256,    // FIFO BRAMのサイズ指定
+    parameter 	pBitWidth  		= 32,     // bitサイズ
+    parameter 	pAddrWidth 		= 16,     // addr size
+	parameter	pFifoBlockRam	= "yes"
 )(
     input                      iClk,
     input   [pBitWidth-1:0]    iWD,    // write data
@@ -20,16 +21,31 @@ module userFifo #(
 );
 
 localparam pDepth = pBuffDepth - 1;
-
 (* ram_style = "block" *) reg [pBitWidth-1:0] fifo [0:pDepth];
-reg [pBitWidth-1:0] rd;     assign oRD = rd;
-// assign oRD = fifo[iRA];
 
-// rwポート
-always @(posedge iClk)
-begin
-    if (iWE) fifo[iWA] <= iWD;
-    rd <= fifo[iRA];
-end
+generate
+	if (pFifoBlockRam == "yes")
+	begin
+		reg [pBitWidth-1:0] rd;     assign oRD = rd;
+		// assign oRD = fifo[iRA];
+
+		// rwポート
+		always @(posedge iClk)
+		begin
+			if (iWE) fifo[iWA] <= iWD;
+			rd <= fifo[iRA];
+		end
+	end
+	else
+	begin
+		assign oRD = fifo[iRA];
+
+		// rwポート
+		always @(posedge iClk)
+		begin
+			if (iWE) fifo[iWA] <= iWD;
+		end
+	end
+endgenerate
 
 endmodule
