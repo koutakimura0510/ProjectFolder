@@ -55,10 +55,10 @@ module VideoTxUnit #(
 	input 							iDisplayRst,
 	input 	[7:0]					iBlDutyRatio,
 	//
-	input 	[pMemAdrsWidth-1:0]		iDmaWAdrs,
-	input 	[pMemAdrsWidth-1:0]		iDmaRAdrs,
-	input 	[pMemAdrsWidth-1:0]		iDmaWLen,
-	input 	[pMemAdrsWidth-1:0]		iDmaRLen,
+	input 	[pMemAdrsWidth-1:0]		iFbufAdrs1,
+	input 	[pMemAdrsWidth-1:0]		iFbufAdrs2,
+	input 	[pMemAdrsWidth-1:0]		iFbufLen1,
+	input 	[pMemAdrsWidth-1:0]		iFbufLen2,
 	input 							iDmaEn,
     // CLK Reset
     input           				iSysClk,
@@ -127,10 +127,10 @@ VideoDmaUnit #(
 	.oDmaREd			(wDmaREd),
 	.iDmaRe				(qDmaRe),
 	//
-	.iDmaWAdrs			(iDmaWAdrs),
-	.iDmaRAdrs			(iDmaRAdrs),
-	.iDmaWLen			(iDmaWLen),
-	.iDmaRLen			(iDmaRLen),
+	.iFbufAdrs1			(iFbufAdrs1),
+	.iFbufAdrs2			(iFbufAdrs2),
+	.iFbufLen1			(iFbufLen1),
+	.iFbufLen2			(iFbufLen2),
 	.iDmaEn				(iDmaEn),
 	//
 	.iRst				(iVtbSystemRst),

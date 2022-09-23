@@ -9,11 +9,12 @@ module DotSquareGen #(
     parameter                   	pVdisplayWidth  = 11,
 	parameter						pColorDepth		= 16,
 	parameter 						pFifoDepth		= 16,
-	parameter 						pFifoBitWidth	= 16
+	parameter 						pFifoBitWidth	= 16,
+	parameter						pFifoBlockRam	= "yes"
 )(
 	// Internal Port
 	// Status
-    input  [pColorDepth-1:0]		iPixel,		// 描画色
+    input  [pColorDepth-1:0]		iColor,		// 描画色
     input  [pHdisplayWidth-1:0]     iHpos,		// 現在の横幅の座標
     input  [pVdisplayWidth-1:0]     iVpos,		// 現在の立幅の座標
     input  [pHdisplayWidth-1:0]     iDxs,		// 描画開始 X座標 Draw X Start
@@ -24,7 +25,7 @@ module DotSquareGen #(
 	input 							iEds,
 	output 							oFull,
     output [pColorDepth-1:0]    	oDd,		// Dest Data
-	output 							oVdd,		// Valid Dest Data 
+	output 							oVdd,		// Valid Data 
 	input 							iEdd,		// Enable Dest Data
 	output 							oEmp,
 	// Clk rst
@@ -43,7 +44,7 @@ reg [3:0] qPosMatch;
 
 always @(posedge iClk)
 begin
-	if (qCke) 		rPixel <= iPixel;
+	if (qCke) 		rPixel <= iColor;
     else 			rPixel <= {pColorDepth{1'b1}};
 
     if (iRst)   	rWe <= 1'd0;
@@ -67,7 +68,8 @@ end
 //-----------------------------------------------------------------------------
 fifoController #(
 	.pFifoDepth		(pFifoDepth),
-	.pFifoBitWidth	(pFifoBitWidth)
+	.pFifoBitWidth	(pFifoBitWidth),
+	.pFifoBlockRam	(pFifoBlockRam)
 ) InstDotSquareFifo (
 	// src side
 	.iWd			(rPixel),

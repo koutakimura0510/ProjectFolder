@@ -102,10 +102,10 @@ wire 						wVtbSystemRstCsr;
 wire 						wVtbVideoRstCsr;
 wire 						wDisplayRstCsr;
 wire [7:0]					wBlDutyRatioCsr;
-wire [pMemAdrsWidth-1:0]	wDmaWAdrsCsr;
-wire [pMemAdrsWidth-1:0]	wDmaRAdrsCsr;
-wire [pMemAdrsWidth-1:0]	wDmaWLenCsr;
-wire [pMemAdrsWidth-1:0]	wDmaRLenCsr;
+wire [pMemAdrsWidth-1:0]	wFbufAdrs1Csr;
+wire [pMemAdrsWidth-1:0]	wFbufAdrs2Csr;
+wire [pMemAdrsWidth-1:0]	wFbufLen1Csr;
+wire [pMemAdrsWidth-1:0]	wFbufLen2Csr;
 wire 						wDmaEnCsr;
 wire 						wFe;
 
@@ -152,10 +152,10 @@ VideoTxUnit #(
 	.iDisplayRst		(wDisplayRstCsr),
 	.iBlDutyRatio		(wBlDutyRatioCsr),
 	//
-	.iDmaWAdrs			(wDmaWAdrsCsr),
-	.iDmaRAdrs			(wDmaRAdrsCsr),
-	.iDmaWLen			(wDmaWLenCsr),
-	.iDmaRLen			(wDmaRLenCsr),
+	.iFbufAdrs1			(wFbufAdrs1Csr),
+	.iFbufAdrs2			(wFbufAdrs2Csr),
+	.iFbufLen1			(wFbufLen1Csr),
+	.iFbufLen2			(wFbufLen2Csr),
 	.iDmaEn				(wDmaEnCsr),
 	//
 	.iSysClk			(iSysClk),
@@ -210,10 +210,10 @@ VideoTxCsr #(
 	.oVtbVideoRst		(wVtbVideoRstCsr),
 	.oDisplayRst		(wDisplayRstCsr),
 	.oBlDutyRatio		(wBlDutyRatioCsr),
-	.oDmaWAdrs			(wDmaWAdrsCsr),
-	.oDmaRAdrs			(wDmaRAdrsCsr),
-	.oDmaWLen			(wDmaWLenCsr),
-	.oDmaRLen			(wDmaRLenCsr),
+	.oFbufAdrs1			(wFbufAdrs1Csr),
+	.oFbufAdrs2			(wFbufAdrs2Csr),
+	.oFbufLen1			(wFbufLen1Csr),
+	.oFbufLen2			(wFbufLen2Csr),
 	.oDmaEn				(wDmaEnCsr),
 	.iSysClk			(iSysClk),
 	.iSysRst			(iSysRst)

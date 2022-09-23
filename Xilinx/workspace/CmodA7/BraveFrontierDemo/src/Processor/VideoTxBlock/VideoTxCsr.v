@@ -57,10 +57,10 @@ module VideoTxCsr #(
 	output  						oDisplayRst,
 	output	[7:0]					oBlDutyRatio,
 	//
-	output 	[pMemAdrsWidth-1:0]		oDmaWAdrs,
-	output 	[pMemAdrsWidth-1:0]		oDmaRAdrs,
-	output 	[pMemAdrsWidth-1:0]		oDmaWLen,
-	output 	[pMemAdrsWidth-1:0]		oDmaRLen,
+	output 	[pMemAdrsWidth-1:0]		oFbufAdrs1,
+	output 	[pMemAdrsWidth-1:0]		oFbufAdrs2,
+	output 	[pMemAdrsWidth-1:0]		oFbufLen1,
+	output 	[pMemAdrsWidth-1:0]		oFbufLen2,
 	output 							oDmaEn,
     // CLK Reset
     input           				iSysRst,
@@ -78,8 +78,8 @@ localparam [pVdisplayWidth:0] lpVSyncStart	= pVdisplay + pVfront;
 localparam [pVdisplayWidth:0] lpVSyncEnd	= pVdisplay + pVfront + pVpulse - 1'b1;
 localparam [pVdisplayWidth:0] lpVSyncMax	= pVdisplay + pVfront + pVpulse + pVback - 1'b1;
 // Frame Buffer Size
-localparam [pMemAdrsWidth-1:0] lpDmaWAdrs	= 0;
-localparam [pMemAdrsWidth-1:0] lpDmaRAdrs	= (pHdisplay * pVdisplay);
+localparam [pMemAdrsWidth-1:0] lpFbufAdrs1	= 0;
+localparam [pMemAdrsWidth-1:0] lpFbufAdrs2	= (pHdisplay * pVdisplay);
 localparam [pMemAdrsWidth-1:0] lpFbufLen1	= (pHdisplay * pVdisplay) - 1;
 localparam [pMemAdrsWidth-1:0] lpFbufLen2	= (pHdisplay * pVdisplay * 2) - 1;
 
@@ -100,10 +100,10 @@ reg 						rVtbVideoRst;		assign oVtbVideoRst = rVtbVideoRst;		// ビデオクロ
 reg 						rDisplayRst;		assign oDisplayRst	= rDisplayRst;		// ディスプレイのリセット信号
 reg 						rDmaEn;				assign oDmaEn		= rDmaEn;			// DMA Enable
 reg [7:0]					rBlDutyRatio;		assign oBlDutyRatio = rBlDutyRatio;		// ディスプレイバックライトの調光
-reg [pMemAdrsWidth-1:0]		rDmaWAdrs;			assign oDmaWAdrs	= rDmaWAdrs;		// FrameBuffer領域 Wriet DMA の開始アドレス
-reg [pMemAdrsWidth-1:0]		rDmaRAdrs;			assign oDmaRAdrs	= rDmaRAdrs;		// FrameBuffer領域 Read DMA の開始アドレス
-reg [pMemAdrsWidth-1:0]		rDmaWLen;			assign oDmaWLen		= rDmaWLen;			// Wriet DMA のアクセスサイズ
-reg [pMemAdrsWidth-1:0]		rDmaRLen;			assign oDmaRLen		= rDmaRLen;			// Read DMA のアクセスサイズ
+reg [pMemAdrsWidth-1:0]		rFbufAdrs1;			assign oFbufAdrs1	= rFbufAdrs1;		// FrameBuffer領域 Wriet DMA の開始アドレス
+reg [pMemAdrsWidth-1:0]		rFbufAdrs2;			assign oFbufAdrs2	= rFbufAdrs2;		// FrameBuffer領域 Read DMA の開始アドレス
+reg [pMemAdrsWidth-1:0]		rFbufLen1;			assign oFbufLen1	= rFbufLen1;		// Wriet DMA のアクセスサイズ
+reg [pMemAdrsWidth-1:0]		rFbufLen2;			assign oFbufLen2	= rFbufLen2;		// Read DMA のアクセスサイズ
 //
 reg [pHdisplayWidth:0]		rHSyncStart;		assign oHSyncStart 	= rHSyncStart;		// アクティブエリア から 同期信号まで
 reg [pHdisplayWidth:0]		rHSyncEnd;			assign oHSyncEnd 	= rHSyncEnd;		// 同期信号 から バックポーチまで
@@ -146,10 +146,10 @@ begin
 		rDisplayRst		<= 1'b1;		// Active Low
 		rDmaEn			<= 1'b0;
 		rBlDutyRatio	<= 8'h00;		// 0xff Max Flash
-		rDmaWAdrs		<= lpDmaWAdrs;
-		rDmaRAdrs		<= lpDmaRAdrs;
-		rDmaWLen		<= lpFbufLen1;
-		rDmaRLen		<= lpFbufLen2;
+		rFbufAdrs1		<= lpFbufAdrs1;
+		rFbufAdrs2		<= lpFbufAdrs2;
+		rFbufLen1		<= lpFbufLen1;
+		rFbufLen2		<= lpFbufLen2;
 	end
 	else
 	begin
@@ -163,10 +163,10 @@ begin
 		rDisplayRst				<= qCsrWCke10 ? iSUsiWd[2:2] 				: rDisplayRst;
 		rDmaEn					<= qCsrWCke10 ? iSUsiWd[3:3] 				: rDmaEn;
 		rBlDutyRatio			<= qCsrWCke14 ? iSUsiWd[7:0] 				: rBlDutyRatio;
-		rDmaWAdrs				<= qCsrWCke18 ? iSUsiWd[pMemAdrsWidth-1:0] 	: rDmaWAdrs;
-		rDmaRAdrs				<= qCsrWCke1c ? iSUsiWd[pMemAdrsWidth-1:0] 	: rDmaRAdrs;
-		rDmaWLen				<= qCsrWCke20 ? iSUsiWd[pMemAdrsWidth-1:0] 	: rDmaWLen;
-		rDmaRLen				<= qCsrWCke24 ? iSUsiWd[pMemAdrsWidth-1:0] 	: rDmaRLen;
+		rFbufAdrs1				<= qCsrWCke18 ? iSUsiWd[pMemAdrsWidth-1:0] 	: rFbufAdrs1;
+		rFbufAdrs2				<= qCsrWCke1c ? iSUsiWd[pMemAdrsWidth-1:0] 	: rFbufAdrs2;
+		rFbufLen1				<= qCsrWCke20 ? iSUsiWd[pMemAdrsWidth-1:0] 	: rFbufLen1;
+		rFbufLen2				<= qCsrWCke24 ? iSUsiWd[pMemAdrsWidth-1:0] 	: rFbufLen2;
 		//
 		rHSyncStart 			<= rHdisplay + rHfront;
 		rHSyncEnd				<= rHdisplay + rHfront + rHpulse - 1'b1;
@@ -215,10 +215,10 @@ begin
 			'h000c:		rSUsiRd	<= {{(16 - pVpulseWidth		){1'b0}}, rVpulse,		{(16 - pHpulseWidth		){1'b0}}, rHpulse		};
 			'h0010:		rSUsiRd	<= {{(32 - 4				){1'b0}}, rDmaEn,rDisplayRst,rVtbVideoRst,rVtbSystemRst	};
 			'h0014:		rSUsiRd	<= {{(32 - 8				){1'b0}}, rBlDutyRatio	};
-			'h0018:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rDmaWAdrs	};
-			'h001c:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rDmaRAdrs	};
-			'h0020:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rDmaWLen	};
-			'h0024:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rDmaRLen	};
+			'h0018:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufAdrs1	};
+			'h001c:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufAdrs2	};
+			'h0020:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufLen1	};
+			'h0024:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufLen2	};
 			//
 			'h0080:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncStart,{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncStart		};
 			'h0084:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncEnd,	{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncEnd		};

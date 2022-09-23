@@ -83,7 +83,7 @@ reg 						qPixelDrawPositionCke;
 PixelDrawPosition #(
 	.pHdisplayWidth	(pHdisplayWidth),
 	.pVdisplayWidth	(pVdisplayWidth)
-) PIXEL_DRAW_POSITION (
+) PixelDrawPosition (
 	.iHdisplay		(qHdisplay),
 	.iVdisplay		(qVdisplay),
 	.oHpos			(wPixelDrawHpos),
@@ -130,7 +130,7 @@ PixelDrawPosition #(
 //-----------------------------------------------------------------------------
 // Scene Draw
 //-----------------------------------------------------------------------------
-localparam lpDotSquareGenFifoDepth = 1024;
+localparam lpDotSquareGenFifoDepth = 16;
 localparam lpSquareSize	= 16;
 localparam lpDxs 		= 0;
 localparam lpDxe 		= lpDxs + lpSquareSize;
@@ -150,8 +150,8 @@ DotSquareGen #(
 	.pColorDepth		(pColorDepth),
 	.pFifoDepth			(lpDotSquareGenFifoDepth),
 	.pFifoBitWidth		(pColorDepth)
-) DOT_SQUARE_GEN (
-	.iPixel				(16'h0000),
+) DotSquareGen (
+	.iColor				(16'h0000),
 	.iHpos				(wPixelDrawHpos),
 	.iVpos				(wPixelDrawVpos),
 	.iDxs				(lpDxs),
@@ -178,6 +178,8 @@ end
 //-----------------------------------------------------------------------------
 // Final Stage ドットデータを結合し一つのピクセルデータに変換する
 //-----------------------------------------------------------------------------
+localparam lpDotMargeToPixelConverterFifoDepth = 16;
+
 wire [pOutColorDepth-1:0] wPixelMargeDd;		assign oPixel = wPixelMargeDd;
 wire  wPixelMargeVdd;							assign oVd 	  = wPixelMargeVdd;
 wire  wPixelMargeFull;
@@ -187,9 +189,9 @@ reg   qPixelMargeEdd;
 
 DotMargeToPixelConverter #(
 	.pColorDepth	(pColorDepth),
-	.pFifoDepth		(1024),
+	.pFifoDepth		(lpDotMargeToPixelConverterFifoDepth),
 	.pFifoBitWidth	(pOutColorDepth)
-) DMT_PIXEL_CONVERTER (
+) DotMargeToPixelConverter (
 	.iDistantground	({pColorDepth{1'b0}}),
 	.iBackground	(wDotSquareDd),
 	.iField			({pColorDepth{1'b0}}),

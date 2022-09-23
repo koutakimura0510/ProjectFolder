@@ -209,10 +209,10 @@ VideoTxUnit #(
 	.iVtbVideoRst		(rVtbVideoRst),
 	.iDisplayRst		(1'b0),
 	.iBlDutyRatio		(127),
-	.iDmaWAdrs			(lpDmaAdrs1),
-	.iDmaRAdrs			(lpDmaAdrs2),
-	.iDmaWLen			(lpDmaLen1),
-	.iDmaRLen			(lpDmaLen2),
+	.iFbufAdrs1			(lpDmaAdrs1),
+	.iFbufAdrs2			(lpDmaAdrs2),
+	.iFbufLen1			(lpDmaLen1),
+	.iFbufLen2			(lpDmaLen2),
 	.iDmaEn				(rDmaEn),
 	.iSysClk			(wSysClk),
 	.iVideoClk			(wVideoClk),
@@ -392,7 +392,7 @@ endtask
 // TestBench 動作
 // lpFrameCnt 画像出力の回数を指定可能、複数回ループさせて正しく raw 画像が出れば OK
 //-----------------------------------------------------------------------------
-localparam lpFrameCnt = 4;
+localparam lpFrameCnt = 6;
 integer n;
 
 initial
