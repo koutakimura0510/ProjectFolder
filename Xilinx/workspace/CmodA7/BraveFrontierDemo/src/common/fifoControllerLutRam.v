@@ -16,6 +16,7 @@ module fifoControllerLutRam #(
     output                      oFull,      // 最大書き込み時High
 	// dst side
     output  [pFifoBitWidth-1:0] oRd,        // read data
+	output 						oRVd,	
     input                       iRe,        // read enable
     output                      oEmp,       // バッファ空時High
 	//
@@ -33,7 +34,7 @@ localparam pAddrWidth  = fBitWidth(pFifoDepth);
 // アドレスの更新
 //-----------------------------------------------------------------------------
 reg [pAddrWidth-1:0] rWA, rRA;
-reg [pAddrWidth-1:0] qWA [0:pFifoFastOutValue];
+reg [pAddrWidth-1:0] qWA [0:pFifoFastOutValue-1];
 
 always @(posedge iClk)
 begin
@@ -49,11 +50,12 @@ end
 //----------------------------------------------------------
 // ハンドシェイク信号出力
 //----------------------------------------------------------
-localparam lpFifoFastOutValue = pFifoFastOutValue + 2;
+localparam lpFifoFastOutValue = pFifoFastOutValue + 1;
 
-reg [pFifoFastOutValue:0] qFull;
+reg [pFifoFastOutValue-1:0] qFull;
 reg rFull;							assign oFull = rFull;
 reg qEMP;							assign oEmp  = qEMP;
+									assign oRVd  = iRe & (~qEMP);
 
 always @(posedge iClk)
 begin
@@ -66,11 +68,11 @@ integer n;
 generate
 always @*
 begin
-		for (n = 1; n < lpFifoFastOutValue; n = n + 1)
-		begin
-			qWA[n-1'b1]		<= (rWA + n);
-			qFull[n-1'b1] 	<= qWA[n-1'b1] == rRA;
-		end
+	for (n = 1; n < lpFifoFastOutValue; n = n + 1)
+	begin
+		qWA[n-1'b1]		<= rWA + n;
+		qFull[n-1'b1] 	<= qWA[n-1'b1] == rRA;
+	end
 
     qEMP <= (rWA  == rRA);
 end

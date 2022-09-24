@@ -57,20 +57,35 @@ wire 						wEmp;
 reg 						rDmaFifoRe;
 reg 						qDmaFifoRe;
 
-fifoController #(
-	.pFifoDepth		(pFifoDepth),
-	.pFifoBitWidth	(pFifoBitWidth)
+fifoControllerLutRam #(
+	.pFifoDepth			(pFifoDepth),
+	.pFifoBitWidth		(pFifoBitWidth),
+	.pFifoFastOutValue	(5)
 ) VideoDmaFifo (
 	.iWd			(iDmaWd),
 	.iWe			(iDmaWEd),
 	.oFull			(oDmaFull),
 	.oRd			(wDmaFifoRd),
-	.iRe			(rDmaFifoRe),
-	.oRvd			(wRVd),
+	.iRe			(qDmaFifoRe),
+	.oRVd			(wRVd),
 	.oEmp			(wEmp),
 	.iRst			(iRst),
 	.iClk			(iClk)
 );
+// fifoController #(
+// 	.pFifoDepth		(pFifoDepth),
+// 	.pFifoBitWidth	(pFifoBitWidth)
+// ) VideoDmaFifo (
+// 	.iWd			(iDmaWd),
+// 	.iWe			(iDmaWEd),
+// 	.oFull			(oDmaFull),
+// 	.oRd			(wDmaFifoRd),
+// 	.iRe			(rDmaFifoRe),
+// 	.oRvd			(wRVd),
+// 	.oEmp			(wEmp),
+// 	.iRst			(iRst),
+// 	.iClk			(iClk)
+// );
 
 //-----------------------------------------------------------------------------
 // R/W ステートマシン
@@ -161,25 +176,6 @@ begin
 	else			rDmaREd	<= iMUfiREd;
 end
 
-//---------------------------------------------------------------------------
-// FIFO レイテンシの違いを吸収するためのアドレスの先読み
-//---------------------------------------------------------------------------
-localparam lpAdrsAhead = 5;
-
-integer m;
-reg [pMemAdrsWidth-1:0] rDmaWAdrsAhead [0:lpAdrsAhead-1];
-
-generate
-always @(posedge iClk)
-begin
-	for (m = 1; m < lpAdrsAhead+1; m = m + 1)
-	begin
-		rDmaWAdrsAhead[m-1] <= rDmaWAdrs + m;
-	end
-end
-endgenerate
-//
-  
 always @*
 begin
 	// TODO 現在は WAdrs が RAdrs を追従する形で動作しているが、
@@ -191,24 +187,19 @@ begin
 	// 下記のアドレス加算処理は 前段の FIFO のデータ出力が数レイテンシ遅れるため、
 	// 1クロック違いでの切り替えなどにすると、タイミングのずれが生じるため先読みでアドレスを確認している
 	// フレームサイズが 2 の乗数ではないので、RAdrs が 各フレームの初めのアドレスをの時の処理も含む
-	qDmaWAdrsOverCheck 	<=  (rDmaWAdrsAhead[0] == rDmaRAdrs) |
-							(rDmaWAdrsAhead[1] == rDmaRAdrs) |
-							(rDmaWAdrsAhead[2] == rDmaRAdrs) |
-							(rDmaWAdrsAhead[3] == rDmaRAdrs) |
-							(rDmaWAdrsAhead[4] == rDmaRAdrs) |
-							((iFbufAdrs1 <= rDmaRAdrs) && (rDmaRAdrs < (iFbufAdrs1 + 3'd5))) |
-							((iFbufAdrs2 <= rDmaRAdrs) && (rDmaRAdrs < (iFbufAdrs2 + 3'd5))) ; 
-	// qDmaWAdrsOverCheck 	<=  |{rAdrsAheadFlag} |
-	// 						((iFbufAdrs1 <= rDmaRAdrs) && (rDmaRAdrs < (iFbufAdrs1 + 3'd5))) |
-	// 						((iFbufAdrs2 <= rDmaRAdrs) && (rDmaRAdrs < (iFbufAdrs2 + 3'd5))) ; 
+	// 
+	// 2022-09-24 上記のレイテンシ0 FIFO に対応した
+	qDmaWAdrsOverCheck 	<=  ((rDmaWAdrs+1'b1) == rDmaRAdrs) |
+							(iFbufAdrs1 == rDmaRAdrs) |
+							(iFbufAdrs2 == rDmaRAdrs); 
 
 	qDmaWAdrsMatch 		<= (rDmaWAdrs == iFbufLen1) | (rDmaWAdrs == iFbufLen2);
 	qDmaRAdrsMatch 		<= (rDmaRAdrs == iFbufLen1) | (rDmaRAdrs == iFbufLen2);
 	//	
-	qMUfiWEd			<= (iDmaRe & iMUfiRdy) | wRVd;
+	qMUfiWEd			<= (iDmaRe | wRVd) & iMUfiRdy;
 	qMUfiREd			<= iDmaRe;						// 後段がデータ受付可能であれば Read 要求とする
-	qMUfiVd				<= (iDmaRe | (~wEmp));			// 空でなければ Ufi 転送要求とする
 	qMUfiCmd			<= (iDmaRe & (~wRVd));			// 後段から Read要求がなければ、WCMD とする
+	qMUfiVd				<= iDmaRe | (~wEmp);			// 空でなければ Ufi 転送要求とする
 	qDmaFifoRe			<= (~iDmaRe) & iMUfiRdy & (~qDmaWAdrsOverCheck);
 
 	// DMA Read のみのデバッグの残り

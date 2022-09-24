@@ -23,7 +23,6 @@ reg [pBitWidth-1:0] fifo [0:pBuffDepth-1];		assign oRD = fifo[iRA];
 always @(posedge iClk)
 begin
     if (iWE) 	fifo[iWA] <= iWD;
-	else		fifo[iWA] <= fifo[iWA];
 end
 
 endmodule
