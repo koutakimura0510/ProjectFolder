@@ -53,7 +53,8 @@ reg 							qDmaRe;
 AudioDmaUnit #(
 	.pBusAdrsBit		(pBusAdrsBit),
 	.pUfiBusWidth		(pUfiBusWidth),
-	.pMemAdrsWidth		(pMemAdrsWidth)
+	.pMemAdrsWidth		(pMemAdrsWidth),
+	.pDmaFifoDepth		(lpDmaFifoDepth)
 ) AudioDmaUnit (
 	.iMUfiRd			(iMUfiRd),
 	.iMUfiREd			(iMUfiREd),
@@ -76,7 +77,7 @@ AudioDmaUnit #(
 //-----------------------------------------------------------------------------
 // Dual Clk Fifo 及び クロック変換
 //-----------------------------------------------------------------------------
-localparam lpDualClkFifoDepth = 32;
+localparam lpDualClkFifoDepth = lpDmaFifoDepth;
 
 wire [pSamplingBitWidth-1:0] 	wAudioDualFifoRd;
 wire 							wAudioDualFifoFull;

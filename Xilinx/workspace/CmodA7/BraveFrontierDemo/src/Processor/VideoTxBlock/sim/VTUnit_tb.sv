@@ -167,8 +167,8 @@ localparam [lpVdisplayWidth:0] lpVSyncEnd	= lpVdisplay + lpVfront + lpVpulse - 1
 localparam [lpVdisplayWidth:0] lpVSyncMax	= lpVdisplay + lpVfront + lpVpulse + lpVback - 1'b1;
 //
 localparam lpColorDepth 		= 16;
-localparam lpDualClkFifoDepth	= 256;	// FIFO サイズを可変して、あらゆるサイズで動作可能か検討する
-localparam lpDmaFifoDepth		= 256;	// 上記同文
+localparam lpDualClkFifoDepth	= 32;	// FIFO サイズを可変して、あらゆるサイズで動作可能か検討する
+localparam lpDmaFifoDepth		= 32;	// 上記同文
 localparam lpFrameSize 			= lpHdisplay * lpVdisplay * 2; // ダブルフレームバッファ構造
 localparam lpDmaAdrs1			= 0;
 localparam lpDmaAdrs2			= lpHdisplay * lpVdisplay;

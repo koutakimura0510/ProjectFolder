@@ -40,7 +40,7 @@ module AudioTxCsr #(
 // DMA Adrs
 //-----------------------------------------------------------------------------
 localparam [pMemAdrsWidth-1:0] lpDmaAdrs	= 'h40000;
-localparam [pMemAdrsWidth-1:0] lpDmaLen		= 'h30000;
+localparam [pMemAdrsWidth-1:0] lpDmaLen		= 'h30000 - 1'b1;
 
 
 //----------------------------------------------------------

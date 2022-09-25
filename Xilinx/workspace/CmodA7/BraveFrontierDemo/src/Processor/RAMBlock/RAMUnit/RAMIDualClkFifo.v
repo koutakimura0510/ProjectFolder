@@ -102,91 +102,81 @@ fifoDualControllerGray #(
 
 
 //-----------------------------------------------------------------------------
-// 
+// UFIB への データ出力
 //-----------------------------------------------------------------------------
-// wire wRVd;
-// wire [pRamDqWidth-1:0] 	wMemRd;
-// wire [pUfiIdNumber-1:0] wSUfiIdO;
-// reg  rRVd;								assign oMemREd = rRVd;
-// reg  [pRamDqWidth-1:0] 	rMemRd;			assign oMemRd = rMemRd;
-// reg  [pUfiIdNumber-1:0] rSUfiIdO;		assign oSUfiIdO = rSUfiIdO;
+wire 	wEmp;
+reg		qWEdId;
+reg  	qREdId;
+wire [pRamDqWidth-1:0]	wMemRd;
+wire 					wMemREd;
+reg [pRamDqWidth-1:0]	rMemRd; 		assign oMemRd	= rMemRd;
+reg 					rMemREd; 		assign oMemREd	= rMemREd;
 
-// // MemClk -> SysClk 変換
-// fifoDualControllerGray #(
-// 	.pBuffDepth	(pDualClkFifoDepth),
-// 	.pBitWidth	(pRamDqWidth)
-// ) RamDualClkFifoRd (
-// 	.iWD		(iMemWd),
-// 	.iWE		(iMemWEd),
-// 	.oFLL		(oMemFull),
-// 	.oRD		(wMemRd),
-// 	.iRE		(iMemRe),
-// 	.oRVD		(wRVd),
-// 	.oEMP		(),
-// 	.iSrcRst	(iSrcRst),
-// 	.iDstRst	(iDstRst),
-// 	.iSrcClk	(iMemClk),
-// 	.iDstClk	(iSysClk)
-// );
+fifoDualControllerGray #(
+	.pBuffDepth		(pDualClkFifoDepth),
+	.pBitWidth		(pRamDqWidth)
+) RamDualClkFifoRd (
+	.iWD			(iMemWd),
+	.iWE			(iMemWEd),
+	.oFLL			(oMemFull),
+	.oRD			(wMemRd),
+	.iRE			(qREdId),
+	.oRVD			(wMemREd),
+	.oEMP			(wEmp),
+	.iSrcRst		(iSrcRst),
+	.iDstRst		(iDstRst),
+	.iSrcClk		(iMemClk),
+	.iDstClk		(iSysClk)
+);
 
-// // タイミングは RDualFIFO と合わせる
+always @*
+begin
+	rMemRd	<= wMemRd;
+	rMemREd	<= wMemREd;
+end
+
+// タイミングは RDualFIFO と合わせる
+// RW のタイミングによっては捨てデータが発生してしまうため
+// 他の FIFO よりも多く深さをとることで改善ずる目的
+localparam lpFifoDepthId = pDualClkFifoDepth << 1;
+
+fifoController #(
+	.pFifoDepth		(lpFifoDepthId),
+	.pFifoBitWidth	(pUfiIdNumber)
+) RamFifoId (
+	.iWd			(iSUfiIdI),
+	.iWe			(qWEdId),
+	.oFull			(),
+	.oRd			(oSUfiIdO),
+	.iRe			(qREdId),
+	.oRvd			(),
+	.oEmp			(),
+	.iRst			(iSrcRst),
+	.iClk			(iSysClk)
+);
+
+// デバッグ用
+// wire [pRamAdrsWidth-1:0] wAdrs;
+
 // fifoController #(
 // 	.pFifoDepth		(pDualClkFifoDepth),
-// 	.pFifoBitWidth	(pUfiIdNumber)
-// ) RamFifoId (
-// 	.iWd			(iSUfiIdI),
-// 	.iWe			(iWEd),
+// 	.pFifoBitWidth	(pRamAdrsWidth)
+// ) demo (
+// 	.iWd			(iAdrs),
+// 	.iWe			(qWEdId),
 // 	.oFull			(),
-// 	.oRd			(wSUfiIdO),
-// 	.iRe			(iMemRe),
+// 	.oRd			(wAdrs),
+// 	.iRe			(qREdId),
 // 	.oRvd			(),
 // 	.oEmp			(),
 // 	.iRst			(iSrcRst),
 // 	.iClk			(iSysClk)
 // );
 
-// always @(posedge iSysClk)
-// begin
-// 	rRVd <= wRVd;
-
-// 	if (wRVd) 	rMemRd <= wMemRd;
-// 	else 		rMemRd <= 0;
-
-// 	if (wRVd) 	rSUfiIdO <= wSUfiIdO;
-// 	else 		rSUfiIdO <= 0;
-// end
-
-fifoDualControllerGray #(
-	.pBuffDepth	(pDualClkFifoDepth),
-	.pBitWidth	(pRamDqWidth)
-) RamDualClkFifoRd (
-	.iWD		(iMemWd),
-	.iWE		(iMemWEd),
-	.oFLL		(oMemFull),
-	.oRD		(oMemRd),
-	.iRE		(iMemRe),
-	.oRVD		(oMemREd),
-	.oEMP		(),
-	.iSrcRst	(iSrcRst),
-	.iDstRst	(iDstRst),
-	.iSrcClk	(iMemClk),
-	.iDstClk	(iSysClk)
-);
-
-// タイミングは RDualFIFO と合わせる
-fifoController #(
-	.pFifoDepth		(pDualClkFifoDepth),
-	.pFifoBitWidth	(pUfiIdNumber)
-) RamFifoId (
-	.iWd			(iSUfiIdI),
-	.iWe			(iWEd),
-	.oFull			(),
-	.oRd			(oSUfiIdO),
-	.iRe			(iMemRe),
-	.oRvd			(),
-	.oEmp			(),
-	.iRst			(iSrcRst),
-	.iClk			(iSysClk)
-);
+always @*
+begin
+	qWEdId <= iCmd & iWEd;		// Read時の ID のみ情報として必要
+	qREdId <= (~wEmp) & iMemRe;	// タイミングを合わせる
+end
 
 endmodule

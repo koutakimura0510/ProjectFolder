@@ -139,26 +139,26 @@ begin
 		default:	rDmaRAdrs <= rDmaRAdrs;
 	endcase
 
-	if (wRVd)		rMUfiWd		<= wDmaFifoRd;
-	else 			rMUfiWd		<= 8'h0f;
+	if (wRVd)			rMUfiWd		<= wDmaFifoRd;
+	else 				rMUfiWd		<= 8'h0f;
 
-	if (wRVd) 		rMUfiAdrs	<= rDmaWAdrs;
-	else 			rMUfiAdrs	<= rDmaRAdrs;
+	if (wRVd) 			rMUfiAdrs	<= rDmaWAdrs;
+	else 				rMUfiAdrs	<= rDmaRAdrs;
 
-	if (iRst)		rMUfiWEd	<= 1'b0;
-	else if (iDmaEn)rMUfiWEd	<= qMUfiWEd;
-	else			rMUfiWEd	<= 1'b0;
+	if (iRst)			rMUfiWEd	<= 1'b0;
+	else if (iDmaEn)	rMUfiWEd	<= qMUfiWEd;
+	else				rMUfiWEd	<= 1'b0;
 
-	if (iRst)		rMUfiREd	<= 1'b0;
-	else if (iDmaEn)rMUfiREd	<= qMUfiREd;
-	else 			rMUfiREd	<= 1'b0;
+	if (iRst)			rMUfiREd	<= 1'b0;
+	else if (iDmaEn)	rMUfiREd	<= qMUfiREd;
+	else 				rMUfiREd	<= 1'b0;
 
-	if (iRst)		rMUfiVd		<= 1'b0;
-	else if (iDmaEn)rMUfiVd 	<= qMUfiVd;
-	else			rMUfiVd 	<= 1'b0;
+	if (iRst)			rMUfiVd		<= 1'b0;
+	else if (iDmaEn)	rMUfiVd 	<= qMUfiVd;
+	else				rMUfiVd 	<= 1'b0;
 
-	if (iDmaEn)		rMUfiCmd	<= qMUfiCmd;
-	else 			rMUfiCmd	<= 1'b0;
+	if (iDmaEn)			rMUfiCmd	<= qMUfiCmd;
+	else 				rMUfiCmd	<= 1'b0;
 
 	if 	(iRst)					rTargetSwitchCnt <= 0;
 	else if (!qTargetSwitch)	rTargetSwitchCnt <= 0;
@@ -182,7 +182,7 @@ begin
 	qMUfiREd			<= iDmaRe;							// 後段がデータ受付可能であれば Read 要求とする
 	//
 	// 2022-09-24 ある程度データ転送を行ったら、他の DMA デバイスにバス使用の権利を譲る
-	qTargetSwitch 		<= ~rTargetSwitchCnt[10];
+	qTargetSwitch 		<= ~rTargetSwitchCnt[1];
 end
 
 

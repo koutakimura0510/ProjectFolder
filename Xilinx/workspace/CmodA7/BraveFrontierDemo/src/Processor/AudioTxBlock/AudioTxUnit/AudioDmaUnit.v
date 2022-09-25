@@ -10,7 +10,8 @@
 module AudioDmaUnit #(
 	parameter					pUfiBusWidth		= 16,
 	parameter					pBusAdrsBit			= 32,
-	parameter 					pMemAdrsWidth 		= 19
+	parameter 					pMemAdrsWidth 		= 19,
+	parameter					pDmaFifoDepth		= 32
 )(
     // Internal Port
 	// Ufi Master Read
@@ -39,6 +40,12 @@ module AudioDmaUnit #(
 
 
 //-----------------------------------------------------------------------------
+// FIFO Bit幅取得
+//-----------------------------------------------------------------------------
+localparam pFIfoBitWidth  = fBitWidth(pDmaFifoDepth) - 3;
+
+
+//-----------------------------------------------------------------------------
 // R/W ステートマシン
 //-----------------------------------------------------------------------------
 reg		[pMemAdrsWidth-1:0]	rMUfiAdrs;		assign oMUfiAdrs	= rMUfiAdrs;
@@ -52,47 +59,64 @@ reg							qMUfiVd;
 //
 reg		[pMemAdrsWidth-1:0]	rDmaRAdrs;
 reg 						qDmaRAdrsMatch;
+//
+reg		[pFIfoBitWidth-1:0]	rSwitchCnt;
+reg 						qSwicthCke;
 
 always @(posedge iClk)
 begin
-	casex ({qDmaRAdrsMatch, iDmaRe, iMUfiRdy, iDmaEn})
-		'bxxx0:		rDmaRAdrs <= iDmaAdrs;
-		'b0111:		rDmaRAdrs <= rDmaRAdrs + 1'b1;
-		'b1111:		rDmaRAdrs <= iDmaAdrs;
+	casex ({qSwicthCke, iDmaRe, iMUfiRdy, iDmaEn})
+		'bxxx0: 	rSwitchCnt	<= {pFIfoBitWidth{1'b0}};
+		'b1xxx:		rSwitchCnt	<= {pFIfoBitWidth{1'b0}};
+		'b0111:		rSwitchCnt	<= rSwitchCnt + 1'b1;
+		default: 	rSwitchCnt	<= rSwitchCnt;
+	endcase
+
+	casex ({qDmaRAdrsMatch, qSwicthCke, iDmaRe, iMUfiRdy, iDmaEn})
+		'bxxxx0:	rDmaRAdrs <= iDmaAdrs;
+		'b00111:	rDmaRAdrs <= rDmaRAdrs + 1'b1;
+		'b10111:	rDmaRAdrs <= iDmaAdrs;
 		default:	rDmaRAdrs <= rDmaRAdrs;
 	endcase
 
 	rMUfiAdrs	<= rDmaRAdrs;
 
-	if (iRst)		rMUfiWEd	<= 1'b0;
-	else if (iDmaEn)rMUfiWEd	<= qMUfiWEd;
-	else			rMUfiWEd	<= 1'b0;
+	if (iRst)			rMUfiWEd	<= 1'b0;
+	else if (iDmaEn)	rMUfiWEd	<= qMUfiWEd;
+	else				rMUfiWEd	<= 1'b0;
 
-	if (iRst)		rMUfiREd	<= 1'b0;
-	else if (iDmaEn)rMUfiREd	<= qMUfiREd;
-	else 			rMUfiREd	<= 1'b0;
+	if (iRst)			rMUfiREd	<= 1'b0;
+	else if (iDmaEn)	rMUfiREd	<= qMUfiREd;
+	else 				rMUfiREd	<= 1'b0;
 
-	if (iRst)		rMUfiVd		<= 1'b0;
-	else if (iDmaEn)rMUfiVd 	<= qMUfiVd;
-	else			rMUfiVd 	<= 1'b0;
+	if (iRst)			rMUfiVd		<= 1'b0;
+	else if (iDmaEn)	rMUfiVd 	<= qMUfiVd;
+	else				rMUfiVd 	<= 1'b0;
+
+
 end
 
 always @*
 begin
 	qDmaRAdrsMatch	<= (rDmaRAdrs == iDmaLen);
-	//	
-	qMUfiWEd		<= iDmaRe & iMUfiRdy;
+	//
+	qMUfiWEd		<= iDmaRe & iMUfiRdy & (~qSwicthCke);
 	qMUfiREd		<= iDmaRe;						// 後段がデータ受付可能であれば Read 要求とする
-	qMUfiVd			<= iDmaRe;
+	qMUfiVd			<= iDmaRe & (~qSwicthCke);
+
+	// DMA 一つだけ使用の場合は気にする必要はないが、二つ以上使用する場合の注意
+	// WEd・REd 発行後に入力される Read データまでのタイミングが大きくずれる場合がある。
+	// 後段の FIFO の深さが 32 とした場合、それ以上の回数の RCmd を発行してしまい、
+	// 結果的に Read データを取得できずに捨ててしまうことになる。
+	// そのため、FIFO の深さ分 RCmd を発行した場合に、他の DMA デバイスにバス使用の権利を譲る形式とした。
+	qSwicthCke		<= rSwitchCnt == {pFIfoBitWidth{1'b1}};
 end
 
 //-----------------------------------------------------------------------------
 // 後段へのデータ転送
-// 読み込み命令転送回数と本Unit のデータ入力の回数を数えて、
-// 一致していなければ本 Unit へのデータとする。
 //-----------------------------------------------------------------------------
-reg [pUfiBusWidth-1:0]	rDmaRd;			assign oDmaRd		= rDmaRd;
-reg 					rDmaREd;		assign oDmaREd		= rDmaREd;
+reg [pUfiBusWidth-1:0]	rDmaRd;			assign oDmaRd	= rDmaRd;
+reg 					rDmaREd;		assign oDmaREd	= rDmaREd;
 
 always @(posedge iClk)
 begin
@@ -101,5 +125,30 @@ begin
 	if (iRst)	rDmaREd	<= 1'b0;
 	else 		rDmaREd	<= iMUfiREd;
 end
+
+
+//-----------------------------------------------------------------------------
+// msb側の1を検出しbit幅を取得する
+//-----------------------------------------------------------------------------
+function[  7:0]	fBitWidth;
+    input [31:0] iVAL;
+    integer			i;
+
+    begin
+    // fBitWidth = 1;
+        for (i = 0; i < 32; i = i+1 )
+        begin
+            if (iVAL[i]) 
+            begin
+                fBitWidth = i+1;
+            end
+        end
+
+        if (fBitWidth != 1)
+        begin
+            fBitWidth = fBitWidth - 1;
+        end
+    end
+endfunction
 
 endmodule

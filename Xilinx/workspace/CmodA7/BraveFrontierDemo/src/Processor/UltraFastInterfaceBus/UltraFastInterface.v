@@ -169,8 +169,6 @@ always @(posedge iUfiClk)
 begin
 	rMUfiRd	<= iSUfiRdRam;
 
-	// if (iUfiRst)		rMUfiEddVtb <= 1'b0;
-	// else 				rMUfiEddVtb <= iSUfiREdRam;;
 	if (iUfiRst)		rMUfiEddVtb <= 1'b0;
 	else if (qIdCkeVtb)	rMUfiEddVtb <= iSUfiREdRam;
 	else 				rMUfiEddVtb <= 1'b0;
