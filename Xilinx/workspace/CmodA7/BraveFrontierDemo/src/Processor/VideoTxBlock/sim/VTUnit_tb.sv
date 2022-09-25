@@ -21,17 +21,20 @@ localparam lpRawFileSave	= "d:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDe
 // ・メモリクロックはビデオクロックの 2.5倍以上の周波数でなければならない
 // ・バスクロックはシステムクロックの 2.5倍以上の周波数でなければならない。
 //----------------------------------------------------------
-localparam 	lpSysClkCycle 	= 12;
-localparam 	lpBusClkCycle 	= 6;
-localparam 	lpVideoClkCycle = 48;
-localparam 	lpMemClkCycle 	= 12;	// ※ 2022-09-20 やはり外部メモリはバトルネックになる
+localparam 	lpSysClkCycle 	= 4;
+localparam 	lpBusClkCycle 	= 2;
+localparam 	lpVideoClkCycle = 40;
+localparam 	lpMemClkCycle 	= 4;
+localparam 	lpAudioClkCycle	= 16;
 //
 wire 		wSysClk;
 wire 		wBusClk;
 wire 		wVideoClk;
 wire 		wMemClk;
+wire 		wAudioClk;
 //
 reg  		rSysRst;
+reg  		rAudioRst;
 reg 		rVtbSystemRst;
 reg 		rVtbVideoRst;
 reg 		rRamSrcRst;
@@ -65,6 +68,12 @@ SimSystemClk #(
 	.oSysClk			(wMemClk)
 );
 
+SimSystemClk #(
+	.pSystemClkCycle	(lpAudioClkCycle)
+) SimAudioClk (
+	.oSysClk			(wAudioClk)
+);
+
 
 //-----------------------------------------------------------------------------
 // リセット信号の生成
@@ -74,12 +83,14 @@ SimSystemClk #(
 task system_reset();
 begin
 	rSysRst 		<= 1'b1;
+	rAudioRst 		<= 1'b1;
 	rVtbSystemRst 	<= 1'b1;
 	rVtbVideoRst 	<= 1'b1;
 	rRamSrcRst		<= 1'b1;
 	rRamDstRst		<= 1'b1;
 	rDmaEn  		<= 1'b0;
-	#(lpMemClkCycle * 2);
+	#(lpAudioClkCycle * 4);
+	rAudioRst 		<= 1'b0;
 	rSysRst 		<= 1'b0;
 	#(lpSysClkCycle * 10);
 	rDmaEn  		<= 1'b1;
@@ -98,6 +109,7 @@ endtask
 localparam lpBusAdrsBit			= 32;
 localparam lpUfiBusWidth		= 12;
 localparam lpMemAdrsWidth		= 19;
+localparam lpUfiIdNumber		=  3;
 //
 wire [lpUfiBusWidth-1:0] 		wMUfiWdVtb;
 wire [lpBusAdrsBit-1:0]			wMUfiAdrsVtb;
@@ -106,11 +118,22 @@ wire 							wMUfiREdVtb;
 wire 							wMUfiVdVtb;		// 転送期間中 Assert
 wire 							wMUfiCmdVtb;	// High Read / Lor Write
 wire 							wMUfiRdyVtb;	// Vtb に対する Ready 信号
-reg 							qMUfiRdy;
+reg 							qMUfiRdyVtb;
+//
+wire [lpBusAdrsBit-1:0]			wMUfiAdrsAtb;
+wire 							wMUfiWEdAtb;
+wire 							wMUfiREdAtb;
+wire 							wMUfiVdAtb;		// 転送期間中 Assert
+wire 							wMUfiRdyAtb;	// Vtb に対する Ready 信号
+reg 							qMUfiRdyAtb;
 //
 wire [lpUfiBusWidth-1:0] 		wMUfiRd;		// Master に対する 読み込みデータ
-wire 							wMUfiREd;		// Master に対する 読み込み有効信号
+wire 							wMUfiEddVtb;	// Master に対する 読み込み有効信号
+wire 							wMUfiEddAtb;	// Master に対する 読み込み有効信号
 wire 							wMUfiRdy;		// Master に対する Ready 信号
+//
+wire [lpUfiIdNumber-1:0]		wMUfiIdI;
+wire [lpUfiIdNumber-1:0]		wMUfiIdO;
 // Slave Memory Block Side
 wire [lpUfiBusWidth-1:0] 		wSUfiWdRam;		// Slave に対する 書き込みデータ
 wire [lpBusAdrsBit-1:0]			wSUfiAdrsRam;	// Slave に対する R/W 共通のアドレス指定バス
@@ -144,13 +167,13 @@ localparam [lpVdisplayWidth:0] lpVSyncEnd	= lpVdisplay + lpVfront + lpVpulse - 1
 localparam [lpVdisplayWidth:0] lpVSyncMax	= lpVdisplay + lpVfront + lpVpulse + lpVback - 1'b1;
 //
 localparam lpColorDepth 		= 16;
-localparam lpDualClkFifoDepth	= 16;	// FIFO サイズを可変して、あらゆるサイズで動作可能か検討する
-localparam lpDmaFifoDepth		= 16;	// 上記同文
+localparam lpDualClkFifoDepth	= 256;	// FIFO サイズを可変して、あらゆるサイズで動作可能か検討する
+localparam lpDmaFifoDepth		= 256;	// 上記同文
 localparam lpFrameSize 			= lpHdisplay * lpVdisplay * 2; // ダブルフレームバッファ構造
 localparam lpDmaAdrs1			= 0;
 localparam lpDmaAdrs2			= lpHdisplay * lpVdisplay;
-localparam lpDmaLen1			= (lpHdisplay * lpVdisplay) - 1;
-localparam lpDmaLen2			= (lpHdisplay * lpVdisplay * 2) - 1;
+localparam lpDmaLen1			= (lpHdisplay * lpVdisplay);
+localparam lpDmaLen2			= (lpHdisplay * lpVdisplay * 2);
 //
 wire [7:0]	wTftColorR;
 wire [7:0]	wTftColorG;
@@ -188,8 +211,8 @@ VideoTxUnit #(
 	.oTftRst			(wTftRst),
 	//
 	.iMUfiRd			(wMUfiRd),
-	.iMUfiREd			(wMUfiREd),
-	.iMUfiRdy			(qMUfiRdy),
+	.iMUfiREd			(wMUfiEddVtb),
+	.iMUfiRdy			(qMUfiRdyVtb),
 	.oMUfiWd			(wMUfiWdVtb),
 	.oMUfiAdrs			(wMUfiAdrsVtb),
 	.oMUfiWEd			(wMUfiWEdVtb),
@@ -222,17 +245,58 @@ VideoTxUnit #(
 
 always @*
 begin
-	qMUfiRdy <= wMUfiRdyVtb & wMUfiRdy;
+	qMUfiRdyVtb <= wMUfiRdyVtb & wMUfiRdy;
+end
+
+
+//-----------------------------------------------------------------------------
+// AudioTxUnit
+//-----------------------------------------------------------------------------
+localparam [lpMemAdrsWidth-1:0] lpDmaAdrs	= 'h40000;
+localparam [lpMemAdrsWidth-1:0] lpDmaLen	= 'h30000;
+
+wire wAudioMClk;
+
+AudioTxUnit #(
+	.pBusAdrsBit		(lpBusAdrsBit),
+	.pUfiBusWidth		(lpUfiBusWidth),
+	.pMemAdrsWidth		(lpMemAdrsWidth),
+	.pSamplingBitWidth	(8),
+	.pTestPortUsed		("no"),
+	.pTestPortNum		(4)
+) AudioTxUnit (
+	.iMUfiRd			(wMUfiRd),
+	.iMUfiREd			(wMUfiEddAtb),
+	.iMUfiRdy			(qMUfiRdyAtb),
+	.oMUfiAdrs			(wMUfiAdrsAtb),
+	.oMUfiWEd			(wMUfiWEdAtb),
+	.oMUfiREd			(wMUfiREdAtb),
+	.oMUfiVd			(wMUfiVdAtb),
+	.oAudioMclk			(wAudioMClk),
+	.iDmaAdrs			(lpDmaAdrs),
+	.iDmaLen			(lpDmaLen),
+	.iDmaEn				(rDmaEn),
+	.iSysRst			(rSysRst),
+	.iSysClk			(wSysClk),
+	.iAudioRst			(rAudioRst),
+	.iAudioClk			(wAudioClk),
+	.oTestPort			()
+);
+
+always @*
+begin
+	qMUfiRdyAtb <= wMUfiRdyAtb & wMUfiRdy;
 end
 
 
 //----------------------------------------------------------
 // RAM Unit
 //----------------------------------------------------------
-localparam lpRamFifoDepth	= 16;
+localparam lpRamSize		= 'h7d000; // 512KB
+localparam lpRamFifoDepth	= 32;
 localparam lpRamDqWidth		= lpUfiBusWidth;
 //
-reg  [lpRamDqWidth-1:0] 	rMem	[0:lpFrameSize-1];	// RW フレームバッファ領域
+reg  [lpRamDqWidth-1:0] 	rMem	[0:lpRamSize-1];
 reg  [lpRamDqWidth-1:0]		qMemDq;
 wire [lpMemAdrsWidth-1:0]	wMemAdrs;
 wire [lpRamDqWidth-1:0]		wMemDq;
@@ -245,6 +309,7 @@ assign wMemDq = qMemDq;
 RAMUnit #(
 	.pUfiBusWidth		(lpUfiBusWidth),
 	.pBusAdrsBit		(lpBusAdrsBit),
+	.pUfiIdNumber		(lpUfiIdNumber),
 	.pRamFifoDepth		(lpRamFifoDepth),
 	.pRamAdrsWidth		(lpMemAdrsWidth),
 	.pRamDqWidth		(lpRamDqWidth)
@@ -264,6 +329,9 @@ RAMUnit #(
 	.oSUfiREd			(iwSUfiREdRam),
 	.oSUfiRdy			(wSUfiRdyRam),
 	//
+	.iSUfiIdI			(wMUfiIdO),
+	.oSUfiIdO			(wMUfiIdI),
+	//
 	.iRamDualFifoSrcRst	(rRamSrcRst),
 	.iRamDualFifoDstRst	(rRamDstRst),
 	//
@@ -277,22 +345,15 @@ integer i;
 
 initial
 begin
-	for (i = 0; i < lpFrameSize; i = i + 1)		// 左右半分で色分けしたデータを初期値とする
+	for (i = 0; i < lpRamSize; i = i + 1)
 	begin
-		if (i[4:0] < (lpHdisplay/2))
-		begin
-			rMem[i] <= 12'h0f0;
-		end
-		else
-		begin
-			rMem[i] <= 12'hfff;
-		end
+		rMem[i] <= i; 	// 適当な初期値
 	end
 end
 
 always @(posedge wMemClk)
 begin
-	casex ({wMemWE, wMemCE})	// フレームバッファにデータを書き込み
+	casex ({wMemWE, wMemCE})	// データを書き込み
 		'b00:		rMem[wMemAdrs] <= wMemDq;
 		default:	rMem[wMemAdrs] <= rMem[wMemAdrs];
 	endcase
@@ -300,7 +361,7 @@ end
 
 always @*
 begin
-	casex ({wMemWE, wMemCE})	// フレームバッファのデータを読み出し
+	casex ({wMemWE, wMemCE})	// データを読み出し
 		'b00:		qMemDq <= {lpRamDqWidth{1'bz}};
 		'b10:		qMemDq <= rMem[wMemAdrs];
 		default:	qMemDq <= {lpRamDqWidth{1'bz}};
@@ -334,14 +395,20 @@ UltraFastInterface #(
 	.iMUfiCmdVtb		(wMUfiCmdVtb),
 	.oMUfiRdyVtb		(wMUfiRdyVtb),
 	//
-	.iMUfiAdrsAtb		({lpUfiBusWidth{1'b0}}),
-	.iMUfiEdAtb			('h0000_0000),
-	.iMUfiVdAtb			(1'b0),
-	.oMUfiRdyAtb		(),
+	.iMUfiAdrsAtb		(wMUfiAdrsAtb),
+	.iMUfiWEdAtb		(wMUfiWEdAtb),
+	.iMUfiREdAtb		(wMUfiREdAtb),
+	.iMUfiVdAtb			(wMUfiVdAtb),
+	.oMUfiRdyAtb		(wMUfiRdyAtb),
 	//
 	.oMUfiRd			(wMUfiRd),
-	.oMUfiREd			(wMUfiREd),
+	.oMUfiEddVtb		(wMUfiEddVtb),
+	.oMUfiEddAtb		(wMUfiEddAtb),
 	.oMUfiRdy			(wMUfiRdy),
+	//
+	.iMUfiIdI			(wMUfiIdI),
+	.oMUfiIdO			(wMUfiIdO),
+	//
 	.oSUfiWdRam			(wSUfiWdRam),
 	.oSUfiAdrsRam		(wSUfiAdrsRam),
 	.oSUfiWEdRam		(wSUfiWEdRam),

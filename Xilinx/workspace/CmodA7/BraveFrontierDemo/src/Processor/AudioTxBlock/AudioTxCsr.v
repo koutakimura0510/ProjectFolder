@@ -16,7 +16,7 @@ module AudioTxCsr #(
 	parameter						pCsrActiveWidth 	= 8,
 	//
     parameter       				pAudioSamplingRate 	= 8,
-	parameter						pMemBitWidth		= 19
+	parameter						pMemAdrsWidth		= 19
 )(
     // Internal Port
 	// Csr Read
@@ -27,29 +27,28 @@ module AudioTxCsr #(
 	input	[pBusAdrsBit-1:0]		iSUsiAdrs,  // R/W Adrs
 	input							iSUsiWCke,	// Write Enable
 	// Csr Output
-	output							oAudioCke,
-	output	[ 6:0]					oAudioTone,
-	output 							oAudioSel,
-	output 	[ 7:0]					oAudioDuty,
-	output 	[ pMemBitWidth-1:0]		oAudioDmaAdrs,
-	output 	[ pMemBitWidth-1:0]		oAudioDmaLen,
-	output 		 					oAudioDmaEn,
+	output 	[pMemAdrsWidth-1:0]		oDmaAdrs,
+	output 	[pMemAdrsWidth-1:0]		oDmaLen,
+	output 		 					oDmaEn,
     // CLK Reset
     input           				iSysRst,
     input           				iSysClk
 );
 
 
+//-----------------------------------------------------------------------------
+// DMA Adrs
+//-----------------------------------------------------------------------------
+localparam [pMemAdrsWidth-1:0] lpDmaAdrs	= 'h40000;
+localparam [pMemAdrsWidth-1:0] lpDmaLen		= 'h30000;
+
+
 //----------------------------------------------------------
 // レジスタマップ
 //----------------------------------------------------------
-reg 					rAudioCke;		assign oAudioCke		= rAudioCke;		// 音源出力
-reg [ 6:0]				rAudioTone;		assign oAudioTone 		= rAudioTone;		// Tone については pwm_piano.Excel 参照
-reg 					rAudioSel;		assign oAudioSel		= rAudioSel;		// 1.Debug mode, 2.Wave Mode
-reg [ 7:0]				rAudioDuty;		assign oAudioDuty		= rAudioDuty;		// Debug 用 Duty比
-reg [pMemBitWidth-1:0]	rAudioDmaAdrs;	assign oAudioDmaAdrs 	= rAudioDmaAdrs;	// DMA 開始アドレス
-reg [pMemBitWidth-1:0]	rAudioDmaLen;	assign oAudioDmaLen 	= rAudioDmaLen;		// DMA 読み込みサイズ
-reg 					rAudioDmaEn;	assign oAudioDmaEn 		= rAudioDmaEn;		// DMA Enable
+reg [pMemAdrsWidth-1:0]	rDmaAdrs;	assign oDmaAdrs 	= rDmaAdrs;		// DMA 開始アドレス
+reg [pMemAdrsWidth-1:0]	rDmaLen;	assign oDmaLen 		= rDmaLen;		// DMA 読み込みサイズ
+reg 					rDmaEn;		assign oDmaEn 		= rDmaEn;		// DMA Enable
 //
 reg 					qCsrWCke00;
 reg 					qCsrWCke04;
@@ -63,23 +62,15 @@ always @(posedge iSysClk)
 begin
 	if (iSysRst)
 	begin
-		rAudioCke		<= 1'b0;		// Active High
-		rAudioTone		<= 7'd69;		// 基本 440Hz のラ音
-		rAudioSel		<= 1'b0;
-		rAudioDuty		<= 8'd127;
-		rAudioDmaAdrs	<= {pMemBitWidth{1'b0}};
-		rAudioDmaLen	<= {pMemBitWidth{1'b0}};
-		rAudioDmaEn		<= 1'b0;
+		rDmaAdrs	<= lpDmaAdrs;
+		rDmaLen		<= lpDmaLen;
+		rDmaEn		<= 1'b0;
 	end
 	else
 	begin
-		rAudioCke		<= qCsrWCke00 ? iSUsiWd[ 0:0] 				: rAudioCke;
-		rAudioTone		<= qCsrWCke04 ? iSUsiWd[ 6:0] 				: rAudioTone;
-		rAudioSel		<= qCsrWCke08 ? iSUsiWd[ 0:0] 				: rAudioSel;
-		rAudioDuty		<= qCsrWCke0c ? iSUsiWd[ 7:0] 				: rAudioDuty;
-		rAudioDmaAdrs	<= qCsrWCke10 ? iSUsiWd[pMemBitWidth-1:0] 	: rAudioDmaAdrs;
-		rAudioDmaLen	<= qCsrWCke14 ? iSUsiWd[pMemBitWidth-1:0] 	: rAudioDmaLen;
-		rAudioDmaEn		<= qCsrWCke18 ? iSUsiWd[ 0:0] 				: rAudioDmaEn;
+		rDmaAdrs	<= qCsrWCke10 ? iSUsiWd[pMemAdrsWidth-1:0] 	: rDmaAdrs;
+		rDmaLen		<= qCsrWCke14 ? iSUsiWd[pMemAdrsWidth-1:0] 	: rDmaLen;
+		rDmaEn		<= qCsrWCke18 ? iSUsiWd[ 0:0] 				: rDmaEn;
 	end
 end
 
@@ -112,13 +103,13 @@ begin
 	begin
 		// {{(32 - パラメータ名	){1'b0}}, レジスタ名} -> パラメータ可変に対応し 0 で埋められるように設定
 		case (iSUsiAdrs[pCsrActiveWidth - 1:0])
-			'h00:		rSUsiRd	<= {{(32 - 1){1'b0}},				rAudioCke		};
-			'h04:		rSUsiRd	<= {{(32 - 7){1'b0}},				rAudioTone		};
-			'h08:		rSUsiRd	<= {{(32 - 1){1'b0}},				rAudioSel		};
-			'h0c:		rSUsiRd	<= {{(32 - 8){1'b0}},				rAudioDuty		};
-			'h10:		rSUsiRd	<= {{(32 - pMemBitWidth){1'b0}},	rAudioDmaAdrs	};
-			'h14:		rSUsiRd	<= {{(32 - pMemBitWidth){1'b0}},	rAudioDmaLen	};
-			'h18:		rSUsiRd	<= {{(32 - 1){1'b0}},				rAudioDmaEn		};
+			'h00:		rSUsiRd	<= {{(32 - 0){1'b0}}		};
+			'h04:		rSUsiRd	<= {{(32 - 0){1'b0}}		};
+			'h08:		rSUsiRd	<= {{(32 - 0){1'b0}}		};
+			'h0c:		rSUsiRd	<= {{(32 - 0){1'b0}}		};
+			'h10:		rSUsiRd	<= {{(32 - pMemAdrsWidth){1'b0}},	rDmaAdrs	};
+			'h14:		rSUsiRd	<= {{(32 - pMemAdrsWidth){1'b0}},	rDmaLen		};
+			'h18:		rSUsiRd	<= {{(32 - 1){1'b0}},				rDmaEn		};
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase
 	end

@@ -54,7 +54,6 @@ module VideoDmaUnit #(
 wire 	[pUfiBusWidth-1:0]  wDmaFifoRd;
 wire 						wRVd;
 wire 						wEmp;
-reg 						rDmaFifoRe;
 reg 						qDmaFifoRe;
 
 fifoControllerLutRam #(
@@ -90,8 +89,6 @@ fifoControllerLutRam #(
 //-----------------------------------------------------------------------------
 // R/W ステートマシン
 //-----------------------------------------------------------------------------
-reg 	[pUfiBusWidth-1:0]	rDmaRd;			assign oDmaRd		= rDmaRd;
-reg 						rDmaREd;		assign oDmaREd		= rDmaREd;
 reg		[pUfiBusWidth-1:0]	rMUfiWd;		assign oMUfiWd		= rMUfiWd;
 reg		[pMemAdrsWidth-1:0]	rMUfiAdrs;		assign oMUfiAdrs	= rMUfiAdrs;
 reg							rMUfiWEd;		assign oMUfiWEd		= rMUfiWEd;
@@ -106,41 +103,39 @@ reg							qMUfiCmd;
 //
 reg		[pMemAdrsWidth-1:0]	rDmaWAdrs;
 reg		[pMemAdrsWidth-1:0]	rDmaRAdrs;
-reg 						rDmaWAdrsSel;
-reg 						rDmaRAdrsSel;
-reg 						qDmaWAdrsOverCheck;
+reg 						rDmaAdrsSel;
 reg 						qDmaWAdrsMatch;
 reg 						qDmaRAdrsMatch;
+//
+reg [10:0] 	rTargetSwitchCnt;
+reg 		qTargetSwitch;
 
 always @(posedge iClk)
 begin
 	// Frame Buffer 領域の切り替え
-	casex ({qDmaWAdrsOverCheck, qDmaWAdrsMatch, wRVd, iDmaEn})
-		'bxxx0:		rDmaWAdrsSel <= 1'b0;
-		'b0111:		rDmaWAdrsSel <= ~rDmaWAdrsSel;
-		default: 	rDmaWAdrsSel <=  rDmaWAdrsSel;
+	casex ({qDmaRAdrsMatch, qDmaWAdrsMatch, iMUfiRdy, iDmaEn})
+		'bxxx0:		rDmaAdrsSel <= 1'b0;
+		'b1111:		rDmaAdrsSel <= ~rDmaAdrsSel;
+		default: 	rDmaAdrsSel <=  rDmaAdrsSel;
 	endcase
 
-	casex ({qDmaRAdrsMatch, iDmaRe, iMUfiRdy, iDmaEn})
-		'bxxx0:		rDmaRAdrsSel <= 1'b0;
-		'b1111:		rDmaRAdrsSel <= ~rDmaRAdrsSel;
-		default: 	rDmaRAdrsSel <=  rDmaRAdrsSel;
-	endcase
-
-	// アドレスの更新
-	casex ({rDmaWAdrsSel, qDmaWAdrsOverCheck, qDmaWAdrsMatch, wRVd, iDmaEn})
-		'bxxxx0:	rDmaWAdrs <= iFbufAdrs1;
-		'bxx011:	rDmaWAdrs <= rDmaWAdrs + 1'b1;
-		'b00111:	rDmaWAdrs <= iFbufAdrs2;
-		'b10111:	rDmaWAdrs <= iFbufAdrs1;
+	// WAdrs の更新
+	casex ({rDmaAdrsSel, qDmaRAdrsMatch, qDmaWAdrsMatch, wRVd, iMUfiRdy, qTargetSwitch, iDmaEn})
+		'bxxxxxx0:	rDmaWAdrs <= iFbufAdrs1;
+		'bxx01111:	rDmaWAdrs <= rDmaWAdrs + 1'b1;
+		'b011x1x1:	rDmaWAdrs <= iFbufAdrs2;
+		'b111x1x1:	rDmaWAdrs <= iFbufAdrs1;
 		default:	rDmaWAdrs <= rDmaWAdrs;
 	endcase
 
-	casex ({rDmaRAdrsSel, qDmaRAdrsMatch, iDmaRe, wRVd, iMUfiRdy, iDmaEn})
-		'bxxxxx0:	rDmaRAdrs <= iFbufAdrs2;
-		'bx01011:	rDmaRAdrs <= rDmaRAdrs + 1'b1;
-		'b011011:	rDmaRAdrs <= iFbufAdrs1;
-		'b111011:	rDmaRAdrs <= iFbufAdrs2;
+	// RAdrs の更新
+	casex ({rDmaAdrsSel, qDmaRAdrsMatch, qDmaWAdrsMatch, iDmaRe, iMUfiRdy, qTargetSwitch, iDmaEn})
+		'bxxxxxx0:	rDmaRAdrs <= iFbufAdrs2;
+		'bx0x1111:	rDmaRAdrs <= rDmaRAdrs + 1'b1;
+		'b010x1x1:	rDmaRAdrs <= iFbufAdrs2;
+		'b011x1x1:	rDmaRAdrs <= iFbufAdrs1;
+		'b110x1x1:	rDmaRAdrs <= iFbufAdrs1;
+		'b111x1x1:	rDmaRAdrs <= iFbufAdrs2;
 		default:	rDmaRAdrs <= rDmaRAdrs;
 	endcase
 
@@ -165,56 +160,44 @@ begin
 	if (iDmaEn)		rMUfiCmd	<= qMUfiCmd;
 	else 			rMUfiCmd	<= 1'b0;
 
-	if (iRst)		rDmaFifoRe	<= 1'b0;
-	else if (iDmaEn)rDmaFifoRe	<= qDmaFifoRe;
-	else 			rDmaFifoRe	<= 1'b0;
-
-	// 後段ブロックへの処理
-	rDmaRd	<= iMUfiRd;
-
-	if (iRst)		rDmaREd	<= 1'b0;
-	else			rDmaREd	<= iMUfiREd;
+	if 	(iRst)					rTargetSwitchCnt <= 0;
+	else if (!qTargetSwitch)	rTargetSwitchCnt <= 0;
+	else if (iMUfiRdy)			rTargetSwitchCnt <= rTargetSwitchCnt + 1'b1;
+	else 						rTargetSwitchCnt <= rTargetSwitchCnt;
 end
 
 always @*
 begin
-	// TODO 現在は WAdrs が RAdrs を追従する形で動作しているが、
-	// 1フレーム単位で 拡大縮小など処理をする場合もあるので、
-	// 必要になったら Dma R/Wアドレスがフレームの端に達した時に、両アドレスを切り替えるようにする。
-	// そのかわり この module 内の VideoDmaFifo が 0 レイテンシである必要があるし、
-	// ExRAM の速度も必要になってくる
-	// 
-	// 下記のアドレス加算処理は 前段の FIFO のデータ出力が数レイテンシ遅れるため、
-	// 1クロック違いでの切り替えなどにすると、タイミングのずれが生じるため先読みでアドレスを確認している
-	// フレームサイズが 2 の乗数ではないので、RAdrs が 各フレームの初めのアドレスをの時の処理も含む
-	// 
-	// 2022-09-24 上記のレイテンシ0 FIFO に対応した
-	qDmaWAdrsOverCheck 	<=  ((rDmaWAdrs+1'b1) == rDmaRAdrs) |
-							(iFbufAdrs1 == rDmaRAdrs) |
-							(iFbufAdrs2 == rDmaRAdrs); 
-
-	qDmaWAdrsMatch 		<= (rDmaWAdrs == iFbufLen1) | (rDmaWAdrs == iFbufLen2);
-	qDmaRAdrsMatch 		<= (rDmaRAdrs == iFbufLen1) | (rDmaRAdrs == iFbufLen2);
-	//	
-	qMUfiWEd			<= (iDmaRe | wRVd) & iMUfiRdy;
-	qMUfiREd			<= iDmaRe;						// 後段がデータ受付可能であれば Read 要求とする
-	qMUfiCmd			<= (iDmaRe & (~wRVd));			// 後段から Read要求がなければ、WCMD とする
-	qMUfiVd				<= iDmaRe | (~wEmp);			// 空でなければ Ufi 転送要求とする
-	qDmaFifoRe			<= (~iDmaRe) & iMUfiRdy & (~qDmaWAdrsOverCheck);
-
-	// DMA Read のみのデバッグの残り
-	// qMUfiWEd		<= iDmaRe & iMUfiRdy;
-	// qMUfiVd		<= iDmaRe;						// 空でなければ Ufi 転送要求とする
-	// qDmaFifoRe	<= 1'b0; // RDMA デバッグのため、書き込み側のデータは必要ない
+	// 2022-09-24 10:25 Git変更内容確認 上記のレイテンシ0 FIFO に対応した
+	// Wadrs はフレーム終端で待機しており、Radrs がフレーム終端に達した場合に、adrs の切り替えを行う
+	qDmaWAdrsMatch 		<= rDmaAdrsSel ? (rDmaWAdrs == iFbufLen2) : (rDmaWAdrs == iFbufLen1);
+	qDmaRAdrsMatch 		<= rDmaAdrsSel ? (rDmaRAdrs == iFbufLen1) : (rDmaRAdrs == iFbufLen2);
+	// Write Buffer へアクセス
+	// Bus が転送可能 かつ RW がフレーム終端でなければ、Write 可能とする
+	qMUfiWEd			<= qTargetSwitch & (iDmaRe | qDmaFifoRe) & iMUfiRdy & (~(qDmaWAdrsMatch & qDmaRAdrsMatch));
+	qMUfiCmd			<= iDmaRe & (~qDmaFifoRe);		// 後段から Read要求がなければ、WCMD とする
+	qMUfiVd				<= qTargetSwitch & (iDmaRe | (~wEmp));			// 空でなければ Ufi 転送要求とする
+	qDmaFifoRe			<= qTargetSwitch & (~iDmaRe) & iMUfiRdy & (~qDmaWAdrsMatch);
+	// Read Buffer へアクセス
+	qMUfiREd			<= iDmaRe;							// 後段がデータ受付可能であれば Read 要求とする
+	//
+	// 2022-09-24 ある程度データ転送を行ったら、他の DMA デバイスにバス使用の権利を譲る
+	qTargetSwitch 		<= ~rTargetSwitchCnt[10];
 end
 
-/*
- DMA サイクル
- まず前提として、FrameBuffer への書き込みは、Read よりも早くなければならない。
- 1.DualFrameBuufer 構造として、WDMA,RDMA は別々のアドレスを指定する。
- 2.起動時は、後段の DualClkFifo が Full になるまで RAM の何も書かれていない領域から 0 を Read する。
- 3.Full になると iDmaRe が Deassert されるので、WDMA に切り替え前段の FIFO からの入力データを UFI 経由で RAM に書き込みを行う。
- 4.
- */
+
+//-----------------------------------------------------------------------------
+// 後段へのデータ転送
+//-----------------------------------------------------------------------------
+reg [pUfiBusWidth-1:0]	rDmaRd;			assign oDmaRd		= rDmaRd;
+reg 					rDmaREd;		assign oDmaREd		= rDmaREd;
+
+always @(posedge iClk)
+begin
+	rDmaRd	<= iMUfiRd;
+
+	if (iRst)	rDmaREd	<= 1'b0;
+	else 		rDmaREd	<= iMUfiREd;
+end
 
 endmodule

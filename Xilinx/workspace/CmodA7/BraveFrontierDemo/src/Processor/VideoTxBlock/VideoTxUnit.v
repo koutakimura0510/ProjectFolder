@@ -14,7 +14,7 @@ module VideoTxUnit #(
     parameter       				pVdisplayWidth		= 11,
 	// Color Depth ARGB:4444
 	parameter						pColorDepth			= 16,
-	// Dual Clk FIFO Depth
+	// FIFO Depth
 	parameter						pDualClkFifoDepth 	= 1024,
 	parameter						pDmaFifoDepth		= 1024
 )(
@@ -190,7 +190,7 @@ wire 						wVideoDualFifoFull;
 VideoDualClkFIFO #(
 	.pBuffDepth		(pDualClkFifoDepth),
 	.pBitWidth		(lpDualFifoWidth)
-) VIDEO_DUAL_CLK_FIFO (
+) VideoDualClkFIFO (
 	.iWd			(wDmaRd),
 	.iWe			(wDmaREd),
 	.ofull			(wVideoDualFifoFull),

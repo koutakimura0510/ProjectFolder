@@ -3,13 +3,17 @@
 // Author koutakimura
 // -
 // メモリ専用バスシステム I/F モジュール
-// バスのデータ幅は、使用する外部RAMのデータ幅と合わせている。 2022-09-14 現在
+// 
+// 2022-09-23
+// 複数 DMA 転送ブロック接続時の RAM からデータを吸い上げた時の、
+// Edd による有効データ出力タイミングのずれを UFIB で吸収できるように更新。
 // 
 //----------------------------------------------------------
 module UltraFastInterface #(
 	// variable parameter
-	parameter 							pUfiBusWidth	=  8,	// Bus幅
-	parameter							pBusAdrsBit		= 32	// アドレスBit幅
+	parameter 							pUfiBusWidth	=  8,	// バスのデータ幅は、使用する外部RAMのデータ幅と合わせている。 2022-09-14 現在
+	parameter							pBusAdrsBit		= 32,	// アドレスBit幅
+	parameter							pUfiIdNumber	=  3
 )(
     // Internal Port
 	// Master -> Slave
@@ -26,20 +30,25 @@ module UltraFastInterface #(
 	//
 	input [pUfiBusWidth-1:0] 			iMUfiWdVtb,
 	input [pBusAdrsBit-1:0] 			iMUfiAdrsVtb,
-	input 								iMUfiWEdVtb,
-	input 								iMUfiREdVtb,
+	input 								iMUfiWEdVtb,	// 有効データ入力時 Assert
+	input 								iMUfiREdVtb,	// データ読み込み時 Assert 
 	input 								iMUfiVdVtb,		// 転送期間中 Assert
 	input 								iMUfiCmdVtb,	// High Read / Lor Write
 	output 								oMUfiRdyVtb,	// Vtb に対する Ready 信号
 	//
 	input [pBusAdrsBit-1:0] 			iMUfiAdrsAtb,
-	input 								iMUfiEdAtb,
+	input 								iMUfiWEdAtb,	// 有効データ入力時 Assert
+	input 								iMUfiREdAtb,	// データ読み込み時 Assert
 	input 								iMUfiVdAtb,		// 転送期間中 Assert
 	output 								oMUfiRdyAtb,	// Atb に対する Ready 信号
 	// 
 	output [pUfiBusWidth-1:0] 			oMUfiRd,		// Master に対する 読み込みデータ
-	output 								oMUfiREd,		// Master に対する 読み込み有効信号
+	output 								oMUfiEddVtb,	// Master に対する 読み込み有効信号
+	output 								oMUfiEddAtb,	// Master に対する 読み込み有効信号
 	output 								oMUfiRdy,		// Master に対する Ready 信号
+	//
+	input 	[pUfiIdNumber-1:0]			iMUfiIdI,
+	output	[pUfiIdNumber-1:0]			oMUfiIdO,
 	// Slave Memory Block Side
 	output [pUfiBusWidth-1:0] 			oSUfiWdRam,		// Slave に対する 書き込みデータ
 	output [pBusAdrsBit-1:0]			oSUfiAdrsRam,	// Slave に対する R/W 共通のアドレス指定バス
@@ -56,28 +65,21 @@ module UltraFastInterface #(
 
 
 //----------------------------------------------------------
+// Valid-then-Ready プロトコル を採用
 // ATB は VTB の Rdy 信号を、 VTB は ATB の Rdy 信号を確認し、
 // Valid 受信中でも、どちらかの動作が終了するまで待機するようにした。
 // 
-// また RCmd 発行後 から 実際のデータ読み込みまでタイムラグがあり、
-// いくつかのレイテンシが発生する。RAM 側で アドレスを判定して
-// タイミングがずれていても ATB や VTB にデータを振り分ける制御線を作ってもよかったが、
-// アクセスするブロックが増えた場合にソース管理が面倒になるので止めた。
+// Block への Edd 判定を行うために UFIB 内で ID を発行し、
+// RAM に対する 読込命令と同時に、Ram FIFO に溜めてある ID も読み出す。
 // 
-// 解決策として、ATB,VTB ブロック内に、RCmd 発行回数とデータの読み込み回数の
-// カウンタを用意しておき、比較することで指定回数受信したことを判定するようにする。
-// こうするとブロック内で変更を完結できるようになる。
-// 
-// メモリアクセス優先順位
-// 1.MCS
-// 2.SPI
-// 3.ATB
-// 4.VTB
 //----------------------------------------------------------
-reg [pUfiBusWidth-1:0] 	rMUfiRd;			assign oMUfiRd  	= rMUfiRd;
-reg 					rMUfiREd;			assign oMUfiREd 	= rMUfiREd;
-reg 					rMUfiRdy;			assign oMUfiRdy 	= rMUfiRdy;
-//
+localparam [pUfiIdNumber-1:0]
+	lpIdIdol = 0,
+	lpIdMcs  = 1,
+	lpIdSpi  = 2,
+	lpIdVtb  = 3,
+	lpIdAtb  = 4;
+
 reg [pUfiBusWidth-1:0]	rMUfiWdRam;			assign oSUfiWdRam 	= rMUfiWdRam;
 reg [pBusAdrsBit-1:0]	rMUfiAdrsRam;		assign oSUfiAdrsRam = rMUfiAdrsRam;
 reg 					rMUfiWEdRam;		assign oSUfiWEdRam	= rMUfiWEdRam;
@@ -85,9 +87,12 @@ reg 					rMUfiREdRam;		assign oSUfiREdRam	= rMUfiREdRam;
 reg 					rMUfiCmdRam;		assign oSUfiCmd 	= rMUfiCmdRam;
 reg 					rMUfiRdyAtb;		assign oMUfiRdyAtb  = rMUfiRdyAtb;
 reg 					rMUfiRdyVtb;		assign oMUfiRdyVtb  = rMUfiRdyVtb;
+reg 					rMUfiRdy;			assign oMUfiRdy 	= rMUfiRdy;
+reg [pUfiIdNumber-1:0]	rMUfiIdO;			assign oMUfiIdO		= rMUfiIdO;
 
 always @(posedge iUfiClk)
 begin
+	// UFIB 制御ステートマシン、ハブとして機能
 	casex ({iMUfiVdMcs, iMUfiVdSpi, iMUfiVdVtb, iMUfiVdAtb, rMUfiRdyVtb, rMUfiRdyAtb})
 		'b1xxxxx:	// MCS は優先して制御
 		begin
@@ -98,6 +103,7 @@ begin
 			rMUfiCmdRam 	<= 1'b0;		// mcs は 書き込み固定
 			rMUfiRdyAtb 	<= 1'b0;
 			rMUfiRdyVtb 	<= 1'b0;
+			rMUfiIdO		<= lpIdMcs;
 		end
 		'b01xxxx:	// SPI は優先して制御
 		begin
@@ -108,18 +114,9 @@ begin
 			rMUfiCmdRam 	<= iMUfiCmdSpi;	// debug 用に R/W 両方
 			rMUfiRdyAtb 	<= 1'b0;
 			rMUfiRdyVtb 	<= 1'b0;
+			rMUfiIdO		<= lpIdSpi;
 		end
-		'b00x10x:	// Vtb 稼働中 OFF
-		begin
-			rMUfiWdRam	 	<= 'h00000000;
-			rMUfiAdrsRam 	<= iMUfiAdrsAtb;
-			rMUfiWEdRam 	<= iMUfiEdAtb;
-			rMUfiREdRam 	<= 1'b0;
-			rMUfiCmdRam 	<= 1'b1;		// Atb は 読み込み固定
-			rMUfiRdyAtb		<= 1'b1;		// Atb 動作中
-			rMUfiRdyVtb		<= 1'b0;
-		end
-		'b001xx0:	// Atb 稼働中 OFF
+		'b001xx0:	// Vtb
 		begin
 			rMUfiWdRam	 	<= iMUfiWdVtb;
 			rMUfiAdrsRam 	<= iMUfiAdrsVtb;
@@ -128,6 +125,18 @@ begin
 			rMUfiCmdRam 	<= iMUfiCmdVtb;	// フレームバッファの R/W があるため 両対応
 			rMUfiRdyAtb		<= 1'b0;
 			rMUfiRdyVtb		<= 1'b1;		// Vtb 動作中
+			rMUfiIdO		<= lpIdVtb;
+		end
+		'b00x10x:	// Atb
+		begin
+			rMUfiWdRam	 	<= 'h00000000;
+			rMUfiAdrsRam 	<= iMUfiAdrsAtb;
+			rMUfiWEdRam 	<= iMUfiWEdAtb;
+			rMUfiREdRam 	<= iMUfiREdAtb;
+			rMUfiCmdRam 	<= 1'b1;		// Atb は Ram に書き込むことはないため読み込み固定
+			rMUfiRdyAtb		<= 1'b1;		// Atb 動作中
+			rMUfiRdyVtb		<= 1'b0;
+			rMUfiIdO		<= lpIdAtb;
 		end
 		default:
 		begin
@@ -136,17 +145,45 @@ begin
 			rMUfiWEdRam 	<= 1'b0;
 			rMUfiREdRam 	<= 1'b0;
 			rMUfiCmdRam 	<= 1'b0;
-			rMUfiRdyAtb 	<= 1'b0;
+			rMUfiRdyAtb 	<= 1'b0;		// 全てのRdy Dessert で 受付可能
 			rMUfiRdyVtb 	<= 1'b0;
+			rMUfiIdO		<= lpIdIdol;
 		end
 	endcase
-	//
-	rMUfiRd		<= iSUfiRdRam;
-	rMUfiRdy 	<= iSUfiRdyRam;
 
-	if (iUfiRst) 			rMUfiREd <= 1'b0;
-	else if (iSUfiREdRam)	rMUfiREd <= 1'b1;
-	else 					rMUfiREd <= 1'b0;
+	if (iUfiRst)	rMUfiRdy <= 1'b0;
+	else 			rMUfiRdy <= iSUfiRdyRam;
+end
+
+
+//-----------------------------------------------------------------------------
+// ID による、取得データの振り分け
+//-----------------------------------------------------------------------------
+reg [pUfiBusWidth-1:0] 	rMUfiRd;			assign oMUfiRd  	= rMUfiRd;
+reg 					rMUfiEddVtb;		assign oMUfiEddVtb 	= rMUfiEddVtb;
+reg 					rMUfiEddAtb;		assign oMUfiEddAtb 	= rMUfiEddAtb;
+reg 					qIdCkeVtb;
+reg 					qIdCkeAtb;
+
+always @(posedge iUfiClk)
+begin
+	rMUfiRd	<= iSUfiRdRam;
+
+	// if (iUfiRst)		rMUfiEddVtb <= 1'b0;
+	// else 				rMUfiEddVtb <= iSUfiREdRam;;
+	if (iUfiRst)		rMUfiEddVtb <= 1'b0;
+	else if (qIdCkeVtb)	rMUfiEddVtb <= iSUfiREdRam;
+	else 				rMUfiEddVtb <= 1'b0;
+
+	if (iUfiRst)		rMUfiEddAtb <= 1'b0;
+	else if (qIdCkeAtb)	rMUfiEddAtb <= iSUfiREdRam;
+	else 				rMUfiEddAtb <= 1'b0;
+end
+
+always @*
+begin
+	qIdCkeVtb <= (iMUfiIdI == lpIdVtb);
+	qIdCkeAtb <= (iMUfiIdI == lpIdAtb);
 end
 
 endmodule

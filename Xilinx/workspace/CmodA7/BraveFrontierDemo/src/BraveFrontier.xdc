@@ -47,10 +47,6 @@ create_generated_clock -name VideoClk [get_pins PreProcessor/CGB/MMCME2_BASE_CLK
 create_generated_clock -name SysClk   [get_pins PreProcessor/CGB/MMCME2_BASE_CLK_GEN/CLKOUT3];
 create_generated_clock -name UfibClk  [get_pins PreProcessor/CGB/MMCME2_BASE_CLK_GEN/CLKOUT4];
 # create_generated_clock -name AudioClk [get_pins PREPROCESSER/CGB/PLLE2_ADV_CLK_GEN/CLKOUT0]
-set_false_path -from [get_pins Processor/AudioTxBlock/AudioTxCsr/rAudioCke_reg/C]
-set_false_path -from [get_pins Processor/AudioTxBlock/AudioTxCsr/rAudioTone_reg[*]/C]
-set_false_path -from [get_pins Processor/AudioTxBlock/AudioTxCsr/rAudioSel_reg/C]
-set_false_path -from [get_pins Processor/AudioTxBlock/AudioTxCsr/rAudioDuty_reg[*]/C]
 
 set_false_path -to [get_pins Processor/AudioTxBlock/AudioTxUnit/AudioToneIndex/rIntIndex_reg[*]/D]
 set_false_path -to [get_pins Processor/AudioTxBlock/AudioTxUnit/AudioToneIndex/rDecIndex_reg[*]/D]

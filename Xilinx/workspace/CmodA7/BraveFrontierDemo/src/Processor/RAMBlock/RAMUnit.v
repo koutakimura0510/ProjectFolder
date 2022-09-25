@@ -9,6 +9,7 @@ module RAMUnit #(
 	// variable parameter
 	parameter					pUfiBusWidth	= 16,
 	parameter					pBusAdrsBit		= 32,
+	parameter					pUfiIdNumber	= 3,
 	parameter					pRamFifoDepth	= 16,
 	parameter					pRamDqWidth		= 8,
 	parameter					pRamAdrsWidth	= 19
@@ -29,6 +30,9 @@ module RAMUnit #(
 	// Ufi Bus Slave Read
 	output	[pUfiBusWidth-1:0]	oSUfiRd,		// Read Data
 	output						oSUfiREd,		// Read Data Enable
+	// Ufi ID Lssue
+	input 	[pUfiIdNumber-1:0]	iSUfiIdI,
+	output 	[pUfiIdNumber-1:0]	oSUfiIdO,
 	//
 	input 						iRamDualFifoSrcRst,
 	input 						iRamDualFifoDstRst,
@@ -47,7 +51,7 @@ wire 	[pRamAdrsWidth-1:0]	wMemAdrs;
 wire 						wMemCmd;
 wire 						wRVd;
 wire 						wEmp;
-reg 						qEmp;
+reg 						qREd;
 wire 						wFull;			assign oSUfiRdy = ~wFull;
 //
 wire 	[pUfiBusWidth-1:0]	wMemRdIf;
@@ -55,6 +59,7 @@ wire 						wMemREdIf;
 wire 						wMemFull;
 
 RAMDualClkFifo #(
+	.pUfiIdNumber		(pUfiIdNumber),
 	.pDualClkFifoDepth 	(pRamFifoDepth),
 	.pRamDqWidth		(pRamDqWidth),
 	.pRamAdrsWidth		(pRamAdrsWidth)
@@ -67,7 +72,7 @@ RAMDualClkFifo #(
 	.oWd				(wMemWd),
 	.oAdrs				(wMemAdrs),
 	.oCmd				(wMemCmd),
-	.iREd				(qEmp),
+	.iREd				(qREd),
 	.oEmp 				(wEmp),
 	.oRVd				(wRVd),
 	.iMemWd				(wMemRdIf),
@@ -76,6 +81,8 @@ RAMDualClkFifo #(
 	.oMemREd			(oSUfiREd),
 	.iMemRe				(iSUfiREd),
 	.oMemFull 			(wMemFull),
+	.iSUfiIdI			(iSUfiIdI),
+	.oSUfiIdO			(oSUfiIdO),
 	.iSrcRst			(iRamDualFifoSrcRst),
 	.iDstRst			(iRamDualFifoDstRst),
 	.iSysClk			(iSysClk),
@@ -84,7 +91,9 @@ RAMDualClkFifo #(
 
 always @*
 begin
-	qEmp <= (~wEmp) & (~wMemFull);
+	// Read アクセス時は、読み出し元の Block の速度によっては
+	// FIFO にデータが蓄積されていくため、両方の状態で Ram にデータを転送するか判断する
+	qREd <= (~wEmp) & (~wMemFull);
 end
 
 

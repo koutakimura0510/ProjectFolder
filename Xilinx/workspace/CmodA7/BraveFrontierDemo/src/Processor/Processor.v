@@ -129,10 +129,13 @@ localparam
 //----------------------------------------------------------
 // バス幅を定義
 //----------------------------------------------------------
-// variable parameter
-localparam	lpUsiBusWidth  		= 32;		// Usi バスデータ幅
-localparam	lpBusAdrsBit		= 32;		// バスアドレス幅, Usi/Ufi 共通
-localparam  lpUfiBusWidth		= 8;
+localparam 	lpRamAdrsWidth		= 19;
+localparam 	lpRamDqWidth		= 8;
+localparam	lpUsiBusWidth  		= 32;			// Usi バスデータ幅
+localparam	lpBusAdrsBit		= 32;			// バスアドレス幅, Usi/Ufi 共通
+localparam  lpUfiBusWidth		= lpRamDqWidth;	// メモリのバス幅と同義
+parameter	lpUfiIdNumber		= 3;
+
 
 
 //----------------------------------------------------------
@@ -350,6 +353,7 @@ VideoTxBlock #(
 	.pUfiBusWidth		(lpUfiBusWidth),
 	.pCsrAdrsWidth		(lpCsrAdrsWidth),
 	.pCsrActiveWidth	(lpVTBCsrActiveWidth),
+	.pMemAdrsWidth		(lpRamAdrsWidth),
 	.pHdisplay			(pHdisplay),
 	.pHfront			(pHfront),
 	.pHback				(pHback),
@@ -421,7 +425,8 @@ reg  [lpUfiBusWidth-1:0]qMUfiRdAtb;
 reg  					qMUfiREdAtb;
 //
 wire [lpBusAdrsBit-1:0]	wMUfiAdrsAtb;
-wire 					wMUfiEdAtb;
+wire 					wMUfiWEdAtb;
+wire 					wMUfiREdAtb;
 wire 					wMUfiVdAtb;
 //
 reg 					qMUfiRdyAtb;
@@ -430,9 +435,13 @@ AudioTxBlock #(
 	.pBlockAdrsMap		(lpBlockAdrsMap),
 	.pAdrsMap	 		(lpATBAdrsMap),
 	.pBusAdrsBit		(lpBusAdrsBit),
+	.pUfiBusWidth		(lpUfiBusWidth),
 	.pCsrAdrsWidth		(lpCsrAdrsWidth),
 	.pCsrActiveWidth	(lpATBCsrActiveWidth),
+	.pMemAdrsWidth		(lpRamAdrsWidth),
+	//
 	.pSamplingBitWidth	(8),
+	//
 	.pTestPortUsed		(lpTestPortAudio),
 	.pTestPortNum		(lpTestPortNum)
 ) AudioTxBlock (
@@ -449,7 +458,8 @@ AudioTxBlock #(
 	.iMUfiREd			(qMUfiREdAtb),
 	//
 	.oMUfiAdrs			(wMUfiAdrsAtb),
-	.oMUfiEd			(wMUfiEdAtb),
+	.oMUfiWEd			(wMUfiWEdAtb),
+	.oMUfiREd			(wMUfiREdAtb),
 	.oMUfiVd			(wMUfiVdAtb),
 	//
 	.iMUfiRdy			(qMUfiRdyAtb),
@@ -467,8 +477,6 @@ AudioTxBlock #(
 // RAMBlock
 //----------------------------------------------------------
 localparam lpRamFifoDepth 	= 1024;
-localparam lpRamAdrsWidth	= 19;
-localparam lpRamDqWidth		= 8;
 
 // USI Bus
 wire [31:0] 			wSUsiRdRam;
@@ -485,6 +493,8 @@ reg  					qSUfiCmd;
 wire 					wSUfiRdy;
 wire [lpUfiBusWidth-1:0]wSUfiRdRam;
 wire 					wSUfiREdRamI;
+wire [lpUfiIdNumber-1:0]wMUfiIdI;
+wire [lpUfiIdNumber-1:0]wMUfiIdO;
 
 RAMBlock #(
 	.pBlockAdrsMap		(lpBlockAdrsMap),
@@ -493,6 +503,7 @@ RAMBlock #(
 	.pCsrAdrsWidth		(lpCsrAdrsWidth),
 	.pCsrActiveWidth	(lpRAMCsrActiveWidth),
 	.pUfiBusWidth		(lpUfiBusWidth),
+	.pUfiIdNumber		(lpUfiIdNumber),
 	.pRamFifoDepth		(lpRamFifoDepth),
 	.pRamAdrsWidth		(lpRamAdrsWidth),
 	.pRamDqWidth		(lpRamDqWidth)
@@ -521,6 +532,9 @@ RAMBlock #(
 	// Slave -> Master
 	.oSUfiRd			(wSUfiRdRam),
 	.oSUfiREd			(wSUfiREdRamI),
+	// Ufi ID Lssue
+	.iSUfiIdI			(wMUfiIdI),
+	.oSUfiIdO			(wMUfiIdO),
 	//
 	.iSysRst			(iSysRst),
 	.iSysClk			(iSysClk),
@@ -621,8 +635,9 @@ end
 // UFI/F BUS
 //----------------------------------------------------------
 wire [lpUfiBusWidth-1:0]wMUfiRd;
-wire 					wMUfiREd;
-//
+wire 					wMUfiEddVtb;
+wire 					wMUfiEddAtb;
+wire					wMUfiRdy;
 //
 wire [lpUfiBusWidth-1:0]wSUfiWdRam;
 wire [lpBusAdrsBit-1:0]	wSUfiAdrsRam;
@@ -631,12 +646,11 @@ wire 					wSUfiREdRamO;
 wire 					wSUfiCmd;
 wire 					wMUfiRdyVtb;
 wire 					wMUfiRdyAtb;
-//
-wire					wMUfiRdy;
 
 UltraFastInterface #(
 	.pUfiBusWidth	(lpUfiBusWidth),
-	.pBusAdrsBit	(lpBusAdrsBit)
+	.pBusAdrsBit	(lpBusAdrsBit),
+	.pUfiIdNumber	(lpUfiIdNumber)
 ) UfiBus (
 	.iMUfiWdMcs		(wMUfiWdMcs),
 	.iMUfiAdrsMcs	(wMUfiAdrsMcs),
@@ -658,13 +672,18 @@ UltraFastInterface #(
 	.oMUfiRdyVtb	(wMUfiRdyVtb),
 	//
 	.iMUfiAdrsAtb	(wMUfiAdrsAtb),
-	.iMUfiEdAtb		(wMUfiEdAtb),
+	.iMUfiWEdAtb	(wMUfiWEdAtb),
+	.iMUfiREdAtb	(wMUfiREdAtb),
 	.iMUfiVdAtb		(wMUfiVdAtb),
 	.oMUfiRdyAtb	(wMUfiRdyAtb),
 	//
 	.oMUfiRd		(wMUfiRd),
-	.oMUfiREd		(wMUfiREd),
+	.oMUfiEddVtb	(wMUfiEddVtb),
+	.oMUfiEddAtb	(wMUfiEddAtb),
 	.oMUfiRdy		(wMUfiRdy),
+	//
+	.iMUfiIdI		(wMUfiIdO),
+	.oMUfiIdO		(wMUfiIdI),
 	//
 	.oSUfiWdRam		(wSUfiWdRam),
 	.oSUfiAdrsRam	(wSUfiAdrsRam),
@@ -689,11 +708,11 @@ begin
 	qSUfiCmd	<= wSUfiCmd;
 	//
 	qMUfiRdVtb 	<= wMUfiRd;
-	qMUfiREdVtb <= wMUfiREd;
+	qMUfiREdVtb <= wMUfiEddVtb;
 	qMUfiRdyVtb <= &{wMUfiRdyVtb,wMUfiRdy};
 	//
 	qMUfiRdAtb	<= wMUfiRd;
-	qMUfiREdAtb	<= wMUfiREd;
+	qMUfiREdAtb	<= wMUfiEddAtb;
 	qMUfiRdyAtb <= &{wMUfiRdyAtb,wMUfiRdy};
 end
 

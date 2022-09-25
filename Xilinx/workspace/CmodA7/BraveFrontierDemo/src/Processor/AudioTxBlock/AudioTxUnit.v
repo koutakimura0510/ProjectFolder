@@ -6,32 +6,31 @@
 // 
 //----------------------------------------------------------
 module AudioTxUnit #(
-	parameter					pUfiBusWidth		= 16,
 	parameter					pBusAdrsBit			= 32,
+	parameter					pUfiBusWidth		= 16,
+	parameter					pMemAdrsWidth		= 19,	// 外部メモリアドレスサイズ
 	parameter					pSamplingBitWidth	= 8,	// 分解能
-	parameter					pMemBitWidth		= 19,	// 外部メモリアドレスサイズ
+	//
 	parameter					pTestPortUsed		= "no",
 	parameter					pTestPortNum		= 4
 )(
+	// External Port
+	output 						oAudioMclk,
     // Internal Port
 	// Ufi Master Read
 	input 	[pUfiBusWidth-1:0]	iMUfiRd,
 	input 						iMUfiREd,
 	// Ufi Master Write
 	output 	[pBusAdrsBit-1:0]	oMUfiAdrs,
-	output 						oMUfiEd,
+	output 						oMUfiWEd,
+	output 						oMUfiREd,
 	output 						oMUfiVd,
 	// Ufi Master Common
 	input						iMUfiRdy,
 	//
-	output 						oAudioMclk,
-	input 						iAudioCke,
-	input [ 6:0]				iAudioTone,
-	input 						iAudioSel,
-	input [ 7:0]				iAudioDuty,
-	input [pMemBitWidth-1:0]	iAudioDmaAdrs,
-	input [pMemBitWidth-1:0]	iAudioDmaLen,
-	input 						iAudioDmaEn,
+	input [pMemAdrsWidth-1:0]	iDmaAdrs,
+	input [pMemAdrsWidth-1:0]	iDmaLen,
+	input 						iDmaEn,
     // CLK Reset
     input           			iSysRst,
     input           			iSysClk,
@@ -42,43 +41,70 @@ module AudioTxUnit #(
 );
 
 
-assign oMUfiAdrs	= {pBusAdrsBit{1'b0}};
-assign oMUfiEd		= 1'b0;
-assign oMUfiVd		= 1'b0;
-
-
 //-----------------------------------------------------------------------------
 // DMA
 //-----------------------------------------------------------------------------
-// AudioDma 
-// 	.iMUfiRd			(iMUfiRd),
-// 	.iMUfiREd			(iMUfiREd),
-// 	.oMUfiAdrs			(oMUfiAdrs),
-// 	.oMUfiEd			(oMUfiEd),
-// 	.oMUfiVd			(oMUfiVd),
-// 	.iMUfiRdy			(iMUfiRdy),
+localparam lpDmaFifoDepth = 32;
+
+wire [pSamplingBitWidth-1:0] 	wDmaRd;
+wire 							wDmaREd;
+reg 							qDmaRe;
+
+AudioDmaUnit #(
+	.pBusAdrsBit		(pBusAdrsBit),
+	.pUfiBusWidth		(pUfiBusWidth),
+	.pMemAdrsWidth		(pMemAdrsWidth)
+) AudioDmaUnit (
+	.iMUfiRd			(iMUfiRd),
+	.iMUfiREd			(iMUfiREd),
+	.oMUfiAdrs			(oMUfiAdrs),
+	.oMUfiWEd			(oMUfiWEd),
+	.oMUfiREd			(oMUfiREd),
+	.oMUfiVd			(oMUfiVd),
+	.iMUfiRdy			(iMUfiRdy),
+	.oDmaRd				(wDmaRd),
+	.oDmaREd			(wDmaREd),
+	.iDmaRe				(qDmaRe),
+	.iDmaAdrs			(iDmaAdrs),
+	.iDmaLen			(iDmaLen),
+	.iDmaEn				(iDmaEn),
+	.iRst				(iSysRst),
+	.iClk				(iSysClk)
+);
 
 
-// //-----------------------------------------------------------------------------
-// // Dual Clk Fifo
-// //-----------------------------------------------------------------------------
-// fifoDualControllerGray # (
-//     .pBuffDepth     (pBuffDepth),
-//     .pBitWidth      (pBitWidth)
-// ) AudioDualClkFifo (
-//     .iWD            (iWd),
-//     .iWE            (iWe),
-//     .oRD            (wRd),
-//     .iRE            (iRe),
-//     .oRVD           (wRVd),
-//     .oFLL           (ofull),
-//     .oEMP           (),
-//     .iSrcRst        (iSysRst),
-//     .iDstRst        (iSysRst),
-//     .iSrcClk        (iAudioClk),
-//     .iDstClk        (iAudioClk)
-// );
+//-----------------------------------------------------------------------------
+// Dual Clk Fifo 及び クロック変換
+//-----------------------------------------------------------------------------
+localparam lpDualClkFifoDepth = 32;
 
+wire [pSamplingBitWidth-1:0] 	wAudioDualFifoRd;
+wire 							wAudioDualFifoFull;
+reg 							qAudioDualFifoRde;
+reg [1:0] 						rAudioRst;
+reg [1:0] 						rAudioCke;
+
+fifoDualControllerGray # (
+    .pBuffDepth     (lpDualClkFifoDepth),
+    .pBitWidth      (pSamplingBitWidth)
+) InstAudioDualClkFifo (
+    .iWD            (wDmaRd),
+    .iWE            (wDmaREd),
+    .oFLL           (wAudioDualFifoFull),
+    .oRD            (wAudioDualFifoRd),
+    .oRVD           (),
+    .iRE            (qAudioDualFifoRde),
+    .oEMP           (),
+    .iSrcRst        (iSysRst),
+    .iDstRst        (iAudioRst),
+    .iSrcClk        (iSysClk),
+    .iDstClk        (iAudioClk)
+);
+
+always @*
+begin
+	qDmaRe <= (~wAudioDualFifoFull);
+end
 
 
 //-----------------------------------------------------------------------------
@@ -91,8 +117,9 @@ assign oMUfiVd		= 1'b0;
 localparam  lpIntegerFileName = "IndexInteger.dat";
 localparam  lpDecimalFileName = "IndexDecimal.dat";
 //
-reg 							qIndexCke;
 wire [pSamplingBitWidth-1:0]	wToneIndex;
+reg  [6:0]						qAudioTone;
+reg 							qToneIndexCke;
 
 AudioToneIndex # (
 	.pToneFifoDepth		(128),
@@ -101,11 +128,16 @@ AudioToneIndex # (
 	.pDecimalFileName	(lpDecimalFileName)
 ) AudioToneIndex (
 	.oToneIndex			(wToneIndex),
-	.iAudioTone			(iAudioTone),
+	.iAudioTone			(qAudioTone),
 	.iRst				(iAudioRst),
-	.iCke				(qIndexCke),
+	.iCke				(qToneIndexCke),
 	.iClk				(iAudioClk)
 );
+
+always @*
+begin
+	qAudioTone 	<= wAudioDualFifoRd[6:0];
+end
 
 
 //-----------------------------------------------------------------------------
@@ -130,9 +162,9 @@ WaveTableRom #(
 //---------------------------------------------------------------------------
 // 波形データから PWM 出力
 //---------------------------------------------------------------------------
-wire wPwm;
-wire wDutyCycleCke;
-reg  [7:0] wDuty;
+wire 							wPwm;
+reg  [pSamplingBitWidth-1:0] 	qDutyRatio;
+wire 							wDutyCycleCke;
 
 DutyGenerator #(
 	.pPWMDutyWidth	(pSamplingBitWidth),
@@ -141,8 +173,8 @@ DutyGenerator #(
 	.oPwm			(wPwm),
 	.oDutyCycleCke	(wDutyCycleCke),
 	.oIVCke			(),
-	.iPWMEn			(iAudioCke),
-	.iDutyRatio		(wDuty),
+	.iPWMEn			(1'b1),			// 音源は基本出力固定
+	.iDutyRatio		(qDutyRatio),
 	.iIVtimer		(1'b0),			// インターバルタイマーによる分周は生成しない
 	.iRst			(iAudioRst),
 	.iClk			(iAudioClk)
@@ -150,12 +182,17 @@ DutyGenerator #(
 
 always @*
 begin
-	qIndexCke	<= wDutyCycleCke;
-	wDuty		<= iAudioSel ? iAudioDuty : wWave;
+	qDutyRatio 			<= wWave;
+	qAudioDualFifoRde	<= wDutyCycleCke;
+	qToneIndexCke 		<= wDutyCycleCke;
 end
 
 OBUF AudioMclk (.I(wPwm), .O(oAudioMclk));
 
+
+//-----------------------------------------------------------------------------
+// TestPort
+//-----------------------------------------------------------------------------
 generate
 	if (pTestPortUsed == "yes")
 	begin

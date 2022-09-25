@@ -80,8 +80,8 @@ localparam [pVdisplayWidth:0] lpVSyncMax	= pVdisplay + pVfront + pVpulse + pVbac
 // Frame Buffer Size
 localparam [pMemAdrsWidth-1:0] lpFbufAdrs1	= 0;
 localparam [pMemAdrsWidth-1:0] lpFbufAdrs2	= (pHdisplay * pVdisplay);
-localparam [pMemAdrsWidth-1:0] lpFbufLen1	= (pHdisplay * pVdisplay) - 1;
-localparam [pMemAdrsWidth-1:0] lpFbufLen2	= (pHdisplay * pVdisplay * 2) - 1;
+localparam [pMemAdrsWidth-1:0] lpFbufLen1	= (pHdisplay * pVdisplay);
+localparam [pMemAdrsWidth-1:0] lpFbufLen2	= (pHdisplay * pVdisplay * 2);
 
 
 //----------------------------------------------------------

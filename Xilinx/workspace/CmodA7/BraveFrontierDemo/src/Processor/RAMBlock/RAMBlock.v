@@ -12,8 +12,9 @@ module RAMBlock #(
 	parameter 							pCsrAdrsWidth	 	= 16,
 	parameter							pCsrActiveWidth 	= 8,
 	parameter							pUfiBusWidth		= 8,
+	parameter							pUfiIdNumber		= 3,
 	//
-	parameter							pRamFifoDepth		= 1024,	// Dual Clk FIFO の深さ
+	parameter							pRamFifoDepth		= 1024,	// FIFO の深さ
 	parameter							pRamAdrsWidth		= 19,	// GPIO アドレス幅
 	parameter							pRamDqWidth			= 8		// GPIO データ幅
 )(
@@ -41,6 +42,9 @@ module RAMBlock #(
 	output	[pUfiBusWidth-1:0]			oSUfiRd,		// Read Data
 	output								oSUfiREd,		// Read Data Enable
 	output 								oSUfiRdy,
+	// Ufi ID Lssue
+	input 	[pUfiIdNumber-1:0]			iSUfiIdI,
+	output 	[pUfiIdNumber-1:0]			oSUfiIdO,
     // CLK Reset
     input           					iSysRst,
     input           					iSysClk,
@@ -56,33 +60,37 @@ wire wRamDualFifoDstRstCsr;
 reg [pUfiBusWidth-1:0]	qMemRdCsr;
 
 RAMUnit #(
-	.pUfiBusWidth	(pUfiBusWidth),
-	.pBusAdrsBit	(pBusAdrsBit),
-	.pRamFifoDepth	(pRamFifoDepth),
-	.pRamAdrsWidth	(pRamAdrsWidth),
-	.pRamDqWidth	(pRamDqWidth)
+	.pUfiBusWidth		(pUfiBusWidth),
+	.pBusAdrsBit		(pBusAdrsBit),
+	.pUfiIdNumber		(pUfiIdNumber),
+	.pRamFifoDepth		(pRamFifoDepth),
+	.pRamAdrsWidth		(pRamAdrsWidth),
+	.pRamDqWidth		(pRamDqWidth)
 ) RamUnit (
-	.oMemAdrs		(oMemAdrs),
-	.ioMemDq		(ioMemDq),
-	.oMemOE			(oMemOE),
-	.oMemWE			(oMemWE),
-	.oMemCE			(oMemCE),
+	.oMemAdrs			(oMemAdrs),
+	.ioMemDq			(ioMemDq),
+	.oMemOE				(oMemOE),
+	.oMemWE				(oMemWE),
+	.oMemCE				(oMemCE),
 	//
-	.iSUfiWd		(iSUfiWd),
-	.iSUfiAdrs		(iSUfiAdrs),
-	.iSUfiWEd		(iSUfiWEd),
-	.iSUfiREd		(iSUfiREd),
-	.iSUfiCmd		(iSUfiCmd),
-	.oSUfiRd		(oSUfiRd),
-	.oSUfiREd		(oSUfiREd),
-	.oSUfiRdy		(oSUfiRdy),
+	.iSUfiWd			(iSUfiWd),
+	.iSUfiAdrs			(iSUfiAdrs),
+	.iSUfiWEd			(iSUfiWEd),
+	.iSUfiREd			(iSUfiREd),
+	.iSUfiCmd			(iSUfiCmd),
+	.oSUfiRd			(oSUfiRd),
+	.oSUfiREd			(oSUfiREd),
+	.oSUfiRdy			(oSUfiRdy),
+	//
+	.iSUfiIdI			(iSUfiIdI),
+	.oSUfiIdO			(oSUfiIdO),
 	//
 	.iRamDualFifoSrcRst	(wRamDualFifoSrcRstCsr),
 	.iRamDualFifoDstRst	(wRamDualFifoDstRstCsr),
 	//
-	.iSysRst		(iSysRst),
-	.iSysClk		(iSysClk),
-	.iMemClk		(iMemClk)
+	.iSysRst			(iSysRst),
+	.iSysClk			(iSysClk),
+	.iMemClk			(iMemClk)
 );
 
 
