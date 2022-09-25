@@ -103,16 +103,21 @@ fifoDualControllerGray #(
 
 //-----------------------------------------------------------------------------
 // UFIB への データ出力
+// TODO 応急措置
+// 無理やりタイミングを合わせるため、FifoGray3 module の Empty 信号は
+// レイテンシ0 の組み合わせ出力となっている。
+// メモリがシステムクロックより遅い場合、タイミングエラーが出るため注意
+// 
 //-----------------------------------------------------------------------------
 wire 	wEmp;
 reg		qWEdId;
 reg  	qREdId;
 wire [pRamDqWidth-1:0]	wMemRd;
 wire 					wMemREd;
-reg [pRamDqWidth-1:0]	rMemRd; 		assign oMemRd	= rMemRd;
+reg	 [pRamDqWidth-1:0]	rMemRd; 		assign oMemRd	= rMemRd;
 reg 					rMemREd; 		assign oMemREd	= rMemREd;
 
-fifoDualControllerGray #(
+fifoDualControllerGray3 #(
 	.pBuffDepth		(pDualClkFifoDepth),
 	.pBitWidth		(pRamDqWidth)
 ) RamDualClkFifoRd (
@@ -135,14 +140,14 @@ begin
 	rMemREd	<= wMemREd;
 end
 
-// タイミングは RDualFIFO と合わせる
+// タイミングは DualFIFORd と合わせる
 // RW のタイミングによっては捨てデータが発生してしまうため
 // 他の FIFO よりも多く深さをとることで改善ずる目的
 localparam lpFifoDepthId = pDualClkFifoDepth << 1;
 
 fifoController #(
-	.pFifoDepth		(lpFifoDepthId),
-	.pFifoBitWidth	(pUfiIdNumber)
+	.pFifoDepth			(lpFifoDepthId),
+	.pFifoBitWidth		(pUfiIdNumber)
 ) RamFifoId (
 	.iWd			(iSUfiIdI),
 	.iWe			(qWEdId),
@@ -155,28 +160,10 @@ fifoController #(
 	.iClk			(iSysClk)
 );
 
-// デバッグ用
-// wire [pRamAdrsWidth-1:0] wAdrs;
-
-// fifoController #(
-// 	.pFifoDepth		(pDualClkFifoDepth),
-// 	.pFifoBitWidth	(pRamAdrsWidth)
-// ) demo (
-// 	.iWd			(iAdrs),
-// 	.iWe			(qWEdId),
-// 	.oFull			(),
-// 	.oRd			(wAdrs),
-// 	.iRe			(qREdId),
-// 	.oRvd			(),
-// 	.oEmp			(),
-// 	.iRst			(iSrcRst),
-// 	.iClk			(iSysClk)
-// );
-
 always @*
 begin
-	qWEdId <= iCmd & iWEd;		// Read時の ID のみ情報として必要
-	qREdId <= (~wEmp) & iMemRe;	// タイミングを合わせる
+	qWEdId <= iCmd & iWEd;		// Read時の ID のみ情報として必要、write cmd は弾く
+	qREdId <= (~wEmp) & iMemRe;	// 読み出しとタイミングを合わせる
 end
 
 endmodule

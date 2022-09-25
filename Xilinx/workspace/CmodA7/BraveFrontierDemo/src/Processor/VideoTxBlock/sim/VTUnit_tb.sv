@@ -24,7 +24,7 @@ localparam lpRawFileSave	= "d:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDe
 localparam 	lpSysClkCycle 	= 4;
 localparam 	lpBusClkCycle 	= 2;
 localparam 	lpVideoClkCycle = 40;
-localparam 	lpMemClkCycle 	= 4;
+localparam 	lpMemClkCycle 	= 4;		// SysClk より遅い場合、タイミングエラー
 localparam 	lpAudioClkCycle	= 16;
 //
 wire 		wSysClk;
