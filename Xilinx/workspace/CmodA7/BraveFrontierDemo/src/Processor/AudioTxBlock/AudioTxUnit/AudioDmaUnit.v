@@ -101,14 +101,14 @@ begin
 	qDmaRAdrsMatch	<= (rDmaRAdrs == iDmaLen);
 	//
 	qMUfiWEd		<= iDmaRe & iMUfiRdy & (~qSwicthCke);
-	qMUfiREd		<= iDmaRe;						// 後段がデータ受付可能であれば Read 要求とする
+	qMUfiREd		<= iDmaRe;
 	qMUfiVd			<= iDmaRe & (~qSwicthCke);
 
 	// DMA 一つだけ使用の場合は気にする必要はないが、二つ以上使用する場合の注意
 	// WEd・REd 発行後に入力される Read データまでのタイミングが大きくずれる場合がある。
 	// 後段の FIFO の深さが 32 とした場合、それ以上の回数の RCmd を発行してしまい、
 	// 結果的に Read データを取得できずに捨ててしまうことになる。
-	// そのため、FIFO の深さ分 RCmd を発行した場合に、他の DMA デバイスにバス使用の権利を譲る形式とした。
+	// そのため、指定回数分 RCmd を発行した場合に、他の DMA デバイスにバス使用の権利を譲る形式とした。
 	qSwicthCke		<= rSwitchCnt == {pFIfoBitWidth{1'b1}};
 end
 

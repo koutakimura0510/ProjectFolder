@@ -11,6 +11,10 @@ module AudioTxUnit #(
 	parameter					pMemAdrsWidth		= 19,	// 外部メモリアドレスサイズ
 	parameter					pSamplingBitWidth	= 8,	// 分解能
 	//
+	parameter					pDualClkFifoDepth	= 1024,
+	parameter					pDmaFifoDepth		= 1024,
+	parameter					pFifoDepthOverride	= "no",
+	//
 	parameter					pTestPortUsed		= "no",
 	parameter					pTestPortNum		= 4
 )(
@@ -44,7 +48,7 @@ module AudioTxUnit #(
 //-----------------------------------------------------------------------------
 // DMA
 //-----------------------------------------------------------------------------
-localparam lpDmaFifoDepth = 32;
+localparam lpDmaFifoDepth = (pFifoDepthOverride == "yes") ? pDmaFifoDepth : 1024;
 
 wire [pSamplingBitWidth-1:0] 	wDmaRd;
 wire 							wDmaREd;
@@ -77,7 +81,7 @@ AudioDmaUnit #(
 //-----------------------------------------------------------------------------
 // Dual Clk Fifo 及び クロック変換
 //-----------------------------------------------------------------------------
-localparam lpDualClkFifoDepth = lpDmaFifoDepth;
+localparam lpDualClkFifoDepth = (pFifoDepthOverride == "yes") ? pDualClkFifoDepth : 1024;
 
 wire [pSamplingBitWidth-1:0] 	wAudioDualFifoRd;
 wire 							wAudioDualFifoFull;

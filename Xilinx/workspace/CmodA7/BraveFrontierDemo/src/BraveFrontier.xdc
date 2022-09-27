@@ -48,8 +48,10 @@ create_generated_clock -name SysClk   [get_pins PreProcessor/CGB/MMCME2_BASE_CLK
 create_generated_clock -name UfibClk  [get_pins PreProcessor/CGB/MMCME2_BASE_CLK_GEN/CLKOUT4];
 # create_generated_clock -name AudioClk [get_pins PREPROCESSER/CGB/PLLE2_ADV_CLK_GEN/CLKOUT0]
 
-set_false_path -to [get_pins Processor/AudioTxBlock/AudioTxUnit/AudioToneIndex/rIntIndex_reg[*]/D]
-set_false_path -to [get_pins Processor/AudioTxBlock/AudioTxUnit/AudioToneIndex/rDecIndex_reg[*]/D]
+# set_false_path -to [get_pins Processor/AudioTxBlock/AudioTxUnit/AudioToneIndex/rIntIndex_reg[*]/D]
+# set_false_path -to [get_pins Processor/AudioTxBlock/AudioTxUnit/AudioToneIndex/rDecIndex_reg[*]/D]
+set_false_path -to [get_pins Processor/AudioTxBlock/AudioTxUnit/InstAudioDualClkFifo/rRA_reg[*]/CE]
+set_false_path -to [get_pins Processor/AudioTxBlock/AudioTxUnit/InstAudioDualClkFifo/rFull_reg/D]
 
 #-------------------------------------------------------------------------------
 # 手動配置

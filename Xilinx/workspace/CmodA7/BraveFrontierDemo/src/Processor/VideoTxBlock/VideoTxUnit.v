@@ -16,7 +16,8 @@ module VideoTxUnit #(
 	parameter						pColorDepth			= 16,
 	// FIFO Depth
 	parameter						pDualClkFifoDepth 	= 1024,
-	parameter						pDmaFifoDepth		= 1024
+	parameter						pDmaFifoDepth		= 1024,
+	parameter						pFifoDepthOverride	= "no"
 )(
 	// External port
 	output [7:4] 					oTftColorR,
@@ -99,6 +100,8 @@ VideoPixelGen #(
 //-----------------------------------------------------------------------------
 // Video DMA
 //-----------------------------------------------------------------------------
+localparam lpDmaFifoDepth = (pFifoDepthOverride == "yes") ? pDmaFifoDepth : 1024;
+
 wire 					wDmaFull;
 wire [pUfiBusWidth-1:0]	wDmaRd;
 wire 					wDmaREd;
@@ -108,7 +111,7 @@ VideoDmaUnit #(
 	.pUfiBusWidth		(pUfiBusWidth),
 	.pBusAdrsBit		(pBusAdrsBit),
 	.pMemAdrsWidth		(pMemAdrsWidth),
-	.pFifoDepth			(pDmaFifoDepth)
+	.pFifoDepth			(lpDmaFifoDepth)
 ) VideoDmaUnit (
 	.iMUfiRd			(iMUfiRd),
 	.iMUfiREd			(iMUfiREd),
@@ -184,11 +187,13 @@ VideoSyncGen #(
 //-----------------------------------------------------------------------------
 // SystemClk <=> VideoClk Dual Clk FIFO
 //-----------------------------------------------------------------------------
+localparam lpDualClkFifoDepth	= (pFifoDepthOverride == "yes") ? pDualClkFifoDepth : 1024;
+
 wire [lpDualFifoWidth-1:0] 	wVideoDualFifoRd;
 wire 						wVideoDualFifoFull;
 
 VideoDualClkFIFO #(
-	.pBuffDepth		(pDualClkFifoDepth),
+	.pBuffDepth		(lpDualClkFifoDepth),
 	.pBitWidth		(lpDualFifoWidth)
 ) VideoDualClkFIFO (
 	.iWd			(wDmaRd),
@@ -264,16 +269,33 @@ DutyGenerator #(
 
 //---------------------------------------------------------------------------
 // TFT DIsplay 出力
+// TODO TFT GPIO 出力部分
+// CmodA7 の RAM 8bit幅に合わせている
 //---------------------------------------------------------------------------
 genvar i;
 
 generate
-	for (i = 0; i < 4; i = i + 1)
-	begin
-		OBUF TFT_R (.O (oTftColorR[4+i]),	.I (wVideoDualFifoRd[8+i]));
-		OBUF TFT_G (.O (oTftColorG[4+i]),	.I (wVideoDualFifoRd[4+i]));
-		OBUF TFT_B (.O (oTftColorB[4+i]),	.I (wVideoDualFifoRd[0+i]));
-	end
+	// for (i = 0; i < 4; i = i + 1)
+	// begin
+	// 	OBUF TFT_R (.O (oTftColorR[4+i]),	.I (wVideoDualFifoRd[8+i]));
+	// 	OBUF TFT_G (.O (oTftColorG[4+i]),	.I (wVideoDualFifoRd[4+i]));
+	// 	OBUF TFT_B (.O (oTftColorB[4+i]),	.I (wVideoDualFifoRd[0+i]));
+	// end
+	OBUF TFT_R7 (.O (oTftColorR[7]),		.I (wVideoDualFifoRd[7]));
+	OBUF TFT_R6 (.O (oTftColorR[6]),		.I (wVideoDualFifoRd[6]));
+	OBUF TFT_R5 (.O (oTftColorR[5]),		.I (wVideoDualFifoRd[5]));
+	OBUF TFT_R4 (.O (oTftColorR[4]),		.I (1'b0));
+	//
+	OBUF TFT_G7 (.O (oTftColorG[7]),		.I (wVideoDualFifoRd[4]));
+	OBUF TFT_G6 (.O (oTftColorG[6]),		.I (wVideoDualFifoRd[3]));
+	OBUF TFT_G5 (.O (oTftColorG[5]),		.I (1'b0));
+	OBUF TFT_G4 (.O (oTftColorG[4]),		.I (1'b0));
+	//
+	OBUF TFT_B7 (.O (oTftColorB[7]),		.I (wVideoDualFifoRd[2]));
+	OBUF TFT_B6 (.O (oTftColorB[6]),		.I (wVideoDualFifoRd[1]));
+	OBUF TFT_B5 (.O (oTftColorB[5]),		.I (wVideoDualFifoRd[0]));
+	OBUF TFT_B4 (.O (oTftColorB[4]),		.I (1'b0));
+	//
 	OBUF TFT_DCLK 	(.O (oTftDclk),			.I (iVideoClk));
 	OBUF TFT_HSync 	(.O (oTftHSync),		.I (qVideoHSync));
 	OBUF TFT_VSync 	(.O (oTftVSync),		.I (qVideoVSync));

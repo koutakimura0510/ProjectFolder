@@ -52,6 +52,10 @@ module AudioTxBlock #(
 //----------------------------------------------------------
 // AudioTxUnit
 //----------------------------------------------------------
+localparam lpDualClkFifoDepth	= 1024;
+localparam lpDmaFifoDepth		= 1024;
+localparam lpFifoDepthOverride	= "no";
+
 wire 	[pMemAdrsWidth-1:0] 	wDmaAdrsCsr;
 wire 	[pMemAdrsWidth-1:0] 	wDmaLenCsr;
 wire 							wDmaEnCsr;
@@ -61,6 +65,9 @@ AudioTxUnit #(
 	.pUfiBusWidth		(pUfiBusWidth),
 	.pMemAdrsWidth		(pMemAdrsWidth),
 	.pSamplingBitWidth	(pSamplingBitWidth),
+	.pDualClkFifoDepth	(lpDualClkFifoDepth),
+	.pDmaFifoDepth		(lpDmaFifoDepth),
+	.pFifoDepthOverride	(lpFifoDepthOverride),
 	.pTestPortUsed		(pTestPortUsed),
 	.pTestPortNum		(pTestPortNum)
 ) AudioTxUnit (

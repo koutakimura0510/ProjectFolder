@@ -33,8 +33,6 @@ module VideoTxBlock #(
     parameter       				pVpulse			= 10,
 	// Color Depth
 	parameter						pColorDepth		= 16,
-	// Dual Clk FIFO Depth
-	parameter						pDualClkFifoDepth = 1024,
 	// Register Width
 	parameter 						pHdisplayWidth	= 11,
 	parameter 						pHfrontWidth	= 7,
@@ -90,6 +88,10 @@ module VideoTxBlock #(
 //-----------------------------------------------------------------------------
 // Unit
 //-----------------------------------------------------------------------------
+localparam lpDualClkFifoDepth	= 1024;
+localparam lpDmaFifoDepth		= 1024;
+localparam lpFifoDepthOverride	= "no";
+//
 wire [pHdisplayWidth-1:0] 	wHdisplayCsr;
 wire [pVdisplayWidth-1:0] 	wVdisplayCsr;
 wire [pHdisplayWidth:0]		wHSyncStartCsr;
@@ -116,7 +118,9 @@ VideoTxUnit #(
     .pHdisplayWidth		(pHdisplayWidth),
     .pVdisplayWidth		(pVdisplayWidth),
 	.pColorDepth		(pColorDepth),
-	.pDualClkFifoDepth	(pDualClkFifoDepth)
+	.pDualClkFifoDepth	(lpDualClkFifoDepth),
+	.pDmaFifoDepth		(lpDmaFifoDepth),
+	.pFifoDepthOverride	(lpFifoDepthOverride)
 ) VideoTxUnit (
 	.oTftColorR			(oTftColorR),
 	.oTftColorG			(oTftColorG),

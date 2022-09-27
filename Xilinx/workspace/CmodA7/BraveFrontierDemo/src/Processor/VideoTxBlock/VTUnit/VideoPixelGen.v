@@ -18,7 +18,9 @@
 // -
 // 上記の並び順で各 module を前後のレイヤーと接続する。
 // module を平行に並べるため、一番レイテンシが大きいブロックで処理速度が決定する。
-// 
+// -
+// プレフィックス
+// D = Draw
 //----------------------------------------------------------
 module VideoPixelGen #(
 	// Display Size
@@ -30,8 +32,6 @@ module VideoPixelGen #(
 	parameter						pOutColorDepth	= pColorDepth - (pColorDepth / 4) // alpha値を除いたbit幅
 )(
 	// Internal Port
-	// Ufi
-	//
 	input	[pHdisplayWidth-1:0]	iHdisplay,
 	input	[pVdisplayWidth-1:0]	iVdisplay,
 	//
@@ -131,33 +131,25 @@ PixelDrawPosition #(
 // Scene Draw
 //-----------------------------------------------------------------------------
 localparam lpDotSquareGenFifoDepth = 16;
-localparam lpSquareSize	= 16;
-localparam lpDxs 		= 0;
-localparam lpDxe 		= lpDxs + lpSquareSize;
-localparam lpDys 		= 2;
-localparam lpDye 		= lpDys + lpSquareSize;
 //
-reg  					qDotSquareEdd;
 reg 					qDotSquareEds;
+wire 					wDotSquareFull;
 wire [pColorDepth-1:0] 	wDotSquareDd;
 wire 					wDotSquareVdd;
+reg  					qDotSquareEdd;
 wire 					wDotSquareEmp;
-wire 					wDotSquareFull;
 
-DotSquareGen #(
+SceneChange #(
 	.pHdisplayWidth		(pHdisplayWidth),
 	.pVdisplayWidth		(pVdisplayWidth),
 	.pColorDepth		(pColorDepth),
 	.pFifoDepth			(lpDotSquareGenFifoDepth),
 	.pFifoBitWidth		(pColorDepth)
-) DotSquareGen (
-	.iColor				(16'h0000),
+) SceneChange (
+	.iColor				(16'h000f),
 	.iHpos				(wPixelDrawHpos),
 	.iVpos				(wPixelDrawVpos),
-	.iDxs				(lpDxs),
-	.iDxe				(lpDxe),
-	.iDys				(lpDys),
-	.iDye				(lpDye),
+	.iFe				(wAFE),
 	.iEds 				(qDotSquareEds),
 	.oFull				(wDotSquareFull),
 	.oDd				(wDotSquareDd),

@@ -106,12 +106,12 @@ fifoDualControllerGray #(
 // TODO 応急措置
 // 無理やりタイミングを合わせるため、FifoGray3 module の Empty 信号は
 // レイテンシ0 の組み合わせ出力となっている。
-// メモリがシステムクロックより遅い場合、タイミングエラーが出るため注意
+// メモリクロックがシステムクロックより遅い場合、タイミングエラーが出るため注意
 // 
 //-----------------------------------------------------------------------------
-wire 	wEmp;
-reg		qWEdId;
-reg  	qREdId;
+wire 					wEmp;
+reg						qWEdId;
+reg  					qREdId;
 wire [pRamDqWidth-1:0]	wMemRd;
 wire 					wMemREd;
 reg	 [pRamDqWidth-1:0]	rMemRd; 		assign oMemRd	= rMemRd;

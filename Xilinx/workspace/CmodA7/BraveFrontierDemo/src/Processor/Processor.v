@@ -134,7 +134,7 @@ localparam 	lpRamDqWidth		= 8;
 localparam	lpUsiBusWidth  		= 32;			// Usi バスデータ幅
 localparam	lpBusAdrsBit		= 32;			// バスアドレス幅, Usi/Ufi 共通
 localparam  lpUfiBusWidth		= lpRamDqWidth;	// メモリのバス幅と同義
-parameter	lpUfiIdNumber		= 3;
+localparam	lpUfiIdNumber		= 3;
 
 
 
@@ -354,6 +354,7 @@ VideoTxBlock #(
 	.pCsrAdrsWidth		(lpCsrAdrsWidth),
 	.pCsrActiveWidth	(lpVTBCsrActiveWidth),
 	.pMemAdrsWidth		(lpRamAdrsWidth),
+	//
 	.pHdisplay			(pHdisplay),
 	.pHfront			(pHfront),
 	.pHback				(pHback),
@@ -370,6 +371,9 @@ VideoTxBlock #(
 	.pVfrontWidth		(lpVfrontWidth),
 	.pVbackWidth		(lpVbackWidth),
 	.pVpulseWidth		(lpVpulseWidth),
+	//
+	.pColorDepth		(16),
+	//
 	.pTestPortUsed		(lpTestPortVideo),
 	.pTestPortNum		(lpTestPortNum)
 ) VideoTxBlock (
@@ -476,8 +480,6 @@ AudioTxBlock #(
 //----------------------------------------------------------
 // RAMBlock
 //----------------------------------------------------------
-localparam lpRamFifoDepth 	= 1024;
-
 // USI Bus
 wire [31:0] 			wSUsiRdRam;
 wire 					wSUsiREdRam;
@@ -504,7 +506,6 @@ RAMBlock #(
 	.pCsrActiveWidth	(lpRAMCsrActiveWidth),
 	.pUfiBusWidth		(lpUfiBusWidth),
 	.pUfiIdNumber		(lpUfiIdNumber),
-	.pRamFifoDepth		(lpRamFifoDepth),
 	.pRamAdrsWidth		(lpRamAdrsWidth),
 	.pRamDqWidth		(lpRamDqWidth)
 ) RamBlock (

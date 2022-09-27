@@ -14,7 +14,6 @@ module RAMBlock #(
 	parameter							pUfiBusWidth		= 8,
 	parameter							pUfiIdNumber		= 3,
 	//
-	parameter							pRamFifoDepth		= 1024,	// FIFO の深さ
 	parameter							pRamAdrsWidth		= 19,	// GPIO アドレス幅
 	parameter							pRamDqWidth			= 8		// GPIO データ幅
 )(
@@ -55,6 +54,8 @@ module RAMBlock #(
 //----------------------------------------------------------
 // RAM Unit
 //----------------------------------------------------------
+localparam lpFifoDepath = 1024;
+
 wire wRamDualFifoSrcRstCsr;
 wire wRamDualFifoDstRstCsr;
 reg [pUfiBusWidth-1:0]	qMemRdCsr;
@@ -63,7 +64,7 @@ RAMUnit #(
 	.pUfiBusWidth		(pUfiBusWidth),
 	.pBusAdrsBit		(pBusAdrsBit),
 	.pUfiIdNumber		(pUfiIdNumber),
-	.pRamFifoDepth		(pRamFifoDepth),
+	.pRamFifoDepth		(lpFifoDepath),
 	.pRamAdrsWidth		(pRamAdrsWidth),
 	.pRamDqWidth		(pRamDqWidth)
 ) RamUnit (
