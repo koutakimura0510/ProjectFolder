@@ -15,8 +15,8 @@ module DotSquareGen #(
 	// Internal Port
 	output 			[pColorDepth-1:0]		oPixel,
     input  			[pColorDepth-1:0]		iColor,		// 描画色
-    input 			[pHdisplayWidth-1:0]	iHpos,		// 現在の横幅の座標
-    input 			[pVdisplayWidth-1:0]	iVpos,		// 現在の立幅の座標
+    input signed	[pHdisplayWidth:0]		iHpos,		// 現在の横幅の座標
+    input signed	[pVdisplayWidth:0]		iVpos,		// 現在の立幅の座標
     input signed 	[pHdisplayWidth:0]		iDLeftX,	// 描画開始 X座標 Draw X Start
     input signed 	[pHdisplayWidth:0]		iDRightX,	// 描画終了 X座標 Draw X End
     input signed 	[pVdisplayWidth:0]		iDTopY,		// 描画開始 Y座標 Draw Y Start
@@ -25,13 +25,6 @@ module DotSquareGen #(
     input                       	iRst,
     input                       	iClk
 );
-
-
-//-----------------------------------------------------------------------------
-// 比較用に符号拡張
-//-----------------------------------------------------------------------------
-wire signed [pHdisplayWidth:0] wHpos = {1'b0, iHpos};
-wire signed [pVdisplayWidth:0] wVpos = {1'b0, iVpos};
 
 
 //----------------------------------------------------------
@@ -52,10 +45,10 @@ end
 //-----------------------------------------------------------------------------
 always @*
 begin
-	qPosMatch[0] <= (iDLeftX <= wHpos);
-	qPosMatch[1] <= (wHpos 	 <  iDRightX);
-	qPosMatch[2] <= (iDTopY  <= wVpos);
-	qPosMatch[3] <= (wVpos   <  iDUnderY);
+	qPosMatch[0] <= (iDLeftX <= iHpos);
+	qPosMatch[1] <= (iHpos 	 <  iDRightX);
+	qPosMatch[2] <= (iDTopY  <= iVpos);
+	qPosMatch[3] <= (iVpos   <  iDUnderY);
 	qCke 		 <= &(qPosMatch);
 end
 
