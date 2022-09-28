@@ -34,12 +34,18 @@ module SceneChange #(
 
 
 //-----------------------------------------------------------------------------
+// Enable 生成
+//-----------------------------------------------------------------------------
+
+
+
+//-----------------------------------------------------------------------------
 // 描画座標の更新
 //-----------------------------------------------------------------------------
 wire [pHdisplayWidth-1:0] wDLeftX;
 wire [pHdisplayWidth-1:0] wDRightX;
-wire [pVdisplayWidth-1:0] wDUpY;
-wire [pVdisplayWidth-1:0] wDDownY;
+wire [pVdisplayWidth-1:0] wDTopY;
+wire [pVdisplayWidth-1:0] wDUnderY;
 
 SquarePosGen #(
 	.pHdisplayWidth		(pHdisplayWidth),
@@ -57,8 +63,8 @@ SquarePosGen #(
 	.iDGainY			(),
 	.oDLeftX			(wDLeftX),
 	.oDRightX			(wDRightX),
-	.oDUpY				(wDUpY),
-	.oDDownY			(wDDownY),
+	.oDTopY				(wDTopY),
+	.oDUnderY			(wDUnderY),
 	.iRst				(iRst),
 	.iClk				(iClk)
 );
@@ -81,8 +87,8 @@ DotSquareGen #(
 	.iVpos				(iVpos),
 	.iDxs				(wDLeftX),
 	.iDxe				(wDRightX),
-	.iDys				(wDUpY),
-	.iDye				(wDDownY),
+	.iDys				(wDTopY),
+	.iDye				(wDUnderY),
 	//
 	.iRst				(iRst),
 	.iClk				(iClk)

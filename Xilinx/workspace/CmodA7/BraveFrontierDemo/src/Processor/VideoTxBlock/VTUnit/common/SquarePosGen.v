@@ -26,11 +26,16 @@ module SquarePosGen #(
 	//
 	output 	[pHdisplayWidth-1:0]	oDLeftX,	// x軸 左点
     output 	[pHdisplayWidth-1:0]   	oDRightX,	// x軸 右点
-	output 	[pVdisplayWidth-1:0]	oDUpY,		// y軸 上点
-	output 	[pVdisplayWidth-1:0]	oDDownY,	// y軸 下点
+	output 	[pVdisplayWidth-1:0]	oDTopY,		// y軸 上点
+	output 	[pVdisplayWidth-1:0]	oDUnderY,	// y軸 下点
 	//
 	input 	[pVdisplayWidth-1:0]	iJumpPeak,	// ジャンプの高さ
 	input 	[pVdisplayWidth-1:0]	iJumpSpeed,	// ジャンプの初速
+	input 							iJumpEn,	// Jump ON 1, OFF 0
+	//
+	input 	[pVdisplayWidth-1:0]	iSlidePeak,	// 水平移動の最高速
+	input 	[pVdisplayWidth-1:0]	iSlideSpeed,// 水平移動の初速
+	input 							iSlideEn,	// Move ON 1, OFF 0
 	// Clk rst
     input                       	iRst,
     input                       	iClk
@@ -59,70 +64,82 @@ end
 //-----------------------------------------------------------------------------
 // 速度 計算
 //-----------------------------------------------------------------------------
-wire signed [pVdisplayWidth:0] wJumpPeak = iJumpSpeed;
 reg  signed [pVdisplayWidth:0] rJumpPeak;
-reg qVDownMatch;
+//
+wire signed [pVdisplayWidth:0] wJumpSpeed = iJumpSpeed;
+wire signed [pVdisplayWidth:0] wJumpPeak  = rJumpPeak - wJumpSpeed;
+//
+reg qVDownPoint;
 reg qJumpPeak;
 
 always @(posedge iClk)
 begin
-	if (iRst)
-	begin
-		rJumpPeak <= iJumpPeak;
-	end
-	else
-	begin
-		casex ({qVDownMatch, qJumpPeak, qFe})
-			'b001: 		rJumpPeak <= rJumpPeak - wJumpPeak;
-			'b111:		rJumpPeak <= iJumpPeak;
-			default: 	rJumpPeak <= rJumpPeak;
-		endcase
-	end
+	casex ({qVDownPoint, qJumpPeak, qCke, iJumpEn})
+		'bxxx0:		rJumpPeak <= iJumpPeak;
+		'b1111:		rJumpPeak <= iJumpPeak;
+		'b0011:		rJumpPeak <= wJumpPeak;
+		default: 	rJumpPeak <= rJumpPeak;
+	endcase
 end
 
 always @*
 begin
-	qJumpPeak <= rJumpPeak[pVdisplayWidth];	// 負の値を検出
+	qJumpPeak <= rJumpPeak[pVdisplayWidth];		// 負の値を検出時、頂点に達したとみなす
 end
+
 
 //-----------------------------------------------------------------------------
 // 速度 計算
 // Gain = 移動量に応じて座標移動を行う
-//----------------------------------------------------------
+//-----------------------------------------------------------------------------
 reg [pHdisplayWidth-1:0] rDLeftX;			assign oDLeftX 	= rDLeftX;
 reg [pHdisplayWidth-1:0] rDRightX;			assign oDRightX = rDRightX;
-reg [pVdisplayWidth-1:0] rDUpY;				assign oDUpY 	= rDUpY;
-reg [pVdisplayWidth-1:0] rDDownY;			assign oDDownY	= rDDownY;
+reg [pVdisplayWidth-1:0] rDTopY;			assign oDTopY 	= rDTopY;
+reg [pVdisplayWidth-1:0] rDUnderY;			assign oDUnderY	= rDUnderY;
 //
+wire [pVdisplayWidth-1:0] wDUnderYinit = iDStartY + iDSizeY;	// Y軸 初期値
+wire [pVdisplayWidth-1:0] wDTopYRise   = rDTopY   - iDGainY;	// 上昇時 Top 座標
+wire [pVdisplayWidth-1:0] wDTopYFall   = rDTopY   + iDGainY;	// 下降時 Top 座標
+wire [pVdisplayWidth-1:0] wDUnderYRise = rDUnderY - iDGainY;	// 上昇時 Under 座標
+wire [pVdisplayWidth-1:0] wDUnderYFall = rDUnderY + iDGainY;	// 下降時 Under 座標
+//
+reg qDUnderOverflow;
 
 always @(posedge iClk)
 begin
-	// x軸
+	// x軸 Left
     if (iRst)   	rDLeftX 	<= iDStartX;
 	else if (qCke)	rDLeftX 	<= rDLeftX + iDGainX;
     else        	rDLeftX 	<= rDLeftX;
 
+	// x軸 Right
     if (iRst)   	rDRightX 	<= iDStartX + iDSizeX;
 	else if (qCke)	rDRightX 	<= rDRightX + iDGainX;
     else        	rDRightX 	<= rDRightX;
 
-	// y軸
-    if (iRst)
-	begin
-		rDUpY 		<= iDStartY;
-	end
-	else
-	else if (qCke)	rDUpY 		<= rDUpY + iDGainY;
-    else        	rDUpY 		<= rDUpY;
+	// y軸 Top
+	casex ({qDUnderOverflow, qJumpPeak, qCke, iJumpEn})
+		'bxxx0:		rDTopY <= iDStartY;
+		'b1111:		rDTopY <= iDStartY;
+		'bx011:		rDTopY <= wDTopYRise;
+		'bx111:		rDTopY <= wDTopYFall;
+		default: 	rDTopY <= rDTopY;
+	endcase
 
-    if (iRst)   	rDDownY 	<= iDStartY + iDSizeY;
-	else if (qCke)	rDDownY 	<= rDDownY  + iDGainX;
-    else        	rDDownY 	<= rDDownY;
+	// y軸 Under
+	casex ({qDUnderOverflow, qJumpPeak, qCke, iJumpEn})
+		'bxxx0:		rDUnderY <= wDUnderYinit;
+		'b1111:		rDUnderY <= wDUnderYinit;
+		'bx011:		rDUnderY <= wDUnderYRise;
+		'bx111:		rDUnderY <= wDUnderYFall;
+		default: 	rDUnderY <= rDUnderY;
+	endcase
 end
 
 always @*
 begin
-	qVDownMatch <= iVdisplay == rDDownY;
+	qVDownPoint 	<= (iVdisplay == rDUnderY);		// 物体の最下点とディスプレイの最下点を参照
+	qDUnderOverflow	<= (iVdisplay < wDUnderYFall);	// 落下中 次フレームの Y座標が画面外の時 地面に着地する
 end
 
 
