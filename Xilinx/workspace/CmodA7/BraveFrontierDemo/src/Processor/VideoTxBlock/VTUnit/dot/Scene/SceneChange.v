@@ -14,22 +14,22 @@ module SceneChange #(
 )(
 	// Internal Port
 	// Status
-    input	[pColorDepth-1:0]		iColor,		// 描画色
-	input	[pHdisplayWidth-1:0]	iHdisplay,	// 画面横サイズ
-	input	[pVdisplayWidth-1:0]	iVdisplay,	// 画面縦サイズ
-    input  	[pHdisplayWidth-1:0]    iHpos,		// 現在の横座標
-    input  	[pVdisplayWidth-1:0]    iVpos,		// 現在の縦座標
-	input 							iFe,
+    input			[pColorDepth-1:0]		iColor,		// 描画色
+	input	signed	[pHdisplayWidth:0]		iHdisplay,	// 画面横サイズ
+	input	signed	[pVdisplayWidth:0]		iVdisplay,	// 画面縦サイズ
+    input  			[pHdisplayWidth-1:0]    iHpos,		// 現在の横座標
+    input  			[pVdisplayWidth-1:0]    iVpos,		// 現在の縦座標
+	input 									iFe,
 	// control
-	input 							iEds,		// Enable Data Src
-	output 							oFull,		// FIFO Full
-	output 							oVdd,		// Valid Dest Data 
-    output 	[pColorDepth-1:0]    	oDd,		// Dest Data
-	input 							iEdd,		// Enable Data Dest
-	output 							oEmp,		// FIFO Empty
+	input 									iEds,		// Enable Data Src
+	output 									oFull,		// FIFO Full
+	output 									oVdd,		// Valid Dest Data 
+    output 	[pColorDepth-1:0]    			oDd,		// Dest Data
+	input 									iEdd,		// Enable Data Dest
+	output 									oEmp,		// FIFO Empty
 	// Clk rst
-    input                       	iRst,
-    input                       	iClk
+    input                       			iRst,
+    input                       			iClk
 );
 
 
@@ -42,10 +42,10 @@ module SceneChange #(
 //-----------------------------------------------------------------------------
 // 描画座標の更新
 //-----------------------------------------------------------------------------
-wire [pHdisplayWidth-1:0] wDLeftX;
-wire [pHdisplayWidth-1:0] wDRightX;
-wire [pVdisplayWidth-1:0] wDTopY;
-wire [pVdisplayWidth-1:0] wDUnderY;
+wire signed [pHdisplayWidth:0] wDLeftX;
+wire signed [pHdisplayWidth:0] wDRightX;
+wire signed [pVdisplayWidth:0] wDTopY;
+wire signed [pVdisplayWidth:0] wDUnderY;
 
 SquarePosGen #(
 	.pHdisplayWidth		(pHdisplayWidth),
@@ -85,10 +85,10 @@ DotSquareGen #(
 	.iColor				(iPixel),
 	.iHpos				(iHpos),
 	.iVpos				(iVpos),
-	.iDxs				(wDLeftX),
-	.iDxe				(wDRightX),
-	.iDys				(wDTopY),
-	.iDye				(wDUnderY),
+	.iDLeftX			(wDLeftX),
+	.iDRightX			(wDRightX),
+	.iDTopY				(wDTopY),
+	.iDUnderY			(wDUnderY),
 	//
 	.iRst				(iRst),
 	.iClk				(iClk)

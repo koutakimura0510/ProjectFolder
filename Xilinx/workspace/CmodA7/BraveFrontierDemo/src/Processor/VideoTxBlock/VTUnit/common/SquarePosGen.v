@@ -3,42 +3,44 @@
 // Author koutakimura
 // -
 // 設定値に合わせて座標を生成する
+// -
+// 2022-09-29 画面外の座標生成に対応 (負の値に対応)
 // 
 //----------------------------------------------------------
 module SquarePosGen #(
-    parameter						pHdisplayWidth  = 11,
-    parameter						pVdisplayWidth  = 11,
-	parameter						pGainWidth		= 7
+    parameter								pHdisplayWidth  = 11,
+    parameter								pVdisplayWidth  = 11,
+	parameter								pGainWidth		= 7
 )(
 	// Internal Port
-	input	[pHdisplayWidth-1:0]	iHdisplay,	// 画面横サイズ
-	input	[pVdisplayWidth-1:0]	iVdisplay,	// 画面縦サイズ
-    input  	[pHdisplayWidth-1:0]    iFe,		// Frame End
+	input	signed	[pHdisplayWidth-1:0]	iHdisplay,		// 画面横サイズ
+	input	signed	[pVdisplayWidth-1:0]	iVdisplay,		// 画面縦サイズ
+    input			[pHdisplayWidth-1:0]    iFe,			// Frame End
 	//
-	input  	[pHdisplayWidth-1:0]	iDStartX,	// x軸 開始点
-	input  	[pVdisplayWidth-1:0]	iDStartY,	// y軸 開始点
+	input	signed	[pHdisplayWidth:0]		iDStartX,		// x軸 開始点
+	input	signed	[pVdisplayWidth:0]		iDStartY,		// y軸 開始点
 	//
-	input  	[pHdisplayWidth-1:0]	iDSizeX,	// x Size
-	input  	[pVdisplayWidth-1:0]	iDSizeY,	// y Size
+	input			[pHdisplayWidth-1:0]	iDSizeX,		// x Size ※描画サイズが負の整数になることはない
+	input			[pVdisplayWidth-1:0]	iDSizeY,		// y Size ※そのため、1bit 拡張のキャストで計算に使用する
 	// 
-	input  	[pGainWidth-1:0]		iDGainX,	// x軸 移動量
-	input  	[pGainWidth-1:0]		iDGainY,	// y軸 移動量
+	input	signed	[pGainWidth:0]			iDGainX,		// x軸 移動量 -.Left, +,Right
+	input	signed	[pGainWidth:0]			iDGainY,		// y軸 移動量 -.Up,   +,Down
 	//
-	output 	[pHdisplayWidth-1:0]	oDLeftX,	// x軸 左点
-    output 	[pHdisplayWidth-1:0]   	oDRightX,	// x軸 右点
-	output 	[pVdisplayWidth-1:0]	oDTopY,		// y軸 上点
-	output 	[pVdisplayWidth-1:0]	oDUnderY,	// y軸 下点
+	output	signed 	[pHdisplayWidth:0] 		oDLeftX,		// x軸 左点
+    output	signed 	[pHdisplayWidth:0] 		oDRightX,		// x軸 右点
+	output	signed 	[pVdisplayWidth:0] 		oDTopY,			// y軸 上点
+	output	signed 	[pVdisplayWidth:0] 		oDUnderY,		// y軸 下点
 	//
-	input 	[pVdisplayWidth-1:0]	iJumpPeak,	// ジャンプの高さ
-	input 	[pVdisplayWidth-1:0]	iJumpSpeed,	// ジャンプの初速
-	input 							iJumpEn,	// Jump ON 1, OFF 0
+	input 	signed	[pVdisplayWidth:0]		iJumpPeak,		// ジャンプの高さ
+	input 	signed	[pVdisplayWidth:0]		iJumpSpeed,		// ジャンプの速度
+	input 									iJumpEn,		// Jump ON 1, OFF 0
 	//
-	input 	[pVdisplayWidth-1:0]	iSlidePeak,	// 水平移動の最高速
-	input 	[pVdisplayWidth-1:0]	iSlideSpeed,// 水平移動の初速
-	input 							iSlideEn,	// Move ON 1, OFF 0
+	input 	signed	[pVdisplayWidth-1:0]	iSlideSpeedPeak,// 水平移動の最高速
+	input 	signed	[pVdisplayWidth-1:0]	iSlideSpeed,	// 水平移動の初速
+	input 									iSlideEn,		// Move ON 1, OFF 0
 	// Clk rst
-    input                       	iRst,
-    input                       	iClk
+    input                       			iRst,
+    input                       			iClk
 );
 
 
@@ -62,12 +64,11 @@ end
 
 
 //-----------------------------------------------------------------------------
-// 速度 計算
+// ジャンプ速度 計算
 //-----------------------------------------------------------------------------
 reg  signed [pVdisplayWidth:0] rJumpPeak;
 //
-wire signed [pVdisplayWidth:0] wJumpSpeed = iJumpSpeed;
-wire signed [pVdisplayWidth:0] wJumpPeak  = rJumpPeak - wJumpSpeed;
+wire signed [pVdisplayWidth:0] wJumpPeak  = rJumpPeak - iJumpSpeed;
 //
 reg qVDownPoint;
 reg qJumpPeak;
@@ -89,21 +90,50 @@ end
 
 
 //-----------------------------------------------------------------------------
+// 水平移動速度 計算
+//-----------------------------------------------------------------------------
+reg  signed [pVdisplayWidth:0] rSlideSpeed;
+//
+wire signed [pVdisplayWidth:0] wSlideSpeed  = rSlideSpeed - iSlideSpeed;
+//
+reg qVDownPoint;
+reg qSlideSpeedPeak;
+
+always @(posedge iClk)
+begin
+	casex ({qSlideSpeedPeak, qCke, iSlideEn})
+		'bxx0:		rSlideSpeed <= iSlideSpeedPeak;
+		'b111:		rSlideSpeed <= rSlideSpeed;
+		'b011:		rSlideSpeed <= wSlideSpeed;
+		default: 	rSlideSpeed <= rSlideSpeed;
+	endcase
+end
+
+always @*
+begin
+	qSlideSpeedPeak <= rSlideSpeed[pVdisplayWidth];		// 負の値を検出時、最高速度に達したとみなす
+end
+
+
+//-----------------------------------------------------------------------------
 // 速度 計算
 // Gain = 移動量に応じて座標移動を行う
 //-----------------------------------------------------------------------------
-reg [pHdisplayWidth-1:0] rDLeftX;			assign oDLeftX 	= rDLeftX;
-reg [pHdisplayWidth-1:0] rDRightX;			assign oDRightX = rDRightX;
-reg [pVdisplayWidth-1:0] rDTopY;			assign oDTopY 	= rDTopY;
-reg [pVdisplayWidth-1:0] rDUnderY;			assign oDUnderY	= rDUnderY;
+reg		signed [pHdisplayWidth:0] rDLeftX;			assign oDLeftX 	= rDLeftX;
+reg		signed [pHdisplayWidth:0] rDRightX;			assign oDRightX = rDRightX;
+reg		signed [pVdisplayWidth:0] rDTopY;			assign oDTopY 	= rDTopY;
+reg		signed [pVdisplayWidth:0] rDUnderY;			assign oDUnderY	= rDUnderY;
+// 符号拡張
+wire 	signed [pHdisplayWidth:0] wDSizeX = iDSizeX;
+wire 	signed [pVdisplayWidth:0] wDSizeY = iDSizeY;
 // X軸
-wire [pHdisplayWidth-1:0] wDRightXinit = iDStartX + iDSizeX;	// X軸 初期値
+wire 	signed [pHdisplayWidth:0] wDRightXinit = iDStartX + wDSizeX;	// X軸 初期値
 // Y軸
-wire [pVdisplayWidth-1:0] wDUnderYinit = iDStartY + iDSizeY;	// Y軸 初期値
-wire [pVdisplayWidth-1:0] wDTopYRise   = rDTopY   - iDGainY;	// 上昇時 Top 座標
-wire [pVdisplayWidth-1:0] wDTopYFall   = rDTopY   + iDGainY;	// 下降時 Top 座標
-wire [pVdisplayWidth-1:0] wDUnderYRise = rDUnderY - iDGainY;	// 上昇時 Under 座標
-wire [pVdisplayWidth-1:0] wDUnderYFall = rDUnderY + iDGainY;	// 下降時 Under 座標
+wire 	signed [pVdisplayWidth:0] wDUnderYinit = iDStartY + wDSizeY;	// Y軸 初期値
+wire 	signed [pVdisplayWidth:0] wDTopYRise   = rDTopY   - iDGainY;	// 上昇時 Top 座標
+wire 	signed [pVdisplayWidth:0] wDTopYFall   = rDTopY   + iDGainY;	// 下降時 Top 座標
+wire 	signed [pVdisplayWidth:0] wDUnderYRise = rDUnderY - iDGainY;	// 上昇時 Under 座標
+wire 	signed [pVdisplayWidth:0] wDUnderYFall = rDUnderY + iDGainY;	// 下降時 Under 座標
 //
 reg qDUnderOverflow;
 
@@ -114,17 +144,13 @@ begin
 	else if (qCke)	rDLeftX 	<= rDLeftX + iDGainX;
     else        	rDLeftX 	<= rDLeftX;
 
-    if (iRst)   	rDRightX 	<= iDStartX + iDSizeX;
-	else if (qCke)	rDRightX 	<= rDRightX + iDGainX;
-    else        	rDRightX 	<= rDRightX;
-
 	// x軸 Right
 	casex ({qDUnderOverflow, qJumpPeak, qCke, iSlideEn})
 		'bxxx0:		rDRightX <= wDRightXinit;
 		'b1111:		rDRightX <= wDRightXinit;
 		'bx011:		rDRightX <= wDTopYRise;
 		'bx111:		rDRightX <= wDTopYFall;
-		default: 	rDRightX <= rDTopY;
+		default: 	rDRightX <= rDRightX;
 	endcase
 
 
