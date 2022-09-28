@@ -3,7 +3,7 @@
 // Author koutakimura
 // -
 // 指定範囲で指定色の四角形データを出力する
-// -
+// 
 // 2022-09-29 座標が画面外の場合のドットデータ生成に対応
 // 
 //----------------------------------------------------------
@@ -18,9 +18,9 @@ module DotSquareGen #(
     input 			[pHdisplayWidth-1:0]	iHpos,		// 現在の横幅の座標
     input 			[pVdisplayWidth-1:0]	iVpos,		// 現在の立幅の座標
     input signed 	[pHdisplayWidth:0]		iDLeftX,	// 描画開始 X座標 Draw X Start
-    input 			[pHdisplayWidth-1:0]	iDRightX,	// 描画終了 X座標 Draw X End
+    input signed 	[pHdisplayWidth:0]		iDRightX,	// 描画終了 X座標 Draw X End
     input signed 	[pVdisplayWidth:0]		iDTopY,		// 描画開始 Y座標 Draw Y Start
-    input 			[pVdisplayWidth-1:0]	iDUnderY,	// 描画終了 Y座標 Draw Y End
+    input signed 	[pVdisplayWidth:0]		iDUnderY,	// 描画終了 Y座標 Draw Y End
 	// Clk rst
     input                       	iRst,
     input                       	iClk
