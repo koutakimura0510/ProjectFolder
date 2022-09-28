@@ -96,7 +96,9 @@ reg [pHdisplayWidth-1:0] rDLeftX;			assign oDLeftX 	= rDLeftX;
 reg [pHdisplayWidth-1:0] rDRightX;			assign oDRightX = rDRightX;
 reg [pVdisplayWidth-1:0] rDTopY;			assign oDTopY 	= rDTopY;
 reg [pVdisplayWidth-1:0] rDUnderY;			assign oDUnderY	= rDUnderY;
-//
+// X軸
+wire [pHdisplayWidth-1:0] wDRightXinit = iDStartX + iDSizeX;	// X軸 初期値
+// Y軸
 wire [pVdisplayWidth-1:0] wDUnderYinit = iDStartY + iDSizeY;	// Y軸 初期値
 wire [pVdisplayWidth-1:0] wDTopYRise   = rDTopY   - iDGainY;	// 上昇時 Top 座標
 wire [pVdisplayWidth-1:0] wDTopYFall   = rDTopY   + iDGainY;	// 下降時 Top 座標
@@ -112,10 +114,19 @@ begin
 	else if (qCke)	rDLeftX 	<= rDLeftX + iDGainX;
     else        	rDLeftX 	<= rDLeftX;
 
-	// x軸 Right
     if (iRst)   	rDRightX 	<= iDStartX + iDSizeX;
 	else if (qCke)	rDRightX 	<= rDRightX + iDGainX;
     else        	rDRightX 	<= rDRightX;
+
+	// x軸 Right
+	casex ({qDUnderOverflow, qJumpPeak, qCke, iSlideEn})
+		'bxxx0:		rDRightX <= wDRightXinit;
+		'b1111:		rDRightX <= wDRightXinit;
+		'bx011:		rDRightX <= wDTopYRise;
+		'bx111:		rDRightX <= wDTopYFall;
+		default: 	rDRightX <= rDTopY;
+	endcase
+
 
 	// y軸 Top
 	casex ({qDUnderOverflow, qJumpPeak, qCke, iJumpEn})

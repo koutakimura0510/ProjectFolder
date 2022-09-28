@@ -40,11 +40,11 @@ end
 always @*
 begin
 	// 指定範囲チェック
-    qPosMatch[0] <= (iDxs  <= iHpos);
-    qPosMatch[1] <= (iHpos < iDxe);
-    qPosMatch[2] <= (iDys  <= iVpos);
-    qPosMatch[3] <= (iVpos < iDye);
-	qCke <= &(qPosMatch);
+	qPosMatch[0] <= (iDxs  <= iHpos);
+	qPosMatch[1] <= (iHpos <  iDxe);
+	qPosMatch[2] <= (iDys  <= iVpos);
+	qPosMatch[3] <= (iVpos <  iDye);
+	qCke 		 <= &(qPosMatch);
 end
 
 endmodule
