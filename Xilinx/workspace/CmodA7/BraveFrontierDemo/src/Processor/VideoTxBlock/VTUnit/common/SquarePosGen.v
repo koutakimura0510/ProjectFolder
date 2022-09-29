@@ -187,22 +187,22 @@ reg qDUnderOverflow;
 
 always @(posedge iClk)
 begin
-	// x軸 Left
-    if (iRst)   	rDLeftX <= iDStartX;
-	else if (qFe)	rDLeftX <= rDLeftX + iDGainX;
-    else        	rDLeftX <= rDLeftX;
+	// // x軸 Left
+    // if (iRst)   	rDLeftX <= iDStartX;
+	// else if (qFe)	rDLeftX <= rDLeftX + iDGainX;
+    // else        	rDLeftX <= rDLeftX;
 
-	// x軸 Right
-	casex ({qDUnderOverflow, qJumpPeakY, qFe, iSlideEn})
-		'bxxx0:		rDRightX <= wDRightXinit;
-		'b1111:		rDRightX <= wDRightXinit;
-		'bx011:		rDRightX <= wDTopYRise;
-		'bx111:		rDRightX <= wDTopYFall;
-		default: 	rDRightX <= rDRightX;
-	endcase
+	// // x軸 Right
+	// casex ({qDUnderOverflow, qJumpPeakY, qFe, iSlideEn})
+	// 	'bxxx0:		rDRightX <= wDRightXinit;
+	// 	'b1111:		rDRightX <= wDRightXinit;
+	// 	'bx011:		rDRightX <= wDTopYRise;
+	// 	'bx111:		rDRightX <= wDTopYFall;
+	// 	default: 	rDRightX <= rDRightX;
+	// endcase
 
 	// y軸 Top
-	casex ({qDUnderOverflow, qJumpPeakY, qFe})
+	casex ({qDUnderOverflow, qJumpPeakY, qFe, rJumpCkeY, iUnderCkeY, iTopCkeY})
 		'bxxx0:		rDTopY <= iDStartY;
 		'b1111:		rDTopY <= iDStartY;
 		'bx011:		rDTopY <= wDTopYRise;
@@ -211,7 +211,7 @@ begin
 	endcase
 
 	// y軸 Under
-	casex ({qDUnderOverflow, qJumpPeakY, qFe})
+	casex ({qDUnderOverflow, qJumpPeakY, qFe, rJumpCkeY, iUnderCkeY, iTopCkeY})
 		'bxxx0:		rDUnderY <= wDUnderYinit;
 		'b1111:		rDUnderY <= wDUnderYinit;
 		'bx011:		rDUnderY <= wDUnderYRise;
