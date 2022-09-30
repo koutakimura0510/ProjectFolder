@@ -97,17 +97,22 @@ always @(posedge iClk)
 begin
 	//-----------------------------------------------------------------------------
 	// ジャンプ後は 次回ジャンプ可能地点に着地するまで、ジャンプの一連の動作を継続する
-	// なるべく Cke 生成ロジックで制御信号を確認するようにして、
+	// なるべく Cke 生成ロジックで制御信号を確認するようにして、ロジックを複雑にしないように
 	// 後段の 計算などには 無駄な Sel を使用しないようにする。
-	// これは ロジックを複雑にしない目的がある。
 	//-----------------------------------------------------------------------------
-	casex ({rJumpCke, qVDownPoint, iJumpCkeY})
-		'b010: 		rJumpCke <= 1'b0;
-		'b011: 		rJumpCke <= 1'b1;
-		'b10x: 		rJumpCke <= 1'b1;
-		'b11x: 		rJumpCke <= 1'b0;
-		default:	rJumpCke <= rJumpCke;
-	endcase
+	if (iRst)
+	begin
+		rJumpCke <= 1'b0;
+	end
+	else
+	begin
+		casex ({rJumpCke, qVDownPoint, iJumpCkeY})
+			'b0x1: 		rJumpCke <= 1'b1;
+			'b10x: 		rJumpCke <= 1'b1;
+			'b11x: 		rJumpCke <= 1'b0;
+			default:	rJumpCke <= rJumpCke;
+		endcase
+	end
 
 	//-----------------------------------------------------------------------------
 	// ジャンプ高さの計算
@@ -123,9 +128,8 @@ begin
 	//-----------------------------------------------------------------------------
 	casex ({qJumpJyroMaxComp, qJumpJyroMinComp, qJumpPeakY, qFe, rJumpCkeY})
 		'bxxxx0:	rJumpGainY <= iJumpGainY;
-		'b0x111:	rJumpGainY <= wJumpFallY;		// 下降量 は緩やかに加速していく
-		'bxx111:	rJumpGainY <= iJumpGainY;		// 落下中の着地点
 		'bx0011:	rJumpGainY <= wJumpRiseY;		// 上昇量 は緩やかに減速していく
+		'b0x111:	rJumpGainY <= wJumpFallY;		// 下降量 は緩やかに加速していく
 		default: 	rJumpGainY <= rJumpGainY;
 	endcase
 end
@@ -177,11 +181,17 @@ wire 	signed [pVdisplayWidth:0] wDSizeY = iDSizeY;
 // X軸
 wire 	signed [pHdisplayWidth:0] wDRightXinit = iDStartX + wDSizeX;		// X軸 初期値
 // Y軸
-wire 	signed [pVdisplayWidth:0] wDUnderYinit = iDStartY + wDSizeY;		// Y軸 初期値
-wire 	signed [pVdisplayWidth:0] wDTopYRise   = rDTopY   - rBasicGainY;	// 上昇時 Top 座標
-wire 	signed [pVdisplayWidth:0] wDTopYFall   = rDTopY   + rBasicGainY;	// 下降時 Top 座標
-wire 	signed [pVdisplayWidth:0] wDUnderYRise = rDUnderY - rBasicGainY;	// 上昇時 Under 座標
-wire 	signed [pVdisplayWidth:0] wDUnderYFall = rDUnderY + rBasicGainY;	// 下降時 Under 座標
+wire 	signed [pVdisplayWidth:0] wDTopYinit		= iDStartY;					// Y軸 Top 初期値
+wire 	signed [pVdisplayWidth:0] wDUnderYinit 		= iDStartY + wDSizeY;		// Y軸 Under 初期値
+wire 	signed [pVdisplayWidth:0] wDTopBasicYRise	= rDTopY   - iBasicGainY;	// 上昇時 Top 座標
+wire 	signed [pVdisplayWidth:0] wDTopBasicYFall	= rDTopY   + iBasicGainY;	// 下降時 Top 座標
+wire 	signed [pVdisplayWidth:0] wDUnderBasicYRise	= rDUnderY - iBasicGainY;	// 上昇時 Under 座標
+wire 	signed [pVdisplayWidth:0] wDUnderBasicYFall	= rDUnderY + iBasicGainY;	// 下降時 Under 座標
+// Y軸 ジャンプ
+wire 	signed [pVdisplayWidth:0] wDTopJumpYRise	= rDTopY   - rJumpGainY;	// 上昇時 Top 座標
+wire 	signed [pVdisplayWidth:0] wDTopJumpYFall	= rDTopY   + rJumpGainY;	// 下降時 Top 座標
+wire 	signed [pVdisplayWidth:0] wDUnderJumpYRise	= rDUnderY - rJumpGainY;	// 上昇時 Under 座標
+wire 	signed [pVdisplayWidth:0] wDUnderJumpYFall	= rDUnderY + rJumpGainY;	// 下降時 Under 座標
 //
 reg qDUnderOverflow;
 
@@ -196,34 +206,49 @@ begin
 	// casex ({qDUnderOverflow, qJumpPeakY, qFe, iSlideEn})
 	// 	'bxxx0:		rDRightX <= wDRightXinit;
 	// 	'b1111:		rDRightX <= wDRightXinit;
-	// 	'bx011:		rDRightX <= wDTopYRise;
-	// 	'bx111:		rDRightX <= wDTopYFall;
+	// 	'bx011:		rDRightX <= wDTopBasicYRise;
+	// 	'bx111:		rDRightX <= wDTopBasicYFall;
 	// 	default: 	rDRightX <= rDRightX;
 	// endcase
 
 	// y軸 Top
-	casex ({qDUnderOverflow, qJumpPeakY, qFe, rJumpCkeY, iUnderCkeY, iTopCkeY})
-		'bxxx0:		rDTopY <= iDStartY;
-		'b1111:		rDTopY <= iDStartY;
-		'bx011:		rDTopY <= wDTopYRise;
-		'bx111:		rDTopY <= wDTopYFall;
-		default: 	rDTopY <= rDTopY;
-	endcase
+	if (iRst)
+	begin
+		rDTopY <= wDTopYinit;
+	end
+	else
+	begin
+		casex ({qDUnderOverflow, qFe, qJumpPeakY, rJumpCkeY, iUnderCkeY, iTopCkeY})
+			'bxxx000:	rDTopY <= rDTopY;
+			'bx1x001:	rDTopY <= wDTopBasicYRise;
+			'bx1x010:	rDTopY <= wDTopBasicYFall;
+			'b0101xx:	rDTopY <= wDTopJumpYRise;
+			'b0111xx:	rDTopY <= wDTopJumpYFall;
+			default: 	rDTopY <= rDTopY;
+		endcase
+	end
 
 	// y軸 Under
-	casex ({qDUnderOverflow, qJumpPeakY, qFe, rJumpCkeY, iUnderCkeY, iTopCkeY})
-		'bxxx0:		rDUnderY <= wDUnderYinit;
-		'b1111:		rDUnderY <= wDUnderYinit;
-		'bx011:		rDUnderY <= wDUnderYRise;
-		'bx111:		rDUnderY <= wDUnderYFall;
-		default: 	rDUnderY <= rDUnderY;
-	endcase
+	if (iRst)
+	begin
+		rDUnderY <= wDUnderYinit;
+	end
+	else
+	begin
+		casex ({qDUnderOverflow, qFe, qJumpPeakY, rJumpCkeY, iUnderCkeY, iTopCkeY})
+			'bxxx0:		rDUnderY <= wDUnderYinit;
+			'b1111:		rDUnderY <= wDUnderYinit;
+			'bx011:		rDUnderY <= wDUnderBasicYRise;
+			'bx111:		rDUnderY <= wDUnderBasicYFall;
+			default: 	rDUnderY <= rDUnderY;
+		endcase
+	end
 end
 
 always @*
 begin
 	qVDownPoint 	<= (iVdisplay == rDUnderY);		// 物体の最下点とディスプレイの最下点を参照
-	qDUnderOverflow	<= (iVdisplay < wDUnderYFall);	// 落下中 次フレームの Y座標が画面外の時 地面に着地する
+	qDUnderOverflow	<= (iVdisplay < wDUnderBasicYFall);	// 落下中 次フレームの Y座標が画面外の時 地面に着地する
 end
 
 
