@@ -13,6 +13,9 @@
 //
 // 2022-03-21
 // ReadEnableから 2レイテンシでデータ出力する構造に変更、ユーザが意識せずともハンドシェイクが上手く行く用に変更
+// 
+// 2022-09-19
+// oRVd のクロックを DstCLK に修正
 // -
 // 参考文献
 // 非同期FIFO Verilog ->    https://zenn.dev/sk6labo/articles/fd2bb32f6e570e
@@ -21,8 +24,9 @@
 // 
 //----------------------------------------------------------
 module fifoDualControllerGray2 #(
-    parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
-    parameter pBitWidth   = 24      // bitサイズ
+    parameter 					pBuffDepth  = 256,    	// FIFO BRAMのサイズ指定
+    parameter 					pBitWidth   = 24,     	// bitサイズ
+	parameter					pFullAlMost = 6			// 指定値、早く full 出力
 )(
     input   [pBitWidth-1:0]     iWD,    	// write data
     input                       iWE,    	// write enable 有効データ書き込み
@@ -85,17 +89,23 @@ end
 //----------------------------------------------------------
 // ハンドシェイク信号、read ptrが write ptrを超えないように調整
 //----------------------------------------------------------
+localparam lpFullAlMost = pFullAlMost + 1;
+
 reg rFull;						assign oFLL = rFull;
 reg rEmp;						assign oEMP = rEmp;
 reg rRVd;						assign oRVD = rRVd;
-reg qFull, qEmp, qRVd;
-reg [lpAddrWidth-1:0] qRAn [0:5];
-reg [lpAddrWidth-1:0] qWAn [0:5];
+reg qEmp, qRVd;
+reg [pFullAlMost-1:0] qFull;
+// reg qFull;
+reg qFullAllmost;
+reg [lpAddrWidth-1:0] qWAn [0:pFullAlMost];
 
 always @(posedge iSrcClk)
 begin
+    // if (iSrcRst)    rFull <= 1'b0;
+    // else            rFull <= qFull;
     if (iSrcRst)    rFull <= 1'b0;
-    else            rFull <= qFull;
+    else            rFull <= qFullAllmost;
 
     if (iSrcRst)    rEmp <= 1'b0;
     else            rEmp <= qEmp;
@@ -106,25 +116,32 @@ begin
     if (iDstRst)    rRVd <= 1'b0;
     else            rRVd <= qRVd;
 end
+//
+integer n;
+
+generate
+	always @*
+	begin
+		for (n = 1; n < lpFullAlMost; n = n + 1)
+		begin
+			qWAn[n-1]   <= rWA + n;
+			qFull[n-1]	<= (qWAn[n-1] == rRA);
+		end
+		qFullAllmost <= |{qFull};
+	end
+endgenerate
 
 always @*
 begin
-    qRAn[0] <= rRA;
-    qRAn[1] <= rRA + 1'd1;
-    qRAn[2] <= rRA + 2'd2;
-    qRAn[3] <= rRA + 2'd3;
-    qRAn[4] <= rRA + 3'd4;
-    qRAn[5] <= rRA + 3'd5;
-    qWAn[0] <= rWA + 1'b1;
-    qWAn[1] <= rWA + 2'd2;
-    qWAn[2] <= rWA + 2'd3;
-    qWAn[3] <= rWA + 3'd4;
-    qWAn[4] <= rWA + 3'd5;
-    qWAn[5] <= rWA + 3'd6;
-    qFull   <= (qWAn[0] == rRA || qWAn[1] == rRA || qWAn[2] == rRA ||
-                qWAn[3] == rRA || qWAn[4] == rRA || qWAn[5] == rRA);
-    qEmp    <= (qRAn[0] == rWA || qRAn[1] == rWA || qRAn[2] == rWA ||
-                qRAn[3] == rWA || qRAn[4] == rWA || qRAn[5] == rWA);
+    // qWAn[0] <= rWA + 1'b1;
+    // qWAn[1] <= rWA + 2'd2;
+    // qWAn[2] <= rWA + 2'd3;
+    // qWAn[3] <= rWA + 3'd4;
+    // qWAn[4] <= rWA + 3'd5;
+    // qWAn[5] <= rWA + 3'd6;
+    // qFull   <= (qWAn[0] == rRA || qWAn[1] == rRA || qWAn[2] == rRA ||
+    //             qWAn[3] == rRA || qWAn[4] == rRA || qWAn[5] == rRA);
+    qEmp    <= (rWA  == rRA) ;
     qRVd    <= (rRA != rORP);
     qRE     <= iRE & (~qEmp);
 end
@@ -133,7 +150,8 @@ end
 //----------------------------------------------------------
 // FIFO動作
 //----------------------------------------------------------
-wire [pBitWidth-1:0] wRD;           assign oRD = wRD;
+reg  [pBitWidth-1:0] rRD;           assign oRD = rRD;
+wire [pBitWidth-1:0] wRD;
 
 userFifoDual #(
     .pBuffDepth    (pBuffDepth),
@@ -146,6 +164,11 @@ userFifoDual #(
     .iWA    (rWA),      .iRA    (rRA),
     .iWE    (qWE)
 );
+
+always @(posedge iDstClk)
+begin
+	rRD <= wRD;
+end
 
 
 ////////////////////////////////////////////////////////////

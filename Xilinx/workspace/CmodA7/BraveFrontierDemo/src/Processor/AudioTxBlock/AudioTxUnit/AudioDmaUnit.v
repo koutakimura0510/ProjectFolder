@@ -40,9 +40,9 @@ module AudioDmaUnit #(
 
 
 //-----------------------------------------------------------------------------
-// FIFO Bit幅取得
+// UFIB Sw
 //-----------------------------------------------------------------------------
-localparam pFIfoBitWidth  = fBitWidth(pDmaFifoDepth) - 3;
+localparam pSwBitWidth  = 1;
 
 
 //-----------------------------------------------------------------------------
@@ -60,14 +60,14 @@ reg							qMUfiVd;
 reg		[pMemAdrsWidth-1:0]	rDmaRAdrs;
 reg 						qDmaRAdrsMatch;
 //
-reg		[pFIfoBitWidth-1:0]	rSwitchCnt;
+reg		[pSwBitWidth-1:0]	rSwitchCnt;
 reg 						qSwicthCke;
 
 always @(posedge iClk)
 begin
 	casex ({qSwicthCke, iDmaRe, iMUfiRdy, iDmaEn})
-		'bxxx0: 	rSwitchCnt	<= {pFIfoBitWidth{1'b0}};
-		'b1xxx:		rSwitchCnt	<= {pFIfoBitWidth{1'b0}};
+		'bxxx0: 	rSwitchCnt	<= {pSwBitWidth{1'b0}};
+		'b1xxx:		rSwitchCnt	<= {pSwBitWidth{1'b0}};
 		'b0111:		rSwitchCnt	<= rSwitchCnt + 1'b1;
 		default: 	rSwitchCnt	<= rSwitchCnt;
 	endcase
@@ -109,7 +109,7 @@ begin
 	// 後段の FIFO の深さが 32 とした場合、それ以上の回数の RCmd を発行してしまい、
 	// 結果的に Read データを取得できずに捨ててしまうことになる。
 	// そのため、指定回数分 RCmd を発行した場合に、他の DMA デバイスにバス使用の権利を譲る形式とした。
-	qSwicthCke		<= rSwitchCnt == {pFIfoBitWidth{1'b1}};
+	qSwicthCke		<= rSwitchCnt == {pSwBitWidth{1'b1}};
 end
 
 //-----------------------------------------------------------------------------

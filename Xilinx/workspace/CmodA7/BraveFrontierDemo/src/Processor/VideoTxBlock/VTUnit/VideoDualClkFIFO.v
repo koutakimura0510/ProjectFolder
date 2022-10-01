@@ -25,6 +25,11 @@ module VideoDualClkFIFO #(
 );
 
 
+//-----------------------------------------------------------------------------
+// FIFO 出力レイテンシ
+//-----------------------------------------------------------------------------
+localparam lpFullAlMost = pBuffDepth >> 2;
+
 
 //-----------------------------------------------------------------------------
 // Dual Clk FIFO Instance
@@ -38,8 +43,9 @@ wire wRVd;
 
 fifoDualControllerGray # (
     .pBuffDepth     (pBuffDepth),
-    .pBitWidth      (pBitWidth)
-) ASYNC_PIXEL_BUFFER (
+    .pBitWidth      (pBitWidth),
+	.pFullAlMost	(5)
+) InstPixelDualClkFifo (
     .iWD            (iWd),
     .iWE            (iWe),
     .oRD            (wRd),

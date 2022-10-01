@@ -48,6 +48,12 @@ module VideoDmaUnit #(
 
 
 //-----------------------------------------------------------------------------
+// UFIB Sw
+//-----------------------------------------------------------------------------
+localparam pSwBitWidth  = 1;
+
+
+//-----------------------------------------------------------------------------
 // DMA を使用して UFIB 経由で RAM に書き込むデータを保持
 // 前段のブロックとのタイミング調停も兼ねる
 //-----------------------------------------------------------------------------
@@ -71,20 +77,7 @@ fifoControllerLutRam #(
 	.iRst			(iRst),
 	.iClk			(iClk)
 );
-// fifoController #(
-// 	.pFifoDepth		(pFifoDepth),
-// 	.pFifoBitWidth	(pFifoBitWidth)
-// ) VideoDmaFifo (
-// 	.iWd			(iDmaWd),
-// 	.iWe			(iDmaWEd),
-// 	.oFull			(oDmaFull),
-// 	.oRd			(wDmaFifoRd),
-// 	.iRe			(rDmaFifoRe),
-// 	.oRvd			(wRVd),
-// 	.oEmp			(wEmp),
-// 	.iRst			(iRst),
-// 	.iClk			(iClk)
-// );
+
 
 //-----------------------------------------------------------------------------
 // R/W ステートマシン
@@ -107,8 +100,8 @@ reg 						rDmaAdrsSel;
 reg 						qDmaWAdrsMatch;
 reg 						qDmaRAdrsMatch;
 //
-reg [10:0] 	rTargetSwitchCnt;
-reg 		qTargetSwitch;
+reg 	[pSwBitWidth-1:0]	rTargetSwitchCnt;
+reg 						qTargetSwitch;
 
 always @(posedge iClk)
 begin
@@ -160,8 +153,8 @@ begin
 	if (iDmaEn)			rMUfiCmd	<= qMUfiCmd;
 	else 				rMUfiCmd	<= 1'b0;
 
-	if 	(iRst)					rTargetSwitchCnt <= 0;
-	else if (!qTargetSwitch)	rTargetSwitchCnt <= 0;
+	if 	(iRst)					rTargetSwitchCnt <= {pSwBitWidth{1'b0}};
+	else if (!qTargetSwitch)	rTargetSwitchCnt <= {pSwBitWidth{1'b0}};
 	else if (iMUfiRdy)			rTargetSwitchCnt <= rTargetSwitchCnt + 1'b1;
 	else 						rTargetSwitchCnt <= rTargetSwitchCnt;
 end
@@ -182,7 +175,7 @@ begin
 	qMUfiREd			<= iDmaRe;							// 後段がデータ受付可能であれば Read 要求とする
 	//
 	// 2022-09-24 ある程度データ転送を行ったら、他の DMA デバイスにバス使用の権利を譲る
-	qTargetSwitch 		<= ~rTargetSwitchCnt[1];
+	qTargetSwitch 		<= ~(rTargetSwitchCnt == {pSwBitWidth{1'b1}});
 end
 
 

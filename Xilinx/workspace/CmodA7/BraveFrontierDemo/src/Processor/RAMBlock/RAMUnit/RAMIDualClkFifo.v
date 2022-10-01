@@ -9,7 +9,8 @@ module RAMDualClkFifo #(
 	parameter						pUfiIdNumber		= 3,
 	parameter						pDualClkFifoDepth 	= 256,
 	parameter						pRamDqWidth			= 8,
-	parameter						pRamAdrsWidth		= 19
+	parameter						pRamAdrsWidth		= 19,
+	parameter						pFullAlMost 		= 16
 )(
 	// 前段との結線
 	input 	[pRamDqWidth-1:0]		iWd,
@@ -52,6 +53,7 @@ module RAMDualClkFifo #(
 fifoDualControllerGray #(
 	.pBuffDepth	(pDualClkFifoDepth),
 	.pBitWidth	(pRamDqWidth)
+	// .pFullAlMost(pFullAlMost)
 ) RamDualClkFifoWd (
 	.iWD		(iWd),
 	.iWE		(iWEd),
@@ -69,6 +71,7 @@ fifoDualControllerGray #(
 fifoDualControllerGray #(
 	.pBuffDepth	(pDualClkFifoDepth),
 	.pBitWidth	(pRamAdrsWidth)
+	// .pFullAlMost(pFullAlMost)
 ) RamDualClkFifoAdrs (
 	.iWD		(iAdrs),
 	.iWE		(iWEd),
@@ -85,7 +88,8 @@ fifoDualControllerGray #(
 
 fifoDualControllerGray #(
 	.pBuffDepth	(pDualClkFifoDepth),
-	.pBitWidth	(1'b1)
+	.pBitWidth	(1'b1),
+	.pFullAlMost(pFullAlMost)
 ) RamDualClkFifoCmd (
 	.iWD		(iCmd),
 	.iWE		(iWEd),
@@ -120,6 +124,7 @@ reg 					rMemREd; 		assign oMemREd	= rMemREd;
 fifoDualControllerGray3 #(
 	.pBuffDepth		(pDualClkFifoDepth),
 	.pBitWidth		(pRamDqWidth)
+	// .pFullAlMost	(pFullAlMost)
 ) RamDualClkFifoRd (
 	.iWD			(iMemWd),
 	.iWE			(iMemWEd),
@@ -146,8 +151,9 @@ end
 localparam lpFifoDepthId = pDualClkFifoDepth << 1;
 
 fifoController #(
-	.pFifoDepth			(lpFifoDepthId),
-	.pFifoBitWidth		(pUfiIdNumber)
+	.pFifoDepth		(lpFifoDepthId),
+	.pFifoBitWidth	(pUfiIdNumber)
+	// .pFullAlMost	(pFullAlMost)
 ) RamFifoId (
 	.iWd			(iSUfiIdI),
 	.iWe			(qWEdId),

@@ -24,8 +24,9 @@
 // 
 //----------------------------------------------------------
 module fifoDualControllerGray #(
-    parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
-    parameter pBitWidth   = 24      // bitサイズ
+    parameter 					pBuffDepth  = 256,    	// FIFO BRAMのサイズ指定
+    parameter 					pBitWidth   = 24,     	// bitサイズ
+	parameter					pFullAlMost = 6			// 指定値、早く full 出力
 )(
     input   [pBitWidth-1:0]     iWD,    	// write data
     input                       iWE,    	// write enable 有効データ書き込み
@@ -88,16 +89,20 @@ end
 //----------------------------------------------------------
 // ハンドシェイク信号、read ptrが write ptrを超えないように調整
 //----------------------------------------------------------
+localparam lpFullAlMost = pFullAlMost + 1;
+
 reg rFull;						assign oFLL = rFull;
 reg rEmp;						assign oEMP = rEmp;
 reg rRVd;						assign oRVD = rRVd;
-reg qFull, qEmp, qRVd;
-reg [lpAddrWidth-1:0] qWAn [0:5];
+reg qEmp, qRVd;
+reg [pFullAlMost-1:0] qFull;
+reg qFullAllmost;
+reg [lpAddrWidth-1:0] qWAn [0:pFullAlMost];
 
 always @(posedge iSrcClk)
 begin
     if (iSrcRst)    rFull <= 1'b0;
-    else            rFull <= qFull;
+    else            rFull <= qFullAllmost;
 
     if (iSrcRst)    rEmp <= 1'b0;
     else            rEmp <= qEmp;
@@ -108,17 +113,23 @@ begin
     if (iDstRst)    rRVd <= 1'b0;
     else            rRVd <= qRVd;
 end
+//
+integer n;
+
+generate
+	always @*
+	begin
+		for (n = 1; n < lpFullAlMost; n = n + 1)
+		begin
+			qWAn[n-1]   <= rWA + n;
+			qFull[n-1]	<= (qWAn[n-1] == rRA);
+		end
+		qFullAllmost <= |{qFull};
+	end
+endgenerate
 
 always @*
 begin
-    qWAn[0] <= rWA + 1'b1;
-    qWAn[1] <= rWA + 2'd2;
-    qWAn[2] <= rWA + 2'd3;
-    qWAn[3] <= rWA + 3'd4;
-    qWAn[4] <= rWA + 3'd5;
-    qWAn[5] <= rWA + 3'd6;
-    qFull    <= (qWAn[0] == rRA || qWAn[1] == rRA || qWAn[2] == rRA ||
-                 qWAn[3] == rRA || qWAn[4] == rRA || qWAn[5] == rRA);
     qEmp    <= (rWA  == rRA) ;
     qRVd    <= (rRA != rORP);
     qRE     <= iRE & (~qEmp);
