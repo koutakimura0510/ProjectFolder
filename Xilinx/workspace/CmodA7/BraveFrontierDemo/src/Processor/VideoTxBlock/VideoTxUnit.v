@@ -15,8 +15,8 @@ module VideoTxUnit #(
 	// Color Depth ARGB:4444
 	parameter						pColorDepth			= 16,
 	// FIFO Depth
-	parameter						pDualClkFifoDepth 	= 1024,
-	parameter						pDmaFifoDepth		= 1024,
+	parameter						pDualClkFifoDepth 	= 32,
+	parameter						pDmaFifoDepth		= 32,
 	parameter						pFifoDepthOverride	= "no"
 )(
 	// External port
@@ -100,7 +100,7 @@ VideoPixelGen #(
 //-----------------------------------------------------------------------------
 // Video DMA
 //-----------------------------------------------------------------------------
-localparam lpDmaFifoDepth = (pFifoDepthOverride == "yes") ? pDmaFifoDepth : 1024;
+localparam lpDmaFifoDepth = (pFifoDepthOverride == "yes") ? pDmaFifoDepth : 32;
 
 wire 					wDmaFull;
 wire [pUfiBusWidth-1:0]	wDmaRd;
@@ -187,7 +187,7 @@ VideoSyncGen #(
 //-----------------------------------------------------------------------------
 // SystemClk <=> VideoClk Dual Clk FIFO
 //-----------------------------------------------------------------------------
-localparam lpDualClkFifoDepth	= (pFifoDepthOverride == "yes") ? pDualClkFifoDepth : 1024;
+localparam lpDualClkFifoDepth	= (pFifoDepthOverride == "yes") ? pDualClkFifoDepth : 32;
 
 wire [lpDualFifoWidth-1:0] 	wVideoDualFifoRd;
 wire 						wVideoDualFifoFull;
@@ -214,8 +214,6 @@ end
 
 // Dual Clk Fifo 経由で 2レイテンシ遅延が発生するため、
 // Sync系統も同様に遅らせる
-// ※2022-09-20 何故か 6レイテンシ遅延が発生しているため応急措置、原因はわかっていない
-// 更にたまに、5レイテンシ遅延の場合があるので質が悪い
 localparam lpSyncLatancy = 2;
 
 reg [lpSyncLatancy-1:0] rVideoHSync;

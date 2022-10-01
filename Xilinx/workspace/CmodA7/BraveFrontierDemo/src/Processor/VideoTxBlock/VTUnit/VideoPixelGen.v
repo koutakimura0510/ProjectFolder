@@ -54,10 +54,10 @@ module VideoPixelGen #(
 // Csr レジスタ入力値を配線遅延など考慮して一度レジスタで受信する
 // 横幅 480 の場合、0 ~ 479 の範囲を使用するため、設定値から -1 した値を各 module で利用する
 //-----------------------------------------------------------------------------
-reg	[pHdisplayWidth:0] rHdisplay;
-reg	[pVdisplayWidth:0] rVdisplay;
-reg	[pHdisplayWidth:0] qHdisplay;
-reg	[pVdisplayWidth:0] qVdisplay;
+reg	[pHdisplayWidth-1:0] rHdisplay;
+reg	[pVdisplayWidth-1:0] rVdisplay;
+reg	[pHdisplayWidth-1:0] qHdisplay;
+reg	[pVdisplayWidth-1:0] qVdisplay;
 
 initial
 begin
@@ -67,8 +67,8 @@ end
 
 always @(posedge iClk)
 begin
-	rHdisplay <= {1'b0, (iHdisplay - 1'b1)};
-	rVdisplay <= {1'b0, (iVdisplay - 1'b1)};
+	rHdisplay <= iHdisplay - 1'b1;
+	rVdisplay <= iVdisplay - 1'b1;
 end
 
 always @*
@@ -152,7 +152,9 @@ SceneChange #(
 	.pFifoDepth			(lpDotSquareGenFifoDepth),
 	.pFifoBitWidth		(pColorDepth)
 ) SceneChange (
-	.iColor				(16'h000f),
+	.iColor				(16'h00f0),
+	.iHdisplay			(qHdisplay),
+	.iVdisplay			(qVdisplay),
 	.iHpos				(wPixelDrawHpos),
 	.iVpos				(wPixelDrawVpos),
 	.iFe				(wAFE),

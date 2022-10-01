@@ -5,18 +5,18 @@
 // 
 //----------------------------------------------------------
 module SceneChange #(
-    parameter                   	pHdisplayWidth  = 11,
-    parameter                   	pVdisplayWidth  = 11,
-	parameter						pColorDepth		= 16,
+    parameter                   			pHdisplayWidth  = 11,
+    parameter                   			pVdisplayWidth  = 11,
+	parameter								pColorDepth		= 16,
 	//
-	parameter						pFifoDepth 		= 16,
-	parameter						pFifoBitWidth	= 16
+	parameter								pFifoDepth 		= 16,
+	parameter								pFifoBitWidth	= 16
 )(
 	// Internal Port
 	// Status
     input			[pColorDepth-1:0]		iColor,		// 描画色
-	input	signed	[pHdisplayWidth:0]		iHdisplay,	// 画面横サイズ
-	input	signed	[pVdisplayWidth:0]		iVdisplay,	// 画面縦サイズ
+	input			[pHdisplayWidth-1:0]	iHdisplay,	// 画面横サイズ
+	input			[pVdisplayWidth-1:0]	iVdisplay,	// 画面縦サイズ
     input  			[pHdisplayWidth-1:0]    iHpos,		// 現在の横座標
     input  			[pVdisplayWidth-1:0]    iVpos,		// 現在の縦座標
 	input 									iFe,
@@ -42,29 +42,54 @@ module SceneChange #(
 //-----------------------------------------------------------------------------
 // 描画座標の更新
 //-----------------------------------------------------------------------------
+localparam pDashGainBitWdith = 4;
+localparam pJumpJyroBitWidth = 4;
+
 wire signed [pHdisplayWidth:0] wDLeftX;
 wire signed [pHdisplayWidth:0] wDRightX;
 wire signed [pVdisplayWidth:0] wDTopY;
 wire signed [pVdisplayWidth:0] wDUnderY;
 
-SquarePosGen #(
+ObjectPosGen #(
 	.pHdisplayWidth		(pHdisplayWidth),
 	.pVdisplayWidth		(pVdisplayWidth),
-	.pGainWidth			(7)
-) SquarePosGen (
+	.pDashGainBitWdith	(pDashGainBitWdith),
+	.pJumpJyroBitWidth	(pJumpJyroBitWidth),
+	.pDirectObjectX		("yes"),
+	.pAutoMoving 		("yes")
+) ObjectPosGen (
 	.iHdisplay			(iHdisplay),
 	.iVdisplay			(iVdisplay),
 	.iFe				(iFe),
-	.iDStartX			(),
-	.iDStartY			(),
-	.iDSizeX			(),
-	.iDSizeY			(),
-	.iDGainX			(),
-	.iDGainY			(),
+	//
+	.iDStartX			(0),
+	.iDStartY			(271-32),
+	.iDSizeX			(32),
+	.iDSizeY			(32),
 	.oDLeftX			(wDLeftX),
 	.oDRightX			(wDRightX),
 	.oDTopY				(wDTopY),
 	.oDUnderY			(wDUnderY),
+	//
+	.iDashGainX			(0),
+	.iDashCkeX			(1'b0),
+	//
+	.iJumpPeakY			(100),
+	.iJumpGainY			(10),
+	.iJumpJyroMaxY		(10),
+	.iJumpJyroMinY		(1),
+	.iJumpUpdateTiming  (1),
+	.iJumpCkeY			(1'b1),
+	//
+	.iBasicGainX		(2),
+	.iBasicGainY		(0),
+	.i
+	//
+	.iLeftCkeX			(1'b0),
+	.iRightCkeX			(1'b1),
+	.iTopCkeY			(1'b1),
+	.iUnderCkeY			(1'b0),
+	//
 	.iRst				(iRst),
 	.iClk				(iClk)
 );
@@ -82,7 +107,7 @@ DotSquareGen #(
 	.pColorDepth		(pColorDepth)
 ) DotSquareGen (
 	.oPixel 			(wPixel),
-	.iColor				(iPixel),
+	.iColor				(iColor),
 	.iHpos				(iHpos),
 	.iVpos				(iVpos),
 	.iDLeftX			(wDLeftX),

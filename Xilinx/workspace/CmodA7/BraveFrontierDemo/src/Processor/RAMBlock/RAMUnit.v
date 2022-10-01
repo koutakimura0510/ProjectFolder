@@ -62,7 +62,8 @@ RAMDualClkFifo #(
 	.pUfiIdNumber		(pUfiIdNumber),
 	.pDualClkFifoDepth 	(pRamFifoDepth),
 	.pRamDqWidth		(pRamDqWidth),
-	.pRamAdrsWidth		(pRamAdrsWidth)
+	.pRamAdrsWidth		(pRamAdrsWidth),
+	.pFullAlMost		(16)
 ) RamDualClkFifo (
 	.iWd				(iSUfiWd),
 	.iAdrs				(iSUfiAdrs[pRamAdrsWidth-1:0]),

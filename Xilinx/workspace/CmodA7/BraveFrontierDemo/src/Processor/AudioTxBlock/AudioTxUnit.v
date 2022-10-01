@@ -11,8 +11,8 @@ module AudioTxUnit #(
 	parameter					pMemAdrsWidth		= 19,	// 外部メモリアドレスサイズ
 	parameter					pSamplingBitWidth	= 8,	// 分解能
 	//
-	parameter					pDualClkFifoDepth	= 1024,
-	parameter					pDmaFifoDepth		= 1024,
+	parameter					pDualClkFifoDepth	= 32,
+	parameter					pDmaFifoDepth		= 32,
 	parameter					pFifoDepthOverride	= "no",
 	//
 	parameter					pTestPortUsed		= "no",
@@ -48,7 +48,7 @@ module AudioTxUnit #(
 //-----------------------------------------------------------------------------
 // DMA
 //-----------------------------------------------------------------------------
-localparam lpDmaFifoDepth = (pFifoDepthOverride == "yes") ? pDmaFifoDepth : 1024;
+localparam lpDmaFifoDepth = (pFifoDepthOverride == "yes") ? pDmaFifoDepth : 32;
 
 wire [pSamplingBitWidth-1:0] 	wDmaRd;
 wire 							wDmaREd;
@@ -81,7 +81,8 @@ AudioDmaUnit #(
 //-----------------------------------------------------------------------------
 // Dual Clk Fifo 及び クロック変換
 //-----------------------------------------------------------------------------
-localparam lpDualClkFifoDepth = (pFifoDepthOverride == "yes") ? pDualClkFifoDepth : 1024;
+localparam lpDualClkFifoDepth 	= (pFifoDepthOverride == "yes") ? pDualClkFifoDepth : 32;
+localparam lpFullAlMost 		= lpDualClkFifoDepth >> 2;
 
 wire [pSamplingBitWidth-1:0] 	wAudioDualFifoRd;
 wire 							wAudioDualFifoFull;
@@ -91,7 +92,8 @@ reg [1:0] 						rAudioCke;
 
 fifoDualControllerGray # (
     .pBuffDepth     (lpDualClkFifoDepth),
-    .pBitWidth      (pSamplingBitWidth)
+    .pBitWidth      (pSamplingBitWidth),
+	.pFullAlMost	(5)
 ) InstAudioDualClkFifo (
     .iWD            (wDmaRd),
     .iWE            (wDmaREd),

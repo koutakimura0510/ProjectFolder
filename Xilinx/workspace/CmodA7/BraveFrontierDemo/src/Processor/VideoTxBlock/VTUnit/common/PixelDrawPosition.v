@@ -69,16 +69,18 @@ end
 //----------------------------------------------------------
 reg rAFE;                   assign oAFE = rAFE;
 reg qAFE;
+//
+wire [pVdisplayWidth-1:0]	wHFast = iHdisplay - 2'd2;
 
 always @(posedge iClk) 
 begin
-    if (iRst) 	rAFE <= 1'b0;
-    else		rAFE <= qAFE;
+    if (iRst) 		rAFE <= 1'b0;
+	else if (iCke)	rAFE <= qAFE;
+    else			rAFE <= 1'b0;
 end
 
 always @*
 begin
-    // qAFE <= (qVposMuxSel & qHposMuxSel);
-    qAFE <= qVposMuxSel;
+    qAFE <= (rVpos == iVdisplay) & (rHpos == wHFast);	// 2pixel 速く frameEnd
 end
 endmodule

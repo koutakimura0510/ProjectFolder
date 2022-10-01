@@ -151,7 +151,7 @@ wire 							wSUfiRdyRam;	// Master に対する Ready 信号
 //----------------------------------------------------------
 localparam  lpHdisplayWidth	= 11;
 localparam	lpVdisplayWidth	= 11;
-localparam	lpHdisplay		= 480;
+localparam	lpHdisplay		= 200;
 localparam	lpHfront		= 8;
 localparam	lpHback			= 43;
 localparam	lpHpulse		= 30;
@@ -167,8 +167,8 @@ localparam [lpVdisplayWidth:0] lpVSyncEnd	= lpVdisplay + lpVfront + lpVpulse - 1
 localparam [lpVdisplayWidth:0] lpVSyncMax	= lpVdisplay + lpVfront + lpVpulse + lpVback - 1'b1;
 //
 localparam lpColorDepth 		= 16;
-localparam lpDualClkFifoDepth	= 32;	// FIFO サイズを可変して、あらゆるサイズで動作可能か検討する
-localparam lpDmaFifoDepth		= 32;	// 上記同文
+localparam lpDualClkFifoDepth	= 1024;	// FIFO サイズを可変して、あらゆるサイズで動作可能か検討する
+localparam lpDmaFifoDepth		= 1024;	// 上記同文
 localparam lpFrameSize 			= lpHdisplay * lpVdisplay * 2; // ダブルフレームバッファ構造
 localparam lpDmaAdrs1			= 0;
 localparam lpDmaAdrs2			= lpHdisplay * lpVdisplay;
@@ -198,7 +198,8 @@ VideoTxUnit #(
 	.pVdisplayWidth		(lpVdisplayWidth),
 	.pColorDepth		(lpColorDepth),
 	.pDualClkFifoDepth	(lpDualClkFifoDepth),
-	.pDmaFifoDepth		(lpDmaFifoDepth)
+	.pDmaFifoDepth		(lpDmaFifoDepth),
+	.pFifoDepthOverride	("yes")
 ) VIDEO_TX_UNIt (
 	.oTftColorR			(wTftColorR[7:4]),
 	.oTftColorG			(wTftColorG[7:4]),
@@ -252,8 +253,11 @@ end
 //-----------------------------------------------------------------------------
 // AudioTxUnit
 //-----------------------------------------------------------------------------
-localparam [lpMemAdrsWidth-1:0] lpDmaAdrs	= 'h40000;
-localparam [lpMemAdrsWidth-1:0] lpDmaLen	= 'h30000;
+localparam [lpMemAdrsWidth-1:0] lpDmaAdrs					= 'h40000;
+localparam [lpMemAdrsWidth-1:0] lpDmaLen					= 'h30000;
+localparam 						lpDualClkFifoDepthAudio		= 1024;
+localparam 						lpDmaFifoDepthAudio			= 1024;
+localparam 						lpFifoDepthOverrideAudio	= "yes";
 
 wire wAudioMClk;
 
@@ -262,6 +266,11 @@ AudioTxUnit #(
 	.pUfiBusWidth		(lpUfiBusWidth),
 	.pMemAdrsWidth		(lpMemAdrsWidth),
 	.pSamplingBitWidth	(8),
+	//
+	.pDualClkFifoDepth	(lpDualClkFifoDepthAudio),
+	.pDmaFifoDepth		(lpDmaFifoDepthAudio),
+	.pFifoDepthOverride	(lpFifoDepthOverrideAudio),
+	//
 	.pTestPortUsed		("no"),
 	.pTestPortNum		(4)
 ) AudioTxUnit (
@@ -459,7 +468,7 @@ endtask
 // TestBench 動作
 // lpFrameCnt 画像出力の回数を指定可能、複数回ループさせて正しく raw 画像が出れば OK
 //-----------------------------------------------------------------------------
-localparam lpFrameCnt = 6;
+localparam lpFrameCnt = 15;
 integer n;
 
 initial
