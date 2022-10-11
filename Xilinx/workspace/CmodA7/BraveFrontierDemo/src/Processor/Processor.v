@@ -168,8 +168,8 @@ MicroControllerBlock #(
 	.oMUfiAdrsMcs		(wMUfiAdrsMcs),
 	.oMUfiEdMcs			(wMUfiEdMcs),
 	.oMUfiVdMcs			(wMUfiVdMcs),
-	.iSysClk			(iSysClk),
-	.iSysRst			(iSysRst)
+	.iSysRst			(iSysRst),
+	.iSysClk			(iSysClk)
 );
 
 

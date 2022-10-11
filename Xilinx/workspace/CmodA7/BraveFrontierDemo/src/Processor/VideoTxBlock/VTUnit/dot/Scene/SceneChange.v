@@ -34,9 +34,35 @@ module SceneChange #(
 
 
 //-----------------------------------------------------------------------------
-// Enable 生成
+// 
 //-----------------------------------------------------------------------------
+reg rLeftDir;
+reg rRightDir;
+wire wRWallPX;
+wire wLWallPX;
 
+always @(posedge iClk)
+begin
+	if (iRst)
+	begin 
+		rLeftDir  <= 1'b0;
+		rRightDir <= 1'b1;
+	end
+	else
+	begin
+		case ({wRWallPX, wLWallPX})
+			'b01:		rLeftDir <= 1'b0;
+			'b10:		rLeftDir <= 1'b1;
+			default:	rLeftDir <= rLeftDir;
+		endcase
+
+		case ({wRWallPX, wLWallPX})
+			'b01:		rRightDir <= 1'b1;
+			'b10:		rRightDir <= 1'b0;
+			default:	rRightDir <= rRightDir;
+		endcase
+	end
+end
 
 
 //-----------------------------------------------------------------------------
@@ -54,22 +80,21 @@ ObjectPosGen #(
 	.pHdisplayWidth		(pHdisplayWidth),
 	.pVdisplayWidth		(pVdisplayWidth),
 	.pDashGainBitWdith	(pDashGainBitWdith),
-	.pJumpJyroBitWidth	(pJumpJyroBitWidth),
-	.pDirectObjectX		("yes"),
-	.pAutoMoving 		("yes")
+	.pJumpJyroBitWidth	(pJumpJyroBitWidth)
 ) ObjectPosGen (
-	.iHdisplay			(iHdisplay),
-	.iVdisplay			(iVdisplay),
-	.iFe				(iFe),
-	//
-	.iDStartX			(0),
-	.iDStartY			(271-32),
-	.iDSizeX			(32),
-	.iDSizeY			(32),
 	.oDLeftX			(wDLeftX),
 	.oDRightX			(wDRightX),
 	.oDTopY				(wDTopY),
 	.oDUnderY			(wDUnderY),
+	//
+	.iHdisplay			(iHdisplay),
+	.iVdisplay			(iVdisplay),
+	.iFe				(iFe),
+	//
+	.iDInitX			(0),
+	.iDInitY			(271-32),
+	.iDSizeX			(31),
+	.iDSizeY			(31),
 	//
 	.iDashGainX			(0),
 	.iDashCkeX			(1'b0),
@@ -83,12 +108,14 @@ ObjectPosGen #(
 	//
 	.iBasicGainX		(2),
 	.iBasicGainY		(0),
-	.i
 	//
-	.iLeftCkeX			(1'b0),
-	.iRightCkeX			(1'b1),
+	.iLeftCkeX			(rLeftDir),
+	.iRightCkeX			(rRightDir),
 	.iTopCkeY			(1'b1),
 	.iUnderCkeY			(1'b0),
+	//
+	.oRightWallPointX	(wRWallPX),
+	.oLeftWallPointX	(wLWallPX),
 	//
 	.iRst				(iRst),
 	.iClk				(iClk)

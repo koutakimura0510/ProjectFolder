@@ -12,27 +12,24 @@ module ObjectPosGen #(
     parameter								pVdisplayWidth  	= 11,
 	parameter								pBasicGainBitWdith	= 3,	// 通常移動量のレジスタ幅
 	parameter								pDashGainBitWdith	= 4,	// ダッシュ移動量のレジスタ幅
-	parameter								pJumpJyroBitWidth	= 4,	// ジャンプ加速度のレジスタ幅
-	//
-	parameter								pDirectObjectX		= "no",	// yes = 画面内の上下左右端と一致したとき跳ね返る
-	parameter								pAutoMoving			= "no"	// yes = 自動移動 ON, 方向Cke で制御しない
+	parameter								pJumpJyroBitWidth	= 4		// ジャンプ加速度のレジスタ幅
 )(
 	// Internal Port
-	// Display,Sync 
-	input			[pHdisplayWidth-1:0]	iHdisplay,			// 画面横サイズ
-	input			[pVdisplayWidth-1:0]	iVdisplay,			// 画面縦サイズ
-    input									iFe,				// Frame End
-	// 描画開始座標
-	input	signed	[pHdisplayWidth:0]		iDStartX,			// x軸 開始点
-	input	signed	[pVdisplayWidth:0]		iDStartY,			// y軸 開始点
-	// 描画サイズ
-	input			[pHdisplayWidth-1:0]	iDSizeX,			// XSize ※描画サイズが負の整数になることはない
-	input			[pVdisplayWidth-1:0]	iDSizeY,			// YSize ※そのため、内部で 1bit 拡張のキャストで計算に使用する
 	// 現在の座標
 	output	signed 	[pHdisplayWidth:0] 		oDLeftX,			// x軸 左点
 	output	signed 	[pHdisplayWidth:0] 		oDRightX,			// x軸 右点
 	output	signed 	[pVdisplayWidth:0] 		oDTopY,				// y軸 上点
 	output	signed 	[pVdisplayWidth:0] 		oDUnderY,			// y軸 下点
+	// Display,Sync 
+	input			[pHdisplayWidth-1:0]	iHdisplay,			// 画面横サイズ
+	input			[pVdisplayWidth-1:0]	iVdisplay,			// 画面縦サイズ
+    input									iFe,				// Frame End
+	// 描画開始座標
+	input	signed	[pHdisplayWidth:0]		iDInitX,			// x軸 開始点
+	input	signed	[pVdisplayWidth:0]		iDInitY,			// y軸 開始点
+	// 描画サイズ
+	input			[pHdisplayWidth-1:0]	iDSizeX,			// XSize ※描画サイズが負の整数になることはない
+	input			[pVdisplayWidth-1:0]	iDSizeY,			// YSize ※そのため、内部で 1bit 拡張のキャストで計算に使用する
 	// ダッシュ機能
 	// input 	signed	[pDashGainBitWdith:0]	iDashPeakX,		// Dash 最高速
 	input 	signed	[pDashGainBitWdith:0]	iDashGainX,			// Dash 加速度
@@ -42,7 +39,7 @@ module ObjectPosGen #(
 	input 	signed	[pVdisplayWidth:0]		iJumpGainY,			// Jump 初速
 	input 	signed  [pJumpJyroBitWidth:0]	iJumpJyroMaxY,		// Jump 最大加速度
 	input 	signed  [pJumpJyroBitWidth:0]	iJumpJyroMinY,		// Jump 最小加速度
-	input 			[5:0]					iJumpUpdateTiming,	// Jump 更新頻度 60fps のbit幅確保
+	input 			[5:0]					iJumpUpdateTiming,	// Jump 更新頻度 60fps のbit幅確保 0~64
 	input 									iJumpCkeY,			// Jump ON 1, OFF 0
 	// 通常動作
 	input 	signed	[pBasicGainBitWdith:0]	iBasicGainX,		// X軸 通常動作時の 移動量
@@ -51,6 +48,9 @@ module ObjectPosGen #(
 	input 									iRightCkeX,			// 右方向移動 Enable
 	input 									iTopCkeY,			// 上方向移動 Enable
 	input 									iUnderCkeY,			// 下方向移動 Enable
+	// 当たり判定
+	output 									oRightWallPointX,
+	output 									oLeftWallPointX,
 	// Clk rst
 	input									iRst,
 	input									iClk
@@ -189,72 +189,93 @@ end
 //-----------------------------------------------------------------------------
 // 座標計算
 //-----------------------------------------------------------------------------
+localparam 	[pHdisplayWidth:0] lpDRightWallXAdd	= 119;
+localparam 	[pHdisplayWidth:0] lpDRightWallXSub	= 31;
+localparam 	[pHdisplayWidth:0] lpDLeftWallXAdd	= 119 - 32;
+localparam 	[pHdisplayWidth:0] lpDLeftWallXSub	= 0;
+
 reg		signed [pHdisplayWidth:0] rDLeftX;			assign oDLeftX 	= rDLeftX;
 reg		signed [pHdisplayWidth:0] rDRightX;			assign oDRightX = rDRightX;
 reg		signed [pVdisplayWidth:0] rDTopY;			assign oDTopY 	= rDTopY;
 reg		signed [pVdisplayWidth:0] rDUnderY;			assign oDUnderY	= rDUnderY;
 // 符号拡張
-wire 	signed [pHdisplayWidth:0] wDSizeX = iDSizeX;
-wire 	signed [pVdisplayWidth:0] wDSizeY = iDSizeY;
+wire 	signed [pHdisplayWidth:0] wDSizeX			= iDSizeX;
+wire 	signed [pVdisplayWidth:0] wDSizeY			= iDSizeY;
 // X軸 Basic
-wire 	signed [pHdisplayWidth:0] wDLeftXinit  		= iDStartX;					// X軸 Left 初期値
-wire 	signed [pHdisplayWidth:0] wDRightXinit 		= iDStartX + wDSizeX;		// X軸 Right 初期値
-wire 	signed [pHdisplayWidth:0] wDLeftBasicXAdd	= rDLeftX  + iBasicGainX;	// X軸 Left 次フレーム座標
-wire 	signed [pHdisplayWidth:0] wDLeftBasicXSub	= rDLeftX  - iBasicGainX;	// X軸 Left 次フレーム座標
-wire 	signed [pHdisplayWidth:0] wDRightBasicXAdd	= rDRightX + iBasicGainX;	// X軸 Right 次フレーム座標
-wire 	signed [pHdisplayWidth:0] wDRightBasicXSub	= rDRightX - iBasicGainX;	// X軸 Right 次フレーム座標
+wire 	signed [pHdisplayWidth:0] wDLeftXinit		= iDInitX;					// X軸 Left 初期値
+wire 	signed [pHdisplayWidth:0] wDRightXinit		= iDInitX  + wDSizeX;		// X軸 Right 初期値
+wire 	signed [pHdisplayWidth:0] wDLeftBasicXAdd	= rDLeftX  + iBasicGainX;	// X軸 Work Left 次フレーム座標
+wire 	signed [pHdisplayWidth:0] wDLeftBasicXSub	= rDLeftX  - iBasicGainX;	// X軸 Work Left 次フレーム座標
+wire 	signed [pHdisplayWidth:0] wDRightBasicXAdd	= rDRightX + iBasicGainX;	// X軸 Work Right 次フレーム座標
+wire 	signed [pHdisplayWidth:0] wDRightBasicXSub	= rDRightX - iBasicGainX;	// X軸 Work Right 次フレーム座標
 // X軸 Dash
-wire 	signed [pHdisplayWidth:0] wDLeftDashXAdd	= rDLeftX  + iDashGainX;	// X軸 Left 次フレーム座標
-wire 	signed [pHdisplayWidth:0] wDLeftDashXSub	= rDLeftX  - iDashGainX;	// X軸 Left 次フレーム座標
-wire 	signed [pHdisplayWidth:0] wDRightDashXAdd	= rDRightX + iDashGainX;	// X軸 Right 次フレーム座標
-wire 	signed [pHdisplayWidth:0] wDRightDashXSub	= rDRightX - iDashGainX;	// X軸 Right 次フレーム座標
+wire 	signed [pHdisplayWidth:0] wDLeftDashXAdd	= rDLeftX  + iDashGainX;	// X軸 Dash Left 次フレーム座標
+wire 	signed [pHdisplayWidth:0] wDLeftDashXSub	= rDLeftX  - iDashGainX;	// X軸 Dash Left 次フレーム座標
+wire 	signed [pHdisplayWidth:0] wDRightDashXAdd	= rDRightX + iDashGainX;	// X軸 Dash Right 次フレーム座標
+wire 	signed [pHdisplayWidth:0] wDRightDashXSub	= rDRightX - iDashGainX;	// X軸 Dash Right 次フレーム座標
 // Y軸 Basic
-wire 	signed [pVdisplayWidth:0] wDTopYinit		= iDStartY;					// Y軸 Top 初期値
-wire 	signed [pVdisplayWidth:0] wDUnderYinit 		= iDStartY + wDSizeY;		// Y軸 Under 初期値
+wire 	signed [pVdisplayWidth:0] wDTopYinit		= iDInitY;					// Y軸 Top 初期値
+wire 	signed [pVdisplayWidth:0] wDUnderYinit		= iDInitY  + wDSizeY;		// Y軸 Under 初期値
 wire 	signed [pVdisplayWidth:0] wDTopBasicYRise	= rDTopY   - iBasicGainY;	// 上昇時 Top 次フレーム座標
 wire 	signed [pVdisplayWidth:0] wDTopBasicYFall	= rDTopY   + iBasicGainY;	// 下降時 Top 次フレーム座標
 wire 	signed [pVdisplayWidth:0] wDUnderBasicYRise	= rDUnderY - iBasicGainY;	// 上昇時 Under 次フレーム座標
 wire 	signed [pVdisplayWidth:0] wDUnderBasicYFall	= rDUnderY + iBasicGainY;	// 下降時 Under 次フレーム座標
 // Y軸 Jump
-wire 	signed [pVdisplayWidth:0] wDTopJumpYRise	= rDTopY   - rJumpGainY;	// 上昇時 Top 次フレーム座標
-wire 	signed [pVdisplayWidth:0] wDTopJumpYFall	= rDTopY   + rJumpGainY;	// 下降時 Top 次フレーム座標
-wire 	signed [pVdisplayWidth:0] wDUnderJumpYRise	= rDUnderY - rJumpGainY;	// 上昇時 Under 次フレーム座標
-wire 	signed [pVdisplayWidth:0] wDUnderJumpYFall	= rDUnderY + rJumpGainY;	// 下降時 Under 次フレーム座標
+wire 	signed [pVdisplayWidth:0] wDTopJumpYRise	= rDTopY   - rJumpGainY;	// 上昇時 Jump Top 次フレーム座標
+wire 	signed [pVdisplayWidth:0] wDTopJumpYFall	= rDTopY   + rJumpGainY;	// 下降時 Jump Top 次フレーム座標
+wire 	signed [pVdisplayWidth:0] wDUnderJumpYRise	= rDUnderY - rJumpGainY;	// 上昇時 Jump Under 次フレーム座標
+wire 	signed [pVdisplayWidth:0] wDUnderJumpYFall	= rDUnderY + rJumpGainY;	// 下降時 Jump Under 次フレーム座標
 //
-reg qDUnderOverflow;
+reg 	qRightWallPointX;
+reg 	qLeftWallPointX;
+reg 	qDLeftOverflow;
+reg 	qDRightOverflow;
+reg 	qDUnderOverflow;
+
+
+//-----------------------------------------------------------------------------
+// x軸の座標更新
+//-----------------------------------------------------------------------------
+// 上位モジュールも使用するためレジスタ出力にもする
+reg rRightWallPointX;						assign oRightWallPointX = rRightWallPointX;
+reg rLeftWallPointX;						assign oLeftWallPointX  = rLeftWallPointX;
 
 always @(posedge iClk)
 begin
-	// x軸 Left
-	if (iRst)
-	begin
-		rDLeftX <= wDLeftXinit;
-	end
-	else
-	begin
-		casex ({iFe, iDashCkeX, iLeftCkeX, iRightCkeX})
-			'bx000:		rDLeftX <= rDLeftX;
-			'b1001:		rDLeftX <= wDLeftBasicXAdd;
-			'b1010:		rDLeftX <= wDLeftBasicXSub;
-			'b1101:		rDLeftX <= wDLeftDashXAdd;
-			'b1110:		rDLeftX <= wDLeftDashXSub;
-			default: 	rDLeftX <= rDLeftX;
-		endcase
-	end
+	if (iRst)	{rRightWallPointX, rLeftWallPointX}	<= 2'b00;
+	else		{rRightWallPointX, rLeftWallPointX}	<= {qRightWallPointX, qLeftWallPointX};
 
-	// x軸 Right
 	if (iRst)
 	begin
+		rDLeftX  <= wDLeftXinit;
 		rDRightX <= wDRightXinit;
 	end
 	else
 	begin
-		casex ({iFe, iDashCkeX, iLeftCkeX, iRightCkeX})
-			'bx000:		rDRightX <= rDRightX;
-			'b1001:		rDRightX <= wDRightBasicXAdd;
-			'b1010:		rDRightX <= wDRightBasicXSub;
-			'b1101:		rDRightX <= wDRightDashXAdd;
-			'b1110:		rDRightX <= wDRightDashXSub;
+		//-----------------------------------------------------------------------------
+		// 共通事項として
+		// 1フレームの更新タイミングで、左右・ダッシュの cke 信号に応じて座標を更新する
+		// 左右の座標を確認し、どちらかがオーバーフローしていれば画面端に座標をとどめる
+		//-----------------------------------------------------------------------------
+		casex ({qDLeftOverflow, qDRightOverflow, iFe, iDashCkeX, iLeftCkeX, iRightCkeX})
+			'bxxx000:	rDLeftX <= rDLeftX;
+			'bx01001:	rDLeftX <= wDLeftBasicXAdd;
+			'b0x1010:	rDLeftX <= wDLeftBasicXSub;
+			'bx01101:	rDLeftX <= wDLeftDashXAdd;
+			'b0x1110:	rDLeftX <= wDLeftDashXSub;
+			'bx11xxx:	rDLeftX <= lpDLeftWallXAdd;
+			'b1x1xxx:	rDLeftX <= lpDLeftWallXSub;
+			default: 	rDLeftX <= rDLeftX;
+		endcase
+
+		casex ({qDLeftOverflow, qDRightOverflow, iFe, iDashCkeX, iLeftCkeX, iRightCkeX})
+			'bxxx000:	rDRightX <= rDRightX;
+			'bx01001:	rDRightX <= wDRightBasicXAdd;
+			'b0x1010:	rDRightX <= wDRightBasicXSub;
+			'bx01101:	rDRightX <= wDRightDashXAdd;
+			'b0x1110:	rDRightX <= wDRightDashXSub;
+			'bx11xxx:	rDRightX <= lpDRightWallXAdd;
+			'b1x1xxx:	rDRightX <= lpDRightWallXSub;
 			default: 	rDRightX <= rDRightX;
 		endcase
 	end
@@ -263,21 +284,22 @@ end
 always @*
 begin
 	// 左右の壁との衝突ポイント
-	qWallPointRX 	<= (wHdisplay == rDRightX);
-	qWallPointLX 	<= ({pHdisplayWidth{1'b0}} == rDLeftX);
+	qRightWallPointX 	<= (wHdisplay == rDRightX);
+	qLeftWallPointX		<= ({pHdisplayWidth{1'b0}} == rDLeftX);
 	// 左右移動中、次フレームの X座標が画面外であれば Assert
-	qDLeftOverflow	<= (wHdisplay < wDUnderJumpYFall);
-	qDRightOverflow	<= (wHdisplay < wDUnderJumpYFall);
+	qDLeftOverflow		<= (wDLeftBasicXSub < 0) || (wDLeftDashXSub < 0);
+	qDRightOverflow		<= (wHdisplay < wDRightBasicXAdd) || (wHdisplay < wDRightDashXAdd);
 end
 
-
-//
+//-----------------------------------------------------------------------------
+// y軸座標更新
+//-----------------------------------------------------------------------------
 always @(posedge iClk)
 begin
-	// y軸 Top
 	if (iRst)
 	begin
-		rDTopY <= wDTopYinit;
+		rDTopY   <= wDTopYinit;
+		rDUnderY <= wDUnderYinit;
 	end
 	else
 	begin
@@ -293,15 +315,7 @@ begin
 			'b1111xx:	rDTopY <= wDTopYinit;
 			default: 	rDTopY <= rDTopY;
 		endcase
-	end
 
-	// y軸 Under
-	if (iRst)
-	begin
-		rDUnderY <= wDUnderYinit;
-	end
-	else
-	begin
 		casex ({qDUnderOverflow, iFe, qJumpPeakY, rJumpCkeY, iUnderCkeY, iTopCkeY})
 			'bxxx000:	rDUnderY <= rDUnderY;
 			'bx1x001:	rDUnderY <= wDUnderBasicYRise;
