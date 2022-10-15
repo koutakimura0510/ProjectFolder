@@ -88,9 +88,9 @@ module VideoTxBlock #(
 //-----------------------------------------------------------------------------
 // Unit
 //-----------------------------------------------------------------------------
-localparam lpDualClkFifoDepth	= 1024;
-localparam lpDmaFifoDepth		= 1024;
-localparam lpFifoDepthOverride	= "no";
+localparam lpDualClkFifoDepth	= 1024;		// ※極端に Depth が少ないと描画タイミングのずれが起きる
+localparam lpDmaFifoDepth		= 1024;		//   恐らく、ch の切り替え頻度が多くなることが原因
+localparam lpFifoDepthOverride	= "yes";
 //
 wire [pHdisplayWidth-1:0] 	wHdisplayCsr;
 wire [pVdisplayWidth-1:0] 	wVdisplayCsr;

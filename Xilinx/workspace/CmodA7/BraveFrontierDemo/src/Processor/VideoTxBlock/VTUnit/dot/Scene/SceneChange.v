@@ -2,7 +2,9 @@
 // Create 2022/09/27
 // Author koutakimura
 // -
-// 
+// シーンチェンジ用のピクセルデータを生成する
+// ※シーンチェンジとは
+// マップ間移動時の 暗転・明転処理などのこと
 //----------------------------------------------------------
 module SceneChange #(
     parameter                   			pHdisplayWidth  = 11,
@@ -92,12 +94,12 @@ ObjectPosGen #(
 	.iFe				(iFe),
 	//
 	.iDInitX			(0),
-	.iDInitY			(271-32),
+	.iDInitY			(271-31),
 	.iDSizeX			(31),
 	.iDSizeY			(31),
 	//
-	.iDashGainX			(0),
-	.iDashCkeX			(1'b0),
+	.iDashGainX			(4),
+	.iDashCkeX			(1'b1),
 	//
 	.iJumpPeakY			(100),
 	.iJumpGainY			(10),
@@ -106,7 +108,7 @@ ObjectPosGen #(
 	.iJumpUpdateTiming  (1),
 	.iJumpCkeY			(1'b1),
 	//
-	.iBasicGainX		(2),
+	.iBasicGainX		(0),
 	.iBasicGainY		(0),
 	//
 	.iLeftCkeX			(rLeftDir),

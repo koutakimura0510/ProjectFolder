@@ -1,51 +1,38 @@
 //----------------------------------------------------------
-// Create 2022/7/10
+// Create 2022/10/14
 // Author koutakimura
 // -
-// プロセッサ内部構造の Master を司るブロック
-// 独自の I/F BUS をマスターの立場から操作し、
-// BUS に接続されている Slaveブロック の操作を行う。
-// -
-// リソース削減のため、コマンドとアドレスは同じ Port を使用する
+// MCUnit Master として、システムを駆動させる。
 //----------------------------------------------------------
 module MicroControllerUnit #(
-	parameter [3:0]			pBusBlockConnect 	= 1,				// Busに接続する Slave数 最大16
-	// Not Set Param
-	parameter [3:0]			pBusBlockConnectWidth 	= pBusBlockConnect - 1'b1	// Busに接続する Slave数 最大16
+	parameter							pBusBlockConnect	= 1,
+	parameter							pBusAdrsBit			= 16,
+	parameter							pUfiBusWidth		= 8,
+	parameter							pMemAdrsWidth		= 19
 )(
 	// External Port
-	input 					iUartRx,
-	output 					oUartTx,
+	// input 					iUartRx,
+	// output 					oUartTx,
     // Internal Port
 	// Bus Master Read
-	input	[31:0]			iMUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
-	input	[pBusBlockConnectWidth:0]	iMUsiREd,	// Slave アクセス可能時 Assert
+	input	[31:0]						iMUsiRd,	// Slave の CSR Read値
+	input	[pBusBlockConnect-1:0]		iMUsiREd,	// Slave CSR Read値入力時 Assert
 	// Bus Master Write
-	output	[31:0]			oMUsiWd,	// 書き込みデータ
-	output	[31:0]			oMUsiAdrs,	// {31:30} / 0.Cmd 無効, 1. WriteCmd, 2. ReadCmd, 3.WRCmd (*)未実装 / {23:16} Busアドレス / {15:0} Csrアドレス
-	output					oMUsiWEd,	// コマンド有効時 Assert
+	output	[31:0]						oMUsiWd,	// 書き込みデータ
+	output	[pBusAdrsBit-1:0]			oMUsiAdrs,
+	output								oMUsiWEd,	// コマンド有効時 Assert
+	//
+	// output 	[pUfiBusWidth-1:0]			oMUfiWd,
+	// output 	[pBusAdrsBit-1:0]			oMUfiAdrs,
+	// output 								oMUfiEd,
+	// output 								oMUfiVd,
     // CLK Reset
-    input           		iSysClk,
-    input           		iSysRst
+    input           					iSysRst,
+    input           					iSysClk
 );
 
-
-// //----------------------------------------------------------
-// // msb側の1を検出しbit幅を取得する
-// //----------------------------------------------------------
-// function[  7:0]	fBitWidth;
-//     input [31:0] iVAL;
-//     integer			i;
-
-//     begin
-//     fBitWidth = 1;
-//     for (i = 0; i < 32; i = i+1 )
-//         if (iVAL[i])
-// 		begin
-//             fBitWidth = i+1;
-//         end
-//     end
-// endfunction
-
+assign oMUsiWd   = 0;
+assign oMUsiAdrs = 0;
+assign oMUsiWEd  = 0;
 
 endmodule

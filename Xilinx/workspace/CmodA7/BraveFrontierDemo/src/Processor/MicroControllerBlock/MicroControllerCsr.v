@@ -22,28 +22,33 @@
 // 上位モジュールへの output port は必ずレジスタ経由で出力する。
 //----------------------------------------------------------
 module MicroControllerCsr #(
-	parameter 		pBusBlockConnectWidth	= 8,
-	parameter		pBusAdrsBit				= 16
+	parameter							pBusBlockConnect 	= 1,
+	parameter 							pBlockAdrsMap 		= 8,
+	parameter [pBlockAdrsMap-1:0] 		pAdrsMap  			= 'h01,
+	parameter							pBusAdrsBit			= 16,
+	parameter 							pCsrAdrsWidth   	= 16,
+	parameter							pCsrActiveWidth 	= 16,
+	parameter							pMemAdrsWidth		= 19
 )(
     // Internal Port
 	// Csr Manual
 	input  	[31:0]						iWd,		// Ckeによる手動レジスタ更新時の Write Data
-	input  	[ 7:0]						iAdrs,		// R/W アドレス指定
-	input 								iCke,		// 有効データ書き込み時 Assert
-	output 	[31:0]						oRd,		// Read Data
+	input  	[pBusAdrsBit-1:0]			iAdrs,		// R/W アドレス指定
+	input 								iWCke,		// 有効データ書き込み時 Assert
+	output 	[31:0]						oRd,		// Slaveに対してのデータを確認できる
 	// Csr Slave
 	input	[31:0]						iMUsiRd,
-	input  	[pBusBlockConnectWidth:0]	iMUsiREd,
+	input  	[pBusBlockConnect-1:0]		iMUsiREd,
 	// Csr Master
 	output	[31:0]						oMUsiWd,	// 書き込みデータ
 	output	[pBusAdrsBit-1:0]			oMUsiAdrs,
 	output								oMUsiWEd,	// コマンド有効時 Assert
 	// Csr Output
 	output	[31:0]						oMUsiRd,
-	output	[pBusBlockConnectWidth:0]	oMUsiREd,
+	output	[pBusBlockConnect-1:0]		oMUsiREd,
     // CLK Reset
-    input           					iSysClk,
-    input           					iSysRst
+    input           					iSysRst,
+    input           					iSysClk
 );
 
 
@@ -51,14 +56,15 @@ module MicroControllerCsr #(
 // レジスタマップ
 //----------------------------------------------------------
 // Manual
-reg [31:0] 						rMUsiWd;		assign oMUsiWd   = rMUsiWd;		// Bus 書き込みデータ
-reg [pBusAdrsBit-1:0]			rMUsiAdrs;		assign oMUsiAdrs = rMUsiAdrs;	// Bus 書き込みアドレス
-reg [ 0:0]		 				rMUsiWEd;		assign oMUsiWEd = rMUsiWEd;	// Bus 書き込み Enable 自動で 0クリア
+reg [31:0] 						rMUsiWd;		assign oMUsiWd   	= rMUsiWd;		// Bus 書き込みデータ
+reg [pBusAdrsBit-1:0]			rMUsiAdrs;		assign oMUsiAdrs 	= rMUsiAdrs;	// Bus 書き込みアドレス
+reg [ 0:0]		 				rMUsiWEd;		assign oMUsiWEd 	= rMUsiWEd;		// Bus 書き込み Enable 自動で 0クリア
 // Auto
-reg [31:0]						rMUsiRd;		assign oMUsiRd	 = rMUsiRd;		// 
-reg [pBusBlockConnectWidth:0] 	rMUsiREd;		assign oMUsiREd	 = rMUsiREd;		// 指定Bit が Assert されていればデータ書き込み可能と判断
-// Access Address
-reg [ 8:0] 						qCsrAdrs;
+reg [31:0]						rMUsiRd;		assign oMUsiRd	 	= rMUsiRd;		// 
+reg [pBusBlockConnect-1:0]	 	rMUsiREd;		assign oMUsiREd	 	= rMUsiREd;		// 指定Bit が Assert されていればデータ書き込み可能と判断
+//
+// reg 							qCsrWCke00;
+// reg 							qCsrWCke08;
 
 always @(posedge iSysClk)
 begin
@@ -68,17 +74,17 @@ begin
 		rMUsiAdrs	<= {pBusAdrsBit{1'b0}};
 		rMUsiWEd	<= 1'b0;
 		rMUsiRd		<= 'h0;
-		rMUsiREd		<= {pBusBlockConnectWidth{1'b0}};
+		rMUsiREd	<= {pBusBlockConnect{1'b0}};
 	end
 	else
 	begin
 		// Manual
-		rMUsiWd		<= (qCsrAdrs == 9'h100) ? iWd : rMUsiWd;
-		rMUsiAdrs	<= (qCsrAdrs == 9'h104) ? iWd[pBusAdrsBit-1:0] : rMUsiAdrs;
-		rMUsiWEd	<= (qCsrAdrs == 9'h108) ? iWd[0] : rMUsiWEd;		// TODO 自動クリアしたい
+		rMUsiWd		<= iWd;
+		rMUsiAdrs	<= iAdrs;
+		rMUsiWEd	<= iWCke;
 		// Auto
 		rMUsiRd		<= iMUsiRd;
-		rMUsiREd		<= iMUsiREd;
+		rMUsiREd	<= iMUsiREd;
 
 		// Ufi 
 		// rSUfiBusRd	<= iSUfiBusRd;
@@ -89,7 +95,9 @@ end
 
 always @*
 begin
-	qCsrAdrs <= {iCke, iAdrs};
+	// qCsrWCke00 <= iWCke & (iAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
+	// qCsrWCke04 <= iWCke & (iAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
+	// qCsrWCke08 <= iWCke & (iAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
 end
 
 //----------------------------------------------------------
@@ -107,9 +115,9 @@ begin
 	else
 	begin
 		case (iAdrs)
-			'h00: 		rRd <= rMUsiWd;
-			'h04: 		rRd <= rMUsiAdrs;
-			'h08: 		rRd <= rMUsiWEd;
+			'h0000:		rRd <= rMUsiWd;
+			'h0004:		rRd <= rMUsiAdrs;
+			'h0008:		rRd <= rMUsiWEd;
 			default: 	rRd <= rRd;
 		endcase
 	end

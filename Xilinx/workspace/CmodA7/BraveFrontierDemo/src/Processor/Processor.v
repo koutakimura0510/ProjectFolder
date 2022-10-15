@@ -155,21 +155,21 @@ wire 							wMUfiEdMcs;
 wire 							wMUfiVdMcs;
 
 MicroControllerBlock #(
-	.pBusBlockConnect	(lpBusBlockConnect),
-	.pBusAdrsBit		(lpBusAdrsBit),
-	.pUfiBusWidth		(lpUfiBusWidth)
+	.pBusBlockConnect			(lpBusBlockConnect),
+	.pBusAdrsBit				(lpBusAdrsBit),
+	.pUfiBusWidth				(lpUfiBusWidth)
 ) MicroControllerBlock (
-	.iMUsiRd			(qMUsiRdMcb),
-	.iMUsiREd			(qMUsiVdMcb),
-	.oMUsiWd			(wMUsiWdMcb),
-	.oMUsiAdrs			(wMUsiAdrsMcb),
-	.oMUsiWEd			(wMUsiWCkeMcb),
-	.oMUfiWdMcs			(wMUfiWdMcs),
-	.oMUfiAdrsMcs		(wMUfiAdrsMcs),
-	.oMUfiEdMcs			(wMUfiEdMcs),
-	.oMUfiVdMcs			(wMUfiVdMcs),
-	.iSysRst			(iSysRst),
-	.iSysClk			(iSysClk)
+	.iMUsiRd					(qMUsiRdMcb),
+	.iMUsiREd					(qMUsiVdMcb),
+	.oMUsiWd					(wMUsiWdMcb),
+	.oMUsiAdrs					(wMUsiAdrsMcb),
+	.oMUsiWEd					(wMUsiWCkeMcb),
+	.oMUfiWd					(wMUfiWdMcs),
+	.oMUfiAdrs					(wMUfiAdrsMcs),
+	.oMUfiEd					(wMUfiEdMcs),
+	.oMUfiVd					(wMUfiVdMcs),
+	.iSysRst					(iSysRst),
+	.iSysClk					(iSysClk)
 );
 
 
