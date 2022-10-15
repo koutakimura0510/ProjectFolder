@@ -109,6 +109,8 @@ wire [pMemAdrsWidth-1:0]	wFbufAdrs2Csr;
 wire [pMemAdrsWidth-1:0]	wFbufLen1Csr;
 wire [pMemAdrsWidth-1:0]	wFbufLen2Csr;
 wire 						wDmaEnCsr;
+wire [7:0]					wMapXSizeCsr;
+wire [7:0]					wMapYSizeCsr;
 wire 						wFe;
 
 VideoTxUnit #(
@@ -219,6 +221,8 @@ VideoTxCsr #(
 	.oFbufLen1			(wFbufLen1Csr),
 	.oFbufLen2			(wFbufLen2Csr),
 	.oDmaEn				(wDmaEnCsr),
+	.oMapXSize			(wMapXSizeCsr),
+	.oMapYSize			(wMapYSizeCsr),
 	.iSysClk			(iSysClk),
 	.iSysRst			(iSysRst)
 );

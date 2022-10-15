@@ -3,6 +3,7 @@
 // Author koutakimura
 // -
 // メモリ専用バスシステム I/F モジュール
+// 読み込み・書き込みは命令は同時に行うことができる。
 // 
 // 2022-09-23
 // 複数 DMA 転送ブロック接続時の RAM からデータを吸い上げた時の、
@@ -30,15 +31,15 @@ module UltraFastInterface #(
 	//
 	input [pUfiBusWidth-1:0] 			iMUfiWdVtb,
 	input [pBusAdrsBit-1:0] 			iMUfiAdrsVtb,
-	input 								iMUfiWEdVtb,	// 有効データ入力時 Assert
-	input 								iMUfiREdVtb,	// データ読み込み時 Assert 
+	input 								iMUfiWEdVtb,	// 有効データ入力命令 Assert
+	input 								iMUfiREdVtb,	// データ読み込み命令 Assert 
 	input 								iMUfiVdVtb,		// 転送期間中 Assert
 	input 								iMUfiCmdVtb,	// High Read / Lor Write
 	output 								oMUfiRdyVtb,	// Vtb に対する Ready 信号
 	//
 	input [pBusAdrsBit-1:0] 			iMUfiAdrsAtb,
-	input 								iMUfiWEdAtb,	// 有効データ入力時 Assert
-	input 								iMUfiREdAtb,	// データ読み込み時 Assert
+	input 								iMUfiWEdAtb,	// 有効データ入力命令 Assert
+	input 								iMUfiREdAtb,	// データ読み込み命令 Assert
 	input 								iMUfiVdAtb,		// 転送期間中 Assert
 	output 								oMUfiRdyAtb,	// Atb に対する Ready 信号
 	// 
@@ -47,8 +48,8 @@ module UltraFastInterface #(
 	output 								oMUfiEddAtb,	// Master に対する 読み込み有効信号
 	output 								oMUfiRdy,		// Master に対する Ready 信号
 	//
-	input 	[pUfiIdNumber-1:0]			iMUfiIdI,
-	output	[pUfiIdNumber-1:0]			oMUfiIdO,
+	input 	[pUfiIdNumber-1:0]			iMUfiIdI,		// どのブロックからアクセス中かを表す ID
+	output	[pUfiIdNumber-1:0]			oMUfiIdO,		// どのブロックからアクセス中かを表す ID
 	// Slave Memory Block Side
 	output [pUfiBusWidth-1:0] 			oSUfiWdRam,		// Slave に対する 書き込みデータ
 	output [pBusAdrsBit-1:0]			oSUfiAdrsRam,	// Slave に対する R/W 共通のアドレス指定バス

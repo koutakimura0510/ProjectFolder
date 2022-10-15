@@ -41,7 +41,7 @@ module VideoTxUnit #(
 	output 							oMUfiCmd,	// High Read, Low Write
 	// Ufi Master Common
 	input 							iMUfiRdy,	// Ufi Bus 転送可能時 Assert
-	// Internal Port
+	// Csr Display
 	input	[pHdisplayWidth-1:0]	iHdisplay,
 	input	[pVdisplayWidth-1:0]	iVdisplay,
 	input	[pHdisplayWidth:0]		iHSyncStart,
@@ -50,17 +50,20 @@ module VideoTxUnit #(
 	input	[pVdisplayWidth:0]		iVSyncStart,
 	input	[pVdisplayWidth:0]		iVSyncEnd,
 	input	[pVdisplayWidth:0]		iVSyncMax,
-	//
+	// Csr Video System Rst
 	input 							iVtbSystemRst,
 	input 							iVtbVideoRst,
 	input 							iDisplayRst,
 	input 	[7:0]					iBlDutyRatio,
-	//
+	// Csr DMA
 	input 	[pMemAdrsWidth-1:0]		iFbufAdrs1,
 	input 	[pMemAdrsWidth-1:0]		iFbufAdrs2,
 	input 	[pMemAdrsWidth-1:0]		iFbufLen1,
 	input 	[pMemAdrsWidth-1:0]		iFbufLen2,
 	input 							iDmaEn,
+	// Csr Map Info
+	input	[7:0]					iMapXSize,
+	input	[7:0]					iMapYSize,
     // CLK Reset
     input           				iSysClk,
 	input 							iVideoClk,
@@ -70,16 +73,17 @@ module VideoTxUnit #(
 );
 
 //-----------------------------------------------------------------------------
-// // Alpha の ビット幅を除いた数値
+// Alpha の ビット幅を除いた数値
 //-----------------------------------------------------------------------------
 localparam lpDualFifoWidth = pColorDepth - (pColorDepth / 4);
 
 
 //-----------------------------------------------------------------------------
+// 1st Stage
 // 1pixel毎の描画データ生成
 //-----------------------------------------------------------------------------
 wire [lpDualFifoWidth-1:0] wDrawPixel;
-wire wDrawPixelVd;
+wire wDrawPixelWEd;
 reg  qVideoPixelGenCke;
 
 VideoPixelGen #(
@@ -89,8 +93,12 @@ VideoPixelGen #(
 ) VideoPixelGen (
 	.iHdisplay			(iHdisplay),
 	.iVdisplay			(iVdisplay),
+	.iMapXSize			(iMapXSize),
+	.iMapYSize			(iMapYSize),
+	//
 	.oPixel				(wDrawPixel),
-	.oVd				(wDrawPixelVd),
+	.oWEd				(wDrawPixelWEd),
+	// 
 	.iRst				(iVtbSystemRst),
 	.iCke				(qVideoPixelGenCke),
 	.iClk				(iSysClk)
@@ -98,7 +106,9 @@ VideoPixelGen #(
 
 
 //-----------------------------------------------------------------------------
-// Video DMA
+// 2nd Stage
+// 1st Stage の pixel データを Video DMA で外部 RAM の FrameBuffer 領域に Write 転送
+// 3rd Stage に Video DMA で外部 RAM の FrameBuffer 領域から Read 転送
 //-----------------------------------------------------------------------------
 localparam lpDmaFifoDepth = (pFifoDepthOverride == "yes") ? pDmaFifoDepth : 32;
 
@@ -113,6 +123,7 @@ VideoDmaUnit #(
 	.pMemAdrsWidth		(pMemAdrsWidth),
 	.pFifoDepth			(lpDmaFifoDepth)
 ) VideoDmaUnit (
+	// Ufi Bus Transaction
 	.iMUfiRd			(iMUfiRd),
 	.iMUfiREd			(iMUfiREd),
 	.oMUfiWd			(oMUfiWd),
@@ -122,14 +133,14 @@ VideoDmaUnit #(
 	.oMUfiVd			(oMUfiVd),
 	.oMUfiCmd			(oMUfiCmd),
 	.iMUfiRdy			(iMUfiRdy),
-	//
+	// DMA Transaction
 	.iDmaWd				(wDrawPixel[pUfiBusWidth-1:0]),
-	.iDmaWEd			(wDrawPixelVd),
+	.iDmaWEd			(wDrawPixelWEd),
 	.oDmaFull			(wDmaFull),
 	.oDmaRd				(wDmaRd),
 	.oDmaREd			(wDmaREd),
 	.iDmaRe				(qDmaRe),
-	//
+	// Csr DMA
 	.iFbufAdrs1			(iFbufAdrs1),
 	.iFbufAdrs2			(iFbufAdrs2),
 	.iFbufLen1			(iFbufLen1),
@@ -142,16 +153,17 @@ VideoDmaUnit #(
 
 always @*
 begin
-	qVideoPixelGenCke <= (~wDmaFull);
+	qVideoPixelGenCke <= (~wDmaFull);	// 前段へ
 end
 
 //-----------------------------------------------------------------------------
 // Video Sync Gen
+// 3rd Stage 以降と、外部 Display I/F に使用する Sync 信号の生成
 //-----------------------------------------------------------------------------
 wire wHSync;
 wire wVSync;
 wire wVde;
-wire wFe;							assign oFe = wFe;
+wire wFe;							assign oFe = wFe;	// debug 用途に上位に出力
 
 VideoSyncGen #(
 	.pHdisplayWidth	(pHdisplayWidth),
@@ -185,7 +197,8 @@ VideoSyncGen #(
 
 
 //-----------------------------------------------------------------------------
-// SystemClk <=> VideoClk Dual Clk FIFO
+// 3rd Stage
+// DMA Read 転送のデータ格納 及び SystemClk = VideoClk のクロック変換用途
 //-----------------------------------------------------------------------------
 localparam lpDualClkFifoDepth	= (pFifoDepthOverride == "yes") ? pDualClkFifoDepth : 32;
 
@@ -237,16 +250,13 @@ end
 
 always @*
 begin
-	// qVideoHSync	<= wHSync;
-	// qVideoVSync	<= wVSync;
-	// qVideoVde	<= wVde;
 	qVideoHSync	<= rVideoHSync[lpSyncLatancy-1];
 	qVideoVSync	<= rVideoVSync[lpSyncLatancy-1];
 	qVideoVde	<= rVideoVde[lpSyncLatancy-1];
 end
 
 //-----------------------------------------------------------------------------
-// バックライト調光
+// 外部 Display のバックライト調光
 //-----------------------------------------------------------------------------
 wire wTftBackLight;
 

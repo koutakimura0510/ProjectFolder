@@ -15,17 +15,17 @@ module VideoDmaUnit #(
 )(
     // Internal Port
 	// Ufi Master Read
-	input 	[pUfiBusWidth-1:0]	iMUfiRd,
-	input 						iMUfiREd,
+	input 	[pUfiBusWidth-1:0]	iMUfiRd,	// FBUF Read Data
+	input 						iMUfiREd,	// FBUF Read Data Cke
 	// Ufi Master Write
 	output	[pUfiBusWidth-1:0]	oMUfiWd,
 	output 	[pBusAdrsBit-1:0]	oMUfiAdrs,
-	output 						oMUfiWEd,
-	output 						oMUfiREd,
-	output 						oMUfiVd,
+	output 						oMUfiWEd,	// VDMA の Write 要求時 Assert
+	output 						oMUfiREd,	// VDMA の Read 要求時 Assert
+	output 						oMUfiVd,	// VDMA が 転送要求時 Assert
 	output 						oMUfiCmd,	// High Read, Low Write
 	// Ufi Master Common
-	input						iMUfiRdy,
+	input						iMUfiRdy,	// MUfi 経由で転送可能時 Assert
 	//
 	// DMA Write Side
 	input 	[pUfiBusWidth-1:0]	iDmaWd,		// 前段の Write Data

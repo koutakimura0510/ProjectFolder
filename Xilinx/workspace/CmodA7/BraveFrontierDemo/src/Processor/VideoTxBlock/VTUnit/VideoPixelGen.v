@@ -42,7 +42,7 @@ module VideoPixelGen #(
 	input	[pVdisplayWidth-1:0]	iVdisplay,
 	//
 	output	[pOutColorDepth-1:0]	oPixel,
-    output                       	oVd,
+    output                       	oWEd,
     // CLK Reset
     input           				iRst,
 	input 							iCke,
@@ -104,9 +104,16 @@ PixelDrawPosition #(
 // Draw Module で共通利用するマップ情報
 // ※ 現在座標からの算出されるマップ情報は、キャラクターの移動・フィールド生成などにも使用されるため共通で必要
 //-----------------------------------------------------------------------------
-// MapInfo MapInfo (
+localparam lpMapIdBitWidth 	= 8;
+localparam lpMapXSize		= 150;
+localparam lpMapYSize		= 150;
+MapInfo #(
+	.pMapIdBitWidth		(lpMapIdBitWidth),
+	.pMapXSize			(lpMapXSize),
+	.pMapYSize			(lpMapYSize)
+) MapInfo (
 
-// );
+);
 
 
 //-----------------------------------------------------------------------------
@@ -186,7 +193,7 @@ end
 localparam lpDotMargeToPixelConverterFifoDepth = 16;
 
 wire [pOutColorDepth-1:0] wPixelMargeDd;		assign oPixel = wPixelMargeDd;
-wire  wPixelMargeVdd;							assign oVd 	  = wPixelMargeVdd;
+wire  wPixelMargeVdd;							assign oWEd 	  = wPixelMargeVdd;
 wire  wPixelMargeFull;
 wire  wPixelMargeEmp;
 reg   qPixelMargeEds;
