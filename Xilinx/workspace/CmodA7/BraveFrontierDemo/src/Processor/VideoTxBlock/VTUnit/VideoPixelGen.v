@@ -30,17 +30,26 @@
 //----------------------------------------------------------
 module VideoPixelGen #(
 	// Display Size
-    parameter       				pHdisplayWidth	= 11,
-    parameter       				pVdisplayWidth	= 11,
+    parameter       				pHdisplayWidth		= 11,	// 11bit だと FHD まで
+    parameter       				pVdisplayWidth		= 11,
+	// Csr Map Info
+	parameter						pMapInfoBitWidth 	= 8,
 	// Color Depth
-	parameter						pColorDepth		= 16,
+	parameter						pColorDepth			= 16,
 	// non valiable
-	parameter						pOutColorDepth	= pColorDepth - (pColorDepth / 4) // alpha値を除いたbit幅
+	parameter						pOutColorDepth		= pColorDepth - (pColorDepth / 4) // alpha値を除いたbit幅
 )(
 	// Internal Port
+	// Csr Input
 	input	[pHdisplayWidth-1:0]	iHdisplay,
 	input	[pVdisplayWidth-1:0]	iVdisplay,
-	//
+	// Csr Map Info
+	input	[7:0]					iMapXSize,
+	input	[7:0]					iMapYSize,
+	input 	[pMapInfoBitWidth-1:0]	iMapInfoWd,
+	input 							iMapInfoCke,
+	input 							iMapInfoVd,
+	// 2nd Stage Output
 	output	[pOutColorDepth-1:0]	oPixel,
     output                       	oWEd,
     // CLK Reset
@@ -87,32 +96,38 @@ wire 						wAFE;
 reg 						qPixelDrawPositionCke;
 
 PixelDrawPosition #(
-	.pHdisplayWidth	(pHdisplayWidth),
-	.pVdisplayWidth	(pVdisplayWidth)
+	.pHdisplayWidth		(pHdisplayWidth),
+	.pVdisplayWidth		(pVdisplayWidth)
 ) PixelDrawPosition (
-	.iHdisplay		(qHdisplay),
-	.iVdisplay		(qVdisplay),
-	.oHpos			(wPixelDrawHpos),
-	.oVpos			(wPixelDrawVpos),
-	.oAFE			(wAFE),
-	.iRst			(iRst),
-	.iCke			(qPixelDrawPositionCke),
-	.iClk			(iClk)
+	.iHdisplay			(qHdisplay),
+	.iVdisplay			(qVdisplay),
+	.oHpos				(wPixelDrawHpos),
+	.oVpos				(wPixelDrawVpos),
+	.oAFE				(wAFE),
+	.iRst				(iRst),
+	.iCke				(qPixelDrawPositionCke),
+	.iClk				(iClk)
 );
 
 //-----------------------------------------------------------------------------
 // Draw Module で共通利用するマップ情報
 // ※ 現在座標からの算出されるマップ情報は、キャラクターの移動・フィールド生成などにも使用されるため共通で必要
 //-----------------------------------------------------------------------------
-localparam lpMapIdBitWidth 	= 8;
-localparam lpMapXSize		= 150;
-localparam lpMapYSize		= 150;
+localparam lpMapXSize			= 150;
+localparam lpMapYSize			= 150;
+
 MapInfo #(
-	.pMapIdBitWidth		(lpMapIdBitWidth),
+	.pMapInfoBitWidth	(pMapInfoBitWidth),
 	.pMapXSize			(lpMapXSize),
 	.pMapYSize			(lpMapYSize)
 ) MapInfo (
-
+	.iMapInfoWd			(iMapInfoWd),
+	.iMapInfoCke		(iMapInfoCke),
+	.iMapInfoVd			(iMapInfoVd),
+	.iMapInfoRAdrs		(iMapInfoRAdrs),
+	.oMapInfo			(oMapInfo),
+	.iRst				(iRst),
+	.iClk				(iClk)
 );
 
 

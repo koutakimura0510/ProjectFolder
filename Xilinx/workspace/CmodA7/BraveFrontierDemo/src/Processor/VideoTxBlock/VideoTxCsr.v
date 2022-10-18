@@ -32,7 +32,9 @@ module VideoTxCsr #(
     parameter       				pVdisplayWidth	= 11,
     parameter       				pVfrontWidth	= 5,
     parameter       				pVbackWidth		= 5,
-    parameter       				pVpulseWidth	= 5
+    parameter       				pVpulseWidth	= 5,
+	//
+	parameter						pMapInfoBitWidth = 8
 )(
     // Internal Port
 	// Csr Read
@@ -65,6 +67,9 @@ module VideoTxCsr #(
 	// Csr Map Info
 	output	[7:0]					oMapXSize,
 	output	[7:0]					oMapYSize,
+	output	[pMapInfoBitWidth-1:0]	oMapInfoWd,
+	output							oMapInfoCke,
+	output							oMapInfoVd,
     // CLK Reset
     input           				iSysRst,
     input           				iSysClk
@@ -116,6 +121,9 @@ reg [pVdisplayWidth:0]		rVSyncEnd;			assign oVSyncEnd 	= rVSyncEnd;		// 同期�
 reg [pVdisplayWidth:0]		rVSyncMax;			assign oVSyncMax 	= rVSyncMax;		// アクティブエリア + 非表示エリア
 reg [ 7:0]					rMapXSize;			assign oMapXSize	= rMapXSize;		// 現在のマップの最大横幅 / 最大255マス固定
 reg [ 7:0]					rMapYSize;			assign oMapYSize	= rMapYSize;		// 現在のマップの最大縦幅 / 最大255マス固定
+reg	[pMapInfoBitWidth-1:0]	rMapInfoWd;			assign oMapInfoWd	= rMapInfoWd;		// マップデータの書き込み (Info)
+reg							rMapInfoCke;		assign oMapInfoCke	= rMapInfoCke;		// rMapInfoWd 有効時 Assert
+reg							rMapInfoVd;			assign oMapInfoVd	= rMapInfoVd;		// Map Info 更新期間中 Assert
 //
 reg 						qCsrWCke00;
 reg 						qCsrWCke04;
@@ -128,6 +136,7 @@ reg 						qCsrWCke1c;
 reg 						qCsrWCke20;
 reg 						qCsrWCke24;
 reg 						qCsrWCke28;
+reg 						qCsrWCke2C;
 //
 always @(posedge iSysClk)
 begin
@@ -166,16 +175,20 @@ begin
 		{rVfront,rHfront	}	<= qCsrWCke08 ? {iSUsiWd[pVfrontWidth-1:0],		iSUsiWd[pHfrontWidth-1:0]} 		: {rVfront,rHfront};
 		{rVpulse,rHpulse	}	<= qCsrWCke0c ? {iSUsiWd[pVpulseWidth-1:0],		iSUsiWd[pHpulseWidth-1:0]}		: {rVpulse,rHpulse};
 		//
-		rVtbSystemRst			<= qCsrWCke10 ? iSUsiWd[0:0] 				: rVtbSystemRst;
-		rVtbVideoRst			<= qCsrWCke10 ? iSUsiWd[1:1] 				: rVtbVideoRst;
-		rDisplayRst				<= qCsrWCke10 ? iSUsiWd[2:2] 				: rDisplayRst;
-		rDmaEn					<= qCsrWCke10 ? iSUsiWd[3:3] 				: rDmaEn;
-		rBlDutyRatio			<= qCsrWCke14 ? iSUsiWd[7:0] 				: rBlDutyRatio;
-		rFbufAdrs1				<= qCsrWCke18 ? iSUsiWd[pMemAdrsWidth-1:0] 	: rFbufAdrs1;
-		rFbufAdrs2				<= qCsrWCke1c ? iSUsiWd[pMemAdrsWidth-1:0] 	: rFbufAdrs2;
-		rFbufLen1				<= qCsrWCke20 ? iSUsiWd[pMemAdrsWidth-1:0] 	: rFbufLen1;
-		rFbufLen2				<= qCsrWCke24 ? iSUsiWd[pMemAdrsWidth-1:0] 	: rFbufLen2;
-		{rMapXSize, rMapYSize}	<= qCsrWCke28 ? iSUsiWd[15:0] 				: {rMapXSize, rMapYSize};
+		rVtbSystemRst			<= qCsrWCke10 ? iSUsiWd[0:0] 					: rVtbSystemRst;
+		rVtbVideoRst			<= qCsrWCke10 ? iSUsiWd[1:1] 					: rVtbVideoRst;
+		rDisplayRst				<= qCsrWCke10 ? iSUsiWd[2:2] 					: rDisplayRst;
+		rDmaEn					<= qCsrWCke10 ? iSUsiWd[3:3] 					: rDmaEn;
+		rBlDutyRatio			<= qCsrWCke14 ? iSUsiWd[7:0] 					: rBlDutyRatio;
+		rFbufAdrs1				<= qCsrWCke18 ? iSUsiWd[pMemAdrsWidth-1:0] 		: rFbufAdrs1;
+		rFbufAdrs2				<= qCsrWCke1c ? iSUsiWd[pMemAdrsWidth-1:0] 		: rFbufAdrs2;
+		rFbufLen1				<= qCsrWCke20 ? iSUsiWd[pMemAdrsWidth-1:0] 		: rFbufLen1;
+		rFbufLen2				<= qCsrWCke24 ? iSUsiWd[pMemAdrsWidth-1:0] 		: rFbufLen2;
+		{rMapXSize, rMapYSize}	<= qCsrWCke28 ? iSUsiWd[15:0] 					: {rMapXSize, rMapYSize};
+		//
+		rMapInfoWd				<= qCsrWCke2C ? iSUsiWd[pMapInfoBitWidth-1:0]	: rMapInfoWd;
+		rMapInfoCke				<= qCsrWCke2C ? iSUsiWd[pMapInfoBitWidth+0:0]	: rMapInfoCke;
+		rMapInfoVd				<= qCsrWCke2C ? iSUsiWd[pMapInfoBitWidth+1:0]	: rMapInfoVd;
 		//
 		//
 		rHSyncStart 			<= rHdisplay + rHfront;

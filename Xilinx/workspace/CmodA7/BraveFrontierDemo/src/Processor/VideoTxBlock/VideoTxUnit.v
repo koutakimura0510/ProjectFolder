@@ -12,6 +12,8 @@ module VideoTxUnit #(
 	// Display Size
     parameter       				pHdisplayWidth		= 11,
     parameter       				pVdisplayWidth		= 11,
+	// Csr Map Info
+	parameter						pMapInfoBitWidth 	= 8,
 	// Color Depth ARGB:4444
 	parameter						pColorDepth			= 16,
 	// FIFO Depth
@@ -64,6 +66,9 @@ module VideoTxUnit #(
 	// Csr Map Info
 	input	[7:0]					iMapXSize,
 	input	[7:0]					iMapYSize,
+	input 	[pMapInfoBitWidth-1:0]	iMapInfoWd,
+	input 							iMapInfoCke,
+	input 							iMapInfoVd,
     // CLK Reset
     input           				iSysClk,
 	input 							iVideoClk,
@@ -89,12 +94,17 @@ reg  qVideoPixelGenCke;
 VideoPixelGen #(
 	.pHdisplayWidth		(pHdisplayWidth),
 	.pVdisplayWidth		(pVdisplayWidth),
+	.pMapInfoBitWidth	(pMapInfoBitWidth),
 	.pColorDepth		(pColorDepth)
 ) VideoPixelGen (
 	.iHdisplay			(iHdisplay),
 	.iVdisplay			(iVdisplay),
+	// Csr Map Info
 	.iMapXSize			(iMapXSize),
 	.iMapYSize			(iMapYSize),
+	.iMapInfoWd			(iMapInfoWd),
+	.iMapInfoCke		(iMapInfoCke),
+	.iMapInfoVd			(iMapInfoVd),
 	//
 	.oPixel				(wDrawPixel),
 	.oWEd				(wDrawPixelWEd),

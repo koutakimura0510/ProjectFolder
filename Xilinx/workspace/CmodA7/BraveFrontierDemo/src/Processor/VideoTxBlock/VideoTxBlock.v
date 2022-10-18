@@ -88,9 +88,11 @@ module VideoTxBlock #(
 //-----------------------------------------------------------------------------
 // Unit
 //-----------------------------------------------------------------------------
-localparam lpDualClkFifoDepth	= 1024;		// ※極端に Depth が少ないと描画タイミングのずれが起きる
-localparam lpDmaFifoDepth		= 1024;		//   恐らく、ch の切り替え頻度が多くなることが原因
-localparam lpFifoDepthOverride	= "yes";
+localparam	lpMapInfoBitWidth	= 8;
+//
+localparam 	lpDualClkFifoDepth	= 1024;		// ※極端に Depth が少ないと描画タイミングのずれが起きる
+localparam 	lpDmaFifoDepth		= 1024;		//   恐らく、ch の切り替え頻度が多くなることが原因
+localparam 	lpFifoDepthOverride	= "yes";
 //
 wire [pHdisplayWidth-1:0] 	wHdisplayCsr;
 wire [pVdisplayWidth-1:0] 	wVdisplayCsr;
@@ -111,15 +113,23 @@ wire [pMemAdrsWidth-1:0]	wFbufLen2Csr;
 wire 						wDmaEnCsr;
 wire [7:0]					wMapXSizeCsr;
 wire [7:0]					wMapYSizeCsr;
+wire [lpMapInfoBitWidth-1:0]wMapInfoWdCsr;
+wire 						wMapInfoCkeCsr;
+wire 						wMapInfoVdCsr;
 wire 						wFe;
 
 VideoTxUnit #(
 	.pBusAdrsBit		(pBusAdrsBit),
 	.pUfiBusWidth		(pUfiBusWidth),
 	.pMemAdrsWidth		(pMemAdrsWidth),
+	//
     .pHdisplayWidth		(pHdisplayWidth),
     .pVdisplayWidth		(pVdisplayWidth),
+	//
+	.pMapInfoBitWidth	(lpMapInfoBitWidth),
+	//
 	.pColorDepth		(pColorDepth),
+	//
 	.pDualClkFifoDepth	(lpDualClkFifoDepth),
 	.pDmaFifoDepth		(lpDmaFifoDepth),
 	.pFifoDepthOverride	(lpFifoDepthOverride)
@@ -164,6 +174,12 @@ VideoTxUnit #(
 	.iFbufLen2			(wFbufLen2Csr),
 	.iDmaEn				(wDmaEnCsr),
 	//
+	.iMapXSize			(wMapXSizeCsr),
+	.iMapYSize			(wMapYSizeCsr),
+	.iMapInfoWd			(wMapInfoWdCsr),
+	.iMapInfoCke		(wMapInfoCkeCsr),
+	.iMapInfoVd			(wMapInfoVdCsr),
+	//
 	.iSysClk			(iSysClk),
 	.iVideoClk			(iVideoClk),
 	.iSysRst			(iSysRst),
@@ -197,7 +213,9 @@ VideoTxCsr #(
     .pVdisplayWidth		(pVdisplayWidth),
     .pVfrontWidth		(pVfrontWidth),
     .pVbackWidth		(pVbackWidth),
-    .pVpulseWidth		(pVpulseWidth)
+    .pVpulseWidth		(pVpulseWidth),
+	//
+	.pMapInfoBitWidth	(lpMapInfoBitWidth)
 ) VideoTxCsr (
 	.oSUsiRd			(oSUsiRd),
 	.oSUsiREd			(oSUsiREd),
@@ -223,6 +241,9 @@ VideoTxCsr #(
 	.oDmaEn				(wDmaEnCsr),
 	.oMapXSize			(wMapXSizeCsr),
 	.oMapYSize			(wMapYSizeCsr),
+	.oMapInfoWd			(wMapInfoWdCsr),
+	.oMapInfoCke		(wMapInfoCkeCsr),
+	.oMapInfoVd			(wMapInfoVdCsr),
 	.iSysClk			(iSysClk),
 	.iSysRst			(iSysRst)
 );
