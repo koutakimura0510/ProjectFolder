@@ -88,10 +88,10 @@ module VideoTxBlock #(
 //-----------------------------------------------------------------------------
 // Unit
 //-----------------------------------------------------------------------------
-localparam	lpMapInfoBitWidth	= 8;
+localparam	lpMapInfoBitWidth	= 8;		// MapChip ID の Bit幅
 //
-localparam 	lpDualClkFifoDepth	= 1024;		// ※極端に Depth が少ないと描画タイミングのずれが起きる
-localparam 	lpDmaFifoDepth		= 1024;		//   恐らく、ch の切り替え頻度が多くなることが原因
+localparam 	lpDualClkFifoDepth	= 1024;		// ※極端に Depth が少ないと描画タイミングのずれが起きる。
+localparam 	lpDmaFifoDepth		= 1024;		//   ch の切り替え頻度が多くなることが原因なので、DispSizeX より大きい値を推奨
 localparam 	lpFifoDepthOverride	= "yes";
 //
 wire [pHdisplayWidth-1:0] 	wHdisplayCsr;

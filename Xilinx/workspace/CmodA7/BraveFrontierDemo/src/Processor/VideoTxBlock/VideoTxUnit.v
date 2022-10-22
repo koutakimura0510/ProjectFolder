@@ -43,6 +43,8 @@ module VideoTxUnit #(
 	output 							oMUfiCmd,	// High Read, Low Write
 	// Ufi Master Common
 	input 							iMUfiRdy,	// Ufi Bus 転送可能時 Assert
+	// Ufi Slave Write
+
 	// Csr Display
 	input	[pHdisplayWidth-1:0]	iHdisplay,
 	input	[pVdisplayWidth-1:0]	iVdisplay,

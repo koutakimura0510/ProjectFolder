@@ -3,7 +3,7 @@
 // Author koutakimura
 // -
 // メモリ専用バスシステム I/F モジュール
-// 読み込み・書き込みは命令は同時に行うことができる。
+// マルチエージェントの機能を持ち、読み込み・書き込み命令は並列に処理される。
 // 
 // 2022-09-23
 // 複数 DMA 転送ブロック接続時の RAM からデータを吸い上げた時の、
@@ -94,8 +94,9 @@ reg [pUfiIdNumber-1:0]	rMUfiIdO;			assign oMUfiIdO		= rMUfiIdO;
 always @(posedge iUfiClk)
 begin
 	// UFIB 制御ステートマシン、ハブとして機能
+	// Master Side
 	casex ({iMUfiVdMcs, iMUfiVdSpi, iMUfiVdVtb, iMUfiVdAtb, rMUfiRdyVtb, rMUfiRdyAtb})
-		'b1xxxxx:	// MCS は優先して制御
+		'b1xxx00:	// MCS は優先して制御
 		begin
 			rMUfiWdRam 		<= iMUfiWdMcs;
 			rMUfiAdrsRam 	<= iMUfiAdrsMcs;

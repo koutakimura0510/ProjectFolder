@@ -37,6 +37,8 @@ module MapInfo #(
 // マップ Info の更新
 // ※ Flash Memory から マップ Info の取得を行うため、更新速度は内部CLKよりも大分遅い。
 // 更新側で準備可能時に CKE が Assert 状態になるため、VD を設けたほうが制御しやすかった。
+// Cke 信号は Csr 経由で自動クリアなどしないため、システム駆動の MCB で Cke を 1clk 単位でトグル
+// させるなど工夫が必要である。
 //-----------------------------------------------------------------------------
 reg [15:0] 					rMapInfoWAdrs;
 reg [pMapInfoBitWidth-1:0]	rMapInfoRd;

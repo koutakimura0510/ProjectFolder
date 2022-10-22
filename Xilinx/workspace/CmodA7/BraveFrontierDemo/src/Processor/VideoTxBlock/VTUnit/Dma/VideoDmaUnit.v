@@ -48,7 +48,7 @@ module VideoDmaUnit #(
 
 
 //-----------------------------------------------------------------------------
-// UFIB Sw
+// UFIB Sw バスの所有権切り替え頻度
 //-----------------------------------------------------------------------------
 localparam pSwBitWidth  = 1;
 
@@ -80,7 +80,9 @@ fifoControllerLutRam #(
 
 
 //-----------------------------------------------------------------------------
-// R/W ステートマシン
+// VDMA R/W ステートマシン
+// ExtRam に MUfi 経由でアクセスし
+// 
 //-----------------------------------------------------------------------------
 reg		[pUfiBusWidth-1:0]	rMUfiWd;		assign oMUfiWd		= rMUfiWd;
 reg		[pMemAdrsWidth-1:0]	rMUfiAdrs;		assign oMUfiAdrs	= rMUfiAdrs;
@@ -106,30 +108,33 @@ reg 						qTargetSwitch;
 always @(posedge iClk)
 begin
 	// Frame Buffer 領域の切り替え
+	// 60FPS 固定のつもりではあるが、
+	// WDma の転送速度が RDma より遅い場合、
+	// RDma は前回の領域で再度読み込みを行う -> 59fps とかになる
 	casex ({qDmaRAdrsMatch, qDmaWAdrsMatch, iMUfiRdy, iDmaEn})
-		'bxxx0:		rDmaAdrsSel <= 1'b0;
-		'b1111:		rDmaAdrsSel <= ~rDmaAdrsSel;
-		default: 	rDmaAdrsSel <=  rDmaAdrsSel;
+		'bxxx0:			rDmaAdrsSel <= 1'b0;
+		'b1111:			rDmaAdrsSel <= ~rDmaAdrsSel;
+		default: 		rDmaAdrsSel <=  rDmaAdrsSel;
 	endcase
 
 	// WAdrs の更新
 	casex ({rDmaAdrsSel, qDmaRAdrsMatch, qDmaWAdrsMatch, wRVd, iMUfiRdy, qTargetSwitch, iDmaEn})
-		'bxxxxxx0:	rDmaWAdrs <= iFbufAdrs1;
-		'bxx01111:	rDmaWAdrs <= rDmaWAdrs + 1'b1;
-		'b011x1x1:	rDmaWAdrs <= iFbufAdrs2;
-		'b111x1x1:	rDmaWAdrs <= iFbufAdrs1;
-		default:	rDmaWAdrs <= rDmaWAdrs;
+		'bxxxxxx0:		rDmaWAdrs <= iFbufAdrs1;
+		'bxx01111:		rDmaWAdrs <= rDmaWAdrs + 1'b1;
+		'b011x1x1:		rDmaWAdrs <= iFbufAdrs2;
+		'b111x1x1:		rDmaWAdrs <= iFbufAdrs1;
+		default:		rDmaWAdrs <= rDmaWAdrs;
 	endcase
 
 	// RAdrs の更新
 	casex ({rDmaAdrsSel, qDmaRAdrsMatch, qDmaWAdrsMatch, iDmaRe, iMUfiRdy, qTargetSwitch, iDmaEn})
-		'bxxxxxx0:	rDmaRAdrs <= iFbufAdrs2;
-		'bx0x1111:	rDmaRAdrs <= rDmaRAdrs + 1'b1;
-		'b010x1x1:	rDmaRAdrs <= iFbufAdrs2;
-		'b011x1x1:	rDmaRAdrs <= iFbufAdrs1;
-		'b110x1x1:	rDmaRAdrs <= iFbufAdrs1;
-		'b111x1x1:	rDmaRAdrs <= iFbufAdrs2;
-		default:	rDmaRAdrs <= rDmaRAdrs;
+		'bxxxxxx0:		rDmaRAdrs <= iFbufAdrs2;			// DMA Enable
+		'bx0x1111:		rDmaRAdrs <= rDmaRAdrs + 1'b1;		// Ufi, DMA, 後段が有効時 アドレス更新
+		'b010x1x1:		rDmaRAdrs <= iFbufAdrs2;
+		'b011x1x1:		rDmaRAdrs <= iFbufAdrs1;
+		'b110x1x1:		rDmaRAdrs <= iFbufAdrs1;
+		'b111x1x1:		rDmaRAdrs <= iFbufAdrs2;
+		default:		rDmaRAdrs <= rDmaRAdrs;
 	endcase
 
 	if (wRVd)			rMUfiWd		<= wDmaFifoRd;
@@ -168,11 +173,11 @@ begin
 	// Write Buffer へアクセス
 	// Bus が転送可能 かつ RW がフレーム終端でなければ、Write 可能とする
 	qMUfiWEd			<= qTargetSwitch & (iDmaRe | qDmaFifoRe) & iMUfiRdy & (~(qDmaWAdrsMatch & qDmaRAdrsMatch));
-	qMUfiCmd			<= iDmaRe & (~qDmaFifoRe);		// 後段から Read要求がなければ、WCMD とする
+	qMUfiCmd			<= iDmaRe & (~qDmaFifoRe);						// 後段から Read要求がなければ、WCMD とする
 	qMUfiVd				<= qTargetSwitch & (iDmaRe | (~wEmp));			// 空でなければ Ufi 転送要求とする
 	qDmaFifoRe			<= qTargetSwitch & (~iDmaRe) & iMUfiRdy & (~qDmaWAdrsMatch);
 	// Read Buffer へアクセス
-	qMUfiREd			<= iDmaRe;							// 後段がデータ受付可能であれば Read 要求とする
+	qMUfiREd			<= iDmaRe;										// 後段がデータ受付可能であれば Read 要求とする
 	//
 	// 2022-09-24 ある程度データ転送を行ったら、他の DMA デバイスにバス使用の権利を譲る
 	qTargetSwitch 		<= ~(rTargetSwitchCnt == {pSwBitWidth{1'b1}});
@@ -192,5 +197,6 @@ begin
 	if (iRst)	rDmaREd	<= 1'b0;
 	else 		rDmaREd	<= iMUfiREd;
 end
+
 
 endmodule

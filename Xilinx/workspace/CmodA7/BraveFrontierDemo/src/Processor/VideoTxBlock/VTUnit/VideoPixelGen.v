@@ -12,16 +12,16 @@
 // 「秒数を計測して処理をさせる」は制限時間などに用いて、描画には極力用いないこと。
 // -
 // レイヤーの並び順は下記の通りである。
-// 遠景
-// 背景
-// フィールド
-// NPC
-// プレイヤー
-// 前オブジェクト
-// エフェクト
-// 前景
-// メニュー
-// シーン
+// Distance:遠景
+// Background:背景
+// Field:フィールド
+// NPC:NPC
+// Player:プレイヤー
+// Object:前オブジェクト
+// Effect:エフェクト
+// Foreground:前景
+// Menu:メニュー
+// Scene:シーン
 // module を平行に並べるため、一番レイテンシが大きいブロックで処理速度が決定する。
 // -
 // module 共通プレフィックス
@@ -113,24 +113,31 @@ PixelDrawPosition #(
 // Draw Module で共通利用するマップ情報
 // ※ 現在座標からの算出されるマップ情報は、キャラクターの移動・フィールド生成などにも使用されるため共通で必要
 //-----------------------------------------------------------------------------
-localparam lpMapXSize			= 150;
-localparam lpMapYSize			= 150;
+// localparam lpMapXSize			= 150;
+// localparam lpMapYSize			= 150;
 
-MapInfo #(
-	.pMapInfoBitWidth	(pMapInfoBitWidth),
-	.pMapXSize			(lpMapXSize),
-	.pMapYSize			(lpMapYSize)
-) MapInfo (
-	.iMapInfoWd			(iMapInfoWd),
-	.iMapInfoCke		(iMapInfoCke),
-	.iMapInfoVd			(iMapInfoVd),
-	.iMapInfoRAdrs		(iMapInfoRAdrs),
-	.oMapInfo			(oMapInfo),
-	.iRst				(iRst),
-	.iClk				(iClk)
-);
+// MapInfo #(
+// 	.pMapInfoBitWidth	(pMapInfoBitWidth),
+// 	.pMapXSize			(lpMapXSize),
+// 	.pMapYSize			(lpMapYSize)
+// ) MapInfo (
+// 	.iMapInfoWd			(iMapInfoWd),
+// 	.iMapInfoCke		(iMapInfoCke),
+// 	.iMapInfoVd			(iMapInfoVd),
+// 	.iMapInfoRAdrs		(iMapInfoRAdrs),
+// 	.oMapInfo			(oMapInfo),
+// 	.iRst				(iRst),
+// 	.iClk				(iClk)
+// );
 
 
+//-----------------------------------------------------------------------------
+// 制約が必要そうではある。
+// BRAM を cache 扱いとしないと、RAM へのアクセス時間が足りなさそう。
+// 16 x 16 x 16 = 4096
+// 4096 * 8 = 32768 , 36kB に収まる
+// ドラクエ方式として、上下左右の右足左足で 合計 8マップチップのため収まりそう。
+//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 // DistantView Draw
 //-----------------------------------------------------------------------------
@@ -140,8 +147,6 @@ MapInfo #(
 //-----------------------------------------------------------------------------
 // Field Draw
 //-----------------------------------------------------------------------------
-
-
 //-----------------------------------------------------------------------------
 // NPC Draw
 //-----------------------------------------------------------------------------

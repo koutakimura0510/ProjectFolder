@@ -137,6 +137,7 @@ reg 						qCsrWCke20;
 reg 						qCsrWCke24;
 reg 						qCsrWCke28;
 reg 						qCsrWCke2C;
+reg 						qCsrWCke30;
 //
 always @(posedge iSysClk)
 begin
@@ -165,8 +166,11 @@ begin
 		rFbufAdrs2		<= lpFbufAdrs2;
 		rFbufLen1		<= lpFbufLen1;
 		rFbufLen2		<= lpFbufLen2;
-		rMapXSize		<= 8'd30;		// 480 / 16 = 30
-		rMapYSize		<= 8'd17;		// 272 / 16 = 17
+		rMapXSize		<= 8'd30;		// DisplayX(480) / MapChipX(16) = 30
+		rMapYSize		<= 8'd17;		// DisplayY(272) / MapChipY(16) = 17
+		rMapInfoWd		<= {pMapInfoBitWidth{1'b0}};
+		rMapInfoCke		<= 1'b0;
+		rMapInfoVd		<= 1'b0;
 	end
 	else
 	begin
@@ -184,12 +188,11 @@ begin
 		rFbufAdrs2				<= qCsrWCke1c ? iSUsiWd[pMemAdrsWidth-1:0] 		: rFbufAdrs2;
 		rFbufLen1				<= qCsrWCke20 ? iSUsiWd[pMemAdrsWidth-1:0] 		: rFbufLen1;
 		rFbufLen2				<= qCsrWCke24 ? iSUsiWd[pMemAdrsWidth-1:0] 		: rFbufLen2;
+		//
 		{rMapXSize, rMapYSize}	<= qCsrWCke28 ? iSUsiWd[15:0] 					: {rMapXSize, rMapYSize};
-		//
 		rMapInfoWd				<= qCsrWCke2C ? iSUsiWd[pMapInfoBitWidth-1:0]	: rMapInfoWd;
-		rMapInfoCke				<= qCsrWCke2C ? iSUsiWd[pMapInfoBitWidth+0:0]	: rMapInfoCke;
-		rMapInfoVd				<= qCsrWCke2C ? iSUsiWd[pMapInfoBitWidth+1:0]	: rMapInfoVd;
-		//
+		rMapInfoCke				<= qCsrWCke30 ? iSUsiWd[0:0]					: rMapInfoCke;
+		rMapInfoVd				<= qCsrWCke30 ? iSUsiWd[1:1]					: rMapInfoVd;
 		//
 		rHSyncStart 			<= rHdisplay + rHfront;
 		rHSyncEnd				<= rHdisplay + rHfront + rHpulse - 1'b1;
@@ -213,7 +216,10 @@ begin
 	qCsrWCke20 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0020});
 	qCsrWCke24 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0024});
 	qCsrWCke28 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0028});
+	qCsrWCke2C <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h002C});
+	qCsrWCke30 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0030});
 end
+
 
 //----------------------------------------------------------
 // Csr Read
@@ -226,7 +232,7 @@ always @(posedge iSysClk)
 begin
 	if (iSysRst)
 	begin
-		rSUsiRd <= 'h0;
+		rSUsiRd  <= 'h0;
 		rSUsiREd <= 1'b0;
 	end
 	else
@@ -244,6 +250,8 @@ begin
 			'h0020:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufLen1														};
 			'h0024:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufLen2														};
 			'h0028:		rSUsiRd	<= {{(32 - 16				){1'b0}}, rMapXSize, rMapYSize											};
+			'h002C:		rSUsiRd	<= {{(32 - pMapInfoBitWidth	){1'b0}}, rMapInfoWd													};
+			'h0030:		rSUsiRd	<= {{(32 - 30				){1'b0}}, rMapInfoCke, rMapInfoVd										};
 			//
 			'h0080:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncStart,{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncStart	};
 			'h0084:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncEnd,	{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncEnd	};
