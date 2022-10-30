@@ -6,8 +6,8 @@
 // 
 //----------------------------------------------------------
 module VideoTxUnit #(
-	parameter						pBusAdrsBit			= 16,
 	parameter						pUfiBusWidth		= 16,
+	parameter						pBusAdrsBit			= 16,
 	parameter						pMemAdrsWidth		= 19,
 	// Display Size
     parameter       				pHdisplayWidth		= 11,
@@ -43,8 +43,10 @@ module VideoTxUnit #(
 	output 							oMUfiCmd,	// High Read, Low Write
 	// Ufi Master Common
 	input 							iMUfiRdy,	// Ufi Bus 転送可能時 Assert
-	// Ufi Slave Write
-
+	// Vtb Slave Side
+	input [pUfiBusWidth-1:0] 		iSUfiWd,	// 書き込みデータ
+	input [pBusAdrsBit-1:0] 		iSUfiAdrs,	// 書き込みアドレス
+	input 							iSUfiWEd,	// 書き込み命令
 	// Csr Display
 	input	[pHdisplayWidth-1:0]	iHdisplay,
 	input	[pVdisplayWidth-1:0]	iVdisplay,
@@ -94,11 +96,17 @@ wire wDrawPixelWEd;
 reg  qVideoPixelGenCke;
 
 VideoPixelGen #(
+	.pUfiBusWidth		(pUfiBusWidth),
+	.pBusAdrsBit		(pBusAdrsBit),
 	.pHdisplayWidth		(pHdisplayWidth),
 	.pVdisplayWidth		(pVdisplayWidth),
 	.pMapInfoBitWidth	(pMapInfoBitWidth),
 	.pColorDepth		(pColorDepth)
 ) VideoPixelGen (
+	.iSUfiWd			(iSUfiWd),
+	.iSUfiAdrs			(iSUfiAdrs),
+	.iSUfiWEd			(iSUfiWEd),
+	//
 	.iHdisplay			(iHdisplay),
 	.iVdisplay			(iVdisplay),
 	// Csr Map Info

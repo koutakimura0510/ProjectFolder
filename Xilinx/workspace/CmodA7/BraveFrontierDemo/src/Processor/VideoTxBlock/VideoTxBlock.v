@@ -76,6 +76,10 @@ module VideoTxBlock #(
 	output 							oMUfiCmd,	// High Read, Low Write
 	// Ufi Master Common
 	input 							iMUfiRdy,	// Ufi Bus 転送可能時 Assert
+	// Vtb Slave Side
+	input [pUfiBusWidth-1:0] 		iSUfiWd,	// 書き込みデータ
+	input [pBusAdrsBit-1:0] 		iSUfiAdrs,	// 書き込みアドレス
+	input 							iSUfiWEd,	// 書き込み命令
 	// CLK Rst
 	input  							iSysRst,
 	input 							iSysClk,
@@ -153,6 +157,10 @@ VideoTxUnit #(
 	.oMUfiVd			(oMUfiVd),
 	.oMUfiCmd			(oMUfiCmd),
 	.iMUfiRdy			(iMUfiRdy),
+	//
+	.iSUfiWd			(iSUfiWd),
+	.iSUfiAdrs			(iSUfiAdrs),
+	.iSUfiWEd			(iSUfiWEd),
 	//
 	.iHdisplay			(wHdisplayCsr),
 	.iVdisplay			(wVdisplayCsr),

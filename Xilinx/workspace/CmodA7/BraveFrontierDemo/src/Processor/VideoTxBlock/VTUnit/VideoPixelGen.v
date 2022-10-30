@@ -29,6 +29,9 @@
 // -
 //----------------------------------------------------------
 module VideoPixelGen #(
+	// Ufi
+	parameter						pUfiBusWidth		= 16,
+	parameter						pBusAdrsBit			= 16,
 	// Display Size
     parameter       				pHdisplayWidth		= 11,	// 11bit だと FHD まで
     parameter       				pVdisplayWidth		= 11,
@@ -40,6 +43,10 @@ module VideoPixelGen #(
 	parameter						pOutColorDepth		= pColorDepth - (pColorDepth / 4) // alpha値を除いたbit幅
 )(
 	// Internal Port
+	// Vtb Slave Side
+	input [pUfiBusWidth-1:0] 		iSUfiWd,	// 書き込みデータ
+	input [pBusAdrsBit-1:0] 		iSUfiAdrs,	// 書き込みアドレス
+	input 							iSUfiWEd,	// 書き込み命令
 	// Csr Input
 	input	[pHdisplayWidth-1:0]	iHdisplay,
 	input	[pVdisplayWidth-1:0]	iVdisplay,

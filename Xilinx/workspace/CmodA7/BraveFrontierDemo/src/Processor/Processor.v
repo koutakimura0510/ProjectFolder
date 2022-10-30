@@ -149,10 +149,16 @@ wire [31:0] 					wMUsiWdMcb;
 wire [lpBusAdrsBit-1:0]			wMUsiAdrsMcb;
 wire 							wMUsiWCkeMcb;
 //
+reg  [lpUfiBusWidth-1:0]		qMUfiRdMcs;
+reg  							qMUfiREdMcs;
+//
 wire [lpUfiBusWidth-1:0]		wMUfiWdMcs;
 wire [lpBusAdrsBit-1:0]			wMUfiAdrsMcs;
-wire 							wMUfiEdMcs;
+wire 							wMUfiWEdMcs;
+wire 							wMUfiREdMcs;
 wire 							wMUfiVdMcs;
+wire 							wMUfiCmdMcs;
+reg  							qMUfiRdyMcs;
 
 MicroControllerBlock #(
 	.pBusBlockConnect			(lpBusBlockConnect),
@@ -164,10 +170,19 @@ MicroControllerBlock #(
 	.oMUsiWd					(wMUsiWdMcb),
 	.oMUsiAdrs					(wMUsiAdrsMcb),
 	.oMUsiWEd					(wMUsiWCkeMcb),
+	//
+	.iMUfiRd					(qMUfiRdMcs),
+	.iMUfiREd					(qMUfiREdMcs),
+	//
 	.oMUfiWd					(wMUfiWdMcs),
 	.oMUfiAdrs					(wMUfiAdrsMcs),
-	.oMUfiEd					(wMUfiEdMcs),
+	.oMUfiWEd					(wMUfiWEdMcs),
+	.oMUfiREd					(wMUfiREdMcs),
 	.oMUfiVd					(wMUfiVdMcs),
+	.oMUfiCmd					(wMUfiCmdMcs),
+	//
+	.iMUfiRdy					(qMUfiRdyMcs),
+	//
 	.iSysRst					(iSysRst),
 	.iSysClk					(iSysClk)
 );
@@ -346,6 +361,10 @@ wire 					wMUfiVdVtb;
 wire 					wMUfiCmdVtb;
 reg  					qMUfiRdyVtb;
 //
+wire [lpUfiBusWidth-1:0]wSUfiWdVtb;
+wire [lpBusAdrsBit-1:0]	wSUfiAdrsVtb;
+wire 					wSUfiWEdVtb;
+//
 VideoTxBlock #(
 	.pBlockAdrsMap		(lpBlockAdrsMap),
 	.pAdrsMap			(lpVTBAdrsMap),
@@ -405,6 +424,10 @@ VideoTxBlock #(
 	.oMUfiCmd			(wMUfiCmdVtb),
 	//
 	.iMUfiRdy			(qMUfiRdyVtb),
+	//
+	.iSUfiWd			(wSUfiWdVtb),
+	.iSUfiAdrs			(wSUfiAdrsVtb),
+	.iSUfiWEd			(wSUfiWEdVtb),
 	// CLK Rst
 	.iSysRst			(iSysRst),
 	.iVideoClk 			(iVideoClk),
@@ -636,6 +659,7 @@ end
 // UFI/F BUS
 //----------------------------------------------------------
 wire [lpUfiBusWidth-1:0]wMUfiRd;
+wire 					wMUfiEddMcs;
 wire 					wMUfiEddVtb;
 wire 					wMUfiEddAtb;
 wire					wMUfiRdy;
@@ -655,8 +679,10 @@ UltraFastInterface #(
 ) UfiBus (
 	.iMUfiWdMcs		(wMUfiWdMcs),
 	.iMUfiAdrsMcs	(wMUfiAdrsMcs),
-	.iMUfiEdMcs		(wMUfiEdMcs),
+	.iMUfiWEdMcs	(wMUfiWEdMcs),
+	.iMUfiREdMcs	(wMUfiREdMcs),
 	.iMUfiVdMcs		(wMUfiVdMcs),
+	.iMUfiCmdMcs	(wMUfiCmdMcs),
 	//
 	.iMUfiWdSpi		(wMUfiWdSpi),
 	.iMUfiAdrsSpi	(wMUfiAdrsSpi),
@@ -672,6 +698,10 @@ UltraFastInterface #(
 	.iMUfiCmdVtb	(wMUfiCmdVtb),
 	.oMUfiRdyVtb	(wMUfiRdyVtb),
 	//
+	.oSUfiWdVtb		(wSUfiWdVtb),
+	.oSUfiAdrsVtb	(wSUfiAdrsVtb),
+	.oSUfiWEdVtb	(wSUfiWEdVtb),
+	//
 	.iMUfiAdrsAtb	(wMUfiAdrsAtb),
 	.iMUfiWEdAtb	(wMUfiWEdAtb),
 	.iMUfiREdAtb	(wMUfiREdAtb),
@@ -679,6 +709,7 @@ UltraFastInterface #(
 	.oMUfiRdyAtb	(wMUfiRdyAtb),
 	//
 	.oMUfiRd		(wMUfiRd),
+	.oMUfiEddMcs	(wMUfiEddMcs),
 	.oMUfiEddVtb	(wMUfiEddVtb),
 	.oMUfiEddAtb	(wMUfiEddAtb),
 	.oMUfiRdy		(wMUfiRdy),
@@ -707,6 +738,10 @@ begin
 	qSUfiWEdRam	<= wSUfiWEdRam;
 	qSUfiREdRam	<= wSUfiREdRamO;
 	qSUfiCmd	<= wSUfiCmd;
+	//
+	qMUfiRdMcs 	<= wMUfiRd;
+	qMUfiREdMcs <= wMUfiEddMcs;
+	qMUfiRdyMcs <= wMUfiRdy;
 	//
 	qMUfiRdVtb 	<= wMUfiRd;
 	qMUfiREdVtb <= wMUfiEddVtb;

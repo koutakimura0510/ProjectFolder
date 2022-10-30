@@ -5,14 +5,12 @@
 // プロセッサ内部構造の Master を司るブロック
 // 独自の I/F BUS をマスターの立場から操作し、
 // BUS に接続されている Slaveブロック の操作を行う。
-// -
-// リソース削減のため、コマンドとアドレスは同じ Port を使用する
 //----------------------------------------------------------
 module MicroControllerBlock #(
 	parameter							pBusBlockConnect 	= 1,
 	parameter 							pBlockAdrsMap 		= 8,
 	parameter [pBlockAdrsMap-1:0] 		pAdrsMap  			= 'h01,
-	parameter							pBusAdrsBit			= 16,
+	parameter							pBusAdrsBit			= 16,	// Usi,Ufi 共通
 	parameter							pUfiBusWidth		= 8,
 	parameter 							pCsrAdrsWidth   	= 16,
 	parameter							pCsrActiveWidth 	= 16,
@@ -26,11 +24,29 @@ module MicroControllerBlock #(
 	output	[31:0]						oMUsiWd,	// Write Data
 	output	[pBusAdrsBit-1:0]			oMUsiAdrs,	// Write address
 	output								oMUsiWEd,	// Write Data Enable
-	//
-	output	[pUfiBusWidth-1:0]			oMUfiWd,
-	output	[pBusAdrsBit-1:0]			oMUfiAdrs,
-	output								oMUfiEd,
-	output								oMUfiVd,
+	// Ufi Master Read
+	input 	[pUfiBusWidth-1:0]			iMUfiRd,	// Read Data
+	input 								iMUfiREd,	// Read Data Enable
+	// Ufi Master Write
+/*
+ 2022-10-29
+ 使用予定の PSRAM のアドレスは h0000_0000 ~ h01FF_FFFF [24:0]
+ [31:25] はフリースペースになるため、MCS から UFIB 経由で Slave にアクセスするときに、
+ どの Slave に要求しているかの条件分岐に使用することにした。
+ 条件分岐は UFIB module 内で行う。
+ oMUfiAdrs
+ [31:28] 予約
+ [27:25] 100:Atb, 010:Vtb, 001:Ram
+ [24: 0] HyperRam Adrs
+ */
+	output 	[pUfiBusWidth-1:0]			oMUfiWd,
+	output 	[pBusAdrsBit-1:0]			oMUfiAdrs,
+	output 								oMUfiWEd,	// Write Adrs Data Enable
+	output 								oMUfiREd,	// Read Adrs Data Enable
+	output 								oMUfiVd,	// Data Valid
+	output 								oMUfiCmd,	// High Read, Low Write
+	// Ufi Master Common
+	input 								iMUfiRdy,	// Ufi Bus 転送可能時 Assert
     // CLK Reset
     input           					iSysRst,
     input           					iSysClk
@@ -38,8 +54,10 @@ module MicroControllerBlock #(
 
 assign oMUfiWd		= {pUfiBusWidth{1'b0}}; // のちのち UFI 処理追加
 assign oMUfiAdrs	= {pBusAdrsBit{1'b0}};
-assign oMUfiEd		= 1'b0;
+assign oMUfiWEd		= 1'b0;
+assign oMUfiREd		= 1'b0;
 assign oMUfiVd		= 1'b0;
+assign oMUfiCmd		= 1'b0;
 
 
 //----------------------------------------------------------
