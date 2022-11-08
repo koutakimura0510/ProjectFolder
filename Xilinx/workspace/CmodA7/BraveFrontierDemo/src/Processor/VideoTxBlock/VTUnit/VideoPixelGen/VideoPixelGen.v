@@ -12,21 +12,38 @@
 // 「秒数を計測して処理をさせる」は制限時間などに用いて、描画には極力用いないこと。
 // -
 // レイヤーの並び順は下記の通りである。
-// Distance:遠景
-// Background:背景
-// Field:フィールド
-// NPC:NPC
-// Player:プレイヤー
-// Object:前オブジェクト
-// Effect:エフェクト
-// Foreground:前景
-// Menu:メニュー
-// Scene:シーン
+// ・Background:背景
+// 		遠くの山の景色など、ドラクエ5 のグランバニア山の途中休憩地点のつり橋から見える、グランバニア城のようなもの
+// 
+// ・Field:フィールド
+// 		ワールドマップ・フィールドマップ
+// 
+// ・NPC:NPC
+// 		プレイヤー以外のキャラクター
+// 
+// ・Player:プレイヤー
+// 		操作キャラクター
+// 
+// ・Object:前オブジェクト
+// 		木下など通過できるフィールドのこと
+// 
+// ・Field2:
+// 		ドラクエ5 のエルヘブンのような立体感のあるマップを生成するのに必要
+// 
+// ・Effect:エフェクト
+// 		戦闘エフェクト、フィールドエフェクトはない
+// 
+// ・Foreground:前景
+// 		霧や光源など
+// 
+// ・Menu:メニュー
+// 		ウィンドウメニュー
+// 
+// ・Scene:シーン
+// 		シーンチェンジ
+// 
 // module を平行に並べるため、一番レイテンシが大きいブロックで処理速度が決定する。
-// -
-// module 共通プレフィックス
-// D = Draw
-// -
+// 
 //----------------------------------------------------------
 module VideoPixelGen #(
 	// Ufi
@@ -35,8 +52,11 @@ module VideoPixelGen #(
 	// Display Size
     parameter       				pHdisplayWidth		= 11,	// 11bit だと FHD まで
     parameter       				pVdisplayWidth		= 11,
-	// Csr Map Info
-	parameter						pMapInfoBitWidth 	= 8,
+	// Map Info
+	parameter						pMapIdWidth			= 8,
+	// MapChip
+	parameter						pMapChipBasicSize	= 16,
+	parameter						pMapChipBasicBs		= 4,	// pMapChipBasicSize の サイズで Bit Shiftした時の 幅
 	// Color Depth
 	parameter						pColorDepth			= 16,
 	// non valiable
@@ -53,9 +73,6 @@ module VideoPixelGen #(
 	// Csr Map Info
 	input	[7:0]					iMapXSize,
 	input	[7:0]					iMapYSize,
-	input 	[pMapInfoBitWidth-1:0]	iMapInfoWd,
-	input 							iMapInfoCke,
-	input 							iMapInfoVd,
 	// 2nd Stage Output
 	output	[pOutColorDepth-1:0]	oPixel,
     output                       	oWEd,
@@ -96,6 +113,7 @@ end
 
 //-----------------------------------------------------------------------------
 // iSUfiAdrs によって BRAM データの更新先を振り分ける
+// 必要なものは、Adrs,Data,module ごとのWCke
 //-----------------------------------------------------------------------------
 
 
@@ -105,26 +123,33 @@ end
 //-----------------------------------------------------------------------------
 wire [pHdisplayWidth-1:0] 	wPixelDrawHpos;
 wire [pVdisplayWidth-1:0] 	wPixelDrawVpos;
+wire [pHdisplayWidth-1:4] 	wInfoHposBs;
+wire [pVdisplayWidth-1:4] 	wInfoVposBs;
 wire 						wAFE;
 reg 						qPixelDrawPositionCke;
 
 PixelDrawPosition #(
-	.pHdisplayWidth		(pHdisplayWidth),
-	.pVdisplayWidth		(pVdisplayWidth)
+	.pHdisplayWidth			(pHdisplayWidth),
+	.pVdisplayWidth			(pVdisplayWidth),
+	.pMapChipBasicBs		(pMapChipBasicBs)
 ) PixelDrawPosition (
-	.iHdisplay			(qHdisplay),
-	.iVdisplay			(qVdisplay),
-	.oHpos				(wPixelDrawHpos),
-	.oVpos				(wPixelDrawVpos),
-	.oAFE				(wAFE),
-	.iRst				(iRst),
-	.iCke				(qPixelDrawPositionCke),
-	.iClk				(iClk)
+	.iHdisplay				(qHdisplay),
+	.iVdisplay				(qVdisplay),
+	.oHpos					(wPixelDrawHpos),
+	.oVpos					(wPixelDrawVpos),
+	.oHposBs				(wInfoHposBs),
+	.oVposBs				(wInfoVposBs),
+	.oAFE					(wAFE),
+	.iRst					(iRst),
+	.iCke					(qPixelDrawPositionCke),
+	.iClk					(iClk)
 );
 
 //-----------------------------------------------------------------------------
 // Draw Module で共通利用するマップ情報
 // ※ 現在座標からの算出されるマップ情報は、キャラクターの移動・フィールド生成などにも使用されるため共通で必要
+// だがマップサイズは BRAMに入りきらないためやはり外部RAMが必要か？
+// 
 //-----------------------------------------------------------------------------
 // localparam lpMapXSize			= 150;
 // localparam lpMapYSize			= 150;
@@ -150,9 +175,6 @@ PixelDrawPosition #(
 // 16 x 16 x 16 = 4096
 // 4096 * 8 = 32768 , 36kB に収まる
 // ドラクエ方式として、上下左右の右足左足で 合計 8マップチップのため収まりそう。
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-// DistantView Draw
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 // Background Draw

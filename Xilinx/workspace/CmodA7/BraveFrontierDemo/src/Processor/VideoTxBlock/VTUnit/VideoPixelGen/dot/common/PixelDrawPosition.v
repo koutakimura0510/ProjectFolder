@@ -7,25 +7,30 @@
 //----------------------------------------------------------
 module PixelDrawPosition #(
 	// Display Size
-    parameter       				pHdisplayWidth	= 11,
-    parameter       				pVdisplayWidth	= 11
+    parameter       							pHdisplayWidth	= 11,
+    parameter       							pVdisplayWidth	= 11,
+	// MapChip
+	parameter									pMapChipBasicBs	= 4
 )(
-	input	[pHdisplayWidth-1:0]	iHdisplay,
-	input	[pVdisplayWidth-1:0]	iVdisplay,
-    output 	[pHdisplayWidth-1:0]	oHpos,
-    output 	[pVdisplayWidth-1:0]	oVpos,
-    output                      	oAFE,		// Active Frame End
+	input	[pHdisplayWidth-1:0]				iHdisplay,
+	input	[pVdisplayWidth-1:0]				iVdisplay,
+    output 	[pHdisplayWidth-1:0]				oHpos,
+    output 	[pVdisplayWidth-1:0]				oVpos,
+	output	[pHdisplayWidth-1:pMapChipBasicBs]	oHposBs,	// Bit Shift Map Info Read 座標計算のため必要な座標データ
+	output	[pVdisplayWidth-1:pMapChipBasicBs]	oVposBs,	// 
+    output                      				oAFE,		// Active Frame End
     // CLK Reset
-    input           				iRst,
-    input                       	iCke,
-    input           				iClk
+    input           							iRst,
+    input                       				iCke,
+    input           							iClk
 );
 
 
 //----------------------------------------------------------
 // 水平同期カウンター
 //----------------------------------------------------------
-reg [pHdisplayWidth-1:0] rHpos;           assign oHpos = rHpos;
+reg [pHdisplayWidth-1:0] rHpos;			assign oHpos   = rHpos;
+										assign oHposBs = rHpos[pHdisplayWidth-1:pMapChipBasicBs];	// mapchip のサイズによる。今回は縦横 16
 reg [pHdisplayWidth-1:0] qHposMux;
 reg qHposMuxSel;
 
@@ -46,7 +51,8 @@ end
 //----------------------------------------------------------
 // 垂直同期カウンター
 //----------------------------------------------------------
-reg [pVdisplayWidth-1:0] rVpos;           assign oVpos = rVpos;
+reg [pVdisplayWidth-1:0] rVpos;         assign oVpos   = rVpos;
+										assign oVposBs = rVpos[pVdisplayWidth-1:pMapChipBasicBs];
 reg [pVdisplayWidth-1:0] qVposMux;
 reg qVposMuxSel;
 

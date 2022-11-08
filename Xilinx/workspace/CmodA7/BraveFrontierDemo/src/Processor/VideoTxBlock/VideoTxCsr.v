@@ -67,9 +67,6 @@ module VideoTxCsr #(
 	// Csr Map Info
 	output	[7:0]					oMapXSize,
 	output	[7:0]					oMapYSize,
-	output	[pMapInfoBitWidth-1:0]	oMapInfoWd,
-	output							oMapInfoCke,
-	output							oMapInfoVd,
     // CLK Reset
     input           				iSysRst,
     input           				iSysClk
@@ -121,9 +118,6 @@ reg [pVdisplayWidth:0]		rVSyncEnd;			assign oVSyncEnd 	= rVSyncEnd;		// 同期�
 reg [pVdisplayWidth:0]		rVSyncMax;			assign oVSyncMax 	= rVSyncMax;		// アクティブエリア + 非表示エリア
 reg [ 7:0]					rMapXSize;			assign oMapXSize	= rMapXSize;		// 現在のマップの最大横幅 / 最大255マス固定
 reg [ 7:0]					rMapYSize;			assign oMapYSize	= rMapYSize;		// 現在のマップの最大縦幅 / 最大255マス固定
-reg	[pMapInfoBitWidth-1:0]	rMapInfoWd;			assign oMapInfoWd	= rMapInfoWd;		// マップデータの書き込み (Info)
-reg							rMapInfoCke;		assign oMapInfoCke	= rMapInfoCke;		// rMapInfoWd 有効時 Assert
-reg							rMapInfoVd;			assign oMapInfoVd	= rMapInfoVd;		// Map Info 更新期間中 Assert
 //
 reg 						qCsrWCke00;
 reg 						qCsrWCke04;
@@ -168,9 +162,6 @@ begin
 		rFbufLen2		<= lpFbufLen2;
 		rMapXSize		<= 8'd30;		// DisplayX(480) / MapChipX(16) = 30
 		rMapYSize		<= 8'd17;		// DisplayY(272) / MapChipY(16) = 17
-		rMapInfoWd		<= {pMapInfoBitWidth{1'b0}};
-		rMapInfoCke		<= 1'b0;
-		rMapInfoVd		<= 1'b0;
 	end
 	else
 	begin
@@ -190,9 +181,6 @@ begin
 		rFbufLen2				<= qCsrWCke24 ? iSUsiWd[pMemAdrsWidth-1:0] 		: rFbufLen2;
 		//
 		{rMapXSize, rMapYSize}	<= qCsrWCke28 ? iSUsiWd[15:0] 					: {rMapXSize, rMapYSize};
-		rMapInfoWd				<= qCsrWCke2C ? iSUsiWd[pMapInfoBitWidth-1:0]	: rMapInfoWd;
-		rMapInfoCke				<= qCsrWCke30 ? iSUsiWd[0:0]					: rMapInfoCke;
-		rMapInfoVd				<= qCsrWCke30 ? iSUsiWd[1:1]					: rMapInfoVd;
 		//
 		rHSyncStart 			<= rHdisplay + rHfront;
 		rHSyncEnd				<= rHdisplay + rHfront + rHpulse - 1'b1;
@@ -250,8 +238,6 @@ begin
 			'h0020:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufLen1														};
 			'h0024:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufLen2														};
 			'h0028:		rSUsiRd	<= {{(32 - 16				){1'b0}}, rMapXSize, rMapYSize											};
-			'h002C:		rSUsiRd	<= {{(32 - pMapInfoBitWidth	){1'b0}}, rMapInfoWd													};
-			'h0030:		rSUsiRd	<= {{(32 - 30				){1'b0}}, rMapInfoCke, rMapInfoVd										};
 			//
 			'h0080:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncStart,{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncStart	};
 			'h0084:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncEnd,	{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncEnd	};

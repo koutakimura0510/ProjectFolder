@@ -14,6 +14,9 @@ module VideoTxUnit #(
     parameter       				pVdisplayWidth		= 11,
 	// Csr Map Info
 	parameter						pMapInfoBitWidth 	= 8,
+	// MapChip
+	parameter						pMapChipBasicSize	= 16,
+	parameter						pMapChipBasicBs		= 4,	// pMapChipBasicSize の サイズで Bit Shiftした時の 幅
 	// Color Depth ARGB:4444
 	parameter						pColorDepth			= 16,
 	// FIFO Depth
@@ -70,9 +73,6 @@ module VideoTxUnit #(
 	// Csr Map Info
 	input	[7:0]					iMapXSize,
 	input	[7:0]					iMapYSize,
-	input 	[pMapInfoBitWidth-1:0]	iMapInfoWd,
-	input 							iMapInfoCke,
-	input 							iMapInfoVd,
     // CLK Reset
     input           				iSysClk,
 	input 							iVideoClk,
@@ -98,9 +98,15 @@ reg  qVideoPixelGenCke;
 VideoPixelGen #(
 	.pUfiBusWidth		(pUfiBusWidth),
 	.pBusAdrsBit		(pBusAdrsBit),
+	//
 	.pHdisplayWidth		(pHdisplayWidth),
 	.pVdisplayWidth		(pVdisplayWidth),
-	.pMapInfoBitWidth	(pMapInfoBitWidth),
+	//
+	.pMapIdWidth		(pMapInfoBitWidth),
+	//
+	.pMapChipBasicSize	(pMapChipBasicSize),
+	.pMapChipBasicBs	(pMapChipBasicBs),
+	//
 	.pColorDepth		(pColorDepth)
 ) VideoPixelGen (
 	.iSUfiWd			(iSUfiWd),
