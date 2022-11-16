@@ -51,6 +51,7 @@ module VideoPixelGen #(
     parameter       				pHdisplayWidth		= 11,	// 11bit だと FHD まで
     parameter       				pVdisplayWidth		= 11,
 	// Map Info
+	parameter						pMapXSizeMax		= 250,
 	parameter						pMapIdWidth			= 8,
 	// MapChip
 	parameter						pMapChipBasicSize	= 16,
@@ -144,27 +145,21 @@ PixelDrawPosition #(
 );
 
 //-----------------------------------------------------------------------------
-// Draw Module で共通利用するマップ情報
-// ※ 現在座標からの算出されるマップ情報は、キャラクターの移動・フィールド生成などにも使用されるため共通で必要
-// だがマップサイズは BRAMに入りきらないためやはり外部RAMが必要か？
-// 
+// MapInfoId の算出
 //-----------------------------------------------------------------------------
-// localparam lpMapXSize			= 150;
-// localparam lpMapYSize			= 150;
-
-// MapInfo #(
-// 	.pMapInfoBitWidth	(pMapInfoBitWidth),
-// 	.pMapXSize			(lpMapXSize),
-// 	.pMapYSize			(lpMapYSize)
-// ) MapInfo (
-// 	.iMapInfoWd			(iMapInfoWd),
-// 	.iMapInfoCke		(iMapInfoCke),
-// 	.iMapInfoVd			(iMapInfoVd),
-// 	.iMapInfoRAdrs		(iMapInfoRAdrs),
-// 	.oMapInfo			(oMapInfo),
-// 	.iRst				(iRst),
-// 	.iClk				(iClk)
-// );
+DrawMapIdInfo #(
+	.pMapSizeWidth		(pMapXSizeMax),
+	.pMapIdWidth		(pMapIdWidth),
+	.pMapInfoNumber		(4)
+) MapInfo (
+	.iMapInfoWd			(iMapInfoWd),
+	.iMapInfoCke		(iMapInfoCke),
+	.iMapInfoVd			(iMapInfoVd),
+	.iMapInfoRAdrs		(iMapInfoRAdrs),
+	.oMapInfo			(oMapInfo),
+	.iRst				(iRst),
+	.iClk				(iClk)
+);
 
 
 //-----------------------------------------------------------------------------
@@ -173,9 +168,6 @@ PixelDrawPosition #(
 // 16 x 16 x 16 = 4096
 // 4096 * 8 = 32768 , 36kB に収まる
 // ドラクエ方式として、上下左右の右足左足で 合計 8マップチップのため収まりそう。
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-// Background Draw
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 // Field Draw

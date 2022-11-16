@@ -2,13 +2,10 @@
 // Create 2022/11/03
 // Author koutakimura
 // -
-// マップ情報を管理する Wrapper Module
+// マップID 情報を管理する Wrapper Module
 // 
 //----------------------------------------------------------
 module DrawMapIdInfo #(
-	// Display Size
-    parameter       					pHdisplayWidth	= 11,
-    parameter       					pVdisplayWidth	= 11,
 	// Map Info Status
 	parameter 							pMapSizeWidth 	= 250,	// マップの最大横幅、ワールドマップ基準
 	parameter 							pMapIdWidth		= 8,	// 最大 256個のマップチップ使用可能
@@ -17,17 +14,16 @@ module DrawMapIdInfo #(
 	parameter							pMapInfoWidth 	= pMapIdWidth * pMapInfoNumber;
 )(
 	// Internal Port
-	input	[pMapInfoWidth-1:0]			iInfoWd,					// MapInfo Write Data
-	input	[15:0]						iInfoWAdrs,					// MapInfo Write Adrs, BRAM が 36KB のため 16bit幅
-	input 								iInfoWCke,					// MapInfo Write Enable
+	input	[pMapInfoWidth-1:0]			iInfoWd,				// MapInfo Write Data
+	input	[7:0]						iInfoWAdrs,				// MapInfo Write Adrs, BRAM が 36KB のため 16bit幅
+	input 								iInfoWCke,				// MapInfo Write Enable
+	// iInfoPos の入力からレイテンシ1で出力
+	output 	[pMapIdWidth-1:0]			oInfoFieldId,			// Filed のマップチップID
+	output 	[pMapIdWidth-1:0]			oInfoObjectId,			// Object のマップチップID
+	output 	[pMapIdWidth-1:0]			oInfoField2Id,			// Filed2 のマップチップID
+	output 	[pMapIdWidth-1:0]			oInfoForegroundId,		// Foreground のマップチップID
 	//
-	output 	[pMapIdWidth-1:0]			oInfoField,
-	output 	[pMapIdWidth-1:0]			oInfoObject,
-	output 	[pMapIdWidth-1:0]			oInfoField2,
-	output 	[pMapIdWidth-1:0]			oInfoForeground,
-	//
-	input	[pHdisplayWidth-1:4] 		iInfoHposBs,				// BitShift した状態の Hpos,Vpos
-	input	[pVdisplayWidth-1:4] 		iInfoVposBs,				// 
+	input	[7:0]				 		iInfoVpos,				// (DisplayVpos + UnitXpos + FiledXpos) / MapchipXSize の値
 	// Clk rst
     input								iRst,
     input								iClk
@@ -44,7 +40,15 @@ module DrawMapIdInfo #(
 // [ 7: 0] Field
 // [15: 8] Object
 // [23:16] Filed2
-// [31:24] Foreground 
+// [31:24] Foreground
+// 
+// BRAM の更新タイミングは下記のように 1Line の端のデータ生成が終了したら
+// 親モジュールに更新割り込みを発行する。(16x16 だったら 16Line の端)
+// Pixelデータは高速な内部 Sync のタイミングで生成するので、
+// このタイミングでも十分間に合う。(外部 Sync には Blank期間もあるので)
+// ・・・
+// ・・・
+// ・・・ <- 最終ラインの描画範囲内が終了したら、次の LineMapInfo に更新する。
 //-----------------------------------------------------------------------------
 (* ram_style = "block" *) reg [pMapInfoWidth-1:0] rMapInfoFifo [0:pMapSizeWidth];
 
@@ -52,19 +56,19 @@ module DrawMapIdInfo #(
 //-----------------------------------------------------------------------------
 // MapInfo R/W
 //-----------------------------------------------------------------------------
-reg [pMapInfoWidth-1:0]		rMapInfo;		assign {oInfoField, oInfoObject, oInfoField2, oInfoForeground} = rInfoField;
+reg [pMapInfoWidth-1:0]		rMapInfo;
 reg [15:0] 					qInfoRAdrs;
 
 always @(posedge iClk)
 begin
 	if (iInfoWCke)	rMapInfoFifo[iInfoWAdrs] <= iInfoWd;
 
-	rMapInfo <= rMapInfoFifo[wInfoRAdrs];
+	rMapInfo <= rMapInfoFifo[iInfoVpos];
 end
 
-always @*
-begin
-	//adrs
-end
+assign oInfoFieldId			= rMapInfo[ 7: 0];
+assign oInfoObjectId		= rMapInfo[15: 8];
+assign oInfoField2Id		= rMapInfo[23:16];
+assign oInfoForegroundId	= rMapInfo[31:24];
 
 endmodule
