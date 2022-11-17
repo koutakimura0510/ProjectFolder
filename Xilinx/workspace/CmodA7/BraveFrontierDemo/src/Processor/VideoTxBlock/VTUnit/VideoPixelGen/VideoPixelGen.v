@@ -3,6 +3,9 @@
 // Author koutakimura
 // -
 // 1pixel毎の描画データ生成
+// キャラクターの座標データ生成と module を分けるか悩んだが
+// 座標データは Pixel 描画に必要な info とみなし同じ module で管理することとした。
+// 
 // 
 // ※ Zynq プロジェクト時の考え方の違いがある。
 // ソフトで座標やアニメーション表現したときは、インターバルタイマー関数や
@@ -88,8 +91,8 @@ module VideoPixelGen #(
 //-----------------------------------------------------------------------------
 reg	[pHdisplayWidth-1:0] rHdisplay;
 reg	[pVdisplayWidth-1:0] rVdisplay;
-reg	[pHdisplayWidth-1:0] qHdisplay;
-reg	[pVdisplayWidth-1:0] qVdisplay;
+wire[pHdisplayWidth-1:0] wHdisplay;		assign wHdisplay = rHdisplay;
+wire[pVdisplayWidth-1:0] wVdisplay;		assign wVdisplay = rVdisplay;
 
 initial
 begin
@@ -101,12 +104,6 @@ always @(posedge iClk)
 begin
 	rHdisplay <= iHdisplay - 1'b1;
 	rVdisplay <= iVdisplay - 1'b1;
-end
-
-always @*
-begin
-	qHdisplay <= rHdisplay;
-	qVdisplay <= rVdisplay;
 end
 
 
@@ -132,8 +129,8 @@ PixelDrawPosition #(
 	.pVdisplayWidth			(pVdisplayWidth),
 	.pMapChipBasicBs		(pMapChipBasicBs)
 ) PixelDrawPosition (
-	.iHdisplay				(qHdisplay),
-	.iVdisplay				(qVdisplay),
+	.iHdisplay				(wHdisplay),
+	.iVdisplay				(wVdisplay),
 	.oHpos					(wPixelDrawHpos),
 	.oVpos					(wPixelDrawVpos),
 	.oHposBs				(wInfoHposBs),
@@ -144,19 +141,29 @@ PixelDrawPosition #(
 	.iClk					(iClk)
 );
 
+
 //-----------------------------------------------------------------------------
-// MapInfoId の算出
+// キャラクター(Player,NPC)の座標データ算出
+//-----------------------------------------------------------------------------
+// DrawUnitPosInfo
+
+
+//-----------------------------------------------------------------------------
+// MapIdInfo の取得・更新
 //-----------------------------------------------------------------------------
 DrawMapIdInfo #(
 	.pMapSizeWidth		(pMapXSizeMax),
 	.pMapIdWidth		(pMapIdWidth),
 	.pMapInfoNumber		(4)
-) MapInfo (
+) DrawMapIdInfo (
 	.iMapInfoWd			(iMapInfoWd),
 	.iMapInfoCke		(iMapInfoCke),
 	.iMapInfoVd			(iMapInfoVd),
 	.iMapInfoRAdrs		(iMapInfoRAdrs),
-	.oMapInfo			(oMapInfo),
+	.oInfoFieldId		(oInfoFieldId),
+	.oInfoObjectId		(oInfoObjectId),
+	.oInfoField2Id		(oInfoField2Id),
+	.oInfoForegroundId	(oInfoForegroundId),
 	.iRst				(iRst),
 	.iClk				(iClk)
 );
@@ -210,8 +217,8 @@ SceneChange #(
 	.pFifoBitWidth		(pColorDepth)
 ) SceneChange (
 	.iColor				(16'h00f0),
-	.iHdisplay			(qHdisplay),
-	.iVdisplay			(qVdisplay),
+	.iHdisplay			(wHdisplay),
+	.iVdisplay			(wVdisplay),
 	.iHpos				(wPixelDrawHpos),
 	.iVpos				(wPixelDrawVpos),
 	.iFe				(wAFE),
