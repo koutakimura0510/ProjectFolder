@@ -1,32 +1,48 @@
 <h1>【主要ディレクトリ一覧】</h1>
 
-- [1. 概要](#1-概要)
-- [2. MarkDown](#2-markdown)
-- [3. Platformio](#3-platformio)
-- [4. Ubuntu](#4-ubuntu)
-- [5. Xilinx](#5-xilinx)
+- [概要](#概要)
+- [ARM](#arm)
+- [Efinix](#efinix)
+- [Intel](#intel)
+- [MarkDown](#markdown)
+- [Platformio](#platformio)
+- [RaspberryPi](#raspberrypi)
+- [Ubuntu](#ubuntu)
+- [Xilinx](#xilinx)
 </br></br>
 
-## 1. 概要
-各プロジェクトを管理するworkspace</br>
-主に取り組んでいるのは上記目次内のプロジェクトである</br></br>
+## 概要
+主に下記のプロジェクトのソースコードを管理するディレクトリTree 構成
+</br></br>
 
-## 2. MarkDown
-チートシートを管理</br>
+## ARM
+主に STM32シリーズのソースコードを管理
+https://github.com/koutakimura0510/ProjectFolder/tree/master/ARM</br></br>
+
+## Efinix
+Titanium,Trion FPGA のソースコードを管理</br>
+https://github.com/koutakimura0510/ProjectFolder/tree/master/Efinix</br></br>
+
+## Intel
+MAX10 シリーズのソースコードを管理</br>
+https://github.com/koutakimura0510/ProjectFolder/tree/master/Intel</br></br>
+
+## MarkDown
+チートシート、環境構築などのメモを管理</br>
 https://github.com/koutakimura0510/ProjectFolder/tree/master/Markdown</br></br>
 
-## 3. Platformio
+## Platformio
 主にESP32関連のソースコードを管理</br>
-https://github.com/koutakimura0510/ProjectFolder/tree/master/PlatformIO/</br></br>
+https://github.com/koutakimura0510/ProjectFolder/tree/master/PlatformIO</br></br>
 
-## 4. Ubuntu
+## RaspberryPi
+C言語、Python, IO制御 のソースコードを管理</br>
+https://github.com/koutakimura0510/ProjectFolder/tree/master/RaspberryPi</br></br>
+
+## Ubuntu
 C言語のサンプルコードやZynqプロジェクトで使用するファイル生成アプリケーションを管理</br>
 https://github.com/koutakimura0510/ProjectFolder/tree/master/Ubuntu</br></br>
 
-## 5. Xilinx
-HDLのサンプルコードやZynqプロジェクトのアプリケーションを管理</br></br>
-**`今取り組んでいるもの`**
-https://github.com/koutakimura0510/ProjectFolder/tree/master/Xilinx/workspace/nexysVideo/hdmi/animation/app.srcs/sources_1/new?ts=4</br>
-</br>
-サンプルコード管理先</br>
-https://github.com/koutakimura0510/ProjectFolder/tree/master/Xilinx/workspace
+## Xilinx
+FPGA の ソースコードを管理</br>
+https://github.com/**koutakimura0510**/ProjectFolder/tree/master/Xilinx/workspace
