@@ -108,10 +108,23 @@ end
 
 
 //-----------------------------------------------------------------------------
-// iSUfiAdrs によって BRAM データの更新先を振り分ける
-// 必要なものは、Adrs,Data,module ごとのWCke
+// 書き込みデータの割り振り
+// BRAM の個数
 //-----------------------------------------------------------------------------
+localparam lpUfiAllocationNum = 9;
 
+SlaveUfiAllocation #(
+	.pUfiBusWidth		(pUfiBusWidth),
+	.pBusAdrsBit		(pBusAdrsBit),
+	.pUfiAllocationNum	(lpUfiAllocationNum)
+) SlaveUfiAllocation (
+	.iSUfiWd			(iSUfiWd),
+	.iSUfiWAdrs			(iSUfiAdrs),
+	.iSUfiWEd			(iSUfiWEd),
+	.oSUfiWd			(wSUfiWd),
+	.oSUfiAdrs			(wSUfiAdrs),
+	.oSUfiWEd			(wSUfiWEd)
+);
 
 
 //-----------------------------------------------------------------------------
@@ -145,7 +158,11 @@ PixelDrawPosition #(
 //-----------------------------------------------------------------------------
 // キャラクター(Player,NPC)の座標データ算出
 //-----------------------------------------------------------------------------
-// DrawUnitPosInfo
+DrawUnitPosInfo (
+
+) DrawUnitPosInfo (
+
+);
 
 
 //-----------------------------------------------------------------------------
