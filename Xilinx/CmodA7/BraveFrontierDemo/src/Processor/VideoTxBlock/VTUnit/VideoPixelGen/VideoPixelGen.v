@@ -109,22 +109,40 @@ end
 
 //-----------------------------------------------------------------------------
 // 書き込みデータの割り振り
-// BRAM の個数
 //-----------------------------------------------------------------------------
-localparam lpUfiAllocationNum = 9;
+localparam lpUfiAllocationNum = 9;	// 割り振り先の BRAM の個数
+localparam
+	lpBramMap	= 0,
+	lpBram1	= 1,
+	lpBram2	= 2,
+	lpBram3	= 3,
+	lpBram4	= 4,
+	lpBram5	= 5,
+	lpBram6	= 6,
+	lpBram7	= 7;
+	lpBram8	= 8;
+//
+wire [pUfiBusWidth-1:0] 		wSUfiWd;
+wire [pBusAdrsBit-1:0] 			wSUfiAdrs;
+wire [lpUfiAllocationNum-1:0] 	wSUfiWEd;
 
 SlaveUfiAllocation #(
-	.pUfiBusWidth		(pUfiBusWidth),
-	.pBusAdrsBit		(pBusAdrsBit),
-	.pUfiAllocationNum	(lpUfiAllocationNum)
+	.pUfiBusWidth				(pUfiBusWidth),
+	.pBusAdrsBit				(pBusAdrsBit),
+	.pUfiAllocationNum			(lpUfiAllocationNum),
+	.pAllocationAdrs			(2048)
 ) SlaveUfiAllocation (
-	.iSUfiWd			(iSUfiWd),
-	.iSUfiWAdrs			(iSUfiAdrs),
-	.iSUfiWEd			(iSUfiWEd),
-	.oSUfiWd			(wSUfiWd),
-	.oSUfiAdrs			(wSUfiAdrs),
-	.oSUfiWEd			(wSUfiWEd)
+	.iSUfiWd					(iSUfiWd),
+	.iSUfiWAdrs					(iSUfiAdrs),
+	.iSUfiWEd					(iSUfiWEd),
+	.oSUfiWd					(wSUfiWd),
+	.oSUfiAdrs					(wSUfiAdrs),
+	.oSUfiWEd					(wSUfiWEd),
+	// .iAllocationAdrs			({}),
+    .iClk						(iClk)
 );
+
+
 
 
 //-----------------------------------------------------------------------------
@@ -158,32 +176,37 @@ PixelDrawPosition #(
 //-----------------------------------------------------------------------------
 // キャラクター(Player,NPC)の座標データ算出
 //-----------------------------------------------------------------------------
-DrawUnitPosInfo (
+// DrawUnitPosInfo (
 
-) DrawUnitPosInfo (
+// ) DrawUnitPosInfo (
 
-);
+// );
 
 
 //-----------------------------------------------------------------------------
 // MapIdInfo の取得・更新
+// TODO MCB に移動する
 //-----------------------------------------------------------------------------
-DrawMapIdInfo #(
-	.pMapSizeWidth		(pMapXSizeMax),
-	.pMapIdWidth		(pMapIdWidth),
-	.pMapInfoNumber		(4)
-) DrawMapIdInfo (
-	.iMapInfoWd			(iMapInfoWd),
-	.iMapInfoCke		(iMapInfoCke),
-	.iMapInfoVd			(iMapInfoVd),
-	.iMapInfoRAdrs		(iMapInfoRAdrs),
-	.oInfoFieldId		(oInfoFieldId),
-	.oInfoObjectId		(oInfoObjectId),
-	.oInfoField2Id		(oInfoField2Id),
-	.oInfoForegroundId	(oInfoForegroundId),
-	.iRst				(iRst),
-	.iClk				(iClk)
-);
+// wire [7:0] wInfoFieldId;
+// wire [7:0] wInfoObjectId;
+// wire [7:0] wInfoField2Id;
+// wire [7:0] wInfoForegroundId;
+
+// DrawMapIdInfo #(
+// 	.pMapSizeWidth			(pMapXSizeMax),
+// 	.pMapIdWidth			(pMapIdWidth),
+// 	.pMapInfoNumber			(4)
+// ) DrawMapIdInfo (
+// 	.iMapInfoWd				(wSUfiWd),
+// 	.iMapInfoWAdrs			(wSUfiAdrs),
+// 	.iMapInfoCke			(wSUfiWEd[lpBramMap]),
+// 	.oInfoFieldId			(wInfoFieldId),
+// 	.oInfoObjectId			(wInfoObjectId),
+// 	.oInfoField2Id			(wInfoField2Id),
+// 	.oInfoForegroundId		(wInfoForegroundId),
+// 	.iRst					(iRst),
+// 	.iClk					(iClk)
+// );
 
 
 //-----------------------------------------------------------------------------
@@ -192,6 +215,14 @@ DrawMapIdInfo #(
 // 16 x 16 x 16 = 4096
 // 4096 * 8 = 32768 , 36kB に収まる
 // ドラクエ方式として、上下左右の右足左足で 合計 8マップチップのため収まりそう。
+// 
+// 格納可能なマップチップ数が 8 個ならば、1マップ(または 1画面)で、
+// 各レイヤーの使用できるマップチップ最大個数を決める必要がある。
+// 
+// ※ 上記タイル方式はボツとする。MCB 内でマップIDを取得し、IDによって RAM
+// に格納されている マップチップのアドレスを計算・取得する。
+// 1 Line の描画データを各 BRAM に割り振りを行う。
+// BRAM は 4Line 格納可能である。
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 // Field Draw
