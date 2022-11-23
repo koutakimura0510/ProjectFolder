@@ -1,0 +1,9 @@
+{
+	"version": "1.0",
+	"modules": {
+		"led_blink": {
+			"proto_instances": {
+			}
+		}
+	}
+}

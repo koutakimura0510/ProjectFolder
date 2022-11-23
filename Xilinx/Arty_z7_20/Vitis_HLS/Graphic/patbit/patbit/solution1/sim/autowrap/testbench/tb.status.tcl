@@ -1,0 +1,1 @@
+set ::AESL_AUTOSIM::gTopFileName /home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/patbit/patbit/solution1/./sim/autowrap/testbench/patbit.cpp_pre.cpp.tb.cpp

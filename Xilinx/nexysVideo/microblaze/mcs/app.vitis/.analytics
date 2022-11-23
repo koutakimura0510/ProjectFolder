@@ -1,0 +1,71 @@
+timestamp=[2022-03-06 10:36:10], mode=WORKBENCH_START, duration=0:00:04.147, duration_ms=4147, data={}
+timestamp=[2022-03-06 10:36:10], mode=WORKBENCH_UI_INIT, duration=0:00:00.419, duration_ms=419, data={editors_count=0, platform_editors_count=0, projects_count=0, platform_projects_count=0, active_platform_editor=false, projects=}
+timestamp=[2022-03-06 10:36:12], mode=PLATFORM_REPOSITORY_INIT, duration=0:00:02.157, duration_ms=2157, data={}
+timestamp=[2022-03-06 10:40:56], mode=APP_CREATION, duration=0:00:03.965, duration_ms=3965, data={name=led_flash, project_type=sdk, os=standalone, processor=microblaze, runtime=cpp, platform=main, application_type=application}
+timestamp=[2022-03-06 10:41:34], mode=PLATFORM_GENERATION, duration=0:00:05.862, duration_ms=5862, data={name=main}
+timestamp=[2022-03-06 10:41:35], mode=BUILD, duration=0:00:00.685, duration_ms=685, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 10:46:20], mode=BUILD, duration=0:00:00.424, duration_ms=424, data={name=led_flash, configuration=Debug, clean_build=true}
+timestamp=[2022-03-06 10:46:21], mode=BUILD, duration=0:00:00.575, duration_ms=575, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 10:46:22], mode=BUILD, duration=0:00:00.435, duration_ms=435, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 10:50:02], mode=BUILD, duration=0:00:00.524, duration_ms=524, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 10:50:04], mode=BUILD, duration=0:00:00.420, duration_ms=420, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 11:01:02], mode=BUILD, duration=0:00:00.418, duration_ms=418, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 11:01:03], mode=BUILD, duration=0:00:00.419, duration_ms=419, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 11:39:46], mode=BUILD, duration=0:00:00.424, duration_ms=424, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 11:39:47], mode=BUILD, duration=0:00:00.419, duration_ms=419, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 11:46:06], mode=BUILD, duration=0:00:00.422, duration_ms=422, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 11:46:07], mode=BUILD, duration=0:00:00.440, duration_ms=440, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 11:54:02], mode=PLATFORM_GENERATION, duration=0:00:05.168, duration_ms=5168, data={name=main}
+timestamp=[2022-03-06 11:54:02], mode=BUILD, duration=0:00:00.425, duration_ms=425, data={name=led_flash, configuration=Debug, clean_build=true}
+timestamp=[2022-03-06 11:54:10], mode=PLATFORM_GENERATION, duration=0:00:05.792, duration_ms=5792, data={name=main}
+timestamp=[2022-03-06 11:54:11], mode=BUILD, duration=0:00:00.573, duration_ms=573, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 12:06:26], mode=BUILD, duration=0:00:00.478, duration_ms=478, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 12:06:27], mode=BUILD, duration=0:00:00.426, duration_ms=426, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 12:06:46], mode=BUILD, duration=0:00:00.523, duration_ms=523, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 12:06:48], mode=BUILD, duration=0:00:00.418, duration_ms=418, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 12:06:54], mode=BUILD, duration=0:00:00.521, duration_ms=521, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 12:06:56], mode=BUILD, duration=0:00:00.421, duration_ms=421, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 12:16:56], mode=BUILD, duration=0:00:00.559, duration_ms=559, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 12:16:58], mode=BUILD, duration=0:00:00.421, duration_ms=421, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 12:30:14], mode=BUILD, duration=0:00:00.525, duration_ms=525, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 12:30:16], mode=BUILD, duration=0:00:00.418, duration_ms=418, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 12:34:24], mode=BUILD, duration=0:00:00.541, duration_ms=541, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 12:34:25], mode=BUILD, duration=0:00:00.420, duration_ms=420, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:03:16], mode=BUILD, duration=0:00:00.524, duration_ms=524, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:03:18], mode=BUILD, duration=0:00:00.420, duration_ms=420, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:19:07], mode=BUILD, duration=0:00:00.521, duration_ms=521, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:19:08], mode=BUILD, duration=0:00:00.423, duration_ms=423, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:24:17], mode=BUILD, duration=0:00:00.520, duration_ms=520, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:24:19], mode=BUILD, duration=0:00:00.421, duration_ms=421, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:24:44], mode=BUILD, duration=0:00:00.522, duration_ms=522, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:24:45], mode=BUILD, duration=0:00:00.423, duration_ms=423, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:27:21], mode=BUILD, duration=0:00:00.474, duration_ms=474, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:27:23], mode=BUILD, duration=0:00:00.423, duration_ms=423, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:28:10], mode=BUILD, duration=0:00:00.520, duration_ms=520, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:28:11], mode=BUILD, duration=0:00:00.421, duration_ms=421, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:29:45], mode=BUILD, duration=0:00:00.526, duration_ms=526, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:29:46], mode=BUILD, duration=0:00:00.424, duration_ms=424, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:48:02], mode=BUILD, duration=0:00:00.524, duration_ms=524, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:48:03], mode=BUILD, duration=0:00:00.423, duration_ms=423, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:52:01], mode=BUILD, duration=0:00:00.522, duration_ms=522, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:52:02], mode=BUILD, duration=0:00:00.422, duration_ms=422, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:52:35], mode=BUILD, duration=0:00:00.526, duration_ms=526, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:52:36], mode=BUILD, duration=0:00:00.422, duration_ms=422, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:53:51], mode=BUILD, duration=0:00:00.422, duration_ms=422, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:53:53], mode=BUILD, duration=0:00:00.424, duration_ms=424, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:55:35], mode=BUILD, duration=0:00:00.528, duration_ms=528, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:55:36], mode=BUILD, duration=0:00:00.425, duration_ms=425, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:56:13], mode=BUILD, duration=0:00:00.524, duration_ms=524, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:56:14], mode=BUILD, duration=0:00:00.423, duration_ms=423, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:56:50], mode=BUILD, duration=0:00:00.526, duration_ms=526, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 13:56:51], mode=BUILD, duration=0:00:00.422, duration_ms=422, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 14:13:39], mode=BUILD, duration=0:00:00.521, duration_ms=521, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 14:13:41], mode=BUILD, duration=0:00:00.421, duration_ms=421, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 14:15:04], mode=BUILD, duration=0:00:00.527, duration_ms=527, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 14:15:06], mode=BUILD, duration=0:00:00.423, duration_ms=423, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 14:15:11], mode=BUILD, duration=0:00:00.422, duration_ms=422, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 14:15:12], mode=BUILD, duration=0:00:00.425, duration_ms=425, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 14:15:57], mode=BUILD, duration=0:00:00.520, duration_ms=520, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 14:15:58], mode=BUILD, duration=0:00:00.422, duration_ms=422, data={name=led_flash_system, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 14:16:16], mode=BUILD, duration=0:00:00.520, duration_ms=520, data={name=led_flash, configuration=Debug, clean_build=false}
+timestamp=[2022-03-06 14:16:17], mode=BUILD, duration=0:00:00.420, duration_ms=420, data={name=led_flash_system, configuration=Debug, clean_build=false}

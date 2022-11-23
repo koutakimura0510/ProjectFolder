@@ -1,0 +1,447 @@
+{"sourceFile": [{
+      "name": "",
+      "directive": [
+        {
+          "functionName": "mapchip_png",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "s_axilite",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "return"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "mapchip_png.cpp",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "TOP",
+            "option": [{
+                "name": "name",
+                "value": "mapchip_png.cpp"
+              }]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "TOP",
+            "option": [{
+                "name": "name",
+                "value": "mapchip_png"
+              }]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "m_axi",
+                "value": ""
+              },
+              {
+                "name": "depth",
+                "value": "307200"
+              },
+              {
+                "name": "port",
+                "value": "srcin"
+              },
+              {
+                "name": "offset",
+                "value": "slave"
+              },
+              {
+                "name": "bundle",
+                "value": "src"
+              },
+              {
+                "name": "num_read_outstanding",
+                "value": "16"
+              },
+              {
+                "name": "max_read_burst_length",
+                "value": "32"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "m_axi",
+                "value": ""
+              },
+              {
+                "name": "depth",
+                "value": "307200"
+              },
+              {
+                "name": "port",
+                "value": "dstin"
+              },
+              {
+                "name": "offset",
+                "value": "slave"
+              },
+              {
+                "name": "bundle",
+                "value": "dst"
+              },
+              {
+                "name": "num_read_outstanding",
+                "value": "16"
+              },
+              {
+                "name": "max_read_burst_length",
+                "value": "32"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "m_axi",
+                "value": ""
+              },
+              {
+                "name": "depth",
+                "value": "307200"
+              },
+              {
+                "name": "port",
+                "value": "dstout"
+              },
+              {
+                "name": "offset",
+                "value": "slave"
+              },
+              {
+                "name": "bundle",
+                "value": "dst"
+              },
+              {
+                "name": "num_write_outstanding",
+                "value": "16"
+              },
+              {
+                "name": "max_write_burst_length",
+                "value": "32"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "s_axilite",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "mapchip_maxwidth"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "s_axilite",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "mapchip_maxheight"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "s_axilite",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "mapchip_draw_xsize"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "s_axilite",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "mapchip_draw_ysize"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "s_axilite",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "xstart_pos"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "s_axilite",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "ystart_pos"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "s_axilite",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "frame_size"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "s_axilite",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "alpha"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "INTERFACE",
+            "option": [
+              {
+                "name": "s_axilite",
+                "value": ""
+              },
+              {
+                "name": "port",
+                "value": "id"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "height_loop",
+          "functionLabel": "",
+          "pragma": {
+            "name": "LOOP_TRIPCOUNT",
+            "option": [
+              {
+                "name": "min",
+                "value": "1"
+              },
+              {
+                "name": "max",
+                "value": "480"
+              },
+              {
+                "name": "avg",
+                "value": "240"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "height_loop",
+          "functionLabel": "",
+          "pragma": {"name": "DATAFLOW"}
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "src_loop",
+          "functionLabel": "",
+          "pragma": {"name": "PIPELINE"}
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "src_loop",
+          "functionLabel": "",
+          "pragma": {
+            "name": "LOOP_TRIPCOUNT",
+            "option": [
+              {
+                "name": "min",
+                "value": "1"
+              },
+              {
+                "name": "max",
+                "value": "640"
+              },
+              {
+                "name": "avg",
+                "value": "240"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "dstin_loop",
+          "functionLabel": "",
+          "pragma": {"name": "PIPELINE"}
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "dstin_loop",
+          "functionLabel": "",
+          "pragma": {
+            "name": "LOOP_TRIPCOUNT",
+            "option": [
+              {
+                "name": "min",
+                "value": "1"
+              },
+              {
+                "name": "max",
+                "value": "640"
+              },
+              {
+                "name": "avg",
+                "value": "240"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "dstout_loop",
+          "functionLabel": "",
+          "pragma": {"name": "PIPELINE"}
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "dstout_loop",
+          "functionLabel": "",
+          "pragma": {
+            "name": "LOOP_TRIPCOUNT",
+            "option": [
+              {
+                "name": "min",
+                "value": "1"
+              },
+              {
+                "name": "max",
+                "value": "640"
+              },
+              {
+                "name": "avg",
+                "value": "240"
+              }
+            ]
+          }
+        },
+        {
+          "functionName": "mapchip_png",
+          "label": "",
+          "functionLabel": "",
+          "pragma": {
+            "name": "TOP",
+            "option": [{
+                "name": "name",
+                "value": "mapchip_png"
+              }]
+          }
+        }
+      ]
+    }]}

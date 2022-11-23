@@ -1,0 +1,41 @@
+<AutoPilot:ProjectResources xmlns:AutoPilot="com.autoesl.autopilot.ui.directiveView">
+    <sourceFile name="">
+        <directive functionName="led_blink" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="ap_ctrl_none" value="" positionalBoolean="mode"/>
+                <option name="port" value="return" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="led_blink" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="ap_none" value="" positionalBoolean="mode"/>
+                <option name="port" value="led" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="led_blink" label="" functionLabel="">
+            <pragma name="TOP">
+                <option name="name" value="led_blink"/>
+            </pragma>
+        </directive>
+        <directive functionName="led_blink" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="s_axilite" value="" positionalBoolean="mode"/>
+                <option name="port" value="return" positionalBoolean="4"/>
+            </pragma>
+        </directive>
+        <directive functionName="led_blink" label="" functionLabel="">
+            <pragma name="INTERFACE">
+                <option name="m_axi" value="" positionalBoolean="mode"/>
+                <option name="port" value="onoff" positionalBoolean="4"/>
+                <option name="offset" value="slave"/>
+                <option name="bundle" value="onoff"/>
+            </pragma>
+        </directive>
+        <directive functionName="led_blink" label="" functionLabel="">
+            <pragma name="TOP">
+                <option name="name" value="led_blink"/>
+            </pragma>
+        </directive>
+    </sourceFile>
+</AutoPilot:ProjectResources>
+

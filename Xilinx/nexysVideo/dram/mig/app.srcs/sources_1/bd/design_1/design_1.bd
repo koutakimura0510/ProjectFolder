@@ -1,0 +1,54 @@
+{
+  "design": {
+    "design_info": {
+      "boundary_crc": "0x0",
+      "device": "xc7a200tsbg484-1",
+      "gen_directory": "../../../../app.gen/sources_1/bd/design_1",
+      "name": "design_1",
+      "rev_ctrl_bd_flag": "RevCtrlBdOff",
+      "synth_flow_mode": "Hierarchical",
+      "tool_version": "2020.2"
+    },
+    "design_tree": {
+      "mig_7series_0": ""
+    },
+    "ports": {
+      "reset": {
+        "type": "rst",
+        "direction": "I",
+        "parameters": {
+          "POLARITY": {
+            "value": "ACTIVE_LOW"
+          }
+        }
+      }
+    },
+    "components": {
+      "mig_7series_0": {
+        "vlnv": "xilinx.com:ip:mig_7series:4.2",
+        "xci_name": "design_1_mig_7series_0_0",
+        "xci_path": "ip/design_1_mig_7series_0_0/design_1_mig_7series_0_0.xci",
+        "inst_hier_path": "mig_7series_0",
+        "parameters": {
+          "RESET_BOARD_INTERFACE": {
+            "value": "reset"
+          }
+        }
+      }
+    },
+    "nets": {
+      "mig_7series_0_ui_clk": {
+        "ports": [
+          "mig_7series_0/ui_clk",
+          "mig_7series_0/sys_clk_i"
+        ]
+      },
+      "reset_1": {
+        "ports": [
+          "reset",
+          "mig_7series_0/sys_rst"
+        ]
+      }
+    }
+  }
+}
