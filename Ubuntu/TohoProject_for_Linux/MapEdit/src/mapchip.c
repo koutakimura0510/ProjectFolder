@@ -21,7 +21,7 @@ bool mapchip_init(MapchipWork *chip, char *path)
 	if (!path) {
 		fprintf(stderr, "ファイルのパスが正しくありません\n");
 		fprintf(stderr, "エラー内容は以下が考えられます\n");
-		fprintf(stderr, "1. toolのカレントディレクトリでプログラムを実行して下さい\n");
+		fprintf(stderr, "1. カレントディレクトリでプログラムを実行して下さい\n");
 		fprintf(stderr, "2. ./program res/ファイル名.png とパスを入力してください(ファイル名は恐らくchip_xxx.pngです)\n");
 		fprintf(stderr, "3. includeディレクトリのMAPCHIP.Hに記述されているファイル名が間違っている可能性があります\n");
 		fprintf(stderr, "4. t_buildinfo構造体の中身を確認してください\n");

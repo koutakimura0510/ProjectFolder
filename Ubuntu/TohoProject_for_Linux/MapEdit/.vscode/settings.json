@@ -1,11 +1,13 @@
 {
     "files.associations": {
-        "TERMINAL.H": "cpp",
-        "sdl_events.h": "c",
-        "sdl_mouse.h": "c",
-        "sdl_keyboard.h": "c",
-        "MYLIB.H": "cpp",
-        "DISPLAY.H": "cpp",
-        "KEY.H": "cpp"
-    }
+		"*.v": "verilog",
+		"TERMINAL.H": "cpp",
+		"sdl_events.h": "c",
+		"sdl_mouse.h": "c",
+		"sdl_keyboard.h": "c",
+		"MYLIB.H": "cpp",
+		"DISPLAY.H": "cpp",
+		"KEY.H": "cpp",
+		"sdl.h": "c"
+	}
 }
