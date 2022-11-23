@@ -1,3 +1,0 @@
-led_blink_control_s_axi
-led_blink_onoff_m_axi
-led_blink

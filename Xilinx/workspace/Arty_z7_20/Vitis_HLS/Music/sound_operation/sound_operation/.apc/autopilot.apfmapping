@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<autopilotfilemapping:AutoPilotFileMapping xmlns:autopilotfilemapping="www.autoesl.com/autopilotfilemapping">
-  <source>
-    <originFiles name="sound_operation.cpp" path="/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/Music/sound_operation/sound_operation.cpp"/>
-  </source>
-  <testbench>
-    <originFiles name="sound_operation_tb.cpp" path="/home/koutakimura/workspace/ProjectFolder/Xilinx/workspace/Arty_z7_20/Vitis_HLS/Music/sound_operation/sound_operation_tb.cpp"/>
-  </testbench>
-</autopilotfilemapping:AutoPilotFileMapping>

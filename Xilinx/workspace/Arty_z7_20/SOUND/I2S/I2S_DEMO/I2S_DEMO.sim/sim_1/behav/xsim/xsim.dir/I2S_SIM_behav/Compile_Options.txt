@@ -1,1 +1,0 @@
--wto "c12aa167183348eeb847bad400f81993" --incr --debug "typical" --relax --mt "8" -L "xil_defaultlib" -L "unisims_ver" -L "unimacro_ver" -L "secureip" --snapshot "I2S_SIM_behav" "xil_defaultlib.I2S_SIM" "xil_defaultlib.glbl" -log "elaborate.log" 
