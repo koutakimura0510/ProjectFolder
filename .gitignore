@@ -84,7 +84,7 @@
 # Xilinx/workspace/IP/*
 # Xilinx/workspace/Sample/*
 # Xilinx/workspace/Arty_z7_20/AXI/*
-Efinix/
+# Efinix/
 
 # Toho Gameのみ対応する
 Xilinx/Arty_z7_20/HDMI/*

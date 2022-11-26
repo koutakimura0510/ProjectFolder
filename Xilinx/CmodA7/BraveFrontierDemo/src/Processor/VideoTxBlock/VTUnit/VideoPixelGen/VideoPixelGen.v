@@ -143,8 +143,6 @@ SlaveUfiAllocation #(
 );
 
 
-
-
 //-----------------------------------------------------------------------------
 // Draw Module で共通利用する内部で高速な描画座標の生成
 //-----------------------------------------------------------------------------
@@ -187,26 +185,26 @@ PixelDrawPosition #(
 // MapIdInfo の取得・更新
 // TODO MCB に移動する
 //-----------------------------------------------------------------------------
-// wire [7:0] wInfoFieldId;
-// wire [7:0] wInfoObjectId;
-// wire [7:0] wInfoField2Id;
-// wire [7:0] wInfoForegroundId;
+wire [7:0] wInfoFieldId;
+wire [7:0] wInfoObjectId;
+wire [7:0] wInfoField2Id;
+wire [7:0] wInfoForegroundId;
 
-// DrawMapIdInfo #(
-// 	.pMapSizeWidth			(pMapXSizeMax),
-// 	.pMapIdWidth			(pMapIdWidth),
-// 	.pMapInfoNumber			(4)
-// ) DrawMapIdInfo (
-// 	.iMapInfoWd				(wSUfiWd),
-// 	.iMapInfoWAdrs			(wSUfiAdrs),
-// 	.iMapInfoCke			(wSUfiWEd[lpBramMap]),
-// 	.oInfoFieldId			(wInfoFieldId),
-// 	.oInfoObjectId			(wInfoObjectId),
-// 	.oInfoField2Id			(wInfoField2Id),
-// 	.oInfoForegroundId		(wInfoForegroundId),
-// 	.iRst					(iRst),
-// 	.iClk					(iClk)
-// );
+DrawMapIdInfo #(
+	.pMapSizeWidth			(pMapXSizeMax),
+	.pMapIdWidth			(pMapIdWidth),
+	.pMapInfoNumber			(4)
+) DrawMapIdInfo (
+	.iMapInfoWd				(wSUfiWd),
+	.iMapInfoWAdrs			(wSUfiAdrs),
+	.iMapInfoCke			(wSUfiWEd[lpBramMap]),
+	.oInfoFieldId			(wInfoFieldId),
+	.oInfoObjectId			(wInfoObjectId),
+	.oInfoField2Id			(wInfoField2Id),
+	.oInfoForegroundId		(wInfoForegroundId),
+	.iRst					(iRst),
+	.iClk					(iClk)
+);
 
 
 //-----------------------------------------------------------------------------
@@ -223,10 +221,20 @@ PixelDrawPosition #(
 // に格納されている マップチップのアドレスを計算・取得する。
 // 1 Line の描画データを各 BRAM に割り振りを行う。
 // BRAM は 4Line 格納可能である。
+// 
+// ※ 更に上記方法をやめて、やっぱりマップチップ読み込み方式で行うことにした。
+// 16Byte 小刻みに読み込むのは レイテンシが悪すぎる。
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 // Field Draw
 //-----------------------------------------------------------------------------
+FieldDraw (
+
+) FieldDraw (
+
+);
+
+
 //-----------------------------------------------------------------------------
 // NPC Draw
 //-----------------------------------------------------------------------------
