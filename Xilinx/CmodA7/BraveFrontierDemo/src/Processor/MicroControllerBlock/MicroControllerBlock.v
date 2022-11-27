@@ -67,48 +67,52 @@ assign oMUfiCmd		= 1'b0;
 //----------------------------------------------------------
 // デバッグ用 MicroBlaze
 //----------------------------------------------------------
-// wire [31:0] 		wMcsWd;
-// wire [ 7:0] 		wMcsAdrs;
-// wire 				wMcsCke;
-// reg  [31:0]			qMcsManualRd;
-// reg  [31:0]			qMcsAutoRd;
-// reg  [pBusBlockConnect-1:0] 	qMcsRd;
-
-// microblaze_mcs_0 MCS (
-// 	.Clk			(iSysClk),
-// 	.Reset			(iSysRst),
-// 	.UART_rxd		(iUartRx),
-// 	.UART_txd		(oUartTx),
-// 	.GPIO1_tri_i	(qMcsManualRd),
-// 	.GPIO2_tri_i	(qMcsAutoRd),
-// 	.GPIO3_tri_i	({23'd0, qMcsRd}),
-// 	.GPIO1_tri_o	(wMcsWd),
-// 	.GPIO2_tri_o	(wMcsAdrs),
-// 	.GPIO3_tri_o	(wMcsCke)
-// );
-
-//-----------------------------------------------------------------------------
-// MCS
-//-----------------------------------------------------------------------------
+// 
+wire [31:0]					wMcbManualRd;
 wire [31:0]					wMUsiRd;
 wire [pBusBlockConnect-1:0]	wMUsiREd;
+// Write
 wire [31:0] 				wMcbCsrWd;
 wire [pBusAdrsBit-1:0] 		wMcbCsrAdrs;
 wire 						wMcbCsrCke;
 
-MicroControllerUnit #(
-	.pBusAdrsBit			(pBusAdrsBit),
-	.pUfiBusWidth			(pUfiBusWidth),
-	.pMemAdrsWidth			(pMemAdrsWidth)
-) MicroControllerUnit (
-	.iMUsiRd				(wMUsiRd),
-	.iMUsiREd				(wMUsiREd),
-	.oMUsiWd				(wMcbCsrWd),
-	.oMUsiAdrs				(wMcbCsrAdrs),
-	.oMUsiWEd				(wMcbCsrCke),
-	.iSysRst				(iSysRst),
-	.iSysClk				(iSysClk)
+microblaze_mcs_0 MCS (
+	.Clk			(iSysClk),
+	.Reset			(iSysRst),
+	.UART_rxd		(iUartRx),
+	.UART_txd		(oUartTx),
+	.GPIO1_tri_i	(wMcbManualRd),
+	.GPIO2_tri_i	(wMUsiRd),
+	.GPIO3_tri_i	({{(32-pBusBlockConnect){1'b0}}, wMUsiREd}),
+	.GPIO4_tri_i	(0),
+	.GPIO1_tri_o	(wMcbCsrWd),
+	.GPIO2_tri_o	(wMcbCsrAdrs),
+	.GPIO3_tri_o	(wMcbCsrCke),
+	.GPIO4_tri_o	()
 );
+
+//-----------------------------------------------------------------------------
+// MCS
+//-----------------------------------------------------------------------------
+// wire [31:0]					wMUsiRd;
+// wire [pBusBlockConnect-1:0]	wMUsiREd;
+// wire [31:0] 				wMcbCsrWd;
+// wire [pBusAdrsBit-1:0] 		wMcbCsrAdrs;
+// wire 						wMcbCsrCke;
+
+// MicroControllerUnit #(
+// 	.pBusAdrsBit			(pBusAdrsBit),
+// 	.pUfiBusWidth			(pUfiBusWidth),
+// 	.pMemAdrsWidth			(pMemAdrsWidth)
+// ) MicroControllerUnit (
+// 	.iMUsiRd				(wMUsiRd),
+// 	.iMUsiREd				(wMUsiREd),
+// 	.oMUsiWd				(wMcbCsrWd),
+// 	.oMUsiAdrs				(wMcbCsrAdrs),
+// 	.oMUsiWEd				(wMcbCsrCke),
+// 	.iSysRst				(iSysRst),
+// 	.iSysClk				(iSysClk)
+// );
 
 
 //-----------------------------------------------------------------------------
@@ -132,6 +136,7 @@ MicroControllerCsr #(
 	.oMUsiAdrs				(oMUsiAdrs),
 	.oMUsiWEd				(oMUsiWEd),
 	// Slave Input Side
+	// Csr に 書き込んでレジスタ経由で出力し直す
 	.iMUsiRd				(iMUsiRd),
 	.iMUsiREd				(iMUsiREd),
 	.oMUsiRd				(wMUsiRd),

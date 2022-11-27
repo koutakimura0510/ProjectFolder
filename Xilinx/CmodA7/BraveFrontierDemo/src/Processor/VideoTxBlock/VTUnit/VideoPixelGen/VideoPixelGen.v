@@ -73,8 +73,8 @@ module VideoPixelGen #(
 	input	[pHdisplayWidth-1:0]	iHdisplay,
 	input	[pVdisplayWidth-1:0]	iVdisplay,
 	// Csr Map Info
-	input	[7:0]					iMapXSize,
-	input	[7:0]					iMapYSize,
+	// input	[7:0]					iMapXSize,
+	// input	[7:0]					iMapYSize,
 	// 2nd Stage Output
 	output	[pOutColorDepth-1:0]	oPixel,
     output                       	oWEd,
@@ -110,37 +110,37 @@ end
 //-----------------------------------------------------------------------------
 // 書き込みデータの割り振り
 //-----------------------------------------------------------------------------
-localparam lpUfiAllocationNum = 9;	// 割り振り先の BRAM の個数
-localparam
-	lpBramMap	= 0,
-	lpBram1	= 1,
-	lpBram2	= 2,
-	lpBram3	= 3,
-	lpBram4	= 4,
-	lpBram5	= 5,
-	lpBram6	= 6,
-	lpBram7	= 7;
-	lpBram8	= 8;
-//
-wire [pUfiBusWidth-1:0] 		wSUfiWd;
-wire [pBusAdrsBit-1:0] 			wSUfiAdrs;
-wire [lpUfiAllocationNum-1:0] 	wSUfiWEd;
+// localparam lpUfiAllocationNum = 9;	// 割り振り先の BRAM の個数
+// localparam
+// 	lpBramMap	= 0,
+// 	lpBram1	= 1,
+// 	lpBram2	= 2,
+// 	lpBram3	= 3,
+// 	lpBram4	= 4,
+// 	lpBram5	= 5,
+// 	lpBram6	= 6,
+// 	lpBram7	= 7;
+// 	lpBram8	= 8;
+// //
+// wire [pUfiBusWidth-1:0] 		wSUfiWd;
+// wire [pBusAdrsBit-1:0] 			wSUfiAdrs;
+// wire [lpUfiAllocationNum-1:0] 	wSUfiWEd;
 
-SlaveUfiAllocation #(
-	.pUfiBusWidth				(pUfiBusWidth),
-	.pBusAdrsBit				(pBusAdrsBit),
-	.pUfiAllocationNum			(lpUfiAllocationNum),
-	.pAllocationAdrs			(2048)
-) SlaveUfiAllocation (
-	.iSUfiWd					(iSUfiWd),
-	.iSUfiWAdrs					(iSUfiAdrs),
-	.iSUfiWEd					(iSUfiWEd),
-	.oSUfiWd					(wSUfiWd),
-	.oSUfiAdrs					(wSUfiAdrs),
-	.oSUfiWEd					(wSUfiWEd),
-	// .iAllocationAdrs			({}),
-    .iClk						(iClk)
-);
+// SlaveUfiAllocation #(
+// 	.pUfiBusWidth				(pUfiBusWidth),
+// 	.pBusAdrsBit				(pBusAdrsBit),
+// 	.pUfiAllocationNum			(lpUfiAllocationNum),
+// 	.pAllocationAdrs			(2048)
+// ) SlaveUfiAllocation (
+// 	.iSUfiWd					(iSUfiWd),
+// 	.iSUfiWAdrs					(iSUfiAdrs),
+// 	.iSUfiWEd					(iSUfiWEd),
+// 	.oSUfiWd					(wSUfiWd),
+// 	.oSUfiAdrs					(wSUfiAdrs),
+// 	.oSUfiWEd					(wSUfiWEd),
+// 	// .iAllocationAdrs			({}),
+//     .iClk						(iClk)
+// );
 
 
 //-----------------------------------------------------------------------------
@@ -185,26 +185,26 @@ PixelDrawPosition #(
 // MapIdInfo の取得・更新
 // TODO MCB に移動する
 //-----------------------------------------------------------------------------
-wire [7:0] wInfoFieldId;
-wire [7:0] wInfoObjectId;
-wire [7:0] wInfoField2Id;
-wire [7:0] wInfoForegroundId;
+// wire [7:0] wInfoFieldId;
+// wire [7:0] wInfoObjectId;
+// wire [7:0] wInfoField2Id;
+// wire [7:0] wInfoForegroundId;
 
-DrawMapIdInfo #(
-	.pMapSizeWidth			(pMapXSizeMax),
-	.pMapIdWidth			(pMapIdWidth),
-	.pMapInfoNumber			(4)
-) DrawMapIdInfo (
-	.iMapInfoWd				(wSUfiWd),
-	.iMapInfoWAdrs			(wSUfiAdrs),
-	.iMapInfoCke			(wSUfiWEd[lpBramMap]),
-	.oInfoFieldId			(wInfoFieldId),
-	.oInfoObjectId			(wInfoObjectId),
-	.oInfoField2Id			(wInfoField2Id),
-	.oInfoForegroundId		(wInfoForegroundId),
-	.iRst					(iRst),
-	.iClk					(iClk)
-);
+// DrawMapIdInfo #(
+// 	.pMapSizeWidth			(pMapXSizeMax),
+// 	.pMapIdWidth			(pMapIdWidth),
+// 	.pMapInfoNumber			(4)
+// ) DrawMapIdInfo (
+// 	.iMapInfoWd				(wSUfiWd),
+// 	.iMapInfoWAdrs			(wSUfiAdrs),
+// 	.iMapInfoCke			(wSUfiWEd[lpBramMap]),
+// 	.oInfoFieldId			(wInfoFieldId),
+// 	.oInfoObjectId			(wInfoObjectId),
+// 	.oInfoField2Id			(wInfoField2Id),
+// 	.oInfoForegroundId		(wInfoForegroundId),
+// 	.iRst					(iRst),
+// 	.iClk					(iClk)
+// );
 
 
 //-----------------------------------------------------------------------------
@@ -228,11 +228,11 @@ DrawMapIdInfo #(
 //-----------------------------------------------------------------------------
 // Field Draw
 //-----------------------------------------------------------------------------
-FieldDraw (
+// DrawFieldMapchip (
 
-) FieldDraw (
+// ) DrawFieldMapchip (
 
-);
+// );
 
 
 //-----------------------------------------------------------------------------

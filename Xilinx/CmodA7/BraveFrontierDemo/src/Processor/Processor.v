@@ -133,7 +133,7 @@ localparam 	lpRamAdrsWidth		= 19;
 localparam 	lpRamDqWidth		= 8;
 localparam	lpUsiBusWidth  		= 32;		// Usi バスデータ幅
 localparam	lpBusAdrsBit		= 32;		// バスアドレス幅, Usi/Ufi 共通
-localparam  lpUfiBusWidth		= 32;
+localparam  lpUfiBusWidth		= 8;
 localparam	lpUfiIdNumber		= 3;
 
 

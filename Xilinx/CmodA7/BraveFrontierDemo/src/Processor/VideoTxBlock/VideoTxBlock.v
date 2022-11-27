@@ -249,9 +249,9 @@ VideoTxCsr #(
 	.oDmaEn				(wDmaEnCsr),
 	.oMapXSize			(wMapXSizeCsr),
 	.oMapYSize			(wMapYSizeCsr),
-	.oMapInfoWd			(wMapInfoWdCsr),
-	.oMapInfoCke		(wMapInfoCkeCsr),
-	.oMapInfoVd			(wMapInfoVdCsr),
+	// .oMapInfoWd			(wMapInfoWdCsr),
+	// .oMapInfoCke		(wMapInfoCkeCsr),
+	// .oMapInfoVd			(wMapInfoVdCsr),
 	.iSysClk			(iSysClk),
 	.iSysRst			(iSysRst)
 );
