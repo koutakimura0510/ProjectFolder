@@ -13,3 +13,6 @@ app.vitis
 .Xil
 work
 ip
+
+vitis/*
+!vitis/main

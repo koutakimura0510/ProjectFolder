@@ -25,6 +25,9 @@ module BraveFrontier #(
 )(
 	// Osc Clk
     input           iOscSystemClk,     // OSC  clk
+	// UART
+	input 			iUartRx,
+	output 			oUartTx,
 	// SPI
     inout           ioSpiSck,
     inout           ioSpiMiso,
@@ -120,6 +123,8 @@ Processor # (
     //----------------------------------------------------------
     // External Port
     //----------------------------------------------------------
+	// UART
+	.iUartRx		(iUartRx),			.oUartTx	(oUartTx),
     // SPI
     .ioSpiSck       (ioSpiSck),
     .ioSpiMiso      (ioSpiMiso),        .ioSpiMosi    	(ioSpiMosi),

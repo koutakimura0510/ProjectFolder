@@ -18,6 +18,9 @@ module Processor #(
     parameter       pDebug        = "off"
 )(
     // External port
+	// UART
+	input 			iUartRx,
+	output 			oUartTx,
 	// SPI
     inout           ioSpiSck,
     inout           ioSpiMiso,
@@ -165,6 +168,9 @@ MicroControllerBlock #(
 	.pBusAdrsBit				(lpBusAdrsBit),
 	.pUfiBusWidth				(lpUfiBusWidth)
 ) MicroControllerBlock (
+	.iUartRx					(iUartRx),
+	.oUartTx					(oUartTx),
+	//
 	.iMUsiRd					(qMUsiRdMcb),
 	.iMUsiREd					(qMUsiVdMcb),
 	.oMUsiWd					(wMUsiWdMcb),

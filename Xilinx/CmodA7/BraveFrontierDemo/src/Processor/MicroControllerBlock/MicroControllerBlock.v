@@ -16,6 +16,9 @@ module MicroControllerBlock #(
 	parameter							pCsrActiveWidth 	= 16,
 	parameter							pMemAdrsWidth		= 19
 )(
+	// external port
+	input 								iUartRx,
+	output 								oUartTx,
     // Internal Port
 	// Bus Master Read
 	input	[31:0]						iMUsiRd,	// CSR Read Data
@@ -84,11 +87,11 @@ microblaze_mcs_0 MCS (
 	.GPIO1_tri_i	(wMcbManualRd),
 	.GPIO2_tri_i	(wMUsiRd),
 	.GPIO3_tri_i	({{(32-pBusBlockConnect){1'b0}}, wMUsiREd}),
-	.GPIO4_tri_i	(0),
+	// .GPIO4_tri_i	(0),
 	.GPIO1_tri_o	(wMcbCsrWd),
 	.GPIO2_tri_o	(wMcbCsrAdrs),
-	.GPIO3_tri_o	(wMcbCsrCke),
-	.GPIO4_tri_o	()
+	.GPIO3_tri_o	(wMcbCsrCke)
+	// .GPIO4_tri_o	()
 );
 
 //-----------------------------------------------------------------------------
