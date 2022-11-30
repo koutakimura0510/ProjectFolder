@@ -30,33 +30,49 @@
 *
 ******************************************************************************/
 
-/*
- * helloworld.c: simple test application
- *
- * This application configures UART 16550 to baud rate 9600.
- * PS7 UART (Zynq) is not initialized by this application, since
- * bootrom/bsp configures it to baud rate 115200
- *
- * ------------------------------------------------
- * | UART TYPE   BAUD RATE                        |
- * ------------------------------------------------
- *   uartns550   9600
- *   uartlite    Configurable only in HW design
- *   ps7_uart    115200 (configured by bootrom/bsp)
- */
-
-#include <stdio.h>
+#include <stdint.h>
 #include "platform.h"
 #include "xil_printf.h"
 #include "xparameters.h"
+#include "xiomodule.h"
+
+XIOModule xio;
+
+/**----------------------------------------------------------
+ * ソフトウェア ループ
+ *---------------------------------------------------------*/
+void wait_time(uint32_t time)
+{
+	for (uint32_t i = 0; i < time; i++);
+}
 
 
-int main()
+/**----------------------------------------------------------
+ * main 関数
+ *---------------------------------------------------------*/
+int main(void)
 {
     init_platform();
+	XIOModule_Initialize(&xio, XPAR_IOMODULE_0_DEVICE_ID);
+
+    uint32_t usi_data = 0x00000001;
+    uint32_t usi_adrs = 0x00010000;
+    uint32_t usi_cke  = 0x00000001;
+	uint32_t d;
+
+    while (1)
+    {
+		wait_time(1000000);
+		XIOModule_DiscreteWrite(&xio, 1, usi_data);	// data
+		XIOModule_DiscreteWrite(&xio, 2, usi_adrs);	// adrs
+		XIOModule_DiscreteWrite(&xio, 3, usi_cke);	// cke assert
+		XIOModule_DiscreteWrite(&xio, 3, 0);		// cke dissert
+		d = XIOModule_DiscreteRead(&xio, 1);
+		usi_data ^= 0x00000001;
+    }
 
     xil_printf("Hello World\n\r");
-    xil_printf("Successfully ran Hello World application");
     cleanup_platform();
+
     return 0;
 }

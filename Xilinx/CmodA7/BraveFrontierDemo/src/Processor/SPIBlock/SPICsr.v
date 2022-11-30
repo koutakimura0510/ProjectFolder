@@ -31,6 +31,7 @@ module SPICsr #(
 	output 							oMSpiCs,
 	// Csr Input
 	input  	[7:0]					iMRd,
+	input 							iMSpiIntr,
     // CLK Reset
     input           				iSysClk,
     input           				iSysRst
@@ -47,7 +48,7 @@ reg [pDivClk-1:0]	rSPIDiv;			assign oSPIDiv 		= rSPIDiv;			// CLK Division
 reg [7:0]			rMWd;				assign oMWd			= rMWd;				// Send Data
 reg 				rMSpiCs;			assign oMSpiCs		= rMSpiCs;			// chip select 
 //
-reg [7:0]			rMRd;
+reg [7:0]			rMRd;	// 読み込みデータ
 //
 reg 				qCsrWCke00;
 reg 				qCsrWCke04;
@@ -67,10 +68,10 @@ begin
 	end
 	else
 	begin
-		rSPIEn			<= qCsrWCke00 ? iSUsiWd[0:0] 			: rSPIEn;
-		rSPIDiv			<= qCsrWCke04 ? iSUsiWd[pDivClk-1:0] 	: rSPIDiv;
-		rMWd			<= qCsrWCke08 ? iSUsiWd[7:0]			: rMWd;
-		rMSpiCs			<= qCsrWCke0c ? iSUsiWd[0:0]			: rMSpiCs;
+		rSPIEn			<= iMSpiIntr  ? 1'b0 : qCsrWCke00 ? iSUsiWd[0:0] : rSPIEn;
+		rSPIDiv			<= qCsrWCke04 ? iSUsiWd[pDivClk-1:0] : rSPIDiv;
+		rMWd			<= qCsrWCke08 ? iSUsiWd[7:0] : rMWd;
+		rMSpiCs			<= qCsrWCke0c ? iSUsiWd[0:0] : rMSpiCs;
 		rMRd			<= iMRd;
 	end
 end

@@ -250,6 +250,7 @@ begin
 	endcase
 
 	// 1byte データ操作完了の割り込み出力
+	// Assert されると、CSR 空間の SpiEn がクリアされる。
 	case ({qMSckCntCke, iDivCke, rMScl})
 		3'b111:			rMSpiIntr <= 1'b1;
 		default:		rMSpiIntr <= 1'b0;

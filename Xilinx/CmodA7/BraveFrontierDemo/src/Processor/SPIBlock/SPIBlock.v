@@ -83,6 +83,7 @@ reg  	[7:0] 			qMWdUnit;
 reg  					qMSpiCsUnit;
 //
 wire 	[7:0]			wMRdUnit;
+wire 					wMSpiIntr;			assign oMSpiIntr = wMSpiIntr;
 
 SPIUnit #(
 	.pBusAdrsBit		(pBusAdrsBit),
@@ -120,7 +121,7 @@ SPIUnit #(
 	.iMSPICs			(qMSpiCsUnit),
 	.oMRd				(wMRdUnit),
 	// Interrupt
-	.oMSpiIntr			(oMSpiIntr),
+	.oMSpiIntr			(wMSpiIntr),
 	// CLK Reset
 	.iSysClk			(iSysClk),
 	.iSysRst			(iSysRst),
@@ -160,6 +161,7 @@ SPICsr #(
 	.oMSpiCs			(wMSpiCsCsr),
 	// Csr Input
 	.iMRd				(qMRdCsr),
+	.iMSpiIntr			(wMSpiIntr),
 	// CLK Reset
 	.iSysClk			(iSysClk),
 	.iSysRst			(iSysRst)
