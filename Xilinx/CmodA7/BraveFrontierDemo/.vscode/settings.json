@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"*.v": "verilog",
+		"xparameters.h": "c",
+		"xiomodule.h": "c"
+	}
+}

@@ -3,8 +3,11 @@
 // Author  KoutaKimura
 // -
 // bcm2835ライブラリを利用した RaspberryPi GPIO の操作を行う
-// 関数をまとめたヘッダファイル
 // 
+// pinout コマンドと比較し確認してね
+// GPIO 10 MOSI | GND
+// GPIO  9 MISO | GPIO 25 SEL
+// GPIO 11 SCLK | GPIO  8 CE
 //----------------------------------------------------------
 #define BCM_LIB_INCLUDE
 #include <main.h>
@@ -111,6 +114,17 @@ uint8_t gpio_spi_transfer(uint8_t send_data)
 void gpio_spi_transfernb(char *wbuff, char *rbuff, uint32_t len)
 {
 	bcm2835_spi_transfernb(wbuff, rbuff, len);
+}
+
+
+/**----------------------------------------------------------
+ * spi 連続バイト 送受信
+ * wbuff: MOSI 送信バッファのアドレス
+ * len  : バッファの深さ。送受信データは同じ配列長である必要あり 
+ *----------------------------------------------------------*/
+void gpio_spi_transfern(char *wbuff, uint32_t len)
+{
+	bcm2835_spi_transfern(wbuff, len);
 }
 
 

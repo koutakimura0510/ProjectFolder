@@ -3,12 +3,7 @@
 // Author koutakimura
 // -
 // 汎用バスシステム I/F モジュール
-// 
-// 接続 Image
-// Master <---> Bus <---> Slave
-// 				  | <---> Slave
-// 				  | <---> Slave
-// 				  | <---> Slave
+// Read時はアドレスを指定するだけでよく、制御信号は必要ない
 // 
 //----------------------------------------------------------
 module UltraSimpleInterface #(

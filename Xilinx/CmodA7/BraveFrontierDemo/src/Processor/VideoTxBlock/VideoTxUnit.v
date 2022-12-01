@@ -46,7 +46,7 @@ module VideoTxUnit #(
 	output 							oMUfiCmd,	// High Read, Low Write
 	// Ufi Master Common
 	input 							iMUfiRdy,	// Ufi Bus 転送可能時 Assert
-	// Vtb Slave Side
+	// Vtb Ufi Slave Side
 	input [pUfiBusWidth-1:0] 		iSUfiWd,	// 書き込みデータ
 	input [pBusAdrsBit-1:0] 		iSUfiAdrs,	// 書き込みアドレス
 	input 							iSUfiWEd,	// 書き込み命令

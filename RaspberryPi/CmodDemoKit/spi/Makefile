@@ -10,9 +10,8 @@ CC 		= /usr/bin/gcc-10
 CFLAG 	= -std=c11 -Wall -g3
 
 # ソースコード指定
-SRC1 	= ./src/*.c
-SRC2 	= ./src/gpio/*.c
-COMPILE = $(SRC1) $(SRC2)
+SRC1 	= ./src/*.c ./src/gpio/*.c ./src/fpga/*.c
+COMPILE = $(SRC1)
 
 # 小部是y区とファイル一体化 生成ファイル名
 NAME    = -o main

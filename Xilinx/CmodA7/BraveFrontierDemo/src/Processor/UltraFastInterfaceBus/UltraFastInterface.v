@@ -172,7 +172,7 @@ begin
 	else 			rMUfiRdy <= iSUfiRdyRam;
 	//
 	rSUfiWdVtb		<=	iMUfiWdMcs;
-	rSUfiAdrsVtb	<=	{7'd0,iMUfiAdrsMcs[24:0]};
+	rSUfiAdrsVtb	<=	iMUfiAdrsMcs;
 
 	if (iUfiRst) 	rSUfiWEdVtb <= 1'b0;
 	else 			rSUfiWEdVtb <= iMUfiWEdMcs & iMUfiAdrsMcs[26];

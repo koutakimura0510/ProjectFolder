@@ -34,9 +34,13 @@
 #include "platform.h"
 #include "xil_printf.h"
 #include "xparameters.h"
-#include "xiomodule.h"
 
-XIOModule xio;
+// MicroBlazeAdrs 
+#define USI_GPI1    (*(volatile unsigned int *) 0x80000010)
+#define USI_GPI2	(*(volatile unsigned int *) 0x80000014)
+#define USI_GPI3    (*(volatile unsigned int *) 0x80000018)
+#define USI_GPI1    (*(volatile unsigned int *) 0x80000020)
+
 
 /**----------------------------------------------------------
  * ソフトウェア ループ
@@ -48,26 +52,39 @@ void wait_time(uint32_t time)
 
 
 /**----------------------------------------------------------
+ * Usi Bus Write
+ *---------------------------------------------------------*/
+void usi_write(uint32_t wd, uint32_t adrs)
+{
+	USI_GPI1	= wd;
+	USI_GPI2	= adrs;
+	USI_GPI3	= 0x00000001;
+	USI_GPI3	= 0x00000000;
+}
+
+
+/**----------------------------------------------------------
+ * Usi Bus Read
+ *---------------------------------------------------------*/
+uint32_t usi_read(uint32_t adrs)
+{
+	return USI_GPI1;
+}
+
+
+/**----------------------------------------------------------
  * main 関数
  *---------------------------------------------------------*/
 int main(void)
 {
     init_platform();
-	XIOModule_Initialize(&xio, XPAR_IOMODULE_0_DEVICE_ID);
 
     uint32_t usi_data = 0x00000001;
-    uint32_t usi_adrs = 0x00010000;
-    uint32_t usi_cke  = 0x00000001;
-	uint32_t d;
 
     while (1)
     {
 		wait_time(1000000);
-		XIOModule_DiscreteWrite(&xio, 1, usi_data);	// data
-		XIOModule_DiscreteWrite(&xio, 2, usi_adrs);	// adrs
-		XIOModule_DiscreteWrite(&xio, 3, usi_cke);	// cke assert
-		XIOModule_DiscreteWrite(&xio, 3, 0);		// cke dissert
-		d = XIOModule_DiscreteRead(&xio, 1);
+		usi_write(usi_data, 0x00010000);
 		usi_data ^= 0x00000001;
     }
 

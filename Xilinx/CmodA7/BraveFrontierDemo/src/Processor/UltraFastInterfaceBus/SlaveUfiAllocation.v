@@ -11,7 +11,7 @@ module SlaveUfiAllocation #(
 	parameter 							pUfiBusWidth	  	= 32,	// バス幅
 	parameter							pBusAdrsBit		  	= 32,	// アドレス Bit幅
 	parameter							pUfiAllocationNum 	=  9,	// 分岐先の Slave の数
-	parameter							pAllocationAdrs		= 2048,
+	parameter							pAllocationAdrs		= 2048,	// 
 	// not variable
 	parameter							pSlaveAdrsWidth		= pBusAdrsBit * pUfiAllocationNum
 )(
@@ -36,9 +36,9 @@ module SlaveUfiAllocation #(
 // 起動時に BRAM が更新されていても問題ないため
 // Rst は接続性ない
 //----------------------------------------------------------
-reg [pUfiBusWidth-1:0] 		rSUfiWd;		oSUfiWd		= rSUfiWd;
-reg [pBusAdrsBit-1:0] 		rSUfiAdrs;		oSUfiAdrs	= rSUfiAdrs;
-reg [pUfiAllocationNum-1:0] rSUfiWEd;		oSUfiWEd	= rSUfiWEd;
+reg [pUfiBusWidth-1:0] 		rSUfiWd;			assign oSUfiWd		= rSUfiWd;
+reg [pBusAdrsBit-1:0] 		rSUfiWAdrs;			assign oSUfiWAdrs	= rSUfiWAdrs;
+reg [pUfiAllocationNum-1:0] rSUfiWEd;			assign oSUfiWEd		= rSUfiWEd;
 //
 reg [pUfiAllocationNum-1:0] qAllocationCke;
 
@@ -55,8 +55,8 @@ genvar n;
 generate
 	for (n = 0; n < pUfiAllocationNum; n = n + 1)
 	begin
-		qAllocationCke[n] <= ((pAllocationAdrs * n) <= iSUfiAdrs) &&
-							  (iSUfiAdrs < (pAllocationAdrs * (n+1)));
+		qAllocationCke[n] <= ((pAllocationAdrs * n) <= iSUfiWAdrs) &&
+							  (iSUfiWAdrs < (pAllocationAdrs * (n+1)));
 	end
 endgenerate
 

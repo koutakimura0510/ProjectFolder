@@ -1,87 +1,22 @@
-//----------------------------------------------------------
-// Create  2022/7/16
-// Author  koutakimura
-// -
-// RaspberryPi SPI通信 Master 動作
-// 
-// pinout コマンドと比較し確認してね
-// GPIO 10 MOSI | GND
-// GPIO  9 MISO | GPIO 25 SEL
-// GPIO 11 SCLK | GPIO  8 CE
-// 
-//----------------------------------------------------------
-
-
 /**----------------------------------------------------------
- * Include
+ * Create  2022/8/26
+ * Author  koutakimura
+ * 
+ * Device:RaspberryPi 4B RAM 4GB
+ * VSCode v1.7.00
+ * 
+ * RaspberryPi SPI通信 Master 動作
+ * FPGA 搭載の携帯ゲーム機を制作するためのデバッグ用プログラム
+ * 本来はFPGAが Master となりゲームデータが保存されているフラッシュメモリと通信を行うが、デバッグが大変になる。
+ * そこで、OS を搭載した RaspberryPi が疑似フラッシュメモリの振る舞いをすることで、
+ * 開発スピードを上げる目的がある。
+ * 
+ * RaspberryPi SPI は Slaveとして機能しないため、Master動作とし、
+ * FPGA にゲームデータを送信し、動作を確認することでデバッグを進めることとする。
+ * 
  *---------------------------------------------------------*/
-// #include "./include/main.h"
 #include <main.h>
 
-
-//----------------------------------------------------------
-// Buffer Size
-//----------------------------------------------------------
-#define BUFF_CSR_SIZE (34)
-
-
-/**----------------------------------------------------------
- * SPI 設定マクロ定数
- * 関数内でなくヘッダ・及び自前の定数で管理することで設定を変更しやすくする目的
- *---------------------------------------------------------*/
-
-
-
-/**----------------------------------------------------------
- * FPGA Slave に CSR の設定データ送信
- * 
- * 
- * FILE *fp : CSR設定ファイルのアドレス
- *---------------------------------------------------------*/
-int fpga_csr_write(FILE *fp, char **argv)
-{
-	int rc;
-	char csr_rbuff[BUFF_CSR_SIZE];	// FPGA CSR 設定ファイル読み込みバッファ
-
-	fp = fopen(argv[1], "r");
-
-	if (fp == NULL)
-	{
-		printf("File Open Error %s\r\n", argv[1]);
-		return 1;
-	}
-
-	printf("ファイルの読み込みを開始します %s\r\n", argv[1]);
-	rc = fread(csr_rbuff, 1, BUFF_CSR_SIZE, fp);
-
-	for (int i = 0; i < rc; i++)
-	{
-		printf("%c", csr_rbuff[i]);
-	}
-
-	if (EOF == fclose(fp))
-	{
-		printf("ファイルの close に失敗しました\n");
-		return 1;
-	}
-
-	printf("File close ok\n");
-
-	return 0;
-}
-
-
-//----------------------------------------------------------
-// FPGA Slave
-// 4byte Adrs + dummy + Cmd + 2byte Data Length + n32bitData... 
-// -
-// 最初に 8byte の命令シーケンスを受信する
-// Cmd : 0. Non, 1. Csr Write, 2. Csr Read, 3. PSRAM Write
-// -
-// Csr 操作時は 連続アクセスは可能としない、必ず Data Length は 4byte 固定とする
-// PSRAM 操作時は Data Length は最大 2048 byte とする
-// 
-//----------------------------------------------------------
 
 /**----------------------------------------------------------
  * main 関数
@@ -94,15 +29,9 @@ int fpga_csr_write(FILE *fp, char **argv)
 int main(int argc, char **argv)
 {
 	//----------------------------------------------------------
-	// システム駆動 static 変数
-	//----------------------------------------------------------
-	FILE *fp = NULL;
-
-
-	//----------------------------------------------------------
 	// 初期設定
 	//----------------------------------------------------------
-	if (false == gpio_init(SPI_CLK_1_250_000_Hz))
+	if (false == gpio_init(SPI_CLK_3_125_000_Hz))
 	{
 		printf("GPIO 初期設定エラーのためプログラムを終了します\r\n");
 		printf("仮想メモリ経由のため sudo で実行しないと設定が行えません\r\n");
@@ -112,23 +41,7 @@ int main(int argc, char **argv)
 	//----------------------------------------------------------
 	// system 稼働処理 関数呼び出し
 	//----------------------------------------------------------
-	// fpga_csr_write(fp, argv);
-	// bcm_spi_transfer(0x03);
-	char wbuff[] = {
-		0x00,0x00,0x01,0x00,
-		0x00,0x01,0x00,0x04,
-		0x05,0x5D,0x4A,0xf0
-	};
-	char rbuff[12] = {0x00};
-
-	// bcm2835_spi_transfern(wbuff, 12);
-	gpio_spi_transfernb(wbuff, rbuff, 12);
-
-	for (int i = 0; i < 12; i++)
-	{
-		printf("0x%2x\n", rbuff[i]);
-	}
-	// bcm_spi_transfernb(wbuff, rbuff, 12);
+	fpga_csr_init();
 
 	//----------------------------------------------------------
 	// 設定終了

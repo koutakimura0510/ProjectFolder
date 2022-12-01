@@ -34,15 +34,15 @@ module MicroControllerBlock #(
 	/*
 	2022-10-29
 	使用予定の PSRAM のアドレスは h0000_0000 ~ h01FF_FFFF [24:0]
-	[31:25] はフリースペースになるため、MCS から UFIB 経由で Slave にアクセスするときに、
+	[31:25] はフリースペースになるため、MCB から UFIB 経由で Slave にアクセスするときに、
 	どの Slave に要求しているかの条件分岐に使用することにした。
 	条件分岐は UFIB module 内で行う。
 	oMUfiAdrs
-	[31:28] 予約
+	[31:28] BRAM ID 0~15
 	[27:25] 100:Atb, 010:Vtb, 001:Ram
 	[24: 0] HyperRam Adrs
 
-	Ram アクセス時は制御信号 (WEd,REd,Vd,Cmd)全て使用するが、
+	Ram アクセス時は制御信号 (WEd,REd,Vd,Cmd,Rdy)全て使用するが、
 	Atb,Vtb アクセス時は 現在 WEd のみ使用する。
 	外部RAM,ROM に保存されているシステムデータを BRAM に書き込むことはするが、現状読み込み動作は想定していない。(writeだけで十分なはず)
 	*/

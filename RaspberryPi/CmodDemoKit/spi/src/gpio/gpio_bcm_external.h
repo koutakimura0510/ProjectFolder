@@ -34,6 +34,7 @@ bool gpio_init(uint16_t spi_div);
 bool gpio_close(void);
 uint8_t gpio_spi_transfer(uint8_t send_data);
 void gpio_spi_transfernb(char *wbuff, char *rbuff, uint32_t len);
+void gpio_spi_transfern(char *wbuff, uint32_t len);
 void gpio_spi_clkdiv(uint16_t spi_div);
 
 #endif
