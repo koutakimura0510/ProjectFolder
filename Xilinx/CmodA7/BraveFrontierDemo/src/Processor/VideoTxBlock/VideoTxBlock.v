@@ -110,16 +110,27 @@ wire 						wVtbSystemRstCsr;
 wire 						wVtbVideoRstCsr;
 wire 						wDisplayRstCsr;
 wire [7:0]					wBlDutyRatioCsr;
+//
 wire [pMemAdrsWidth-1:0]	wFbufAdrs1Csr;
 wire [pMemAdrsWidth-1:0]	wFbufAdrs2Csr;
 wire [pMemAdrsWidth-1:0]	wFbufLen1Csr;
 wire [pMemAdrsWidth-1:0]	wFbufLen2Csr;
 wire 						wDmaEnCsr;
+//
 wire [7:0]					wMapXSizeCsr;
 wire [7:0]					wMapYSizeCsr;
 wire [lpMapInfoBitWidth-1:0]wMapInfoWdCsr;
 wire 						wMapInfoCkeCsr;
 wire 						wMapInfoVdCsr;
+//
+wire [pColorDepth-1:0]		wSceneColorCsr,
+wire [6:0]					wSceneFrameTimingCsr,
+wire 						wSceneFrameAddEnCsr,
+wire 						wSceneFrameSubEnCsr,
+wire						wSceneFrameRstCsr,
+wire						wSceneAlphaMaxCsr,
+wire 						wSceneAlphaMinCsr,
+//
 wire 						wFe;
 
 VideoTxUnit #(
@@ -188,6 +199,14 @@ VideoTxUnit #(
 	.iMapInfoCke		(wMapInfoCkeCsr),
 	.iMapInfoVd			(wMapInfoVdCsr),
 	//
+	.iSceneColor		(wSceneColorCsr),
+	.iSceneFrameTiming	(wSceneFrameTimingCsr),
+	.iSceneFrameAddEn	(wSceneFrameAddEnCsr),
+	.iSceneFrameSubEn	(wSceneFrameSubEnCsr),
+	.iSceneFrameRst		(wSceneFrameRstCsr),
+	.oSceneAlphaMax		(wSceneAlphaMaxCsr),
+	.oSceneAlphaMin		(wSceneAlphaMinCsr),
+	//
 	.iSysClk			(iSysClk),
 	.iVideoClk			(iVideoClk),
 	.iSysRst			(iSysRst),
@@ -223,6 +242,8 @@ VideoTxCsr #(
     .pVbackWidth		(pVbackWidth),
     .pVpulseWidth		(pVpulseWidth),
 	//
+	.pColorDepth		(pColorDepth),
+	//
 	.pMapInfoBitWidth	(lpMapInfoBitWidth)
 ) VideoTxCsr (
 	.oSUsiRd			(oSUsiRd),
@@ -252,6 +273,14 @@ VideoTxCsr #(
 	// .oMapInfoWd			(wMapInfoWdCsr),
 	// .oMapInfoCke		(wMapInfoCkeCsr),
 	// .oMapInfoVd			(wMapInfoVdCsr),
+	.oSceneColor		(wSceneColorCsr),
+	.oSceneFrameTiming	(wSceneFrameTimingCsr),
+	.oSceneFrameAddEn	(wSceneFrameAddEnCsr),
+	.oSceneFrameSubEn	(wSceneFrameSubEnCsr),
+	.oSceneFrameRst		(wSceneFrameRstCsr),
+	.iSceneAlphaMax		(wSceneAlphaMaxCsr),
+	.iSceneAlphaMin		(wSceneAlphaMinCsr),
+	//
 	.iSysClk			(iSysClk),
 	.iSysRst			(iSysRst)
 );

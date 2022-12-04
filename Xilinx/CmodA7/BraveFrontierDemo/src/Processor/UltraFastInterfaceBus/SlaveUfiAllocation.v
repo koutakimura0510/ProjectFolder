@@ -11,9 +11,6 @@ module SlaveUfiAllocation #(
 	parameter 							pUfiBusWidth	  	= 32,	// バス幅
 	parameter							pBusAdrsBit		  	= 32,	// アドレス Bit幅
 	parameter							pUfiAllocationNum 	=  9,	// 分岐先の Slave の数
-	parameter							pAllocationAdrs		= 2048,	// 
-	// not variable
-	parameter							pSlaveAdrsWidth		= pBusAdrsBit * pUfiAllocationNum
 )(
     // Internal Port
 	// Slave write data
@@ -25,8 +22,6 @@ module SlaveUfiAllocation #(
 	output 	[pBusAdrsBit-1:0]			oSUfiWAdrs,					// Slave に対する R/W 共通のアドレス指定バス
 	output 	[pUfiAllocationNum-1:0]		oSUfiWEd,					// Slave に対する 書き込み有効信号
 	
-	// input	[pSlaveAdrsWidth-1:0]		iAllocationAdrs,			// 各 Slave の開始アドレスを指定
-    // CLK Reset
     // input								iRst,
     input								iClk
 );
@@ -55,8 +50,7 @@ genvar n;
 generate
 	for (n = 0; n < pUfiAllocationNum; n = n + 1)
 	begin
-		qAllocationCke[n] <= ((pAllocationAdrs * n) <= iSUfiWAdrs) &&
-							  (iSUfiWAdrs < (pAllocationAdrs * (n+1)));
+		qAllocationCke[n] <= iSUfiWAdrs[31:28] == n;
 	end
 endgenerate
 

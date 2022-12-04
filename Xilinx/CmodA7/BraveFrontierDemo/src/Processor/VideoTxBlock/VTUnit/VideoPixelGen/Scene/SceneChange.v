@@ -1,183 +1,91 @@
-//----------------------------------------------------------
-// Create 2022/09/27
-// Author koutakimura
-// -
-// シーンチェンジ用のピクセルデータを生成する
-// ※シーンチェンジとは
-// マップ間移動時の 暗転・明転処理などのこと
-//----------------------------------------------------------
+/*
+Create 2022/12/04
+Author koutakimura
+-
+シーンチェンジ用のピクセルデータを生成する
+※シーンチェンジとはマップ間移動時の 暗転・明転処理などのこと
+
+例えば 30fps 毎に 黒画面で徐々に暗転させる場合は下記設定にする。
+iSceneFrameTiming 	= 30
+iSceneFrameAddEn  	= 1
+iSceneFrameRst		= 1
+
+設定後 Alpha 値が 0 から F になると、oSceneAlphaMax が Assert される。
+Host は 通知を読み取り命令に応じて下記設定にする。
+iSceneFrameTiming 	= 30
+iSceneFrameAddEn  	= 0
+iSceneFrameSubEn  	= 1
+iSceneFrameRst		= 1
+
+
+設定後 Alpha 値が F から 0 になると、oSceneAlphaMin が Assert される。
+Host は 通知を読み取り命令に応じて下記設定にする。
+iSceneFrameRst		= 0
+*/
 module SceneChange #(
-    parameter                   			pHdisplayWidth  = 11,
-    parameter                   			pVdisplayWidth  = 11,
 	parameter								pColorDepth		= 16,
-	//
-	parameter								pFifoDepth 		= 16,
-	parameter								pFifoBitWidth	= 16
 )(
 	// Internal Port
+	// output pixel data
+    output 	[pColorDepth-1:0]    			oPixel,				// Dest Pixel Data
 	// Status
-    input			[pColorDepth-1:0]		iColor,		// 描画色
-	input			[pHdisplayWidth-1:0]	iHdisplay,	// 画面横サイズ
-	input			[pVdisplayWidth-1:0]	iVdisplay,	// 画面縦サイズ
-    input  			[pHdisplayWidth-1:0]    iHpos,		// 現在の横座標
-    input  			[pVdisplayWidth-1:0]    iVpos,		// 現在の縦座標
-	input 									iFe,
-	// control
-	input 									iEds,		// Enable Data Src
-	output 									oFull,		// FIFO Full
-	output 									oVdd,		// Valid Dest Data 
-    output 	[pColorDepth-1:0]    			oDd,		// Dest Data
-	input 									iEdd,		// Enable Data Dest
-	output 									oEmp,		// FIFO Empty
+	input 									iFe,				// frame end
+	// Csr
+    input	[pColorDepth-1:0]				iSceneColor,		// 描画色
+	input 	[6:0]							iSceneFrameTiming,	// SceneChange の更新速度,fps基準
+	input 									iSceneFrameAddEn,	// SceneChange Add Start
+	input 									iSceneFrameSubEn,	// SceneChange Sub Start
+    input                       			iSceneFrameRst,
+	output									oSceneAlphaMax,
+	output 									oSceneAlphaMin,
 	// Clk rst
-    input                       			iRst,
     input                       			iClk
 );
 
 
 //-----------------------------------------------------------------------------
-// 
+// 設定データに基づき、暗転処理を行う。
 //-----------------------------------------------------------------------------
-reg rLeftDir;
-reg rRightDir;
-wire wRWallPX;
-wire wLWallPX;
+reg [pColorDepth-1:0] 	rColor;					assign oPixel 			= rColor;
+reg 					rSceneAlphaMax;			assign oSceneAlphaMax 	= rSceneAlphaMax;
+reg 					rSceneAlphaMin;			assign oSceneAlphaMin 	= rSceneAlphaMin;
+reg [6:0]				rFeCnt;
+reg 					qFrameUpdateEn;
+reg 					qAlphaMax;
+reg 					qAlphaMin;
+//
+wire [];
+//
+wire [pColorDepth-1:0] 	wColorAdd = rColor + 16'1000;
+wire [pColorDepth-1:0] 	wColorSub = rColor - 16'1000;
 
 always @(posedge iClk)
 begin
-	if (iRst)
-	begin 
-		rLeftDir  <= 1'b0;
-		rRightDir <= 1'b1;
-	end
-	else
-	begin
-		case ({wRWallPX, wLWallPX})
-			'b01:		rLeftDir <= 1'b0;
-			'b10:		rLeftDir <= 1'b1;
-			default:	rLeftDir <= rLeftDir;
-		endcase
+	casex ({iFrameRst, qFrameUpdateEn, iFe, qAlphaMin, qAlphaMax, iFrameSubEn, iFrameAddEn})
+		'b1xxxxxx:	rColor <= iColor;
+		'b011x0x1:	rColor <= wColorAdd;
+		'b0110x1x:	rColor <= wColorSub;
+		default: 	rColor <= rColor;
+	endcase
 
-		case ({wRWallPX, wLWallPX})
-			'b01:		rRightDir <= 1'b1;
-			'b10:		rRightDir <= 1'b0;
-			default:	rRightDir <= rRightDir;
-		endcase
-	end
+	casex ({iFrameRst, qFrameUpdateEn, iFe, iFrameSubEn, iFrameAddEn})
+		'b1xxxx: 		rFeCnt <= 8'd0;
+		'b011xx:		rFeCnt <= 8'd0;
+		'b001x1:		rFeCnt <= rFeCnt + 1'b1;
+		'b0011x:		rFeCnt <= rFeCnt + 1'b1;
+		default:	 	rFeCnt <= rFeCnt;
+	endcase
+
+	// CSR 保存用にレジスタ出力
+	rSceneAlphaMax	<= qAlphaMax;
+	rSceneAlphaMin	<= qAlphaMin;
 end
 
-
-//-----------------------------------------------------------------------------
-// 描画座標の更新
-//-----------------------------------------------------------------------------
-localparam pDashGainBitWdith = 4;
-localparam pJumpJyroBitWidth = 4;
-
-wire signed [pHdisplayWidth:0] wDLeftX;
-wire signed [pHdisplayWidth:0] wDRightX;
-wire signed [pVdisplayWidth:0] wDTopY;
-wire signed [pVdisplayWidth:0] wDUnderY;
-
-ObjectPosGen #(
-	.pHdisplayWidth		(pHdisplayWidth),
-	.pVdisplayWidth		(pVdisplayWidth),
-	.pDashGainBitWdith	(pDashGainBitWdith),
-	.pJumpJyroBitWidth	(pJumpJyroBitWidth)
-) ObjectPosGen (
-	.oDLeftX			(wDLeftX),
-	.oDRightX			(wDRightX),
-	.oDTopY				(wDTopY),
-	.oDUnderY			(wDUnderY),
-	//
-	.iHdisplay			(iHdisplay),
-	.iVdisplay			(iVdisplay),
-	.iFe				(iFe),
-	//
-	.iDInitX			(0),
-	.iDInitY			(271-31),
-	.iDSizeX			(31),
-	.iDSizeY			(31),
-	//
-	.iDashGainX			(4),
-	.iDashCkeX			(1'b1),
-	//
-	.iJumpPeakY			(100),
-	.iJumpGainY			(10),
-	.iJumpJyroMaxY		(10),
-	.iJumpJyroMinY		(1),
-	.iJumpUpdateTiming  (1),
-	.iJumpCkeY			(1'b1),
-	//
-	.iBasicGainX		(0),
-	.iBasicGainY		(0),
-	//
-	.iLeftCkeX			(rLeftDir),
-	.iRightCkeX			(rRightDir),
-	.iTopCkeY			(1'b1),
-	.iUnderCkeY			(1'b0),
-	//
-	.oRightWallPointX	(wRWallPX),
-	.oLeftWallPointX	(wLWallPX),
-	//
-	.iRst				(iRst),
-	.iClk				(iClk)
-);
-
-
-
-//-----------------------------------------------------------------------------
-// 四角形の生成
-//-----------------------------------------------------------------------------
-wire [pColorDepth-1:0] wPixel;
-
-DotSquareGen #(
-	.pHdisplayWidth		(pHdisplayWidth),
-	.pVdisplayWidth		(pVdisplayWidth),
-	.pColorDepth		(pColorDepth)
-) DotSquareGen (
-	.oPixel 			(wPixel),
-	.iColor				(iColor),
-	.iHpos				(iHpos),
-	.iVpos				(iVpos),
-	.iDLeftX			(wDLeftX),
-	.iDRightX			(wDRightX),
-	.iDTopY				(wDTopY),
-	.iDUnderY			(wDUnderY),
-	//
-	.iRst				(iRst),
-	.iClk				(iClk)
-);
-
-
-//-----------------------------------------------------------------------------
-// 他の DotGenerator とタイミングを合わせるため FIFO 経由で出力データの制御を行う
-//-----------------------------------------------------------------------------
-reg rWe;	// 前段の pixelデータが 1clk 遅れのためタイミングを合わせる
-
-fifoController #(
-	.pFifoDepth		(pFifoDepth),
-	.pFifoBitWidth	(pFifoBitWidth)
-) InstDotSquareFifo (
-	// src side
-	.iWd			(wPixel),
-	.iWe			(rWe),
-	.oFull			(oFull),
-	// dst side
-	.oRd			(oDd),
-	.oRvd			(oVdd),
-	.iRe			(iEdd),
-	.oEmp			(oEmp),
-	//
-	.iRst			(iRst),
-	.iClk			(iClk)
-);
-
-always @(posedge iClk)
+always @*
 begin
-	if (iRst) 		rWe <= 1'b0;
-	else if (iEds)	rWe <= 1'b1;
-	else 			rWe <= 1'b0;
+	qFrameUpdateEn 	<= (rFeCnt == iFrameTiming);
+	qAlphaMax		<= rColor[15:12] == 4'd15;
+	qAlphaMin		<= rColor[15:12] == 4'd0;
 end
-
 
 endmodule

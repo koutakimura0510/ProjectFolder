@@ -76,6 +76,14 @@ module VideoTxUnit #(
 	input 	[pMapInfoBitWidth-1:0] 	iMapInfoWd,
 	input 							iMapInfoCke,
 	input 							iMapInfoVd,
+	// Csr SceneChange
+    input	[pColorDepth-1:0]		iSceneColor,		// 描画色
+	input 	[6:0]					iSceneFrameTiming,	// SceneChange の更新速度,fps基準
+	input 							iSceneFrameAddEn,	// SceneChange Add Start
+	input 							iSceneFrameSubEn,	// SceneChange Sub Start
+    input                     		iSceneFrameRst,
+	output							oSceneAlphaMax,
+	output 							oSceneAlphaMin,
     // CLK Reset
     input           				iSysClk,
 	input 							iVideoClk,
@@ -124,6 +132,14 @@ VideoPixelGen #(
 	// .iMapInfoWd			(iMapInfoWd),
 	// .iMapInfoCke		(iMapInfoCke),
 	// .iMapInfoVd			(iMapInfoVd),
+	//
+	.iSceneColor		(iSceneColor),
+	.iSceneFrameTiming	(iSceneFrameTiming),
+	.iSceneFrameAddEn	(iSceneFrameAddEn),
+	.iSceneFrameSubEn	(iSceneFrameSubEn),
+	.iSceneFrameRst		(iSceneFrameRst),
+	.oSceneAlphaMax		(oSceneAlphaMax),
+	.oSceneAlphaMin		(oSceneAlphaMin),
 	//
 	.oPixel				(wDrawPixel),
 	.oWEd				(wDrawPixelWEd),

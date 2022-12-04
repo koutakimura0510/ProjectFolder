@@ -72,9 +72,15 @@ module VideoPixelGen #(
 	// Csr Input
 	input	[pHdisplayWidth-1:0]	iHdisplay,
 	input	[pVdisplayWidth-1:0]	iVdisplay,
-	// Csr Map Info
 	// input	[7:0]					iMapXSize,
 	// input	[7:0]					iMapYSize,
+    input	[pColorDepth-1:0]		iSceneColor,		// 描画色
+	input 	[6:0]					iSceneFrameTiming,	// SceneChange の更新速度,fps基準
+	input 							iSceneFrameAddEn,	// SceneChange Add Start
+	input 							iSceneFrameSubEn,	// SceneChange Sub Start
+    input                     		iSceneFrameRst,
+	output							oSceneAlphaMax,
+	output 							oSceneAlphaMin,
 	// 2nd Stage Output
 	output	[pOutColorDepth-1:0]	oPixel,
     output                       	oWEd,
@@ -113,15 +119,15 @@ end
 // localparam lpUfiAllocationNum = 9;	// 割り振り先の BRAM の個数
 // localparam
 // 	lpBramMap	= 0,
-// 	lpBram1	= 1,
-// 	lpBram2	= 2,
-// 	lpBram3	= 3,
-// 	lpBram4	= 4,
-// 	lpBram5	= 5,
-// 	lpBram6	= 6,
-// 	lpBram7	= 7;
-// 	lpBram8	= 8;
-// //
+// 	lpBram1		= 1,
+// 	lpBram2		= 2,
+// 	lpBram3		= 3,
+// 	lpBram4		= 4,
+// 	lpBram5		= 5,
+// 	lpBram6		= 6,
+// 	lpBram7		= 7;
+// 	lpBram8		= 8;
+
 // wire [pUfiBusWidth-1:0] 		wSUfiWd;
 // wire [pBusAdrsBit-1:0] 			wSUfiAdrs;
 // wire [lpUfiAllocationNum-1:0] 	wSUfiWEd;
@@ -129,8 +135,7 @@ end
 // SlaveUfiAllocation #(
 // 	.pUfiBusWidth				(pUfiBusWidth),
 // 	.pBusAdrsBit				(pBusAdrsBit),
-// 	.pUfiAllocationNum			(lpUfiAllocationNum),
-// 	.pAllocationAdrs			(2048)
+// 	.pUfiAllocationNum			(lpUfiAllocationNum)
 // ) SlaveUfiAllocation (
 // 	.iSUfiWd					(iSUfiWd),
 // 	.iSUfiWAdrs					(iSUfiAdrs),
@@ -138,7 +143,6 @@ end
 // 	.oSUfiWd					(wSUfiWd),
 // 	.oSUfiAdrs					(wSUfiAdrs),
 // 	.oSUfiWEd					(wSUfiWEd),
-// 	// .iAllocationAdrs			({}),
 //     .iClk						(iClk)
 // );
 
@@ -256,42 +260,62 @@ PixelDrawPosition #(
 //-----------------------------------------------------------------------------
 // Scene Draw
 //-----------------------------------------------------------------------------
-localparam lpDotSquareGenFifoDepth = 16;
-//
-reg 					qDotSquareEds;
-wire 					wDotSquareFull;
-wire [pColorDepth-1:0] 	wDotSquareDd;
-wire 					wDotSquareVdd;
-reg  					qDotSquareEdd;
-wire 					wDotSquareEmp;
+wire [pColorDepth-1:0] wSceneChangePixel;
 
 SceneChange #(
+	.pColorDepth		(pColorDepth)
+) SceneChange (
+	.oPixel				(wSceneChangePixel),
+	.iFe				(wAFE),
+	.iSceneColor		(iSceneColor),
+	.iSceneFrameTiming	(iSceneFrameTiming),
+	.iSceneFrameAddEn	(iSceneFrameAddEn),
+	.iSceneFrameSubEn	(iSceneFrameSubEn),
+	.iSceneFrameRst		(iSceneFrameRst),
+	.oSceneAlphaMax		(oSceneAlphaMax),
+	.oSceneAlphaMin		(oSceneAlphaMin),
+	.iClk				(iClk)
+);
+
+//-----------------------------------------------------------------------------
+// デモンストレーション
+//-----------------------------------------------------------------------------
+localparam lpVpgDemoGenFifoDepth = 16;
+//
+reg 					qVpgDemoEds;
+wire 					wVpgDemoFull;
+wire [pColorDepth-1:0] 	wVpgDemoDd;
+wire 					wVpgDemoVdd;
+reg  					qVpgDemoEdd;
+wire 					wVpgDemoEmp;
+
+VpgDemo #(
 	.pHdisplayWidth		(pHdisplayWidth),
 	.pVdisplayWidth		(pVdisplayWidth),
 	.pColorDepth		(pColorDepth),
-	.pFifoDepth			(lpDotSquareGenFifoDepth),
+	.pFifoDepth			(lpVpgDemoGenFifoDepth),
 	.pFifoBitWidth		(pColorDepth)
-) SceneChange (
+) VpgDemo (
 	.iColor				(16'h00f0),
 	.iHdisplay			(wHdisplay),
 	.iVdisplay			(wVdisplay),
 	.iHpos				(wPixelDrawHpos),
 	.iVpos				(wPixelDrawVpos),
 	.iFe				(wAFE),
-	.iEds 				(qDotSquareEds),
-	.oFull				(wDotSquareFull),
-	.oDd				(wDotSquareDd),
-	.oVdd				(wDotSquareVdd),
-	.iEdd				(qDotSquareEdd),
-	.oEmp				(wDotSquareEmp),
+	.iEds 				(qVpgDemoEds),
+	.oFull				(wVpgDemoFull),
+	.oDd				(wVpgDemoDd),
+	.oVdd				(wVpgDemoVdd),
+	.iEdd				(qVpgDemoEdd),
+	.oEmp				(wVpgDemoEmp),
 	.iRst				(iRst),
 	.iClk				(iClk)
 );
 
 always @*
 begin
-	qDotSquareEds			<= (~wDotSquareFull);
-	qPixelDrawPositionCke 	<= (~wDotSquareFull);
+	qVpgDemoEds				<= (~wVpgDemoFull);
+	qPixelDrawPositionCke 	<= (~wVpgDemoFull);
 end
 
 
@@ -300,8 +324,8 @@ end
 //-----------------------------------------------------------------------------
 localparam lpDotMargeToPixelConverterFifoDepth = 16;
 
-wire [pOutColorDepth-1:0] wPixelMargeDd;		assign oPixel = wPixelMargeDd;
-wire  wPixelMargeVdd;							assign oWEd 	  = wPixelMargeVdd;
+wire [pOutColorDepth-1:0] wPixelMargeDd;		assign oPixel 	= wPixelMargeDd;
+wire  wPixelMargeVdd;							assign oWEd 	= wPixelMargeVdd;
 wire  wPixelMargeFull;
 wire  wPixelMargeEmp;
 reg   qPixelMargeEds;
@@ -312,8 +336,6 @@ DotMargeToPixelConverter #(
 	.pFifoDepth		(lpDotMargeToPixelConverterFifoDepth),
 	.pFifoBitWidth	(pOutColorDepth)
 ) DotMargeToPixelConverter (
-	.iDistantground	({pColorDepth{1'b0}}),
-	.iBackground	(wDotSquareDd),
 	.iField			({pColorDepth{1'b0}}),
 	.iNpc			({pColorDepth{1'b0}}),
 	.iPlayer		({pColorDepth{1'b0}}),
@@ -322,6 +344,8 @@ DotMargeToPixelConverter #(
 	.iEffect2		({pColorDepth{1'b0}}),
 	.iForeground	({pColorDepth{1'b0}}),
 	.iMenuWindow	({pColorDepth{1'b0}}),
+	.iVpgDemo 		(wVpgDemoDd),
+	.iSceneChange	(wSceneChangePixel),
 	.iEds			(qPixelMargeEds),
 	.oFull			(wPixelMargeFull),
 	.oDd			(wPixelMargeDd),
@@ -334,10 +358,9 @@ DotMargeToPixelConverter #(
 
 always @*
 begin
-	qPixelMargeEds	<= wDotSquareVdd;
+	qPixelMargeEds	<= wVpgDemoVdd;
 	qPixelMargeEdd 	<= (~wPixelMargeEmp) & iCke;
-	qDotSquareEdd	<= (~wPixelMargeFull);
+	qVpgDemoEdd		<= (~wPixelMargeFull);
 end
-
 
 endmodule

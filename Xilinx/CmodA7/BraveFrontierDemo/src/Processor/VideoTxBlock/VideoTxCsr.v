@@ -34,6 +34,8 @@ module VideoTxCsr #(
     parameter       				pVbackWidth		= 5,
     parameter       				pVpulseWidth	= 5,
 	//
+	parameter						pColorDepth		= 16,
+	//
 	parameter						pMapInfoBitWidth = 8
 )(
     // Internal Port
@@ -67,6 +69,14 @@ module VideoTxCsr #(
 	// Csr Map Info
 	output	[7:0]					oMapXSize,
 	output	[7:0]					oMapYSize,
+	// Csr SceneChange
+    output	[pColorDepth-1:0]		oSceneColor,
+	output 	[6:0]					oSceneFrameTiming,
+	output 							oSceneFrameAddEn,
+	output 							oSceneFrameSubEn,
+    output                     		oSceneFrameRst,
+	input							iSceneAlphaMax,
+	input 							iSceneAlphaMin,
     // CLK Reset
     input           				iSysRst,
     input           				iSysClk
@@ -119,49 +129,55 @@ reg [pVdisplayWidth:0]		rVSyncMax;			assign oVSyncMax 	= rVSyncMax;		// アク�
 reg [ 7:0]					rMapXSize;			assign oMapXSize	= rMapXSize;		// 現在のマップの最大横幅 / 最大255マス固定
 reg [ 7:0]					rMapYSize;			assign oMapYSize	= rMapYSize;		// 現在のマップの最大縦幅 / 最大255マス固定
 //
-reg 						qCsrWCke00;
-reg 						qCsrWCke04;
-reg 						qCsrWCke08;
-reg 						qCsrWCke0c;
-reg 						qCsrWCke10;
-reg 						qCsrWCke14;
-reg 						qCsrWCke18;
-reg 						qCsrWCke1c;
-reg 						qCsrWCke20;
-reg 						qCsrWCke24;
-reg 						qCsrWCke28;
-reg 						qCsrWCke2C;
-reg 						qCsrWCke30;
+reg [pColorDepth-1:0]		rSceneColor;		assign oSceneColor			= rSceneColor;
+reg [6:0]					rSceneFrameTiming;	assign oSceneFrameTiming	= rSceneFrameTiming;
+reg 						rSceneFrameAddEn;	assign oSceneFrameAddEn		= rSceneFrameAddEn;
+reg 						rSceneFrameSubEn;	assign oSceneFrameSubEn		= rSceneFrameSubEn;
+reg 						rSceneFrameRst;		assign oSceneFrameRst		= rSceneFrameRst;
+reg 						rSceneAlphaMax;
+reg 						rSceneAlphaMin;
+//
+reg 						qCsrWCke00, qCsrWCke04, qCsrWCke08, qCsrWCke0c;
+reg 						qCsrWCke10, qCsrWCke14, qCsrWCke18, qCsrWCke1c;
+reg 						qCsrWCke20, qCsrWCke24, qCsrWCke28, qCsrWCke2c;
+reg 						qCsrWCke30, qCsrWCke34, qCsrWCke38, qCsrWCke3c;
 //
 always @(posedge iSysClk)
 begin
 	if (iSysRst)
 	begin
-		rHdisplay		<= pHdisplay;
-		rHfront			<= pHfront;
-		rHback			<= pHback;
-		rHpulse			<= pHpulse;
-		rVdisplay		<= pVdisplay;
-		rVfront			<= pVfront;
-		rVback			<= pVback;
-		rVpulse			<= pVpulse;
-		rHSyncStart		<= lpHSyncStart;
-		rHSyncEnd		<= lpHSyncEnd;
-		rHSyncMax		<= lpHSyncMax;
-		rVSyncStart		<= lpVSyncStart;
-		rVSyncEnd		<= lpVSyncEnd;
-		rVSyncMax		<= lpVSyncMax;
-		rVtbSystemRst	<= 1'b1;		// Active High
-		rVtbVideoRst	<= 1'b1;		// Active High
-		rDisplayRst		<= 1'b1;		// Active Low
-		rDmaEn			<= 1'b0;
-		rBlDutyRatio	<= 8'h00;		// 0xff Max Flash
-		rFbufAdrs1		<= lpFbufAdrs1;
-		rFbufAdrs2		<= lpFbufAdrs2;
-		rFbufLen1		<= lpFbufLen1;
-		rFbufLen2		<= lpFbufLen2;
-		rMapXSize		<= 8'd30;		// DisplayX(480) / MapChipX(16) = 30
-		rMapYSize		<= 8'd17;		// DisplayY(272) / MapChipY(16) = 17
+		rHdisplay				<= pHdisplay;
+		rHfront					<= pHfront;
+		rHback					<= pHback;
+		rHpulse					<= pHpulse;
+		rVdisplay				<= pVdisplay;
+		rVfront					<= pVfront;
+		rVback					<= pVback;
+		rVpulse					<= pVpulse;
+		rHSyncStart				<= lpHSyncStart;
+		rHSyncEnd				<= lpHSyncEnd;
+		rHSyncMax				<= lpHSyncMax;
+		rVSyncStart				<= lpVSyncStart;
+		rVSyncEnd				<= lpVSyncEnd;
+		rVSyncMax				<= lpVSyncMax;
+		rVtbSystemRst			<= 1'b1;		// Active High
+		rVtbVideoRst			<= 1'b1;		// Active High
+		rDisplayRst				<= 1'b1;		// Active Low
+		rDmaEn					<= 1'b0;
+		rBlDutyRatio			<= 8'h00;		// 0xff Max Flash
+		rFbufAdrs1				<= lpFbufAdrs1;
+		rFbufAdrs2				<= lpFbufAdrs2;
+		rFbufLen1				<= lpFbufLen1;
+		rFbufLen2				<= lpFbufLen2;
+		rMapXSize				<= 8'd30;		// DisplayX(480) / MapChipX(16) = 30
+		rMapYSize				<= 8'd17;		// DisplayY(272) / MapChipY(16) = 17
+		rSceneColor				<= {pColorDepth{1'b0}};
+		rSceneFrameTiming		<= 7'd0;
+		rSceneFrameAddEn		<= 1'b0;
+		rSceneFrameSubEn		<= 1'b0;
+		rSceneFrameRst			<= 1'b1;
+		rSceneAlphaMax			<= 1'b0;
+		rSceneAlphaMin			<= 1'b0;
 	end
 	else
 	begin
@@ -182,12 +198,20 @@ begin
 		//
 		{rMapXSize, rMapYSize}	<= qCsrWCke28 ? iSUsiWd[15:0] 					: {rMapXSize, rMapYSize};
 		//
+		rSceneColor				<= qCsrWCke2c ? iSUsiWd[pColorDepth-1:0]		: rSceneColor;
+		rSceneFrameTiming		<= qCsrWCke30 ? iSUsiWd[6:0] 					: rSceneFrameTiming;
+		rSceneFrameAddEn		<= qCsrWCke34 ? iSUsiWd[0:0]					: rSceneFrameAddEn;
+		rSceneFrameSubEn		<= qCsrWCke34 ? iSUsiWd[1:1]					: rSceneFrameSubEn;
+		rSceneFrameRst			<= qCsrWCke34 ? iSUsiWd[2:2]					: rSceneFrameRst;
+		//
 		rHSyncStart 			<= rHdisplay + rHfront;
 		rHSyncEnd				<= rHdisplay + rHfront + rHpulse - 1'b1;
 		rHSyncMax				<= rHdisplay + rHfront + rHpulse + rHback - 1'b1;
 		rVSyncStart 			<= rVdisplay + rVfront;
 		rVSyncEnd				<= rVdisplay + rVfront + rVpulse - 1'b1;
 		rVSyncMax				<= rVdisplay + rVfront + rVpulse + rVback - 1'b1;
+		//
+		{rSceneAlphaMax,rSceneAlphaMin}	<= {iSceneAlphaMax, iSceneAlphaMin};
 	end
 end
 
@@ -204,8 +228,9 @@ begin
 	qCsrWCke20 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0020});
 	qCsrWCke24 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0024});
 	qCsrWCke28 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0028});
-	qCsrWCke2C <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h002C});
+	qCsrWCke2c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h002C});
 	qCsrWCke30 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0030});
+	qCsrWCke34 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0034});
 end
 
 
@@ -238,10 +263,14 @@ begin
 			'h0020:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufLen1														};
 			'h0024:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufLen2														};
 			'h0028:		rSUsiRd	<= {{(32 - 16				){1'b0}}, rMapXSize, rMapYSize											};
+			'h002c:		rSUsiRd	<= {{(32 - pColorDepth		){1'b0}}, rSceneColor													};
+			'h0030:		rSUsiRd	<= {{(32 - 7				){1'b0}}, rSceneFrameTiming												};
+			'h0034:		rSUsiRd	<= {{(32 - 3				){1'b0}}, rSceneFrameRst,rSceneFrameSubEn,rSceneFrameAddEn				};
 			//
-			'h0080:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncStart,{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncStart	};
-			'h0084:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncEnd,	{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncEnd	};
-			'h0088:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncMax,	{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncMax	};
+			'h3000:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncStart,{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncStart	};
+			'h3004:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncEnd,	{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncEnd	};
+			'h3008:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncMax,	{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncMax	};
+			'h4000:		rSUsiRd	<= {{(32 - 2)					{1'b0}}, {rSceneAlphaMax,rSceneAlphaMin}							};
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase
 	end

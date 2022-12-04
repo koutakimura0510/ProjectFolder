@@ -10,9 +10,6 @@ module DotMargeToPixelConverter #(
 	parameter 						pFifoBitWidth	= 16
 )(
 	// Internal Port
-	// Status
-    input  [pColorDepth-1:0]		iDistantground,
-    input  [pColorDepth-1:0]		iBackground,
     input  [pColorDepth-1:0]		iField,
     input  [pColorDepth-1:0]		iNpc,
     input  [pColorDepth-1:0]		iPlayer,
@@ -21,6 +18,8 @@ module DotMargeToPixelConverter #(
     input  [pColorDepth-1:0]		iEffect2,
     input  [pColorDepth-1:0]		iForeground,
     input  [pColorDepth-1:0]		iMenuWindow,
+    input  [pColorDepth-1:0]		iVpgDemo,
+	input  [pColorDepth-1:0]		iSceneChange,
 	// control
 	input 							iEds,		// Enable Data Source
 	output 							oFull,
@@ -42,7 +41,7 @@ reg rWe;
 
 always @(posedge iClk)
 begin
-	rPixel <= iBackground[11:0];
+	rPixel <= iVpgDemo[11:0];
 
 	if (iRst) 		rWe <= 1'b0;
 	else if (iEds)	rWe <= 1'b1;
