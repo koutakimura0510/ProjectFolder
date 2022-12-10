@@ -13,14 +13,13 @@ module VpgDemo #(
 	parameter								pFifoBitWidth	= 16
 )(
 	// Internal Port
-	input	[pColorDepth-1:0]				iSrcPixel,	// 合成元のピクセルデータ
-    input	[pColorDepth-1:0]				iColor,		// 描画色
 	input	[pHdisplayWidth-1:0]			iHdisplay,	// 画面横サイズ
 	input	[pVdisplayWidth-1:0]			iVdisplay,	// 画面縦サイズ
     input  	[pHdisplayWidth-1:0]    		iHpos,		// 現在の横座標
     input  	[pVdisplayWidth-1:0]    		iVpos,		// 現在の縦座標
 	input 									iFe,
-	// control
+	// FIFO Side
+    input	[pColorDepth-1:0]				iColor,		// 描画色
 	input 									iEds,		// Enable Data Src
 	output 									oFull,		// FIFO Full
 	output 									oVdd,		// Valid Dest Data 
@@ -133,8 +132,8 @@ DotSquareGen #(
 	.pVdisplayWidth		(pVdisplayWidth),
 	.pColorDepth		(pColorDepth)
 ) DotSquareGen (
-	// .oPixel 			(wPixel),
-	.oPixel 			(oDd),
+	.oPixel 			(wPixel),
+	// .oPixel 			(oDd),
 	.iColor				(iColor),
 	.iHpos				(iHpos),
 	.iVpos				(iVpos),
@@ -149,41 +148,34 @@ DotSquareGen #(
 
 
 //-----------------------------------------------------------------------------
-// 
-//-----------------------------------------------------------------------------
-// iSrcPixel
-
-
-
-//-----------------------------------------------------------------------------
 // 他の DotGenerator とタイミングを合わせるため FIFO 経由で出力データの制御を行う
 //-----------------------------------------------------------------------------
-// reg rWe;	// 前段の pixelデータが 1clk 遅れのためタイミングを合わせる
+reg rWe;	// 前段の pixelデータが 1clk 遅れのためタイミングを合わせる
 
-// fifoController #(
-// 	.pFifoDepth		(pFifoDepth),
-// 	.pFifoBitWidth	(pFifoBitWidth)
-// ) InstDotSquareFifo (
-// 	// src side
-// 	.iWd			(wPixel),
-// 	.iWe			(rWe),
-// 	.oFull			(oFull),
-// 	// dst side
-// 	.oRd			(oDd),
-// 	.oRvd			(oVdd),
-// 	.iRe			(iEdd),
-// 	.oEmp			(oEmp),
-// 	//
-// 	.iRst			(iRst),
-// 	.iClk			(iClk)
-// );
+fifoController #(
+	.pFifoDepth		(pFifoDepth),
+	.pFifoBitWidth	(pFifoBitWidth)
+) InstDotSquareFifo (
+	// src side
+	.iWd			(wPixel),
+	.iWe			(rWe),
+	.oFull			(oFull),
+	// dst side
+	.oRd			(oDd),
+	.oRvd			(oVdd),
+	.iRe			(iEdd),
+	.oEmp			(oEmp),
+	//
+	.iRst			(iRst),
+	.iClk			(iClk)
+);
 
-// always @(posedge iClk)
-// begin
-// 	if (iRst) 		rWe <= 1'b0;
-// 	else if (iEds)	rWe <= 1'b1;
-// 	else 			rWe <= 1'b0;
-// end
+always @(posedge iClk)
+begin
+	if (iRst) 		rWe <= 1'b0;
+	else if (iEds)	rWe <= 1'b1;
+	else 			rWe <= 1'b0;
+end
 
 
 endmodule

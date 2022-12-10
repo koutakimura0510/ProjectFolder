@@ -24,21 +24,33 @@ iSceneFrameRst		= 0
 */
 module SceneChange #(
 	parameter								pColorDepth		= 16,
+	parameter 								pFifoDepth		= 16,
+	parameter 								pFifoBitWidth	= 16,
+	// not
+	parameter								pRGBBitWidth 	= pColorDepth / 4,		// ARGB 一つの要素の Bit幅
+	parameter								pAlphaBitMsb 	= pColorDepth - 1,
+	parameter								pAlphaBitLsb 	= pColorDepth - (pColorDepth / 4),
+	parameter	[pColorDepth-1:0]			pAlphaNum	 	= 1 << pAlphaBitLsb
 )(
 	// Internal Port
-	// output pixel data
-    output 	[pColorDepth-1:0]    			oPixel,				// Dest Pixel Data
-	// Status
 	input 									iFe,				// frame end
+	//
+	input 									iEds,				// Enable Data Src
+	output 									oFull,				// FIFO Full
+    output 	[pColorDepth-1:0]    			oDd,				// Dest Data
+	output 									oVdd,				// Valid Dest Data 
+	input 									iEdd,				// Enable Data Dest
+	output 									oEmp,				// FIFO Empty
 	// Csr
     input	[pColorDepth-1:0]				iSceneColor,		// 描画色
 	input 	[6:0]							iSceneFrameTiming,	// SceneChange の更新速度,fps基準
 	input 									iSceneFrameAddEn,	// SceneChange Add Start
 	input 									iSceneFrameSubEn,	// SceneChange Sub Start
-    input                       			iSceneFrameRst,
+    input 									iSceneFrameRst,
 	output									oSceneAlphaMax,
 	output 									oSceneAlphaMin,
 	// Clk rst
+	input 									iRst,
     input                       			iClk
 );
 
@@ -46,35 +58,38 @@ module SceneChange #(
 //-----------------------------------------------------------------------------
 // 設定データに基づき、暗転処理を行う。
 //-----------------------------------------------------------------------------
-reg [pColorDepth-1:0] 	rColor;					assign oPixel 			= rColor;
-reg 					rSceneAlphaMax;			assign oSceneAlphaMax 	= rSceneAlphaMax;
-reg 					rSceneAlphaMin;			assign oSceneAlphaMin 	= rSceneAlphaMin;
+reg [pColorDepth-1:0] 	rScenePixel;
+reg 					rSceneAlphaMax;					assign oSceneAlphaMax 	= rSceneAlphaMax;
+reg 					rSceneAlphaMin;					assign oSceneAlphaMin 	= rSceneAlphaMin;
 reg [6:0]				rFeCnt;
 reg 					qFrameUpdateEn;
+reg 					rWe, 			qWeCke;
 reg 					qAlphaMax;
 reg 					qAlphaMin;
 //
-wire [];
-//
-wire [pColorDepth-1:0] 	wColorAdd = rColor + 16'1000;
-wire [pColorDepth-1:0] 	wColorSub = rColor - 16'1000;
+wire [pColorDepth-1:0] 	wColorAdd = rScenePixel + pAlphaNum;
+wire [pColorDepth-1:0] 	wColorSub = rScenePixel - pAlphaNum;
 
 always @(posedge iClk)
 begin
-	casex ({iFrameRst, qFrameUpdateEn, iFe, qAlphaMin, qAlphaMax, iFrameSubEn, iFrameAddEn})
-		'b1xxxxxx:	rColor <= iColor;
-		'b011x0x1:	rColor <= wColorAdd;
-		'b0110x1x:	rColor <= wColorSub;
-		default: 	rColor <= rColor;
+	casex ({iSceneFrameRst, qFrameUpdateEn, iFe, qAlphaMin, qAlphaMax, iSceneFrameSubEn, iSceneFrameAddEn})
+		'b1x_x_xx_xx:	rScenePixel <= iSceneColor;
+		'b01_1_x0_x1:	rScenePixel <= wColorAdd;
+		'b01_1_0x_1x:	rScenePixel <= wColorSub;
+		default: 		rScenePixel <= rScenePixel;
 	endcase
 
-	casex ({iFrameRst, qFrameUpdateEn, iFe, iFrameSubEn, iFrameAddEn})
-		'b1xxxx: 		rFeCnt <= 8'd0;
-		'b011xx:		rFeCnt <= 8'd0;
-		'b001x1:		rFeCnt <= rFeCnt + 1'b1;
-		'b0011x:		rFeCnt <= rFeCnt + 1'b1;
+	casex ({iSceneFrameRst, qFrameUpdateEn, iFe, iSceneFrameSubEn, iSceneFrameAddEn})
+		'b1_x_x_xx:		rFeCnt <= 8'd0;
+		'b0_1_1_xx:		rFeCnt <= 8'd0;
+		'b0_0_1_x1:		rFeCnt <= rFeCnt + 1'b1;
+		'b0_0_1_1x:		rFeCnt <= rFeCnt + 1'b1;
 		default:	 	rFeCnt <= rFeCnt;
 	endcase
+
+	if (iSceneFrameRst)	rWe <= 1'b0;
+	else if (qWeCke)	rWe <= 1'b1;
+	else 				rWe <= 1'b0;
 
 	// CSR 保存用にレジスタ出力
 	rSceneAlphaMax	<= qAlphaMax;
@@ -83,9 +98,31 @@ end
 
 always @*
 begin
-	qFrameUpdateEn 	<= (rFeCnt == iFrameTiming);
-	qAlphaMax		<= rColor[15:12] == 4'd15;
-	qAlphaMin		<= rColor[15:12] == 4'd0;
+	qWeCke			<= |{iSceneFrameSubEn, iSceneFrameAddEn} & iEds;
+	qFrameUpdateEn 	<= (rFeCnt == iSceneFrameTiming);
+	qAlphaMax		<= (rScenePixel[pAlphaBitMsb:pAlphaBitLsb] == 4'd15);
+	qAlphaMin		<= (rScenePixel[pAlphaBitMsb:pAlphaBitLsb] == 4'd0);
 end
+
+//-----------------------------------------------------------------------------
+// 他の DotGenerator とタイミングを合わせるため FIFO 経由で出力データの制御を行う
+//-----------------------------------------------------------------------------
+fifoController #(
+	.pFifoDepth		(pFifoDepth),
+	.pFifoBitWidth	(pFifoBitWidth)
+) InstDotSquareFifo (
+	// src side
+	.iWd			(rScenePixel),
+	.iWe			(rWe),
+	.oFull			(oFull),
+	// dst side
+	.oRd			(oDd),
+	.oRvd			(oVdd),
+	.iRe			(iEdd),
+	.oEmp			(oEmp),
+	//
+	.iRst			(iRst),
+	.iClk			(iClk)
+);
 
 endmodule

@@ -123,13 +123,13 @@ wire [lpMapInfoBitWidth-1:0]wMapInfoWdCsr;
 wire 						wMapInfoCkeCsr;
 wire 						wMapInfoVdCsr;
 //
-wire [pColorDepth-1:0]		wSceneColorCsr,
-wire [6:0]					wSceneFrameTimingCsr,
-wire 						wSceneFrameAddEnCsr,
-wire 						wSceneFrameSubEnCsr,
-wire						wSceneFrameRstCsr,
-wire						wSceneAlphaMaxCsr,
-wire 						wSceneAlphaMinCsr,
+wire [pColorDepth-1:0]		wSceneColorCsr;
+wire [6:0]					wSceneFrameTimingCsr;
+wire 						wSceneFrameAddEnCsr;
+wire 						wSceneFrameSubEnCsr;
+wire						wSceneFrameRstCsr;
+wire						wSceneAlphaMaxCsr;
+wire 						wSceneAlphaMinCsr;
 //
 wire 						wFe;
 

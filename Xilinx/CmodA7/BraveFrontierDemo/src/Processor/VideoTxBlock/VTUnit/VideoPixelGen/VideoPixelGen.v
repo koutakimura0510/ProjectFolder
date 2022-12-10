@@ -260,13 +260,29 @@ PixelDrawPosition #(
 //-----------------------------------------------------------------------------
 // Scene Draw
 //-----------------------------------------------------------------------------
-wire [pColorDepth-1:0] wSceneChangePixel;
+localparam 				lpSceneChangeFifoDepth = 16;
+
+reg 					qSceneChangeEds;
+wire 					wSceneChangeFull;
+wire [pColorDepth-1:0] 	wSceneChangeDd;
+wire 					wSceneChangeVdd;
+reg  					qSceneChangeEdd;
+wire 					wSceneChangeEmp;
 
 SceneChange #(
-	.pColorDepth		(pColorDepth)
+	.pColorDepth		(pColorDepth),
+	.pFifoDepth			(lpSceneChangeFifoDepth),
+	.pFifoBitWidth		(pColorDepth)
 ) SceneChange (
-	.oPixel				(wSceneChangePixel),
 	.iFe				(wAFE),
+	//
+	.iEds				(qSceneChangeEds),
+	.oFull				(wSceneChangeFull),
+	.oDd				(wSceneChangeDd),
+	.oVdd				(wSceneChangeVdd),
+	.iEdd				(qSceneChangeEdd),
+	.oEmp				(wSceneChangeEmp),
+	//
 	.iSceneColor		(iSceneColor),
 	.iSceneFrameTiming	(iSceneFrameTiming),
 	.iSceneFrameAddEn	(iSceneFrameAddEn),
@@ -274,13 +290,21 @@ SceneChange #(
 	.iSceneFrameRst		(iSceneFrameRst),
 	.oSceneAlphaMax		(oSceneAlphaMax),
 	.oSceneAlphaMin		(oSceneAlphaMin),
+	//
+	.iRst				(iRst),
 	.iClk				(iClk)
 );
+
+always @*
+begin
+	// SceneChange は現在 他のタイミングと合わせれば良い 
+	qSceneChangeEds			<= (~wSceneChangeFull);
+end
 
 //-----------------------------------------------------------------------------
 // デモンストレーション
 //-----------------------------------------------------------------------------
-localparam lpVpgDemoGenFifoDepth = 16;
+localparam 				lpVpgDemoGenFifoDepth = 16;
 //
 reg 					qVpgDemoEds;
 wire 					wVpgDemoFull;
@@ -296,12 +320,13 @@ VpgDemo #(
 	.pFifoDepth			(lpVpgDemoGenFifoDepth),
 	.pFifoBitWidth		(pColorDepth)
 ) VpgDemo (
-	.iColor				(16'h00f0),
 	.iHdisplay			(wHdisplay),
 	.iVdisplay			(wVdisplay),
 	.iHpos				(wPixelDrawHpos),
 	.iVpos				(wPixelDrawVpos),
 	.iFe				(wAFE),
+	//
+	.iColor				(16'h00f0),
 	.iEds 				(qVpgDemoEds),
 	.oFull				(wVpgDemoFull),
 	.oDd				(wVpgDemoDd),
@@ -345,7 +370,8 @@ DotMargeToPixelConverter #(
 	.iForeground	({pColorDepth{1'b0}}),
 	.iMenuWindow	({pColorDepth{1'b0}}),
 	.iVpgDemo 		(wVpgDemoDd),
-	.iSceneChange	(wSceneChangePixel),
+	.iSceneChange	(wSceneChangeDd),
+	//
 	.iEds			(qPixelMargeEds),
 	.oFull			(wPixelMargeFull),
 	.oDd			(wPixelMargeDd),
@@ -358,8 +384,15 @@ DotMargeToPixelConverter #(
 
 always @*
 begin
-	qPixelMargeEds	<= wVpgDemoVdd;
+	// 前段から Write Enable
+	// 前段全ステージで データ転送が可能になった時のみ受け付ける
+	qPixelMargeEds	<= &{wVpgDemoVdd,wSceneChangeVdd};
+
+	// 後段からの データ転送要求受付
 	qPixelMargeEdd 	<= (~wPixelMargeEmp) & iCke;
+
+	// 前段 にデータ受付許可発行
+	qSceneChangeEdd	<= (~wPixelMargeFull);
 	qVpgDemoEdd		<= (~wPixelMargeFull);
 end
 

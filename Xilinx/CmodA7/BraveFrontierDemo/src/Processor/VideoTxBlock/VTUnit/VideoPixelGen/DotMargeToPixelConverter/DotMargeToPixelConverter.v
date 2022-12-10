@@ -21,11 +21,11 @@ module DotMargeToPixelConverter #(
     input  [pColorDepth-1:0]		iVpgDemo,
 	input  [pColorDepth-1:0]		iSceneChange,
 	// control
-	input 							iEds,		// Enable Data Source
+	input 							iEds,
 	output 							oFull,
-    output [pFifoBitWidth-1:0]    	oDd,		// Dest Data
-	output 							oVdd,		// Valid Dest Data 
-	input 							iEdd,		// Enable Dest Data
+    output [pFifoBitWidth-1:0]    	oDd,
+	output 							oVdd,
+	input 							iEdd,
 	output 							oEmp,
 	// Clk rst
     input                       	iRst,
@@ -34,19 +34,23 @@ module DotMargeToPixelConverter #(
 
 
 //-----------------------------------------------------------------------------
-// 
+// オーバーレイ処理
 //-----------------------------------------------------------------------------
-reg [pFifoBitWidth-1:0] rPixel;
-reg rWe;
+wire [pColorDepth-1:0]	wSrcPixel;
+wire 					wWe;
 
-always @(posedge iClk)
-begin
-	rPixel <= iVpgDemo[11:0];
-
-	if (iRst) 		rWe <= 1'b0;
-	else if (iEds)	rWe <= 1'b1;
-	else 			rWe <= 1'b0;	// 実際は 上記のドットの合算とタイミングを合わせる
-end
+OverlayMarge #(
+	.pDspUsed		("yes"),
+	.pColorDepth	(pColorDepth)
+) OverlayMarge (
+	.iSrcPixel		(iVpgDemo),
+	.iOverlayPixel	(iSceneChange),
+	.iWe			(iEds),
+	.oDstPixel		(wSrcPixel),
+	.oWe			(wWe),
+	.iRst			(iRst),
+	.iClk			(iClk)
+);
 
 
 //-----------------------------------------------------------------------------
@@ -57,8 +61,8 @@ fifoController #(
 	.pFifoBitWidth	(pFifoBitWidth)
 ) InstDotMargeToPixelConverterFifo (
 	// src side
-	.iWd			(rPixel),
-	.iWe			(rWe),
+	.iWd			(wSrcPixel),
+	.iWe			(wWe),
 	.oFull			(oFull),
 	// dst side
 	.oRd			(oDd),

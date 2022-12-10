@@ -20,17 +20,17 @@ module DspTop(
 //-----------------------------------------------------------------------------
 // 乗算用計算値生成
 //-----------------------------------------------------------------------------
-reg [3:0] rDstR;
-reg [3:0] rDstG;
-reg [3:0] rDstB;
+reg [7:0] rDstR;
+reg [7:0] rDstG;
+reg [7:0] rDstB;
 
 always @( posedge iClk )
 begin
 	if (iRst)
 	begin
-		rDstR <= 4'hf;
-		rDstG <= 4'hf;
-		rDstB <= 4'hf;
+		rDstR <= 8'hff;
+		rDstG <= 8'hff;
+		rDstB <= 8'hff;
 	end
 	else
 	begin
@@ -39,8 +39,6 @@ begin
 		rDstB <= rDstB + 2'd3;
 	end
 end
-
-
 
 //-----------------------------------------------------------------------------
 // 内蔵乗算機を使用
@@ -56,12 +54,10 @@ end
 // (* use_dsp ="yes" *) プリミティブをなくすと、LUT と FF が使用される。
 // ソースコード上では乗算だが、加算器をたくさん並べた回路に生成される。
 // 上記3つ使用をなくすと下記のリソースが増える。
-// LUT +8
-// FF +17 
 //-----------------------------------------------------------------------------
-wire[7:0] wSrcR = 4'd10 * rDstR;
-wire[7:0] wSrcG = 4'd10 * rDstG;
-wire[7:0] wSrcB = 4'd10 * rDstB;
+(* use_dsp ="yes" *) wire[7:0] wSrcR = rDstR[4+:4] * rDstR[3:0];
+(* use_dsp ="yes" *) wire[7:0] wSrcG = rDstG[ 7:4] * rDstG[3:0];
+(* use_dsp ="yes" *) wire[7:0] wSrcB = rDstB[ 7:4] * rDstB[3:0];
 // (* use_dsp ="yes" *) reg[7:0] rDspR;
 // (* use_dsp ="yes" *) reg[7:0] rDspG;
 // (* use_dsp ="yes" *) reg[7:0] rDspB;
