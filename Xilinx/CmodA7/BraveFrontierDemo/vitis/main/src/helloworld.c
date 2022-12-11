@@ -29,17 +29,23 @@
 * this Software without prior written authorization from Xilinx.
 *
 ******************************************************************************/
-
 #include <stdint.h>
 #include "platform.h"
 #include "xil_printf.h"
 #include "xparameters.h"
 
-// MicroBlazeAdrs 
-#define USI_GPI1    (*(volatile unsigned int *) 0x80000010)
-#define USI_GPI2	(*(volatile unsigned int *) 0x80000014)
-#define USI_GPI3    (*(volatile unsigned int *) 0x80000018)
-#define USI_GPI1    (*(volatile unsigned int *) 0x80000020)
+
+// MicroBlaze GPO GPI Adrs
+// 使用していない Pin はコメントアウト
+#define USI_GPO1	(*(volatile unsigned int *) 0x80000010)
+#define USI_GPO2	(*(volatile unsigned int *) 0x80000014)
+#define USI_GPO3	(*(volatile unsigned int *) 0x80000018)
+// #define USI_GPO4    (*(volatile unsigned int *) 0x8000001C)
+//
+#define USI_GPI1	(*(volatile unsigned int *) 0x80000020)
+// #define USI_GPI2    (*(volatile unsigned int *) 0x80000024)
+// #define USI_GPI3    (*(volatile unsigned int *) 0x80000028)
+// #define USI_GPI4    (*(volatile unsigned int *) 0x8000002C)
 
 
 /**----------------------------------------------------------
@@ -56,10 +62,10 @@ void wait_time(uint32_t time)
  *---------------------------------------------------------*/
 void usi_write(uint32_t wd, uint32_t adrs)
 {
-	USI_GPI1	= wd;
-	USI_GPI2	= adrs;
-	USI_GPI3	= 0x00000001;
-	USI_GPI3	= 0x00000000;
+	USI_GPO1	= wd;
+	USI_GPO2	= adrs;
+	USI_GPO3	= 0x00000001;
+	USI_GPO3	= 0x00000000;
 }
 
 
@@ -78,14 +84,36 @@ uint32_t usi_read(uint32_t adrs)
 int main(void)
 {
     init_platform();
-
-    uint32_t usi_data = 0x00000001;
+	usi_write(0x00000000, 0x00010000);
+	usi_write(0x00000001, 0x00010004);
+	usi_write(0x00000000, 0x00010008);
+	usi_write(0x00000000, 0x0001000c);
+	usi_write(0x00000000, 0x00010010);
+	usi_write(0x00000000, 0x00010014);
+	usi_write(0x00000000, 0x00010018);
+	usi_write(0x0112A880, 0x0001001c);
+	usi_write(0x015752A0, 0x00010020);
+	usi_write(0x01C9C380, 0x00010024);
+	usi_write(0x02AEA540, 0x00010028);
+	usi_write(0x055D4A80, 0x0001002c);
+	usi_write(0x0000001f, 0x00010000);
+	//
+	usi_write(0x00000003, 0x00040010);
+	usi_write(0x00000003, 0x00060000);
+	usi_write(0x00000000, 0x00060000);
+	usi_write(0x0000000f, 0x00040010);
+	usi_write(0x0000000e, 0x00040010);
+	wait_time(100000);
+	usi_write(0x0000000c, 0x00040010);
+	usi_write(0x0000006f, 0x00040014);
+	//
+	usi_write(0x0000ffff, 0x0004002c);
+	usi_write(0x0000001f, 0x00040030);
+	usi_write(0x00000001, 0x00040034);
 
     while (1)
     {
-		wait_time(1000000);
-		usi_write(usi_data, 0x00010000);
-		usi_data ^= 0x00000001;
+    	;
     }
 
     xil_printf("Hello World\n\r");

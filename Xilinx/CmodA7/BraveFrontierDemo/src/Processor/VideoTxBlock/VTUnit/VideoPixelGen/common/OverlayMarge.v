@@ -55,7 +55,7 @@ module OverlayMarge #(
 (* use_dsp =pDspUsed *) wire[pDspBitWidth-1:0] wOverlayGstage1 = iOverlayPixel[pAlphaBitMsb:pAlphaBitLsb] * iOverlayPixel[pGBitLsb+:pRGBBitWidth];
 (* use_dsp =pDspUsed *) wire[pDspBitWidth-1:0] wOverlayBstage1 = iOverlayPixel[pAlphaBitMsb:pAlphaBitLsb] * iOverlayPixel[pBBitLsb+:pRGBBitWidth];
 
-wire[pRGBBitWidth-1:0] wSrcAstage1	   = {pRGBBitWidth{1'b1}} - iOverlayPixel[pAlphaBitMsb:pAlphaBitLsb];
+wire[pRGBBitWidth-1:0]	wSrcAstage1	= {pRGBBitWidth{1'b1}} - iOverlayPixel[pAlphaBitMsb:pAlphaBitLsb];
 //
 reg [pColorDepth-1:0]	rSrcPixelstage1;
 reg [pDspBitWidth-1:0] 	rOverlayRstage1;
@@ -83,9 +83,9 @@ wire[pDspBitWidth-1:0] wOverlayRstage2 = rOverlayRstage1 + {pRGBBitWidth{1'b1}};
 wire[pDspBitWidth-1:0] wOverlayGstage2 = rOverlayGstage1 + {pRGBBitWidth{1'b1}};
 wire[pDspBitWidth-1:0] wOverlayBstage2 = rOverlayBstage1 + {pRGBBitWidth{1'b1}};
 
-(* use_dsp =pDspUsed *) wire[pDspBitWidth-1:0] wSrcRstage2 = wSrcAstage1 * rSrcPixelstage1[pRBitLsb+:pRGBBitWidth];
-(* use_dsp =pDspUsed *) wire[pDspBitWidth-1:0] wSrcGstage2 = wSrcAstage1 * rSrcPixelstage1[pGBitLsb+:pRGBBitWidth];
-(* use_dsp =pDspUsed *) wire[pDspBitWidth-1:0] wSrcBstage2 = wSrcAstage1 * rSrcPixelstage1[pBBitLsb+:pRGBBitWidth];
+(* use_dsp =pDspUsed *) wire[pDspBitWidth-1:0] wSrcRstage2 = rSrcAstage1 * rSrcPixelstage1[pRBitLsb+:pRGBBitWidth];
+(* use_dsp =pDspUsed *) wire[pDspBitWidth-1:0] wSrcGstage2 = rSrcAstage1 * rSrcPixelstage1[pGBitLsb+:pRGBBitWidth];
+(* use_dsp =pDspUsed *) wire[pDspBitWidth-1:0] wSrcBstage2 = rSrcAstage1 * rSrcPixelstage1[pBBitLsb+:pRGBBitWidth];
 //
 reg [pRGBBitWidth-1:0]	rSrcAstage2;	// Alpha 値のみ抜粋
 reg [pDspBitWidth-1:0] 	rOverlayRstage2;

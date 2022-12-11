@@ -37,6 +37,7 @@ module MicroControllerBlock #(
 	[31:25] はフリースペースになるため、MCB から UFIB 経由で Slave にアクセスするときに、
 	どの Slave に要求しているかの条件分岐に使用することにした。
 	条件分岐は UFIB module 内で行う。
+
 	oMUfiAdrs
 	[31:28] BRAM ID 0~15
 	[27:25] 100:Atb, 010:Vtb, 001:Ram
@@ -46,8 +47,8 @@ module MicroControllerBlock #(
 	Atb,Vtb アクセス時は 現在 WEd のみ使用する。
 	外部RAM,ROM に保存されているシステムデータを BRAM に書き込むことはするが、現状読み込み動作は想定していない。(writeだけで十分なはず)
 	*/
-	output 	[pUfiBusWidth-1:0]			oMUfiWd,
-	output 	[pBusAdrsBit-1:0]			oMUfiAdrs,
+	output 	[pUfiBusWidth-1:0]			oMUfiWd,	// Write Data
+	output 	[pBusAdrsBit-1:0]			oMUfiAdrs,	// R/W Common Adrs
 	output 								oMUfiWEd,	// Write Adrs Data Enable
 	output 								oMUfiREd,	// Read Adrs Data Enable
 	output 								oMUfiVd,	// Data Valid
@@ -59,6 +60,10 @@ module MicroControllerBlock #(
     input           					iSysClk
 );
 
+
+//-----------------------------------------------------------------------------
+// 未使用 pin
+//-----------------------------------------------------------------------------
 assign oMUfiWd		= {pUfiBusWidth{1'b0}}; // のちのち UFI 処理追加
 assign oMUfiAdrs	= {pBusAdrsBit{1'b0}};
 assign oMUfiWEd		= 1'b0;
@@ -67,10 +72,11 @@ assign oMUfiVd		= 1'b0;
 assign oMUfiCmd		= 1'b0;
 
 
-//----------------------------------------------------------
+//-----------------------------------------------------------------------------
 // デバッグ用 MicroBlaze
-//----------------------------------------------------------
-// 
+// MicroBlaze MCS DS865 - 2012 DataSheet 参照
+//-----------------------------------------------------------------------------
+// Read
 wire [31:0]					wMcbManualRd;
 wire [31:0]					wMUsiRd;
 wire [pBusBlockConnect-1:0]	wMUsiREd;
@@ -93,6 +99,7 @@ microblaze_mcs_0 MCS (
 	.GPIO3_tri_o	(wMcbCsrCke)
 	// .GPIO4_tri_o	()
 );
+
 
 //-----------------------------------------------------------------------------
 // MCS

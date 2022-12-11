@@ -104,7 +104,7 @@ localparam lpDualFifoWidth = pColorDepth - (pColorDepth / 4);
 //-----------------------------------------------------------------------------
 wire [lpDualFifoWidth-1:0] wDrawPixel;
 wire wDrawPixelWEd;
-reg  qVideoPixelGenCke;
+reg  qVideoPixelGenEdd;
 
 VideoPixelGen #(
 	.pUfiBusWidth		(pUfiBusWidth),
@@ -143,9 +143,9 @@ VideoPixelGen #(
 	//
 	.oPixel				(wDrawPixel),
 	.oWEd				(wDrawPixelWEd),
+	.iEdd				(qVideoPixelGenEdd),
 	// 
 	.iRst				(iVtbSystemRst),
-	.iCke				(qVideoPixelGenCke),
 	.iClk				(iSysClk)
 );
 
@@ -157,10 +157,10 @@ VideoPixelGen #(
 //-----------------------------------------------------------------------------
 localparam lpDmaFifoDepth = (pFifoDepthOverride == "yes") ? pDmaFifoDepth : 32;
 
-wire 					wDmaFull;
-wire [pUfiBusWidth-1:0]	wDmaRd;
-wire 					wDmaREd;
-reg						qDmaRe;
+wire 	[pUfiBusWidth-1:0]	wDmaRd;
+wire 						wDmaREd;
+wire 						wDmaFull;
+reg							qDmaRe;
 
 VideoDmaUnit #(
 	.pUfiBusWidth		(pUfiBusWidth),
@@ -196,10 +196,6 @@ VideoDmaUnit #(
 	.iClk				(iSysClk)
 );
 
-always @*
-begin
-	qVideoPixelGenCke <= (~wDmaFull);	// 前段へ
-end
 
 //-----------------------------------------------------------------------------
 // Video Sync Gen
@@ -247,15 +243,17 @@ VideoSyncGen #(
 //-----------------------------------------------------------------------------
 localparam lpDualClkFifoDepth	= (pFifoDepthOverride == "yes") ? pDualClkFifoDepth : 32;
 
-wire [lpDualFifoWidth-1:0] 	wVideoDualFifoRd;
-wire 						wVideoDualFifoFull;
+reg		[pUfiBusWidth-1:0]		qVideoDualFifoWd;
+reg								qVideoDualFifoWEd;
+wire 	[lpDualFifoWidth-1:0] 	wVideoDualFifoRd;
+wire 							wVideoDualFifoFull;
 
 VideoDualClkFIFO #(
 	.pBuffDepth		(lpDualClkFifoDepth),
 	.pBitWidth		(lpDualFifoWidth)
 ) VideoDualClkFIFO (
-	.iWd			(wDmaRd),
-	.iWe			(wDmaREd),
+	.iWd			(qVideoDualFifoWd),
+	.iWe			(qVideoDualFifoWEd),
 	.ofull			(wVideoDualFifoFull),
 	.oRd			(wVideoDualFifoRd),
 	.iRe			(wVde),
@@ -267,7 +265,10 @@ VideoDualClkFIFO #(
 
 always @*
 begin
-	qDmaRe <= (~wVideoDualFifoFull);
+	qVideoDualFifoWd	<= iDmaEn ?   wDmaRd  : wDrawPixel[pUfiBusWidth-1:0];
+	qVideoDualFifoWEd	<= iDmaEn ?   wDmaREd : wDrawPixelWEd;
+	qVideoPixelGenEdd 	<= iDmaEn ? (~wDmaFull) : (~wVideoDualFifoFull);
+	qDmaRe 				<= (~wVideoDualFifoFull);
 end
 
 // Dual Clk Fifo 経由で 2レイテンシ遅延が発生するため、

@@ -84,9 +84,9 @@ module VideoPixelGen #(
 	// 2nd Stage Output
 	output	[pOutColorDepth-1:0]	oPixel,
     output                       	oWEd,
+	input 							iEdd,
     // CLK Reset
     input           				iRst,
-	input 							iCke,
     input           				iClk
 );
 
@@ -389,7 +389,7 @@ begin
 	qPixelMargeEds	<= &{wVpgDemoVdd,wSceneChangeVdd};
 
 	// 後段からの データ転送要求受付
-	qPixelMargeEdd 	<= (~wPixelMargeEmp) & iCke;
+	qPixelMargeEdd 	<= (~wPixelMargeEmp) & iEdd;
 
 	// 前段 にデータ受付許可発行
 	qSceneChangeEdd	<= (~wPixelMargeFull);
