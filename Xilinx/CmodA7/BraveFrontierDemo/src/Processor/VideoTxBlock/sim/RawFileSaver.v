@@ -35,7 +35,6 @@ localparam [2:0]
 
 //
 integer fd = 0;	// ファイルディスクリプタ
-//
 reg rSaveEnd;							assign oSaveEnd = rSaveEnd;
 reg [2:0] rFileSt;
 
@@ -57,6 +56,7 @@ begin
 			if (!fd)
 			begin
 				$display("File Open NG %s\n", pRawFileSave);
+				// $fwrite(fd, "%c", iColorR);
 				rFileSt = lpFileOpenError;
 			end
 			else

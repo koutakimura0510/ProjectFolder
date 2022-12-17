@@ -11,7 +11,7 @@ module BraveFrontierSim;
 //-----------------------------------------------------------------------------
 // ファイル名
 //-----------------------------------------------------------------------------
-localparam lpRawFileSave	= "d:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/sim/ImageData.raw";
+localparam lpRawFileSave	= "/home/kimura/workspace/ProjectFolder/Xilinx/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/sim/ImageData.raw";
 
 
 //----------------------------------------------------------

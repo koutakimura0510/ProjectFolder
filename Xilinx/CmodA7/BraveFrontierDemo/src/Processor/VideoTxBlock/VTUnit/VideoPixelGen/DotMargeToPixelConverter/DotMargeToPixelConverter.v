@@ -39,18 +39,18 @@ module DotMargeToPixelConverter #(
 wire [pColorDepth-1:0]	wSrcPixel;
 wire 					wWe;
 
-OverlayMarge #(
-	.pDspUsed		("yes"),
-	.pColorDepth	(pColorDepth)
-) OverlayMarge (
-	.iSrcPixel		(iVpgDemo),
-	.iOverlayPixel	(iSceneChange),
-	.iWe			(iEds),
-	.oDstPixel		(wSrcPixel),
-	.oWe			(wWe),
-	.iRst			(iRst),
-	.iClk			(iClk)
-);
+// OverlayMarge #(
+// 	.pDspUsed		("yes"),
+// 	.pColorDepth	(pColorDepth)
+// ) OverlayMarge (
+// 	.iSrcPixel		(iVpgDemo),
+// 	.iOverlayPixel	(iSceneChange),
+// 	.iWe			(iEds),
+// 	.oDstPixel		(wSrcPixel),
+// 	.oWe			(wWe),
+// 	.iRst			(iRst),
+// 	.iClk			(iClk)
+// );
 
 
 //-----------------------------------------------------------------------------
@@ -61,8 +61,8 @@ fifoController #(
 	.pFifoBitWidth	(pFifoBitWidth)
 ) InstDotMargeToPixelConverterFifo (
 	// src side
-	.iWd			(wSrcPixel),
-	.iWe			(wWe),
+	.iWd			(iVpgDemo),
+	.iWe			(iEds),
 	.oFull			(oFull),
 	// dst side
 	.oRd			(oDd),
@@ -73,6 +73,23 @@ fifoController #(
 	.iRst			(iRst),
 	.iClk			(iClk)
 );
+// fifoController #(
+// 	.pFifoDepth		(pFifoDepth),
+// 	.pFifoBitWidth	(pFifoBitWidth)
+// ) InstDotMargeToPixelConverterFifo (
+// 	// src side
+// 	.iWd			(wSrcPixel),
+// 	.iWe			(wWe),
+// 	.oFull			(oFull),
+// 	// dst side
+// 	.oRd			(oDd),
+// 	.oRvd			(oVdd),
+// 	.iRe			(iEdd),
+// 	.oEmp			(oEmp),
+// 	//
+// 	.iRst			(iRst),
+// 	.iClk			(iClk)
+// );
 
 
 endmodule

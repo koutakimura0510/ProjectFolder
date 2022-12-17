@@ -1,34 +1,21 @@
-/******************************************************************************
-*
-* Copyright (C) 2009 - 2014 Xilinx, Inc.  All rights reserved.
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in
-* all copies or substantial portions of the Software.
-*
-* Use of the Software is limited solely to applications:
-* (a) running on a Xilinx device, or
-* (b) that interact with a Xilinx device through a bus or interconnect.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-* XILINX  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-* OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-* SOFTWARE.
-*
-* Except as contained in this notice, the name of the Xilinx shall not be used
-* in advertising or otherwise to promote the sale, use or other dealings in
-* this Software without prior written authorization from Xilinx.
-*
-******************************************************************************/
+/**----------------------------------------------------------
+ * Create  2022/12/10
+ * Author  kimura
+ * -
+ * vitis22.04
+ * 
+ * Build 手順
+ * ctrl + B
+ * toolber -> xilinx -> program device -> generate
+ * 
+ * download.bit が無いと error が出た場合の処置
+ * folder -> _ide -> bitstream -> xxx.mmi ファイルの下記の inst を削除。
+ * パスが正しくないので download.bit が生成されない。
+ * <Processor Endianness="Little" InstPath="Processor/MicroControllerBlock/MCS/inst/microblaze_I">
+ * 
+ *--------------------------------------------------------*/
+
+
 #include <stdint.h>
 #include "platform.h"
 #include "xil_printf.h"
@@ -43,7 +30,7 @@
 // #define USI_GPO4    (*(volatile unsigned int *) 0x8000001C)
 //
 #define USI_GPI1	(*(volatile unsigned int *) 0x80000020)
-// #define USI_GPI2    (*(volatile unsigned int *) 0x80000024)
+ #define USI_GPI2    (*(volatile unsigned int *) 0x80000024)
 // #define USI_GPI3    (*(volatile unsigned int *) 0x80000028)
 // #define USI_GPI4    (*(volatile unsigned int *) 0x8000002C)
 
@@ -74,7 +61,8 @@ void usi_write(uint32_t wd, uint32_t adrs)
  *---------------------------------------------------------*/
 uint32_t usi_read(uint32_t adrs)
 {
-	return USI_GPI1;
+	USI_GPO2 = adrs;
+	return USI_GPI2;
 }
 
 
@@ -107,13 +95,16 @@ int main(void)
 	usi_write(0x0000000c, 0x00040010);
 	usi_write(0x0000006f, 0x00040014);
 	//
-	usi_write(0x0000ffff, 0x0004002c);
-	usi_write(0x0000001f, 0x00040030);
-	usi_write(0x00000001, 0x00040034);
+	usi_write(0x0000f000, 0x0004002c);
+//	usi_write(0x0000001f, 0x00040030);
+//	usi_write(0x00000001, 0x00040034);
+	//
 
     while (1)
     {
-    	;
+		uint32_t rd;
+		rd = usi_read(0x00040030);
+		rd = usi_read(0x00044000);
     }
 
     xil_printf("Hello World\n\r");

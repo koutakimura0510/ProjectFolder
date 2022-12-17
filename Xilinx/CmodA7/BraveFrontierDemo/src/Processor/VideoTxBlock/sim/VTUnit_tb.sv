@@ -12,8 +12,8 @@ module VTUnit_tb;
 //-----------------------------------------------------------------------------
 // ファイル名
 //-----------------------------------------------------------------------------
-localparam lpRawFileSave	= "d:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/sim/ImageData.raw";
-
+// localparam lpRawFileSave	= "/home/kimura/workspace/ProjectFolder/Xilinx/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/sim/ImageData.raw";
+localparam lpRawFileSave	= "/home/kimura/workspace/ProjectFolder/Xilinx/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/sim/ImageData.bmp";
 
 //----------------------------------------------------------
 // Clk Generator
@@ -214,6 +214,11 @@ VideoTxUnit #(
 	.iMUfiRd			(wMUfiRd),
 	.iMUfiREd			(wMUfiEddVtb),
 	.iMUfiRdy			(qMUfiRdyVtb),
+	//
+	.iSUfiWd			(0),
+	.iSUfiAdrs			(0),
+	.iSUfiWEd			(0),
+	//
 	.oMUfiWd			(wMUfiWdVtb),
 	.oMUfiAdrs			(wMUfiAdrsVtb),
 	.oMUfiWEd			(wMUfiWEdVtb),
@@ -229,15 +234,32 @@ VideoTxUnit #(
 	.iVSyncStart		(lpVSyncStart),
 	.iVSyncEnd			(lpVSyncEnd),
 	.iVSyncMax			(lpVSyncMax),
+	//
 	.iVtbSystemRst		(rVtbSystemRst),
 	.iVtbVideoRst		(rVtbVideoRst),
 	.iDisplayRst		(1'b0),
 	.iBlDutyRatio		(127),
+	//
 	.iFbufAdrs1			(lpDmaAdrs1),
 	.iFbufAdrs2			(lpDmaAdrs2),
 	.iFbufLen1			(lpDmaLen1),
 	.iFbufLen2			(lpDmaLen2),
 	.iDmaEn				(rDmaEn),
+	//
+	.iMapXSize			(0),
+	.iMapYSize			(0),
+	.iMapInfoWd			(0),
+	.iMapInfoCke		(0),
+	.iMapInfoVd			(0),
+	//
+	.iSceneColor		(16'h0fff),
+	.iSceneFrameTiming	(7'd30),
+	.iSceneFrameAddEn	(0),
+	.iSceneFrameSubEn	(0),
+	.iSceneFrameRst		(0),
+	.oSceneAlphaMax		(),
+	.oSceneAlphaMin		(),
+	//
 	.iSysClk			(wSysClk),
 	.iVideoClk			(wVideoClk),
 	.iSysRst			(rSysRst),
@@ -387,7 +409,9 @@ UltraFastInterface #(
 ) UltraFastInterface (
 	.iMUfiWdMcs			({lpUfiBusWidth{1'b0}}),
 	.iMUfiAdrsMcs		('h0000_0000),
-	.iMUfiEdMcs			(1'b0),
+	.iMUfiWEdMcs		(1'b0),
+	.iMUfiREdMcs		(1'b0),
+	.iMUfiCmdMcs		(1'b0),
 	.iMUfiVdMcs			(1'b0),
 	//
 	.iMUfiWdSpi			({lpUfiBusWidth{1'b0}}),
@@ -404,6 +428,10 @@ UltraFastInterface #(
 	.iMUfiCmdVtb		(wMUfiCmdVtb),
 	.oMUfiRdyVtb		(wMUfiRdyVtb),
 	//
+	.oSUfiWdVtb			(),
+	.oSUfiAdrsVtb		(),
+	.oSUfiWEdVtb		(),
+	//
 	.iMUfiAdrsAtb		(wMUfiAdrsAtb),
 	.iMUfiWEdAtb		(wMUfiWEdAtb),
 	.iMUfiREdAtb		(wMUfiREdAtb),
@@ -411,6 +439,7 @@ UltraFastInterface #(
 	.oMUfiRdyAtb		(wMUfiRdyAtb),
 	//
 	.oMUfiRd			(wMUfiRd),
+	.oMUfiEddMcs		(),
 	.oMUfiEddVtb		(wMUfiEddVtb),
 	.oMUfiEddAtb		(wMUfiEddAtb),
 	.oMUfiRdy			(wMUfiRdy),
@@ -426,6 +455,7 @@ UltraFastInterface #(
 	.iSUfiRdRam			(wSUfiRdRam),
 	.iSUfiREdRam		(iwSUfiREdRam),
 	.iSUfiRdyRam		(wSUfiRdyRam),
+	//
 	.iUfiRst			(rSysRst),
 	.iUfiClk			(wBusClk)
 );
@@ -437,8 +467,23 @@ UltraFastInterface #(
 //-----------------------------------------------------------------------------
 wire wSaveEnd;
 
-RawFileSaver #(
-	.pRawFileSave (lpRawFileSave)
+// RawFileSaver #(
+// 	.pRawFileSave 	(lpRawFileSave)
+// ) RAW_FILE_SAVER (
+// 	.iColorR	(wTftColorR),
+// 	.iColorG	(wTftColorG),
+// 	.iColorB	(wTftColorB),
+// 	.iVde		(wTftDe),
+// 	.iAFE		(wAFE),
+// 	.oSaveEnd	(wSaveEnd),
+// 	.iRst		(rVtbVideoRst),
+// 	.iClk		(wVideoClk)
+// );
+BmpFileSaver #(
+	.pRawFileSave 	(lpRawFileSave),
+	.pHdisplay		(lpHdisplay),
+	.pVdisplay		(lpVdisplay),
+	.pBmpImageSize	(0)
 ) RAW_FILE_SAVER (
 	.iColorR	(wTftColorR),
 	.iColorG	(wTftColorG),
@@ -468,7 +513,7 @@ endtask
 // TestBench 動作
 // lpFrameCnt 画像出力の回数を指定可能、複数回ループさせて正しく raw 画像が出れば OK
 //-----------------------------------------------------------------------------
-localparam lpFrameCnt = 15;
+localparam lpFrameCnt = 2;
 integer n;
 
 initial
