@@ -98,7 +98,11 @@ end
 
 always @*
 begin
-	qWeCke			<= |{iSceneFrameSubEn, iSceneFrameAddEn} & iEds;
+	casex ({iSceneFrameSubEn, iSceneFrameAddEn, iEds})
+		'b1x1:			qWeCke <= 1'b1;
+		'bx11:			qWeCke <= 1'b1;
+		default: 		qWeCke <= 1'b0;
+	endcase
 	qFrameUpdateEn 	<= (rFeCnt == iSceneFrameTiming);
 	qAlphaMax		<= (rScenePixel[pAlphaBitMsb:pAlphaBitLsb] == 4'd15);
 	qAlphaMin		<= (rScenePixel[pAlphaBitMsb:pAlphaBitLsb] == 4'd0);

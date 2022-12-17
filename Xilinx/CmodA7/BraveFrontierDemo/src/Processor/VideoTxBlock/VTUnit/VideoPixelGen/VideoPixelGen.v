@@ -326,7 +326,7 @@ VpgDemo #(
 	.iVpos				(wPixelDrawVpos),
 	.iFe				(wAFE),
 	//
-	.iColor				(16'h00f0),
+	.iColor				(16'hf0f0),
 	.iEds 				(qVpgDemoEds),
 	.oFull				(wVpgDemoFull),
 	.oDd				(wVpgDemoDd),
@@ -339,13 +339,16 @@ VpgDemo #(
 
 always @*
 begin
-	qVpgDemoEds				<= (~wVpgDemoFull);
+	qVpgDemoEds				<= (~wVpgDemoFull);	// 自身の FIFO が満杯でなければデータ保存
 	qPixelDrawPositionCke 	<= (~wVpgDemoFull);
 end
 
 
 //-----------------------------------------------------------------------------
 // Final Stage ドットデータを結合し一つのピクセルデータに変換する
+// 前段と後段から要求される制御信号は、異なる CLK ドメインによるレイテンシの違いが発生するため、
+// pFifoFastOutValue パラメータで調整を行う。
+// このとき、FIFO Depth のパラメータ設定には十分余裕を持つこととする。
 //-----------------------------------------------------------------------------
 localparam lpDotMargeToPixelConverterFifoDepth = 16;
 
@@ -357,29 +360,30 @@ reg   qPixelMargeEds;
 reg   qPixelMargeEdd;
 
 DotMargeToPixelConverter #(
-	.pColorDepth	(pColorDepth),
-	.pFifoDepth		(lpDotMargeToPixelConverterFifoDepth),
-	.pFifoBitWidth	(pOutColorDepth)
+	.pColorDepth		(pColorDepth),
+	.pFifoDepth			(lpDotMargeToPixelConverterFifoDepth),
+	.pFifoBitWidth		(pOutColorDepth),
+	.pFifoFastOutValue	(10)
 ) DotMargeToPixelConverter (
-	.iField			({pColorDepth{1'b0}}),
-	.iNpc			({pColorDepth{1'b0}}),
-	.iPlayer		({pColorDepth{1'b0}}),
-	.iObject		({pColorDepth{1'b0}}),
-	.iEffect1		({pColorDepth{1'b0}}),
-	.iEffect2		({pColorDepth{1'b0}}),
-	.iForeground	({pColorDepth{1'b0}}),
-	.iMenuWindow	({pColorDepth{1'b0}}),
-	.iVpgDemo 		(wVpgDemoDd),
-	.iSceneChange	(wSceneChangeDd),
+	.iField				({pColorDepth{1'b0}}),
+	.iNpc				({pColorDepth{1'b0}}),
+	.iPlayer			({pColorDepth{1'b0}}),
+	.iObject			({pColorDepth{1'b0}}),
+	.iEffect1			({pColorDepth{1'b0}}),
+	.iEffect2			({pColorDepth{1'b0}}),
+	.iForeground		({pColorDepth{1'b0}}),
+	.iMenuWindow		({pColorDepth{1'b0}}),
+	.iVpgDemo 			(wVpgDemoDd),
+	.iSceneChange		(wSceneChangeDd),
 	//
-	.iEds			(qPixelMargeEds),
-	.oFull			(wPixelMargeFull),
-	.oDd			(wPixelMargeDd),
-	.oVdd			(wPixelMargeVdd),
-	.iEdd			(qPixelMargeEdd),
-	.oEmp			(wPixelMargeEmp),
-	.iRst			(iRst),
-	.iClk			(iClk)
+	.iEds				(qPixelMargeEds),
+	.oFull				(wPixelMargeFull),
+	.oDd				(wPixelMargeDd),
+	.oVdd				(wPixelMargeVdd),
+	.iEdd				(qPixelMargeEdd),
+	.oEmp				(wPixelMargeEmp),
+	.iRst				(iRst),
+	.iClk				(iClk)
 );
 
 always @*

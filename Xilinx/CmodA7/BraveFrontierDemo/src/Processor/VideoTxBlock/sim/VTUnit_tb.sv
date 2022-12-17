@@ -33,17 +33,6 @@ wire 		wVideoClk;
 wire 		wMemClk;
 wire 		wAudioClk;
 //
-reg  		rSysRst;
-reg  		rAudioRst;
-reg 		rVtbSystemRst;
-reg 		rVtbVideoRst;
-reg 		rRamSrcRst;
-reg 		rRamDstRst;
-reg 		rDmaEn;
-//
-reg 		rRamSrcRst;
-reg 		rRamDstRst;
-//
 SimSystemClk #(
 	.pSystemClkCycle	(lpSysClkCycle)
 ) SimSystemClk (
@@ -80,25 +69,38 @@ SimSystemClk #(
 // rVtbVideoRst リセットは rVtbSystemRst より遅らせることで、
 // Dual CLk FIFO にある程度データを溜める目的がある。
 //-----------------------------------------------------------------------------
+reg  		rSysRst;
+reg  		rAudioRst;
+//
+reg 		rVtbSystemRst;
+reg 		rVtbVideoRst;
+reg 		rVtbSceneFrameRst;
+//
+reg 		rRamSrcRst;
+reg 		rRamDstRst;
+reg 		rDmaEn;
+//
 task system_reset();
 begin
-	rSysRst 		<= 1'b1;
-	rAudioRst 		<= 1'b1;
-	rVtbSystemRst 	<= 1'b1;
-	rVtbVideoRst 	<= 1'b1;
-	rRamSrcRst		<= 1'b1;
-	rRamDstRst		<= 1'b1;
-	rDmaEn  		<= 1'b0;
+	rSysRst 			<= 1'b1;
+	rAudioRst 			<= 1'b1;
+	rVtbSystemRst 		<= 1'b1;
+	rVtbVideoRst 		<= 1'b1;
+	rVtbSceneFrameRst 	<= 1'b1;
+	rRamSrcRst			<= 1'b1;
+	rRamDstRst			<= 1'b1;
+	rDmaEn  			<= 1'b0;
 	#(lpAudioClkCycle * 4);
-	rAudioRst 		<= 1'b0;
-	rSysRst 		<= 1'b0;
+	rAudioRst 			<= 1'b0;
+	rSysRst 			<= 1'b0;
 	#(lpSysClkCycle * 10);
-	rDmaEn  		<= 1'b1;
-	rVtbSystemRst 	<= 1'b0;
-	rRamSrcRst		<= 1'b0;
-	rRamDstRst		<= 1'b0;
-	#(lpSysClkCycle * 10);
-	rVtbVideoRst 	<= 1'b0;
+	rDmaEn  			<= 1'b1;
+	rVtbSystemRst 		<= 1'b0;
+	rRamSrcRst			<= 1'b0;
+	rRamDstRst			<= 1'b0;
+	rVtbSceneFrameRst	<= 1'b0;
+	#(lpSysClkCycle * 50);
+	rVtbVideoRst 		<= 1'b0;
 end
 endtask
 
@@ -151,7 +153,7 @@ wire 							wSUfiRdyRam;	// Master に対する Ready 信号
 //----------------------------------------------------------
 localparam  lpHdisplayWidth	= 11;
 localparam	lpVdisplayWidth	= 11;
-localparam	lpHdisplay		= 200;
+localparam	lpHdisplay		= 100;
 localparam	lpHfront		= 8;
 localparam	lpHback			= 43;
 localparam	lpHpulse		= 30;
@@ -199,7 +201,8 @@ VideoTxUnit #(
 	.pColorDepth		(lpColorDepth),
 	.pDualClkFifoDepth	(lpDualClkFifoDepth),
 	.pDmaFifoDepth		(lpDmaFifoDepth),
-	.pFifoDepthOverride	("yes")
+	.pFifoDepthOverride	("yes"),
+	.pTestBencth 		("yes")
 ) VIDEO_TX_UNIt (
 	.oTftColorR			(wTftColorR[7:4]),
 	.oTftColorG			(wTftColorG[7:4]),
@@ -253,10 +256,10 @@ VideoTxUnit #(
 	.iMapInfoVd			(0),
 	//
 	.iSceneColor		(16'h0fff),
-	.iSceneFrameTiming	(7'd30),
-	.iSceneFrameAddEn	(0),
+	.iSceneFrameTiming	(7'd0),
+	.iSceneFrameAddEn	(1),
 	.iSceneFrameSubEn	(0),
-	.iSceneFrameRst		(0),
+	.iSceneFrameRst		(rVtbSceneFrameRst),
 	.oSceneAlphaMax		(),
 	.oSceneAlphaMin		(),
 	//
@@ -482,17 +485,16 @@ wire wSaveEnd;
 BmpFileSaver #(
 	.pRawFileSave 	(lpRawFileSave),
 	.pHdisplay		(lpHdisplay),
-	.pVdisplay		(lpVdisplay),
-	.pBmpImageSize	(0)
-) RAW_FILE_SAVER (
-	.iColorR	(wTftColorR),
-	.iColorG	(wTftColorG),
-	.iColorB	(wTftColorB),
-	.iVde		(wTftDe),
-	.iAFE		(wAFE),
-	.oSaveEnd	(wSaveEnd),
-	.iRst		(rVtbVideoRst),
-	.iClk		(wVideoClk)
+	.pVdisplay		(lpVdisplay)
+) BmpFileSaver (
+	.iColorR		(wTftColorR),
+	.iColorG		(wTftColorG),
+	.iColorB		(wTftColorB),
+	.iVde			(wTftDe),
+	.iAFE			(wAFE),
+	.oSaveEnd		(wSaveEnd),
+	.iRst			(rVtbVideoRst),
+	.iClk			(wVideoClk)
 );
 
 
@@ -513,7 +515,7 @@ endtask
 // TestBench 動作
 // lpFrameCnt 画像出力の回数を指定可能、複数回ループさせて正しく raw 画像が出れば OK
 //-----------------------------------------------------------------------------
-localparam lpFrameCnt = 2;
+localparam lpFrameCnt = 16;
 integer n;
 
 initial

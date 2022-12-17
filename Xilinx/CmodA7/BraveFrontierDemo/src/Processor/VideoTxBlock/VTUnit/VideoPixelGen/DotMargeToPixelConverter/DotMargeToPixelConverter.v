@@ -7,7 +7,8 @@
 module DotMargeToPixelConverter #(
 	parameter						pColorDepth		= 16,
 	parameter 						pFifoDepth		= 16,
-	parameter 						pFifoBitWidth	= 16
+	parameter 						pFifoBitWidth	= 16,
+	parameter						pFifoFastOutValue = 10
 )(
 	// Internal Port
     input  [pColorDepth-1:0]		iField,
@@ -36,50 +37,33 @@ module DotMargeToPixelConverter #(
 //-----------------------------------------------------------------------------
 // オーバーレイ処理
 //-----------------------------------------------------------------------------
-wire [pColorDepth-1:0]	wSrcPixel;
+wire [pColorDepth-1:0]	wDstPixel;
 wire 					wWe;
 
-// OverlayMarge #(
-// 	.pDspUsed		("yes"),
-// 	.pColorDepth	(pColorDepth)
-// ) OverlayMarge (
-// 	.iSrcPixel		(iVpgDemo),
-// 	.iOverlayPixel	(iSceneChange),
-// 	.iWe			(iEds),
-// 	.oDstPixel		(wSrcPixel),
-// 	.oWe			(wWe),
-// 	.iRst			(iRst),
-// 	.iClk			(iClk)
-// );
+OverlayMerge #(
+	.pDspUsed		("yes"),
+	.pColorDepth	(pColorDepth)
+) OverlayMerge (
+	.iSrcPixel		(iVpgDemo),
+	.iOverlayPixel	(iSceneChange),
+	.iWe			(iEds),
+	.oDstPixel		(wDstPixel),
+	.oWe			(wWe),
+	.iRst			(iRst),
+	.iClk			(iClk)
+);
 
 
 //-----------------------------------------------------------------------------
 // 他の DotGenerator とタイミングを合わせるため FIFO 経由で出力データの制御を行う
 //-----------------------------------------------------------------------------
-fifoController #(
-	.pFifoDepth		(pFifoDepth),
-	.pFifoBitWidth	(pFifoBitWidth)
-) InstDotMargeToPixelConverterFifo (
-	// src side
-	.iWd			(iVpgDemo),
-	.iWe			(iEds),
-	.oFull			(oFull),
-	// dst side
-	.oRd			(oDd),
-	.oRvd			(oVdd),
-	.iRe			(iEdd),
-	.oEmp			(oEmp),
-	//
-	.iRst			(iRst),
-	.iClk			(iClk)
-);
 // fifoController #(
 // 	.pFifoDepth		(pFifoDepth),
 // 	.pFifoBitWidth	(pFifoBitWidth)
 // ) InstDotMargeToPixelConverterFifo (
 // 	// src side
-// 	.iWd			(wSrcPixel),
-// 	.iWe			(wWe),
+// 	.iWd			(iVpgDemo),
+// 	.iWe			(iEds),
 // 	.oFull			(oFull),
 // 	// dst side
 // 	.oRd			(oDd),
@@ -90,6 +74,24 @@ fifoController #(
 // 	.iRst			(iRst),
 // 	.iClk			(iClk)
 // );
+fifoControllerLutRam #(
+	.pFifoDepth			(pFifoDepth),
+	.pFifoBitWidth		(pFifoBitWidth),
+	.pFifoFastOutValue	(pFifoFastOutValue)
+) fifoControllerLutRam (
+	// src side
+	.iWd			(wDstPixel),
+	.iWe			(wWe),
+	.oFull			(oFull),
+	// dst side
+	.oRd			(oDd),
+	.oRVd			(oVdd),
+	.iRe			(iEdd),
+	.oEmp			(oEmp),
+	//
+	.iRst			(iRst),
+	.iClk			(iClk)
+);
 
 
 endmodule

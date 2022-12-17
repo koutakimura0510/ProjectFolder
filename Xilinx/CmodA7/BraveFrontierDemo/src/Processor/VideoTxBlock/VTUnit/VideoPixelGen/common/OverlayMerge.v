@@ -6,7 +6,7 @@ Author  kimura
 22-12-10:並列処理で Overlay 計算を行う場合のために、Src 側の Alpha値を含んだデータを出力するように変更
 
 */
-module OverlayMarge #(
+module OverlayMerge #(
 	// variable
 	parameter						pDspUsed	= "no",		// "yes" の場合 Dsp 6つ使用
 	parameter						pColorDepth	 = 16,
