@@ -260,7 +260,7 @@ PixelDrawPosition #(
 //-----------------------------------------------------------------------------
 // Scene Draw
 //-----------------------------------------------------------------------------
-localparam 				lpSceneChangeFifoDepth = 16;
+localparam 				lpSceneChangeFifoDepth = 512;
 
 reg 					qSceneChangeEds;
 wire 					wSceneChangeFull;
@@ -304,7 +304,7 @@ end
 //-----------------------------------------------------------------------------
 // デモンストレーション
 //-----------------------------------------------------------------------------
-localparam 				lpVpgDemoGenFifoDepth = 16;
+localparam 				lpVpgDemoGenFifoDepth = 512;
 //
 reg 					qVpgDemoEds;
 wire 					wVpgDemoFull;
@@ -350,7 +350,7 @@ end
 // pFifoFastOutValue パラメータで調整を行う。
 // このとき、FIFO Depth のパラメータ設定には十分余裕を持つこととする。
 //-----------------------------------------------------------------------------
-localparam lpDotMargeToPixelConverterFifoDepth = 16;
+localparam lpDotMargeToPixelConverterFifoDepth = 512;
 
 wire [pOutColorDepth-1:0] wPixelMargeDd;		assign oPixel 	= wPixelMargeDd;
 wire  wPixelMargeVdd;							assign oWEd 	= wPixelMargeVdd;

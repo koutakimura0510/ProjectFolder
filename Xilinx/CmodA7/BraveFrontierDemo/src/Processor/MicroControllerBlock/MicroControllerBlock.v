@@ -85,20 +85,20 @@ wire [31:0] 				wMcbCsrWd;
 wire [pBusAdrsBit-1:0] 		wMcbCsrAdrs;
 wire 						wMcbCsrCke;
 
-microblaze_mcs_0 MCS (
-	.Clk			(iSysClk),
-	.Reset			(iSysRst),
-	.UART_rxd		(iUartRx),
-	.UART_txd		(oUartTx),
-	.GPIO1_tri_i	(wMcbManualRd),
-	.GPIO2_tri_i	(wMUsiRd),
-	.GPIO3_tri_i	({{(32-pBusBlockConnect){1'b0}}, wMUsiREd}),
-	// .GPIO4_tri_i	(0),
-	.GPIO1_tri_o	(wMcbCsrWd),
-	.GPIO2_tri_o	(wMcbCsrAdrs),
-	.GPIO3_tri_o	(wMcbCsrCke)
-	// .GPIO4_tri_o	()
-);
+// microblaze_mcs_0 MCS (
+// 	.Clk			(iSysClk),
+// 	.Reset			(iSysRst),
+// 	.UART_rxd		(iUartRx),
+// 	.UART_txd		(oUartTx),
+// 	.GPIO1_tri_i	(wMcbManualRd),
+// 	.GPIO2_tri_i	(wMUsiRd),
+// 	.GPIO3_tri_i	({{(32-pBusBlockConnect){1'b0}}, wMUsiREd}),
+// 	// .GPIO4_tri_i	(0),
+// 	.GPIO1_tri_o	(wMcbCsrWd),
+// 	.GPIO2_tri_o	(wMcbCsrAdrs),
+// 	.GPIO3_tri_o	(wMcbCsrCke)
+// 	// .GPIO4_tri_o	()
+// );
 
 
 //-----------------------------------------------------------------------------

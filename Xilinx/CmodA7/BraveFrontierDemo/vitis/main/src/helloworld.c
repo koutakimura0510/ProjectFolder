@@ -91,13 +91,13 @@ int main(void)
 	usi_write(0x00000000, 0x00060000);
 	usi_write(0x0000000f, 0x00040010);
 	usi_write(0x0000000e, 0x00040010);
-	wait_time(100000);
+	usi_write(0x00000fff, 0x0004002c);
+	usi_write(0x0000001f, 0x00040030);
+	usi_write(0x00000001, 0x00040034);
+	wait_time(1000);
 	usi_write(0x0000000c, 0x00040010);
 	usi_write(0x0000006f, 0x00040014);
 	//
-	usi_write(0x0000f000, 0x0004002c);
-//	usi_write(0x0000001f, 0x00040030);
-//	usi_write(0x00000001, 0x00040034);
 	//
 
     while (1)
