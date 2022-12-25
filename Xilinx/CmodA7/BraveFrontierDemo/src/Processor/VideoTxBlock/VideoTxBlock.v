@@ -93,11 +93,13 @@ module VideoTxBlock #(
 // Unit
 //-----------------------------------------------------------------------------
 localparam	lpMapInfoBitWidth	= 8;		// MapChip ID の Bit幅
+localparam	lpMapChipRamDepth	= 2048;		// 色サイズに対応した BRAM の最大深さ
+localparam	lpMapChipRamWidth	= fBitWidth(lpMapChipRamDepth);
 //
 localparam 	lpDualClkFifoDepth	= 1024;		// ※極端に Depth が少ないと描画タイミングのずれが起きる。
 localparam 	lpDmaFifoDepth		= 1024;		//   ch の切り替え頻度が多くなることが原因なので、DispSizeX より大きい値を推奨
 localparam 	lpFifoDepthOverride	= "yes";
-//
+// Display
 wire [pHdisplayWidth-1:0] 	wHdisplayCsr;
 wire [pVdisplayWidth-1:0] 	wVdisplayCsr;
 wire [pHdisplayWidth:0]		wHSyncStartCsr;
@@ -110,19 +112,19 @@ wire 						wVtbSystemRstCsr;
 wire 						wVtbVideoRstCsr;
 wire 						wDisplayRstCsr;
 wire [7:0]					wBlDutyRatioCsr;
-//
+// DMA
 wire [pMemAdrsWidth-1:0]	wFbufAdrs1Csr;
 wire [pMemAdrsWidth-1:0]	wFbufAdrs2Csr;
 wire [pMemAdrsWidth-1:0]	wFbufLen1Csr;
 wire [pMemAdrsWidth-1:0]	wFbufLen2Csr;
 wire 						wDmaEnCsr;
-//
+// Map Info
 wire [7:0]					wMapXSizeCsr;
 wire [7:0]					wMapYSizeCsr;
 wire [lpMapInfoBitWidth-1:0]wMapInfoWdCsr;
 wire 						wMapInfoCkeCsr;
 wire 						wMapInfoVdCsr;
-//
+// Scene Change
 wire [pColorDepth-1:0]		wSceneColorCsr;
 wire [6:0]					wSceneFrameTimingCsr;
 wire 						wSceneFrameAddEnCsr;
@@ -130,6 +132,11 @@ wire 						wSceneFrameSubEnCsr;
 wire						wSceneFrameRstCsr;
 wire						wSceneAlphaMaxCsr;
 wire 						wSceneAlphaMinCsr;
+// Player Draw
+wire 						wPDFeCntCke,
+wire [6:0]					wPDFeUpdateCnt,
+wire [pRamAdrsWidth-1:0]	wPDRadrsNext,
+wire						wPDRst,
 //
 wire 						wFe;
 
@@ -145,10 +152,14 @@ VideoTxUnit #(
 	//
 	.pColorDepth		(pColorDepth),
 	//
+	.pMapChipRamDepth	(lpMapChipRamDepth),
+	.pMapChipRamWidth	(lpMapChipRamWidth),
+	//
 	.pDualClkFifoDepth	(lpDualClkFifoDepth),
 	.pDmaFifoDepth		(lpDmaFifoDepth),
 	.pFifoDepthOverride	(lpFifoDepthOverride)
 ) VideoTxUnit (
+	// GPIO
 	.oTftColorR			(oTftColorR),
 	.oTftColorG			(oTftColorG),
 	.oTftColorB			(oTftColorB),
@@ -158,7 +169,7 @@ VideoTxUnit #(
 	.oTftDe				(oTftDe),
 	.oTftBackLight		(oTftBackLight),
 	.oTftRst			(oTftRst),
-	//
+	// Master Ufi
 	.iMUfiRd			(iMUfiRd),
 	.iMUfiREd			(iMUfiREd),
 	.oMUfiWd			(oMUfiWd),
@@ -168,11 +179,11 @@ VideoTxUnit #(
 	.oMUfiVd			(oMUfiVd),
 	.oMUfiCmd			(oMUfiCmd),
 	.iMUfiRdy			(iMUfiRdy),
-	//
+	// Slave Ufi
 	.iSUfiWd			(iSUfiWd),
 	.iSUfiAdrs			(iSUfiAdrs),
 	.iSUfiWEd			(iSUfiWEd),
-	//
+	// Display
 	.iHdisplay			(wHdisplayCsr),
 	.iVdisplay			(wVdisplayCsr),
 	.iHSyncStart		(wHSyncStartCsr),
@@ -181,24 +192,24 @@ VideoTxUnit #(
 	.iVSyncStart		(wVSyncStartCsr),
 	.iVSyncEnd			(wVSyncEndCsr),
 	.iVSyncMax			(wVSyncMaxCsr),
-	//
+	// Video System Rst
 	.iVtbSystemRst		(wVtbSystemRstCsr),
 	.iVtbVideoRst		(wVtbVideoRstCsr),
 	.iDisplayRst		(wDisplayRstCsr),
 	.iBlDutyRatio		(wBlDutyRatioCsr),
-	//
+	// DMA
 	.iFbufAdrs1			(wFbufAdrs1Csr),
 	.iFbufAdrs2			(wFbufAdrs2Csr),
 	.iFbufLen1			(wFbufLen1Csr),
 	.iFbufLen2			(wFbufLen2Csr),
 	.iDmaEn				(wDmaEnCsr),
-	//
+	// Map Info
 	.iMapXSize			(wMapXSizeCsr),
 	.iMapYSize			(wMapYSizeCsr),
 	.iMapInfoWd			(wMapInfoWdCsr),
 	.iMapInfoCke		(wMapInfoCkeCsr),
 	.iMapInfoVd			(wMapInfoVdCsr),
-	//
+	// SceneChange
 	.iSceneColor		(wSceneColorCsr),
 	.iSceneFrameTiming	(wSceneFrameTimingCsr),
 	.iSceneFrameAddEn	(wSceneFrameAddEnCsr),
@@ -206,6 +217,11 @@ VideoTxUnit #(
 	.iSceneFrameRst		(wSceneFrameRstCsr),
 	.oSceneAlphaMax		(wSceneAlphaMaxCsr),
 	.oSceneAlphaMin		(wSceneAlphaMinCsr),
+	// Player Draw
+	.iPDFeUpdateCnt		(wPDFeUpdateCnt),
+	.iPDRadrsNext		(wPDRadrsNext),
+	.iPDRst				(wPDRst),
+	.oPDFeCntCke		(wPDFeCntCke),
 	//
 	.iSysClk			(iSysClk),
 	.iVideoClk			(iVideoClk),
@@ -244,6 +260,8 @@ VideoTxCsr #(
 	//
 	.pColorDepth		(pColorDepth),
 	//
+	.pMapChipRamWidth	(pMapChipRamWidth),
+	//
 	.pMapInfoBitWidth	(lpMapInfoBitWidth)
 ) VideoTxCsr (
 	.oSUsiRd			(oSUsiRd),
@@ -251,6 +269,7 @@ VideoTxCsr #(
 	.iSUsiWd			(iSUsiWd),
 	.iSUsiAdrs			(iSUsiAdrs),
 	.iSUsiWCke			(iSUsiWCke),
+	// Display
 	.oHdisplay			(wHdisplayCsr),
 	.oVdisplay			(wVdisplayCsr),
 	.oHSyncStart		(wHSyncStartCsr),
@@ -259,20 +278,24 @@ VideoTxCsr #(
 	.oVSyncStart		(wVSyncStartCsr),
 	.oVSyncEnd			(wVSyncEndCsr),
 	.oVSyncMax			(wVSyncMaxCsr),
+	// Video System Rst
 	.oVtbSystemRst		(wVtbSystemRstCsr),
 	.oVtbVideoRst		(wVtbVideoRstCsr),
 	.oDisplayRst		(wDisplayRstCsr),
 	.oBlDutyRatio		(wBlDutyRatioCsr),
+	// DMA
 	.oFbufAdrs1			(wFbufAdrs1Csr),
 	.oFbufAdrs2			(wFbufAdrs2Csr),
 	.oFbufLen1			(wFbufLen1Csr),
 	.oFbufLen2			(wFbufLen2Csr),
 	.oDmaEn				(wDmaEnCsr),
+	// Map Info
 	.oMapXSize			(wMapXSizeCsr),
 	.oMapYSize			(wMapYSizeCsr),
 	// .oMapInfoWd			(wMapInfoWdCsr),
 	// .oMapInfoCke		(wMapInfoCkeCsr),
 	// .oMapInfoVd			(wMapInfoVdCsr),
+	// Scene Change
 	.oSceneColor		(wSceneColorCsr),
 	.oSceneFrameTiming	(wSceneFrameTimingCsr),
 	.oSceneFrameAddEn	(wSceneFrameAddEnCsr),
@@ -280,6 +303,11 @@ VideoTxCsr #(
 	.oSceneFrameRst		(wSceneFrameRstCsr),
 	.iSceneAlphaMax		(wSceneAlphaMaxCsr),
 	.iSceneAlphaMin		(wSceneAlphaMinCsr),
+	// Player Draw
+	.oPDFeUpdateCnt		(wPDFeUpdateCnt),
+	.oPDRadrsNext		(wPDRadrsNext),
+	.oPDRst				(wPDRst),
+	.iPDFeCntCke		(wPDFeCntCke),
 	//
 	.iSysClk			(iSysClk),
 	.iSysRst			(iSysRst)
@@ -306,3 +334,32 @@ endgenerate
 
 
 endmodule
+
+//-----------------------------------------------------------------------------
+// endmodule
+//-----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+// MSB の Bitを検出
+//-----------------------------------------------------------------------------
+function[  7:0]	fBitWidth;
+    input [31:0] iVAL;
+    integer			i;
+
+    begin
+    // fBitWidth = 1;
+        for (i = 0; i < 32; i = i+1 )
+        begin
+            if (iVAL[i]) 
+            begin
+                fBitWidth = i+1;
+            end
+        end
+
+        if (fBitWidth != 1)
+        begin
+            fBitWidth = fBitWidth - 1;
+        end
+    end
+endfunction

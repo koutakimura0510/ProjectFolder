@@ -35,6 +35,8 @@ module VideoTxCsr #(
     parameter       				pVpulseWidth	= 5,
 	//
 	parameter						pColorDepth		= 16,
+	// MapChip BRAM Depth
+	parameter						pMapChipRamWidth= 10,
 	//
 	parameter						pMapInfoBitWidth = 8
 )(
@@ -77,6 +79,11 @@ module VideoTxCsr #(
     output                     		oSceneFrameRst,
 	input							iSceneAlphaMax,
 	input 							iSceneAlphaMin,
+	// Csr Player Draw
+	output 	[6:0]					oPDFeUpdateCnt,
+	output 	[pMapChipRamWidth-1:0]	oPDRadrsNext,
+	output 							oPDRst,
+	input 							iPDFeCntCke,
     // CLK Reset
     input           				iSysRst,
     input           				iSysClk
@@ -129,18 +136,41 @@ reg [pVdisplayWidth:0]		rVSyncMax;			assign oVSyncMax 	= rVSyncMax;		// アク�
 reg [ 7:0]					rMapXSize;			assign oMapXSize	= rMapXSize;		// 現在のマップの最大横幅 / 最大255マス固定
 reg [ 7:0]					rMapYSize;			assign oMapYSize	= rMapYSize;		// 現在のマップの最大縦幅 / 最大255マス固定
 //
-reg [pColorDepth-1:0]		rSceneColor;		assign oSceneColor			= rSceneColor;
-reg [6:0]					rSceneFrameTiming;	assign oSceneFrameTiming	= rSceneFrameTiming;
-reg 						rSceneFrameAddEn;	assign oSceneFrameAddEn		= rSceneFrameAddEn;
-reg 						rSceneFrameSubEn;	assign oSceneFrameSubEn		= rSceneFrameSubEn;
-reg 						rSceneFrameRst;		assign oSceneFrameRst		= rSceneFrameRst;
+reg [pColorDepth-1:0]		rSceneColor;		assign oSceneColor			= rSceneColor;			// 描画色
+reg [6:0]					rSceneFrameTiming;	assign oSceneFrameTiming	= rSceneFrameTiming;	// SceneChange の更新速度,fps基準
+reg 						rSceneFrameAddEn;	assign oSceneFrameAddEn		= rSceneFrameAddEn;		// SceneChange Add Start
+reg 						rSceneFrameSubEn;	assign oSceneFrameSubEn		= rSceneFrameSubEn;		// SceneChange Sub Start
+reg 						rSceneFrameRst;		assign oSceneFrameRst		= rSceneFrameRst;		// local module Rst 信号
 reg 						rSceneAlphaMax;
 reg 						rSceneAlphaMin;
 //
-reg 						qCsrWCke00, qCsrWCke04, qCsrWCke08, qCsrWCke0c;
-reg 						qCsrWCke10, qCsrWCke14, qCsrWCke18, qCsrWCke1c;
-reg 						qCsrWCke20, qCsrWCke24, qCsrWCke28, qCsrWCke2c;
-reg 						qCsrWCke30, qCsrWCke34, qCsrWCke38, qCsrWCke3c;
+reg [6:0]					rPDFeUpdateCnt;		assign oPDFeUpdateCnt		= rPDFeUpdateCnt;		// プレイヤー描画アニメーション更新速度. fps基準
+reg [pRamAdrsWidth-1:0]		rPDRadrsNext;		assign oPDRadrsNext			= rPDRadrsNext;			// プレイヤー描画アドレス
+reg 						rPDRst;				assign oPDRst				= rPDRst;				// local module rst 信号
+reg 						rPDFeCntCke;
+//
+reg 						qCsrWCke0000, qCsrWCke0004, qCsrWCke0008, qCsrWCke000c;
+reg 						qCsrWCke0010, qCsrWCke0014, qCsrWCke0018, qCsrWCke001c;
+//
+reg 						qCsrWCke0100, qCsrWCke0104, qCsrWCke0108, qCsrWCke010c;
+reg 						qCsrWCke0110, qCsrWCke0114, qCsrWCke0118, qCsrWCke011c;
+reg 						qCsrWCke0120, qCsrWCke0124, qCsrWCke0128, qCsrWCke012c;
+reg 						qCsrWCke0130, qCsrWCke0134, qCsrWCke0138, qCsrWCke013c;
+//
+reg 						qCsrWCke0200, qCsrWCke0204, qCsrWCke0208, qCsrWCke020c;
+reg 						qCsrWCke0210, qCsrWCke0214, qCsrWCke0218, qCsrWCke021c;
+reg 						qCsrWCke0220, qCsrWCke0224, qCsrWCke0228, qCsrWCke022c;
+reg 						qCsrWCke0230, qCsrWCke0234, qCsrWCke0238, qCsrWCke023c;
+//
+reg 						qCsrWCke0300, qCsrWCke0304, qCsrWCke0308, qCsrWCke030c;
+reg 						qCsrWCke0310, qCsrWCke0314, qCsrWCke0318, qCsrWCke031c;
+reg 						qCsrWCke0320, qCsrWCke0324, qCsrWCke0328, qCsrWCke032c;
+reg 						qCsrWCke0330, qCsrWCke0334, qCsrWCke0338, qCsrWCke033c;
+//
+reg 						qCsrWCke0400, qCsrWCke0404, qCsrWCke0408, qCsrWCke040c;
+reg 						qCsrWCke0410, qCsrWCke0414, qCsrWCke0418, qCsrWCke041c;
+reg 						qCsrWCke0420, qCsrWCke0424, qCsrWCke0428, qCsrWCke042c;
+reg 						qCsrWCke0430, qCsrWCke0434, qCsrWCke0438, qCsrWCke043c;
 //
 always @(posedge iSysClk)
 begin
@@ -181,56 +211,67 @@ begin
 	end
 	else
 	begin
-		{rVdisplay,rHdisplay}	<= qCsrWCke00 ? {iSUsiWd[pVdisplayWidth-1:0],	iSUsiWd[pHdisplayWidth-1:0]} 	: {rVdisplay,rHdisplay};
-		{rVback,rHback		}	<= qCsrWCke04 ? {iSUsiWd[pVbackWidth-1:0],		iSUsiWd[pHbackWidth-1:0]}		: {rVback,rHback};
-		{rVfront,rHfront	}	<= qCsrWCke08 ? {iSUsiWd[pVfrontWidth-1:0],		iSUsiWd[pHfrontWidth-1:0]} 		: {rVfront,rHfront};
-		{rVpulse,rHpulse	}	<= qCsrWCke0c ? {iSUsiWd[pVpulseWidth-1:0],		iSUsiWd[pHpulseWidth-1:0]}		: {rVpulse,rHpulse};
-		//
-		rVtbSystemRst			<= qCsrWCke10 ? iSUsiWd[0:0] 					: rVtbSystemRst;
-		rVtbVideoRst			<= qCsrWCke10 ? iSUsiWd[1:1] 					: rVtbVideoRst;
-		rDisplayRst				<= qCsrWCke10 ? iSUsiWd[2:2] 					: rDisplayRst;
-		rDmaEn					<= qCsrWCke10 ? iSUsiWd[3:3] 					: rDmaEn;
-		rBlDutyRatio			<= qCsrWCke14 ? iSUsiWd[7:0] 					: rBlDutyRatio;
-		rFbufAdrs1				<= qCsrWCke18 ? iSUsiWd[pMemAdrsWidth-1:0] 		: rFbufAdrs1;
-		rFbufAdrs2				<= qCsrWCke1c ? iSUsiWd[pMemAdrsWidth-1:0] 		: rFbufAdrs2;
-		rFbufLen1				<= qCsrWCke20 ? iSUsiWd[pMemAdrsWidth-1:0] 		: rFbufLen1;
-		rFbufLen2				<= qCsrWCke24 ? iSUsiWd[pMemAdrsWidth-1:0] 		: rFbufLen2;
-		//
-		{rMapXSize, rMapYSize}	<= qCsrWCke28 ? iSUsiWd[15:0] 					: {rMapXSize, rMapYSize};
-		//
-		rSceneColor				<= qCsrWCke2c ? iSUsiWd[pColorDepth-1:0]		: rSceneColor;
-		rSceneFrameTiming		<= qCsrWCke30 ? iSUsiWd[6:0] 					: rSceneFrameTiming;
-		rSceneFrameAddEn		<= qCsrWCke34 ? iSUsiWd[0:0]					: rSceneFrameAddEn;
-		rSceneFrameSubEn		<= qCsrWCke34 ? iSUsiWd[1:1]					: rSceneFrameSubEn;
-		rSceneFrameRst			<= qCsrWCke34 ? iSUsiWd[2:2]					: rSceneFrameRst;
-		//
-		rHSyncStart 			<= rHdisplay + rHfront;
-		rHSyncEnd				<= rHdisplay + rHfront + rHpulse - 1'b1;
-		rHSyncMax				<= rHdisplay + rHfront + rHpulse + rHback - 1'b1;
-		rVSyncStart 			<= rVdisplay + rVfront;
-		rVSyncEnd				<= rVdisplay + rVfront + rVpulse - 1'b1;
-		rVSyncMax				<= rVdisplay + rVfront + rVpulse + rVback - 1'b1;
-		//
-		{rSceneAlphaMax,rSceneAlphaMin}	<= {iSceneAlphaMax, iSceneAlphaMin};
+		// System Rst	0x0000 ~ 0x000c
+		rVtbSystemRst			<= qCsrWCke0000 ? iSUsiWd[0:0] 					: rVtbSystemRst;
+		rVtbVideoRst			<= qCsrWCke0000 ? iSUsiWd[1:1] 					: rVtbVideoRst;
+		rDisplayRst				<= qCsrWCke0000 ? iSUsiWd[2:2] 					: rDisplayRst;
+		// Display		0x0010 ~ 0x00fc
+		{rVdisplay,rHdisplay}	<= qCsrWCke0010 ? {iSUsiWd[pVdisplayWidth-1:0],	iSUsiWd[pHdisplayWidth-1:0]} 	: {rVdisplay,rHdisplay};
+		{rVback,rHback		}	<= qCsrWCke0014 ? {iSUsiWd[pVbackWidth-1:0],	iSUsiWd[pHbackWidth-1:0]}		: {rVback,rHback};
+		{rVfront,rHfront	}	<= qCsrWCke0018 ? {iSUsiWd[pVfrontWidth-1:0],	iSUsiWd[pHfrontWidth-1:0]} 		: {rVfront,rHfront};
+		{rVpulse,rHpulse	}	<= qCsrWCke001c ? {iSUsiWd[pVpulseWidth-1:0],	iSUsiWd[pHpulseWidth-1:0]}		: {rVpulse,rHpulse};
+		rHSyncStart 			<= rHdisplay + rHfront;								//20
+		rVSyncStart 			<= rVdisplay + rVfront;								//20
+		rHSyncEnd				<= rHdisplay + rHfront + rHpulse - 1'b1;			//24
+		rVSyncEnd				<= rVdisplay + rVfront + rVpulse - 1'b1;			//24
+		rHSyncMax				<= rHdisplay + rHfront + rHpulse + rHback - 1'b1;	//2c
+		rVSyncMax				<= rVdisplay + rVfront + rVpulse + rVback - 1'b1;	//2c
+		// DMA			0x0100 ~ 0x01fc
+		rDmaEn					<= qCsrWCke0100 ? iSUsiWd[0:0] 					: rDmaEn;
+		rBlDutyRatio			<= qCsrWCke0104 ? iSUsiWd[7:0] 					: rBlDutyRatio;
+		rFbufAdrs1				<= qCsrWCke0108 ? iSUsiWd[pMemAdrsWidth-1:0] 	: rFbufAdrs1;
+		rFbufAdrs2				<= qCsrWCke010c ? iSUsiWd[pMemAdrsWidth-1:0] 	: rFbufAdrs2;
+		rFbufLen1				<= qCsrWCke0110 ? iSUsiWd[pMemAdrsWidth-1:0] 	: rFbufLen1;
+		rFbufLen2				<= qCsrWCke0114 ? iSUsiWd[pMemAdrsWidth-1:0] 	: rFbufLen2;
+		// Map Info		0x0200 ~ 0x02fc
+		{rMapXSize, rMapYSize}	<= qCsrWCke0200 ? iSUsiWd[15:0]					: {rMapXSize, rMapYSize};
+		// Scene Change	0x0300 ~ 0x03fc
+		rSceneColor				<= qCsrWCke0300 ? iSUsiWd[pColorDepth-1:0]		: rSceneColor;
+		rSceneFrameTiming		<= qCsrWCke0304 ? iSUsiWd[6:0] 					: rSceneFrameTiming;
+		rSceneFrameAddEn		<= qCsrWCke0308 ? iSUsiWd[0:0]					: rSceneFrameAddEn;
+		rSceneFrameSubEn		<= qCsrWCke0308 ? iSUsiWd[1:1]					: rSceneFrameSubEn;
+		rSceneFrameRst			<= qCsrWCke0308 ? iSUsiWd[2:2]					: rSceneFrameRst;
+		{rSceneAlphaMax,rSceneAlphaMin}	<= {iSceneAlphaMax, iSceneAlphaMin};	// 030c
+		// Player Draw	0x0400 ~ 0x4fc
+		rPDRst					<= qCsrWCke0400 ? iSUsiWd[0:0]					: rPDRst;
+		rPDFeUpdateCnt			<= qCsrWCke0404 ? iSUsiWd[6:0]					: rPDFeUpdateCnt;
+		rPDRadrsNext			<= qCsrWCke0408 ? iSUsiWd[pMapChipRamWidth-1:0]	: rPDRadrsNext;
+		rPDFeCntCke				<= &{rSUsiREd,qCsrWCke040c} ? 1'b0 :  iPDFeCntCke;
 	end
 end
 
 always @*
 begin
-	qCsrWCke00 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
-	qCsrWCke04 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
-	qCsrWCke08 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
-	qCsrWCke0c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h000c});
-	qCsrWCke10 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0010});
-	qCsrWCke14 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
-	qCsrWCke18 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0018});
-	qCsrWCke1c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h001c});
-	qCsrWCke20 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0020});
-	qCsrWCke24 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0024});
-	qCsrWCke28 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0028});
-	qCsrWCke2c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h002C});
-	qCsrWCke30 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0030});
-	qCsrWCke34 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0034});
+	qCsrWCke0000 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
+	//
+	qCsrWCke0010 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0010});
+	qCsrWCke0014 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
+	qCsrWCke0018 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0018});
+	qCsrWCke001c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h001c});
+	qCsrWCke0100 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0100});
+	qCsrWCke0104 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0104});
+	qCsrWCke0108 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0108});
+	qCsrWCke010c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h010c});
+	qCsrWCke0110 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0110});
+	qCsrWCke0114 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0114});
+	qCsrWCke0200 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0200});
+	qCsrWCke0300 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0300});
+	qCsrWCke0304 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0304});
+	qCsrWCke0308 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0308});
+	qCsrWCke0400 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0400});
+	qCsrWCke0404 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0404});
+	qCsrWCke0408 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0408});
+	qCsrWCke040c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h040C});
 end
 
 
@@ -252,25 +293,29 @@ begin
 	begin
 		// {{(32 - パラメータ名	){1'b0}}, レジスタ名} -> パラメータ可変に対応し 0 で埋められるように設定
 		case (iSUsiAdrs[pCsrActiveWidth - 1:0])
-			'h0000:		rSUsiRd	<= {{(16 - pVdisplayWidth	){1'b0}}, rVdisplay, 	{(16 - pHdisplayWidth	){1'b0}}, rHdisplay		};
-			'h0004:		rSUsiRd	<= {{(16 - pVbackWidth		){1'b0}}, rVback,		{(16 - pHbackWidth		){1'b0}}, rHback		};
-			'h0008:		rSUsiRd	<= {{(16 - pVfrontWidth		){1'b0}}, rVfront,		{(16 - pHfrontWidth		){1'b0}}, rHfront		};
-			'h000c:		rSUsiRd	<= {{(16 - pVpulseWidth		){1'b0}}, rVpulse,		{(16 - pHpulseWidth		){1'b0}}, rHpulse		};
-			'h0010:		rSUsiRd	<= {{(32 - 4				){1'b0}}, rDmaEn,rDisplayRst,rVtbVideoRst,rVtbSystemRst					};
-			'h0014:		rSUsiRd	<= {{(32 - 8				){1'b0}}, rBlDutyRatio													};
-			'h0018:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufAdrs1													};
-			'h001c:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufAdrs2													};
-			'h0020:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufLen1														};
-			'h0024:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufLen2														};
-			'h0028:		rSUsiRd	<= {{(32 - 16				){1'b0}}, rMapXSize, rMapYSize											};
-			'h002c:		rSUsiRd	<= {{(32 - pColorDepth		){1'b0}}, rSceneColor													};
-			'h0030:		rSUsiRd	<= {{(32 - 7				){1'b0}}, rSceneFrameTiming												};
-			'h0034:		rSUsiRd	<= {{(32 - 3				){1'b0}}, rSceneFrameRst,rSceneFrameSubEn,rSceneFrameAddEn				};
-			//
-			'h3000:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncStart,{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncStart	};
-			'h3004:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncEnd,	{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncEnd	};
-			'h3008:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncMax,	{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncMax	};
-			'h4000:		rSUsiRd	<= {{(32 - 2)					{1'b0}}, {rSceneAlphaMax,rSceneAlphaMin}							};
+			'h0000:		rSUsiRd	<= {{(32 - 3				){1'b0}}, rDisplayRst,rVtbVideoRst,rVtbSystemRst						};
+			'h0010:		rSUsiRd	<= {{(16 - pVdisplayWidth	){1'b0}}, rVdisplay, 	{(16 - pHdisplayWidth	){1'b0}}, rHdisplay		};
+			'h0014:		rSUsiRd	<= {{(16 - pVbackWidth		){1'b0}}, rVback,		{(16 - pHbackWidth		){1'b0}}, rHback		};
+			'h0018:		rSUsiRd	<= {{(16 - pVfrontWidth		){1'b0}}, rVfront,		{(16 - pHfrontWidth		){1'b0}}, rHfront		};
+			'h001c:		rSUsiRd	<= {{(16 - pVpulseWidth		){1'b0}}, rVpulse,		{(16 - pHpulseWidth		){1'b0}}, rHpulse		};
+			'h0020:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncStart,{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncStart	};
+			'h0024:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncEnd,	{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncEnd	};
+			'h0028:		rSUsiRd	<= {{(16 - (pVdisplayWidth +1)){1'b0}}, rVSyncMax,	{(16 - (pHdisplayWidth +1)){1'b0}}, rHSyncMax	};
+			'h0100:		rSUsiRd	<= {{(32 - 1				){1'b0}}, rDmaEn														};
+			'h0104:		rSUsiRd	<= {{(32 - 8				){1'b0}}, rBlDutyRatio													};
+			'h0108:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufAdrs1													};
+			'h010c:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufAdrs2													};
+			'h0110:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufLen1														};
+			'h0114:		rSUsiRd	<= {{(32 - pMemAdrsWidth	){1'b0}}, rFbufLen2														};
+			'h0200:		rSUsiRd	<= {{(32 - 16				){1'b0}}, rMapXSize, rMapYSize											};
+			'h0300:		rSUsiRd	<= {{(32 - pColorDepth		){1'b0}}, rSceneColor													};
+			'h0304:		rSUsiRd	<= {{(32 - 7				){1'b0}}, rSceneFrameTiming												};
+			'h0308:		rSUsiRd	<= {{(32 - 3				){1'b0}}, rSceneFrameRst,rSceneFrameSubEn,rSceneFrameAddEn				};
+			'h030c:		rSUsiRd	<= {{(32 - 2				){1'b0}}, {rSceneAlphaMax,rSceneAlphaMin}								};
+			'h0400:		rSUsiRd	<= {{(32 - 1				){1'b0}}, rPDRst														};
+			'h0404:		rSUsiRd	<= {{(32 - 6				){1'b0}}, rPDFeUpdateCnt												};
+			'h0408:		rSUsiRd	<= {{(32 - pMapChipRamWidth	){1'b0}}, rPDRadrsNext													};
+			'h040c:		rSUsiRd	<= {{(32 - 1				){1'b0}}, rPDFeCntCke													};
 			default: 	rSUsiRd <= iSUsiWd;
 		endcase
 	end

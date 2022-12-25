@@ -61,6 +61,9 @@ module VideoPixelGen #(
 	parameter						pMapChipBasicBs		= 4,	// pMapChipBasicSize の サイズで Bit Shiftした時の 幅
 	// Color Depth
 	parameter						pColorDepth			= 16,
+	// FIFO Depth
+	parameter						pMapChipRamDepth	= 2048,	// 色サイズに対応した BRAM の最大深さ
+	parameter						pMapChipRamWidth	= 10,
 	// non valiable
 	parameter						pOutColorDepth		= pColorDepth - (pColorDepth / 4) // alpha値を除いたbit幅
 )(
@@ -69,18 +72,24 @@ module VideoPixelGen #(
 	input [pUfiBusWidth-1:0] 		iSUfiWd,	// 書き込みデータ
 	input [pBusAdrsBit-1:0] 		iSUfiAdrs,	// 書き込みアドレス
 	input 							iSUfiWEd,	// 書き込み命令
-	// Csr Input
+	// Csr Display
 	input	[pHdisplayWidth-1:0]	iHdisplay,
 	input	[pVdisplayWidth-1:0]	iVdisplay,
 	// input	[7:0]					iMapXSize,
 	// input	[7:0]					iMapYSize,
-    input	[pColorDepth-1:0]		iSceneColor,		// 描画色
-	input 	[6:0]					iSceneFrameTiming,	// SceneChange の更新速度,fps基準
-	input 							iSceneFrameAddEn,	// SceneChange Add Start
-	input 							iSceneFrameSubEn,	// SceneChange Sub Start
+	// Csr SceneChange
+    input	[pColorDepth-1:0]		iSceneColor,
+	input 	[6:0]					iSceneFrameTiming,
+	input 							iSceneFrameAddEn,
+	input 							iSceneFrameSubEn,
     input                     		iSceneFrameRst,
 	output							oSceneAlphaMax,
 	output 							oSceneAlphaMin,
+	// Csr Player Draw
+	input 	[6:0]					iPDFeUpdateCnt,
+	input 	[pMapChipRamWidth-1:0]	iPDRadrsNext,
+	input 							iPDRst,
+	output 							oPDFeCntCke,
 	// 2nd Stage Output
 	output	[pOutColorDepth-1:0]	oPixel,
     output                       	oWEd,
@@ -154,7 +163,7 @@ wire [pHdisplayWidth-1:0] 	wPixelDrawHpos;
 wire [pVdisplayWidth-1:0] 	wPixelDrawVpos;
 wire [pHdisplayWidth-1:4] 	wInfoHposBs;
 wire [pVdisplayWidth-1:4] 	wInfoVposBs;
-wire 						wAFE;
+wire 						wAFe;
 reg 						qPixelDrawPositionCke;
 
 PixelDrawPosition #(
@@ -168,7 +177,7 @@ PixelDrawPosition #(
 	.oVpos					(wPixelDrawVpos),
 	.oHposBs				(wInfoHposBs),
 	.oVposBs				(wInfoVposBs),
-	.oAFE					(wAFE),
+	.oAFE					(wAFe),
 	.iRst					(iRst),
 	.iCke					(qPixelDrawPositionCke),
 	.iClk					(iClk)
@@ -243,8 +252,32 @@ PixelDrawPosition #(
 // NPC Draw
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-// Player Draw
+// Player Draw (以降 PD)
+// 気づいたが、Dot データは BRAM に格納されているので、
+// Enable を Assert すればタイミング制御は容易なのではと思う。
 //-----------------------------------------------------------------------------
+wire [pColorDepth-1:0] 	wPlayerDrawDd;
+
+PlayerDraw #(
+	.pInitFileName			(pInitFileName),
+	.pColorDepth			(pColorDepth),
+	.pRamDepth				(pMapChipRamDepth)
+) PlayerDraw (
+	.oPixel					(wPlayerDrawDd),
+	.iPlayerPixelWd			({pColorDepth{1'b0}}),
+	.iPlayerPixelWe			(1'b0),
+	.iFe					(wAFe),
+	.iPlayerDrawVd			(),
+	.iSrcEn					(),
+	.iPDFeUpdateCnt			(iPDFeUpdateCnt),
+	.iPDRadrsNext			(iPDRadrsNext),
+	.iPDRst					(iPDRst),
+	.oPDFeCntCke			(oPDFeCntCke),
+	.iRst					(iRst),
+	.iClk					(iClk)
+);
+
+
 //-----------------------------------------------------------------------------
 // Object Draw
 //-----------------------------------------------------------------------------
@@ -260,28 +293,14 @@ PixelDrawPosition #(
 //-----------------------------------------------------------------------------
 // Scene Draw
 //-----------------------------------------------------------------------------
-localparam 				lpSceneChangeFifoDepth = 512;
-
-reg 					qSceneChangeEds;
-wire 					wSceneChangeFull;
 wire [pColorDepth-1:0] 	wSceneChangeDd;
-wire 					wSceneChangeVdd;
-reg  					qSceneChangeEdd;
-wire 					wSceneChangeEmp;
 
 SceneChange #(
-	.pColorDepth		(pColorDepth),
-	.pFifoDepth			(lpSceneChangeFifoDepth),
-	.pFifoBitWidth		(pColorDepth)
+	.pColorDepth		(pColorDepth)
 ) SceneChange (
-	.iFe				(wAFE),
+	.iFe				(wAFe),
 	//
-	.iEds				(qSceneChangeEds),
-	.oFull				(wSceneChangeFull),
-	.oDd				(wSceneChangeDd),
-	.oVdd				(wSceneChangeVdd),
-	.iEdd				(qSceneChangeEdd),
-	.oEmp				(wSceneChangeEmp),
+	.oPixel				(wSceneChangeDd),
 	//
 	.iSceneColor		(iSceneColor),
 	.iSceneFrameTiming	(iSceneFrameTiming),
@@ -294,12 +313,6 @@ SceneChange #(
 	.iRst				(iRst),
 	.iClk				(iClk)
 );
-
-always @*
-begin
-	// SceneChange は現在 他のタイミングと合わせれば良い 
-	qSceneChangeEds			<= (~wSceneChangeFull);
-end
 
 //-----------------------------------------------------------------------------
 // デモンストレーション
@@ -324,7 +337,7 @@ VpgDemo #(
 	.iVdisplay			(wVdisplay),
 	.iHpos				(wPixelDrawHpos),
 	.iVpos				(wPixelDrawVpos),
-	.iFe				(wAFE),
+	.iFe				(wAFe),
 	//
 	.iColor				(16'hf0f0),
 	.iEds 				(qVpgDemoEds),
@@ -390,14 +403,17 @@ always @*
 begin
 	// 前段から Write Enable
 	// 前段全ステージで データ転送が可能になった時のみ受け付ける
-	qPixelMargeEds	<= &{wVpgDemoVdd,wSceneChangeVdd};
+	qPixelMargeEds	<= wVpgDemoVdd;
 
 	// 後段からの データ転送要求受付
 	qPixelMargeEdd 	<= (~wPixelMargeEmp) & iEdd;
 
 	// 前段 にデータ受付許可発行
-	qSceneChangeEdd	<= (~wPixelMargeFull);
 	qVpgDemoEdd		<= (~wPixelMargeFull);
 end
 
 endmodule
+
+//-----------------------------------------------------------------------------
+// endmodule
+//-----------------------------------------------------------------------------

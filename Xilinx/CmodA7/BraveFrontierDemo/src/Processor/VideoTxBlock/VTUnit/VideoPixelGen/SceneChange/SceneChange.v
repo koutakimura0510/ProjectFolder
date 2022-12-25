@@ -24,8 +24,6 @@ iSceneFrameRst		= 0
 */
 module SceneChange #(
 	parameter								pColorDepth		= 16,
-	parameter 								pFifoDepth		= 16,
-	parameter 								pFifoBitWidth	= 16,
 	// not
 	parameter								pRGBBitWidth 	= pColorDepth / 4,		// ARGB 一つの要素の Bit幅
 	parameter								pAlphaBitMsb 	= pColorDepth - 1,
@@ -35,12 +33,7 @@ module SceneChange #(
 	// Internal Port
 	input 									iFe,				// frame end
 	//
-	input 									iEds,				// Enable Data Src
-	output 									oFull,				// FIFO Full
-    output 	[pColorDepth-1:0]    			oDd,				// Dest Data
-	output 									oVdd,				// Valid Dest Data 
-	input 									iEdd,				// Enable Data Dest
-	output 									oEmp,				// FIFO Empty
+    output 	[pColorDepth-1:0]    			oPixel,				// Dest Data
 	// Csr
     input	[pColorDepth-1:0]				iSceneColor,		// 描画色
 	input 	[6:0]							iSceneFrameTiming,	// SceneChange の更新速度,fps基準
@@ -58,7 +51,7 @@ module SceneChange #(
 //-----------------------------------------------------------------------------
 // 設定データに基づき、暗転処理を行う。
 //-----------------------------------------------------------------------------
-reg [pColorDepth-1:0] 	rScenePixel;
+reg [pColorDepth-1:0] 	rScenePixel;					assign oPixel 			= rScenePixel;
 reg 					rSceneAlphaMax;					assign oSceneAlphaMax 	= rSceneAlphaMax;
 reg 					rSceneAlphaMin;					assign oSceneAlphaMin 	= rSceneAlphaMin;
 reg [6:0]				rFeCnt;
@@ -87,10 +80,6 @@ begin
 		default:	 	rFeCnt <= rFeCnt;
 	endcase
 
-	if (iSceneFrameRst)	rWe <= 1'b0;
-	else if (qWeCke)	rWe <= 1'b1;
-	else 				rWe <= 1'b0;
-
 	// CSR 保存用にレジスタ出力
 	rSceneAlphaMax	<= qAlphaMax;
 	rSceneAlphaMin	<= qAlphaMin;
@@ -98,35 +87,9 @@ end
 
 always @*
 begin
-	casex ({iSceneFrameSubEn, iSceneFrameAddEn, iEds})
-		'b1x1:			qWeCke <= 1'b1;
-		'bx11:			qWeCke <= 1'b1;
-		default: 		qWeCke <= 1'b0;
-	endcase
 	qFrameUpdateEn 	<= (rFeCnt == iSceneFrameTiming);
 	qAlphaMax		<= (rScenePixel[pAlphaBitMsb:pAlphaBitLsb] == 4'd15);
 	qAlphaMin		<= (rScenePixel[pAlphaBitMsb:pAlphaBitLsb] == 4'd0);
 end
-
-//-----------------------------------------------------------------------------
-// 他の DotGenerator とタイミングを合わせるため FIFO 経由で出力データの制御を行う
-//-----------------------------------------------------------------------------
-fifoController #(
-	.pFifoDepth		(pFifoDepth),
-	.pFifoBitWidth	(pFifoBitWidth)
-) InstDotSquareFifo (
-	// src side
-	.iWd			(rScenePixel),
-	.iWe			(rWe),
-	.oFull			(oFull),
-	// dst side
-	.oRd			(oDd),
-	.oRvd			(oVdd),
-	.iRe			(iEdd),
-	.oEmp			(oEmp),
-	//
-	.iRst			(iRst),
-	.iClk			(iClk)
-);
 
 endmodule

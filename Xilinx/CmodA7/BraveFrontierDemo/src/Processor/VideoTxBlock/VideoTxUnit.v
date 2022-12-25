@@ -19,6 +19,9 @@ module VideoTxUnit #(
 	parameter						pMapChipBasicBs		= 4,	// pMapChipBasicSize の サイズで Bit Shiftした時の 幅
 	// Color Depth ARGB:4444
 	parameter						pColorDepth			= 16,
+	// MapChip BRAM Depth
+	parameter						pMapChipRamDepth	= 2048,
+	parameter						pMapChipRamWidth	= 10,
 	// FIFO Depth
 	parameter						pDualClkFifoDepth 	= 32,
 	parameter						pDmaFifoDepth		= 32,
@@ -85,6 +88,11 @@ module VideoTxUnit #(
     input                     		iSceneFrameRst,
 	output							oSceneAlphaMax,
 	output 							oSceneAlphaMin,
+	// Csr Player Draw
+	input 	[6:0]					iPDFeUpdateCnt,
+	input 	[pRamAdrsWidth-1:0]		iPDRadrsNext,
+	input 							iPDRst,
+	output 							oPDFeCntCke,
     // CLK Reset
     input           				iSysClk,
 	input 							iVideoClk,
@@ -119,7 +127,10 @@ VideoPixelGen #(
 	.pMapChipBasicSize	(pMapChipBasicSize),
 	.pMapChipBasicBs	(pMapChipBasicBs),
 	//
-	.pColorDepth		(pColorDepth)
+	.pColorDepth		(pColorDepth),
+	//
+	.pMapChipRamDepth	(pMapChipRamDepth),
+	.pMapChipRamWidth	(pMapChipRamWidth)
 ) VideoPixelGen (
 	.iSUfiWd			(iSUfiWd),
 	.iSUfiAdrs			(iSUfiAdrs),
@@ -141,6 +152,11 @@ VideoPixelGen #(
 	.iSceneFrameRst		(iSceneFrameRst),
 	.oSceneAlphaMax		(oSceneAlphaMax),
 	.oSceneAlphaMin		(oSceneAlphaMin),
+	//
+	.iPDFeUpdateCnt		(iPDFeUpdateCnt),
+	.iPDRadrsNext		(iPDRadrsNext),
+	.iPDRst				(iPDRst),
+	.oPDFeCntCke		(oPDFeCntCke),
 	//
 	.oPixel				(wDrawPixel),
 	.oWEd				(wDrawPixelWEd),
