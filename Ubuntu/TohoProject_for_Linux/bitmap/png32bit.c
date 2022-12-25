@@ -218,7 +218,13 @@ uint32_t rgb_generate(uint32_t alpha, uint32_t red, uint32_t green, uint32_t blu
  */
 void pixel_generate(void)
 {
-	uint32_t pixel_wid, pixel_hei, type, color_bit, memory_type;
+	uint32_t pixel_wid;
+	uint32_t pixel_hei;
+	uint32_t type;
+	uint32_t color_bit;
+	uint32_t memory_type;
+	uint32_t cut_line;
+	uint32_t cut_line_buff[12];
 	uint8_t *p;
 
 	/* 指定した画像データのアドレスと情報取得 */
@@ -228,6 +234,7 @@ void pixel_generate(void)
 	SDL_UnlockSurface(image);
 
 	/* 画像データの情報出力 */
+	fprintf(stderr, "読み込んだ画像ファイルの Info を出力します。\n");
 	fprintf(stderr, "height   = %d\n", image->h);
 	fprintf(stderr, "width    = %d\n", image->w);
 	fprintf(stderr, "fmt->BytesPerPixel = %dBytes\n", fmt->BytesPerPixel);
@@ -235,33 +242,57 @@ void pixel_generate(void)
 	fprintf(stderr, "\n");
 
 	/* 画像データの切り取り座標とRGB生成パターン選択 */
+	fprintf(stderr, "画像ファイルのデータプロジェクトで使用する RAW 又は dat ファイルを生成します。\n");
+	fprintf(stderr, "なお、不正値を入力した場合のエラーは処理は行っていません。\n");
+	fprintf(stderr, "正しいファイルが生成されませんので注意してください。\n");
+	fprintf(stderr, "\n");
+	fprintf(stderr, "----------------------------------------------\n");
 	fprintf(stderr, "WidthのPixel数を区切る座標をして下さい。\n");
 	fprintf(stderr, "0またはwidth以上の場合、最大値を設定します。\n");
 	scanf("%d", &pixel_wid);
 	fprintf(stderr, "\n");
+	fprintf(stderr, "----------------------------------------------\n");
 	fprintf(stderr, "HeightのPixel数を区切る座標をして下さい。\n");
 	fprintf(stderr, "0またはheight以上の場合、最大値を設定します。\n");
 	scanf("%d", &pixel_hei);
 	fprintf(stderr, "\n");
+	fprintf(stderr, "----------------------------------------------\n");
 	fprintf(stderr, "RGBの生成タイプを指定して下さい。\n");
 	fprintf(stderr, "0 = RBG, 1 = RGB\n");
 	scanf("%d", &type);
 	fprintf(stderr, "\n");
-	fprintf(stderr, "RGBのBit数を選択して下さい\n");
+	fprintf(stderr, "----------------------------------------------\n");
+	fprintf(stderr, "ARGBのBit数を選択して下さい\n");
 	fprintf(stderr, "0 = 4Bit, 1 = 8Bit\n");
 	scanf("%d", &color_bit);
 	fprintf(stderr, "\n");
-	fprintf(stderr, "データの保存先を選択して下さい。\n");
-	fprintf(stderr, "0 = Flash Memory, 1 = Block RAM\n");
+	fprintf(stderr, "----------------------------------------------\n");
+	fprintf(stderr, "データの保存形式を選択して下さい。\n");
+	fprintf(stderr, "0 = Flash Memory, 1 = FPGA Block RAM\n");
 	scanf("%d", &memory_type);
+	fprintf(stderr, "\n");
+	fprintf(stderr, "----------------------------------------------\n");
+	fprintf(stderr, "使用する画像ラインの選択をします。\n");
+	fprintf(stderr, "0 の場合すべてのラインを読み取ります。\n");
+	fprintf(stderr, "左足、立姿、左足の歩行画像 = ID 1,2,3 としたとき、立姿を飛ばしたい場合は 13 と入力してください。 \n");
+	fprintf(stderr, "以降の 4,5,6 ラインも使用する場合は、13456 と入力します。\n");
+	fprintf(stderr, "0 = AllLine, 123456 -> 135 CutLine\n");
+	scanf("%d", &cut_line);
 
-	if ((pixel_hei == 0) || (image->h < pixel_hei))
-	{
+	for (uint8_t i = image->w / pixel_wid; i > 0 ; i--) {
+		if (cut_line != 0) {
+			uint32_t d = cut_line / 10;
+			uint32_t r = cut_line - (d * 10);
+			cut_line = d;
+			cut_line_buff[i-2] = r;
+		}
+	}
+
+	if ((pixel_hei == 0) || (image->h < pixel_hei)) {
 		pixel_hei = 1;
 	}
 
-	if ((pixel_wid == 0) || (image->w < pixel_wid))
-	{
+	if ((pixel_wid == 0) || (image->w < pixel_wid)) {
 		pixel_wid = 1;
 	}
 
@@ -359,6 +390,7 @@ static void sdl_init(void)
 int main(int argc, char **argv)
 {
 	if (0 != system_init(argv[1])) {
+		fprintf(stderr, "引数にファイルを選択してください。\n");
 		fclose(fp);
 		SDL_Quit();
 		return 1;
