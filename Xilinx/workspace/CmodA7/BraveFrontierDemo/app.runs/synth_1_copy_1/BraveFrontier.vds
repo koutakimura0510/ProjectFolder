@@ -1,0 +1,1025 @@
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:48:16 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Sun Oct 30 13:44:45 2022
+# Process ID: 4728
+# Current directory: D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/app.runs/synth_1_copy_1
+# Command line: vivado.exe -log BraveFrontier.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source BraveFrontier.tcl
+# Log file: D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/app.runs/synth_1_copy_1/BraveFrontier.vds
+# Journal file: D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/app.runs/synth_1_copy_1\vivado.jou
+# Running On: KoutaKimura, OS: Windows, CPU Frequency: 3610 MHz, CPU Physical cores: 12, Host memory: 34070 MB
+#-----------------------------------------------------------
+source BraveFrontier.tcl -notrace
+Command: read_checkpoint -auto_incremental -incremental D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/app.srcs/utils_1/imports/synth_1/BraveFrontier.dcp
+INFO: [Vivado 12-5825] Read reference checkpoint from D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/app.srcs/utils_1/imports/synth_1/BraveFrontier.dcp for incremental synthesis
+INFO: [Vivado 12-7989] Please ensure there are no constraint changes
+Command: synth_design -top BraveFrontier -part xc7a35tcpg236-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7a35t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a35t'
+INFO: [Device 21-403] Loading part xc7a35tcpg236-1
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 18340
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1403.930 ; gain = 0.000
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'BraveFrontier' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/BraveFrontier.v:13]
+INFO: [Synth 8-6157] synthesizing module 'PreProcessor' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/PreProcessor/PreProcessor.v:9]
+	Parameter pSystemPll bound to: on - type: string 
+	Parameter pAudioPll bound to: off - type: string 
+INFO: [Synth 8-6157] synthesizing module 'cgbWrapper' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/PreProcessor/ClockGenerateBlock/cgbWrapper.v:28]
+	Parameter pSystemPll bound to: on - type: string 
+	Parameter pAudioPll bound to: off - type: string 
+INFO: [Synth 8-6157] synthesizing module 'MMCME2_BASE' [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:63629]
+	Parameter BANDWIDTH bound to: OPTIMIZED - type: string 
+	Parameter CLKFBOUT_MULT_F bound to: 60.000000 - type: double 
+	Parameter CLKFBOUT_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKIN1_PERIOD bound to: 83.333000 - type: double 
+	Parameter CLKOUT0_DIVIDE_F bound to: 29.375000 - type: double 
+	Parameter CLKOUT0_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT0_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKOUT1_DIVIDE bound to: 12 - type: integer 
+	Parameter CLKOUT1_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT1_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKOUT2_DIVIDE bound to: 80 - type: integer 
+	Parameter CLKOUT2_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT2_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKOUT3_DIVIDE bound to: 12 - type: integer 
+	Parameter CLKOUT3_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT3_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKOUT4_CASCADE bound to: FALSE - type: string 
+	Parameter CLKOUT4_DIVIDE bound to: 4 - type: integer 
+	Parameter CLKOUT4_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT4_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKOUT5_DIVIDE bound to: 10 - type: integer 
+	Parameter CLKOUT5_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT5_PHASE bound to: 0.000000 - type: double 
+	Parameter DIVCLK_DIVIDE bound to: 1 - type: integer 
+	Parameter REF_JITTER1 bound to: 0.000000 - type: double 
+	Parameter STARTUP_WAIT bound to: FALSE - type: string 
+INFO: [Synth 8-6155] done synthesizing module 'MMCME2_BASE' (0#1) [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:63629]
+INFO: [Synth 8-6157] synthesizing module 'IBUF' [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:55203]
+	Parameter IBUF_LOW_PWR bound to: FALSE - type: string 
+	Parameter IOSTANDARD bound to: DEFAULT - type: string 
+INFO: [Synth 8-6155] done synthesizing module 'IBUF' (0#1) [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:55203]
+INFO: [Synth 8-6157] synthesizing module 'BUFG' [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:1082]
+INFO: [Synth 8-6155] done synthesizing module 'BUFG' (0#1) [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:1082]
+INFO: [Synth 8-6155] done synthesizing module 'cgbWrapper' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/PreProcessor/ClockGenerateBlock/cgbWrapper.v:28]
+INFO: [Synth 8-6155] done synthesizing module 'PreProcessor' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/PreProcessor/PreProcessor.v:9]
+INFO: [Synth 8-6157] synthesizing module 'Processor' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/Processor.v:7]
+	Parameter pHdisplay bound to: 480 - type: integer 
+	Parameter pHfront bound to: 8 - type: integer 
+	Parameter pHback bound to: 43 - type: integer 
+	Parameter pHpulse bound to: 30 - type: integer 
+	Parameter pVdisplay bound to: 272 - type: integer 
+	Parameter pVfront bound to: 12 - type: integer 
+	Parameter pVback bound to: 4 - type: integer 
+	Parameter pVpulse bound to: 10 - type: integer 
+	Parameter pPixelDebug bound to: off - type: string 
+	Parameter pBuffDepth bound to: 1024 - type: integer 
+	Parameter pDebug bound to: off - type: string 
+INFO: [Synth 8-6157] synthesizing module 'MicroControllerBlock' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/MicroControllerBlock/MicroControllerBlock.v:9]
+	Parameter pBusBlockConnect bound to: 6 - type: integer 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pUfiBusWidth bound to: 8 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'MicroControllerUnit' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/MicroControllerBlock/MicroControllerUnit.v:7]
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pUfiBusWidth bound to: 8 - type: integer 
+	Parameter pMemAdrsWidth bound to: 19 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'MicroControllerUnit' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/MicroControllerBlock/MicroControllerUnit.v:7]
+WARNING: [Synth 8-689] width (6) of port connection 'iMUsiREd' does not match port width (1) of module 'MicroControllerUnit' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/MicroControllerBlock/MicroControllerBlock.v:101]
+INFO: [Synth 8-6157] synthesizing module 'MicroControllerCsr' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/MicroControllerBlock/MicroControllerCsr.v:24]
+	Parameter pBusBlockConnect bound to: 6 - type: integer 
+	Parameter pBlockAdrsMap bound to: 8 - type: integer 
+	Parameter pAdrsMap bound to: 8'b00000001 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pCsrAdrsWidth bound to: 16 - type: integer 
+	Parameter pCsrActiveWidth bound to: 16 - type: integer 
+	Parameter pMemAdrsWidth bound to: 19 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'MicroControllerCsr' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/MicroControllerBlock/MicroControllerCsr.v:24]
+WARNING: [Synth 8-689] width (1) of port connection 'oRd' does not match port width (32) of module 'MicroControllerCsr' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/MicroControllerBlock/MicroControllerBlock.v:126]
+INFO: [Synth 8-6155] done synthesizing module 'MicroControllerBlock' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/MicroControllerBlock/MicroControllerBlock.v:9]
+WARNING: [Synth 8-7071] port 'iMUfiRd' of module 'MicroControllerBlock' is unconnected for instance 'MicroControllerBlock' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/Processor.v:167]
+WARNING: [Synth 8-7071] port 'iMUfiREd' of module 'MicroControllerBlock' is unconnected for instance 'MicroControllerBlock' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/Processor.v:167]
+WARNING: [Synth 8-7023] instance 'MicroControllerBlock' of module 'MicroControllerBlock' has 16 connections declared, but only 14 given [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/Processor.v:167]
+INFO: [Synth 8-6157] synthesizing module 'GpioBlock' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/GpioBlock/GpioBlock.v:8]
+	Parameter pBlockAdrsMap bound to: 4 - type: integer 
+	Parameter pAdrsMap bound to: 4'b0001 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pCsrAdrsWidth bound to: 16 - type: integer 
+	Parameter pCsrActiveWidth bound to: 8 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'GpioUnit' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/GpioBlock/GpioUnit.v:12]
+	Parameter pExLedNumber bound to: 5 - type: integer 
+	Parameter pExLedFlashMode bound to: 2 - type: integer 
+	Parameter pPWMDutyWidth bound to: 8 - type: integer 
+	Parameter pIVtimerWidth bound to: 32 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'DutyGenerator' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/DutyGenerator.v:7]
+	Parameter pPWMDutyWidth bound to: 8 - type: integer 
+	Parameter pIVtimerWidth bound to: 32 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'CkeGenerator' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/CkeGenerator.v:7]
+	Parameter pDivReg bound to: yes - type: string 
+	Parameter pDivWidth bound to: 32 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'CkeGenerator' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/CkeGenerator.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'DutyGenerator' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/DutyGenerator.v:7]
+INFO: [Synth 8-6157] synthesizing module 'OBUF' [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:71220]
+INFO: [Synth 8-6155] done synthesizing module 'OBUF' (0#1) [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:71220]
+INFO: [Synth 8-6155] done synthesizing module 'GpioUnit' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/GpioBlock/GpioUnit.v:12]
+INFO: [Synth 8-6157] synthesizing module 'GpioCsr' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/GpioBlock/GpioCsr.v:11]
+	Parameter pBlockAdrsMap bound to: 4 - type: integer 
+	Parameter pAdrsMap bound to: 4'b0001 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pCsrAdrsWidth bound to: 16 - type: integer 
+	Parameter pCsrActiveWidth bound to: 8 - type: integer 
+	Parameter pExLedNumber bound to: 5 - type: integer 
+	Parameter pExLedFlashMode bound to: 2 - type: integer 
+	Parameter pPWMDutyWidth bound to: 8 - type: integer 
+	Parameter pIVtimerWidth bound to: 32 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'GpioCsr' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/GpioBlock/GpioCsr.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'GpioBlock' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/GpioBlock/GpioBlock.v:8]
+INFO: [Synth 8-6157] synthesizing module 'SPIBlock' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPIBlock.v:16]
+	Parameter pBlockAdrsMap bound to: 4 - type: integer 
+	Parameter pAdrsMap bound to: 4'b0010 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pCsrAdrsWidth bound to: 16 - type: integer 
+	Parameter pCsrActiveWidth bound to: 8 - type: integer 
+	Parameter pBusBlockConnect bound to: 6 - type: integer 
+	Parameter pUfiBusWidth bound to: 8 - type: integer 
+	Parameter pTestPortUsed bound to: no - type: string 
+	Parameter pTestPortNum bound to: 4 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'SPIUnit' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPIUnit.v:8]
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pDivClk bound to: 16 - type: integer 
+	Parameter pUfiBusWidth bound to: 8 - type: integer 
+	Parameter pTestPortUsed bound to: no - type: string 
+	Parameter pTestPortNum bound to: 4 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'CkeGenerator__parameterized0' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/CkeGenerator.v:7]
+	Parameter pDivReg bound to: yes - type: string 
+	Parameter pDivWidth bound to: 16 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'CkeGenerator__parameterized0' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/CkeGenerator.v:7]
+INFO: [Synth 8-6157] synthesizing module 'SPISignalMux' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPIUnit/SPISignalMux.v:8]
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pUfiBusWidth bound to: 8 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'SPISignalMux' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPIUnit/SPISignalMux.v:8]
+INFO: [Synth 8-6157] synthesizing module 'SPISignal' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPIUnit/SPISignal.v:14]
+	Parameter pTestPortUsed bound to: no - type: string 
+	Parameter pTestPortNum bound to: 4 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'IBUF__parameterized0' [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:55203]
+INFO: [Synth 8-6155] done synthesizing module 'IBUF__parameterized0' (0#1) [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:55203]
+INFO: [Synth 8-6157] synthesizing module 'IOBUF' [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:59734]
+INFO: [Synth 8-6155] done synthesizing module 'IOBUF' (0#1) [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:59734]
+INFO: [Synth 8-6155] done synthesizing module 'SPISignal' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPIUnit/SPISignal.v:14]
+INFO: [Synth 8-6155] done synthesizing module 'SPIUnit' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPIUnit.v:8]
+INFO: [Synth 8-6157] synthesizing module 'SPICsr' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPICsr.v:10]
+	Parameter pBlockAdrsMap bound to: 4 - type: integer 
+	Parameter pAdrsMap bound to: 4'b0010 
+	Parameter pCsrAdrsWidth bound to: 16 - type: integer 
+	Parameter pCsrActiveWidth bound to: 8 - type: integer 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pDivClk bound to: 16 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'SPICsr' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPICsr.v:10]
+INFO: [Synth 8-6155] done synthesizing module 'SPIBlock' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPIBlock.v:16]
+INFO: [Synth 8-6157] synthesizing module 'I2CBlock' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CBlock.v:8]
+	Parameter pBlockAdrsMap bound to: 4 - type: integer 
+	Parameter pAdrsMap bound to: 4'b0001 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pCsrAdrsWidth bound to: 16 - type: integer 
+	Parameter pCsrActiveWidth bound to: 8 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'I2CUnit' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CUnit.v:8]
+	Parameter pI2CDivClk bound to: 16 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'I2CMasterMux' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CUnit/I2CMasterMux.v:15]
+INFO: [Synth 8-6155] done synthesizing module 'I2CMasterMux' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CUnit/I2CMasterMux.v:15]
+INFO: [Synth 8-6157] synthesizing module 'I2CMaster' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CUnit/I2CMaster.v:12]
+INFO: [Synth 8-6155] done synthesizing module 'I2CMaster' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CUnit/I2CMaster.v:12]
+INFO: [Synth 8-6155] done synthesizing module 'I2CUnit' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CUnit.v:8]
+INFO: [Synth 8-6157] synthesizing module 'I2CCsr' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CCsr.v:10]
+	Parameter pBlockAdrsMap bound to: 4 - type: integer 
+	Parameter pAdrsMap bound to: 4'b0001 
+	Parameter pCsrAdrsWidth bound to: 16 - type: integer 
+	Parameter pCsrActiveWidth bound to: 8 - type: integer 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pI2CDivClk bound to: 16 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'I2CCsr' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CCsr.v:10]
+INFO: [Synth 8-6155] done synthesizing module 'I2CBlock' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CBlock.v:8]
+INFO: [Synth 8-6157] synthesizing module 'VideoTxBlock' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VideoTxBlock.v:8]
+	Parameter pBlockAdrsMap bound to: 4 - type: integer 
+	Parameter pAdrsMap bound to: 4'b0100 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pUfiBusWidth bound to: 8 - type: integer 
+	Parameter pCsrAdrsWidth bound to: 16 - type: integer 
+	Parameter pCsrActiveWidth bound to: 16 - type: integer 
+	Parameter pMemAdrsWidth bound to: 19 - type: integer 
+	Parameter pHdisplay bound to: 480 - type: integer 
+	Parameter pHback bound to: 43 - type: integer 
+	Parameter pHfront bound to: 8 - type: integer 
+	Parameter pHpulse bound to: 30 - type: integer 
+	Parameter pVdisplay bound to: 272 - type: integer 
+	Parameter pVfront bound to: 12 - type: integer 
+	Parameter pVback bound to: 4 - type: integer 
+	Parameter pVpulse bound to: 10 - type: integer 
+	Parameter pColorDepth bound to: 16 - type: integer 
+	Parameter pHdisplayWidth bound to: 11 - type: integer 
+	Parameter pHfrontWidth bound to: 7 - type: integer 
+	Parameter pHbackWidth bound to: 7 - type: integer 
+	Parameter pHpulseWidth bound to: 7 - type: integer 
+	Parameter pVdisplayWidth bound to: 11 - type: integer 
+	Parameter pVfrontWidth bound to: 5 - type: integer 
+	Parameter pVbackWidth bound to: 5 - type: integer 
+	Parameter pVpulseWidth bound to: 5 - type: integer 
+	Parameter pTestPortUsed bound to: no - type: string 
+	Parameter pTestPortNum bound to: 4 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'VideoTxUnit' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VideoTxUnit.v:8]
+	Parameter pUfiBusWidth bound to: 8 - type: integer 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pMemAdrsWidth bound to: 19 - type: integer 
+	Parameter pHdisplayWidth bound to: 11 - type: integer 
+	Parameter pVdisplayWidth bound to: 11 - type: integer 
+	Parameter pMapInfoBitWidth bound to: 8 - type: integer 
+	Parameter pColorDepth bound to: 16 - type: integer 
+	Parameter pDualClkFifoDepth bound to: 1024 - type: integer 
+	Parameter pDmaFifoDepth bound to: 1024 - type: integer 
+	Parameter pFifoDepthOverride bound to: yes - type: string 
+INFO: [Synth 8-6157] synthesizing module 'VideoPixelGen' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/VideoPixelGen.v:31]
+	Parameter pUfiBusWidth bound to: 8 - type: integer 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pHdisplayWidth bound to: 11 - type: integer 
+	Parameter pVdisplayWidth bound to: 11 - type: integer 
+	Parameter pMapInfoBitWidth bound to: 8 - type: integer 
+	Parameter pColorDepth bound to: 16 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'PixelDrawPosition' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/dot/common/PixelDrawPosition.v:8]
+	Parameter pHdisplayWidth bound to: 11 - type: integer 
+	Parameter pVdisplayWidth bound to: 11 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'PixelDrawPosition' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/dot/common/PixelDrawPosition.v:8]
+INFO: [Synth 8-6157] synthesizing module 'SceneChange' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/dot/Scene/SceneChange.v:9]
+	Parameter pHdisplayWidth bound to: 11 - type: integer 
+	Parameter pVdisplayWidth bound to: 11 - type: integer 
+	Parameter pColorDepth bound to: 16 - type: integer 
+	Parameter pFifoDepth bound to: 16 - type: integer 
+	Parameter pFifoBitWidth bound to: 16 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'ObjectPosGen' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/dot/common/ObjectPosGen.v:10]
+	Parameter pHdisplayWidth bound to: 11 - type: integer 
+	Parameter pVdisplayWidth bound to: 11 - type: integer 
+	Parameter pDashGainBitWdith bound to: 4 - type: integer 
+	Parameter pJumpJyroBitWidth bound to: 4 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'ObjectPosGen' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/dot/common/ObjectPosGen.v:10]
+INFO: [Synth 8-6157] synthesizing module 'DotSquareGen' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/dot/common/DotSquareGen.v:10]
+	Parameter pHdisplayWidth bound to: 11 - type: integer 
+	Parameter pVdisplayWidth bound to: 11 - type: integer 
+	Parameter pColorDepth bound to: 16 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'DotSquareGen' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/dot/common/DotSquareGen.v:10]
+INFO: [Synth 8-6157] synthesizing module 'fifoController' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoController.v:24]
+	Parameter pFifoDepth bound to: 16 - type: integer 
+	Parameter pFifoBitWidth bound to: 16 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'userFifo' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifo.v:9]
+	Parameter pBuffDepth bound to: 16 - type: integer 
+	Parameter pBitWidth bound to: 16 - type: integer 
+	Parameter pAddrWidth bound to: 8'b00000100 
+	Parameter pFifoBlockRam bound to: yes - type: string 
+INFO: [Synth 8-6155] done synthesizing module 'userFifo' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifo.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'fifoController' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoController.v:24]
+INFO: [Synth 8-6155] done synthesizing module 'SceneChange' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/dot/Scene/SceneChange.v:9]
+INFO: [Synth 8-6157] synthesizing module 'DotMargeToPixelConverter' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/dot/DotMargeToPixelConverter.v:7]
+	Parameter pColorDepth bound to: 16 - type: integer 
+	Parameter pFifoDepth bound to: 16 - type: integer 
+	Parameter pFifoBitWidth bound to: 12 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'fifoController__parameterized0' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoController.v:24]
+	Parameter pFifoDepth bound to: 16 - type: integer 
+	Parameter pFifoBitWidth bound to: 12 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'userFifo__parameterized0' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifo.v:9]
+	Parameter pBuffDepth bound to: 16 - type: integer 
+	Parameter pBitWidth bound to: 12 - type: integer 
+	Parameter pAddrWidth bound to: 8'b00000100 
+	Parameter pFifoBlockRam bound to: yes - type: string 
+INFO: [Synth 8-6155] done synthesizing module 'userFifo__parameterized0' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifo.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'fifoController__parameterized0' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoController.v:24]
+INFO: [Synth 8-6155] done synthesizing module 'DotMargeToPixelConverter' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/dot/DotMargeToPixelConverter.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'VideoPixelGen' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/VideoPixelGen.v:31]
+INFO: [Synth 8-6157] synthesizing module 'VideoDmaUnit' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/Dma/VideoDmaUnit.v:8]
+	Parameter pUfiBusWidth bound to: 8 - type: integer 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pMemAdrsWidth bound to: 19 - type: integer 
+	Parameter pFifoDepth bound to: 1024 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'fifoControllerLutRam' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoControllerLutRam.v:8]
+	Parameter pFifoDepth bound to: 1024 - type: integer 
+	Parameter pFifoBitWidth bound to: 8 - type: integer 
+	Parameter pFifoFastOutValue bound to: 5 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'LutRam' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/LutRam.v:8]
+	Parameter pBuffDepth bound to: 1024 - type: integer 
+	Parameter pBitWidth bound to: 8 - type: integer 
+	Parameter pAddrWidth bound to: 8'b00001010 
+INFO: [Synth 8-6155] done synthesizing module 'LutRam' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/LutRam.v:8]
+INFO: [Synth 8-6155] done synthesizing module 'fifoControllerLutRam' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoControllerLutRam.v:8]
+INFO: [Synth 8-6155] done synthesizing module 'VideoDmaUnit' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/Dma/VideoDmaUnit.v:8]
+INFO: [Synth 8-6157] synthesizing module 'VideoSyncGen' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/VideoSyncGen.v:8]
+	Parameter pHdisplayWidth bound to: 11 - type: integer 
+	Parameter pVdisplayWidth bound to: 11 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'VideoSyncGen' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/VideoSyncGen.v:8]
+INFO: [Synth 8-6157] synthesizing module 'VideoDualClkFIFO' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/VideoDualClkFIFO.v:10]
+	Parameter pBuffDepth bound to: 1024 - type: integer 
+	Parameter pBitWidth bound to: 12 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'fifoDualControllerGray' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoDualControllerGray.v:26]
+	Parameter pBuffDepth bound to: 1024 - type: integer 
+	Parameter pBitWidth bound to: 12 - type: integer 
+	Parameter pFullAlMost bound to: 5 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'userFifoDual' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifoDual.v:8]
+	Parameter pBuffDepth bound to: 1024 - type: integer 
+	Parameter pBitWidth bound to: 12 - type: integer 
+	Parameter pAddrWidth bound to: 8'b00001010 
+INFO: [Synth 8-6155] done synthesizing module 'userFifoDual' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifoDual.v:8]
+INFO: [Synth 8-6155] done synthesizing module 'fifoDualControllerGray' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoDualControllerGray.v:26]
+INFO: [Synth 8-6155] done synthesizing module 'VideoDualClkFIFO' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VTUnit/VideoDualClkFIFO.v:10]
+INFO: [Synth 8-6157] synthesizing module 'DutyGenerator__parameterized0' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/DutyGenerator.v:7]
+	Parameter pPWMDutyWidth bound to: 8 - type: integer 
+	Parameter pIVtimerWidth bound to: 7 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'CkeGenerator__parameterized1' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/CkeGenerator.v:7]
+	Parameter pDivReg bound to: yes - type: string 
+	Parameter pDivWidth bound to: 7 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'CkeGenerator__parameterized1' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/CkeGenerator.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'DutyGenerator__parameterized0' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/DutyGenerator.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'VideoTxUnit' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VideoTxUnit.v:8]
+INFO: [Synth 8-6157] synthesizing module 'VideoTxCsr' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VideoTxCsr.v:11]
+	Parameter pBlockAdrsMap bound to: 4 - type: integer 
+	Parameter pAdrsMap bound to: 4'b0100 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pCsrAdrsWidth bound to: 16 - type: integer 
+	Parameter pCsrActiveWidth bound to: 16 - type: integer 
+	Parameter pMemAdrsWidth bound to: 19 - type: integer 
+	Parameter pHdisplay bound to: 480 - type: integer 
+	Parameter pHfront bound to: 8 - type: integer 
+	Parameter pHback bound to: 43 - type: integer 
+	Parameter pHpulse bound to: 30 - type: integer 
+	Parameter pVdisplay bound to: 272 - type: integer 
+	Parameter pVfront bound to: 12 - type: integer 
+	Parameter pVback bound to: 4 - type: integer 
+	Parameter pVpulse bound to: 10 - type: integer 
+	Parameter pHdisplayWidth bound to: 11 - type: integer 
+	Parameter pHbackWidth bound to: 7 - type: integer 
+	Parameter pHfrontWidth bound to: 7 - type: integer 
+	Parameter pHpulseWidth bound to: 7 - type: integer 
+	Parameter pVdisplayWidth bound to: 11 - type: integer 
+	Parameter pVfrontWidth bound to: 5 - type: integer 
+	Parameter pVbackWidth bound to: 5 - type: integer 
+	Parameter pVpulseWidth bound to: 5 - type: integer 
+	Parameter pMapInfoBitWidth bound to: 8 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'VideoTxCsr' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VideoTxCsr.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'VideoTxBlock' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/VideoTxBlock/VideoTxBlock.v:8]
+INFO: [Synth 8-6157] synthesizing module 'AudioTxBlock' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/AudioTxBlock/AudioTxBlock.v:8]
+	Parameter pBlockAdrsMap bound to: 4 - type: integer 
+	Parameter pAdrsMap bound to: 4'b0101 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pUfiBusWidth bound to: 8 - type: integer 
+	Parameter pCsrAdrsWidth bound to: 16 - type: integer 
+	Parameter pCsrActiveWidth bound to: 8 - type: integer 
+	Parameter pMemAdrsWidth bound to: 19 - type: integer 
+	Parameter pSamplingBitWidth bound to: 8 - type: integer 
+	Parameter pTestPortUsed bound to: yes - type: string 
+	Parameter pTestPortNum bound to: 4 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'AudioTxUnit' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/AudioTxBlock/AudioTxUnit.v:8]
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pUfiBusWidth bound to: 8 - type: integer 
+	Parameter pMemAdrsWidth bound to: 19 - type: integer 
+	Parameter pSamplingBitWidth bound to: 8 - type: integer 
+	Parameter pDualClkFifoDepth bound to: 1024 - type: integer 
+	Parameter pDmaFifoDepth bound to: 1024 - type: integer 
+	Parameter pFifoDepthOverride bound to: no - type: string 
+	Parameter pTestPortUsed bound to: yes - type: string 
+	Parameter pTestPortNum bound to: 4 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'AudioDmaUnit' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/AudioTxBlock/AudioTxUnit/AudioDmaUnit.v:10]
+	Parameter pUfiBusWidth bound to: 8 - type: integer 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pMemAdrsWidth bound to: 19 - type: integer 
+	Parameter pDmaFifoDepth bound to: 32 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'AudioDmaUnit' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/AudioTxBlock/AudioTxUnit/AudioDmaUnit.v:10]
+INFO: [Synth 8-6157] synthesizing module 'fifoDualControllerGray__parameterized0' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoDualControllerGray.v:26]
+	Parameter pBuffDepth bound to: 32 - type: integer 
+	Parameter pBitWidth bound to: 8 - type: integer 
+	Parameter pFullAlMost bound to: 5 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'userFifoDual__parameterized0' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifoDual.v:8]
+	Parameter pBuffDepth bound to: 32 - type: integer 
+	Parameter pBitWidth bound to: 8 - type: integer 
+	Parameter pAddrWidth bound to: 8'b00000101 
+INFO: [Synth 8-6155] done synthesizing module 'userFifoDual__parameterized0' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifoDual.v:8]
+INFO: [Synth 8-6155] done synthesizing module 'fifoDualControllerGray__parameterized0' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoDualControllerGray.v:26]
+INFO: [Synth 8-6157] synthesizing module 'AudioToneIndex' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/AudioTxBlock/AudioTxUnit/AudioToneIndex.v:8]
+	Parameter pToneFifoDepth bound to: 128 - type: integer 
+	Parameter pSamplingBitWidth bound to: 8 - type: integer 
+	Parameter pIntegerFileName bound to: IndexInteger.dat - type: string 
+	Parameter pDecimalFileName bound to: IndexDecimal.dat - type: string 
+INFO: [Synth 8-3876] $readmem data file 'IndexInteger.dat' is read successfully [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/AudioTxBlock/AudioTxUnit/AudioToneIndex.v:31]
+INFO: [Synth 8-3876] $readmem data file 'IndexDecimal.dat' is read successfully [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/AudioTxBlock/AudioTxUnit/AudioToneIndex.v:32]
+INFO: [Synth 8-6155] done synthesizing module 'AudioToneIndex' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/AudioTxBlock/AudioTxUnit/AudioToneIndex.v:8]
+INFO: [Synth 8-6157] synthesizing module 'WaveTableRom' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/WaveTableRom.v:8]
+	Parameter pFifoDepth bound to: 256 - type: integer 
+	Parameter pSamplingBitWidth bound to: 8 - type: integer 
+	Parameter pFileName bound to: SinTable.dat - type: string 
+INFO: [Synth 8-3876] $readmem data file 'SinTable.dat' is read successfully [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/WaveTableRom.v:27]
+INFO: [Synth 8-6155] done synthesizing module 'WaveTableRom' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/WaveTableRom.v:8]
+INFO: [Synth 8-6157] synthesizing module 'DutyGenerator__parameterized1' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/DutyGenerator.v:7]
+	Parameter pPWMDutyWidth bound to: 8 - type: integer 
+	Parameter pIVtimerWidth bound to: 1 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'CkeGenerator__parameterized2' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/CkeGenerator.v:7]
+	Parameter pDivReg bound to: yes - type: string 
+	Parameter pDivWidth bound to: 1 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'CkeGenerator__parameterized2' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/CkeGenerator.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'DutyGenerator__parameterized1' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/DutyGenerator.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'AudioTxUnit' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/AudioTxBlock/AudioTxUnit.v:8]
+INFO: [Synth 8-6157] synthesizing module 'AudioTxCsr' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/AudioTxBlock/AudioTxCsr.v:11]
+	Parameter pBlockAdrsMap bound to: 4 - type: integer 
+	Parameter pAdrsMap bound to: 4'b0101 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pCsrAdrsWidth bound to: 16 - type: integer 
+	Parameter pCsrActiveWidth bound to: 8 - type: integer 
+	Parameter pMemAdrsWidth bound to: 19 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'AudioTxCsr' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/AudioTxBlock/AudioTxCsr.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'AudioTxBlock' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/AudioTxBlock/AudioTxBlock.v:8]
+INFO: [Synth 8-6157] synthesizing module 'RAMBlock' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/RAMBlock/RAMBlock.v:7]
+	Parameter pBlockAdrsMap bound to: 4 - type: integer 
+	Parameter pAdrsMap bound to: 4'b0110 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pCsrAdrsWidth bound to: 16 - type: integer 
+	Parameter pCsrActiveWidth bound to: 8 - type: integer 
+	Parameter pUfiBusWidth bound to: 8 - type: integer 
+	Parameter pUfiIdNumber bound to: 3 - type: integer 
+	Parameter pRamAdrsWidth bound to: 19 - type: integer 
+	Parameter pRamDqWidth bound to: 8 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'RAMUnit' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/RAMBlock/RAMUnit.v:8]
+	Parameter pUfiBusWidth bound to: 8 - type: integer 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pUfiIdNumber bound to: 3 - type: integer 
+	Parameter pRamFifoDepth bound to: 1024 - type: integer 
+	Parameter pRamDqWidth bound to: 8 - type: integer 
+	Parameter pRamAdrsWidth bound to: 19 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'RAMDualClkFifo' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/RAMBlock/RAMUnit/RAMIDualClkFifo.v:8]
+	Parameter pUfiIdNumber bound to: 3 - type: integer 
+	Parameter pDualClkFifoDepth bound to: 1024 - type: integer 
+	Parameter pRamDqWidth bound to: 8 - type: integer 
+	Parameter pRamAdrsWidth bound to: 19 - type: integer 
+	Parameter pFullAlMost bound to: 16 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'fifoDualControllerGray__parameterized1' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoDualControllerGray.v:26]
+	Parameter pBuffDepth bound to: 1024 - type: integer 
+	Parameter pBitWidth bound to: 8 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'userFifoDual__parameterized1' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifoDual.v:8]
+	Parameter pBuffDepth bound to: 1024 - type: integer 
+	Parameter pBitWidth bound to: 8 - type: integer 
+	Parameter pAddrWidth bound to: 8'b00001010 
+INFO: [Synth 8-6155] done synthesizing module 'userFifoDual__parameterized1' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifoDual.v:8]
+INFO: [Synth 8-6155] done synthesizing module 'fifoDualControllerGray__parameterized1' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoDualControllerGray.v:26]
+INFO: [Synth 8-6157] synthesizing module 'fifoDualControllerGray__parameterized2' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoDualControllerGray.v:26]
+	Parameter pBuffDepth bound to: 1024 - type: integer 
+	Parameter pBitWidth bound to: 19 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'userFifoDual__parameterized2' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifoDual.v:8]
+	Parameter pBuffDepth bound to: 1024 - type: integer 
+	Parameter pBitWidth bound to: 19 - type: integer 
+	Parameter pAddrWidth bound to: 8'b00001010 
+INFO: [Synth 8-6155] done synthesizing module 'userFifoDual__parameterized2' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifoDual.v:8]
+INFO: [Synth 8-6155] done synthesizing module 'fifoDualControllerGray__parameterized2' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoDualControllerGray.v:26]
+INFO: [Synth 8-6157] synthesizing module 'fifoDualControllerGray__parameterized3' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoDualControllerGray.v:26]
+	Parameter pBuffDepth bound to: 1024 - type: integer 
+	Parameter pBitWidth bound to: 1'b1 
+	Parameter pFullAlMost bound to: 16 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'userFifoDual__parameterized3' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifoDual.v:8]
+	Parameter pBuffDepth bound to: 1024 - type: integer 
+	Parameter pBitWidth bound to: 1'b1 
+	Parameter pAddrWidth bound to: 8'b00001010 
+INFO: [Synth 8-6155] done synthesizing module 'userFifoDual__parameterized3' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifoDual.v:8]
+INFO: [Synth 8-6155] done synthesizing module 'fifoDualControllerGray__parameterized3' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoDualControllerGray.v:26]
+INFO: [Synth 8-6157] synthesizing module 'fifoDualControllerGray3' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoDualControllerGray3.v:26]
+	Parameter pBuffDepth bound to: 1024 - type: integer 
+	Parameter pBitWidth bound to: 8 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'fifoDualControllerGray3' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoDualControllerGray3.v:26]
+INFO: [Synth 8-6157] synthesizing module 'fifoController__parameterized1' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoController.v:24]
+	Parameter pFifoDepth bound to: 2048 - type: integer 
+	Parameter pFifoBitWidth bound to: 3 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'userFifo__parameterized1' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifo.v:9]
+	Parameter pBuffDepth bound to: 2048 - type: integer 
+	Parameter pBitWidth bound to: 3 - type: integer 
+	Parameter pAddrWidth bound to: 8'b00001011 
+	Parameter pFifoBlockRam bound to: yes - type: string 
+INFO: [Synth 8-6155] done synthesizing module 'userFifo__parameterized1' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifo.v:9]
+INFO: [Synth 8-6155] done synthesizing module 'fifoController__parameterized1' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoController.v:24]
+INFO: [Synth 8-6155] done synthesizing module 'RAMDualClkFifo' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/RAMBlock/RAMUnit/RAMIDualClkFifo.v:8]
+INFO: [Synth 8-6157] synthesizing module 'RAMIf' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/RAMBlock/RAMUnit/RAMIf.v:17]
+	Parameter pRamAdrsWidth bound to: 19 - type: integer 
+	Parameter pRamDqWidth bound to: 8 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'RAMIf' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/RAMBlock/RAMUnit/RAMIf.v:17]
+INFO: [Synth 8-6155] done synthesizing module 'RAMUnit' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/RAMBlock/RAMUnit.v:8]
+INFO: [Synth 8-6157] synthesizing module 'RAMCsr' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/RAMBlock/RAMCsr.v:11]
+	Parameter pBlockAdrsMap bound to: 4 - type: integer 
+	Parameter pAdrsMap bound to: 4'b0110 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pCsrAdrsWidth bound to: 16 - type: integer 
+	Parameter pCsrActiveWidth bound to: 8 - type: integer 
+	Parameter pRamAdrsWidth bound to: 19 - type: integer 
+	Parameter pRamDqWidth bound to: 8 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'RAMCsr' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/RAMBlock/RAMCsr.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'RAMBlock' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/RAMBlock/RAMBlock.v:7]
+INFO: [Synth 8-6157] synthesizing module 'UltraSimpleInterface' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/UltraSimpleInterfaceBus/UltraSimpleInterface.v:14]
+	Parameter pBusBlockConnect bound to: 6 - type: integer 
+	Parameter pUsiBusWidth bound to: 32 - type: integer 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pBlockAdrsMap bound to: 4 - type: integer 
+	Parameter pGpioAdrsMap bound to: 4'b0001 
+	Parameter pSPIAdrsMap bound to: 4'b0010 
+	Parameter pI2CAdrsMap bound to: 4'b0011 
+	Parameter pVTBAdrsMap bound to: 4'b0100 
+	Parameter pATBAdrsMap bound to: 4'b0101 
+	Parameter pRAMAdrsMap bound to: 4'b0110 
+	Parameter pCsrAdrsWidth bound to: 16 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'UltraSimpleInterface' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/UltraSimpleInterfaceBus/UltraSimpleInterface.v:14]
+INFO: [Synth 8-6157] synthesizing module 'UltraFastInterface' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/UltraFastInterfaceBus/UltraFastInterface.v:16]
+	Parameter pUfiBusWidth bound to: 8 - type: integer 
+	Parameter pBusAdrsBit bound to: 32 - type: integer 
+	Parameter pUfiIdNumber bound to: 3 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'UltraFastInterface' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/UltraFastInterfaceBus/UltraFastInterface.v:16]
+INFO: [Synth 8-6155] done synthesizing module 'Processor' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/Processor.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'BraveFrontier' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/BraveFrontier.v:13]
+WARNING: [Synth 8-3848] Net oTestPort in module/entity Processor does not have driver. [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/Processor.v:57]
+WARNING: [Synth 8-7129] Port iMUfiAdrsMcs[31] in module UltraFastInterface is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUfiAdrsMcs[30] in module UltraFastInterface is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUfiAdrsMcs[29] in module UltraFastInterface is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUfiAdrsMcs[28] in module UltraFastInterface is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUfiAdrsMcs[27] in module UltraFastInterface is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[31] in module RAMCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[30] in module RAMCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[29] in module RAMCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[28] in module RAMCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[27] in module RAMCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[26] in module RAMCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[25] in module RAMCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[24] in module RAMCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[23] in module RAMCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[22] in module RAMCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[21] in module RAMCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[20] in module RAMCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUfiAdrs[31] in module RAMUnit is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUfiAdrs[30] in module RAMUnit is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUfiAdrs[29] in module RAMUnit is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUfiAdrs[28] in module RAMUnit is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUfiAdrs[27] in module RAMUnit is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUfiAdrs[26] in module RAMUnit is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUfiAdrs[25] in module RAMUnit is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUfiAdrs[24] in module RAMUnit is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUfiAdrs[23] in module RAMUnit is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUfiAdrs[22] in module RAMUnit is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUfiAdrs[21] in module RAMUnit is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUfiAdrs[20] in module RAMUnit is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUfiAdrs[19] in module RAMUnit is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[31] in module AudioTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[30] in module AudioTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[29] in module AudioTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[28] in module AudioTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[27] in module AudioTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[26] in module AudioTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[25] in module AudioTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[24] in module AudioTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[23] in module AudioTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[22] in module AudioTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[21] in module AudioTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[20] in module AudioTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[31] in module VideoTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[30] in module VideoTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[29] in module VideoTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[28] in module VideoTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[27] in module VideoTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[26] in module VideoTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[25] in module VideoTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[24] in module VideoTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[23] in module VideoTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[22] in module VideoTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[21] in module VideoTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[20] in module VideoTxCsr is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iDistantground[15] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iDistantground[14] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iDistantground[13] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iDistantground[12] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iDistantground[11] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iDistantground[10] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iDistantground[9] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iDistantground[8] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iDistantground[7] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iDistantground[6] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iDistantground[5] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iDistantground[4] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iDistantground[3] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iDistantground[2] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iDistantground[1] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iDistantground[0] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iBackground[15] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iBackground[14] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iBackground[13] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iBackground[12] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iField[15] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iField[14] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iField[13] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iField[12] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iField[11] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iField[10] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iField[9] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iField[8] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iField[7] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iField[6] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iField[5] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iField[4] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iField[3] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iField[2] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iField[1] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iField[0] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iNpc[15] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iNpc[14] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iNpc[13] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iNpc[12] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iNpc[11] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iNpc[10] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iNpc[9] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iNpc[8] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iNpc[7] in module DotMargeToPixelConverter is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iNpc[6] in module DotMargeToPixelConverter is either unconnected or has no load
+INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:05 . Memory (MB): peak = 1403.930 ; gain = 0.000
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:03 ; elapsed = 00:00:05 . Memory (MB): peak = 1403.930 ; gain = 0.000
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:03 ; elapsed = 00:00:05 . Memory (MB): peak = 1403.930 ; gain = 0.000
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.056 . Memory (MB): peak = 1403.930 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 16 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/BraveFrontier.xdc]
+INFO: [Timing 38-2] Deriving generated clocks [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/BraveFrontier.xdc:44]
+Finished Parsing XDC File [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/BraveFrontier.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/BraveFrontier.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/BraveFrontier_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/BraveFrontier_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1454.082 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 16 instances were transformed.
+  IOBUF => IOBUF (IBUF, OBUFT): 15 instances
+  MMCME2_BASE => MMCME2_ADV: 1 instance 
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.010 . Memory (MB): peak = 1454.082 ; gain = 0.000
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:06 ; elapsed = 00:00:10 . Memory (MB): peak = 1454.082 ; gain = 50.152
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a35tcpg236-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:06 ; elapsed = 00:00:10 . Memory (MB): peak = 1454.082 ; gain = 50.152
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:06 ; elapsed = 00:00:11 . Memory (MB): peak = 1454.082 ; gain = 50.152
+---------------------------------------------------------------------------------
+INFO: [Synth 8-7082] The signal fifo_reg is implemented as Block RAM but is better mapped onto distributed LUT RAM for the following reason(s): The depth (4 address bits) is shallow. Please use attribute (* ram_style = "distributed" *) to instruct Vivado to infer distributed LUT RAM.
+INFO: [Synth 8-7082] The signal fifo_reg is implemented as Block RAM but is better mapped onto distributed LUT RAM for the following reason(s): The depth (4 address bits) is shallow. Please use attribute (* ram_style = "distributed" *) to instruct Vivado to infer distributed LUT RAM.
+INFO: [Synth 8-7082] The signal fifo_reg is implemented as Block RAM but is better mapped onto distributed LUT RAM for the following reason(s): The depth (5 address bits) is shallow. Please use attribute (* ram_style = "distributed" *) to instruct Vivado to infer distributed LUT RAM.
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:06 ; elapsed = 00:00:12 . Memory (MB): peak = 1454.082 ; gain = 50.152
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input   32 Bit       Adders := 6     
+	   2 Input   19 Bit       Adders := 3     
+	   2 Input   16 Bit       Adders := 2     
+	   2 Input   12 Bit       Adders := 9     
+	   3 Input   12 Bit       Adders := 8     
+	   4 Input   12 Bit       Adders := 2     
+	   2 Input   11 Bit       Adders := 13    
+	   2 Input   10 Bit       Adders := 56    
+	   3 Input    9 Bit       Adders := 1     
+	   2 Input    8 Bit       Adders := 9     
+	   3 Input    8 Bit       Adders := 1     
+	   2 Input    7 Bit       Adders := 1     
+	   2 Input    6 Bit       Adders := 2     
+	   2 Input    5 Bit       Adders := 8     
+	   2 Input    4 Bit       Adders := 17    
+	   2 Input    3 Bit       Adders := 3     
+	   2 Input    1 Bit       Adders := 3     
++---Registers : 
+	               32 Bit    Registers := 29    
+	               25 Bit    Registers := 1     
+	               19 Bit    Registers := 14    
+	               16 Bit    Registers := 10    
+	               12 Bit    Registers := 19    
+	               11 Bit    Registers := 9     
+	               10 Bit    Registers := 17    
+	                9 Bit    Registers := 1     
+	                8 Bit    Registers := 43    
+	                7 Bit    Registers := 4     
+	                6 Bit    Registers := 4     
+	                5 Bit    Registers := 9     
+	                4 Bit    Registers := 7     
+	                3 Bit    Registers := 12    
+	                2 Bit    Registers := 6     
+	                1 Bit    Registers := 129   
++---RAMs : 
+	              19K Bit	(1024 X 19 bit)          RAMs := 1     
+	              12K Bit	(1024 X 12 bit)          RAMs := 1     
+	               8K Bit	(1024 X 8 bit)          RAMs := 2     
+	               6K Bit	(2048 X 3 bit)          RAMs := 1     
+	             1024 Bit	(1024 X 1 bit)          RAMs := 1     
+	              256 Bit	(16 X 16 bit)          RAMs := 1     
+	              256 Bit	(32 X 8 bit)          RAMs := 1     
+	              192 Bit	(16 X 12 bit)          RAMs := 1     
++---ROMs : 
+	                    ROMs := 1     
++---Muxes : 
+	   4 Input   32 Bit        Muxes := 5     
+	   2 Input   32 Bit        Muxes := 7     
+	   3 Input   32 Bit        Muxes := 3     
+	   6 Input   32 Bit        Muxes := 1     
+	   5 Input   32 Bit        Muxes := 3     
+	  17 Input   32 Bit        Muxes := 1     
+	   2 Input   22 Bit        Muxes := 1     
+	   5 Input   19 Bit        Muxes := 1     
+	   7 Input   19 Bit        Muxes := 1     
+	   2 Input   19 Bit        Muxes := 1     
+	   4 Input   19 Bit        Muxes := 1     
+	   4 Input   16 Bit        Muxes := 2     
+	   3 Input   16 Bit        Muxes := 1     
+	   2 Input   16 Bit        Muxes := 2     
+	   8 Input   12 Bit        Muxes := 4     
+	   2 Input   12 Bit        Muxes := 6     
+	   4 Input   12 Bit        Muxes := 3     
+	   7 Input   12 Bit        Muxes := 4     
+	   2 Input    8 Bit        Muxes := 2     
+	   4 Input    8 Bit        Muxes := 2     
+	   5 Input    8 Bit        Muxes := 1     
+	   4 Input    7 Bit        Muxes := 1     
+	   5 Input    6 Bit        Muxes := 1     
+	   4 Input    6 Bit        Muxes := 1     
+	   4 Input    5 Bit        Muxes := 2     
+	   5 Input    4 Bit        Muxes := 1     
+	   2 Input    3 Bit        Muxes := 6     
+	   3 Input    3 Bit        Muxes := 1     
+	   6 Input    3 Bit        Muxes := 2     
+	   7 Input    3 Bit        Muxes := 1     
+	   4 Input    3 Bit        Muxes := 1     
+	   8 Input    3 Bit        Muxes := 1     
+	   5 Input    3 Bit        Muxes := 1     
+	   2 Input    2 Bit        Muxes := 2     
+	   4 Input    2 Bit        Muxes := 2     
+	   7 Input    2 Bit        Muxes := 2     
+	   3 Input    2 Bit        Muxes := 1     
+	   2 Input    1 Bit        Muxes := 40    
+	   4 Input    1 Bit        Muxes := 17    
+	   3 Input    1 Bit        Muxes := 8     
+	   7 Input    1 Bit        Muxes := 4     
+	   5 Input    1 Bit        Muxes := 10    
+	   6 Input    1 Bit        Muxes := 1     
+	   9 Input    1 Bit        Muxes := 1     
+	   8 Input    1 Bit        Muxes := 1     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 90 (col length:60)
+BRAMs: 100 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-3936] Found unconnected internal register 'SceneChange/InstDotSquareFifo/rRD_reg' and it is trimmed from '16' to '12' bits. [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoController.v:111]
+WARNING: [Synth 8-3936] Found unconnected internal register 'AudioTxUnit/InstAudioDualClkFifo/rRD_reg' and it is trimmed from '8' to '7' bits. [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/fifoDualControllerGray.v:142]
+WARNING: [Synth 8-3936] Found unconnected internal register 'VideoTxUnit/VideoPixelGen/SceneChange/InstDotSquareFifo/USER_FIFO/rd_reg' and it is trimmed from '16' to '12' bits. [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifo.v:29]
+INFO: [Synth 8-7082] The signal VideoTxUnit/VideoPixelGen/SceneChange/InstDotSquareFifo/USER_FIFO/fifo_reg is implemented as Block RAM but is better mapped onto distributed LUT RAM for the following reason(s): The depth (4 address bits) is shallow. Please use attribute (* ram_style = "distributed" *) to instruct Vivado to infer distributed LUT RAM.
+INFO: [Synth 8-7082] The signal VideoTxUnit/VideoPixelGen/DotMargeToPixelConverter/InstDotMargeToPixelConverterFifo/USER_FIFO/fifo_reg is implemented as Block RAM but is better mapped onto distributed LUT RAM for the following reason(s): The depth (4 address bits) is shallow. Please use attribute (* ram_style = "distributed" *) to instruct Vivado to infer distributed LUT RAM.
+INFO: [Synth 8-5784] Optimized 4 bits of RAM "VideoTxUnit/VideoDualClkFIFO/InstPixelDualClkFifo/USER_FIFO_DUAL/fifo_reg" due to constant propagation. Old ram width 12 bits, new ram width 8 bits.
+WARNING: [Synth 8-3936] Found unconnected internal register 'AudioTxUnit/InstAudioDualClkFifo/USER_FIFO_DUAL/rd_reg' and it is trimmed from '8' to '7' bits. [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/userFifoDual.v:25]
+INFO: [Synth 8-7082] The signal AudioTxUnit/InstAudioDualClkFifo/USER_FIFO_DUAL/fifo_reg is implemented as Block RAM but is better mapped onto distributed LUT RAM for the following reason(s): The depth (5 address bits) is shallow. Please use attribute (* ram_style = "distributed" *) to instruct Vivado to infer distributed LUT RAM.
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:12 ; elapsed = 00:00:20 . Memory (MB): peak = 1454.082 ; gain = 50.152
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+ROM: Preliminary Mapping Report
++---------------+----------------------------------------------+---------------+----------------+
+|Module Name    | RTL Object                                   | Depth x Width | Implemented As | 
++---------------+----------------------------------------------+---------------+----------------+
+|AudioToneIndex | rDecFifo                                     | 128x8         | LUT            | 
+|AudioToneIndex | rIntFifo                                     | 128x8         | LUT            | 
+|AudioTxBlock   | AudioTxUnit/InstAudioDualClkFifo/rRD_reg_rep | 128x8         | Block RAM      | 
+|AudioTxBlock   | AudioTxUnit/InstAudioDualClkFifo/rRD_reg     | 128x8         | Block RAM      | 
++---------------+----------------------------------------------+---------------+----------------+
+
+
+Block RAM: Preliminary Mapping Report (see note below)
++-----------------------+--------------------------------------------------------------------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name            | RTL Object                                                                                             | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++-----------------------+--------------------------------------------------------------------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Processor/VideoTxBlock | VideoTxUnit/VideoPixelGen/SceneChange/InstDotSquareFifo/USER_FIFO/fifo_reg                             | 16 x 12(READ_FIRST)    | W |   | 16 x 12(WRITE_FIRST)   |   | R | Port A and B     | 1      | 0      | 
+|Processor/VideoTxBlock | VideoTxUnit/VideoPixelGen/DotMargeToPixelConverter/InstDotMargeToPixelConverterFifo/USER_FIFO/fifo_reg | 16 x 12(READ_FIRST)    | W |   | 16 x 12(WRITE_FIRST)   |   | R | Port A and B     | 1      | 0      | 
+|Processor/VideoTxBlock | VideoTxUnit/VideoDualClkFIFO/InstPixelDualClkFifo/USER_FIFO_DUAL/fifo_reg                              | 1 K x 12(NO_CHANGE)    | W |   | 1 K x 12(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      | 
+|Processor/AudioTxBlock | AudioTxUnit/InstAudioDualClkFifo/USER_FIFO_DUAL/fifo_reg                                               | 32 x 7(NO_CHANGE)      | W |   | 32 x 7(WRITE_FIRST)    |   | R | Port A and B     | 1      | 0      | 
+|Processor/RamBlock     | RamUnit/RamDualClkFifo/RamDualClkFifoCmd/USER_FIFO_DUAL/fifo_reg                                       | 1 K x 1(NO_CHANGE)     | W |   | 1 K x 1(WRITE_FIRST)   |   | R | Port A and B     | 1      | 0      | 
+|Processor/RamBlock     | RamUnit/RamDualClkFifo/RamDualClkFifoRd/USER_FIFO_DUAL/fifo_reg                                        | 1 K x 8(NO_CHANGE)     | W |   | 1 K x 8(WRITE_FIRST)   |   | R | Port A and B     | 1      | 0      | 
+|Processor/RamBlock     | RamUnit/RamDualClkFifo/RamFifoId/USER_FIFO/fifo_reg                                                    | 2 K x 3(READ_FIRST)    | W |   | 2 K x 3(WRITE_FIRST)   |   | R | Port A and B     | 1      | 0      | 
+|Processor/RamBlock     | RamUnit/RamDualClkFifo/RamDualClkFifoWd/USER_FIFO_DUAL/fifo_reg                                        | 1 K x 8(NO_CHANGE)     | W |   | 1 K x 8(WRITE_FIRST)   |   | R | Port A and B     | 1      | 0      | 
+|Processor/RamBlock     | RamUnit/RamDualClkFifo/RamDualClkFifoAdrs/USER_FIFO_DUAL/fifo_reg                                      | 1 K x 19(NO_CHANGE)    | W |   | 1 K x 19(WRITE_FIRST)  |   | R | Port A and B     | 0      | 1      | 
++-----------------------+--------------------------------------------------------------------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+Note: The table above is a preliminary report that shows the Block RAMs at the current stage of the synthesis flow. Some Block RAMs may be reimplemented as non Block RAM primitives later in the synthesis flow. Multiple instantiated Block RAMs are reported only once. 
+
+Distributed RAM: Preliminary Mapping Report (see note below)
++-----------------------+-------------------------------------------------------+-----------+----------------------+--------------+
+|Module Name            | RTL Object                                            | Inference | Size (Depth x Width) | Primitives   | 
++-----------------------+-------------------------------------------------------+-----------+----------------------+--------------+
+|Processor/VideoTxBlock | VideoTxUnit/VideoDmaUnit/VideoDmaFifo/LutRam/fifo_reg | Implied   | 1 K x 8              | RAM64M x 48  | 
++-----------------------+-------------------------------------------------------+-----------+----------------------+--------------+
+
+Note: The table above is a preliminary report that shows the Distributed RAMs at the current stage of the synthesis flow. Some Distributed RAMs may be reimplemented as non Distributed RAM primitives later in the synthesis flow. Multiple instantiated RAMs are reported only once.
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:14 ; elapsed = 00:00:24 . Memory (MB): peak = 1454.082 ; gain = 50.152
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:15 ; elapsed = 00:00:26 . Memory (MB): peak = 1454.082 ; gain = 50.152
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Final Mapping Report
++-----------------------+--------------------------------------------------------------------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name            | RTL Object                                                                                             | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++-----------------------+--------------------------------------------------------------------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Processor/VideoTxBlock | VideoTxUnit/VideoPixelGen/SceneChange/InstDotSquareFifo/USER_FIFO/fifo_reg                             | 16 x 12(READ_FIRST)    | W |   | 16 x 12(WRITE_FIRST)   |   | R | Port A and B     | 1      | 0      | 
+|Processor/VideoTxBlock | VideoTxUnit/VideoPixelGen/DotMargeToPixelConverter/InstDotMargeToPixelConverterFifo/USER_FIFO/fifo_reg | 16 x 12(READ_FIRST)    | W |   | 16 x 12(WRITE_FIRST)   |   | R | Port A and B     | 1      | 0      | 
+|Processor/VideoTxBlock | VideoTxUnit/VideoDualClkFIFO/InstPixelDualClkFifo/USER_FIFO_DUAL/fifo_reg                              | 1 K x 12(NO_CHANGE)    | W |   | 1 K x 12(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      | 
+|Processor/AudioTxBlock | AudioTxUnit/InstAudioDualClkFifo/USER_FIFO_DUAL/fifo_reg                                               | 32 x 7(NO_CHANGE)      | W |   | 32 x 7(WRITE_FIRST)    |   | R | Port A and B     | 1      | 0      | 
+|Processor/RamBlock     | RamUnit/RamDualClkFifo/RamDualClkFifoCmd/USER_FIFO_DUAL/fifo_reg                                       | 1 K x 1(NO_CHANGE)     | W |   | 1 K x 1(WRITE_FIRST)   |   | R | Port A and B     | 1      | 0      | 
+|Processor/RamBlock     | RamUnit/RamDualClkFifo/RamDualClkFifoRd/USER_FIFO_DUAL/fifo_reg                                        | 1 K x 8(NO_CHANGE)     | W |   | 1 K x 8(WRITE_FIRST)   |   | R | Port A and B     | 1      | 0      | 
+|Processor/RamBlock     | RamUnit/RamDualClkFifo/RamFifoId/USER_FIFO/fifo_reg                                                    | 2 K x 3(READ_FIRST)    | W |   | 2 K x 3(WRITE_FIRST)   |   | R | Port A and B     | 1      | 0      | 
+|Processor/RamBlock     | RamUnit/RamDualClkFifo/RamDualClkFifoWd/USER_FIFO_DUAL/fifo_reg                                        | 1 K x 8(NO_CHANGE)     | W |   | 1 K x 8(WRITE_FIRST)   |   | R | Port A and B     | 1      | 0      | 
+|Processor/RamBlock     | RamUnit/RamDualClkFifo/RamDualClkFifoAdrs/USER_FIFO_DUAL/fifo_reg                                      | 1 K x 19(NO_CHANGE)    | W |   | 1 K x 19(WRITE_FIRST)  |   | R | Port A and B     | 0      | 1      | 
++-----------------------+--------------------------------------------------------------------------------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+
+Distributed RAM: Final Mapping Report
++-----------------------+-------------------------------------------------------+-----------+----------------------+--------------+
+|Module Name            | RTL Object                                            | Inference | Size (Depth x Width) | Primitives   | 
++-----------------------+-------------------------------------------------------+-----------+----------------------+--------------+
+|Processor/VideoTxBlock | VideoTxUnit/VideoDmaUnit/VideoDmaFifo/LutRam/fifo_reg | Implied   | 1 K x 8              | RAM64M x 48  | 
++-----------------------+-------------------------------------------------------+-----------+----------------------+--------------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+INFO: [Synth 8-7052] The timing for the instance Processor/AudioTxBlock/AudioTxUnit/InstAudioDualClkFifo/USER_FIFO_DUAL/fifo_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance Processor/AudioTxBlock/AudioTxUnit/WaveTableRom/rWave_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance Processor/AudioTxBlock/AudioTxUnit/InstAudioDualClkFifo/rRD_reg_rep (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+INFO: [Synth 8-7052] The timing for the instance Processor/AudioTxBlock/AudioTxUnit/InstAudioDualClkFifo/rRD_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:16 ; elapsed = 00:00:28 . Memory (MB): peak = 1457.457 ; gain = 53.527
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:18 ; elapsed = 00:00:30 . Memory (MB): peak = 1457.457 ; gain = 53.527
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:18 ; elapsed = 00:00:30 . Memory (MB): peak = 1457.457 ; gain = 53.527
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:18 ; elapsed = 00:00:30 . Memory (MB): peak = 1457.457 ; gain = 53.527
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:18 ; elapsed = 00:00:30 . Memory (MB): peak = 1457.457 ; gain = 53.527
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:18 ; elapsed = 00:00:30 . Memory (MB): peak = 1457.457 ; gain = 53.527
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:18 ; elapsed = 00:00:31 . Memory (MB): peak = 1457.457 ; gain = 53.527
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+------------+------+
+|      |Cell        |Count |
++------+------------+------+
+|1     |BUFG        |     8|
+|2     |CARRY4      |   240|
+|3     |LUT1        |    61|
+|4     |LUT2        |   367|
+|5     |LUT3        |   362|
+|6     |LUT4        |   657|
+|7     |LUT5        |   285|
+|8     |LUT6        |   728|
+|9     |MMCME2_BASE |     1|
+|10    |MUXF7       |    53|
+|11    |MUXF8       |     8|
+|12    |RAM64M      |    48|
+|13    |RAMB18E1    |    11|
+|20    |RAMB36E1    |     1|
+|21    |FDRE        |  1692|
+|22    |FDSE        |   309|
+|23    |IBUF        |     2|
+|24    |IOBUF       |    15|
+|25    |OBUF        |    48|
+|26    |OBUFT       |     4|
++------+------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:18 ; elapsed = 00:00:31 . Memory (MB): peak = 1457.457 ; gain = 53.527
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 220 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:15 ; elapsed = 00:00:29 . Memory (MB): peak = 1457.457 ; gain = 3.375
+Synthesis Optimization Complete : Time (s): cpu = 00:00:18 ; elapsed = 00:00:31 . Memory (MB): peak = 1457.457 ; gain = 53.527
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.066 . Memory (MB): peak = 1457.457 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 377 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1465.035 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 64 instances were transformed.
+  IOBUF => IOBUF (IBUF, OBUFT): 15 instances
+  MMCME2_BASE => MMCME2_ADV: 1 instance 
+  RAM64M => RAM64M (RAMD64E(x4)): 48 instances
+
+Synth Design complete, checksum: 19385daa
+INFO: [Common 17-83] Releasing license: Synthesis
+193 Infos, 111 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:20 ; elapsed = 00:00:34 . Memory (MB): peak = 1465.035 ; gain = 61.105
+INFO: [Common 17-1381] The checkpoint 'D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/app.runs/synth_1_copy_1/BraveFrontier.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file BraveFrontier_utilization_synth.rpt -pb BraveFrontier_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Sun Oct 30 13:45:23 2022...

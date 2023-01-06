@@ -1,0 +1,45 @@
+#0 $dumpon
+$date today $end
+$timescale 1 ns $end
+$scope module top $end
+$var wire 1 0 MCsiRxController/genblk1[0].fifoController/iWd $end
+$var wire 1 1 MCsiRxController/genblk1[0].fifoController/ofull $end
+$var wire 1 2 MCsiRxController/genblk1[0].fifoController/iWe $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+00
+01
+12
+$end
+#79
+02
+#364
+12
+#844
+02
+#1129
+12
+#1609
+02
+#1894
+12
+#2048
+11
+#2052
+01
+#2374
+02
+#2659
+12
+#3139
+02
+#3424
+12
+#3904
+02
+#4095
+00
+01
+02

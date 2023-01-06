@@ -1,0 +1,539 @@
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:48:16 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Sat Aug 27 17:43:00 2022
+# Process ID: 28656
+# Current directory: D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/app.runs/synth_1_copy_1
+# Command line: vivado.exe -log BraveFrontier.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source BraveFrontier.tcl
+# Log file: D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/app.runs/synth_1_copy_1/BraveFrontier.vds
+# Journal file: D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/app.runs/synth_1_copy_1\vivado.jou
+# Running On: KoutaKimura, OS: Windows, CPU Frequency: 3610 MHz, CPU Physical cores: 12, Host memory: 34070 MB
+#-----------------------------------------------------------
+source BraveFrontier.tcl -notrace
+Command: read_checkpoint -auto_incremental -incremental D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/app.srcs/utils_1/imports/synth_1/BraveFrontier.dcp
+INFO: [Vivado 12-5825] Read reference checkpoint from D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/app.srcs/utils_1/imports/synth_1/BraveFrontier.dcp for incremental synthesis
+INFO: [Vivado 12-7989] Please ensure there are no constraint changes
+Command: synth_design -top BraveFrontier -part xc7a35tcpg236-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7a35t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a35t'
+INFO: [Device 21-403] Loading part xc7a35tcpg236-1
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 6460
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 1402.273 ; gain = 0.000
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'BraveFrontier' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/BraveFrontier.v:13]
+INFO: [Synth 8-6157] synthesizing module 'PreProcesser' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/PreProcessor/PreProcessor.v:9]
+	Parameter pSystemPll bound to: on - type: string 
+	Parameter pAudioPll bound to: off - type: string 
+INFO: [Synth 8-6157] synthesizing module 'cgbWrapper' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/PreProcessor/ClockGenerateBlock/cgbWrapper.v:28]
+	Parameter pSystemPll bound to: on - type: string 
+	Parameter pAudioPll bound to: off - type: string 
+INFO: [Synth 8-6157] synthesizing module 'MMCME2_BASE' [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:63629]
+	Parameter BANDWIDTH bound to: OPTIMIZED - type: string 
+	Parameter CLKFBOUT_MULT_F bound to: 60.000000 - type: double 
+	Parameter CLKFBOUT_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKIN1_PERIOD bound to: 83.333000 - type: double 
+	Parameter CLKOUT0_DIVIDE_F bound to: 8.000000 - type: double 
+	Parameter CLKOUT0_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT0_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKOUT1_DIVIDE bound to: 18 - type: integer 
+	Parameter CLKOUT1_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT1_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKOUT2_DIVIDE bound to: 80 - type: integer 
+	Parameter CLKOUT2_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT2_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKOUT3_DIVIDE bound to: 10 - type: integer 
+	Parameter CLKOUT3_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT3_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKOUT4_CASCADE bound to: FALSE - type: string 
+	Parameter CLKOUT4_DIVIDE bound to: 10 - type: integer 
+	Parameter CLKOUT4_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT4_PHASE bound to: 0.000000 - type: double 
+	Parameter CLKOUT5_DIVIDE bound to: 10 - type: integer 
+	Parameter CLKOUT5_DUTY_CYCLE bound to: 0.500000 - type: double 
+	Parameter CLKOUT5_PHASE bound to: 0.000000 - type: double 
+	Parameter DIVCLK_DIVIDE bound to: 1 - type: integer 
+	Parameter REF_JITTER1 bound to: 0.000000 - type: double 
+	Parameter STARTUP_WAIT bound to: FALSE - type: string 
+INFO: [Synth 8-6155] done synthesizing module 'MMCME2_BASE' (0#1) [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:63629]
+INFO: [Synth 8-6157] synthesizing module 'IBUF' [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:55203]
+	Parameter IBUF_LOW_PWR bound to: FALSE - type: string 
+	Parameter IOSTANDARD bound to: DEFAULT - type: string 
+INFO: [Synth 8-6155] done synthesizing module 'IBUF' (0#1) [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:55203]
+INFO: [Synth 8-6157] synthesizing module 'BUFG' [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:1082]
+INFO: [Synth 8-6155] done synthesizing module 'BUFG' (0#1) [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:1082]
+INFO: [Synth 8-6155] done synthesizing module 'cgbWrapper' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/PreProcessor/ClockGenerateBlock/cgbWrapper.v:28]
+INFO: [Synth 8-6155] done synthesizing module 'PreProcesser' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/PreProcessor/PreProcessor.v:9]
+INFO: [Synth 8-6157] synthesizing module 'Processer' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/Processor.v:7]
+	Parameter pHdisplay bound to: 480 - type: integer 
+	Parameter pHback bound to: 43 - type: integer 
+	Parameter pHfront bound to: 8 - type: integer 
+	Parameter pHsync bound to: 30 - type: integer 
+	Parameter pVdisplay bound to: 272 - type: integer 
+	Parameter pVtop bound to: 12 - type: integer 
+	Parameter pVbottom bound to: 4 - type: integer 
+	Parameter pVsync bound to: 10 - type: integer 
+	Parameter pPixelDebug bound to: off - type: string 
+	Parameter pBuffDepth bound to: 1024 - type: integer 
+	Parameter pDebug bound to: off - type: string 
+INFO: [Synth 8-6157] synthesizing module 'MicroControllerBlock' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/MicroControllerBlock/MicroControllerBlock.v:11]
+	Parameter pBusSlaveConnect bound to: 6 - type: integer 
+	Parameter pBusAdrsBit bound to: 16 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'MicroControllerCsr' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/MicroControllerBlock/MicroControllerCsr.v:24]
+	Parameter pBusSlaveConnectWidth bound to: 4'b0101 
+	Parameter pBusAdrsBit bound to: 16 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'MicroControllerCsr' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/MicroControllerBlock/MicroControllerCsr.v:24]
+INFO: [Synth 8-6155] done synthesizing module 'MicroControllerBlock' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/MicroControllerBlock/MicroControllerBlock.v:11]
+INFO: [Synth 8-6157] synthesizing module 'GpioBlock' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/GpioBlock/GpioBlock.v:8]
+	Parameter pBlockAdrsMap bound to: 8 - type: integer 
+	Parameter pAdrsMap bound to: 8'b00000001 
+	Parameter pBusAdrsBit bound to: 16 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'GpioUnit' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/GpioBlock/GpioUnit.v:8]
+	Parameter pExLedNumber bound to: 5 - type: integer 
+	Parameter pExLedFlashMode bound to: 2 - type: integer 
+	Parameter pPWMDutyWidth bound to: 8 - type: integer 
+	Parameter pIVtimerWidth bound to: 32 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'DutyGenerator' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/DutyGenerator.v:7]
+	Parameter pPWMDutyWidth bound to: 8 - type: integer 
+	Parameter pIVtimerWidth bound to: 32 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'CkeGenerator' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/CkeGenerator.v:7]
+	Parameter pDivReg bound to: yes - type: string 
+	Parameter pDivWidth bound to: 32 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'CkeGenerator' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/CkeGenerator.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'DutyGenerator' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/DutyGenerator.v:7]
+INFO: [Synth 8-6157] synthesizing module 'OBUF' [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:71220]
+INFO: [Synth 8-6155] done synthesizing module 'OBUF' (0#1) [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:71220]
+INFO: [Synth 8-6155] done synthesizing module 'GpioUnit' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/GpioBlock/GpioUnit.v:8]
+INFO: [Synth 8-6157] synthesizing module 'GpioCsr' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/GpioBlock/GpioCsr.v:11]
+	Parameter pBlockAdrsMap bound to: 8 - type: integer 
+	Parameter pAdrsMap bound to: 8'b00000001 
+	Parameter pBusAdrsBit bound to: 16 - type: integer 
+	Parameter pExLedNumber bound to: 5 - type: integer 
+	Parameter pExLedFlashMode bound to: 2 - type: integer 
+	Parameter pIVtimerWidth bound to: 32 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'GpioCsr' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/GpioBlock/GpioCsr.v:11]
+INFO: [Synth 8-6155] done synthesizing module 'GpioBlock' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/GpioBlock/GpioBlock.v:8]
+INFO: [Synth 8-6157] synthesizing module 'SPIBlock' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPIBlock.v:16]
+	Parameter pBlockAdrsMap bound to: 8 - type: integer 
+	Parameter pAdrsMap bound to: 8'b00000010 
+	Parameter pBusAdrsBit bound to: 16 - type: integer 
+	Parameter pBusSlaveConnect bound to: 6 - type: integer 
+	Parameter pUfiBusWidth bound to: 16 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'SPIUnit' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPIUnit.v:8]
+	Parameter pBusAdrsBit bound to: 16 - type: integer 
+	Parameter pDivClk bound to: 16 - type: integer 
+	Parameter pUfiBusWidth bound to: 16 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'CkeGenerator__parameterized0' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/CkeGenerator.v:7]
+	Parameter pDivReg bound to: yes - type: string 
+	Parameter pDivWidth bound to: 16 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'CkeGenerator__parameterized0' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/common/CkeGenerator.v:7]
+INFO: [Synth 8-6157] synthesizing module 'SPISignalMux' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPIUnit/SPISignalMux.v:8]
+	Parameter pBusAdrsBit bound to: 16 - type: integer 
+	Parameter pUfiBusWidth bound to: 16 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'SPISignalMux' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPIUnit/SPISignalMux.v:8]
+INFO: [Synth 8-6157] synthesizing module 'SPISignal' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPIUnit/SPISignal.v:14]
+INFO: [Synth 8-6157] synthesizing module 'IBUF__parameterized0' [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:55203]
+INFO: [Synth 8-6155] done synthesizing module 'IBUF__parameterized0' (0#1) [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:55203]
+INFO: [Synth 8-6157] synthesizing module 'IOBUF' [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:59734]
+INFO: [Synth 8-6155] done synthesizing module 'IOBUF' (0#1) [C:/Xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:59734]
+INFO: [Synth 8-6155] done synthesizing module 'SPISignal' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPIUnit/SPISignal.v:14]
+INFO: [Synth 8-6155] done synthesizing module 'SPIUnit' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPIUnit.v:8]
+INFO: [Synth 8-6157] synthesizing module 'SPICsr' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPICsr.v:10]
+	Parameter pBlockAdrsMap bound to: 8 - type: integer 
+	Parameter pAdrsMap bound to: 8'b00000010 
+	Parameter pBusAdrsBit bound to: 16 - type: integer 
+	Parameter pDivClk bound to: 16 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'SPICsr' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPICsr.v:10]
+INFO: [Synth 8-6155] done synthesizing module 'SPIBlock' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/SPIBlock/SPIBlock.v:16]
+INFO: [Synth 8-6157] synthesizing module 'I2CBlock' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CBlock.v:8]
+	Parameter pBlockAdrsMap bound to: 8 - type: integer 
+	Parameter pAdrsMap bound to: 8'b00000001 
+	Parameter pBusAdrsBit bound to: 16 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'I2CUnit' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CUnit.v:8]
+	Parameter pI2CDivClk bound to: 16 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'I2CMasterMux' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CUnit/I2CMasterMux.v:15]
+INFO: [Synth 8-6155] done synthesizing module 'I2CMasterMux' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CUnit/I2CMasterMux.v:15]
+INFO: [Synth 8-6157] synthesizing module 'I2CMaster' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CUnit/I2CMaster.v:12]
+INFO: [Synth 8-6155] done synthesizing module 'I2CMaster' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CUnit/I2CMaster.v:12]
+INFO: [Synth 8-6155] done synthesizing module 'I2CUnit' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CUnit.v:8]
+INFO: [Synth 8-6157] synthesizing module 'I2CCsr' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CCsr.v:10]
+	Parameter pBlockAdrsMap bound to: 8 - type: integer 
+	Parameter pAdrsMap bound to: 8'b00000001 
+	Parameter pBusAdrsBit bound to: 16 - type: integer 
+	Parameter pI2CDivClk bound to: 16 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'I2CCsr' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CCsr.v:10]
+INFO: [Synth 8-6155] done synthesizing module 'I2CBlock' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/I2CBlock/I2CBlock.v:8]
+INFO: [Synth 8-6157] synthesizing module 'AudioGenBlock' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/AudioGenBlock/AudioGenBlock.v:8]
+	Parameter pBlockAdrsMap bound to: 8 - type: integer 
+	Parameter pAdrsMap bound to: 8'b00000101 
+	Parameter pBusAdrsBit bound to: 16 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'AudioGenBlock' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/AudioGenBlock/AudioGenBlock.v:8]
+INFO: [Synth 8-6157] synthesizing module 'UltraSimpleInterface' [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/UltraSimpleInterfaceBus/UltraSimpleInterface.v:14]
+	Parameter pBusSlaveConnect bound to: 6 - type: integer 
+	Parameter pUsiBusWidth bound to: 32 - type: integer 
+	Parameter pBusAdrsBit bound to: 16 - type: integer 
+	Parameter pBlockAdrsMap bound to: 8 - type: integer 
+	Parameter pGpioAdrsMap bound to: 8'b00000001 
+	Parameter pSPIAdrsMap bound to: 8'b00000010 
+	Parameter pI2CAdrsMap bound to: 8'b00000011 
+	Parameter pPGBAdrsMap bound to: 8'b00000100 
+	Parameter pAGBAdrsMap bound to: 8'b00000101 
+	Parameter pRAMAdrsMap bound to: 8'b00000110 
+INFO: [Synth 8-6155] done synthesizing module 'UltraSimpleInterface' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/UltraSimpleInterfaceBus/UltraSimpleInterface.v:14]
+INFO: [Synth 8-6155] done synthesizing module 'Processer' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/Processor.v:7]
+INFO: [Synth 8-6155] done synthesizing module 'BraveFrontier' (0#1) [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/BraveFrontier.v:13]
+WARNING: [Synth 8-3848] Net wMcsWd in module/entity MicroControllerBlock does not have driver. [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/MicroControllerBlock/MicroControllerBlock.v:34]
+WARNING: [Synth 8-3848] Net wMcsAdrs in module/entity MicroControllerBlock does not have driver. [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/MicroControllerBlock/MicroControllerBlock.v:35]
+WARNING: [Synth 8-3848] Net wMcsCke in module/entity MicroControllerBlock does not have driver. [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/Processor/MicroControllerBlock/MicroControllerBlock.v:36]
+WARNING: [Synth 8-7129] Port iSUsiWd[31] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[30] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[29] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[28] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[27] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[26] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[25] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[24] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[23] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[22] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[21] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[20] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[19] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[18] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[17] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[16] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[15] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[14] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[13] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[12] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[11] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[10] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[9] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[8] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[7] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[6] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[5] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[4] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[3] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[2] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[1] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWd[0] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[15] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[14] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[13] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[12] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[11] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[10] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[9] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[8] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[7] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[6] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[5] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[4] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[3] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[2] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[1] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiAdrs[0] in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSUsiWCke in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSysClk in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSysRst in module AudioGenBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSysRst in module I2CMaster is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iSysRst in module SPISignalMux is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiREd[5] in module SPIBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiREd[4] in module SPIBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiREd[3] in module SPIBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiREd[2] in module SPIBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiREd[1] in module SPIBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiREd[0] in module SPIBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ioMemDq[7] in module Processer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ioMemDq[6] in module Processer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ioMemDq[5] in module Processer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ioMemDq[4] in module Processer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ioMemDq[3] in module Processer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ioMemDq[2] in module Processer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ioMemDq[1] in module Processer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ioMemDq[0] in module Processer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iPixelClk in module Processer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMemClk in module Processer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iAudioClk in module Processer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iAudioRst in module Processer is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iAudioClk in module cgbWrapper is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 1402.273 ; gain = 0.000
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 1402.273 ; gain = 0.000
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 1402.273 ; gain = 0.000
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.025 . Memory (MB): peak = 1402.273 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 8 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/BraveFrontier.xdc]
+INFO: [Timing 38-2] Deriving generated clocks [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/BraveFrontier.xdc:44]
+Finished Parsing XDC File [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/BraveFrontier.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/src/BraveFrontier.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/BraveFrontier_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/BraveFrontier_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1428.637 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 8 instances were transformed.
+  IOBUF => IOBUF (IBUF, OBUFT): 7 instances
+  MMCME2_BASE => MMCME2_ADV: 1 instance 
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.005 . Memory (MB): peak = 1428.637 ; gain = 0.000
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 1428.637 ; gain = 26.363
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a35tcpg236-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 1428.637 ; gain = 26.363
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 1428.637 ; gain = 26.363
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 1428.637 ; gain = 26.363
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input   32 Bit       Adders := 6     
+	   2 Input   16 Bit       Adders := 2     
+	   2 Input    8 Bit       Adders := 12    
+	   2 Input    6 Bit       Adders := 1     
+	   2 Input    5 Bit       Adders := 1     
+	   2 Input    4 Bit       Adders := 1     
+	   2 Input    3 Bit       Adders := 3     
++---Registers : 
+	               32 Bit    Registers := 23    
+	               16 Bit    Registers := 11    
+	                8 Bit    Registers := 19    
+	                6 Bit    Registers := 3     
+	                5 Bit    Registers := 3     
+	                4 Bit    Registers := 1     
+	                3 Bit    Registers := 8     
+	                2 Bit    Registers := 4     
+	                1 Bit    Registers := 41    
++---Muxes : 
+	   4 Input   32 Bit        Muxes := 5     
+	   8 Input   32 Bit        Muxes := 1     
+	   2 Input   32 Bit        Muxes := 6     
+	   3 Input   32 Bit        Muxes := 2     
+	   6 Input   32 Bit        Muxes := 1     
+	   5 Input   32 Bit        Muxes := 1     
+	   4 Input   16 Bit        Muxes := 2     
+	   3 Input   16 Bit        Muxes := 1     
+	   2 Input   16 Bit        Muxes := 1     
+	   2 Input    8 Bit        Muxes := 1     
+	   4 Input    8 Bit        Muxes := 2     
+	   5 Input    6 Bit        Muxes := 1     
+	   4 Input    5 Bit        Muxes := 2     
+	   5 Input    4 Bit        Muxes := 1     
+	   8 Input    3 Bit        Muxes := 1     
+	   2 Input    3 Bit        Muxes := 6     
+	   6 Input    3 Bit        Muxes := 2     
+	   7 Input    3 Bit        Muxes := 1     
+	   4 Input    3 Bit        Muxes := 1     
+	   2 Input    2 Bit        Muxes := 2     
+	   4 Input    2 Bit        Muxes := 1     
+	   3 Input    2 Bit        Muxes := 1     
+	   2 Input    1 Bit        Muxes := 30    
+	   4 Input    1 Bit        Muxes := 7     
+	   3 Input    1 Bit        Muxes := 4     
+	   7 Input    1 Bit        Muxes := 3     
+	   5 Input    1 Bit        Muxes := 4     
+	   6 Input    1 Bit        Muxes := 1     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 90 (col length:60)
+BRAMs: 100 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-7129] Port iMUsiREd[5] in module SPIBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiREd[4] in module SPIBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiREd[3] in module SPIBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiREd[2] in module SPIBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiREd[1] in module SPIBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiREd[0] in module SPIBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[31] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[30] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[29] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[28] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[27] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[26] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[25] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[24] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[23] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[22] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[21] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[20] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[19] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[18] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[17] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[16] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[15] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[14] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[13] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[12] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[11] in module MicroControllerBlock is either unconnected or has no load
+WARNING: [Synth 8-7129] Port iMUsiRd[10] in module MicroControllerBlock is either unconnected or has no load
+INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:12 ; elapsed = 00:00:12 . Memory (MB): peak = 1428.637 ; gain = 26.363
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 1428.637 ; gain = 26.363
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:17 ; elapsed = 00:00:17 . Memory (MB): peak = 1428.637 ; gain = 26.363
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:17 ; elapsed = 00:00:18 . Memory (MB): peak = 1434.973 ; gain = 32.699
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:19 ; elapsed = 00:00:20 . Memory (MB): peak = 1434.973 ; gain = 32.699
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:19 ; elapsed = 00:00:20 . Memory (MB): peak = 1434.973 ; gain = 32.699
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:19 ; elapsed = 00:00:20 . Memory (MB): peak = 1434.973 ; gain = 32.699
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:19 ; elapsed = 00:00:20 . Memory (MB): peak = 1434.973 ; gain = 32.699
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:19 ; elapsed = 00:00:20 . Memory (MB): peak = 1434.973 ; gain = 32.699
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:19 ; elapsed = 00:00:20 . Memory (MB): peak = 1434.973 ; gain = 32.699
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+------------+------+
+|      |Cell        |Count |
++------+------------+------+
+|1     |BUFG        |     5|
+|2     |CARRY4      |    76|
+|3     |LUT1        |    17|
+|4     |LUT2        |   121|
+|5     |LUT3        |    76|
+|6     |LUT4        |   173|
+|7     |LUT5        |    83|
+|8     |LUT6        |   269|
+|9     |MMCME2_BASE |     1|
+|10    |FDRE        |   737|
+|11    |FDSE        |   209|
+|12    |IBUF        |     2|
+|13    |IOBUF       |     7|
+|14    |OBUF        |    52|
++------+------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:20 ; elapsed = 00:00:20 . Memory (MB): peak = 1434.973 ; gain = 32.699
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 57 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:15 ; elapsed = 00:00:19 . Memory (MB): peak = 1434.973 ; gain = 6.336
+Synthesis Optimization Complete : Time (s): cpu = 00:00:20 ; elapsed = 00:00:20 . Memory (MB): peak = 1434.973 ; gain = 32.699
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.024 . Memory (MB): peak = 1434.973 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 84 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1441.484 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 8 instances were transformed.
+  IOBUF => IOBUF (IBUF, OBUFT): 7 instances
+  MMCME2_BASE => MMCME2_ADV: 1 instance 
+
+Synth Design complete, checksum: 3658e934
+INFO: [Common 17-83] Releasing license: Synthesis
+85 Infos, 104 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 1441.484 ; gain = 39.211
+INFO: [Common 17-1381] The checkpoint 'D:/workspace/Xilinx/workspace/CmodA7/BraveFrontierDemo/app.runs/synth_1_copy_1/BraveFrontier.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file BraveFrontier_utilization_synth.rpt -pb BraveFrontier_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Sat Aug 27 17:43:27 2022...
