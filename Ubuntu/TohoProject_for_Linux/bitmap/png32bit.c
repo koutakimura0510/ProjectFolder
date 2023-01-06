@@ -45,6 +45,16 @@ typedef enum
 	DEFAULT,
 } RGB_TYPE;
 
+typedef struct {
+	uint32_t pixel_wid;
+	uint32_t pixel_hei;
+	uint32_t type;
+	uint32_t color_bit;
+	uint32_t memory_type;
+	uint32_t cut_line;
+	uint32_t cut_line_buff[12];
+} PixelGen;
+
 
 /*
  * HD画質、1280 x 3 x 15画面のデータ容量を超える場合
@@ -218,12 +228,15 @@ uint32_t rgb_generate(uint32_t alpha, uint32_t red, uint32_t green, uint32_t blu
  */
 void pixel_generate(void)
 {
+	PixelGen pixel_gen;
+	
 	uint32_t pixel_wid;
 	uint32_t pixel_hei;
 	uint32_t type;
 	uint32_t color_bit;
 	uint32_t memory_type;
 	uint32_t cut_line;
+	uint32_t cut_line_old;
 	uint32_t cut_line_buff[12];
 	uint8_t *p;
 
@@ -234,19 +247,18 @@ void pixel_generate(void)
 	SDL_UnlockSurface(image);
 
 	/* 画像データの情報出力 */
+	fprintf(stderr, "画像ファイルのデータプロジェクトで使用する RAW 又は dat ファイルを生成します。\n");
+	fprintf(stderr, "なお、不正値を入力した場合のエラーは処理は行っていません。\n");
+	fprintf(stderr, "正しいファイルが生成されませんので注意してください。\n");
+	fprintf(stderr, "\n");
+	fprintf(stderr, "----------------------------------------------\n");
 	fprintf(stderr, "読み込んだ画像ファイルの Info を出力します。\n");
 	fprintf(stderr, "height   = %d\n", image->h);
 	fprintf(stderr, "width    = %d\n", image->w);
 	fprintf(stderr, "fmt->BytesPerPixel = %dBytes\n", fmt->BytesPerPixel);
 	fprintf(stderr, "fmt->BitsPerPixel  = %dbit\n", fmt->BitsPerPixel);
 	fprintf(stderr, "\n");
-
 	/* 画像データの切り取り座標とRGB生成パターン選択 */
-	fprintf(stderr, "画像ファイルのデータプロジェクトで使用する RAW 又は dat ファイルを生成します。\n");
-	fprintf(stderr, "なお、不正値を入力した場合のエラーは処理は行っていません。\n");
-	fprintf(stderr, "正しいファイルが生成されませんので注意してください。\n");
-	fprintf(stderr, "\n");
-	fprintf(stderr, "----------------------------------------------\n");
 	fprintf(stderr, "WidthのPixel数を区切る座標をして下さい。\n");
 	fprintf(stderr, "0またはwidth以上の場合、最大値を設定します。\n");
 	scanf("%d", &pixel_wid);
@@ -278,14 +290,22 @@ void pixel_generate(void)
 	fprintf(stderr, "以降の 4,5,6 ラインも使用する場合は、13456 と入力します。\n");
 	fprintf(stderr, "0 = AllLine, 123456 -> 135 CutLine\n");
 	scanf("%d", &cut_line);
+	cut_line_old = cut_line;
 
-	for (uint8_t i = image->w / pixel_wid; i > 0 ; i--) {
-		if (cut_line != 0) {
-			uint32_t d = cut_line / 10;
-			uint32_t r = cut_line - (d * 10);
-			cut_line = d;
-			cut_line_buff[i-2] = r;
+	if (cut_line_old != 0) {
+		for (uint8_t i = image->w / pixel_wid; i > 0 ; i--) {
+			if (cut_line != 0) {
+				uint32_t d = cut_line / 10;
+				uint32_t r = cut_line - (d * 10);
+				cut_line = d;
+				cut_line_buff[i] = r;
+			}else{
+				cut_line_buff[i] = 0x10001234;
+			}
 		}
+	}
+	for (uint8_t i = image->w / pixel_wid; i > 0 ; i--) {
+		printf("%d\n",cut_line_buff[i]);
 	}
 
 	if ((pixel_hei == 0) || (image->h < pixel_hei)) {
@@ -302,60 +322,62 @@ void pixel_generate(void)
 		uint32_t ypixel = y * pixel_hei * image->w * fmt->BytesPerPixel;
 		for (uint32_t x = 0; x < image->w / pixel_wid; x++)
 		{
-			uint32_t wpos   = 0;
-			uint32_t id_cnt = x + (y * (image->w / pixel_wid));
-			uint32_t xpixel = x * pixel_wid * fmt->BytesPerPixel;
+			if ((cut_line_old == 0) || (cut_line_buff[x] == x)) {
+				uint32_t wpos   = 0;
+				uint32_t id_cnt = x + (y * (image->w / pixel_wid));
+				uint32_t xpixel = x * pixel_wid * fmt->BytesPerPixel;
 
-			/* 指定範囲のマップチップデータ取得 */
-			for (uint32_t j = 0; j < pixel_hei; j++)
-			{
-				uint32_t cuty = j * image->w * fmt->BytesPerPixel;
-				for (uint32_t i = 0; i < pixel_wid; i++)
+				/* 指定範囲のマップチップデータ取得 */
+				for (uint32_t j = 0; j < pixel_hei; j++)
 				{
-					uint32_t cutx = i * fmt->BytesPerPixel;
-					for (uint32_t rgbx = 0; rgbx < fmt->BytesPerPixel; rgbx++)
+					uint32_t cuty = j * image->w * fmt->BytesPerPixel;
+					for (uint32_t i = 0; i < pixel_wid; i++)
 					{
-						uint32_t pos = rgbx + cutx + cuty + xpixel + ypixel;
-						color[wpos] = p[pos];
-						wpos++;
+						uint32_t cutx = i * fmt->BytesPerPixel;
+						for (uint32_t rgbx = 0; rgbx < fmt->BytesPerPixel; rgbx++)
+						{
+							uint32_t pos = rgbx + cutx + cuty + xpixel + ypixel;
+							color[wpos] = p[pos];
+							wpos++;
+						}
 					}
 				}
-			}
 
-			/* RGBデータの生成 */
-			for (uint32_t z = 0; z < wpos; z = z + fmt->BytesPerPixel)
-			{
-				uint32_t pixel;
-
-				if (fmt->BytesPerPixel == 3)
+				/* RGBデータの生成 */
+				for (uint32_t z = 0; z < wpos; z = z + fmt->BytesPerPixel)
 				{
-					pixel = rgb_generate(0xff, color[z + 2], color[z + 1], color[z], type, color_bit);
-				}
-				else
-				{
-					pixel = rgb_generate(color[z + 3], color[z], color[z + 1], color[z + 2], type, color_bit);
-				}
-				// fprintf(stderr, "ID = %4d, マップチップの切り取り位置 = %4d, color = 0x%08x\n", id_cnt, z / fmt->BytesPerPixel, pixel);
+					uint32_t pixel;
 
-				if (memory_type == 1) {
-					if (color_bit == 0) {
-						fprintf(fp, "%04x\n", pixel);
-					}else{
-						fprintf(fp, "%08x\n", pixel);
+					if (fmt->BytesPerPixel == 3)
+					{
+						pixel = rgb_generate(0xff, color[z + 2], color[z + 1], color[z], type, color_bit);
 					}
-				} else {
-					if (color_bit == 0) {
-						fprintf(fp, "0x%04x\n", pixel);
-					}else{
-						fprintf(fp, "0x%08x\n", pixel);
+					else
+					{
+						pixel = rgb_generate(color[z + 3], color[z], color[z + 1], color[z + 2], type, color_bit);
+					}
+					// fprintf(stderr, "ID = %4d, マップチップの切り取り位置 = %4d, color = 0x%08x\n", id_cnt, z / fmt->BytesPerPixel, pixel);
+
+					if (memory_type == 1) {
+						if (color_bit == 0) {
+							fprintf(fp, "%04x\n", pixel);
+						}else{
+							fprintf(fp, "%08x\n", pixel);
+						}
+					} else {
+						if (color_bit == 0) {
+							fprintf(fp, "0x%04x\n", pixel);
+						}else{
+							fprintf(fp, "0x%08x\n", pixel);
+						}
 					}
 				}
-			}
-			fprintf(stderr, "ID = %3d,  マップチップのサイズ = %4d\n", id_cnt, wpos / fmt->BytesPerPixel);
+				fprintf(stderr, "ID = %3d,  マップチップのサイズ = %4d\n", id_cnt, wpos / fmt->BytesPerPixel);
 
-			/* マップチップデータの切り取りが終了したら改行する */
-			if (memory_type == 0) {
-				fprintf(fp, "\n");
+				/* マップチップデータの切り取りが終了したら改行する */
+				if (memory_type == 0) {
+					fprintf(fp, "\n");
+				}
 			}
 		}
 	}
@@ -389,16 +411,17 @@ static void sdl_init(void)
  */
 int main(int argc, char **argv)
 {
-	if (0 != system_init(argv[1])) {
-		fprintf(stderr, "引数にファイルを選択してください。\n");
-		fclose(fp);
-		SDL_Quit();
-		return 1;
-	}
+	
+	// if (0 != system_init(argv[1])) {
+	// 	fprintf(stderr, "引数にファイルを選択してください。\n");
+	// 	fclose(fp);
+	// 	SDL_Quit();
+	// 	return 1;
+	// }
 
-	sdl_init();
-	pixel_generate();
-	fprintf(stderr, "ファイルを出力しました %s\n", dir_path);
+	// sdl_init();
+	// pixel_generate();
+	// fprintf(stderr, "ファイルを出力しました %s\n", dir_path);
 
 	return 0;
 }
