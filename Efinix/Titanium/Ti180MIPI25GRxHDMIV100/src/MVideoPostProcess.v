@@ -112,7 +112,7 @@ MVideoTimingGen #(
 //-----------------------------------------------------------------------------
 // 内部用高速クロックを ビデオタイミングに変換
 //-----------------------------------------------------------------------------
-localparam lpVdcFifoBitWidth	= 8;
+localparam lpVdcFifoBitWidth	= 2;
 localparam lpVdcFifoDepth		= 8192 / lpVdcFifoBitWidth;
 localparam lpVdcFifoBitLoop		= 16   / lpVdcFifoBitWidth;
 localparam lpVdcFifoFullAlMost	= 16;
@@ -140,7 +140,7 @@ generate
 		);
 	end
 endgenerate
-
+//
 assign oAdv7511Vs	= wVgaGenVs;
 assign oAdv7511Hs	= wVgaGenHs;
 assign oAdv7511De	= wVgaGenDe;
