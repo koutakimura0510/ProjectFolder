@@ -48,4 +48,8 @@ generate
 	end
 endgenerate
 
+EFX_RAM10 #(
+	
+)
+
 endmodule
