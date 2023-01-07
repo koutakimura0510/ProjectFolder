@@ -83,9 +83,6 @@ adv7511_config #(
 //-----------------------------------------------------------------------------
 // SYNC信号生成
 //-----------------------------------------------------------------------------
-localparam 	lpVtgRstMaxCnt	  = 1920;
-localparam 	lpVtgRstBitWidth  = 11;
-
 wire 		wVgaGenHs, wVgaGenVs, wVgaGenDe, wVgaGenFDe;
 reg [2:0]	rVtgRST;
 
@@ -109,12 +106,14 @@ MVideoTimingGen #(
 // ColorBar Gen
 //-----------------------------------------------------------------------------
 
+// MColorBarGen mColorBarGen
+
 
 //-----------------------------------------------------------------------------
 // 内部用高速クロックを ビデオタイミングに変換
 //-----------------------------------------------------------------------------
-localparam lpVdcFifoBitWidth	= 1;
-localparam lpVdcFifoDepth		= (8192*2) / lpVdcFifoBitWidth;
+localparam lpVdcFifoBitWidth	= 8;
+localparam lpVdcFifoDepth		= 8192 / lpVdcFifoBitWidth;
 localparam lpVdcFifoBitLoop		= 16   / lpVdcFifoBitWidth;
 localparam lpVdcFifoFullAlMost	= 16;
 
@@ -152,6 +151,9 @@ assign oAdv7511Data = wVdcRd;	// ADV7511, YUYV -> [15:8] U,V, [7:0] Y
 // RST Generate
 // 出力するピクセルデータが一定数溜まるまで VGA の Rst Active をキープする
 //-----------------------------------------------------------------------------
+localparam 	lpVtgRstMaxCnt	  = 1920;
+localparam 	lpVtgRstBitWidth  = 11;
+
 reg 						rVtgRstSel, qVtgRstSelCke;
 reg 						qVtgRstCntCke;
 reg  [lpVtgRstBitWidth-1:0] rVtgRstCnt;

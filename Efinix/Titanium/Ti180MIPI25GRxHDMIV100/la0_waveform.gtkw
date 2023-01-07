@@ -1,6 +1,6 @@
 [dumpfile] "D:\workspace\Efinix\Titanium\Ti180MIPI25GRxHDMIV100\la0_waveform.vcd"
-[dumpfile_mtime] "Wed Jan 04 12:43:39 2023"
-[dumpfile_size] 507
+[dumpfile_mtime] "Fri Jan 06 17:11:55 2023"
+[dumpfile_size] 627
 [savefile] "D:\workspace\Efinix\Titanium\Ti180MIPI25GRxHDMIV100\la0_waveform.gtkw"
 [timestart] 0
 [size] 1000 600
@@ -9,6 +9,6 @@
 [signals_width] 126
 [sst_expanded] 1
 @22
-top.\MCsiRxController/genblk1[0].fifoController/iWd
-top.\MCsiRxController/genblk1[0].fifoController/ofull
-top.\MCsiRxController/genblk1[0].fifoController/iWe
+top.\MCsiRxController/genblk1[0].mCsiDualClkFIFO/ofull
+top.\MCsiRxController/genblk1[0].mCsiDualClkFIFO/iWe
+top.\MCsiRxController/genblk1[0].mCsiDualClkFIFO/iWd[7:0]

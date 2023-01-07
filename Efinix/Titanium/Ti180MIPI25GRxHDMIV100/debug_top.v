@@ -83,7 +83,7 @@ module edb_top (
     edb_vio_top #(
         .NUM_PROBE_IN           ( 7 ),
         .NUM_PROBE_OUT          ( 1 ),
-        .UUID           ( 128'hadcfb99a51664107b5d4d5c181ad9698 ),
+        .UUID           ( 128'h535a4454c9474ca08bda1f4e43b62fc0 ),
         .PROBE_IN0_WIDTH        ( 32 ),
         .PROBE_IN1_WIDTH        ( 12 ),
         .PROBE_IN2_WIDTH        ( 12 ),

@@ -400,7 +400,7 @@ wire [lpPulseGenNumber-1:0] wSampling = {
 	wMipiRxVs,
 	wMipiRxVd,
 	1'b0,
-	1'b1
+	1'b0
 };
 wire [lpPulseGenNumber-1:0] wPulse;
 //
@@ -456,29 +456,28 @@ assign oTestPort[11] = wMipiRxVd;	// Pin8
 // 
 // 自動生成のロジアナを使用する場合は、手動生成 module をコメントアウトする
 //-----------------------------------------------------------------------------
-// edb_top edb_top_inst (
-//     .bscan_CAPTURE      ( jtag_inst1_CAPTURE ),
-//     .bscan_DRCK         ( jtag_inst1_DRCK ),
-//     .bscan_RESET        ( jtag_inst1_RESET ),
-//     .bscan_RUNTEST      ( jtag_inst1_RUNTEST ),
-//     .bscan_SEL          ( jtag_inst1_SEL ),
-//     .bscan_SHIFT        ( jtag_inst1_SHIFT ),
-//     .bscan_TCK          ( jtag_inst1_TCK ),
-//     .bscan_TDI          ( jtag_inst1_TDI ),
-//     .bscan_TMS          ( jtag_inst1_TMS ),
-//     .bscan_UPDATE       ( jtag_inst1_UPDATE ),
-//     .bscan_TDO          ( jtag_inst1_TDO ),
-//     .vio0_clk       	( iSCLK ),
-//     .vio0_Axi_rdata    	( rAxiRdata ),
-//     .vio0_Axi_araddr   	( wAxiAraddr ),
-// 	.vio0_HsyncCnt	   	( wHsyncCntMonitor ),
-// 	.vio0_PplCnt	   	( wPplCntMonitor ),
-// 	.vio0_Datatype		( wMipiRxOutDatatype ),
-// 	.vio0_WordCnt		( wMipiRxWordCnt ),
-// 	.vio0_ShortPkt		( wMipiRxShortpkt ),
-// 	.vio0_PCLK			( wMipiRxPCLK )
-// 	// .vio0_PixelData   	( wMipiRxPixelData )
-// );
+edb_top edb_top_inst (
+    .bscan_CAPTURE      ( jtag_inst1_CAPTURE ),
+    .bscan_DRCK         ( jtag_inst1_DRCK ),
+    .bscan_RESET        ( jtag_inst1_RESET ),
+    .bscan_RUNTEST      ( jtag_inst1_RUNTEST ),
+    .bscan_SEL          ( jtag_inst1_SEL ),
+    .bscan_SHIFT        ( jtag_inst1_SHIFT ),
+    .bscan_TCK          ( jtag_inst1_TCK ),
+    .bscan_TDI          ( jtag_inst1_TDI ),
+    .bscan_TMS          ( jtag_inst1_TMS ),
+    .bscan_UPDATE       ( jtag_inst1_UPDATE ),
+    .bscan_TDO          ( jtag_inst1_TDO ),
+    .vio0_clk       	( iSCLK ),
+    .vio0_Axi_rdata    	( rAxiRdata ),
+    .vio0_Axi_araddr   	( wAxiAraddr ),
+	.vio0_HsyncCnt	   	( wHsyncCntMonitor ),
+	.vio0_PplCnt	   	( wPplCntMonitor ),
+	.vio0_Datatype		( wMipiRxOutDatatype ),
+	.vio0_WordCnt		( wMipiRxWordCnt ),
+	.vio0_ShortPkt		( wMipiRxShortpkt ),
+	.vio0_PCLK			( wMipiRxPCLK )
+);
 
 
 endmodule

@@ -23,7 +23,7 @@ module edb_top (
     input  la0_clk,
     input  la0_probe0,
     input  la0_probe1,
-    input  la0_probe2
+    input  [7:0] la0_probe2
 );
 
     localparam HUB_CS_WIDTH = 15;
@@ -82,13 +82,13 @@ module edb_top (
         .TRIGOUT_EN         ( 0 ),
         .INPUT_PIPE_STAGES      ( 1 ),
         .CAPTURE_CONTROL    ( 0 ),
-        .UUID   ( 128'h1eadac55a9164613993e33b9f5e27924 ),
+        .UUID   ( 128'h8959cbc9954149539c7576c7290abe71 ),
         .CNDTNL_STRG_EN     ( 0 ),
         .PROBE0_WIDTH       ( 1 ),
         .PROBE0_TYPE        ( 1 ),
         .PROBE1_WIDTH       ( 1 ),
         .PROBE1_TYPE        ( 1 ),
-        .PROBE2_WIDTH       ( 1 ),
+        .PROBE2_WIDTH       ( 8 ),
         .PROBE2_TYPE        ( 1 )
     ) la0 (
         .bscan_CAPTURE                  ( bscan_CAPTURE ),

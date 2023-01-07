@@ -1,4 +1,5 @@
 outflow
+!src/sample/adv7511_reg.mem
 !Ti180MIPI25GRxHDMIV100.xml
 !Ti180MIPI25GRxHDMIV100.peri.xml
 Ti180MIPI25GRxHDMIV100.peri.pre_import.xml

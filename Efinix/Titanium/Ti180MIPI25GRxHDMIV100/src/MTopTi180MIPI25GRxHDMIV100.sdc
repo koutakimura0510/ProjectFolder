@@ -183,8 +183,8 @@ set_output_delay -clock iBCLK -reference_pin [get_ports {iBCLK~CLKOUT~333~337}] 
 set_output_delay -clock iBCLK -reference_pin [get_ports {iBCLK~CLKOUT~333~337}] -min -0.140 [get_ports {oAdv7511SclOe}]
 set_input_delay -clock iBCLK -reference_pin [get_ports {iBCLK~CLKOUT~333~334}] -max 0.414 [get_ports {iAdv7511Sda}]
 set_input_delay -clock iBCLK -reference_pin [get_ports {iBCLK~CLKOUT~333~334}] -min 0.276 [get_ports {iAdv7511Sda}]
-set_output_delay -clock iBCLK -reference_pin [get_ports {iBCLK~CLKOUT~333~336}] -max 0.263 [get_ports {oAdv7511Sda}]
-set_output_delay -clock iBCLK -reference_pin [get_ports {iBCLK~CLKOUT~333~336}] -min -0.140 [get_ports {oAdv7511Sda}]
+set_output_delay -clock iBCLK -reference_pin [get_ports {iBCLK~CLKOUT~333~336}] -max 0.263 [get_ports {oAdv7511SdaOe}]
+set_output_delay -clock iBCLK -reference_pin [get_ports {iBCLK~CLKOUT~333~336}] -min -0.140 [get_ports {oAdv7511SdaOe}]
 
 # Clockout Interface
 ######################

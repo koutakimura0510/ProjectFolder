@@ -275,21 +275,21 @@ end
 // CSI2-IP から出力されるデータは垂れ流しで全て受け付ける。
 // 
 // ※ Titanium の DualClkRam が 最大8bit ～ 10bit, 深さ1024 までしか対応していない。
-//	力技で 1bit,深さ16384 の RAM を 64個使用し対応している。
+// 
 //	BRAM のプリミティブ活用や、コードからの合成結果については試行回数が必要。
 //	Quantum アーキテクチャの特徴を生かして、カスケード接続が定石か？
 //-----------------------------------------------------------------------------
-localparam lpCdcFifoBitWidth	= 1;
-localparam lpCdcFifoDepth		= (8192*2) / lpCdcFifoBitWidth;	// サイズが 32768 だと合成エラー, MAX16384のよう
+localparam lpCdcFifoBitWidth	= 8;
+localparam lpCdcFifoDepth		= 8192 / lpCdcFifoBitWidth;
 localparam lpCdcFifoBitLoop		= 64   / lpCdcFifoBitWidth;
 localparam lpCdcFIfoFullAlMost	= 4;
 //
-wire [63:0] 					wDualFifoRd;
-wire [lpCdcFifoBitLoop-1:0] 	wDualFifoEmp;
-wire [lpCdcFifoBitLoop-1:0] 	wDualFifoRvd;
-reg  							qDualFifoRe;
-wire [lpCdcFifoBitLoop-1:0] 	wDualFifoFull;
-reg  							qDualFifoWe;
+wire [63:0] 					wCdcFifoRd;
+wire [lpCdcFifoBitLoop-1:0] 	wCdcFifoEmp;
+wire [lpCdcFifoBitLoop-1:0] 	wCdcFifoRvd;
+reg  							qCdcFifoRe;
+wire [lpCdcFifoBitLoop-1:0] 	wCdcFifoFull;
+reg  							qCdcFifoWe;
 
 genvar n;
 
@@ -302,12 +302,12 @@ generate
 		) mCsiDualClkFIFO (
 			// src side
 			.iWd(wMipiRxData[(n+1)*lpCdcFifoBitWidth-1:n*lpCdcFifoBitWidth]),
-			.iWe(qDualFifoWe),				.ofull(wDualFifoFull[n]),
+			.iWe(qCdcFifoWe),				.ofull(wCdcFifoFull[n]),
 			.iSrcClk(iPCLK),				.iSrcRst(iPRST),
 			// dst side
-			.oRd(wDualFifoRd[(n+1)*lpCdcFifoBitWidth-1:n*lpCdcFifoBitWidth]),
-			.oRvd(wDualFifoRvd[n]),
-			.iRe(qDualFifoRe),				.oEmp(wDualFifoEmp[n]),
+			.oRd(wCdcFifoRd[(n+1)*lpCdcFifoBitWidth-1:n*lpCdcFifoBitWidth]),
+			.oRvd(wCdcFifoRvd[n]),
+			.iRe(qCdcFifoRe),				.oEmp(wCdcFifoEmp[n]),
 			.iDstClk(iFCLK),				.iDstRst(iFRST)
 		);
 	end
@@ -315,7 +315,7 @@ endgenerate
 
 always @*
 begin
-	qDualFifoWe <= &{wMipiRxVd,~wDualFifoFull[0]};
+	qCdcFifoWe <= &{wMipiRxVd,~wCdcFifoFull[0]};
 end
 
 //-----------------------------------------------------------------------------
@@ -328,8 +328,8 @@ reg 		qPfcEmp;
 reg 		qPfcfull;
 
 MPixelFormatConverter mPixelFormatConverter (
-	.iRd(wDualFifoRd),		.oRe(wPfcRe),
-	.iRvd(wDualFifoRvd[0]),	.iEmp(qPfcEmp),
+	.iRd(wCdcFifoRd),		.oRe(wPfcRe),
+	.iRvd(wCdcFifoRvd[0]),	.iEmp(qPfcEmp),
 	.oWd(wPfcWd),			.oWe(wPfcWe),
 	.ifull(qPfcfull),
 	// common
@@ -338,8 +338,8 @@ MPixelFormatConverter mPixelFormatConverter (
 
 always @*
 begin
-	qDualFifoRe <= wPfcRe;
-	qPfcEmp		<= (~wDualFifoEmp[0]);
+	qCdcFifoRe	<= wPfcRe;
+	qPfcEmp		<= (~wCdcFifoEmp[0]);
 end
 
 //-----------------------------------------------------------------------------
@@ -350,8 +350,8 @@ end
 // ※ 16bit 深さ512 まで
 //-----------------------------------------------------------------------------
 localparam lpPfcFifoBitWidth	= 16;
-localparam lpPfcFifoDepth  		= (8192*2) / lpPfcFifoBitWidth;
-localparam lpPfcFifoBitLoop		= 16 / lpPfcFifoBitWidth;
+localparam lpPfcFifoDepth  		= 8192 / lpPfcFifoBitWidth;
+localparam lpPfcFifoBitLoop		= 16   / lpPfcFifoBitWidth;
 localparam lpPfcFIfoFullAlMost  = 16;
 //
 wire [15:0] 				wPfcFifoRd;			assign oVideoData = wPfcFifoRd;

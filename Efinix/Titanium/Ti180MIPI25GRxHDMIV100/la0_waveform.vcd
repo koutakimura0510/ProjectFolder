@@ -2,44 +2,48 @@
 $date today $end
 $timescale 1 ns $end
 $scope module top $end
-$var wire 1 0 MCsiRxController/genblk1[0].fifoController/iWd $end
-$var wire 1 1 MCsiRxController/genblk1[0].fifoController/ofull $end
-$var wire 1 2 MCsiRxController/genblk1[0].fifoController/iWe $end
+$var wire 1 0 MCsiRxController/genblk1[0].mCsiDualClkFIFO/ofull $end
+$var wire 1 1 MCsiRxController/genblk1[0].mCsiDualClkFIFO/iWe $end
+$var wire 8 2 MCsiRxController/genblk1[0].mCsiDualClkFIFO/iWd $end
 $upscope $end
 $enddefinitions $end
 #0
 $dumpvars
 00
 01
-12
+b00000000 2
 $end
-#79
-02
-#364
-12
-#844
-02
-#1129
-12
-#1609
-02
-#1894
-12
-#2048
+#128
 11
-#2052
+b10000000 2
+#608
 01
-#2374
-02
-#2659
-12
-#3139
-02
-#3424
-12
-#3904
-02
+#862
+b00000000 2
+#863
+b10000000 2
+#869
+11
+#1349
+01
+#1603
+b00000000 2
+#1604
+b10000000 2
+#1610
+11
+#2048
+10
+01
+#3084
+b00000000 2
+#3085
+b10000000 2
+#3825
+b00000000 2
+#3826
+b10000000 2
 #4095
-00
+10
 01
-02
+b10000000 2
