@@ -112,34 +112,30 @@ MVideoTimingGen #(
 //-----------------------------------------------------------------------------
 // 内部用高速クロックを ビデオタイミングに変換
 //-----------------------------------------------------------------------------
-localparam lpVdcFifoBitWidth	= 2;
-localparam lpVdcFifoDepth		= 8192 / lpVdcFifoBitWidth;
-localparam lpVdcFifoBitLoop		= 16   / lpVdcFifoBitWidth;
+localparam lpVdcFifoBitWidth	= 16;
+localparam lpVdcFifoCascade		= 16;
+localparam lpVdcFifoDepth		= 512 * lpVdcFifoCascade;
 localparam lpVdcFifoFullAlMost	= 16;
 
 wire [15:0] wVdcRd;
-wire [lpVdcFifoBitLoop-1:0]	wVdcfull;			assign oVideofull = wVdcfull[0];
+wire wVdcfull;						assign oVideofull = wVdcfull;
 
-genvar n;
-
-generate
-	for (n = 0; n < lpVdcFifoBitLoop; n = n + 1) begin
-		fifoDualController #(
-			.pFifoDepth(lpVdcFifoDepth),	.pFifoBitWidth(lpVdcFifoBitWidth),
-			.pFullAlMost(lpVdcFifoFullAlMost)
-		) mVideoDualClkFIFO (
-			// Write Side
-			.iWd(iVideoData[(n+1)*lpVdcFifoBitWidth-1:n*lpVdcFifoBitWidth]),
-			.iWe(iVideoVd),					.ofull(wVdcfull[n]),
-			.iSrcClk(iFCLK),				.iSrcRst(iFRST),
-			// Read Side
-			.oRd(wVdcRd[(n+1)*lpVdcFifoBitWidth-1:n*lpVdcFifoBitWidth]),
-			.iRe(wVgaGenFDe),
-			.oRvd(),						.oEmp(),
-			.iDstClk(iVCLK),				.iDstRst(iVRST)
-		);
-	end
-endgenerate
+fifoDualController #(
+	.pFifoDepth(lpVdcFifoDepth),
+	.pFifoBitWidth(lpVdcFifoBitWidth),
+	.pFifoCascade(lpVdcFifoCascade),
+	.pFullAlMost(lpVdcFifoFullAlMost)
+) mVideoDualClkFIFO (
+	// Write Side
+	.iWd(iVideoData),
+	.iWe(iVideoVd),					.oFull(wVdcfull),
+	.iSrcClk(iFCLK),				.iSrcRst(iFRST),
+	// Read Side
+	.oRd(wVdcRd),
+	.iRe(wVgaGenFDe),
+	.oRvd(),						.oEmp(),
+	.iDstClk(iVCLK),				.iDstRst(iVRST)
+);
 //
 assign oAdv7511Vs	= wVgaGenVs;
 assign oAdv7511Hs	= wVgaGenHs;

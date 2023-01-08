@@ -104,6 +104,7 @@ input 			axi_clk,
 // Status
 output 	[11:0]	oHsyncCntMonitor,
 output 	[11:0]	oPplCntMonitor,
+output 			oCdcFifoFull,
 //
 // Clk,Rst
 input			iSRST,
@@ -130,6 +131,12 @@ input			iFCLK
 // 
 // ※1Lane 8bit の場合、CSI2.5G SoftIP 生成時に 16bit 指定になっている。
 // 　define.vh・IPname.sv(今回は mCsiIpCOre) のソースの手動変更が必要になるので注意
+// 
+// データシートに記載はないが下記フォーマットでレジスタ値確認。
+// PixelPerClock・DataType が恐らく正常に出力されているので正しそうではある。
+// Raw16 = 0x2e
+// Raw20 = 0x2f 
+// 
 //-----------------------------------------------------------------------------
 assign oMipiDphyRx1_FORCE_RX_MODE	= 1'b0; // 用途不明
 assign oMipiDphyRx1_RESET_N			= qIpCorerHsnRST;
@@ -279,43 +286,38 @@ end
 //	BRAM のプリミティブ活用や、コードからの合成結果については試行回数が必要。
 //	Quantum アーキテクチャの特徴を生かして、カスケード接続が定石か？
 //-----------------------------------------------------------------------------
-localparam lpCdcFifoBitWidth	= 8;
-localparam lpCdcFifoDepth		= 8192 / lpCdcFifoBitWidth;
-localparam lpCdcFifoBitLoop		= 64   / lpCdcFifoBitWidth;
+localparam lpCdcFifoBitWidth	= 64;
+localparam lpCdcFifoCascade		= 8;
+localparam lpCdcFifoDepth		= 1024;
 localparam lpCdcFIfoFullAlMost	= 4;
 //
-wire [63:0] 					wCdcFifoRd;
-wire [lpCdcFifoBitLoop-1:0] 	wCdcFifoEmp;
-wire [lpCdcFifoBitLoop-1:0] 	wCdcFifoRvd;
-reg  							qCdcFifoRe;
-wire [lpCdcFifoBitLoop-1:0] 	wCdcFifoFull;
-reg  							qCdcFifoWe;
+wire [63:0] 	wCdcFifoRd;
+wire 			wCdcFifoEmp;
+wire 			wCdcFifoRvd;
+reg  			qCdcFifoRe;
+wire 			wCdcFifoFull;				assign oCdcFifoFull = wCdcFifoFull;
+reg  			qCdcFifoWe;
 
-genvar n;
 
-generate
-	for (n = 0; n < lpCdcFifoBitLoop; n = n + 1)
-	begin
-		fifoDualController #(
-			.pFifoDepth	(lpCdcFifoDepth),	.pFifoBitWidth(lpCdcFifoBitWidth),
-			.pFullAlMost(lpCdcFIfoFullAlMost)
-		) mCsiDualClkFIFO (
-			// src side
-			.iWd(wMipiRxData[(n+1)*lpCdcFifoBitWidth-1:n*lpCdcFifoBitWidth]),
-			.iWe(qCdcFifoWe),				.ofull(wCdcFifoFull[n]),
-			.iSrcClk(iPCLK),				.iSrcRst(iPRST),
-			// dst side
-			.oRd(wCdcFifoRd[(n+1)*lpCdcFifoBitWidth-1:n*lpCdcFifoBitWidth]),
-			.oRvd(wCdcFifoRvd[n]),
-			.iRe(qCdcFifoRe),				.oEmp(wCdcFifoEmp[n]),
-			.iDstClk(iFCLK),				.iDstRst(iFRST)
-		);
-	end
-endgenerate
+fifoDualController #(
+	.pFifoDepth(lpCdcFifoDepth),
+	.pFifoBitWidth(lpCdcFifoBitWidth),
+	.pFifoCascade(lpCdcFifoCascade),
+	.pFullAlMost(lpCdcFIfoFullAlMost)
+) mCsiDualClkFIFO (
+	// src side
+	.iWd(wMipiRxData),
+	.iWe(qCdcFifoWe),		.oFull(wCdcFifoFull),
+	.iSrcClk(iPCLK),		.iSrcRst(iPRST),
+	// dst side
+	.oRd(wCdcFifoRd),		.oRvd(wCdcFifoRvd),
+	.iRe(qCdcFifoRe),		.oEmp(wCdcFifoEmp),
+	.iDstClk(iFCLK),		.iDstRst(iFRST)
+);
 
 always @*
 begin
-	qCdcFifoWe <= &{wMipiRxVd,~wCdcFifoFull[0]};
+	qCdcFifoWe <= &{wMipiRxVd,~wCdcFifoFull};
 end
 
 //-----------------------------------------------------------------------------
@@ -329,7 +331,7 @@ reg 		qPfcfull;
 
 MPixelFormatConverter mPixelFormatConverter (
 	.iRd(wCdcFifoRd),		.oRe(wPfcRe),
-	.iRvd(wCdcFifoRvd[0]),	.iEmp(qPfcEmp),
+	.iRvd(wCdcFifoRvd),		.iEmp(qPfcEmp),
 	.oWd(wPfcWd),			.oWe(wPfcWe),
 	.ifull(qPfcfull),
 	// common
@@ -339,8 +341,9 @@ MPixelFormatConverter mPixelFormatConverter (
 always @*
 begin
 	qCdcFifoRe	<= wPfcRe;
-	qPfcEmp		<= (~wCdcFifoEmp[0]);
+	qPfcEmp		<= (~wCdcFifoEmp);
 end
+
 
 //-----------------------------------------------------------------------------
 // Dual Port Ram
@@ -350,41 +353,37 @@ end
 // ※ 16bit 深さ512 まで
 //-----------------------------------------------------------------------------
 localparam lpPfcFifoBitWidth	= 16;
-localparam lpPfcFifoDepth  		= 8192 / lpPfcFifoBitWidth;
-localparam lpPfcFifoBitLoop		= 16   / lpPfcFifoBitWidth;
+localparam lpPfcFifoCascade		= 1;
+localparam lpPfcFifoDepth  		= 512 * lpPfcFifoCascade;
 localparam lpPfcFIfoFullAlMost  = 16;
 //
-wire [15:0] 				wPfcFifoRd;			assign oVideoData = wPfcFifoRd;
-wire [lpPfcFifoBitLoop-1:0]	wPfcFifoRvd;		assign oVideoVd	  = wPfcFifoRvd[0];
-wire [lpPfcFifoBitLoop-1:0]	wPfcFifoEmp;
-reg 						qPfcFifoRe;
-wire [lpPfcFifoBitLoop-1:0]	wPfcFifoFull;
+wire [15:0] 	wPfcFifoRd;				assign oVideoData = wPfcFifoRd;
+wire 			wPfcFifoRvd;			assign oVideoVd	  = wPfcFifoRvd;
+wire 			wPfcFifoEmp;
+reg 			qPfcFifoRe;
+wire 			wPfcFifoFull;
 //
-genvar m;
-
-generate
-	for (m = 0; m < lpPfcFifoBitLoop; m = m + 1) begin
-		fifoController #(
-			.pFifoDepth	(lpPfcFifoDepth),	.pFifoBitWidth(lpPfcFifoBitWidth),
-			.pFullAlMost(lpPfcFIfoFullAlMost)
-		) mCsiPfcFifo (
-			// src side
-			.iWd(wPfcWd[(m+1)*lpPfcFifoBitWidth-1:m*lpPfcFifoBitWidth]),
-			.iWe(wPfcWe),					.ofull(wPfcFifoFull[m]),
-			// dst side
-			.oRd(wPfcFifoRd[(m+1)*lpPfcFifoBitWidth-1:m*lpPfcFifoBitWidth]),
-			.oRvd(wPfcFifoRvd[m]),
-			.iRe(qPfcFifoRe),				.oEmp(wPfcFifoEmp[m]),
-			// common
-			.iClk(iFCLK),					.iRst(iFRST)
-		);
-	end
-endgenerate
+fifoController #(
+	.pFifoDepth(lpPfcFifoDepth),
+	.pFifoBitWidth(lpPfcFifoBitWidth),
+	.pFifoCascade(lpPfcFifoCascade),
+	.pFullAlMost(lpPfcFIfoFullAlMost)
+) mCsiPfcFifo (
+	// src side
+	.iWd(wPfcWd),
+	.iWe(wPfcWe),			.oFull(wPfcFifoFull),
+	// dst side
+	.oRd(wPfcFifoRd),
+	.oRvd(wPfcFifoRvd),
+	.iRe(qPfcFifoRe),		.oEmp(wPfcFifoEmp),
+	// common
+	.iCLK(iFCLK),			.iRST(iFRST)
+);
 
 always @*
 begin
-	qPfcFifoRe 	<= (~iVideofull) & (~wPfcFifoEmp[0]);
-	qPfcfull	<= (~wPfcFifoFull[0]);
+	qPfcFifoRe 	<= (~iVideofull) & (~wPfcFifoEmp);
+	qPfcfull	<= (~wPfcFifoFull);
 end
 
 //-----------------------------------------------------------------------------

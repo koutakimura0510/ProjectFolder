@@ -13,7 +13,7 @@
  *
  * Revision    :
  * 29/Dec-2022 V1.00 New Release, Inh.fr. "MTopTi180MIPI25GRxHDMIV100.v" K.Kimura
- *
+ *					 DDRメモリを経由せずに MIPI Rx -> HDMI スルー出力とする
  *~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*/
 //-----------------------------------------------------------------------------
 module MTopTi180MIPI25GRxHDMIV100 (
@@ -259,6 +259,7 @@ wire 			wVideofull;
 //
 wire 	[11:0]	wHsyncCntMonitor;
 wire 	[11:0]	wPplCntMonitor;
+wire 			wCdcFifoFull;
 
 MCsiRxController MCsiRxController (
 	// CSI controller ouptut I/F port
@@ -324,6 +325,7 @@ MCsiRxController MCsiRxController (
 	// Status
 	.oHsyncCntMonitor(wHsyncCntMonitor),
 	.oPplCntMonitor(wPplCntMonitor),
+	.oCdcFifoFull(wCdcFifoFull),
 	// Common
 	.iSRST(qSRST),						.inSRST(qnSRST),
 	.iPRST(qPRST),						.inPRST(qnPRST),
@@ -388,19 +390,19 @@ MVideoPostProcess #(
 //-----------------------------------------------------------------------------
 localparam lpPulseGenNumber	= 5;						// pulse 生成個数
 localparam [32*lpPulseGenNumber-1:0] lpClkDivCnt = {	// 分周値
-	32'd5000,
+	32'd3,
 	32'd3,
 	32'd5000,
-	32'd0,
-	32'd30000000
+	32'd3,
+	32'd5000
 };
 
 wire [lpPulseGenNumber-1:0] wSampling = {
+	wVideofull,
+	wCdcFifoFull,
 	wMipiRxHs,
 	wMipiRxVs,
-	wMipiRxVd,
-	1'b0,
-	1'b0
+	wMipiRxVd
 };
 wire [lpPulseGenNumber-1:0] wPulse;
 //
@@ -412,9 +414,9 @@ begin
 	begin
 		MPulseGenerator #(
 			.pCntMax(lpClkDivCnt[32*(n+1)-1:32*n]), .pStartPulse(1'b0)
-		) MSPulseGenerator (
+		) mPulseGenerator (
 			.oPulse(wPulse[n]),	.iSampling(wSampling[n]),
-			.iRST(qPRST),		.iCLK(iPCLK)
+			.iRST(qFRST),		.iCLK(iFCLK)
 		);
 	end
 end

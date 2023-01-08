@@ -1,0 +1,56 @@
+{
+    "args": [
+        "-o",
+        "mCsiIpCore",
+        "--base_path",
+        "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip",
+        "--vlnv",
+        {
+            "vendor": "efinixinc.com",
+            "library": "mipi",
+            "name": "efx_csi2_rx_top",
+            "version": "1.0"
+        }
+    ],
+    "conf": {
+        "tINIT_NS": "100000",
+        "NUM_DATA_LANE": "2",
+        "ASYNC_STAGE": "2",
+        "CLOCK_FREQ_MHZ(mhz)": "100",
+        "PIXEL_FIFO_DEPTH": "2048",
+        "AREGISTER": "8",
+        "Pack_40": "1",
+        "Pack_48": "1",
+        "Pack_56": "1",
+        "Pack_64": "1",
+        "FRAME_MODE": "0",
+        "ENABLE_VCX": "0"
+    },
+    "output": {
+        "external_source": [
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\mCsiIpCore_define.vh",
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\mCsiIpCore_tmpl.vhd",
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\mCsiIpCore_tmpl.v",
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\mCsiIpCore.sv"
+        ],
+        "external_example": [
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\Ti180M484_devkit\\data_unpack.v",
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\Ti180M484_devkit\\datatype_gen.v",
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\Ti180M484_devkit\\dual_clock_fifo.v",
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\Ti180M484_devkit\\pattern_gen.v",
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\Ti180M484_devkit\\shift_reg.v",
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\Ti180M484_devkit\\simple_dual_port_ram.v",
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\Ti180M484_devkit\\vga_gen.v",
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\Ti180M484_devkit\\reset.v",
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\Ti180M484_devkit\\top_2_5g.sv",
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\Ti180M484_devkit\\efx_csi2_tx_top.sv",
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\Ti180M484_devkit\\Ti180_mipi.sdc",
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\Ti180M484_devkit\\Ti180_mipi.xml",
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\Ti180M484_devkit\\Ti180_mipi.peri.xml",
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\Ti180M484_devkit\\mCsiIpCore.sv",
+            "D:\\workspace\\Efinix\\Titanium\\Ti180MIPI25GRxHDMIV100\\ip\\mCsiIpCore\\Ti180M484_devkit\\mCsiIpCore_define.vh"
+        ]
+    },
+    "sw_version": "2022.1.226",
+    "generated_date": "2023-01-01T07:35:15.955932"
+}

@@ -21,7 +21,7 @@ module userFifoDual #(
 
 localparam [pAddrWidth-1:0] pDepth = pBuffDepth - 1;
 
-(* ram_style = "block" *) reg [pBitWidth-1:0] fifo [0:pDepth];
+(* ram_style = "block_ram" *) reg [pBitWidth-1:0] fifo [0:pDepth];
 reg [pBitWidth-1:0] rd;     assign oRD = rd;
 
 integer i;
