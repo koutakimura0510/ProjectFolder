@@ -1,22 +1,15 @@
-/*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*
- *
- * File Name   : MTopTi180MIPI25GRxHDMIV100.v
- * Description : Ti180M484 dev Kit MIPI RX to HDMI Output Simple Demo.
- * Simulator   : VeritakWin Ver.3.84D Build May.23.2011
- * Implem. Tool: Efinix Efinity 2022.1.226.2.11
- * Explanation : 
- *
- * Copyright(c) 2011-2022, by Net-Vision Corp. All rights reserved.
- * (Note) For this source code, it is forbidden using and issuing
- *        without permission.
- * （注） このソース・コードの無断使用および無断持ち出しを禁止します．
- *
- * Revision    :
- * 29/Dec-2022 V1.00 New Release, Inh.fr. "MTopTi180MIPI25GRxHDMIV100.v" K.Kimura
- *
- *~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*/
 //-----------------------------------------------------------------------------
-module MTopTi180MIPI25GRxHDMIV100 (
+// Create  2023/1/7
+// Author  kimura
+// Editor  VSCode ver1.70.0
+// Build   Efinity2022.1.22.6
+// Borad   Ti180M484
+// -
+// BRAM プリミティブ確認プロジェクト
+// efx_run.bat .\Ti180BramPrimitiveV100.xml --flow compile <- コンパイル
+// efx_run.py <project name>.xml --flow program --pgm_opts mode=jtag <- FPGA 書き込み
+//-----------------------------------------------------------------------------
+module MTopTi180BramV100 (
 //
 // User Interface LED, SW
 output	[ 5:0] 	oLed,
@@ -26,7 +19,7 @@ input  	[ 1:0]	iPushSw,
 input			iSCLK,				// 100 [MHz]
 input			iPCLK,				// 25 [MHz]
 input			iPll2Locked,		// PLL1 Locked
-output			oPll2nRst,		// PLL1 Rst Active Low
+output			oPll2nRst,			// PLL1 Rst Active Low
 //
 // Jtag I/F
 input  			jtag_inst1_TDI,
@@ -86,8 +79,52 @@ end
 //-----------------------------------------------------------------------------
 // BRAM Core
 //-----------------------------------------------------------------------------
+localparam lpFifoBitWidth	= 8;
+localparam lpFifoDepth		= 1024;
+localparam lpFullAlMost		= 16;
 
+reg	[lpFifoBitWidth-1:0]rWd;
+reg  					qWe;
+wire 					wFull;
+wire[lpFifoBitWidth-1:0]wRd;
+reg  					qRe;
+wire 					wRvd;
+wire 					wEmp;
+//
+reg 					qMaxCntCke;
+reg [26:0]				rCnt;
 
+EfxRamFifoController #(
+	.pFifoBitWidth(lpFifoBitWidth),
+	.pFifoDepth(lpFifoDepth),
+	.pFullAlMost(lpFullAlMost)
+) EfxRamFifoController (
+	.iWd	(rWd),			.iWe	(qWe),
+	.oFull	(wFull),
+	.oRd	(wRd),			.iRe	(qRe),
+	.oRvd	(wRvd),			.oEmp	(wEmp),
+	.iRST	(qSRST),		.iCLK	(iSCLK)
+);
+
+always @(posedge iSCLK)
+begin
+	if (qSRST) 		rWd <= {lpFifoBitWidth{1'b0}};
+	else if (qWe)	rWd <= rWd + 1'b1;
+	else 			rWd <= rWd;
+
+	if (qSRST)		rCnt <= 0;
+	else if (qMaxCntCke) rCnt <= 0;
+	else 			rCnt <= rCnt + 1'b1;
+end
+
+always @*
+begin
+	qMaxCntCke <= (rCnt == 'd10000000);
+	qWe <= (~wFull);
+	qRe <= (~wEmp) & qMaxCntCke;
+end
+
+assign oLed = wRd[5:0];
 
 
 endmodule
