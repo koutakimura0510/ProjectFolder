@@ -22,81 +22,73 @@
 // 
 //----------------------------------------------------------
 module fifoController #(
-    parameter 					pFifoDepth        	= 1024,		// FIFO BRAMのサイズ指定
-    parameter 					pFifoBitWidth     	= 8,		// bitサイズ
-	parameter 					pFifoCascade		= 1,     	// BRAM使用個数
-	parameter					pFullAlMost 		= 6,		// 指定値、早く full 出力
-	parameter	[0:0]			pFullRst 			= 1'b0,
-	parameter	[0:0]			pEmpRst 			= 1'b1,
-	parameter					pFifoBlockRam		= "yes",	// yes BRAM, no reg
-	parameter					pAddrWidth			= fBitWidth(pFifoDepth)
+    parameter 	pFifoDepth        	= 16,		// FIFO BRAMのサイズ指定
+    parameter 	pFifoBitWidth     	= 8,		// bitサイズ
+	parameter	pFullAlMost 		= 6,		// 指定値、早く full 出力
+	parameter	pFifoBlockRam		= "yes"		// yes BRAM, no reg
 )(
 	// src side
     input   [pFifoBitWidth-1:0] iWd,        // write data
-    input                       iWe,        // write enable Active High
-    output                      oFull,      // Fifo Full Assert, Active High
+    input                       iWe,        // write enable 有効データ書き込み
+    output                      ofull,      // 最大書き込み時High
 	// dst side
     output  [pFifoBitWidth-1:0] oRd,        // read data
-    input                       iRe,        // read enable Active High
-    output                      oRvd,       // Valid Data
-    output                      oEmp,       // Fifo Empty
+    input                       iRe,        // read enable
+    output                      oRvd,       // 有効データ出力
+    output                      oEmp,       // バッファ空時High
 	//
-    input                       iRST,
-    input                       iCLK
+    input                       iRst,
+    input                       iClk
 );
-	// .iWd	(),				.iWe	(),
-	// .oFull	(),
-	// .oRd	(),				.iRe	(),
-	// .oRvd	(),				.oEmp	(),
-	// .iRST	(qSRST),		.iCLK	(iSCLK)
+
+//----------------------------------------------------------
+// FIFO の深さの bit幅取得
+//----------------------------------------------------------
+localparam pAddrWidth  = fBitWidth(pFifoDepth);
 
 
 //-----------------------------------------------------------------------------
 // アドレスの更新
 //-----------------------------------------------------------------------------
-reg [pAddrWidth-1:0] rWa, rRa, rRaOld;
-reg qWe, qRe;
+reg [pAddrWidth-1:0] rWA, rRA, rORP;
+reg qWE, qRE;
 
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
-    if (iRST)       rWa <= {pAddrWidth{1'b0}};
-    else if (qWe)   rWa <= rWa + 1'b1;
-    else            rWa <= rWa;
+    if (iRst)       rWA <= {pAddrWidth{1'b0}};
+    else if (qWE)   rWA <= rWA + 1'b1;
+    else            rWA <= rWA;
 	//
-    if (iRST)      	rRa <= {pAddrWidth{1'b0}};
-    else if (qRe)  	rRa <= rRa + 1'b1;
-    else           	rRa <= rRa;
+    if (iRst)      	rRA <= {pAddrWidth{1'b0}};
+    else if (qRE)  	rRA <= rRA + 1'b1;
+    else           	rRA <= rRA;
 	// 前回のrpが更新されていたら新規データを出力できる状態と判断する
-    if (iRST)   	rRaOld <= {pAddrWidth{1'b0}};
-    else        	rRaOld <= rRa;
+    if (iRst)   	rORP <= {pAddrWidth{1'b0}};
+    else        	rORP <= rRA;
 end
-
 
 //----------------------------------------------------------
 // ハンドシェイク信号出力
 //----------------------------------------------------------
 localparam lpFullAlMost = pFullAlMost + 1;
 
-reg 					rFull;						assign oFull = rFull;
-reg 					rEmp;						assign oEmp  = rEmp;
-reg 					rRvd;						assign oRvd  = rRvd;
-reg 					qFullAllmost, qEmp, qRvd;
-reg [pFullAlMost-1:0] 	qFull;
-reg [pAddrWidth-1:0] 	qWAn [0:pFullAlMost];
+reg qFullAllmost, qEMP, qRVD;
+reg [pFullAlMost-1:0] qFull;
+reg rFLL;							assign ofull = rFLL;
+reg rEMP;							assign oEmp  = rEMP;
+reg rRvd;							assign oRvd = rRvd;
+reg [pAddrWidth-1:0] qWAn [0:pFullAlMost];
 
-always @(posedge iCLK)
+always @(posedge iClk)
 begin
-	if (iRST)				rFull <= pFullRst;
-	else if (qFullAllmost)	rFull <= 1'b1;
-	else					rFull <= 1'b0;
+    if (iRst)       rFLL <= 1'b0;
+    else            rFLL <= qFullAllmost;
 
-	if (iRST)				rEmp <= pEmpRst;
-	else if (qEmp)			rEmp <= 1'b1;
-	else					rEmp <= 1'b0;
+    if (iRst)       rEMP <= 1'b1;
+    else            rEMP <= qEMP;
 
-	if (iRST)				rRvd <= 1'b0;
-	else if	(qRvd)			rRvd <= 1'b1;
-	else					rRvd <= 1'b0;
+    if (iRst)       rRvd <= 1'b0;
+    else            rRvd <= qRVD;
 end
 //
 integer n;
@@ -106,8 +98,8 @@ generate
 	begin
 		for (n = 1; n < lpFullAlMost; n = n + 1)
 		begin
-			qWAn[n-1]   <= rWa + n;
-			qFull[n-1]	<= (qWAn[n-1] == rRa);
+			qWAn[n-1]   <= rWA + n;
+			qFull[n-1]	<= (qWAn[n-1] == rRA);
 		end
 		qFullAllmost <= |{qFull};
 	end
@@ -115,44 +107,42 @@ endgenerate
 
 always @*
 begin
-    qEmp <= (rWa == rRa);
-    qRvd <= (rRa != rRaOld);
-    qWe  <= iWe;
-    qRe  <= iRe & (~qEmp);
+    qEMP <= (rWA  == rRA);
+    qRVD <= (rRA != rORP);
+    // qRVD <= iRe & (~qEMP);
+    qWE  <= iWe;
+    qRE  <= iRe & (~qEMP);
 end
 
 
 //----------------------------------------------------------
 // FIFO 動作
 //----------------------------------------------------------
-wire	[pFifoBitWidth-1:0] wRd;					assign oRd = wRd;
-
-genvar m;
-
-generate
-	for (m = 0; m < pFifoCascade; m = m + 1)
-	begin
-		userFifo #(
-			.pBuffDepth    	(pFifoDepth),
-			.pBitWidth     	(pFifoBitWidth),
-			.pAddrWidth    	(pAddrWidth),
-			.pFifoBlockRam	(pFifoBlockRam)
-		) USER_FIFO (
-			// write
-			.iWD(iWd[(m+1)*(pFifoBitWidth/pFifoCascade)-1:m*(pFifoBitWidth/pFifoCascade)]),
-			.iWA(rWa),			.iWE(qWe),
-			// read
-			.oRD(wRd[(m+1)*(pFifoBitWidth/pFifoCascade)-1:m*(pFifoBitWidth/pFifoCascade)]),
-			.iRA(rRa),
-			.iClk(iCLK)
-		);
-	end
-endgenerate
+reg  [pFifoBitWidth-1:0] rRD;					assign oRd = rRD;
+wire [pFifoBitWidth-1:0] wRD;
 
 
-//-----------------------------------------------------------------------------
+userFifo #(
+    .pBuffDepth    	(pFifoDepth),
+    .pBitWidth     	(pFifoBitWidth),
+    .pAddrWidth    	(pAddrWidth),
+	.pFifoBlockRam	(pFifoBlockRam)
+) USER_FIFO (
+    // write side       read side
+    .iClk   (iClk),
+    .iWD    (iWd),      .oRD    (wRD),
+    .iWA    (rWA),      .iRA    (rRA),
+    .iWE    (qWE)
+);
+
+
+always @(posedge iClk)
+begin
+	rRD <= wRD;
+end
+
+
 // msb側の1を検出しbit幅を取得する
-//-----------------------------------------------------------------------------
 function[  7:0]	fBitWidth;
     input [31:0] iVAL;
     integer			i;

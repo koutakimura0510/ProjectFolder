@@ -24,14 +24,13 @@
 // 
 //----------------------------------------------------------
 module fifoDualController #(
-    parameter 					pFifoDepth  	= 1024,    	// FIFO BRAMのサイズ指定
-    parameter 					pFifoBitWidth   = 8,     	// Data Width
-    parameter 					pFifoCascade	= 1,     	// BRAM使用個数
+    parameter 					pFifoDepth  	= 256,    	// FIFO BRAMのサイズ指定
+    parameter 					pFifoBitWidth   = 24,     	// bitサイズ
 	parameter					pFullAlMost 	= 6			// 指定値、早く full 出力
 )(
-    input   [pFifoBitWidth-1:0] iWd,    	// write data
+    input   [pFifoBitWidth-1:0] iWd,    // write data
     input                       iWe,    	// write enable 有効データ書き込み
-    output                      oFull,   	// 最大書き込み時High
+    output                      ofull,   	// 最大書き込み時High
     output  [pFifoBitWidth-1:0] oRd,    	// read data
     input                       iRe,    	// read enable
     output                      oRvd,   	// 有効データ出力
@@ -143,27 +142,17 @@ end
 //----------------------------------------------------------
 wire [pFifoBitWidth-1:0] wRD;			assign oRd = wRD;
 
-genvar m;
-
-generate
-	for (m = 0; m < pFifoCascade; m = m + 1)
-	begin
-		userFifoDual #(
-			.pBuffDepth    (pFifoDepth),
-			.pBitWidth     (pFifoBitWidth),
-			.pAddrWidth    (lpAddrWidth)
-		) USER_FIFO_DUAL (
-			// write
-			.iWD(iWd[(m+1)*(pFifoBitWidth/pFifoCascade)-1:m*(pFifoBitWidth/pFifoCascade)]),
-			.iWA(rWA),			.iWE(qWE),
-			.iSrcClk(iSrcClk),  
-			// read
-			.oRD(wRD[(m+1)*(pFifoBitWidth/pFifoCascade)-1:m*(pFifoBitWidth/pFifoCascade)]),
-			.iRA(rRA),
-			.iDstClk(iDstClk)
-		);
-	end
-endgenerate
+userFifoDual #(
+    .pBuffDepth    (pFifoDepth),
+    .pBitWidth     (pFifoBitWidth),
+    .pAddrWidth    (lpAddrWidth)
+) USER_FIFO_DUAL (
+    // write side       read side
+    .iSrcClk(iSrcClk),  .iDstClk(iDstClk),
+    .iWD    (iWd),      .oRD    (wRD),
+    .iWA    (rWA),      .iRA    (rRA),
+    .iWE    (qWE)
+);
 
 
 ////////////////////////////////////////////////////////////

@@ -20,6 +20,9 @@ create_clock -period 50.0000 iPCLK
 create_clock -period  5.0000 iFCLK
 # create_clock -period 6.7340  iVCLK
 create_clock -period 13.4680  iVCLK
+create_clock -period 7.5008  pll_inst3_CLKOUT0
+create_clock -period 1.6835  pll_ddr_CLKOUT3
+create_clock -period 3.3670  pll_ddr_CLKOUT4
 create_clock -name MipiDphyRx1_WORD_CLKOUT_HS -period 6.4 [get_ports MipiDphyRx1_WORD_CLKOUT_HS]
 # GPIO Constraints
 ####################

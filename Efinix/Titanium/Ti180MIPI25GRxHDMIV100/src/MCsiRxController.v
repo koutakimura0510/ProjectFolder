@@ -286,38 +286,43 @@ end
 //	BRAM のプリミティブ活用や、コードからの合成結果については試行回数が必要。
 //	Quantum アーキテクチャの特徴を生かして、カスケード接続が定石か？
 //-----------------------------------------------------------------------------
-localparam lpCdcFifoBitWidth	= 64;
-localparam lpCdcFifoCascade		= 8;
-localparam lpCdcFifoDepth		= 1024;
+localparam lpCdcFifoBitWidth	= 8;
+localparam lpCdcFifoDepth		= 8192 / lpCdcFifoBitWidth;
+localparam lpCdcFifoBitLoop		= 64   / lpCdcFifoBitWidth;
 localparam lpCdcFIfoFullAlMost	= 4;
 //
-wire [63:0] 	wCdcFifoRd;
-wire 			wCdcFifoEmp;
-wire 			wCdcFifoRvd;
-reg  			qCdcFifoRe;
-wire 			wCdcFifoFull;				assign oCdcFifoFull = wCdcFifoFull;
-reg  			qCdcFifoWe;
+wire [63:0] 					wCdcFifoRd;
+wire [lpCdcFifoBitLoop-1:0] 	wCdcFifoEmp;
+wire [lpCdcFifoBitLoop-1:0] 	wCdcFifoRvd;
+reg  							qCdcFifoRe;
+wire [lpCdcFifoBitLoop-1:0] 	wCdcFifoFull;				assign oCdcFifoFull = wCdcFifoFull[0];
+reg  							qCdcFifoWe;
 
+genvar n;
 
-fifoDualController #(
-	.pFifoDepth(lpCdcFifoDepth),
-	.pFifoBitWidth(lpCdcFifoBitWidth),
-	.pFifoCascade(lpCdcFifoCascade),
-	.pFullAlMost(lpCdcFIfoFullAlMost)
-) mCsiDualClkFIFO (
-	// src side
-	.iWd(wMipiRxData),
-	.iWe(qCdcFifoWe),		.oFull(wCdcFifoFull),
-	.iSrcClk(iPCLK),		.iSrcRst(iPRST),
-	// dst side
-	.oRd(wCdcFifoRd),		.oRvd(wCdcFifoRvd),
-	.iRe(qCdcFifoRe),		.oEmp(wCdcFifoEmp),
-	.iDstClk(iFCLK),		.iDstRst(iFRST)
-);
+generate
+	for (n = 0; n < lpCdcFifoBitLoop; n = n + 1)
+	begin
+		fifoDualController #(
+			.pFifoDepth	(lpCdcFifoDepth),	.pFifoBitWidth(lpCdcFifoBitWidth),
+			.pFullAlMost(lpCdcFIfoFullAlMost)
+		) mCsiDualClkFIFO (
+			// src side
+			.iWd(wMipiRxData[(n+1)*lpCdcFifoBitWidth-1:n*lpCdcFifoBitWidth]),
+			.iWe(qCdcFifoWe),				.ofull(wCdcFifoFull[n]),
+			.iSrcClk(iPCLK),				.iSrcRst(iPRST),
+			// dst side
+			.oRd(wCdcFifoRd[(n+1)*lpCdcFifoBitWidth-1:n*lpCdcFifoBitWidth]),
+			.oRvd(wCdcFifoRvd[n]),
+			.iRe(qCdcFifoRe),				.oEmp(wCdcFifoEmp[n]),
+			.iDstClk(iFCLK),				.iDstRst(iFRST)
+		);
+	end
+endgenerate
 
 always @*
 begin
-	qCdcFifoWe <= &{wMipiRxVd,~wCdcFifoFull};
+	qCdcFifoWe <= &{wMipiRxVd,~wCdcFifoFull[0]};
 end
 
 //-----------------------------------------------------------------------------
@@ -331,7 +336,7 @@ reg 		qPfcfull;
 
 MPixelFormatConverter mPixelFormatConverter (
 	.iRd(wCdcFifoRd),		.oRe(wPfcRe),
-	.iRvd(wCdcFifoRvd),		.iEmp(qPfcEmp),
+	.iRvd(wCdcFifoRvd[0]),	.iEmp(qPfcEmp),
 	.oWd(wPfcWd),			.oWe(wPfcWe),
 	.ifull(qPfcfull),
 	// common
@@ -341,9 +346,8 @@ MPixelFormatConverter mPixelFormatConverter (
 always @*
 begin
 	qCdcFifoRe	<= wPfcRe;
-	qPfcEmp		<= (~wCdcFifoEmp);
+	qPfcEmp		<= (~wCdcFifoEmp[0]);
 end
-
 
 //-----------------------------------------------------------------------------
 // Dual Port Ram
@@ -353,37 +357,41 @@ end
 // ※ 16bit 深さ512 まで
 //-----------------------------------------------------------------------------
 localparam lpPfcFifoBitWidth	= 16;
-localparam lpPfcFifoCascade		= 1;
-localparam lpPfcFifoDepth  		= 512 * lpPfcFifoCascade;
+localparam lpPfcFifoDepth  		= 8192 / lpPfcFifoBitWidth;
+localparam lpPfcFifoBitLoop		= 16   / lpPfcFifoBitWidth;
 localparam lpPfcFIfoFullAlMost  = 16;
 //
-wire [15:0] 	wPfcFifoRd;				assign oVideoData = wPfcFifoRd;
-wire 			wPfcFifoRvd;			assign oVideoVd	  = wPfcFifoRvd;
-wire 			wPfcFifoEmp;
-reg 			qPfcFifoRe;
-wire 			wPfcFifoFull;
+wire [15:0] 				wPfcFifoRd;			assign oVideoData = wPfcFifoRd;
+wire [lpPfcFifoBitLoop-1:0]	wPfcFifoRvd;		assign oVideoVd	  = wPfcFifoRvd[0];
+wire [lpPfcFifoBitLoop-1:0]	wPfcFifoEmp;
+reg 						qPfcFifoRe;
+wire [lpPfcFifoBitLoop-1:0]	wPfcFifoFull;
 //
-fifoController #(
-	.pFifoDepth(lpPfcFifoDepth),
-	.pFifoBitWidth(lpPfcFifoBitWidth),
-	.pFifoCascade(lpPfcFifoCascade),
-	.pFullAlMost(lpPfcFIfoFullAlMost)
-) mCsiPfcFifo (
-	// src side
-	.iWd(wPfcWd),
-	.iWe(wPfcWe),			.oFull(wPfcFifoFull),
-	// dst side
-	.oRd(wPfcFifoRd),
-	.oRvd(wPfcFifoRvd),
-	.iRe(qPfcFifoRe),		.oEmp(wPfcFifoEmp),
-	// common
-	.iCLK(iFCLK),			.iRST(iFRST)
-);
+genvar m;
+
+generate
+	for (m = 0; m < lpPfcFifoBitLoop; m = m + 1) begin
+		fifoController #(
+			.pFifoDepth	(lpPfcFifoDepth),	.pFifoBitWidth(lpPfcFifoBitWidth),
+			.pFullAlMost(lpPfcFIfoFullAlMost)
+		) mCsiPfcFifo (
+			// src side
+			.iWd(wPfcWd[(m+1)*lpPfcFifoBitWidth-1:m*lpPfcFifoBitWidth]),
+			.iWe(wPfcWe),					.ofull(wPfcFifoFull[m]),
+			// dst side
+			.oRd(wPfcFifoRd[(m+1)*lpPfcFifoBitWidth-1:m*lpPfcFifoBitWidth]),
+			.oRvd(wPfcFifoRvd[m]),
+			.iRe(qPfcFifoRe),				.oEmp(wPfcFifoEmp[m]),
+			// common
+			.iClk(iFCLK),					.iRst(iFRST)
+		);
+	end
+endgenerate
 
 always @*
 begin
-	qPfcFifoRe 	<= (~iVideofull) & (~wPfcFifoEmp);
-	qPfcfull	<= (~wPfcFifoFull);
+	qPfcFifoRe 	<= (~iVideofull) & (~wPfcFifoEmp[0]);
+	qPfcfull	<= (~wPfcFifoFull[0]);
 end
 
 //-----------------------------------------------------------------------------
