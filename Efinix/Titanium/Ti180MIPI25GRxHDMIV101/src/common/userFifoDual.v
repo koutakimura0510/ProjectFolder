@@ -15,8 +15,8 @@ module userFifoDual #(
     input                      iWE,		// write enable
     output  [pBitWidth-1:0]    oRD,		// read data
     input   [pAddrWidth-1:0]   iRA,		// read address
-    input                      iSrcClk, // write side
-    input                      iDstClk  // read side
+    input                      iWCLK, // write side
+    input                      iRCLK  // read side
 );
 
 localparam [pAddrWidth-1:0] pDepth = pBuffDepth - 1;
@@ -35,13 +35,13 @@ end
 
 
 // write side
-always @(posedge iSrcClk)
+always @(posedge iWCLK)
 begin
     if (iWE) fifo[iWA] <= iWD;
 end
 
 // read side
-always @(posedge iDstClk)
+always @(posedge iRCLK)
 begin
     rd <= fifo[iRA];
 end

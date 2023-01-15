@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efxpt:design_db name="Ti180MIPI25GRxHDMIV101" device_def="Ti180M484" location="D:\workspace\Efinix\Titanium\Ti180MIPI25GRxHDMIV101" version="2022.1.226.2.11" db_version="20221999" last_change_date="Mon Jan  9 16:26:46 2023" xmlns:efxpt="http://www.efinixinc.com/peri_design_db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/peri_design_db peri_design_db.xsd ">
+<efxpt:design_db name="Ti180MIPI25GRxHDMIV101" device_def="Ti180M484" location="D:\workspace\Efinix\Titanium\Ti180MIPI25GRxHDMIV101" version="2022.1.226.2.11" db_version="20221999" last_change_date="Sun Jan 15 12:00:22 2023" xmlns:efxpt="http://www.efinixinc.com/peri_design_db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/peri_design_db peri_design_db.xsd ">
     <efxpt:device_info>
         <efxpt:iobank_info>
             <efxpt:iobank name="2A_2B_2C" iostd="1.8 V LVCMOS" is_dyn_voltage="false" mode_sel_name="2A_2B_2C_MODE_SEL"/>
@@ -183,47 +183,89 @@
         <efxpt:comp_gpio name="oLed[5]" gpio_def="GPIOB_P_12" mode="output" bus_name="oLed" io_standard="1.8 V LVCMOS">
             <efxpt:output_config name="oLed[5]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="16" fastclk_name=""/>
         </efxpt:comp_gpio>
-        <efxpt:comp_gpio name="oTestPort[0]" gpio_def="GPIOB_P_27" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
-            <efxpt:output_config name="oTestPort[0]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="16" fastclk_name=""/>
+        <efxpt:comp_gpio name="oTestPort[0]" gpio_def="GPIOB_P_29" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[0]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
         </efxpt:comp_gpio>
-        <efxpt:comp_gpio name="oTestPort[10]" gpio_def="GPIOB_P_23" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
-            <efxpt:output_config name="oTestPort[10]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="16" fastclk_name=""/>
+        <efxpt:comp_gpio name="oTestPort[10]" gpio_def="GPIOB_P_25" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[10]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
         </efxpt:comp_gpio>
-        <efxpt:comp_gpio name="oTestPort[11]" gpio_def="GPIOB_P_30" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
-            <efxpt:output_config name="oTestPort[11]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="16" fastclk_name=""/>
+        <efxpt:comp_gpio name="oTestPort[11]" gpio_def="GPIOB_P_32" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[11]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
         </efxpt:comp_gpio>
-        <efxpt:comp_gpio name="oTestPort[1]" gpio_def="GPIOT_P_15" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
-            <efxpt:output_config name="oTestPort[1]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="16" fastclk_name=""/>
+        <efxpt:comp_gpio name="oTestPort[12]" gpio_def="GPIOB_N_25" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[12]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
         </efxpt:comp_gpio>
-        <efxpt:comp_gpio name="oTestPort[2]" gpio_def="GPIOB_N_27" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
-            <efxpt:output_config name="oTestPort[2]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="16" fastclk_name=""/>
+        <efxpt:comp_gpio name="oTestPort[13]" gpio_def="GPIOB_N_32" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[13]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
         </efxpt:comp_gpio>
-        <efxpt:comp_gpio name="oTestPort[3]" gpio_def="GPIOT_N_15" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
-            <efxpt:output_config name="oTestPort[3]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="16" fastclk_name=""/>
+        <efxpt:comp_gpio name="oTestPort[14]" gpio_def="GPIOB_P_26" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[14]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
         </efxpt:comp_gpio>
-        <efxpt:comp_gpio name="oTestPort[4]" gpio_def="GPIOT_P_14" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
-            <efxpt:output_config name="oTestPort[4]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="16" fastclk_name=""/>
+        <efxpt:comp_gpio name="oTestPort[15]" gpio_def="GPIOB_P_33" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[15]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
         </efxpt:comp_gpio>
-        <efxpt:comp_gpio name="oTestPort[5]" gpio_def="GPIOT_P_16" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
-            <efxpt:output_config name="oTestPort[5]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="16" fastclk_name=""/>
+        <efxpt:comp_gpio name="oTestPort[16]" gpio_def="GPIOB_N_26" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[16]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
         </efxpt:comp_gpio>
-        <efxpt:comp_gpio name="oTestPort[6]" gpio_def="GPIOT_N_14" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
-            <efxpt:output_config name="oTestPort[6]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="16" fastclk_name=""/>
+        <efxpt:comp_gpio name="oTestPort[17]" gpio_def="GPIOB_N_33" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[17]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
         </efxpt:comp_gpio>
-        <efxpt:comp_gpio name="oTestPort[7]" gpio_def="GPIOT_N_16" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
-            <efxpt:output_config name="oTestPort[7]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="16" fastclk_name=""/>
+        <efxpt:comp_gpio name="oTestPort[18]" gpio_def="GPIOB_P_27" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[18]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
         </efxpt:comp_gpio>
-        <efxpt:comp_gpio name="oTestPort[8]" gpio_def="GPIOB_P_29" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
-            <efxpt:output_config name="oTestPort[8]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="16" fastclk_name=""/>
+        <efxpt:comp_gpio name="oTestPort[19]" gpio_def="GPIOT_P_15" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[19]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
         </efxpt:comp_gpio>
-        <efxpt:comp_gpio name="oTestPort[9]" gpio_def="GPIOB_N_29" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
-            <efxpt:output_config name="oTestPort[9]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="16" fastclk_name=""/>
+        <efxpt:comp_gpio name="oTestPort[1]" gpio_def="GPIOB_N_29" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[1]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
+        </efxpt:comp_gpio>
+        <efxpt:comp_gpio name="oTestPort[20]" gpio_def="GPIOB_N_27" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[20]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
+        </efxpt:comp_gpio>
+        <efxpt:comp_gpio name="oTestPort[21]" gpio_def="GPIOT_N_15" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[21]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
+        </efxpt:comp_gpio>
+        <efxpt:comp_gpio name="oTestPort[22]" gpio_def="GPIOT_P_14" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[22]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
+        </efxpt:comp_gpio>
+        <efxpt:comp_gpio name="oTestPort[23]" gpio_def="GPIOT_P_16" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[23]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
+        </efxpt:comp_gpio>
+        <efxpt:comp_gpio name="oTestPort[24]" gpio_def="GPIOT_N_14" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[24]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
+        </efxpt:comp_gpio>
+        <efxpt:comp_gpio name="oTestPort[25]" gpio_def="GPIOT_N_16" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[25]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
+        </efxpt:comp_gpio>
+        <efxpt:comp_gpio name="oTestPort[2]" gpio_def="GPIOB_P_23" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[2]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
+        </efxpt:comp_gpio>
+        <efxpt:comp_gpio name="oTestPort[3]" gpio_def="GPIOB_P_30" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[3]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
+        </efxpt:comp_gpio>
+        <efxpt:comp_gpio name="oTestPort[4]" gpio_def="GPIOB_N_23" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[4]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
+        </efxpt:comp_gpio>
+        <efxpt:comp_gpio name="oTestPort[5]" gpio_def="GPIOB_N_30" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[5]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
+        </efxpt:comp_gpio>
+        <efxpt:comp_gpio name="oTestPort[6]" gpio_def="GPIOB_P_24" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[6]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
+        </efxpt:comp_gpio>
+        <efxpt:comp_gpio name="oTestPort[7]" gpio_def="GPIOB_P_31" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[7]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
+        </efxpt:comp_gpio>
+        <efxpt:comp_gpio name="oTestPort[8]" gpio_def="GPIOB_N_24" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[8]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
+        </efxpt:comp_gpio>
+        <efxpt:comp_gpio name="oTestPort[9]" gpio_def="GPIOB_N_31" mode="output" bus_name="oTestPort" io_standard="1.8 V LVCMOS">
+            <efxpt:output_config name="oTestPort[9]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
         </efxpt:comp_gpio>
         <efxpt:global_unused_config state="input with weak pullup"/>
         <efxpt:bus name="iPushSw" mode="input" msb="1" lsb="0"/>
         <efxpt:bus name="oAdv7511Data" mode="output" msb="15" lsb="0"/>
         <efxpt:bus name="oLed" mode="output" msb="5" lsb="0"/>
-        <efxpt:bus name="oTestPort" mode="output" msb="11" lsb="0"/>
+        <efxpt:bus name="oTestPort" mode="output" msb="25" lsb="0"/>
     </efxpt:gpio_info>
     <efxpt:pll_info>
         <efxpt:pll name="pll_inst1" pll_def="PLL_TL0" ref_clock_name="" ref_clock_freq="74.2500" multiplier="1" pre_divider="1" post_divider="2" reset_name="pll_inst1_RSTN" locked_name="pll_inst1_LOCKED" is_ipfrz="false" is_bypass_lock="true">
@@ -426,6 +468,21 @@
                 <efxpt:pin name="jtag_inst1_TMS" type_name="TMS" is_bus="false"/>
                 <efxpt:pin name="jtag_inst1_UPDATE" type_name="UPDATE" is_bus="false"/>
                 <efxpt:pin name="jtag_inst1_TDO" type_name="TDO" is_bus="false"/>
+            </efxpt:gen_pin>
+        </efxpt:jtag>
+        <efxpt:jtag name="jtag_inst2" jtag_def="JTAG_USER2">
+            <efxpt:gen_pin>
+                <efxpt:pin name="jtag_inst2_CAPTURE" type_name="CAPTURE" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_DRCK" type_name="DRCK" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_RESET" type_name="RESET" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_RUNTEST" type_name="RUNTEST" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_SEL" type_name="SEL" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_SHIFT" type_name="SHIFT" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_TCK" type_name="TCK" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_TDI" type_name="TDI" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_TMS" type_name="TMS" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_UPDATE" type_name="UPDATE" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_TDO" type_name="TDO" is_bus="false"/>
             </efxpt:gen_pin>
         </efxpt:jtag>
     </efxpt:jtag_info>

@@ -7,9 +7,9 @@ route {
     cell: "pt_input_flop_0"
     port: "CLK"
   }
-  delay: 1667
-  delay_min: 1111
-  delay_max: 1667
+  delay: 1606
+  delay_min: 1070
+  delay_max: 1606
   type: FIXED_NET_DELAY
 }
 route {
@@ -21,9 +21,9 @@ route {
     cell: "pt_input_flop_1"
     port: "CLK"
   }
-  delay: 1613
-  delay_min: 1075
-  delay_max: 1613
+  delay: 1626
+  delay_min: 1085
+  delay_max: 1626
   type: FIXED_NET_DELAY
 }
 route {
@@ -301,20 +301,6 @@ route {
     cell: "pt_input_flop_21"
     port: "CLK"
   }
-  delay: 1631
-  delay_min: 1088
-  delay_max: 1631
-  type: FIXED_NET_DELAY
-}
-route {
-  driver {
-    cell: "MipiDphyRx1_WORD_CLKOUT_HS~CLKOUT~1~38"
-    port: "OUT"
-  }
-  sink {
-    cell: "pt_input_flop_22"
-    port: "CLK"
-  }
   delay: 1644
   delay_min: 1097
   delay_max: 1644
@@ -326,7 +312,7 @@ route {
     port: "OUT"
   }
   sink {
-    cell: "pt_input_flop_23"
+    cell: "pt_input_flop_22"
     port: "CLK"
   }
   delay: 1611
@@ -340,7 +326,7 @@ route {
     port: "OUT"
   }
   sink {
-    cell: "pt_input_flop_24"
+    cell: "pt_input_flop_23"
     port: "CLK"
   }
   delay: 1646
@@ -354,7 +340,7 @@ route {
     port: "OUT"
   }
   sink {
-    cell: "pt_input_flop_25"
+    cell: "pt_input_flop_24"
     port: "CLK"
   }
   delay: 1592
@@ -368,7 +354,7 @@ route {
     port: "OUT"
   }
   sink {
-    cell: "pt_output_flop_28"
+    cell: "pt_output_flop_27"
     port: "CLK"
   }
   delay: -835
@@ -382,7 +368,7 @@ route {
     port: "OUT"
   }
   sink {
-    cell: "pt_input_flop_27"
+    cell: "pt_input_flop_26"
     port: "CLK"
   }
   delay: 414
@@ -396,7 +382,7 @@ route {
     port: "OUT"
   }
   sink {
-    cell: "pt_input_flop_26"
+    cell: "pt_input_flop_25"
     port: "CLK"
   }
   delay: 414
@@ -410,7 +396,7 @@ route {
     port: "OUT"
   }
   sink {
-    cell: "pt_output_flop_30"
+    cell: "pt_output_flop_29"
     port: "CLK"
   }
   delay: -263
@@ -424,7 +410,7 @@ route {
     port: "OUT"
   }
   sink {
-    cell: "pt_output_flop_29"
+    cell: "pt_output_flop_28"
     port: "CLK"
   }
   delay: -263
@@ -438,7 +424,7 @@ route {
     port: "Q"
   }
   sink {
-    cell: "MipiDphyRx1_ERR_SOT_SYNC_HS_LAN0"
+    cell: "MipiDphyRx1_ERR_SOT_HS_LAN0"
     port: "IN"
   }
   delay: 0
@@ -452,7 +438,7 @@ route {
     port: "Q"
   }
   sink {
-    cell: "MipiDphyRx1_ERR_SOT_SYNC_HS_LAN1"
+    cell: "MipiDphyRx1_RX_ACTIVE_HS_LAN0"
     port: "IN"
   }
   delay: 0
@@ -634,7 +620,7 @@ route {
     port: "Q"
   }
   sink {
-    cell: "MipiDphyRx1_RX_SYNC_HS_LAN1"
+    cell: "MipiDphyRx1_RX_VALID_HS_LAN0"
     port: "IN"
   }
   delay: 0
@@ -648,7 +634,7 @@ route {
     port: "Q"
   }
   sink {
-    cell: "MipiDphyRx1_RX_VALID_HS_LAN0"
+    cell: "MipiDphyRx1_RX_VALID_HS_LAN1"
     port: "IN"
   }
   delay: 0
@@ -662,7 +648,7 @@ route {
     port: "Q"
   }
   sink {
-    cell: "MipiDphyRx1_RX_VALID_HS_LAN1"
+    cell: "MipiDphyRx1_STOPSTATE_LAN0"
     port: "IN"
   }
   delay: 0
@@ -676,7 +662,7 @@ route {
     port: "Q"
   }
   sink {
-    cell: "MipiDphyRx1_STOPSTATE_LAN0"
+    cell: "MipiDphyRx1_STOPSTATE_LAN1"
     port: "IN"
   }
   delay: 0
@@ -690,20 +676,6 @@ route {
     port: "Q"
   }
   sink {
-    cell: "MipiDphyRx1_STOPSTATE_LAN1"
-    port: "IN"
-  }
-  delay: 0
-  delay_min: 0
-  delay_max: 0
-  type: FIXED_NET_DELAY
-}
-route {
-  driver {
-    cell: "pt_input_flop_26"
-    port: "Q"
-  }
-  sink {
     cell: "iAdv7511Scl"
     port: "IN"
   }
@@ -714,7 +686,7 @@ route {
 }
 route {
   driver {
-    cell: "pt_input_flop_27"
+    cell: "pt_input_flop_26"
     port: "Q"
   }
   sink {
@@ -830,7 +802,7 @@ route {
     port: "OUT"
   }
   sink {
-    cell: "pt_output_flop_28"
+    cell: "pt_output_flop_27"
     port: "D"
   }
   delay: 0
@@ -844,7 +816,7 @@ route {
     port: "OUT"
   }
   sink {
-    cell: "pt_output_flop_29"
+    cell: "pt_output_flop_28"
     port: "D"
   }
   delay: 0
@@ -858,7 +830,7 @@ route {
     port: "OUT"
   }
   sink {
-    cell: "pt_output_flop_30"
+    cell: "pt_output_flop_29"
     port: "D"
   }
   delay: 0

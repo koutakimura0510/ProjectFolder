@@ -24,7 +24,7 @@ module MCsiRxController #(
 output 			oMipiDphyRx1_RESET_N,				// Disables PHY and Digital Logic
 output 			oMipiDphyRx1_RST0_N,				// Async FIFO RST and sync out of RST
 input 			iMipiDphyRx1_STOPSTATE_CLK,			// Lane in Stop State
-input 			iMipiDphyRx1_STOPSTATE_LAN0,		// Data Lane in Stop State
+input 			iMipiDphyRx1_STOPSTATE_LAN0,		// Data Lane in Stop State, Active High
 input 			iMipiDphyRx1_STOPSTATE_LAN1,		// Data Lane in Stop State
 input 			iMipiDphyRx1_ERR_ESC_LAN0,			// Lane Escape Command Error
 input 			iMipiDphyRx1_ERR_ESC_LAN1,			// Lane Escape Command Error
@@ -85,239 +85,119 @@ input 			iMipiDphyRx1_RX_CLK_ESC_LAN1,			// Escape Mode Receive CLK
 output 			oMipiDphyRx1_TX_CLK_ESC,				// Escape Mode TX CLK must be lower than 20[MHz]
 //
 // CSI controller ouptut interface port
-output			oMipiRxVs,			// Vsync
-output			oMipiRxHs,			// HSync
-output			oMipiRxVd,			// Data Valid
-output	[63:0] 	oMipiRxPixelData,
-output	[ 5:0]	oMipiRxOutDatatype,
-output 	[15:0]	oMipiRxWordCnt,
-output 	[15:0]	oMipiRxShortpkt,
-output 	[ 3:0]	oMipiRxPCLK,
+output [ 5:0] 	oHsDatatype,
+output [15:0] 	oHsWordCnt,
+output [ 7:0] 	oHsEcc,
 //
 // Video Signals
-output  [15:0]	oVideoData,
+output  [31:0]	oVideoPixel,
 output  		oVideoVd,
 input 			iVideofull,
 //
-// AXI4-Lite Interface
-input 			axi_rready,
-output 			axi_rvalid,
-output	[31:0] 	axi_rdata,
-output 			axi_arready,
-input 			axi_arvalid,
-input 	[5:0] 	axi_araddr,
-input 			axi_bready,
-output 			axi_bvalid,
-output 			axi_wready,
-input 			axi_wvalid,
-input 	[31:0] 	axi_wdata,
-output 			axi_awready,
-input 	[5:0] 	axi_awaddr,
-input 			axi_awvalid,
-input 			axi_reset_n,
-input 			axi_clk,
-//
-// Status
-output 	[11:0]	oHsyncCntMonitor,
-output 	[11:0]	oPplCntMonitor,
 output 			oCdcFifoFull,
 //
 // Clk,Rst
 input			iSRST,
 input			inSRST,
-input			iPRST,
-input			inPRST,
+input			iVRST,
+input			inVRST,
 input			iFRST,
 input			inFRST,
 input			iSCLK,
-input			iPCLK,
-input			iFCLK
+input			iVCLK,
+input 			iFCLK
 );
   
 //-----------------------------------------------------------------------------
-// YUV422 8bit
-// [63:56] Y4
-// [55:48] V3
-// [47:40] Y3
-// [39:32] U3
-// [31:24] Y2
-// [23:16] V1
-// [15: 8] Y1
-// [ 7: 0] U0
-// 
-// ※1Lane 8bit の場合、CSI2.5G SoftIP 生成時に 16bit 指定になっている。
-// 　define.vh・IPname.sv(今回は mCsiIpCOre) のソースの手動変更が必要になるので注意
-// 
-// データシートに記載はないが下記フォーマットでレジスタ値確認。
-// PixelPerClock・DataType が恐らく正常に出力されているので正しそうではある。
-// Raw16 = 0x2e
-// Raw20 = 0x2f 
-// 
+// MIPI D-PHY / CSI-2 Decoder
 //-----------------------------------------------------------------------------
-assign oMipiDphyRx1_RESET_N			= qIpCorerHsnRST;
-assign oMipiDphyRx1_RST0_N			= inSRST;
-// unused
-assign oMipiDphyRx1_FORCE_RX_MODE	= 1'b0; // 用途不明
-assign oMipiDphyRx1_TX_REQUEST_ESC	= 1'b0;
-assign oMipiDphyRx1_TURN_REQUEST	= 1'b0;
-assign oMipiDphyRx1_TX_TRIGGER_ESC  = 4'd0;
-assign oMipiDphyRx1_TX_LPDT_ESC		= 1'b0;
-assign oMipiDphyRx1_TX_DATA_ESC		= 8'd0;
-assign oMipiDphyRx1_TX_VALID_ESC	= 1'b0;
-assign oMipiDphyRx1_TX_READY_ESC	= 1'b0;
-assign oMipiDphyRx1_TX_ULPS_ESC		= 1'b0;
-assign oMipiDphyRx1_TX_ULPS_EXIT	= 1'b0;
-assign oMipiDphyRx1_TX_CLK_ESC		= 1'b0;
-wire [25:0] wUnused = {
-	iMipiDphyRx1_STOPSTATE_CLK,
-	iMipiDphyRx1_RX_TRIGGER_ESC[3:0],
-	iMipiDphyRx1_DIRECTION,
-	iMipiDphyRx1_ERR_CONTENTION_LP0,
-	iMipiDphyRx1_ERR_CONTENTION_LP1,
-	iMipiDphyRx1_RX_CLK_ACTIVE_HS,
-	iMipiDphyRx1_RX_ACTIVE_HS_LAN0,
-	iMipiDphyRx1_RX_ACTIVE_HS_LAN1,
-	iMipiDphyRx1_ERR_SOT_HS_LAN0,
-	iMipiDphyRx1_ERR_SOT_HS_LAN1,
-	iMipiDphyRx1_RX_LPDT_ESC,
-	iMipiDphyRx1_RX_DATA_ESC[7:0],
-	iMipiDphyRx1_RX_VALID_ESC,
-	iMipiDphyRx1_RX_ERR_SYNC_ESC,
-	iMipiDphyRx1_LP_CLK
-};
-//
-reg qIpCorerHsnRST;
-//
-wire			wMipiRxVd;					assign oMipiRxVd	 		= wMipiRxVd;
-wire			wMipiRxVs;					assign oMipiRxVs	 		= wMipiRxVs;
-wire			wMipiRxHs;					assign oMipiRxHs	 		= wMipiRxHs;
-wire	[63:0]	wMipiRxData;				assign oMipiRxPixelData		= wMipiRxData;
-wire 	[15:0]	wMipiRxWordCnt;				assign oMipiRxWordCnt 		= wMipiRxWordCnt;
-wire	[ 5:0]	wMipiRxDatatype;			assign oMipiRxOutDatatype 	= wMipiRxDatatype;
-wire 	[15:0]	wMipiRxShortpkt;			assign oMipiRxShortpkt		= wMipiRxShortpkt;
-wire 	[ 3:0]	wMipiRxPCLK;				assign oMipiRxPCLK			= wMipiRxPCLK;		// 用途不明-Byte bit?
-//
-wire 	[ 1:0] 	wRxClkEsc			= {iMipiDphyRx1_RX_CLK_ESC_LAN1,iMipiDphyRx1_RX_CLK_ESC_LAN0};
-wire 	[ 1:0] 	wRxErrEsc			= {iMipiDphyRx1_ERR_ESC_LAN1,iMipiDphyRx1_ERR_ESC_LAN0};
-wire 	[ 1:0] 	wRxErrControl		= {iMipiDphyRx1_ERR_CONTROL_LAN1,iMipiDphyRx1_ERR_CONTROL_LAN0};
-wire 	[ 1:0] 	wRxErrSotSyncHS		= {iMipiDphyRx1_ERR_SOT_SYNC_HS_LAN1,iMipiDphyRx1_ERR_SOT_SYNC_HS_LAN0};
-wire 			wRxUlpsClkNot		=  iMipiDphyRx1_RX_ULPS_CLK_NOT;
-wire 			wRxUlpsActiveClkNot	=  iMipiDphyRx1_RX_ULPS_ACTIVE_CLK_NOT;
-wire 	[ 1:0] 	wRxUlpsEsc			= {iMipiDphyRx1_RX_ULPS_ESC_LAN1,iMipiDphyRx1_RX_ULPS_ESC_LAN0};
-wire 	[ 1:0] 	wRxUlpsActiveNot	= {iMipiDphyRx1_RX_ULPS_ACTIVE_NOT_LAN1,iMipiDphyRx1_RX_ULPS_ACTIVE_NOT_LAN0};
-wire 	[ 1:0] 	wRxSkewCalHS		= {iMipiDphyRx1_RX_SKEW_CAL_HS_LAN1,iMipiDphyRx1_RX_SKEW_CAL_HS_LAN0};
-wire 	[ 1:0] 	wRxStopState		= {iMipiDphyRx1_STOPSTATE_LAN1,iMipiDphyRx1_STOPSTATE_LAN0};
-wire 	[ 1:0] 	wRxSyncHS			= {iMipiDphyRx1_RX_SYNC_HS_LAN1,iMipiDphyRx1_RX_SYNC_HS_LAN0};
+wire [31:0] wHsPixel;
+wire [ 5:0] wHsDatatype;					assign oHsDatatype 	= wHsDatatype;
+wire [15:0] wHsWordCnt;						assign oHsWordCnt 	= wHsWordCnt;
+wire [ 7:0] wHsEcc;							assign oHsEcc 		= wHsEcc;
+wire 		wHsValid;
+reg 		qCsiEdv;
 
-mCsiIpCore mCsiIpCore (
-	// DPHY I/F
-	.RxDataHS0(iMipiDphyRx1_RX_DATA_HS_LAN0),		.RxDataHS1(iMipiDphyRx1_RX_DATA_HS_LAN1),
-	.RxDataHS2(),									.RxDataHS3(),
-	.RxDataHS4(),									.RxDataHS5(),
-	.RxDataHS6(),									.RxDataHS7(),
-	.RxValidHS0(iMipiDphyRx1_RX_VALID_HS_LAN0),		.RxValidHS1(iMipiDphyRx1_RX_VALID_HS_LAN1),
-	.RxValidHS2(),									.RxValidHS3(),
-	.RxValidHS4(),									.RxValidHS5(),
-	.RxValidHS6(),									.RxValidHS7(),
-	.RxClkEsc(wRxClkEsc),							.RxErrEsc(wRxErrEsc),
-	.RxErrControl(wRxErrControl),					.RxErrSotSyncHS(wRxErrSotSyncHS),
-	.RxUlpsActiveClkNot(wRxUlpsActiveClkNot),		.RxUlpsClkNot(wRxUlpsClkNot),
-	.RxUlpsEsc(wRxUlpsEsc),							.RxUlpsActiveNot(wRxUlpsActiveNot),
-	.RxSkewCalHS(wRxSkewCalHS),						.RxStopState(wRxStopState),
-	.RxSyncHS(wRxSyncHS),
-	.clk_byte_HS(iMipiDphyRx1_WORD_CLKOUT_HS),		.reset_byte_HS_n(qIpCorerHsnRST),
-	// 
-	// CSI Video I/F PCLK
-	.hsync_vc0(wMipiRxHs),		.hsync_vc1(),		.hsync_vc2(),		.hsync_vc3(),
-	.hsync_vc4(),				.hsync_vc5(),		.hsync_vc6(),		.hsync_vc7(),
-	.hsync_vc8(),				.hsync_vc9(),		.hsync_vc10(),		.hsync_vc11(),
-	.hsync_vc12(),				.hsync_vc13(),		.hsync_vc14(),		.hsync_vc15(),
-	.vsync_vc0(wMipiRxVs),		.vsync_vc1(),		.vsync_vc2(),		.vsync_vc3(),
-	.vsync_vc4(),				.vsync_vc5(),		.vsync_vc6(),		.vsync_vc7(),
-	.vsync_vc8(),				.vsync_vc9(),		.vsync_vc10(),		.vsync_vc11(),
-	.vsync_vc12(),				.vsync_vc13(),		.vsync_vc14(),		.vsync_vc15(),
-	.vc(),						.vcx(),
-	.word_count(wMipiRxWordCnt),					.shortpkt_data_field(wMipiRxShortpkt),
-	.datatype(wMipiRxDatatype),						.pixel_per_clk(wMipiRxPCLK),
-	.pixel_data(wMipiRxData),						.pixel_data_valid(wMipiRxVd),
-	.irq(),
-	.clk_pixel(iPCLK),  							.reset_pixel_n(inPRST),
+MCsi2Decoder MCsi2Decoder(
+	// Hard D-PHY Port
+	// Controls and Status Signals
+	.oMipiDphyRx1_RESET_N(oMipiDphyRx1_RESET_N),
+	.oMipiDphyRx1_RST0_N(oMipiDphyRx1_RST0_N),
+	.iMipiDphyRx1_STOPSTATE_CLK(iMipiDphyRx1_STOPSTATE_CLK),
+	.iMipiDphyRx1_STOPSTATE_LAN0(iMipiDphyRx1_STOPSTATE_LAN0),
+	.iMipiDphyRx1_STOPSTATE_LAN1(iMipiDphyRx1_STOPSTATE_LAN1),
+	.iMipiDphyRx1_ERR_ESC_LAN0(iMipiDphyRx1_ERR_ESC_LAN0),
+	.iMipiDphyRx1_ERR_ESC_LAN1(iMipiDphyRx1_ERR_ESC_LAN1),
+	.iMipiDphyRx1_ERR_CONTROL_LAN0(iMipiDphyRx1_ERR_CONTROL_LAN0),
+	.iMipiDphyRx1_ERR_CONTROL_LAN1(iMipiDphyRx1_ERR_CONTROL_LAN1),
+	.oMipiDphyRx1_TX_REQUEST_ESC(oMipiDphyRx1_TX_REQUEST_ESC),
+	.oMipiDphyRx1_TURN_REQUEST(oMipiDphyRx1_TURN_REQUEST),
+	.oMipiDphyRx1_FORCE_RX_MODE(oMipiDphyRx1_FORCE_RX_MODE),
+	.oMipiDphyRx1_TX_TRIGGER_ESC(oMipiDphyRx1_TX_TRIGGER_ESC),
+	.iMipiDphyRx1_RX_TRIGGER_ESC(iMipiDphyRx1_RX_TRIGGER_ESC),
+	.iMipiDphyRx1_DIRECTION(iMipiDphyRx1_DIRECTION),
+	.iMipiDphyRx1_ERR_CONTENTION_LP0(iMipiDphyRx1_ERR_CONTENTION_LP0),
+	.iMipiDphyRx1_ERR_CONTENTION_LP1(iMipiDphyRx1_ERR_CONTENTION_LP1),
 	//
-	// AXI4-Lite Interface
-	.axi_awaddr(axi_awaddr),						.axi_awvalid(axi_awvalid),
-	.axi_awready(axi_awready),						.axi_wdata(axi_wdata),
-	.axi_wvalid(axi_wvalid),						.axi_wready(axi_wready),
-	.axi_bvalid(axi_bvalid),						.axi_bready(axi_bready),
-	.axi_araddr(axi_araddr),						.axi_arvalid(axi_arvalid),
-	.axi_arready(axi_arready),						.axi_rdata(axi_rdata),
-	.axi_rvalid(axi_rvalid),						.axi_rready(axi_rready),
-	.axi_clk(axi_clk), 								.axi_reset_n(axi_reset_n),
+	// HS Mode Signals
+	.iMipiDphyRx1_RX_CLK_ACTIVE_HS(iMipiDphyRx1_RX_CLK_ACTIVE_HS),
+	.iMipiDphyRx1_RX_ACTIVE_HS_LAN0(iMipiDphyRx1_RX_ACTIVE_HS_LAN0),
+	.iMipiDphyRx1_RX_ACTIVE_HS_LAN1(iMipiDphyRx1_RX_ACTIVE_HS_LAN1),
+	.iMipiDphyRx1_RX_VALID_HS_LAN0(iMipiDphyRx1_RX_VALID_HS_LAN0),
+	.iMipiDphyRx1_RX_VALID_HS_LAN1(iMipiDphyRx1_RX_VALID_HS_LAN1),
+	.iMipiDphyRx1_RX_SYNC_HS_LAN0(iMipiDphyRx1_RX_SYNC_HS_LAN0),
+	.iMipiDphyRx1_RX_SYNC_HS_LAN1(iMipiDphyRx1_RX_SYNC_HS_LAN1),
+	.iMipiDphyRx1_RX_SKEW_CAL_HS_LAN0(iMipiDphyRx1_RX_SKEW_CAL_HS_LAN0),
+	.iMipiDphyRx1_RX_SKEW_CAL_HS_LAN1(iMipiDphyRx1_RX_SKEW_CAL_HS_LAN1),
+	.iMipiDphyRx1_RX_DATA_HS_LAN0(iMipiDphyRx1_RX_DATA_HS_LAN0),
+	.iMipiDphyRx1_RX_DATA_HS_LAN1(iMipiDphyRx1_RX_DATA_HS_LAN1),
+	.iMipiDphyRx1_ERR_SOT_HS_LAN0(iMipiDphyRx1_ERR_SOT_HS_LAN0),
+	.iMipiDphyRx1_ERR_SOT_HS_LAN1(iMipiDphyRx1_ERR_SOT_HS_LAN1),
+	.iMipiDphyRx1_ERR_SOT_SYNC_HS_LAN0(iMipiDphyRx1_ERR_SOT_SYNC_HS_LAN0),
+	.iMipiDphyRx1_ERR_SOT_SYNC_HS_LAN1(iMipiDphyRx1_ERR_SOT_SYNC_HS_LAN1),
 	//
-	// Core CLK
-	.clk(iSCLK),									.reset_n(inSRST)
+	// LP Mode Signals
+	.iMipiDphyRx1_RX_LPDT_ESC(iMipiDphyRx1_RX_LPDT_ESC),
+	.iMipiDphyRx1_RX_DATA_ESC(iMipiDphyRx1_RX_DATA_ESC),
+	.iMipiDphyRx1_RX_VALID_ESC(iMipiDphyRx1_RX_VALID_ESC),
+	.iMipiDphyRx1_RX_ERR_SYNC_ESC(iMipiDphyRx1_RX_ERR_SYNC_ESC),
+	.oMipiDphyRx1_TX_LPDT_ESC(oMipiDphyRx1_TX_LPDT_ESC),
+	.oMipiDphyRx1_TX_DATA_ESC(oMipiDphyRx1_TX_DATA_ESC),
+	.oMipiDphyRx1_TX_VALID_ESC(oMipiDphyRx1_TX_VALID_ESC),
+	.oMipiDphyRx1_TX_READY_ESC(oMipiDphyRx1_TX_READY_ESC),
+	//
+	// Ultra Low Power Sleep Mode Signals
+	.oMipiDphyRx1_TX_ULPS_ESC(oMipiDphyRx1_TX_ULPS_ESC),
+	.oMipiDphyRx1_TX_ULPS_EXIT(oMipiDphyRx1_TX_ULPS_EXIT),
+	.iMipiDphyRx1_RX_ULPS_CLK_NOT(iMipiDphyRx1_RX_ULPS_CLK_NOT),
+	.iMipiDphyRx1_RX_ULPS_ACTIVE_CLK_NOT(iMipiDphyRx1_RX_ULPS_ACTIVE_CLK_NOT),
+	.iMipiDphyRx1_RX_ULPS_ESC_LAN0(iMipiDphyRx1_RX_ULPS_ESC_LAN0),
+	.iMipiDphyRx1_RX_ULPS_ESC_LAN1(iMipiDphyRx1_RX_ULPS_ESC_LAN1),
+	.iMipiDphyRx1_RX_ULPS_ACTIVE_NOT_LAN0(iMipiDphyRx1_RX_ULPS_ACTIVE_NOT_LAN0),
+	.iMipiDphyRx1_RX_ULPS_ACTIVE_NOT_LAN1(iMipiDphyRx1_RX_ULPS_ACTIVE_NOT_LAN1),
+	//
+	// Clock Domain
+	.iMipiDphyRx1_WORD_CLKOUT_HS(iMipiDphyRx1_WORD_CLKOUT_HS),
+	.iMipiDphyRx1_LP_CLK(iMipiDphyRx1_LP_CLK),
+	.iMipiDphyRx1_RX_CLK_ESC_LAN0(iMipiDphyRx1_RX_CLK_ESC_LAN0),
+	.iMipiDphyRx1_RX_CLK_ESC_LAN1(iMipiDphyRx1_RX_CLK_ESC_LAN1),
+	.oMipiDphyRx1_TX_CLK_ESC(oMipiDphyRx1_TX_CLK_ESC),
+	//
+	// Out Pixel
+	.oHsPixel(wHsPixel),
+	.oHsDatatype(wHsDatatype),
+	.oHsWordCnt(wHsWordCnt),
+	.oHsEcc(wHsEcc),
+	.oHsValid(wHsValid),
+	//
+	// Status
+	.iEdv(qCsiEdv),
+	//
+	// CLK RST
+	.iSRST(iSRST),
+	.inSRST(inSRST),
+	.iSCLK(iSCLK)
 );
-
-
-//-----------------------------------------------------------------------------
-// CSI-IP から出力される HSync Assert 期間中の VD をカウント
-// SVO-03-MIPI の MIPI 信号を受信しているので、解像度が一致するか確認のため作成
-// 
-// ※以下確認済み
-// 1ラインの Vd のカウント数は 解像度 1920,4PixelPer/Clock だと、1920 / 4 = 480(0x1E0)
-// 1280,4PixelPer/Clock だと、1280 / 4 = 320(0x140),のため一致を確認。
-// HSync は正常にカウントできていない。
-// 
-// Ppl = Pixel Per Line
-//-----------------------------------------------------------------------------
-reg 	[11:0]	rHsyncCnt, 	rHsyncCntMonitor;		assign oHsyncCntMonitor	= rHsyncCntMonitor;
-reg 	[11:0] 	rPplCnt, 	rPplCntMonitor;			assign oPplCntMonitor 	= rPplCntMonitor;
-reg 			rPplMonitorSel;
-reg 			qPplCntCke, qPplCntMonitorCke;
-reg 			qPplCntRst;
-//
-wire 	[11:0]	wHsyncCnt 	= rHsyncCnt + 1'b1;
-wire 	[11:0]	wPplCnt 	= rPplCnt + 1'b1;
-
-always @(posedge iPCLK)
-begin
-	// Hync Assert 期間をカウント
-	if (qPplCntRst) 			rHsyncCnt <= 12'd1;
-	else if (wMipiRxHs)			rHsyncCnt <= wHsyncCnt;
-	else 						rHsyncCnt <= rHsyncCnt;
-
-	case ( {rPplMonitorSel,wMipiRxHs} )
-		'b0x: 					rHsyncCntMonitor <= rHsyncCntMonitor;
-		'b10:					rHsyncCntMonitor <= rHsyncCnt;
-		default: 				rHsyncCntMonitor <= rHsyncCntMonitor;
-	endcase
-	//
-	// Hsync Assert 期間の VD 立ち上がり回数カウント
-	if (qPplCntRst) 			rPplCnt <= 12'd0;
-	else if (qPplCntCke)		rPplCnt <= wPplCnt;
-	else 						rPplCnt <= rPplCnt;
-
-	case ( {rPplMonitorSel,wMipiRxHs} )	// 上記 rPplCnt の結果をモニタリング用に保持
-		'b0x: 					rPplCntMonitor <= rPplCntMonitor;
-		'b10:					rPplCntMonitor <= rPplCnt;
-		default: 				rPplCntMonitor <= rPplCntMonitor;
-	endcase
-
-	if (iSRST)					rPplMonitorSel <= 1'b0;
-	else if (qPplCntMonitorCke)	rPplMonitorSel <= ~rPplMonitorSel;
-	else 						rPplMonitorSel <=  rPplMonitorSel;
-end
-
-always @*
-begin
-	casex ( {rPplMonitorSel,wMipiRxHs} )
-		'b01: 		qPplCntMonitorCke <= 1'b1;	// Assert
-		'b10: 		qPplCntMonitorCke <= 1'b1;	// Negete
-		default: 	qPplCntMonitorCke <= 1'b0;
-	endcase
-
-	qPplCntRst 		<= |{iSRST,~wMipiRxHs};		// Hsync Dissert でカウント回数クリア
-	qPplCntCke 		<= wMipiRxVd;
-end
 
 
 //-----------------------------------------------------------------------------
@@ -330,17 +210,18 @@ end
 //	BRAM のプリミティブ活用や、コードからの合成結果については試行回数が必要。
 //	Quantum アーキテクチャの特徴を生かして、カスケード接続が定石か？
 //-----------------------------------------------------------------------------
-localparam lpCdcFifoBitWidth	= 8;
-localparam lpCdcFifoDepth		= 8192 / lpCdcFifoBitWidth;
-localparam lpCdcFifoBitLoop		= 64   / lpCdcFifoBitWidth;
-localparam lpCdcFIfoFullAlMost	= 4;
+localparam lpCdcFifoBitWidth	= 16;
+localparam lpCdcFifoDepth		= (8192*4) / lpCdcFifoBitWidth;
+localparam lpCdcFifoBitLoop		= 16   / lpCdcFifoBitWidth;
+localparam lpCdcFIfoFullAlMost	= 16;
 //
-wire [63:0] 					wCdcFifoRd;
+reg  [31:0] 					qCdcFifoWd;
 wire [lpCdcFifoBitLoop-1:0] 	wCdcFifoEmp;
+wire [31:0] 					wCdcFifoRd;
 wire [lpCdcFifoBitLoop-1:0] 	wCdcFifoRvd;
+reg  							qCdcFifoWe;
 reg  							qCdcFifoRe;
 wire [lpCdcFifoBitLoop-1:0] 	wCdcFifoFull;				assign oCdcFifoFull = wCdcFifoFull[0];
-reg  							qCdcFifoWe;
 
 genvar n;
 
@@ -352,107 +233,146 @@ generate
 			.pFullAlMost(lpCdcFIfoFullAlMost)
 		) mCsiDualClkFIFO (
 			// src side
-			.iWd(wMipiRxData[(n+1)*lpCdcFifoBitWidth-1:n*lpCdcFifoBitWidth]),
-			.iWe(qCdcFifoWe),				.ofull(wCdcFifoFull[n]),
-			.iSrcClk(iPCLK),				.iSrcRst(iPRST),
+			.iWd(qCdcFifoWd[(n+1)*lpCdcFifoBitWidth-1:n*lpCdcFifoBitWidth]),
+			.iWe(qCdcFifoWe),						.ofull(wCdcFifoFull[n]),
+			.iWCLK(iMipiDphyRx1_WORD_CLKOUT_HS),	.iWnRST(inSRST),
 			// dst side
 			.oRd(wCdcFifoRd[(n+1)*lpCdcFifoBitWidth-1:n*lpCdcFifoBitWidth]),
 			.oRvd(wCdcFifoRvd[n]),
-			.iRe(qCdcFifoRe),				.oEmp(wCdcFifoEmp[n]),
-			.iDstClk(iFCLK),				.iDstRst(iFRST)
+			.iRe(qCdcFifoRe),						.oEmp(wCdcFifoEmp[n]),
+			.iRCLK(iVCLK),							.iRnRST(inVRST)
 		);
 	end
 endgenerate
 
 always @*
 begin
-	qCdcFifoWe <= &{wMipiRxVd,~wCdcFifoFull[0]};
+	qCdcFifoWd 	<= wHsPixel;
+	qCdcFifoWe 	<= wHsValid;
+	qCsiEdv		<= (~wCdcFifoFull[0]);
 end
 
-//-----------------------------------------------------------------------------
-// UYVY16bit 固定で 64bit to 16bit Convert
-//-----------------------------------------------------------------------------
-wire [15:0] wPfcWd;
-wire 		wPfcWe;
-wire 		wPfcRe;
-reg 		qPfcEmp;
-reg 		qPfcfull;
-
-MPixelFormatConverter mPixelFormatConverter (
-	.iRd(wCdcFifoRd),		.oRe(wPfcRe),
-	.iRvd(wCdcFifoRvd[0]),	.iEmp(qPfcEmp),
-	.oWd(wPfcWd),			.oWe(wPfcWe),
-	.ifull(qPfcfull),
-	// common
-	.iRST(iFRST),			.iCLK(iFCLK)
-);
-
-always @*
-begin
-	qCdcFifoRe	<= wPfcRe;
-	qPfcEmp		<= (~wCdcFifoEmp[0]);
-end
 
 //-----------------------------------------------------------------------------
-// Dual Port Ram
-// 前段のデータを貯める速度が出力より早いためデータが溢れてしまう。
-// 回避するために途中で BRAM を挟み対応。
-// 
-// ※ 16bit 深さ512 まで
+// Fifo Side
 //-----------------------------------------------------------------------------
-localparam lpPfcFifoBitWidth	= 16;
-localparam lpPfcFifoDepth  		= 8192 / lpPfcFifoBitWidth;
-localparam lpPfcFifoBitLoop		= 16   / lpPfcFifoBitWidth;
-localparam lpPfcFIfoFullAlMost  = 16;
-//
-wire [15:0] 				wPfcFifoRd;			assign oVideoData = wPfcFifoRd;
-wire [lpPfcFifoBitLoop-1:0]	wPfcFifoRvd;		assign oVideoVd	  = wPfcFifoRvd[0];
-wire [lpPfcFifoBitLoop-1:0]	wPfcFifoEmp;
-reg 						qPfcFifoRe;
-wire [lpPfcFifoBitLoop-1:0]	wPfcFifoFull;
-//
-genvar m;
+localparam lpFtiFifoBitWidth	= 16;
+localparam lpFtiFifoDepth		= (8192*4) / lpFtiFifoBitWidth;
+localparam lpFtiFifoBitLoop		= 16   / lpFtiFifoBitWidth;
+localparam lpFtiFifoFullAlMost	= 16;
+
+wire [15:0] 				wFtiRd;								assign oVideoPixel = {16'd0,wFtiRd};
+wire [lpFtiFifoBitLoop-1:0]	wFtiRvd;							assign oVideoVd    = wFtiRvd[0];
+reg  						qFtiRe;
+wire [lpFtiFifoBitLoop-1:0]	wFtiEmp;
+wire [lpFtiFifoBitLoop-1:0]	wFtifull;
 
 generate
-	for (m = 0; m < lpPfcFifoBitLoop; m = m + 1) begin
+	for (n = 0; n < lpFtiFifoBitLoop; n = n + 1) begin
 		fifoController #(
-			.pFifoDepth	(lpPfcFifoDepth),	.pFifoBitWidth(lpPfcFifoBitWidth),
-			.pFullAlMost(lpPfcFIfoFullAlMost)
-		) mCsiPfcFifo (
-			// src side
-			.iWd(wPfcWd[(m+1)*lpPfcFifoBitWidth-1:m*lpPfcFifoBitWidth]),
-			.iWe(wPfcWe),					.ofull(wPfcFifoFull[m]),
-			// dst side
-			.oRd(wPfcFifoRd[(m+1)*lpPfcFifoBitWidth-1:m*lpPfcFifoBitWidth]),
-			.oRvd(wPfcFifoRvd[m]),
-			.iRe(qPfcFifoRe),				.oEmp(wPfcFifoEmp[m]),
+			.pFifoDepth(lpFtiFifoDepth),	.pFifoBitWidth(lpFtiFifoBitWidth),
+			.pFullAlMost(lpFtiFifoFullAlMost)
+		) mVideoFIFO (
+			// Write Side
+			.iWd(wCdcFifoRd[(n+1)*lpFtiFifoBitWidth-1:n*lpFtiFifoBitWidth]),
+			.iWe(wCdcFifoRvd[0]),			.ofull(wFtifull[n]),
+			// Read Side
+			.oRd(wFtiRd[(n+1)*lpFtiFifoBitWidth-1:n*lpFtiFifoBitWidth]),
+			.iRe(qFtiRe),
+			.oRvd(wFtiRvd[n]),				.oEmp(wFtiEmp[n]),
 			// common
-			.iClk(iFCLK),					.iRst(iFRST)
+			.iCLK(iVCLK),					.inRST(inVRST)
 		);
 	end
 endgenerate
 
 always @*
 begin
-	qPfcFifoRe 	<= (~iVideofull) & (~wPfcFifoEmp[0]);
-	qPfcfull	<= (~wPfcFifoFull[0]);
+	qCdcFifoRe 	<= (~wFtifull[0]) & (~wCdcFifoEmp[0]);
+	qFtiRe		<= (~iVideofull) & (~wFtiEmp[0]);
 end
+
 
 //-----------------------------------------------------------------------------
-// CLK Rst Conn.
-// サンプルが 3CLK 遅らせたリセットを入力していたため真似した。
+// ILA 用モニタリング
 //-----------------------------------------------------------------------------
-reg [2:0] rIpCoreHsnRST;
+reg 		rHsStartTrigger;
+reg 		rHsValid;
+reg 		rStopState;
+reg 		rClkActiveHs;
+reg 		rSkewCalHs;
+reg 		rActiveHs;
+reg 		rSkewCalHs;
+reg 		rErrSotHs;
+reg 		rErrSotSyncHs;
+reg [7:0] 	rRxLaneData0, rRxLaneData1;
+reg [15:0]	rValidCnt;
+reg 		rHsClk;
 
-always @(posedge iSCLK)
+always @(posedge iMipiDphyRx1_WORD_CLKOUT_HS, negedge inSRST)
 begin
-	if (!inSRST) rIpCoreHsnRST <= 3'd0;
-	else 		 rIpCoreHsnRST <= {rIpCoreHsnRST[1:0],inSRST};
+	if (!inSRST)	rHsClk <= 1'b0;
+	else 			rHsClk <= ~rHsClk;
+
+	if (!inSRST)	rHsStartTrigger <= 1'b0;
+	else 			rHsStartTrigger <= iMipiDphyRx1_RX_SYNC_HS_LAN0;
+
+	if (!inSRST)	rRxLaneData0 	<= 8'b0;
+	else 			rRxLaneData0 	<= iMipiDphyRx1_RX_DATA_HS_LAN0;
+
+	if (!inSRST)	rRxLaneData1 	<= 8'b0;
+	else 			rRxLaneData1 	<= iMipiDphyRx1_RX_DATA_HS_LAN1;
+
+	if (!inSRST)	rHsValid 		<= 1'b0;
+	else 			rHsValid 		<= iMipiDphyRx1_RX_VALID_HS_LAN0;
+
+	if (!inSRST)	rStopState		 <= 1'b0;
+	else 			rStopState		 <= iMipiDphyRx1_STOPSTATE_LAN0;
+
+	if (!inSRST)	rClkActiveHs 	<= 1'b0;
+	else 			rClkActiveHs 	<= iMipiDphyRx1_RX_CLK_ACTIVE_HS;
+
+	if (!inSRST)	rActiveHs <= 1'b0;
+	else 			rActiveHs <= iMipiDphyRx1_RX_ACTIVE_HS_LAN0;
+
+	if (!inSRST)	rSkewCalHs <= 1'b0;
+	else 			rSkewCalHs <= iMipiDphyRx1_RX_SKEW_CAL_HS_LAN0;
+
+	if (!inSRST)	rErrSotHs <= 1'b0;
+	else 			rErrSotHs <= iMipiDphyRx1_ERR_SOT_HS_LAN0;
+
+	if (!inSRST)	rErrSotSyncHs <= 1'b0;
+	else 			rErrSotSyncHs <= iMipiDphyRx1_RX_ERR_SYNC_ESC;
+
+	if (!inSRST)	rValidCnt <= 16'd0;
+	else if (iMipiDphyRx1_RX_VALID_HS_LAN0)	rValidCnt <= rValidCnt + 1'b1;
+	else 									rValidCnt <= 16'd0;
 end
 
-always @*
-begin
-	qIpCorerHsnRST	<= rIpCoreHsnRST[2];
-end
+/*
+ハード D-PHY 信号メモ
+
+MipiDphyRx1_WORD_CLKOUT_HS
+HS モードのクロックドメイン、データの開始前と終了後まで持続する
+
+MipiDphyRx1_RX_SYNC_HS_LAN0
+HS モードで、有効データ入力時に開始として立ち上がりされる
+
+MipiDphyRx1_RX_VALID_HS_LAN0
+HS モードで、Packet Header, Packet Data, Packet Footer の
+出力期間中に Assert される信号
+
+MipiDphyRx1_STOPSTATE_LAN1
+WORD_CLKOUT_HS シーケンス開始時(CLK 立ち上がり)に Dissert され、
+VALID の Dissert と同時に Assert される。
+HS モードの終了を検出可能。
+
+MipiDphyRx1_RX_CLK_ACTIVE_HS
+WORD_CLKOUT_HS 駆動中に Assert され続ける信号
+
+MipiDphyRx1_RX_ACTIVE_HS_LAN0
+VALID 期間中 Assert され続ける信号
+
+*/
 
 endmodule

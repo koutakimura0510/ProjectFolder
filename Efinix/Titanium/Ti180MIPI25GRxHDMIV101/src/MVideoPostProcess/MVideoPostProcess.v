@@ -38,7 +38,7 @@ output			oAdv7511SdaOe,
 input			iAdv7511Scl,
 output			oAdv7511SclOe,
 // Video Signals
-input  [15:0]	iVideoData,
+input  [31:0]	iVideoPixel,
 input 	 		iVideoVd,
 output 			oVideofull,
 // Status
@@ -110,7 +110,7 @@ MVideoTimingGen #(
 
 
 //-----------------------------------------------------------------------------
-// 内部用高速クロックを ビデオタイミングに変換
+// Fifo Side
 //-----------------------------------------------------------------------------
 localparam lpVdcFifoBitWidth	= 1;
 localparam lpVdcFifoDepth		= 8192 / lpVdcFifoBitWidth;
@@ -124,19 +124,19 @@ genvar n;
 
 generate
 	for (n = 0; n < lpVdcFifoBitLoop; n = n + 1) begin
-		fifoDualController #(
+		fifoController #(
 			.pFifoDepth(lpVdcFifoDepth),	.pFifoBitWidth(lpVdcFifoBitWidth),
 			.pFullAlMost(lpVdcFifoFullAlMost)
-		) mVideoDualClkFIFO (
+		) mVideoFIFO (
 			// Write Side
-			.iWd(iVideoData[(n+1)*lpVdcFifoBitWidth-1:n*lpVdcFifoBitWidth]),
+			.iWd(iVideoPixel[(n+1)*lpVdcFifoBitWidth-1:n*lpVdcFifoBitWidth]),
 			.iWe(iVideoVd),					.ofull(wVdcfull[n]),
-			.iSrcClk(iFCLK),				.iSrcRst(iFRST),
 			// Read Side
 			.oRd(wVdcRd[(n+1)*lpVdcFifoBitWidth-1:n*lpVdcFifoBitWidth]),
 			.iRe(wVgaGenFDe),
 			.oRvd(),						.oEmp(),
-			.iDstClk(iVCLK),				.iDstRst(iVRST)
+			// common
+			.iCLK(iVCLK),					.inRST(inVRST)
 		);
 	end
 endgenerate
@@ -144,7 +144,7 @@ endgenerate
 assign oAdv7511Vs	= wVgaGenVs;
 assign oAdv7511Hs	= wVgaGenHs;
 assign oAdv7511De	= wVgaGenDe;
-assign oAdv7511Data = wVdcRd;	// ADV7511, YUYV -> [15:8] U,V, [7:0] Y
+assign oAdv7511Data = {wVdcRd[7:0], wVdcRd[15:8]};	// ADV7511, YUYV -> [15:8] U,V, [7:0] Y
 
 
 //-----------------------------------------------------------------------------
@@ -159,19 +159,16 @@ reg 						qVtgRstCntCke;
 reg  [lpVtgRstBitWidth-1:0] rVtgRstCnt;
 wire [lpVtgRstBitWidth:0]	wVtgRstCnt = rVtgRstCnt + 1'b1;
 
-always @(posedge iFCLK)
+always @(posedge iVCLK)
 begin
-	if (iFRST) 				rVtgRstSel <= 1'b1;
+	if (iVRST) 				rVtgRstSel <= 1'b1;
 	else if (qVtgRstSelCke)	rVtgRstSel <= 1'b0;
 	else 					rVtgRstSel <= rVtgRstSel;
 
-	if (iFRST) 				rVtgRstCnt <= {lpVtgRstBitWidth{1'b0}};
+	if (iVRST) 				rVtgRstCnt <= {lpVtgRstBitWidth{1'b0}};
 	else if (qVtgRstCntCke)	rVtgRstCnt <= wVtgRstCnt;
 	else 					rVtgRstCnt <= rVtgRstCnt;
-end
 
-always @(posedge iVCLK)
-begin
 	if (iVRST) 				rVtgRST <= 3'b111;
 	else 					rVtgRST <= {rVtgRST[1:0],rVtgRstSel};
 end

@@ -11,14 +11,9 @@ edb_top edb_top_inst (
     .bscan_UPDATE       ( jtag_inst1_UPDATE ),
     .bscan_TDO          ( jtag_inst1_TDO ),
     .vio0_clk       ( $INSERT_YOUR_CLOCK_NAME ),
-    .vio0_Axi_rdata ( vio0_Axi_rdata ),
-    .vio0_HsyncCnt  ( vio0_HsyncCnt ),
-    .vio0_PplCnt    ( vio0_PplCnt ),
     .vio0_Datatype  ( vio0_Datatype ),
     .vio0_WordCnt   ( vio0_WordCnt ),
-    .vio0_ShortPkt  ( vio0_ShortPkt ),
-    .vio0_PCLK      ( vio0_PCLK ),
-    .vio0_Axi_araddr( vio0_Axi_araddr )
+    .vio0_HsEcc     ( vio0_HsEcc )
 );
 
 ////////////////////////////////////////////////////////////////////////////////

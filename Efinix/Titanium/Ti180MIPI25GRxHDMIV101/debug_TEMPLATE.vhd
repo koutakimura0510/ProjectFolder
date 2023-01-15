@@ -13,14 +13,9 @@ component edb_top
          bscan_UPDATE  : in  std_logic;
          bscan_TDO     : out std_logic;
          vio0_clk      : in  std_logic;
-         vio0_Axi_rdata : in  std_logic_vector(31 downto 0);
-         vio0_HsyncCnt : in  std_logic_vector(11 downto 0);
-         vio0_PplCnt   : in  std_logic_vector(11 downto 0);
          vio0_Datatype : in  std_logic_vector(5 downto 0);
          vio0_WordCnt  : in  std_logic_vector(15 downto 0);
-         vio0_ShortPkt : in  std_logic_vector(15 downto 0);
-         vio0_PCLK     : in  std_logic_vector(3 downto 0);
-         vio0_Axi_araddr : out std_logic_vector(5 downto 0)
+         vio0_HsEcc    : in  std_logic_vector(7 downto 0)
        );
 end component ;
 ---------------------- End COMPONENT Declaration ------------
@@ -43,14 +38,9 @@ port map (
            bscan_UPDATE  => jtag_inst1_UPDATE,
            bscan_TDO     => jtag_inst1_TDO,
            vio0_clk      => #INSERT_YOUR_CLOCK_NAME,
-           vio0_Axi_rdata => vio0_Axi_rdata,
-           vio0_HsyncCnt => vio0_HsyncCnt,
-           vio0_PplCnt   => vio0_PplCnt,
            vio0_Datatype => vio0_Datatype,
            vio0_WordCnt  => vio0_WordCnt,
-           vio0_ShortPkt => vio0_ShortPkt,
-           vio0_PCLK     => vio0_PCLK,
-           vio0_Axi_araddr => vio0_Axi_araddr
+           vio0_HsEcc    => vio0_HsEcc
          );
 ------------------------ End INSTANTIATION Template ---------
 

@@ -1,6 +1,6 @@
 /*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*
  *
- * File Name   : MTopTi180MIPI25GRxHDMIV100.v
+ * File Name   : MTopTi180MIPI25GRxHDMIV101.v
  * Description : Ti180M484 dev Kit MIPI RX to HDMI Output Simple Demo.
  * Simulator   : VeritakWin Ver.3.84D Build May.23.2011
  * Implem. Tool: Efinix Efinity 2022.1.226.2.11
@@ -13,6 +13,7 @@
  *
  * Revision    :
  * 29/Dec-2022 V1.00 New Release, Inh.fr. "MTopTi180MIPI25GRxHDMIV100.v" K.Kimura
+ * 13/Jan-2023 V1.01 MIPI D-PHY Decoder を自作に変更                     K.Kimura
  *
  *~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*/
 //-----------------------------------------------------------------------------
@@ -221,7 +222,7 @@ input 			pll_ddr_LOCKED,		// PLL Ddr Locked Port
 output 			pll_ddr_RSTN,		// PLL Ddr Rst Active Low Port
 //
 // TestPort
-output	[11:0]	oTestPort,			// Signals Test Gpio
+output	[25:0]	oTestPort,			// Signals Test Gpio
 //
 // Jtag I/F
 input  			jtag_inst1_TDI,
@@ -323,53 +324,16 @@ end
 
 
 //-----------------------------------------------------------------------------
-// MIPI DPHY, Axi Logic Part
-// VIO で設定したアドレス空間を繰り返し Read する。
-//-----------------------------------------------------------------------------
-reg 	[31:0]	rAxiRdata;
-wire 	[31:0]	wAxiRdata;
-reg 			rAxiArvalid, qAxiArvalidCke;
-wire 	[5:0]	wAxiAraddr;
-wire 			wAxiArready;
-wire 			wAxiRvalid;
-
-always @(posedge iSCLK)
-begin
-	if (qSRST) 					rAxiArvalid <=  1'b0;
-	else if (qAxiArvalidCke)	rAxiArvalid <= ~rAxiArvalid;
-	else 						rAxiArvalid <=  rAxiArvalid;
-
-	if (wAxiRvalid) 			rAxiRdata <= wAxiRdata;
-	else 						rAxiRdata <= rAxiRdata;
-end
-
-always @*
-begin
-	casex ( {rAxiArvalid,wAxiArready} )
-	'b0x:		qAxiArvalidCke	<= 1'b1;	// Assert
-	'b11:		qAxiArvalidCke	<= 1'b1;	// Diseert
-	default:	qAxiArvalidCke	<= 1'b0;
-	endcase
-end
-
-//-----------------------------------------------------------------------------
 // MIPI DPHY RX
 //-----------------------------------------------------------------------------
-wire			wMipiRxVd;
-wire			wMipiRxHs;
-wire			wMipiRxVs;
-wire	[63:0] 	wMipiRxPixelData;
-wire	[ 5:0]	wMipiRxOutDatatype;
-wire 	[15:0]	wMipiRxWordCnt;
-wire 	[15:0]	wMipiRxShortpkt;
-wire 	[ 3:0]	wMipiRxPCLK;
+wire	[ 5:0]	wHsDatatype;
+wire 	[15:0]	wHsWordCnt;
+wire 	[ 7:0]	wHsEcc;
 //
-wire 	[15:0]	wVideoData;
+wire 	[31:0]	wVideoPixel;
 wire 			wVideoVd;
 wire 			wVideofull;
 //
-wire 	[11:0]	wHsyncCntMonitor;
-wire 	[11:0]	wPplCntMonitor;
 wire 			wCdcFifoFull;
 
 MCsiRxController MCsiRxController (
@@ -434,32 +398,18 @@ MCsiRxController MCsiRxController (
 	.iMipiDphyRx1_RX_CLK_ESC_LAN1			(MipiDphyRx1_RX_CLK_ESC_LAN1),
 	.oMipiDphyRx1_TX_CLK_ESC				(MipiDphyRx1_TX_CLK_ESC),
 	// CSI-2 controller ouptut I/F port
-	.oMipiRxVs(wMipiRxVs),						.oMipiRxHs(wMipiRxHs),
-	.oMipiRxVd(wMipiRxVd),						.oMipiRxPixelData(wMipiRxPixelData),
-	.oMipiRxOutDatatype(wMipiRxOutDatatype),	.oMipiRxWordCnt(wMipiRxWordCnt),
-	.oMipiRxShortpkt(wMipiRxShortpkt),			.oMipiRxPCLK(wMipiRxPCLK),
+	.oHsDatatype(wHsDatatype),			.oHsWordCnt(wHsWordCnt),
+	.oHsEcc(wHsEcc),
 	// Video Signals
-	.oVideoData(wVideoData),
+	.oVideoPixel(wVideoPixel),
 	.oVideoVd(wVideoVd),				.iVideofull(wVideofull),
-	// AXI4-Lite Interface
-	.axi_awaddr(4'b0),					.axi_awvalid(1'b0),
-	.axi_awready(),						.axi_wdata(32'b0),
-	.axi_wvalid(1'b0),					.axi_wready(),
-	.axi_bvalid(),						.axi_bready(1'b0),
-	.axi_araddr(wAxiAraddr),			.axi_arvalid(rAxiArvalid),
-	.axi_arready(wAxiArready),
-	.axi_rdata(wAxiRdata),
-	.axi_rvalid(wAxiRvalid),			.axi_rready(1'b1),
-	.axi_clk(iSCLK), 					.axi_reset_n(qnSRST),
 	// Status
-	.oHsyncCntMonitor(wHsyncCntMonitor),
-	.oPplCntMonitor(wPplCntMonitor),
 	.oCdcFifoFull(wCdcFifoFull),
 	// Common
 	.iSRST(qSRST),						.inSRST(qnSRST),
-	.iPRST(qPRST),						.inPRST(qnPRST),
+	.iVRST(qVRST),						.inVRST(qnVRST),
 	.iFRST(qFRST),						.inFRST(qnFRST),
-	.iSCLK(iSCLK),						.iPCLK(iPCLK),
+	.iSCLK(iSCLK),						.iVCLK(iVCLK),
 	.iFCLK(iFCLK)
 );
 
@@ -560,7 +510,7 @@ MVideoPostProcess #(
 	.iAdv7511Sda(iAdv7511Sda),		.oAdv7511SdaOe(oAdv7511SdaOe),
 	.iAdv7511Scl(iAdv7511Scl),		.oAdv7511SclOe(oAdv7511SclOe),
 	// Video Signal
-	.iVideoData(wVideoData),
+	.iVideoPixel(wVideoPixel),
 	.iVideoVd(wVideoVd),			.oVideofull(wVideofull),
 	// Status
 	.iVideoSignalSel(1'b0),
@@ -596,9 +546,9 @@ localparam [32*lpPulseGenNumber-1:0] lpClkDivCnt = {	// 分周値
 wire [lpPulseGenNumber-1:0] wSampling = {
 	wVideofull,
 	wCdcFifoFull,
-	wMipiRxHs,
-	wMipiRxVs,
-	wMipiRxVd
+	1'b0,
+	1'b0,
+	wVideoVd
 };
 wire [lpPulseGenNumber-1:0] wPulse;
 //
@@ -630,18 +580,32 @@ assign oLed[4] = wPulse[4];
 assign oLed[5] = qLocked;
 // FMC to QSE Adapter Card to J3 MIPI and LVDS Expansion Daughter Card
 // ※ 一部 回路図・データシートと異なる IO の位置
-assign oTestPort[0]  = 1'b0;		// Pin31
-assign oTestPort[1]  = 1'b0;		// Pin32
-assign oTestPort[2]  = 1'b0;		// Pin33
-assign oTestPort[3]  = 1'b0;		// Pin34
-assign oTestPort[4]  = 1'b0;		// Pin37
-assign oTestPort[5]  = wAdv7511Hs;	// Pin38 -> Pin40
-assign oTestPort[6]  = wAdv7511Vs;	// Pin39 -> Pin37
-assign oTestPort[7]  = wAdv7511De;	// Pin40 -> Pin38
-assign oTestPort[8]  = 1'b0;		// Pin2
-assign oTestPort[9]  = wMipiRxHs;	// Pin4
-assign oTestPort[10] = wMipiRxVs;	// Pin7
-assign oTestPort[11] = wMipiRxVd;	// Pin8
+assign oTestPort[0]  = MipiDphyRx1_RX_SYNC_HS_LAN0;		// Pin2
+assign oTestPort[1]  = MipiDphyRx1_RX_CLK_ESC_LAN0;		// Pin4
+assign oTestPort[2]  = MipiDphyRx1_STOPSTATE_LAN1;		// Pin7
+assign oTestPort[3]  = MipiDphyRx1_RX_SKEW_CAL_HS_LAN1;	// Pin8
+assign oTestPort[4]  = MipiDphyRx1_RX_DATA_HS_LAN0[0];	// Pin9
+assign oTestPort[5]  = 1'b0;	// Pin10
+assign oTestPort[6]  = 1'b0;	// Pin13
+assign oTestPort[7]  = MipiDphyRx1_RX_CLK_ACTIVE_HS;	// Pin14
+assign oTestPort[8]  = 1'b0;	// Pin15
+assign oTestPort[9]  = 1'b0;	// Pin16
+assign oTestPort[10] = MipiDphyRx1_RX_ACTIVE_HS_LAN0;	// Pin19
+assign oTestPort[11] = 1'b0;	// Pin20
+assign oTestPort[12] = 1'b0;	// Pin21
+assign oTestPort[13] = 1'b0;	// Pin22
+assign oTestPort[14] = 1'b0;	// Pin25
+assign oTestPort[15] = 1'b0;	// Pin26
+assign oTestPort[16] = 1'b0;	// Pin27
+assign oTestPort[17] = MipiDphyRx1_WORD_CLKOUT_HS;	// Pin28
+assign oTestPort[18] = 1'b0;	// Pin31
+assign oTestPort[19] = 1'b0;	// Pin32
+assign oTestPort[20] = 1'b0;	// Pin33
+assign oTestPort[21] = 1'b0;	// Pin34
+assign oTestPort[22] = 1'b0;	// Pin37 -> Pin39
+assign oTestPort[23] = 1'b0;	// Pin38
+assign oTestPort[24] = MipiDphyRx1_RX_VALID_HS_LAN0;	// Pin39 -> Pin37
+assign oTestPort[25] = MipiDphyRx1_RX_VALID_HS_LAN1;	// Pin40
 // Pin5,6,11,12,17,18,23,24,29,30,35,36 = GND
 
 
@@ -653,29 +617,29 @@ assign oTestPort[11] = wMipiRxVd;	// Pin8
 // Open Debug Wizard の USER2 などで 自動ロジアナ生成をすると自動でチェックマークが ON になるので注意。
 // 
 // 自動生成のロジアナを使用する場合は、手動生成 module をコメントアウトする
+// 
+// デフォルトの GTKWave は遅いため、下記リンクを参考にアップデートすること
+// https://rightxlight.co.jp/technical/efinix-efinty-iverilog-simulation/
 //-----------------------------------------------------------------------------
-edb_top edb_top_inst (
-    .bscan_CAPTURE      ( jtag_inst1_CAPTURE ),
-    .bscan_DRCK         ( jtag_inst1_DRCK ),
-    .bscan_RESET        ( jtag_inst1_RESET ),
-    .bscan_RUNTEST      ( jtag_inst1_RUNTEST ),
-    .bscan_SEL          ( jtag_inst1_SEL ),
-    .bscan_SHIFT        ( jtag_inst1_SHIFT ),
-    .bscan_TCK          ( jtag_inst1_TCK ),
-    .bscan_TDI          ( jtag_inst1_TDI ),
-    .bscan_TMS          ( jtag_inst1_TMS ),
-    .bscan_UPDATE       ( jtag_inst1_UPDATE ),
-    .bscan_TDO          ( jtag_inst1_TDO ),
-    .vio0_clk       	( iSCLK ),
-    .vio0_Axi_rdata    	( rAxiRdata ),
-    .vio0_Axi_araddr   	( wAxiAraddr ),
-	.vio0_HsyncCnt	   	( wHsyncCntMonitor ),
-	.vio0_PplCnt	   	( wPplCntMonitor ),
-	.vio0_Datatype		( wMipiRxOutDatatype ),
-	.vio0_WordCnt		( wMipiRxWordCnt ),
-	.vio0_ShortPkt		( wMipiRxShortpkt ),
-	.vio0_PCLK			( wMipiRxPCLK )
-);
+// edb_top edb_top_inst (
+//     .bscan_CAPTURE      ( jtag_inst1_CAPTURE ),
+//     .bscan_DRCK         ( jtag_inst1_DRCK ),
+//     .bscan_RESET        ( jtag_inst1_RESET ),
+//     .bscan_RUNTEST      ( jtag_inst1_RUNTEST ),
+//     .bscan_SEL          ( jtag_inst1_SEL ),
+//     .bscan_SHIFT        ( jtag_inst1_SHIFT ),
+//     .bscan_TCK          ( jtag_inst1_TCK ),
+//     .bscan_TDI          ( jtag_inst1_TDI ),
+//     .bscan_TMS          ( jtag_inst1_TMS ),
+//     .bscan_UPDATE       ( jtag_inst1_UPDATE ),
+//     .bscan_TDO          ( jtag_inst1_TDO ),
+//     .vio0_clk       	( iSCLK ),
+// 	.vio0_Datatype		( wHsDatatype ),
+// 	.vio0_WordCnt		( wHsWordCnt ),
+// 	.vio0_HsEcc			( wHsEcc )
+// );
+
+
 
 
 endmodule

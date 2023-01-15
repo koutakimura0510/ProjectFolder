@@ -3,28 +3,8 @@
         {
             "name": "vio0",
             "type": "vio",
-            "uuid": "d1ba187976664d1e8c26f3fa2237d477",
+            "uuid": "b1135b706c344182aa59002af8dd8b15",
             "probes": [
-                {
-                    "name": "Axi_rdata",
-                    "width": 32,
-                    "init": null
-                },
-                {
-                    "name": "Axi_araddr",
-                    "width": 6,
-                    "init": "0x0"
-                },
-                {
-                    "name": "HsyncCnt",
-                    "width": 12,
-                    "init": null
-                },
-                {
-                    "name": "PplCnt",
-                    "width": 12,
-                    "init": null
-                },
                 {
                     "name": "Datatype",
                     "width": 6,
@@ -36,13 +16,8 @@
                     "init": null
                 },
                 {
-                    "name": "ShortPkt",
-                    "width": 16,
-                    "init": null
-                },
-                {
-                    "name": "PCLK",
-                    "width": 4,
+                    "name": "HsEcc",
+                    "width": 8,
                     "init": null
                 }
             ]

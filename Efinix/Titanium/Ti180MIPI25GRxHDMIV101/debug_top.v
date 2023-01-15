@@ -21,14 +21,9 @@ module edb_top (
     input  bscan_UPDATE,
     output bscan_TDO,
     input  vio0_clk,
-    input  [31:0] vio0_Axi_rdata,
-    input  [11:0] vio0_HsyncCnt,
-    input  [11:0] vio0_PplCnt,
     input  [5:0] vio0_Datatype,
     input  [15:0] vio0_WordCnt,
-    input  [15:0] vio0_ShortPkt,
-    input  [3:0] vio0_PCLK,
-    output [5:0] vio0_Axi_araddr
+    input  [7:0] vio0_HsEcc
 );
 
     localparam HUB_CS_WIDTH = 15;
@@ -81,18 +76,12 @@ module edb_top (
 
     // debug core instances
     edb_vio_top #(
-        .NUM_PROBE_IN           ( 7 ),
-        .NUM_PROBE_OUT          ( 1 ),
-        .UUID           ( 128'h0f0ac116ffc74d659c543a57395eea65 ),
-        .PROBE_IN0_WIDTH        ( 32 ),
-        .PROBE_IN1_WIDTH        ( 12 ),
-        .PROBE_IN2_WIDTH        ( 12 ),
-        .PROBE_IN3_WIDTH        ( 6 ),
-        .PROBE_IN4_WIDTH        ( 16 ),
-        .PROBE_IN5_WIDTH        ( 16 ),
-        .PROBE_IN6_WIDTH        ( 4 ),
-        .PROBE_OUT0_WIDTH       ( 6 ),
-        .PROBE_OUT0_INIT_VAL    ( 'h0 )
+        .NUM_PROBE_IN           ( 3 ),
+        .NUM_PROBE_OUT          ( 0 ),
+        .UUID           ( 128'ha14822a15c9546db998ef0f9f8e49209 ),
+        .PROBE_IN0_WIDTH        ( 6 ),
+        .PROBE_IN1_WIDTH        ( 16 ),
+        .PROBE_IN2_WIDTH        ( 8 )
     ) vio0 (
         .bscan_CAPTURE          ( bscan_CAPTURE ),
         .bscan_DRCK             ( bscan_DRCK ),
@@ -109,13 +98,13 @@ module edb_top (
         .edb_module_inhibit ( vio0_module_inhibit ),
         .edb_module_tdo     ( vio0_module_tdo ),
         .clk                ( vio0_clk ),
-        .probe_in0          ( vio0_Axi_rdata ),
-        .probe_in1          ( vio0_HsyncCnt ),
-        .probe_in2          ( vio0_PplCnt ),
-        .probe_in3          ( vio0_Datatype ),
-        .probe_in4          ( vio0_WordCnt ),
-        .probe_in5          ( vio0_ShortPkt ),
-        .probe_in6          ( vio0_PCLK ),
+        .probe_in0          ( vio0_Datatype ),
+        .probe_in1          ( vio0_WordCnt ),
+        .probe_in2          ( vio0_HsEcc ),
+        .probe_in3          ( 1'b0 ),
+        .probe_in4          ( 1'b0 ),
+        .probe_in5          ( 1'b0 ),
+        .probe_in6          ( 1'b0 ),
         .probe_in7          ( 1'b0 ),
         .probe_in8          ( 1'b0 ),
         .probe_in9          ( 1'b0 ),
@@ -173,7 +162,7 @@ module edb_top (
         .probe_in61         ( 1'b0 ),
         .probe_in62         ( 1'b0 ),
         .probe_in63         ( 1'b0 ),
-        .probe_out0         ( vio0_Axi_araddr ),
+        .probe_out0         (  ),
         .probe_out1         (  ),
         .probe_out2         (  ),
         .probe_out3         (  ),

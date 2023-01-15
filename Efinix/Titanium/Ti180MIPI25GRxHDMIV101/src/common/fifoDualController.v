@@ -36,10 +36,10 @@ module fifoDualController #(
     output                      oRvd,   	// 有効データ出力
     output                      oEmp,   	// バッファ空時High
 	//
-    input                       iSrcRst,	// Active High
-    input                       iDstRst,	// Active High
-    input                       iSrcClk,	// clk write side
-    input                       iDstClk 	// clk read  side
+    input                       iWnRST,	// Active High
+    input                       iRnRST,	// Active High
+    input                       iWCLK,	// clk write side
+    input                       iRCLK 	// clk read  side
 );
 
 //----------------------------------------------------------
@@ -57,9 +57,9 @@ localparam lpAddrWidth   = fBitWidth(pFifoDepth);
 reg [lpAddrWidth-1:0] rWA;
 reg qWE;
 
-always @(posedge iSrcClk)
+always @(posedge iWCLK, negedge iWnRST)
 begin
-    if (iSrcRst)    rWA <= {lpAddrWidth{1'b0}};
+    if (!iWnRST)    rWA <= {lpAddrWidth{1'b0}};
     else if (qWE)   rWA <= rWA + 1'b1;
     else            rWA <= rWA;
 end
@@ -75,12 +75,12 @@ end
 reg [lpAddrWidth-1:0] rRA, rORP;
 reg qRE;
 
-always @(posedge iDstClk)
+always @(posedge iRCLK, negedge iRnRST)
 begin
-    if (iDstRst)    rORP <= {lpAddrWidth{1'b0}};
+    if (!iRnRST)    rORP <= {lpAddrWidth{1'b0}};
     else            rORP <= rRA;
 
-    if (iDstRst)	rRA <= {lpAddrWidth{1'b0}};
+    if (!iRnRST)	rRA <= {lpAddrWidth{1'b0}};
     else if (qRE)   rRA <= rRA + 1'b1;
     else            rRA <= rRA;
 end
@@ -99,19 +99,19 @@ reg [pFullAlMost-1:0] qFull;
 reg qFullAllmost;
 reg [lpAddrWidth-1:0] qWAn [0:pFullAlMost];
 
-always @(posedge iSrcClk)
+always @(posedge iWCLK, negedge iWnRST)
 begin
-    if (iSrcRst)    rFull <= 1'b0;
+    if (!iWnRST)    rFull <= 1'b0;
     else            rFull <= qFullAllmost;
 
 end
 
-always @(posedge iDstClk)
+always @(posedge iRCLK, negedge iRnRST)
 begin
-    if (iDstRst)    rEmp <= 1'b1;
+    if (!iRnRST)    rEmp <= 1'b1;
     else            rEmp <= qEmp;
 
-    if (iDstRst)    rRVd <= 1'b0;
+    if (!iRnRST)    rRVd <= 1'b0;
     else            rRVd <= qRVd;
 end
 //
@@ -148,7 +148,7 @@ userFifoDual #(
     .pAddrWidth    (lpAddrWidth)
 ) USER_FIFO_DUAL (
     // write side       read side
-    .iSrcClk(iSrcClk),  .iDstClk(iDstClk),
+    .iWCLK(iWCLK),  	.iRCLK(iRCLK),
     .iWD    (iWd),      .oRD    (wRD),
     .iWA    (rWA),      .iRA    (rRA),
     .iWE    (qWE)
