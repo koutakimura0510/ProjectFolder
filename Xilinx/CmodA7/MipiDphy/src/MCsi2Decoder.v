@@ -171,7 +171,7 @@ always @*
 begin
 	qFtiWd	<= {3'd0, rDphyHsDataLaneLs, rDphyHsDataLane1, rDphyHsDataLane0};
 	qFtiWe  <= rDphyHsDataLaneVd;
-	qFtiRe	<= (~wFtiEmp[0]);
+	qFtiRe	<= &{(~wFtiEmp[0]),iEdv};
 	qFtiLs  <= &{wFtiRd[16],wFtiRvd[0]};
 	// RST
 	qnHsRst <= inSRST;//rDphyHsStopState;
@@ -304,8 +304,13 @@ begin
 	qDatatypeCheck  <= (6'h13 < rDatatype);
 	//
 	qLineCntRst 	<= |{iSRST,qLineCntMaxCke};
-	qLineCntCke 	<= wFtiRvd[0];
-	qLineCntMaxCke  <= ((rWordcnt[15:1]-1'b1) == rFrameWidthCnt); // 1920 x YUV4228bit = F00
+	qLineCntMaxCke  <= &{((rWordcnt[15:1]-1'b1) == rFrameWidthCnt),wFtiRvd[0]} ? 1'b1 : 1'b0; // 1920 x YUV4228bit = F00
+
+	case ({wFtiRvd[0],rHsSt})
+		{1'b1,lpRxHsState3}:	qLineCntCke <= 1'b1;
+		{1'b1,lpRxHsState4}:	qLineCntCke <= 1'b1;
+		default:				qLineCntCke <= 1'b0;
+	endcase
 	//
 	qHsStNextCke[0] <= qFtiLs;
 	qHsStNextCke[1] <= wFtiRvd[0];

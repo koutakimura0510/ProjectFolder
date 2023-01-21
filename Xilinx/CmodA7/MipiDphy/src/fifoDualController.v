@@ -131,7 +131,7 @@ endgenerate
 
 always @*
 begin
-    qEmp    <= (rWA  == rRA) || (rWA  == (rRA+1'b1));
+    qEmp    <= (rWA  == rRA);// || (rWA  == (rRA+1'b1));
     qRVd    <= (rRA != rORP);
     qRE     <= iRe & (~qEmp);
 end
@@ -150,7 +150,7 @@ userFifoDual #(
     // write side       read side
     .iWCLK(iWCLK),  	.iRCLK(iRCLK),
     .iWD    (iWd),      .oRD    (wRD),
-    .iWA    (rWA),      .iRA    (rRA),
+    .iWA    (rWA),      .iRA    (rORP),
     .iWE    (qWE)
 );
 

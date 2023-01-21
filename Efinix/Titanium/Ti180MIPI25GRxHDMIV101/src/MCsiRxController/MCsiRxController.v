@@ -195,72 +195,24 @@ MCsi2Decoder MCsi2Decoder(
 );
 
 
-//-----------------------------------------------------------------------------
-// Dual CLK Fifo Side
-// ピクセルクロックのタイミングで出力されるピクセルデータを高速なクロックに変換
-// CSI2-IP から出力されるデータは垂れ流しで全て受け付ける。
-// 
-// ※ Titanium の DualClkRam が 最大8bit ～ 10bit, 深さ1024 までしか対応していない。
-// 
-//	BRAM のプリミティブ活用や、コードからの合成結果については試行回数が必要。
-//	Quantum アーキテクチャの特徴を生かして、カスケード接続が定石か？
-//-----------------------------------------------------------------------------
-localparam lpCdcFifoBitWidth	= 16;
-localparam lpCdcFifoDepth		= (8192) / lpCdcFifoBitWidth;
-localparam lpCdcFifoBitLoop		= 16   / lpCdcFifoBitWidth;
-localparam lpCdcFIfoFullAlMost	= 16;
-//
-reg  [lpCdcFifoBitWidth-1:0] 	qCdcFifoWd;
-wire [lpCdcFifoBitLoop-1:0] 	wCdcFifoEmp;
-wire [lpCdcFifoBitWidth-1:0] 	wCdcFifoRd;
-wire [lpCdcFifoBitLoop-1:0] 	wCdcFifoRvd;
-reg  							qCdcFifoWe;
-reg  							qCdcFifoRe;
-wire [lpCdcFifoBitLoop-1:0] 	wCdcFifoFull;				assign oCdcFifoFull = wCdcFifoFull[0];
-
-genvar n;
-
-generate
-	for (n = 0; n < lpCdcFifoBitLoop; n = n + 1)
-	begin
-		fifoDualController #(
-			.pFifoDepth	(lpCdcFifoDepth),	.pFifoBitWidth(lpCdcFifoBitWidth),
-			.pFullAlMost(lpCdcFIfoFullAlMost)
-		) mCsiDualClkFIFO (
-			// src side
-			.iWd(qCdcFifoWd[(n+1)*lpCdcFifoBitWidth-1:n*lpCdcFifoBitWidth]),
-			.iWe(qCdcFifoWe),						.ofull(wCdcFifoFull[n]),
-			.iWCLK(iSCLK),							.iWnRST(inSRST),
-			// dst side
-			.oRd(wCdcFifoRd[(n+1)*lpCdcFifoBitWidth-1:n*lpCdcFifoBitWidth]),
-			.oRvd(wCdcFifoRvd[n]),
-			.iRe(qCdcFifoRe),						.oEmp(wCdcFifoEmp[n]),
-			.iRCLK(iVCLK),							.iRnRST(inVRST)
-		);
-	end
-endgenerate
-
-always @*
-begin
-	qCdcFifoWd 	<= wHsPixel;
-	qCdcFifoWe 	<= wHsValid;
-	qCsiEdv		<= (~wCdcFifoFull[0]);
-end
-
 
 //-----------------------------------------------------------------------------
 // Fifo Side
 //-----------------------------------------------------------------------------
 localparam lpFtiFifoBitWidth	= 16;
 localparam lpFtiFifoDepth		= (8192) / lpFtiFifoBitWidth;
-localparam lpFtiFifoBitLoop		= 16   / lpFtiFifoBitWidth;
+localparam lpFtiFifoBitLoop		= 16     / lpFtiFifoBitWidth;
 localparam lpFtiFifoFullAlMost	= 16;
 
 wire [lpFtiFifoBitWidth-1:0]wFtiRd;								assign oVideoPixel = {16'd0,wFtiRd};
 wire [lpFtiFifoBitLoop-1:0]	wFtiRvd;							assign oVideoVd    = wFtiRvd[0];
+reg  [lpFtiFifoBitWidth-1:0]qFtiWd;
+reg 						qFtiWe;
 reg  						qFtiRe;
 wire [lpFtiFifoBitLoop-1:0]	wFtiEmp;
-wire [lpFtiFifoBitLoop-1:0]	wFtifull;
+wire [lpFtiFifoBitLoop-1:0]	wFtifull;							assign oCdcFifoFull = wFtifull[0];
+
+genvar n;
 
 generate
 	for (n = 0; n < lpFtiFifoBitLoop; n = n + 1) begin
@@ -269,22 +221,24 @@ generate
 			.pFullAlMost(lpFtiFifoFullAlMost)
 		) mVideoFIFO (
 			// Write Side
-			.iWd(wCdcFifoRd[(n+1)*lpFtiFifoBitWidth-1:n*lpFtiFifoBitWidth]),
-			.iWe(wCdcFifoRvd[0]),			.ofull(wFtifull[n]),
+			.iWd(qFtiWd[(n+1)*lpFtiFifoBitWidth-1:n*lpFtiFifoBitWidth]),
+			.iWe(qFtiWe),					.ofull(wFtifull[n]),
 			// Read Side
 			.oRd(wFtiRd[(n+1)*lpFtiFifoBitWidth-1:n*lpFtiFifoBitWidth]),
 			.iRe(qFtiRe),
 			.oRvd(wFtiRvd[n]),				.oEmp(wFtiEmp[n]),
 			// common
-			.iCLK(iVCLK),					.inRST(inVRST)
+			.iCLK(iSCLK),					.inRST(inSRST)
 		);
 	end
 endgenerate
 
 always @*
 begin
-	qCdcFifoRe 	<= (~wFtifull[0]) & (~wCdcFifoEmp[0]);
+	qFtiWd 		<= wHsPixel;
+	qFtiWe 		<= wHsValid;
 	qFtiRe		<= (~iVideofull) & (~wFtiEmp[0]);
+	qCsiEdv		<= (~wFtifull[0]);
 end
 
 

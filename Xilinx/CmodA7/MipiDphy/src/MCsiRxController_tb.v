@@ -72,6 +72,7 @@ wire [ 7:0] wHsEcc;
 wire [ 1:0]	wHsVc;
 wire [ 1:0]	wHsVcx;
 wire 		wHsValid;
+reg 		rFull;
 
 MCsi2Decoder MCsi2Decoder (
 	// Hard D-PHY Port
@@ -97,8 +98,8 @@ MCsi2Decoder MCsi2Decoder (
 	.iMipiDphyRx1_RX_CLK_ACTIVE_HS			(1'b0),
 	.iMipiDphyRx1_RX_ACTIVE_HS_LAN0			(1'b0),
 	.iMipiDphyRx1_RX_ACTIVE_HS_LAN1			(1'b0),
-	.iMipiDphyRx1_RX_VALID_HS_LAN0			(wDphyHsDataLaneVs),
-	.iMipiDphyRx1_RX_VALID_HS_LAN1			(wDphyHsDataLaneVs),
+	.iMipiDphyRx1_RX_VALID_HS_LAN0			(wDphyHsDataLaneVd),
+	.iMipiDphyRx1_RX_VALID_HS_LAN1			(wDphyHsDataLaneVd),
 	.iMipiDphyRx1_RX_SYNC_HS_LAN0			(wDphyHsDataLaneLs),
 	.iMipiDphyRx1_RX_SYNC_HS_LAN1			(wDphyHsDataLaneLs),
 	.iMipiDphyRx1_RX_SKEW_CAL_HS_LAN0		(1'b0),
@@ -141,14 +142,19 @@ MCsi2Decoder MCsi2Decoder (
 	.oHsValid(wHsValid),
 	//
 	// Status
-	.iEdv(1'b0),
+	.iEdv(rFull),
 	//
 	// CLK RST
 	.iSRST(rSRST),
 	.inSRST(rnSRST),
-	.iSCLK(rSCLK)
+	.iSCLK(wSCLK)
 );
 
+always @(posedge wSCLK)
+begin
+	if (rSRST) 	rFull <= 1'b0;
+	else 		rFull <= ~rFull;
+end
 
 initial begin
 	system_reset();

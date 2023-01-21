@@ -105,7 +105,7 @@ MVideoTimingGen #(
 
 
 //-----------------------------------------------------------------------------
-// Fifo Side
+// 内部用高速クロックを ビデオタイミングに変換
 //-----------------------------------------------------------------------------
 localparam lpVdcFifoBitWidth	= 1;
 localparam lpVdcFifoDepth		= 8192 / lpVdcFifoBitWidth;
@@ -119,19 +119,19 @@ genvar n;
 
 generate
 	for (n = 0; n < lpVdcFifoBitLoop; n = n + 1) begin
-		fifoController #(
+		fifoDualController #(
 			.pFifoDepth(lpVdcFifoDepth),	.pFifoBitWidth(lpVdcFifoBitWidth),
 			.pFullAlMost(lpVdcFifoFullAlMost)
-		) mVideoFIFO (
+		) mVideoDualClkFIFO (
 			// Write Side
 			.iWd(iVideoPixel[(n+1)*lpVdcFifoBitWidth-1:n*lpVdcFifoBitWidth]),
-			.iWe(iVideoVd),					.ofull(wVdcfull[n]),
+			.iWe(iVideoVd),				.ofull(wVdcfull[n]),
+			.iWCLK(iSCLK),				.iWnRST(inSRST),
 			// Read Side
 			.oRd(wVdcRd[(n+1)*lpVdcFifoBitWidth-1:n*lpVdcFifoBitWidth]),
 			.iRe(wVgaGenFDe),
-			.oRvd(),						.oEmp(),
-			// common
-			.iCLK(iVCLK),					.inRST(inVRST)
+			.oRvd(),					.oEmp(),
+			.iRCLK(iVCLK),				.iRnRST(inVRST)
 		);
 	end
 endgenerate
@@ -140,6 +140,26 @@ assign oAdv7511Vs	= wVgaGenVs;
 assign oAdv7511Hs	= wVgaGenHs;
 assign oAdv7511De	= wVgaGenDe;
 assign oAdv7511Data = {wVdcRd[7:0], wVdcRd[15:8]};	// ADV7511, YUYV -> [15:8] U,V, [7:0] Y
+
+
+// generate
+// 	for (n = 0; n < lpVdcFifoBitLoop; n = n + 1) begin
+// 		fifoController #(
+// 			.pFifoDepth(lpVdcFifoDepth),	.pFifoBitWidth(lpVdcFifoBitWidth),
+// 			.pFullAlMost(lpVdcFifoFullAlMost)
+// 		) mVideoFIFO (
+// 			// Write Side
+// 			.iWd(iVideoPixel[(n+1)*lpVdcFifoBitWidth-1:n*lpVdcFifoBitWidth]),
+// 			.iWe(iVideoVd),					.ofull(wVdcfull[n]),
+// 			// Read Side
+// 			.oRd(wVdcRd[(n+1)*lpVdcFifoBitWidth-1:n*lpVdcFifoBitWidth]),
+// 			.iRe(wVgaGenFDe),
+// 			.oRvd(),						.oEmp(),
+// 			// common
+// 			.iCLK(iVCLK),					.inRST(inVRST)
+// 		);
+// 	end
+// endgenerate
 
 
 //-----------------------------------------------------------------------------

@@ -24,7 +24,7 @@ module MMipiDphyGen_tb (
 //-----------------------------------------------------------------------------
 // MIPI D-PHY 信号生成
 //-----------------------------------------------------------------------------
-localparam lpHsStNum  = 2;
+localparam lpHsStNum  = 3;
 localparam [lpHsStNum-1:0]
 	lpHsIdol		  = 0,
 	lpHsStartTrigger  = 1,
@@ -79,15 +79,15 @@ begin
 			begin
 				rSt <= lpHsPacketHeader2;
 				rDphyHsDataLane0  <= 8'h1E;
-				rDphyHsDataLane1  <= 8'h00;
+				rDphyHsDataLane1  <= 8'hE0;
 				rDphyHsDataLaneLs <= 1'b0;
 				rDphyHsDataLaneVd <= 1'b1;
 			end
 
 			lpHsPacketHeader2:
 			begin
-				rSt <= lpHsPacketHeader2;
-				rDphyHsDataLane0  <= 8'h0F;
+				rSt <= lpHsPacketData;
+				rDphyHsDataLane0  <= 8'h01;
 				rDphyHsDataLane1  <= 8'h14;
 				rDphyHsDataLaneLs <= 1'b0;
 				rDphyHsDataLaneVd <= 1'b1;
@@ -96,7 +96,7 @@ begin
 			lpHsPacketData:
 			begin
 				rSt <= qLineMaxCke ? lpHsPacketFooter : lpHsPacketData;
-				rDphyHsDataLane0  <= 8'h80;
+				rDphyHsDataLane0  <= rDphyHsDataLane0 + 1'b1;
 				rDphyHsDataLane1  <= 8'h00;
 				rDphyHsDataLaneLs <= 1'b0;
 				rDphyHsDataLaneVd <= qLineMaxCke ? 1'b0 : 1'b1;
@@ -105,8 +105,8 @@ begin
 			lpHsPacketFooter: 
 			begin
 				rSt <= qLineMaxCke ? lpHsIdol : lpHsPacketFooter;
-				rDphyHsDataLane0  <= 8'h80;
-				rDphyHsDataLane1  <= 8'h00;
+				rDphyHsDataLane0  <= 8'hff;
+				rDphyHsDataLane1  <= 8'hff;
 				rDphyHsDataLaneLs <= 1'b0;
 				rDphyHsDataLaneVd <= 1'b0;
 			end
@@ -114,8 +114,8 @@ begin
 			default:
 			begin
 				rSt <= lpHsIdol;
-				rDphyHsDataLane0  <= 8'h80;
-				rDphyHsDataLane1  <= 8'h00;
+				rDphyHsDataLane0  <= 8'hff;
+				rDphyHsDataLane1  <= 8'hff;
 				rDphyHsDataLaneLs <= 1'b0;
 				rDphyHsDataLaneVd <= 1'b0;
 			end
