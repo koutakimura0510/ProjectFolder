@@ -1,0 +1,73 @@
+/**-----------------------------------------------------------------------------
+ * Create  2023/1/21
+ * Author  koutakimura
+ * 
+ * Efinity FPGA Task.json
+ * Ctrl + Shift + B で実行するコマンドを選択。
+ *
+ * Compile : Synthesis + Placement + Routing + Bitstream Generate
+ * 
+ * bitstream を hex に変更するには下記インストールの必要あり
+ * python 公式インストーラ、インストール時は必ず環境変数のパスを通すにチェックを入れること
+ * https://www.python.org/downloads/windows/
+ *
+ * Python ライブラリインストール
+ * pip install bitarray
+ *-----------------------------------------------------------------------------*/
+
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Compile",
+			"type": "shell",
+			"command": "efx_run.bat ./Ti180MIPI25GRxHDMIV101.xml --flow compile;cp ./outflow/Ti180MIPI25GRxHDMIV101.bit ./outflow/Ti180MIPI25GRxHDMIV101.hex",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		{
+			"label": "Synthesis",
+			"type": "shell",
+			"command": "efx_run.bat ./Ti180MIPI25GRxHDMIV101.xml --flow map",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		{
+			"label": "Place + Routing",
+			"type": "shell",
+			"command": "efx_run.bat ./Ti180MIPI25GRxHDMIV101.xml --flow pnr",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		{
+			"label": "Interface",
+			"type": "shell",
+			"command": "efx_run.bat ./Ti180MIPI25GRxHDMIV101.xml --flow interface",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		{
+			"label": "Jtag",
+			"type": "shell",
+			"command": "efx_run.bat ./Ti180MIPI25GRxHDMIV101.xml --flow program --pgm_opts ./outflow/Ti180MIPI25GRxHDMIV101.bit mode=jtag",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+	]
+}

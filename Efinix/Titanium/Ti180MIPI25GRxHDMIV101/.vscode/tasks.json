@@ -6,7 +6,13 @@
  * Ctrl + Shift + B で実行するコマンドを選択。
  *
  * Compile : Synthesis + Placement + Routing + Bitstream Generate
+ * 
+ * bitstream を hex に変更するには下記インストールの必要あり
+ * python 公式インストーラ、インストール時は必ず環境変数のパスを通すにチェックを入れること
+ * https://www.python.org/downloads/windows/
  *
+ * Python ライブラリインストール
+ * pip install bitarray
  *-----------------------------------------------------------------------------*/
 
 {
@@ -17,7 +23,7 @@
 		{
 			"label": "Compile",
 			"type": "shell",
-			"command": "efx_run.bat ./Ti180MIPI25GRxHDMIV101.xml --flow compile",
+			"command": "efx_run.bat ./Ti180MIPI25GRxHDMIV101.xml --flow compile;cp ./outflow/Ti180MIPI25GRxHDMIV101.bit ./outflow/Ti180MIPI25GRxHDMIV101.hex",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -57,7 +63,7 @@
 		{
 			"label": "Jtag",
 			"type": "shell",
-			"command": "efx_run.bat ./Ti180MIPI25GRxHDMIV101.xml --flow program --pgm_opts ./outflow/ mode=jtag",
+			"command": "efx_run.bat ./Ti180MIPI25GRxHDMIV101.xml --flow program --pgm_opts ./outflow/Ti180MIPI25GRxHDMIV101.bit mode=jtag",
 			"group": {
 				"kind": "build",
 				"isDefault": true

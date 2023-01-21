@@ -1,0 +1,648 @@
+{
+    "debug_cores": [
+        {
+            "name": "la0",
+            "type": "la",
+            "uuid": "798084eb444b43888cea62e0471ad9c6",
+            "trigin_en": false,
+            "trigout_en": false,
+            "auto_inserted": true,
+            "capture_control": false,
+            "data_depth": 4096,
+            "input_pipeline": 1,
+            "probes": [
+                {
+                    "name": "MCsiRxController/rHsClk",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/qNotTrigger",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rStopState",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rHsStartTrigger",
+                    "width": 2,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rSkewCalHs",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rErrSotHs",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rValidCnt",
+                    "width": 16,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rErrSotSyncHs",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rRxLaneData0",
+                    "width": 8,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rRxLaneData1",
+                    "width": 8,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rActiveHs",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rHsValid",
+                    "width": 1,
+                    "probe_type": 1
+                }
+            ]
+        }
+    ],
+    "connections": [
+        {
+            "command": "add_ports",
+            "id": 1,
+            "args": {
+                "netlist": "MTopTi180MIPI25GRxHDMIV101",
+                "ports": [
+                    {
+                        "name": "jtag_inst2_CAPTURE",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_DRCK",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_RESET",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_RUNTEST",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_SEL",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_SHIFT",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_TCK",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_TDI",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_TMS",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_UPDATE",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_TDO",
+                        "dir": "out",
+                        "width": 1
+                    }
+                ]
+            }
+        },
+        {
+            "command": "instantiate",
+            "netlist": "edb_top",
+            "id": 2,
+            "instance": "edb_top_inst"
+        },
+        {
+            "command": "connect",
+            "id": 3,
+            "args": {
+                "instance": "edb_top_inst",
+                "ports": [
+                    {
+                        "name": "bscan_CAPTURE",
+                        "net": "jtag_inst2_CAPTURE"
+                    },
+                    {
+                        "name": "bscan_DRCK",
+                        "net": "jtag_inst2_DRCK"
+                    },
+                    {
+                        "name": "bscan_RESET",
+                        "net": "jtag_inst2_RESET"
+                    },
+                    {
+                        "name": "bscan_RUNTEST",
+                        "net": "jtag_inst2_RUNTEST"
+                    },
+                    {
+                        "name": "bscan_SEL",
+                        "net": "jtag_inst2_SEL"
+                    },
+                    {
+                        "name": "bscan_SHIFT",
+                        "net": "jtag_inst2_SHIFT"
+                    },
+                    {
+                        "name": "bscan_TCK",
+                        "net": "jtag_inst2_TCK"
+                    },
+                    {
+                        "name": "bscan_TDI",
+                        "net": "jtag_inst2_TDI"
+                    },
+                    {
+                        "name": "bscan_TMS",
+                        "net": "jtag_inst2_TMS"
+                    },
+                    {
+                        "name": "bscan_UPDATE",
+                        "net": "jtag_inst2_UPDATE"
+                    },
+                    {
+                        "name": "bscan_TDO",
+                        "net": "jtag_inst2_TDO"
+                    },
+                    {
+                        "name": "la0_clk",
+                        "net": "MipiDphyRx1_WORD_CLKOUT_HS",
+                        "path": []
+                    },
+                    {
+                        "name": "la0_probe0",
+                        "net": "rHsClk",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1",
+                        "net": "qNotTrigger",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2",
+                        "net": "rStopState",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe3[0]",
+                        "net": "rHsStartTrigger[0]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe3[1]",
+                        "net": "rHsStartTrigger[1]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4",
+                        "net": "rSkewCalHs",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe5",
+                        "net": "rErrSotHs",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[0]",
+                        "net": "rValidCnt[0]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[1]",
+                        "net": "rValidCnt[1]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[2]",
+                        "net": "rValidCnt[2]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[3]",
+                        "net": "rValidCnt[3]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[4]",
+                        "net": "rValidCnt[4]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[5]",
+                        "net": "rValidCnt[5]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[6]",
+                        "net": "rValidCnt[6]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[7]",
+                        "net": "rValidCnt[7]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[8]",
+                        "net": "rValidCnt[8]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[9]",
+                        "net": "rValidCnt[9]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[10]",
+                        "net": "rValidCnt[10]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[11]",
+                        "net": "rValidCnt[11]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[12]",
+                        "net": "rValidCnt[12]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[13]",
+                        "net": "rValidCnt[13]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[14]",
+                        "net": "rValidCnt[14]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[15]",
+                        "net": "rValidCnt[15]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7",
+                        "net": "rErrSotSyncHs",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[0]",
+                        "net": "rRxLaneData0[0]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[1]",
+                        "net": "rRxLaneData0[1]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[2]",
+                        "net": "rRxLaneData0[2]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[3]",
+                        "net": "rRxLaneData0[3]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[4]",
+                        "net": "rRxLaneData0[4]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[5]",
+                        "net": "rRxLaneData0[5]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[6]",
+                        "net": "rRxLaneData0[6]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[7]",
+                        "net": "rRxLaneData0[7]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe9[0]",
+                        "net": "rRxLaneData1[0]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe9[1]",
+                        "net": "rRxLaneData1[1]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe9[2]",
+                        "net": "rRxLaneData1[2]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe9[3]",
+                        "net": "rRxLaneData1[3]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe9[4]",
+                        "net": "rRxLaneData1[4]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe9[5]",
+                        "net": "rRxLaneData1[5]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe9[6]",
+                        "net": "rRxLaneData1[6]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe9[7]",
+                        "net": "rRxLaneData1[7]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe10",
+                        "net": "rActiveHs",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe11",
+                        "net": "rHsValid",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "vdbs": [
+        {
+            "file": "debug_top.post.vdb",
+            "instance": "edb_top_inst"
+        }
+    ],
+    "session": {
+        "wizard": {
+            "data_depth": 4096,
+            "capture_control": false,
+            "selected_nets": [
+                {
+                    "name": "rHsClk",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "qNotTrigger",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rStopState",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rHsStartTrigger",
+                    "width": 2,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ],
+                    "net_idx_left": 1,
+                    "net_idx_right": 0
+                },
+                {
+                    "name": "rSkewCalHs",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rErrSotHs",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rValidCnt",
+                    "width": 16,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ],
+                    "net_idx_left": 15,
+                    "net_idx_right": 0
+                },
+                {
+                    "name": "rErrSotSyncHs",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rRxLaneData0",
+                    "width": 8,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ],
+                    "net_idx_left": 7,
+                    "net_idx_right": 0
+                },
+                {
+                    "name": "rRxLaneData1",
+                    "width": 8,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ],
+                    "net_idx_left": 7,
+                    "net_idx_right": 0
+                },
+                {
+                    "name": "rActiveHs",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rHsValid",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                }
+            ],
+            "top_module": "MTopTi180MIPI25GRxHDMIV101",
+            "db_checksum": "ba5fce12098a2c03e7bae2e9a172d1842464edfca8e284870b3519e987537970",
+            "src": "elaborate",
+            "jtag_user": "USER2",
+            "input_pipeline": 1
+        }
+    }
+}

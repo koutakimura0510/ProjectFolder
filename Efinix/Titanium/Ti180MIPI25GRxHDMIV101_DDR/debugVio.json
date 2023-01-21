@@ -1,0 +1,30 @@
+{
+    "debug_cores": [
+        {
+            "name": "vio0",
+            "type": "vio",
+            "uuid": "b1135b706c344182aa59002af8dd8b15",
+            "probes": [
+                {
+                    "name": "Datatype",
+                    "width": 6,
+                    "init": null
+                },
+                {
+                    "name": "WordCnt",
+                    "width": 16,
+                    "init": null
+                },
+                {
+                    "name": "HsEcc",
+                    "width": 8,
+                    "init": null
+                }
+            ]
+        }
+    ],
+    "session": {
+        "debug_widget": [],
+        "wizard": {}
+    }
+}
