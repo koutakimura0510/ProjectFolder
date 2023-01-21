@@ -6,11 +6,6 @@
  * Implem. Tool: Efinix Efinity 2022.1.226.2.11
  * Explanation : 
  *
- * Copyright(c) 2011-2022, by Net-Vision Corp. All rights reserved.
- * (Note) For this source code, it is forbidden using and issuing
- *        without permission.
- * （注） このソース・コードの無断使用および無断持ち出しを禁止します．
- *
  * Revision    :
  * 31/Dec-2022 V1.00 New Release, Inh.fr. "MVideoTimingGen.v" K.Kimura
  *

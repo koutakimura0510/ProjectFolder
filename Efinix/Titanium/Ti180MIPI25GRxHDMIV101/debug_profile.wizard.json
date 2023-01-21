@@ -3,7 +3,7 @@
         {
             "name": "la0",
             "type": "la",
-            "uuid": "405456bcb3ce4902936e2a59f0a63fa3",
+            "uuid": "850ca05f09ed4a2d9e3d67daf7de5b99",
             "trigin_en": false,
             "trigout_en": false,
             "auto_inserted": true,
@@ -12,42 +12,12 @@
             "input_pipeline": 1,
             "probes": [
                 {
-                    "name": "MCsiRxController/rValidCnt",
-                    "width": 16,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/rRxLaneData1",
-                    "width": 8,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/rErrSotSyncHs",
+                    "name": "MCsiRxController/rHsClk",
                     "width": 1,
                     "probe_type": 1
                 },
                 {
-                    "name": "MCsiRxController/rSkewCalHs",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/rRxLaneData0",
-                    "width": 8,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/rHsStartTrigger",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/rHsValid",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/rActiveHs",
+                    "name": "MCsiRxController/qNotTrigger",
                     "width": 1,
                     "probe_type": 1
                 },
@@ -57,47 +27,47 @@
                     "probe_type": 1
                 },
                 {
+                    "name": "MCsiRxController/rHsStartTrigger",
+                    "width": 2,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rSkewCalHs",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
                     "name": "MCsiRxController/rErrSotHs",
                     "width": 1,
                     "probe_type": 1
                 },
                 {
-                    "name": "MCsiRxController/MCsi2Decoder/qWidthMaxCke",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/MCsi2Decoder/rHsSt",
-                    "width": 2,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/MCsi2Decoder/rHsEcc",
-                    "width": 8,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/MCsi2Decoder/rHsWordCnt",
+                    "name": "MCsiRxController/rValidCnt",
                     "width": 16,
                     "probe_type": 1
                 },
                 {
-                    "name": "MCsiRxController/MCsi2Decoder/wFtiRvd",
-                    "width": 2,
+                    "name": "MCsiRxController/rErrSotSyncHs",
+                    "width": 1,
                     "probe_type": 1
                 },
                 {
-                    "name": "MCsiRxController/MCsi2Decoder/rFrameWidthCnt",
-                    "width": 13,
+                    "name": "MCsiRxController/rRxLaneData0",
+                    "width": 8,
                     "probe_type": 1
                 },
                 {
-                    "name": "MCsiRxController/MCsi2Decoder/rHsDatatype",
-                    "width": 6,
+                    "name": "MCsiRxController/rRxLaneData1",
+                    "width": 8,
                     "probe_type": 1
                 },
                 {
-                    "name": "MCsiRxController/rHsClk",
+                    "name": "MCsiRxController/rActiveHs",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rHsValid",
                     "width": 1,
                     "probe_type": 1
                 }
@@ -231,665 +201,295 @@
                         "path": []
                     },
                     {
-                        "name": "la0_probe0[0]",
-                        "net": "rValidCnt[0]",
+                        "name": "la0_probe0",
+                        "net": "rHsClk",
                         "path": [
                             "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe0[1]",
-                        "net": "rValidCnt[1]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe0[2]",
-                        "net": "rValidCnt[2]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe0[3]",
-                        "net": "rValidCnt[3]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe0[4]",
-                        "net": "rValidCnt[4]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe0[5]",
-                        "net": "rValidCnt[5]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe0[6]",
-                        "net": "rValidCnt[6]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe0[7]",
-                        "net": "rValidCnt[7]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe0[8]",
-                        "net": "rValidCnt[8]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe0[9]",
-                        "net": "rValidCnt[9]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe0[10]",
-                        "net": "rValidCnt[10]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe0[11]",
-                        "net": "rValidCnt[11]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe0[12]",
-                        "net": "rValidCnt[12]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe0[13]",
-                        "net": "rValidCnt[13]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe0[14]",
-                        "net": "rValidCnt[14]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe0[15]",
-                        "net": "rValidCnt[15]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe1[0]",
-                        "net": "rRxLaneData1[0]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe1[1]",
-                        "net": "rRxLaneData1[1]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe1[2]",
-                        "net": "rRxLaneData1[2]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe1[3]",
-                        "net": "rRxLaneData1[3]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe1[4]",
-                        "net": "rRxLaneData1[4]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe1[5]",
-                        "net": "rRxLaneData1[5]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe1[6]",
-                        "net": "rRxLaneData1[6]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe1[7]",
-                        "net": "rRxLaneData1[7]",
+                        "name": "la0_probe1",
+                        "net": "qNotTrigger",
                         "path": [
                             "MCsiRxController"
                         ]
                     },
                     {
                         "name": "la0_probe2",
-                        "net": "rErrSotSyncHs",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe3",
-                        "net": "rSkewCalHs",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe4[0]",
-                        "net": "rRxLaneData0[0]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe4[1]",
-                        "net": "rRxLaneData0[1]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe4[2]",
-                        "net": "rRxLaneData0[2]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe4[3]",
-                        "net": "rRxLaneData0[3]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe4[4]",
-                        "net": "rRxLaneData0[4]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe4[5]",
-                        "net": "rRxLaneData0[5]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe4[6]",
-                        "net": "rRxLaneData0[6]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe4[7]",
-                        "net": "rRxLaneData0[7]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5",
-                        "net": "rHsStartTrigger",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6",
-                        "net": "rHsValid",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe7",
-                        "net": "rActiveHs",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe8",
                         "net": "rStopState",
                         "path": [
                             "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe9",
+                        "name": "la0_probe3[0]",
+                        "net": "rHsStartTrigger[0]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe3[1]",
+                        "net": "rHsStartTrigger[1]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4",
+                        "net": "rSkewCalHs",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe5",
                         "net": "rErrSotHs",
                         "path": [
                             "MCsiRxController"
                         ]
                     },
                     {
+                        "name": "la0_probe6[0]",
+                        "net": "rValidCnt[0]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[1]",
+                        "net": "rValidCnt[1]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[2]",
+                        "net": "rValidCnt[2]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[3]",
+                        "net": "rValidCnt[3]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[4]",
+                        "net": "rValidCnt[4]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[5]",
+                        "net": "rValidCnt[5]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[6]",
+                        "net": "rValidCnt[6]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[7]",
+                        "net": "rValidCnt[7]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[8]",
+                        "net": "rValidCnt[8]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[9]",
+                        "net": "rValidCnt[9]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[10]",
+                        "net": "rValidCnt[10]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[11]",
+                        "net": "rValidCnt[11]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[12]",
+                        "net": "rValidCnt[12]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[13]",
+                        "net": "rValidCnt[13]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[14]",
+                        "net": "rValidCnt[14]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[15]",
+                        "net": "rValidCnt[15]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7",
+                        "net": "rErrSotSyncHs",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[0]",
+                        "net": "rRxLaneData0[0]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[1]",
+                        "net": "rRxLaneData0[1]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[2]",
+                        "net": "rRxLaneData0[2]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[3]",
+                        "net": "rRxLaneData0[3]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[4]",
+                        "net": "rRxLaneData0[4]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[5]",
+                        "net": "rRxLaneData0[5]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[6]",
+                        "net": "rRxLaneData0[6]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[7]",
+                        "net": "rRxLaneData0[7]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe9[0]",
+                        "net": "rRxLaneData1[0]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe9[1]",
+                        "net": "rRxLaneData1[1]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe9[2]",
+                        "net": "rRxLaneData1[2]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe9[3]",
+                        "net": "rRxLaneData1[3]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe9[4]",
+                        "net": "rRxLaneData1[4]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe9[5]",
+                        "net": "rRxLaneData1[5]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe9[6]",
+                        "net": "rRxLaneData1[6]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe9[7]",
+                        "net": "rRxLaneData1[7]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
                         "name": "la0_probe10",
-                        "net": "qWidthMaxCke",
+                        "net": "rActiveHs",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe11[0]",
-                        "net": "rHsSt[0]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe11[1]",
-                        "net": "rHsSt[1]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe12[0]",
-                        "net": "rHsEcc[0]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe12[1]",
-                        "net": "rHsEcc[1]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe12[2]",
-                        "net": "rHsEcc[2]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe12[3]",
-                        "net": "rHsEcc[3]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe12[4]",
-                        "net": "rHsEcc[4]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe12[5]",
-                        "net": "rHsEcc[5]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe12[6]",
-                        "net": "rHsEcc[6]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe12[7]",
-                        "net": "rHsEcc[7]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe13[0]",
-                        "net": "rHsWordCnt[0]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe13[1]",
-                        "net": "rHsWordCnt[1]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe13[2]",
-                        "net": "rHsWordCnt[2]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe13[3]",
-                        "net": "rHsWordCnt[3]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe13[4]",
-                        "net": "rHsWordCnt[4]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe13[5]",
-                        "net": "rHsWordCnt[5]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe13[6]",
-                        "net": "rHsWordCnt[6]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe13[7]",
-                        "net": "rHsWordCnt[7]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe13[8]",
-                        "net": "rHsWordCnt[8]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe13[9]",
-                        "net": "rHsWordCnt[9]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe13[10]",
-                        "net": "rHsWordCnt[10]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe13[11]",
-                        "net": "rHsWordCnt[11]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe13[12]",
-                        "net": "rHsWordCnt[12]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe13[13]",
-                        "net": "rHsWordCnt[13]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe13[14]",
-                        "net": "rHsWordCnt[14]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe13[15]",
-                        "net": "rHsWordCnt[15]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe14[0]",
-                        "net": "wFtiRvd[0]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe14[1]",
-                        "net": "wFtiRvd[1]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe15[0]",
-                        "net": "rFrameWidthCnt[0]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe15[1]",
-                        "net": "rFrameWidthCnt[1]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe15[2]",
-                        "net": "rFrameWidthCnt[2]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe15[3]",
-                        "net": "rFrameWidthCnt[3]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe15[4]",
-                        "net": "rFrameWidthCnt[4]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe15[5]",
-                        "net": "rFrameWidthCnt[5]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe15[6]",
-                        "net": "rFrameWidthCnt[6]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe15[7]",
-                        "net": "rFrameWidthCnt[7]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe15[8]",
-                        "net": "rFrameWidthCnt[8]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe15[9]",
-                        "net": "rFrameWidthCnt[9]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe15[10]",
-                        "net": "rFrameWidthCnt[10]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe15[11]",
-                        "net": "rFrameWidthCnt[11]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe15[12]",
-                        "net": "rFrameWidthCnt[12]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe16[0]",
-                        "net": "rHsDatatype[0]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe16[1]",
-                        "net": "rHsDatatype[1]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe16[2]",
-                        "net": "rHsDatatype[2]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe16[3]",
-                        "net": "rHsDatatype[3]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe16[4]",
-                        "net": "rHsDatatype[4]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe16[5]",
-                        "net": "rHsDatatype[5]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe17",
-                        "net": "rHsClk",
+                        "name": "la0_probe11",
+                        "net": "rHsValid",
                         "path": [
                             "MCsiRxController"
                         ]
@@ -910,6 +510,68 @@
             "capture_control": false,
             "selected_nets": [
                 {
+                    "name": "rHsClk",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "qNotTrigger",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rStopState",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rHsStartTrigger",
+                    "width": 2,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ],
+                    "net_idx_left": 1,
+                    "net_idx_right": 0
+                },
+                {
+                    "name": "rSkewCalHs",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rErrSotHs",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
                     "name": "rValidCnt",
                     "width": 16,
                     "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
@@ -922,29 +584,7 @@
                     "net_idx_right": 0
                 },
                 {
-                    "name": "rRxLaneData1",
-                    "width": 8,
-                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ],
-                    "net_idx_left": 7,
-                    "net_idx_right": 0
-                },
-                {
                     "name": "rErrSotSyncHs",
-                    "width": 1,
-                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ]
-                },
-                {
-                    "name": "rSkewCalHs",
                     "width": 1,
                     "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
                     "selected_probe_type": "DATA AND TRIGGER",
@@ -966,24 +606,16 @@
                     "net_idx_right": 0
                 },
                 {
-                    "name": "rHsStartTrigger",
-                    "width": 1,
+                    "name": "rRxLaneData1",
+                    "width": 8,
                     "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
                     "path": [
                         "MCsiRxController"
-                    ]
-                },
-                {
-                    "name": "rHsValid",
-                    "width": 1,
-                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ]
+                    ],
+                    "net_idx_left": 7,
+                    "net_idx_right": 0
                 },
                 {
                     "name": "rActiveHs",
@@ -996,116 +628,7 @@
                     ]
                 },
                 {
-                    "name": "rStopState",
-                    "width": 1,
-                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ]
-                },
-                {
-                    "name": "rErrSotHs",
-                    "width": 1,
-                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ]
-                },
-                {
-                    "name": "qWidthMaxCke",
-                    "width": 1,
-                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController",
-                        "MCsi2Decoder"
-                    ]
-                },
-                {
-                    "name": "rHsSt",
-                    "width": 2,
-                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController",
-                        "MCsi2Decoder"
-                    ],
-                    "net_idx_left": 1,
-                    "net_idx_right": 0
-                },
-                {
-                    "name": "rHsEcc",
-                    "width": 8,
-                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController",
-                        "MCsi2Decoder"
-                    ],
-                    "net_idx_left": 7,
-                    "net_idx_right": 0
-                },
-                {
-                    "name": "rHsWordCnt",
-                    "width": 16,
-                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController",
-                        "MCsi2Decoder"
-                    ],
-                    "net_idx_left": 15,
-                    "net_idx_right": 0
-                },
-                {
-                    "name": "wFtiRvd",
-                    "width": 2,
-                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController",
-                        "MCsi2Decoder"
-                    ],
-                    "net_idx_left": 1,
-                    "net_idx_right": 0
-                },
-                {
-                    "name": "rFrameWidthCnt",
-                    "width": 13,
-                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController",
-                        "MCsi2Decoder"
-                    ],
-                    "net_idx_left": 12,
-                    "net_idx_right": 0
-                },
-                {
-                    "name": "rHsDatatype",
-                    "width": 6,
-                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController",
-                        "MCsi2Decoder"
-                    ],
-                    "net_idx_left": 5,
-                    "net_idx_right": 0
-                },
-                {
-                    "name": "rHsClk",
+                    "name": "rHsValid",
                     "width": 1,
                     "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
                     "selected_probe_type": "DATA AND TRIGGER",

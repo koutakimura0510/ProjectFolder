@@ -1,0 +1,49 @@
+//----------------------------------------------------------
+// Create 2021/02/05
+// Author koutakimura
+// -
+// DualPortFIFOの生成モジュール
+// このFIFOを使用する上位モジュール内でインターフェースを制御することとする
+//----------------------------------------------------------
+module userFifoDual #(
+    parameter pBuffDepth = 256,    // FIFO BRAMのサイズ指定
+    parameter pBitWidth  = 32,     // bitサイズ
+    parameter pAddrWidth = 16      // addr size
+)(
+    input   [pBitWidth-1:0]    iWD,		// write data
+    input   [pAddrWidth-1:0]   iWA,		// write addr
+    input                      iWE,		// write enable
+    output  [pBitWidth-1:0]    oRD,		// read data
+    input   [pAddrWidth-1:0]   iRA,		// read address
+    input                      iWCLK, // write side
+    input                      iRCLK  // read side
+);
+
+localparam [pAddrWidth-1:0] pDepth = pBuffDepth - 1;
+
+(* ram_style = "block" *) reg [pBitWidth-1:0] fifo [0:pDepth];
+reg [pBitWidth-1:0] rd;     assign oRD = rd;
+
+integer i;
+initial
+begin
+	for (i = 0; i < pBuffDepth; i = i + 1)
+	begin
+		fifo[i] <= {pBitWidth{1'b0}};
+	end
+end
+
+
+// write side
+always @(posedge iWCLK)
+begin
+    if (iWE) fifo[iWA] <= iWD;
+end
+
+// read side
+always @(posedge iRCLK)
+begin
+    rd <= fifo[iRA];
+end
+
+endmodule

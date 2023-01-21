@@ -1,6 +1,6 @@
 [dumpfile] "D:\workspace\Efinix\Titanium\Ti180MIPI25GRxHDMIV101\la1_waveform.vcd"
-[dumpfile_mtime] "Sat Jan 14 12:49:31 2023"
-[dumpfile_size] 93790
+[dumpfile_mtime] "Sun Jan 15 12:29:24 2023"
+[dumpfile_size] 49500
 [savefile] "D:\workspace\Efinix\Titanium\Ti180MIPI25GRxHDMIV101\la1_waveform.gtkw"
 [timestart] 0
 [size] 1000 600
@@ -10,10 +10,13 @@
 [sst_expanded] 1
 @22
 top.\MCsiRxController/MCsi2Decoder/rFrameWidthCnt[12:0]
-top.\MCsiRxController/MCsi2Decoder/rHsWordCnt[15:0]
-top.\MCsiRxController/MCsi2Decoder/rHsPixel[31:0]
-top.\MCsiRxController/MCsi2Decoder/qWidthMaxCke
-top.\MCsiRxController/MCsi2Decoder/rHsSt[1:0]
-top.\MCsiRxController/MCsi2Decoder/rHsDatatype[5:0]
 top.\MCsiRxController/MCsi2Decoder/rHsValid
-top.\MCsiRxController/MCsi2Decoder/wFtifull[0]
+top.\MCsiRxController/MCsi2Decoder/rEcc[7:0]
+top.\MCsiRxController/MCsi2Decoder/qFtiRe
+top.\MCsiRxController/MCsi2Decoder/qWidthMaxCke
+top.\MCsiRxController/MCsi2Decoder/rDatatype[5:0]
+top.\MCsiRxController/MCsi2Decoder/wFtiRd[19:0]
+top.\MCsiRxController/MCsi2Decoder/rWordcnt[15:0]
+top.\MCsiRxController/MCsi2Decoder/qFtiLs
+top.\MCsiRxController/MCsi2Decoder/wFtiRvd[1:0]
+top.\MCsiRxController/MCsi2Decoder/rHsSt[2:0]

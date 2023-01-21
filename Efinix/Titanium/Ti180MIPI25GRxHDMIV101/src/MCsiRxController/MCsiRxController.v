@@ -5,12 +5,6 @@
  * Simulator   : VeritakWin Ver.3.84D Build May.23.2011
  * Implem. Tool: Efinix Efinity 2022.1.226.2.11
  * Explanation : 
- *
- * Copyright(c) 2011-2022, by Net-Vision Corp. All rights reserved.
- * (Note) For this source code, it is forbidden using and issuing
- *        without permission.
- * （注） このソース・コードの無断使用および無断持ち出しを禁止します．
- *
  * Revision    :
  * 29/Dec-2022 V1.00 New Release, Inh.fr. "MCsiRxController.v" K.Kimura
  *
@@ -115,6 +109,8 @@ wire [31:0] wHsPixel;
 wire [ 5:0] wHsDatatype;					assign oHsDatatype 	= wHsDatatype;
 wire [15:0] wHsWordCnt;						assign oHsWordCnt 	= wHsWordCnt;
 wire [ 7:0] wHsEcc;							assign oHsEcc 		= wHsEcc;
+wire [ 1:0]	wHsVc;
+wire [ 1:0]	wHsVcx;
 wire 		wHsValid;
 reg 		qCsiEdv;
 
@@ -184,10 +180,9 @@ MCsi2Decoder MCsi2Decoder(
 	.oMipiDphyRx1_TX_CLK_ESC(oMipiDphyRx1_TX_CLK_ESC),
 	//
 	// Out Pixel
-	.oHsPixel(wHsPixel),
-	.oHsDatatype(wHsDatatype),
-	.oHsWordCnt(wHsWordCnt),
-	.oHsEcc(wHsEcc),
+	.oHsPixel(wHsPixel),		.oHsDatatype(wHsDatatype),
+	.oHsWordCnt(wHsWordCnt),	.oHsEcc(wHsEcc),
+	.oHsVc(wHsVc),				.oHsVcx(wHsVcx),
 	.oHsValid(wHsValid),
 	//
 	// Status
@@ -211,13 +206,13 @@ MCsi2Decoder MCsi2Decoder(
 //	Quantum アーキテクチャの特徴を生かして、カスケード接続が定石か？
 //-----------------------------------------------------------------------------
 localparam lpCdcFifoBitWidth	= 16;
-localparam lpCdcFifoDepth		= (8192*4) / lpCdcFifoBitWidth;
+localparam lpCdcFifoDepth		= (8192) / lpCdcFifoBitWidth;
 localparam lpCdcFifoBitLoop		= 16   / lpCdcFifoBitWidth;
 localparam lpCdcFIfoFullAlMost	= 16;
 //
-reg  [31:0] 					qCdcFifoWd;
+reg  [lpCdcFifoBitWidth-1:0] 	qCdcFifoWd;
 wire [lpCdcFifoBitLoop-1:0] 	wCdcFifoEmp;
-wire [31:0] 					wCdcFifoRd;
+wire [lpCdcFifoBitWidth-1:0] 	wCdcFifoRd;
 wire [lpCdcFifoBitLoop-1:0] 	wCdcFifoRvd;
 reg  							qCdcFifoWe;
 reg  							qCdcFifoRe;
@@ -235,7 +230,7 @@ generate
 			// src side
 			.iWd(qCdcFifoWd[(n+1)*lpCdcFifoBitWidth-1:n*lpCdcFifoBitWidth]),
 			.iWe(qCdcFifoWe),						.ofull(wCdcFifoFull[n]),
-			.iWCLK(iMipiDphyRx1_WORD_CLKOUT_HS),	.iWnRST(inSRST),
+			.iWCLK(iSCLK),							.iWnRST(inSRST),
 			// dst side
 			.oRd(wCdcFifoRd[(n+1)*lpCdcFifoBitWidth-1:n*lpCdcFifoBitWidth]),
 			.oRvd(wCdcFifoRvd[n]),
@@ -257,11 +252,11 @@ end
 // Fifo Side
 //-----------------------------------------------------------------------------
 localparam lpFtiFifoBitWidth	= 16;
-localparam lpFtiFifoDepth		= (8192*4) / lpFtiFifoBitWidth;
+localparam lpFtiFifoDepth		= (8192) / lpFtiFifoBitWidth;
 localparam lpFtiFifoBitLoop		= 16   / lpFtiFifoBitWidth;
 localparam lpFtiFifoFullAlMost	= 16;
 
-wire [15:0] 				wFtiRd;								assign oVideoPixel = {16'd0,wFtiRd};
+wire [lpFtiFifoBitWidth-1:0]wFtiRd;								assign oVideoPixel = {16'd0,wFtiRd};
 wire [lpFtiFifoBitLoop-1:0]	wFtiRvd;							assign oVideoVd    = wFtiRvd[0];
 reg  						qFtiRe;
 wire [lpFtiFifoBitLoop-1:0]	wFtiEmp;
@@ -296,10 +291,10 @@ end
 //-----------------------------------------------------------------------------
 // ILA 用モニタリング
 //-----------------------------------------------------------------------------
-reg 		rHsStartTrigger;
+reg [1:0]	rHsStartTrigger;
+reg 		qNotTrigger;
 reg 		rHsValid;
 reg 		rStopState;
-reg 		rClkActiveHs;
 reg 		rSkewCalHs;
 reg 		rActiveHs;
 reg 		rSkewCalHs;
@@ -314,23 +309,23 @@ begin
 	if (!inSRST)	rHsClk <= 1'b0;
 	else 			rHsClk <= ~rHsClk;
 
-	if (!inSRST)	rHsStartTrigger <= 1'b0;
-	else 			rHsStartTrigger <= iMipiDphyRx1_RX_SYNC_HS_LAN0;
+	if (!inSRST)	rHsStartTrigger[0] <= 1'b0;
+	else 			rHsStartTrigger[0] <= iMipiDphyRx1_RX_SYNC_HS_LAN0;
 
-	if (!inSRST)	rRxLaneData0 	<= 8'b0;
-	else 			rRxLaneData0 	<= iMipiDphyRx1_RX_DATA_HS_LAN0;
+	if (!inSRST)	rHsStartTrigger[1] <= 1'b0;
+	else 			rHsStartTrigger[1] <= iMipiDphyRx1_RX_SYNC_HS_LAN1;
 
-	if (!inSRST)	rRxLaneData1 	<= 8'b0;
-	else 			rRxLaneData1 	<= iMipiDphyRx1_RX_DATA_HS_LAN1;
+	if (!inSRST)	rRxLaneData0 <= 8'b0;
+	else 			rRxLaneData0 <= iMipiDphyRx1_RX_DATA_HS_LAN0;
 
-	if (!inSRST)	rHsValid 		<= 1'b0;
-	else 			rHsValid 		<= iMipiDphyRx1_RX_VALID_HS_LAN0;
+	if (!inSRST)	rRxLaneData1 <= 8'b0;
+	else 			rRxLaneData1 <= iMipiDphyRx1_RX_DATA_HS_LAN1;
 
-	if (!inSRST)	rStopState		 <= 1'b0;
-	else 			rStopState		 <= iMipiDphyRx1_STOPSTATE_LAN0;
+	if (!inSRST)	rHsValid <= 1'b0;
+	else 			rHsValid <= iMipiDphyRx1_RX_VALID_HS_LAN0;
 
-	if (!inSRST)	rClkActiveHs 	<= 1'b0;
-	else 			rClkActiveHs 	<= iMipiDphyRx1_RX_CLK_ACTIVE_HS;
+	if (!inSRST)	rStopState <= 1'b0;
+	else 			rStopState <= iMipiDphyRx1_STOPSTATE_LAN0;
 
 	if (!inSRST)	rActiveHs <= 1'b0;
 	else 			rActiveHs <= iMipiDphyRx1_RX_ACTIVE_HS_LAN0;
@@ -347,6 +342,11 @@ begin
 	if (!inSRST)	rValidCnt <= 16'd0;
 	else if (iMipiDphyRx1_RX_VALID_HS_LAN0)	rValidCnt <= rValidCnt + 1'b1;
 	else 									rValidCnt <= 16'd0;
+end
+
+always @*
+begin
+	qNotTrigger <= rHsStartTrigger[0] != rHsStartTrigger[1];
 end
 
 /*

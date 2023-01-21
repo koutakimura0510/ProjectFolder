@@ -6,11 +6,6 @@
  * Implem. Tool: Efinix Efinity 2022.1.226.2.11
  * Explanation : 
  *
- * Copyright(c) 2011-2022, by Net-Vision Corp. All rights reserved.
- * (Note) For this source code, it is forbidden using and issuing
- *        without permission.
- * （注） このソース・コードの無断使用および無断持ち出しを禁止します．
- *
  * Revision    :
  * 14/Jan-2023 V1.00 New Release, Inh.fr. "MCsiRxDecoder.v" K.Kimura
  *
@@ -87,6 +82,8 @@ output	[31:0] 	oHsPixel,
 output	[ 5:0] 	oHsDatatype,
 output	[15:0] 	oHsWordCnt,
 output	[ 7:0] 	oHsEcc,
+output	[ 1:0] 	oHsVc,
+output	[ 1:0] 	oHsVcx,
 output			oHsValid,
 //
 input 			iEdv,
@@ -96,67 +93,226 @@ input			iSRST,
 input			inSRST,
 input			iSCLK
 );
-  
 
 //-----------------------------------------------------------------------------
-// HS mode Decoder State Machine
-// 各Lane はタイミングが同じで出力される前提
+// HS Mode ステートマシン
+// 各 Lnae は同期している前提
 //-----------------------------------------------------------------------------
-reg 	qnHsRst;
-reg 	r
+reg [7:0] 	rDphyHsDataLane0;
+reg [7:0] 	rDphyHsDataLane1;
+reg 		rDphyHsDataLaneLs;
+reg 		rDphyHsDataLaneVd;
+// reg 		rDphyHsSotSyncLan;	// Sot Error
+reg 		rDphyHsSotSyncLan;	// Sot Sync Error
+reg 		rDphyHsStopState;	// Rst に使用
 
 always @(posedge iMipiDphyRx1_WORD_CLKOUT_HS, negedge qnHsRst)
 begin
-	rDataLane[0] <= iMipiDphyRx1_RX_DATA_HS_LAN0;
-	rDataLane[1] <= iMipiDphyRx1_RX_DATA_HS_LAN1;
-end
-
-always @*
-begin
-	qWidthMaxCke <= ((rHsWordCnt[15:1]-1'b1) == rFrameWidthCnt);
+	if (!qnHsRst)
+	begin
+		rDphyHsDataLane0   	<= 8'd0;
+		rDphyHsDataLane1   	<= 8'd0;
+		rDphyHsDataLaneLs  	<= 1'b0;
+		rDphyHsDataLaneVd  	<= 1'b0;
+		rDphyHsStopState   	<= 1'b1;
+	end
+	else
+	begin
+		rDphyHsDataLane0   	<= iMipiDphyRx1_RX_DATA_HS_LAN0;
+		rDphyHsDataLane1   	<= iMipiDphyRx1_RX_DATA_HS_LAN1;
+		rDphyHsDataLaneLs  	<= iMipiDphyRx1_RX_SYNC_HS_LAN0;
+		rDphyHsDataLaneVd  	<= iMipiDphyRx1_RX_VALID_HS_LAN0 | iMipiDphyRx1_RX_SYNC_HS_LAN0;
+		rDphyHsStopState	<= iMipiDphyRx1_STOPSTATE_LAN0;
+	end
 end
 
 
 //-----------------------------------------------------------------------------
-// Fifo Side
+// Csi2Decoder DualClkFifo
 //-----------------------------------------------------------------------------
-localparam lpFtiFifoBitWidth	= 16;
-localparam lpFtiFifoDepth		= 8192 / lpFtiFifoBitWidth;
-localparam lpFtiFifoBitLoop		= 32   / lpFtiFifoBitWidth;
+localparam lpFtiFifoBitWidth	= 10;
+localparam lpFtiFifoDepth		= 1024;
 localparam lpFtiFifoFullAlMost	= 2;
 
-wire [31:0] 				wFtiRd;							assign oHsPixel = wFtiRd;
-wire [lpFtiFifoBitLoop-1:0]	wFtiRvd;						assign oHsValid = wFtiRvd[0];
-reg  						qFtiRe;
-wire [lpFtiFifoBitLoop-1:0]	wFtiEmp;
-wire [lpFtiFifoBitLoop-1:0]	wFtifull;
+reg  [lpFtiFifoBitWidth*2-1:0] 	qFtiWd;
+reg 						 	qFtiWe;
+wire [1:0]					 	wFtifull;
+wire [lpFtiFifoBitWidth*2-1:0] 	wFtiRd;
+reg  						 	qFtiLs;
+reg  						 	qFtiRe;
+wire [1:0]					 	wFtiRvd;
+wire [1:0]					 	wFtiEmp;
+reg							 	qnFdcSRst, qnHsRst;
 
 genvar n;
 
 generate
-	for (n = 0; n < lpFtiFifoBitLoop; n = n + 1) begin
-		fifoController #(
+	for (n = 0; n < 2; n = n + 1)
+	begin
+		fifoDualController #(
 			.pFifoDepth(lpFtiFifoDepth),	.pFifoBitWidth(lpFtiFifoBitWidth),
 			.pFullAlMost(lpFtiFifoFullAlMost)
-		) mVideoFIFO (
+		) Csi2DecoderDualClkFifo (
 			// Write Side
-			.iWd(rHsPixel[(n+1)*lpFtiFifoBitWidth-1:n*lpFtiFifoBitWidth]),
-			.iWe(rHsValid),					.ofull(wFtifull[n]),
+			.iWd(qFtiWd[(n+1)*lpFtiFifoBitWidth-1:n*lpFtiFifoBitWidth]),
+			.iWe(qFtiWe),		.ofull(wFtifull[n]),
+			.iWCLK(iMipiDphyRx1_WORD_CLKOUT_HS),
+			.iWnRST(qnHsRst),
 			// Read Side
-			.oRd(wFtiRd[(n+1)*lpFtiFifoBitWidth-1:n*lpFtiFifoBitWidth]),
+			.oRd({wFtiRd[(n+1)*lpFtiFifoBitWidth-1:n*lpFtiFifoBitWidth]}),
 			.iRe(qFtiRe),
-			.oRvd(wFtiRvd[n]),				.oEmp(wFtiEmp[n]),
-			// common
-			.iCLK(iMipiDphyRx1_WORD_CLKOUT_HS),	.inRST(qnHsRst)
+			.oRvd(wFtiRvd[n]),	.oEmp(wFtiEmp[n]),
+			.iRCLK(iSCLK),		.iRnRST(qnFdcSRst)
 		);
 	end
 endgenerate
 
 always @*
 begin
-	qFtiRe		<= iEdv & (~wFtiEmp[0]);
+	qFtiWd	<= {3'd0, rDphyHsDataLaneLs, rDphyHsDataLane1, rDphyHsDataLane0};
+	qFtiWe  <= rDphyHsDataLaneVd;
+	qFtiRe	<= (~wFtiEmp[0]);
+	qFtiLs  <= &{wFtiRd[16],wFtiRvd[0]};
+	// RST
+	qnHsRst <= inSRST;//rDphyHsStopState;
 end
 
+
+//-----------------------------------------------------------------------------
+// HS Mode データ取得ステートマシン
+//-----------------------------------------------------------------------------
+localparam lpStateIdNum	= 3;
+localparam [lpStateIdNum-1:0]
+	lpRxHsStateIdol = 3'd0,
+	lpRxHsState1    = 3'd1,
+	lpRxHsState2    = 3'd2,
+	lpRxHsState3    = 3'd3,
+	lpRxHsState4	= 3'd4,
+	lpRxHsStateNum	= 3'd5;
+reg [lpStateIdNum-1:0] 		rHsSt;
+reg [lpRxHsStateNum-1:0]	qHsStNextCke;
+
+always @(posedge iSCLK)
+begin
+	if (iSRST)
+	begin
+		rHsSt <= lpRxHsStateIdol;
+	end
+	else
+	begin
+		case (rHsSt)
+			lpRxHsStateIdol:	rHsSt <= (qHsStNextCke[0])	? lpRxHsState1    : lpRxHsStateIdol;	// Line Start チェック
+			lpRxHsState1:		rHsSt <= (qHsStNextCke[1]) 	? lpRxHsState2    : lpRxHsState1;		// Get Datatype and LSB Wordcnt
+			lpRxHsState2:		rHsSt <= (qHsStNextCke[2]) 	? lpRxHsState3    : lpRxHsState2;		// Get MSB Wordcnt and ECC
+			lpRxHsState3:		rHsSt <= (qHsStNextCke[3]) 	? lpRxHsState4    : lpRxHsStateIdol;	// Datatype Check
+			lpRxHsState4:		rHsSt <= (qHsStNextCke[4]) 	? lpRxHsStateIdol : lpRxHsState4;		// Data 転送
+			default:			rHsSt <= lpRxHsStateIdol;
+		endcase
+	end
+end
+
+always @*
+begin
+	qnFdcSRst <= inSRST;//(rHsSt == lpRxHsStateIdol) ? 1'b0 : 1'b1;
+end
+
+//-----------------------------------------------------------------------------
+// 
+//-----------------------------------------------------------------------------
+localparam lpPixelBitWidth 	= 32;
+localparam lpFrameWidthBit  = 13;	// 8K Line
+
+// MIPI Status
+reg [lpPixelBitWidth-1:0] rPixel;			assign oHsPixel		= rPixel;
+reg [ 5:0] 	rDatatype;						assign oHsDatatype 	= rDatatype;
+reg [15:0] 	rWordcnt;						assign oHsWordCnt 	= rWordcnt;
+reg [ 7:0] 	rEcc;							assign oHsEcc 		= rEcc;
+reg [ 1:0]  rVc;							assign oVc			= oVc;
+reg [ 1:0]  rVcx;							assign oVcx			= oVcx;
+reg 		rHsValid;						assign oHsValid 	= rHsValid;
+// CLK Enable
+reg 		qHsValidCke;
+reg 		qWordCntLsb, qWordCntMsb;
+reg 		qDatatypeCheck, qDatatypeCke;
+reg 		qEccCke;
+// Line Cnt
+reg [lpFrameWidthBit-1:0]	rFrameWidthCnt;
+reg 						qLineCntRst, qLineCntCke, qLineCntMaxCke;
+
+always @(posedge iSCLK)
+begin
+	rPixel <= {16'd0, wFtiRd[15:0]};
+
+	case ({qWordCntMsb,qWordCntLsb})
+	2'b01:	 rWordcnt <= {rWordcnt[15:8], wFtiRd[15:8]};
+	2'b10:	 rWordcnt <= {wFtiRd[7:0], rWordcnt[7:0]};
+	default: rWordcnt <= rWordcnt;
+	endcase
+
+	if (iSRST)				rHsValid <= 1'd0;
+	else if (qHsValidCke)	rHsValid <= 1'b1;
+	else					rHsValid <= 1'b0;
+
+	if (iSRST)				rDatatype <= 6'd0;
+	else if (qDatatypeCke)	rDatatype <= wFtiRd[5:0];
+	else					rDatatype <= rDatatype;
+
+	if (iSRST)				rVc <= 2'd0;
+	else if (qDatatypeCke)	rVc <= wFtiRd[7:6];
+	else					rVc <= rVc;
+
+	if (iSRST)				rEcc <= 8'd0;
+	else if (qEccCke)		rEcc <= wFtiRd[15:8];
+	else					rEcc <= rEcc;
+
+	if (qLineCntRst)		rFrameWidthCnt <= {lpFrameWidthBit{1'b0}};
+	else if (qLineCntCke)	rFrameWidthCnt <= rFrameWidthCnt + 1'b1;
+	else					rFrameWidthCnt <= rFrameWidthCnt;
+
+	rVcx <= 2'd0;
+end
+
+always @*
+begin
+	// Wordcnt
+	case (rHsSt)
+		lpRxHsState2:	qWordCntMsb <= 1'b1;
+		default:		qWordCntMsb <= 1'b0;
+	endcase
+
+	case (rHsSt)
+		lpRxHsState1:	qWordCntLsb <= 1'b1;
+		default:		qWordCntLsb <= 1'b0;
+	endcase
+	// Datatype
+	case (rHsSt)
+		lpRxHsState1:	qDatatypeCke <= 1'b1;
+		default:		qDatatypeCke <= 1'b0;
+	endcase
+	// ECC
+	case (rHsSt)
+		lpRxHsState2:	qEccCke <= 1'b1;
+		default:		qEccCke <= 1'b0;
+	endcase
+	// Datatype Check 時に、データ受信があればそのまま転送する
+	casex ({qDatatypeCheck,wFtiRvd[0],rHsSt})
+		{1'b1,1'b1,lpRxHsState3}:	qHsValidCke <= 1'b1;
+		{1'bx,1'b1,lpRxHsState4}:	qHsValidCke <= 1'b1;
+		default:					qHsValidCke <= 1'b0;
+	endcase
+	//
+	qDatatypeCheck  <= (6'h13 < rDatatype);
+	//
+	qLineCntRst 	<= |{iSRST,qLineCntMaxCke};
+	qLineCntCke 	<= wFtiRvd[0];
+	qLineCntMaxCke  <= ((rWordcnt[15:1]-1'b1) == rFrameWidthCnt); // 1920 x YUV4228bit = F00
+	//
+	qHsStNextCke[0] <= qFtiLs;
+	qHsStNextCke[1] <= wFtiRvd[0];
+	qHsStNextCke[2] <= wFtiRvd[0];
+	qHsStNextCke[3] <= qDatatypeCheck;
+	qHsStNextCke[4] <= qLineCntMaxCke;
+end
 
 //-----------------------------------------------------------------------------
 // Hs Mode CLK,RST
@@ -175,6 +331,7 @@ assign oMipiDphyRx1_TX_READY_ESC	= 1'b0;
 assign oMipiDphyRx1_TX_ULPS_ESC		= 1'b0;
 assign oMipiDphyRx1_TX_ULPS_EXIT	= 1'b0;
 assign oMipiDphyRx1_TX_CLK_ESC		= 1'b0;
+
 wire [25:0] wUnused = {
 	iMipiDphyRx1_STOPSTATE_CLK,
 	iMipiDphyRx1_RX_TRIGGER_ESC[3:0],
@@ -186,18 +343,13 @@ wire [25:0] wUnused = {
 	iMipiDphyRx1_RX_ACTIVE_HS_LAN1,
 	iMipiDphyRx1_ERR_SOT_HS_LAN0,
 	iMipiDphyRx1_ERR_SOT_HS_LAN1,
+	// LP Signals
 	iMipiDphyRx1_RX_LPDT_ESC,
 	iMipiDphyRx1_RX_DATA_ESC[7:0],
 	iMipiDphyRx1_RX_VALID_ESC,
 	iMipiDphyRx1_RX_ERR_SYNC_ESC,
 	iMipiDphyRx1_LP_CLK
 };
-
-
-always @*
-begin
-	qnHsRst		 <= inSRST;
-end
 
 
 endmodule
