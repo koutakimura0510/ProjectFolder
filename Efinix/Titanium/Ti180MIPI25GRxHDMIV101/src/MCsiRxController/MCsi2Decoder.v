@@ -85,7 +85,8 @@ output	[ 7:0] 	oHsEcc,
 output	[ 1:0] 	oHsVc,
 output	[ 1:0] 	oHsVcx,
 output			oHsValid,
-//
+// Flow Controll
+output 			oCddFifoFull,
 input 			iEdv,
 //
 // CLK,RST
@@ -136,7 +137,7 @@ localparam lpFtiFifoFullAlMost	= 2;
 
 reg  [lpFtiFifoBitWidth*2-1:0] 	qFtiWd;
 reg 						 	qFtiWe;
-wire [1:0]					 	wFtifull;
+wire [1:0]					 	wFtifull;						assign oCddFifoFull = wFtifull[0];
 wire [lpFtiFifoBitWidth*2-1:0] 	wFtiRd;
 reg  						 	qFtiLs;
 reg  						 	qFtiRe;

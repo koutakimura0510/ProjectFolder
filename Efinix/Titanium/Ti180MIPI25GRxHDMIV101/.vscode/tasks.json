@@ -2,17 +2,13 @@
  * Create  2023/1/21
  * Author  koutakimura
  * 
- * Efinity FPGA Task.json
+ * Efinity FPGA tasks.json
  * Ctrl + Shift + B で実行するコマンドを選択。
+ * 使用プロジェクトを変更する場合は、下記の文字列を task.json内で一括変換する。
+ * ※[] 内を一括変換 -> [Ti180MIPI25GRxHDMIV101]
  *
- * Compile : Synthesis + Placement + Routing + Bitstream Generate
- * 
- * bitstream を hex に変更するには下記インストールの必要あり
- * python 公式インストーラ、インストール時は必ず環境変数のパスを通すにチェックを入れること
- * https://www.python.org/downloads/windows/
+ * Windows 動作用なので、Linux の場合は .bat を .py に変更が必要。
  *
- * Python ライブラリインストール
- * pip install bitarray
  *-----------------------------------------------------------------------------*/
 
 {
@@ -21,6 +17,10 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			//-----------------------------------------------------------------------------
+			// bitstream 出力まで一括実行
+			// 現在 コマンドで Jtag 書き込み時に bit ファイル指定方法が分からないので、bit を hex に上書きしている。
+			//-----------------------------------------------------------------------------
 			"label": "Compile",
 			"type": "shell",
 			"command": "efx_run.bat ./Ti180MIPI25GRxHDMIV101.xml --flow compile;cp ./outflow/Ti180MIPI25GRxHDMIV101.bit ./outflow/Ti180MIPI25GRxHDMIV101.hex",
@@ -30,6 +30,9 @@
 			}
 		},
 
+		//-----------------------------------------------------------------------------
+		// map
+		//-----------------------------------------------------------------------------
 		{
 			"label": "Synthesis",
 			"type": "shell",
@@ -39,17 +42,23 @@
 				"isDefault": true
 			}
 		},
-
+		
+		//-----------------------------------------------------------------------------
+		// debugger 使用時は実行しないと Place 実行時に FAIL 発生
+		//-----------------------------------------------------------------------------
 		{
-			"label": "Place + Routing",
+			"label": "Debugger auto instantion",
 			"type": "shell",
-			"command": "efx_run.bat ./Ti180MIPI25GRxHDMIV101.xml --flow pnr",
+			"command": "efx_run.bat ./Ti180MIPI25GRxHDMIV101.xml --flow dbg_auto",
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			}
 		},
-
+		
+		//-----------------------------------------------------------------------------
+		// コマンド実行時は、使用しない Interface Block は消さないと FAIL 発生
+		//-----------------------------------------------------------------------------
 		{
 			"label": "Interface",
 			"type": "shell",
@@ -60,6 +69,48 @@
 			}
 		},
 
+		//-----------------------------------------------------------------------------
+		// Place routing
+		//-----------------------------------------------------------------------------
+		{
+			"label": "Place + Routing",
+			"type": "shell",
+			"command": "efx_run.bat ./Ti180MIPI25GRxHDMIV101.xml --flow pnr",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		//-----------------------------------------------------------------------------
+		// Bitstream hex Generate
+		//-----------------------------------------------------------------------------
+		{
+			"label": "Pgm",
+			"type": "shell",
+			"command": "efx_run.bat ./Ti180MIPI25GRxHDMIV101.xml --flow pgm",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		//-----------------------------------------------------------------------------
+		// Bitstream to Hex File
+		//-----------------------------------------------------------------------------
+		{
+			"label": "Bit to Hex Convert",
+			"type": "shell",
+			"command": "cp ./outflow/Ti180MIPI25GRxHDMIV101.bit ./outflow/Ti180MIPI25GRxHDMIV101.hex",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		
+		//-----------------------------------------------------------------------------
+		// Jtag FPGA に直接書き込み
+		//-----------------------------------------------------------------------------
 		{
 			"label": "Jtag",
 			"type": "shell",

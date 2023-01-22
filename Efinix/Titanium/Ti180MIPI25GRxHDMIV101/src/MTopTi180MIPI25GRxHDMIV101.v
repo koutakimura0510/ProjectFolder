@@ -80,114 +80,6 @@ input 			MipiDphyRx1_RX_CLK_ESC_LAN0,			// Escape Mode Receive CLK
 input 			MipiDphyRx1_RX_CLK_ESC_LAN1,			// Escape Mode Receive CLK
 output 			MipiDphyRx1_TX_CLK_ESC,					// Escape Mode TX CLK must be lower than 20[MHz]
 //
-// DDR Hard-IP
-// Startup Sequencer Signals
-output  							DDR_CFG_PHY_RSTN,	// Active low reset to DDR PHY.
-output  							DDR_CFG_RST,		// Active-high DDR configuration controller reset.
-output  							DDR_CFG_START,		// Start the DDR configuration controller.
-input   							DDR_CFG_DONE,		// Indicates the controller configuration is done
-output  							DDR_CFG_SEL,		// To select whether to use internal DDR configuration controller or user register ports for configuration:
-														// 0: Use internal configuration controller.
-														// 1: Use register configuration ports (cfg_rst, cfg_start, cfg_done will be disabled).
-// Controller Signal 
-output 								DDR_CTRL_RSTN,		// Controller Reset Signal 
-input 								DDR_CTRL_INT,		// Interrupt sign form controller 
-input   							DDR_CTRL_MEM_RST_VALID,	// The user should wait until the mem_rst_valid signal is asserted and the DFI command signals have transitioned to the PHY pad outputs to release control of these signals
-input 								DDR_CTRL_REFRESH,	// Controller Refresh Pin Signal 
-input 								DDR_CTRL_BUSY,		// This will only be low when the controller is not reading data, writing data or processing a command
-input 								DDR_CTRL_CMD_Q_ALMOST_FULL,// Command Queue Full Pin 
-input 								DDR_CTRL_DP_IDLE,	// Data Path Idle
-input 	[					 1:0] 	DDR_CTRL_CKE,		// Delayed CKE form Controller
-input 	[					 1:0] 	DDR_CTRL_PORT_BUSY,	// Port Busy Reading Data
-// DDR AXI 0 Read Address Channel
-output 								DDR_ARST_0,
-output	[					32:0] 	DDR_ARADDR_0,		// Read address. It gives the address of the first transfer in a burst transaction.
-output	[					 1:0] 	DDR_ARBURST_0,		// Burst type. The burst type and the size determine how the address for each transfer within the burst is calculated.
-output	[					 5:0] 	DDR_ARID_0,			// Address ID. This signal identifies the group of address signals.
-output	[					 7:0] 	DDR_ARLEN_0,		// Burst length. This signal indicates the number of transfers in a burst.
-input								DDR_ARREADY_0,		// Address ready. This signal indicates that the slave is ready to accept an address and associated control signals.
-output	[					 2:0]	DDR_ARSIZE_0,		// Burst size. This signal indicates the size of each transfer in the burst.
-output								DDR_ARVALID_0,		// Address valid. This signal indicates that the channel is signaling valid address and control information.
-output								DDR_ARLOCK_0,		// Lock type. This signal provides additional information about the atomic characteristics of the transfer.
-output								DDR_ARAPCMD_0,		// Read auto-precharge.
-output								DDR_ARQOS_0,		// QoS indentifier for read transaction.
-// DDR AXI 0 Wrtie Address Channel
-output	[					32:0] 	DDR_AWADDR_0,		// Write address. It gives the address of the first transfer in a burst transaction.
-output	[					 1:0] 	DDR_AWBURST_0,		// Burst type. The burst type and the size determine how the address for each transfer within the burst is calculated.
-output	[					 5:0] 	DDR_AWID_0,			// Address ID. This signal identifies the group of address signals.
-output	[					 7:0] 	DDR_AWLEN_0,		// Burst length. This signal indicates the number of transfers in a burst.
-input								DDR_AWREADY_0,		// Address ready. This signal indicates that the slave is ready to accept an address and associated control signals.
-output	[					 2:0] 	DDR_AWSIZE_0,		// Burst size. This signal indicates the size of each transfer in the burst.
-output								DDR_AWVALID_0,		// Address valid. This signal indicates that the channel is signaling valid address and control information.
-output								DDR_AWLOCK_0,		// Lock type. This signal provides additional information about the atomic characteristics of the transfer.
-output								DDR_AWAPCMD_0,		// Write auto-precharge.
-output								DDR_AWQOS_0,		// QoS indentifier for write transaction.
-output	[					 3:0] 	DDR_AWCACHE_0,		// Memory type. This signal indicates how transactions are required to progress through a system.
-output								DDR_AWALLSTRB_0,	// Write all strobes asserted.
-output								DDR_AWCOBUF_0,		// Write coherent bufferable selection.
-// DDR AXI 0 Wrtie Response Channel
-input	[					 5:0]	DDR_BID_0,			// Response ID tag. This signal is the ID tag of the write response.
-output								DDR_BREADY_0,		// Response ready. This signal indicates that the master can accept a write response.
-input	[					 1:0]	DDR_BRESP_0,		// Read response. This signal indicates the status of the read transfer.
-input								DDR_BVALID_0,		// Write response valid. This signal indicates that the channel is signaling a valid write response.
-// DDR AXI 0 Read Data Channel
-input	[	pDdrAxiDatWidth0-1:0]	DDR_RDATA_0,		// Read data.
-input	[					 5:0] 	DDR_RID_0,			// Read ID tag. This signal is the identification tag for the read data group of signals generated by the slave.
-input								DDR_RLAST_0,		// Read last. This signal indicates the last transfer in a read burst.
-output								DDR_RREADY_0,		// Read ready. This signal indicates that the master can accept the read data and response information.
-input	[					 1:0] 	DDR_RRESP_0,		// Read response. This signal indicates the status of the read transfer.
-input								DDR_RVALID_0,		// Read valid. This signal indicates that the channel is signaling the required read data.
-// DDR AXI 0 Write Data Channel Signals 
-output	[	pDdrAxiDatWidth0-1:0]	DDR_WDATA_0,		// Write data. AXI4 port 0 is 256, port 1 is 128.
-output								DDR_WLAST_0,		// Write last. This signal indicates the last transfer in a write burst.
-input								DDR_WREADY_0,		// Write ready. This signal indicates that the slave can accept the write data.
-output	[ pDdrAxiDatWidth0/8-1:0]	DDR_WSTRB_0,		// Write strobes. This signal indicates which byte lanes hold valid data. There is one write strobe bit for each eight bits of the write data bus.
-output								DDR_WVALID_0,		// Write valid. This signal indicates that valid write data and strobes are available.
-// DDR AXI 1 Read Address Channel
-output  							DDR_ARST_1,
-output	[					32:0] 	DDR_ARADDR_1,		// Read address. It gives the address of the first transfer in a burst transaction.
-output	[					 1:0] 	DDR_ARBURST_1,		// Burst type. The burst type and the size determine how the address for each transfer within the burst is calculated.
-output	[					 5:0] 	DDR_ARID_1,			// Address ID. This signal identifies the group of address signals.
-output	[					 7:0] 	DDR_ARLEN_1,		// Burst length. This signal indicates the number of transfers in a burst.
-input								DDR_ARREADY_1,		// Address ready. This signal indicates that the slave is ready to accept an address and associated control signals.
-output	[					2:0]	DDR_ARSIZE_1,		// Burst size. This signal indicates the size of each transfer in the burst.
-output								DDR_ARVALID_1,		// Address valid. This signal indicates that the channel is signaling valid address and control information.
-output								DDR_ARLOCK_1,		// Lock type. This signal provides additional information about the atomic characteristics of the transfer.
-output								DDR_ARAPCMD_1,		// Read auto-precharge.
-output								DDR_ARQOS_1,		// QoS indentifier for read transaction.
-// DDR AXI 1 Wrtie Address Channel
-output	[					32:0] 	DDR_AWADDR_1,		// Write address. It gives the address of the first transfer in a burst transaction.
-output	[					 1:0] 	DDR_AWBURST_1,		// Burst type. The burst type and the size determine how the address for each transfer within the burst is calculated.
-output	[					 5:0] 	DDR_AWID_1,			// Address ID. This signal identifies the group of address signals.
-output	[					 7:0] 	DDR_AWLEN_1,		// Burst length. This signal indicates the number of transfers in a burst.
-input								DDR_AWREADY_1,		// Address ready. This signal indicates that the slave is ready to accept an address and associated control signals.
-output	[					 2:0] 	DDR_AWSIZE_1,		// Burst size. This signal indicates the size of each transfer in the burst.
-output								DDR_AWVALID_1,		// Address valid. This signal indicates that the channel is signaling valid address and control information.
-output								DDR_AWLOCK_1,		// Lock type. This signal provides additional information about the atomic characteristics of the transfer.
-output								DDR_AWAPCMD_1,		// Write auto-precharge.
-output								DDR_AWQOS_1,		// QoS indentifier for write transaction.
-output	[					 3:0] 	DDR_AWCACHE_1,		// Memory type. This signal indicates how transactions are required to progress through a system.
-output								DDR_AWALLSTRB_1,	// Write all strobes asserted.
-output								DDR_AWCOBUF_1,		// Write coherent bufferable selection.
-// DDR AXI 1 Wrtie Response Channel
-input	[					 5:0]	DDR_BID_1,			// Response ID tag. This signal is the ID tag of the write response.
-output								DDR_BREADY_1,		// Response ready. This signal indicates that the master can accept a write response.
-input	[					 1:0]	DDR_BRESP_1,		// Read response. This signal indicates the status of the read transfer.
-input								DDR_BVALID_1,		// Write response valid. This signal indicates that the channel is signaling a valid write response.
-//DDR AXI 1 Read Data Channel
-input	[	pDdrAxiDatWidth1-1:0]	DDR_RDATA_1,		// Read data.
-input	[					 5:0] 	DDR_RID_1,			// Read ID tag. This signal is the identification tag for the read data group of signals generated by the slave.
-input								DDR_RLAST_1,		// Read last. This signal indicates the last transfer in a read burst.
-output								DDR_RREADY_1,		// Read ready. This signal indicates that the master can accept the read data and response information.
-input	[					 1:0] 	DDR_RRESP_1,		// Read response. This signal indicates the status of the read transfer.
-input								DDR_RVALID_1,		// Read valid. This signal indicates that the channel is signaling the required read data.
-//DDR AXI 1 Write Data Channel Signals 
-output	[	pDdrAxiDatWidth1-1:0]	DDR_WDATA_1,		// Write data. AXI4 port 0 is 256, port 1 is 128.
-output								DDR_WLAST_1,		// Write last. This signal indicates the last transfer in a write burst.
-input								DDR_WREADY_1,		// Write ready. This signal indicates that the slave can accept the write data.
-output	[ pDdrAxiDatWidth1/8-1:0] 	DDR_WSTRB_1,		// Write strobes. This signal indicates which byte lanes hold valid data. There is one write strobe bit for each eight bits of the write data bus.
-output								DDR_WVALID_1,		// Write valid. This signal indicates that valid write data and strobes are available.
-//
 // YCbCr video output for ADV7511(HDMI)
 output 			oAdv7511Vs,			// VSYNC Gpio
 output 			oAdv7511Hs,			// HSYNC Gpio
@@ -214,10 +106,6 @@ output			pll_inst1_RSTN,		// PLL1 Rst Active Low Port
 input			iVCLK,				// 74.25 [MHz] Port
 input			pll_inst2_LOCKED,	// PLL2 Locked Port
 output			pll_inst2_RSTN,		// PLL2 Rst Active Low Port
-//
-// PLL3 Control
-input 			pll_ddr_LOCKED,		// PLL Ddr Locked Port
-output 			pll_ddr_RSTN,		// PLL Ddr Rst Active Low Port
 //
 // TestPort
 output	[25:0]	oTestPort,			// Signals Test Gpio
@@ -332,6 +220,7 @@ wire 	[31:0]	wVideoPixel;
 wire 			wVideoVd;
 wire 			wVideofull;
 //
+wire 			wCddFifoFull;
 wire 			wCdcFifoFull;
 
 MCsiRxController MCsiRxController (
@@ -401,7 +290,8 @@ MCsiRxController MCsiRxController (
 	// Video Signals
 	.oVideoPixel(wVideoPixel),
 	.oVideoVd(wVideoVd),				.iVideofull(wVideofull),
-	// Status
+	// Flow Controll
+	.oCddFifoFull(wCddFifoFull),
 	.oCdcFifoFull(wCdcFifoFull),
 	// Common
 	.iSRST(qSRST),						.inSRST(qnSRST),
@@ -410,73 +300,6 @@ MCsiRxController MCsiRxController (
 	.iSCLK(iSCLK),						.iVCLK(iVCLK),
 	.iFCLK(iFCLK)
 );
-
-
-//-----------------------------------------------------------------------------
-// DDR Memory Controller
-//-----------------------------------------------------------------------------
-MDdrController #(
-	.pDdrAxiDatWidth0	(pDdrAxiDatWidth0),
-	.pDdrAxiDatWidth1	(pDdrAxiDatWidth1)
-) MDdrController (
-	// DDR CFG
-	.oDDR_CFG_PHY_RSTN(DDR_CFG_PHY_RSTN),			.oDDR_CFG_RST(DDR_CFG_RST),
-	.oDDR_CFG_START(DDR_CFG_START),					.iDDR_CFG_DONE(DDR_CFG_DONE),
-	.oDDR_CFG_SEL(DDR_CFG_SEL),
-	// DDR Control
-	.oDDR_CTRL_RSTN(DDR_CTRL_RSTN),					.iDDR_CTRL_INT(DDR_CTRL_INT),
-	.iDDR_CTRL_MEM_RST_VALID(DDR_CTRL_MEM_RST_VALID),.iDDR_CTRL_REFRESH(DDR_CTRL_REFRESH),
-	.iDDR_CTRL_BUSY(DDR_CTRL_BUSY),					.iDDR_CTRL_CMD_Q_ALMOST_FULL(DDR_CTRL_CMD_Q_ALMOST_FULL),
-	.iDDR_CTRL_DP_IDLE(DDR_CTRL_DP_IDLE),			.iDDR_CTRL_CKE(DDR_CTRL_CKE),
-	.iDDR_CTRL_PORT_BUSY(DDR_CTRL_PORT_BUSY),
-	// AXI Port 0
-	.oDDR_ARST_0(DDR_ARST_0),						.oDDR_ARADDR_0(DDR_ARADDR_0),
-	.oDDR_ARBURST_0(DDR_ARBURST_0),					.oDDR_ARID_0(DDR_ARID_0),
-	.oDDR_ARLEN_0(DDR_ARLEN_0),						.iDDR_ARREADY_0(DDR_ARREADY_0),
-	.oDDR_ARSIZE_0(DDR_ARSIZE_0),					.oDDR_ARVALID_0(DDR_ARVALID_0),
-	.oDDR_ARLOCK_0(DDR_ARLOCK_0),					.oDDR_ARAPCMD_0(DDR_ARAPCMD_0),
-	.oDDR_ARQOS_0(DDR_ARQOS_0),						.oDDR_AWADDR_0(DDR_AWADDR_0),
-	.oDDR_AWBURST_0(DDR_AWBURST_0),					.oDDR_AWID_0(DDR_AWID_0),
-	.oDDR_AWLEN_0(DDR_AWLEN_0),						.iDDR_AWREADY_0(DDR_AWREADY_0),
-	.oDDR_AWSIZE_0(DDR_AWSIZE_0),					.oDDR_AWVALID_0(DDR_AWVALID_0),
-	.oDDR_AWLOCK_0(DDR_AWLOCK_0),					.oDDR_AWAPCMD_0(DDR_AWAPCMD_0),
-	.oDDR_AWQOS_0(DDR_AWQOS_0),						.oDDR_AWCACHE_0(DDR_AWCACHE_0),
-	.oDDR_AWALLSTRB_0(DDR_AWALLSTRB_0),				.oDDR_AWCOBUF_0(DDR_AWCOBUF_0),
-	.iDDR_BID_0(DDR_BID_0),							.oDDR_BREADY_0(DDR_BREADY_0),
-	.iDDR_BRESP_0(DDR_BRESP_0),						.iDDR_BVALID_0(DDR_BVALID_0),
-	.iDDR_RDATA_0(DDR_RDATA_0),						.iDDR_RID_0(DDR_RID_0),
-	.iDDR_RLAST_0(DDR_RLAST_0),						.oDDR_RREADY_0(DDR_RREADY_0),
-	.iDDR_RRESP_0(DDR_RRESP_0),						.iDDR_RVALID_0(DDR_RVALID_0),
-	.oDDR_WDATA_0(DDR_WDATA_0),						.oDDR_WLAST_0(DDR_WLAST_0),
-	.iDDR_WREADY_0(DDR_WREADY_0),					.oDDR_WSTRB_0(DDR_WSTRB_0),
-	.oDDR_WVALID_0(DDR_WVALID_0),
-	// AXI Port 1
-	.oDDR_ARST_1(DDR_ARST_1),						.oDDR_ARADDR_1(DDR_ARADDR_1),
-	.oDDR_ARBURST_1(DDR_ARBURST_1),					.oDDR_ARID_1(DDR_ARID_1),
-	.oDDR_ARLEN_1(DDR_ARLEN_1),						.iDDR_ARREADY_1(DDR_ARREADY_1),
-	.oDDR_ARSIZE_1(DDR_ARSIZE_1),					.oDDR_ARVALID_1(DDR_ARVALID_1),
-	.oDDR_ARLOCK_1(DDR_ARLOCK_1),					.oDDR_ARAPCMD_1(DDR_ARAPCMD_1),
-	.oDDR_ARQOS_1(DDR_ARQOS_1),						.oDDR_AWADDR_1(DDR_AWADDR_1),
-	.oDDR_AWBURST_1(DDR_AWBURST_1),					.oDDR_AWID_1(DDR_AWID_1),
-	.oDDR_AWLEN_1(DDR_AWLEN_1),						.iDDR_AWREADY_1(DDR_AWREADY_1),
-	.oDDR_AWSIZE_1(DDR_AWSIZE_1),					.oDDR_AWVALID_1(DDR_AWVALID_1),
-	.oDDR_AWLOCK_1(DDR_AWLOCK_1),					.oDDR_AWAPCMD_1(DDR_AWAPCMD_1),
-	.oDDR_AWQOS_1(DDR_AWQOS_1),						.oDDR_AWCACHE_1(DDR_AWCACHE_1),
-	.oDDR_AWALLSTRB_1(DDR_AWALLSTRB_1),				.oDDR_AWCOBUF_1(DDR_AWCOBUF_1),
-	.iDDR_BID_1(DDR_BID_1),							.oDDR_BREADY_1(DDR_BREADY_1),
-	.iDDR_BRESP_1(DDR_BRESP_1),						.iDDR_BVALID_1(DDR_BVALID_1),
-	.iDDR_RDATA_1(DDR_RDATA_1),						.iDDR_RID_1(DDR_RID_1),
-	.iDDR_RLAST_1(DDR_RLAST_1),						.oDDR_RREADY_1(DDR_RREADY_1),
-	.iDDR_RRESP_1(DDR_RRESP_1),						.iDDR_RVALID_1(DDR_RVALID_1),
-	.oDDR_WDATA_1(DDR_WDATA_1),						.oDDR_WLAST_1(DDR_WLAST_1),
-	.iDDR_WREADY_1(DDR_WREADY_1),					.oDDR_WSTRB_1(DDR_WSTRB_1),
-	.oDDR_WVALID_1(DDR_WVALID_1),
-	// common
-	.iSRST(qSRST),		.inSRST(qnSRST),
-	.iFRST(qFRST),		.inFRST(qnFRST),
-	.iSCLK(iSCLK),		.iFCLK(iFCLK)
-);
-
 
 
 //-----------------------------------------------------------------------------
@@ -536,16 +359,16 @@ localparam lpPulseGenNumber	= 5;						// pulse 生成個数
 localparam [32*lpPulseGenNumber-1:0] lpClkDivCnt = {	// 分周値
 	32'd3,
 	32'd3,
-	32'd5000,
+	32'd1,
 	32'd3,
-	32'd5000
+	32'd4000
 };
 
 wire [lpPulseGenNumber-1:0] wSampling = {
 	wVideofull,
 	wCdcFifoFull,
 	1'b0,
-	1'b0,
+	wCddFifoFull,
 	wVideoVd
 };
 wire [lpPulseGenNumber-1:0] wPulse;
@@ -570,6 +393,14 @@ endgenerate
 //-----------------------------------------------------------------------------
 // 転送速度確認のため FIFO FULL Check
 //-----------------------------------------------------------------------------
+reg rCdcFifoFull;
+
+always @(posedge iSCLK)
+begin
+	if (rSRST) 				rCdcFifoFull <= 1'b0;
+	else if (wCdcFifoFull)	rCdcFifoFull <= 1'b1;
+	else 					rCdcFifoFull <= rCdcFifoFull;
+end
 
 
 //-----------------------------------------------------------------------------
@@ -577,7 +408,7 @@ endgenerate
 //-----------------------------------------------------------------------------
 assign oLed[0] = wPulse[0];
 assign oLed[1] = wPulse[1];
-assign oLed[2] = wPulse[2];
+assign oLed[2] = rCdcFifoFull;//wPulse[2];
 assign oLed[3] = wPulse[3];
 assign oLed[4] = wPulse[4];
 assign oLed[5] = qLocked;

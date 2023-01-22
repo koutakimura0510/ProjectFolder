@@ -105,9 +105,9 @@ MVideoTimingGen #(
 
 
 //-----------------------------------------------------------------------------
-// 内部用高速クロックを ビデオタイミングに変換
+// 内部用高速クロックをビデオクロックにリタイミング
 //-----------------------------------------------------------------------------
-localparam lpVdcFifoBitWidth	= 1;
+localparam lpVdcFifoBitWidth	= 4;
 localparam lpVdcFifoDepth		= 8192 / lpVdcFifoBitWidth;
 localparam lpVdcFifoBitLoop		= 16   / lpVdcFifoBitWidth;
 localparam lpVdcFifoFullAlMost	= 16;

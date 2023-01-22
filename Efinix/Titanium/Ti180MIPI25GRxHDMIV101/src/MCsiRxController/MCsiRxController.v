@@ -87,7 +87,8 @@ output [ 7:0] 	oHsEcc,
 output  [31:0]	oVideoPixel,
 output  		oVideoVd,
 input 			iVideofull,
-//
+// Flow Controll
+output 			oCddFifoFull,
 output 			oCdcFifoFull,
 //
 // Clk,Rst
@@ -112,6 +113,8 @@ wire [ 7:0] wHsEcc;							assign oHsEcc 		= wHsEcc;
 wire [ 1:0]	wHsVc;
 wire [ 1:0]	wHsVcx;
 wire 		wHsValid;
+//
+wire 		wCddFifoFull;					assign oCddFifoFull	= wCddFifoFull;
 reg 		qCsiEdv;
 
 MCsi2Decoder MCsi2Decoder(
@@ -185,7 +188,8 @@ MCsi2Decoder MCsi2Decoder(
 	.oHsVc(wHsVc),				.oHsVcx(wHsVcx),
 	.oHsValid(wHsValid),
 	//
-	// Status
+	// Flow Controll
+	.oCddFifoFull(wCddFifoFull),
 	.iEdv(qCsiEdv),
 	//
 	// CLK RST
