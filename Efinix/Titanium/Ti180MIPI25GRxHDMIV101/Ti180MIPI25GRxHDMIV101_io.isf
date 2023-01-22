@@ -1,6 +1,6 @@
 # Efinity Interface Configuration
 # Version: 2022.2.322.1.8
-# Date: 2023-01-21 21:38
+# Date: 2023-01-22 14:34
 #
 # Copyright (C) 2017 - 2022 Efinix Inc. All rights reserved.
 #
@@ -146,7 +146,7 @@ design.set_property("pll_inst2","CLKOUT0_EN","1","PLL")
 design.set_property("pll_inst2","CLKOUT1_EN","1","PLL")
 design.set_property("pll_inst2","CLKOUT2_EN","1","PLL")
 design.set_property("pll_inst2","CLKOUT3_EN","1","PLL")
-design.set_property("pll_inst2","CLKOUT4_EN","1","PLL")
+design.set_property("pll_inst2","CLKOUT4_EN","0","PLL")
 design.set_property("pll_inst2","REFCLK_SOURCE","EXTERNAL","PLL")
 design.set_property("pll_inst2","CLKOUT0_DIV","26","PLL")
 design.set_property("pll_inst2","CLKOUT0_DYNPHASE_EN","0","PLL")
@@ -166,12 +166,6 @@ design.set_property("pll_inst2","CLKOUT3_DIV","13","PLL")
 design.set_property("pll_inst2","CLKOUT3_DYNPHASE_EN","0","PLL")
 design.set_property("pll_inst2","CLKOUT3_PHASE_SETTING","0","PLL")
 design.set_property("pll_inst2","CLKOUT3_PIN","iFCLK","PLL")
-design.set_property("pll_inst2","CLKOUT4_CLKMUX_BUF_PIN","","PLL")
-design.set_property("pll_inst2","CLKOUT4_CONN_TYPE","gclk","PLL")
-design.set_property("pll_inst2","CLKOUT4_DIV","104","PLL")
-design.set_property("pll_inst2","CLKOUT4_DYNPHASE_EN","0","PLL")
-design.set_property("pll_inst2","CLKOUT4_PHASE_SETTING","0","PLL")
-design.set_property("pll_inst2","CLKOUT4_PIN","iPCLK","PLL")
 design.set_property("pll_inst2","EXT_CLK","EXT_CLK0","PLL")
 design.set_property("pll_inst2","LOCKED_PIN","pll_inst2_LOCKED","PLL")
 design.set_property("pll_inst2","M","2","PLL")

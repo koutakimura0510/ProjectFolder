@@ -3,62 +3,127 @@
         {
             "name": "la0",
             "type": "la",
-            "uuid": "ac24ae2cf3a240329d790082861f7c19",
+            "uuid": "b0f3dc67795a4eab91b10db6049963a6",
             "trigin_en": false,
             "trigout_en": false,
             "auto_inserted": true,
             "capture_control": false,
-            "data_depth": 4096,
+            "data_depth": 8192,
             "input_pipeline": 1,
             "probes": [
                 {
-                    "name": "MCsiRxController/MCsi2Decoder/rHsSt",
-                    "width": 3,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/MCsi2Decoder/rWordcnt",
-                    "width": 16,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/MCsi2Decoder/rHsValid",
+                    "name": "MCsiRxController/rErrContentionLp0",
                     "width": 1,
                     "probe_type": 1
                 },
                 {
-                    "name": "MCsiRxController/MCsi2Decoder/rDatatype",
-                    "width": 6,
+                    "name": "MCsiRxController/rStartTriggerHs",
+                    "width": 2,
                     "probe_type": 1
                 },
                 {
-                    "name": "MCsiRxController/MCsi2Decoder/wFtiRd",
-                    "width": 20,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/MCsi2Decoder/rPixel",
-                    "width": 32,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/MCsi2Decoder/rFrameWidthCnt",
-                    "width": 13,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/MCsi2Decoder/rEcc",
+                    "name": "MCsiRxController/rLpDataEsc",
                     "width": 8,
                     "probe_type": 1
                 },
                 {
-                    "name": "MCsiRxController/MCsi2Decoder/rVcx",
-                    "width": 2,
+                    "name": "MCsiRxController/rRxTriggerEsc",
+                    "width": 1,
                     "probe_type": 1
                 },
                 {
-                    "name": "MCsiRxController/MCsi2Decoder/rVc",
-                    "width": 2,
+                    "name": "MCsiRxController/rDirection",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rLpValidEsc",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rLpLpdtEsc",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rErrSotSyncHs",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rValidHs",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rStopState",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rClkActiveHs",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rErrControlLan",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rWordClkHs",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rStopStateClk",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rLaneData1Hs",
+                    "width": 8,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rSkewCalHs",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rLpErrSyncEsc",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rLpClk",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rErrEscLan",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rLaneData0Hs",
+                    "width": 8,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rErrSotHs",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rActiveHs",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rErrContentionLp1",
+                    "width": 1,
                     "probe_type": 1
                 }
             ]
@@ -191,827 +256,318 @@
                         "path": []
                     },
                     {
-                        "name": "la0_probe0[0]",
-                        "net": "rHsSt[0]",
+                        "name": "la0_probe0",
+                        "net": "rErrContentionLp0",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe0[1]",
-                        "net": "rHsSt[1]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe0[2]",
-                        "net": "rHsSt[2]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
                         "name": "la0_probe1[0]",
-                        "net": "rWordcnt[0]",
+                        "net": "rStartTriggerHs[0]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
                         "name": "la0_probe1[1]",
-                        "net": "rWordcnt[1]",
+                        "net": "rStartTriggerHs[1]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe1[2]",
-                        "net": "rWordcnt[2]",
+                        "name": "la0_probe2[0]",
+                        "net": "rLpDataEsc[0]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe1[3]",
-                        "net": "rWordcnt[3]",
+                        "name": "la0_probe2[1]",
+                        "net": "rLpDataEsc[1]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe1[4]",
-                        "net": "rWordcnt[4]",
+                        "name": "la0_probe2[2]",
+                        "net": "rLpDataEsc[2]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe1[5]",
-                        "net": "rWordcnt[5]",
+                        "name": "la0_probe2[3]",
+                        "net": "rLpDataEsc[3]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe1[6]",
-                        "net": "rWordcnt[6]",
+                        "name": "la0_probe2[4]",
+                        "net": "rLpDataEsc[4]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe1[7]",
-                        "net": "rWordcnt[7]",
+                        "name": "la0_probe2[5]",
+                        "net": "rLpDataEsc[5]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe1[8]",
-                        "net": "rWordcnt[8]",
+                        "name": "la0_probe2[6]",
+                        "net": "rLpDataEsc[6]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe1[9]",
-                        "net": "rWordcnt[9]",
+                        "name": "la0_probe2[7]",
+                        "net": "rLpDataEsc[7]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe1[10]",
-                        "net": "rWordcnt[10]",
+                        "name": "la0_probe3",
+                        "net": "rRxTriggerEsc",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe1[11]",
-                        "net": "rWordcnt[11]",
+                        "name": "la0_probe4",
+                        "net": "rDirection",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe1[12]",
-                        "net": "rWordcnt[12]",
+                        "name": "la0_probe5",
+                        "net": "rLpValidEsc",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe1[13]",
-                        "net": "rWordcnt[13]",
+                        "name": "la0_probe6",
+                        "net": "rLpLpdtEsc",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe1[14]",
-                        "net": "rWordcnt[14]",
+                        "name": "la0_probe7",
+                        "net": "rErrSotSyncHs",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe1[15]",
-                        "net": "rWordcnt[15]",
+                        "name": "la0_probe8",
+                        "net": "rValidHs",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe2",
-                        "net": "rHsValid",
+                        "name": "la0_probe9",
+                        "net": "rStopState",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe3[0]",
-                        "net": "rDatatype[0]",
+                        "name": "la0_probe10",
+                        "net": "rClkActiveHs",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe3[1]",
-                        "net": "rDatatype[1]",
+                        "name": "la0_probe11",
+                        "net": "rErrControlLan",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe3[2]",
-                        "net": "rDatatype[2]",
+                        "name": "la0_probe12",
+                        "net": "rWordClkHs",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe3[3]",
-                        "net": "rDatatype[3]",
+                        "name": "la0_probe13",
+                        "net": "rStopStateClk",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe3[4]",
-                        "net": "rDatatype[4]",
+                        "name": "la0_probe14[0]",
+                        "net": "rLaneData1Hs[0]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe3[5]",
-                        "net": "rDatatype[5]",
+                        "name": "la0_probe14[1]",
+                        "net": "rLaneData1Hs[1]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[0]",
-                        "net": "wFtiRd[0]",
+                        "name": "la0_probe14[2]",
+                        "net": "rLaneData1Hs[2]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[1]",
-                        "net": "wFtiRd[1]",
+                        "name": "la0_probe14[3]",
+                        "net": "rLaneData1Hs[3]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[2]",
-                        "net": "wFtiRd[2]",
+                        "name": "la0_probe14[4]",
+                        "net": "rLaneData1Hs[4]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[3]",
-                        "net": "wFtiRd[3]",
+                        "name": "la0_probe14[5]",
+                        "net": "rLaneData1Hs[5]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[4]",
-                        "net": "wFtiRd[4]",
+                        "name": "la0_probe14[6]",
+                        "net": "rLaneData1Hs[6]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[5]",
-                        "net": "wFtiRd[5]",
+                        "name": "la0_probe14[7]",
+                        "net": "rLaneData1Hs[7]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[6]",
-                        "net": "wFtiRd[6]",
+                        "name": "la0_probe15",
+                        "net": "rSkewCalHs",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[7]",
-                        "net": "wFtiRd[7]",
+                        "name": "la0_probe16",
+                        "net": "rLpErrSyncEsc",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[8]",
-                        "net": "wFtiRd[8]",
+                        "name": "la0_probe17",
+                        "net": "rLpClk",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[9]",
-                        "net": "wFtiRd[9]",
+                        "name": "la0_probe18",
+                        "net": "rErrEscLan",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[10]",
-                        "net": "wFtiRd[10]",
+                        "name": "la0_probe19[0]",
+                        "net": "rLaneData0Hs[0]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[11]",
-                        "net": "wFtiRd[11]",
+                        "name": "la0_probe19[1]",
+                        "net": "rLaneData0Hs[1]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[12]",
-                        "net": "wFtiRd[12]",
+                        "name": "la0_probe19[2]",
+                        "net": "rLaneData0Hs[2]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[13]",
-                        "net": "wFtiRd[13]",
+                        "name": "la0_probe19[3]",
+                        "net": "rLaneData0Hs[3]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[14]",
-                        "net": "wFtiRd[14]",
+                        "name": "la0_probe19[4]",
+                        "net": "rLaneData0Hs[4]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[15]",
-                        "net": "wFtiRd[15]",
+                        "name": "la0_probe19[5]",
+                        "net": "rLaneData0Hs[5]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[16]",
-                        "net": "wFtiRd[16]",
+                        "name": "la0_probe19[6]",
+                        "net": "rLaneData0Hs[6]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[17]",
-                        "net": "wFtiRd[17]",
+                        "name": "la0_probe19[7]",
+                        "net": "rLaneData0Hs[7]",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[18]",
-                        "net": "wFtiRd[18]",
+                        "name": "la0_probe20",
+                        "net": "rErrSotHs",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe4[19]",
-                        "net": "wFtiRd[19]",
+                        "name": "la0_probe21",
+                        "net": "rActiveHs",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe5[0]",
-                        "net": "rPixel[0]",
+                        "name": "la0_probe22",
+                        "net": "rErrContentionLp1",
                         "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[1]",
-                        "net": "rPixel[1]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[2]",
-                        "net": "rPixel[2]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[3]",
-                        "net": "rPixel[3]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[4]",
-                        "net": "rPixel[4]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[5]",
-                        "net": "rPixel[5]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[6]",
-                        "net": "rPixel[6]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[7]",
-                        "net": "rPixel[7]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[8]",
-                        "net": "rPixel[8]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[9]",
-                        "net": "rPixel[9]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[10]",
-                        "net": "rPixel[10]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[11]",
-                        "net": "rPixel[11]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[12]",
-                        "net": "rPixel[12]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[13]",
-                        "net": "rPixel[13]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[14]",
-                        "net": "rPixel[14]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[15]",
-                        "net": "rPixel[15]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[16]",
-                        "net": "rPixel[16]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[17]",
-                        "net": "rPixel[17]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[18]",
-                        "net": "rPixel[18]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[19]",
-                        "net": "rPixel[19]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[20]",
-                        "net": "rPixel[20]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[21]",
-                        "net": "rPixel[21]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[22]",
-                        "net": "rPixel[22]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[23]",
-                        "net": "rPixel[23]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[24]",
-                        "net": "rPixel[24]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[25]",
-                        "net": "rPixel[25]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[26]",
-                        "net": "rPixel[26]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[27]",
-                        "net": "rPixel[27]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[28]",
-                        "net": "rPixel[28]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[29]",
-                        "net": "rPixel[29]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[30]",
-                        "net": "rPixel[30]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[31]",
-                        "net": "rPixel[31]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[0]",
-                        "net": "rFrameWidthCnt[0]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[1]",
-                        "net": "rFrameWidthCnt[1]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[2]",
-                        "net": "rFrameWidthCnt[2]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[3]",
-                        "net": "rFrameWidthCnt[3]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[4]",
-                        "net": "rFrameWidthCnt[4]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[5]",
-                        "net": "rFrameWidthCnt[5]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[6]",
-                        "net": "rFrameWidthCnt[6]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[7]",
-                        "net": "rFrameWidthCnt[7]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[8]",
-                        "net": "rFrameWidthCnt[8]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[9]",
-                        "net": "rFrameWidthCnt[9]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[10]",
-                        "net": "rFrameWidthCnt[10]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[11]",
-                        "net": "rFrameWidthCnt[11]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[12]",
-                        "net": "rFrameWidthCnt[12]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe7[0]",
-                        "net": "rEcc[0]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe7[1]",
-                        "net": "rEcc[1]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe7[2]",
-                        "net": "rEcc[2]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe7[3]",
-                        "net": "rEcc[3]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe7[4]",
-                        "net": "rEcc[4]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe7[5]",
-                        "net": "rEcc[5]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe7[6]",
-                        "net": "rEcc[6]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe7[7]",
-                        "net": "rEcc[7]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe8[0]",
-                        "net": "rVcx[0]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe8[1]",
-                        "net": "rVcx[1]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[0]",
-                        "net": "rVc[0]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[1]",
-                        "net": "rVc[1]",
-                        "path": [
-                            "MCsiRxController",
-                            "MCsi2Decoder"
+                            "MCsiRxController"
                         ]
                     }
                 ]
@@ -1026,136 +582,246 @@
     ],
     "session": {
         "wizard": {
-            "data_depth": 4096,
+            "data_depth": 8192,
             "capture_control": false,
             "selected_nets": [
                 {
-                    "name": "rHsSt",
-                    "width": 3,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController",
-                        "MCsi2Decoder"
-                    ],
-                    "net_idx_left": 2,
-                    "net_idx_right": 0
-                },
-                {
-                    "name": "rWordcnt",
-                    "width": 16,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController",
-                        "MCsi2Decoder"
-                    ],
-                    "net_idx_left": 15,
-                    "net_idx_right": 0
-                },
-                {
-                    "name": "rHsValid",
+                    "name": "rErrContentionLp0",
                     "width": 1,
                     "clk_domain": "iSCLK",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
                     "path": [
-                        "MCsiRxController",
-                        "MCsi2Decoder"
+                        "MCsiRxController"
                     ]
                 },
                 {
-                    "name": "rDatatype",
-                    "width": 6,
+                    "name": "rStartTriggerHs",
+                    "width": 2,
                     "clk_domain": "iSCLK",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
                     "path": [
-                        "MCsiRxController",
-                        "MCsi2Decoder"
+                        "MCsiRxController"
                     ],
-                    "net_idx_left": 5,
+                    "net_idx_left": 1,
                     "net_idx_right": 0
                 },
                 {
-                    "name": "wFtiRd",
-                    "width": 20,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController",
-                        "MCsi2Decoder"
-                    ],
-                    "net_idx_left": 19,
-                    "net_idx_right": 0
-                },
-                {
-                    "name": "rPixel",
-                    "width": 32,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController",
-                        "MCsi2Decoder"
-                    ],
-                    "net_idx_left": 31,
-                    "net_idx_right": 0
-                },
-                {
-                    "name": "rFrameWidthCnt",
-                    "width": 13,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController",
-                        "MCsi2Decoder"
-                    ],
-                    "net_idx_left": 12,
-                    "net_idx_right": 0
-                },
-                {
-                    "name": "rEcc",
+                    "name": "rLpDataEsc",
                     "width": 8,
                     "clk_domain": "iSCLK",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
                     "path": [
-                        "MCsiRxController",
-                        "MCsi2Decoder"
+                        "MCsiRxController"
                     ],
                     "net_idx_left": 7,
                     "net_idx_right": 0
                 },
                 {
-                    "name": "rVcx",
-                    "width": 2,
+                    "name": "rRxTriggerEsc",
+                    "width": 1,
                     "clk_domain": "iSCLK",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
                     "path": [
-                        "MCsiRxController",
-                        "MCsi2Decoder"
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rDirection",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rLpValidEsc",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rLpLpdtEsc",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rErrSotSyncHs",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rValidHs",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rStopState",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rClkActiveHs",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rErrControlLan",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rWordClkHs",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rStopStateClk",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rLaneData1Hs",
+                    "width": 8,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
                     ],
-                    "net_idx_left": 1,
+                    "net_idx_left": 7,
                     "net_idx_right": 0
                 },
                 {
-                    "name": "rVc",
-                    "width": 2,
+                    "name": "rSkewCalHs",
+                    "width": 1,
                     "clk_domain": "iSCLK",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
                     "path": [
-                        "MCsiRxController",
-                        "MCsi2Decoder"
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rLpErrSyncEsc",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rLpClk",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rErrEscLan",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rLaneData0Hs",
+                    "width": 8,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
                     ],
-                    "net_idx_left": 1,
+                    "net_idx_left": 7,
                     "net_idx_right": 0
+                },
+                {
+                    "name": "rErrSotHs",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rActiveHs",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rErrContentionLp1",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
                 }
             ],
             "top_module": "MTopTi180MIPI25GRxHDMIV101",

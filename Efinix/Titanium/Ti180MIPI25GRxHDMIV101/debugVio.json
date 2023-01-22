@@ -3,7 +3,7 @@
         {
             "name": "vio0",
             "type": "vio",
-            "uuid": "b1135b706c344182aa59002af8dd8b15",
+            "uuid": "5a33a4f204c5401983bcd318e6786b18",
             "probes": [
                 {
                     "name": "Datatype",
@@ -16,8 +16,18 @@
                     "init": null
                 },
                 {
-                    "name": "HsEcc",
+                    "name": "Ecc",
                     "width": 8,
+                    "init": null
+                },
+                {
+                    "name": "Vc",
+                    "width": 2,
+                    "init": null
+                },
+                {
+                    "name": "Vcx",
+                    "width": 2,
                     "init": null
                 }
             ]

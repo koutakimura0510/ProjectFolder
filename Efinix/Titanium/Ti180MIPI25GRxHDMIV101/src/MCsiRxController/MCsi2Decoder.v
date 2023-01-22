@@ -131,13 +131,13 @@ end
 //-----------------------------------------------------------------------------
 // Csi2Decoder DualClkFifo
 //-----------------------------------------------------------------------------
-localparam lpFtiFifoBitWidth	= 10;
-localparam lpFtiFifoDepth		= 1024;
+localparam lpFtiFifoBitWidth	= 20;
+localparam lpFtiFifoDepth		= 2048;
 localparam lpFtiFifoFullAlMost	= 2;
 
 reg  [lpFtiFifoBitWidth*2-1:0] 	qFtiWd;
 reg 						 	qFtiWe;
-wire [1:0]					 	wFtifull;						assign oCddFifoFull = 1'b0;//wFtifull[0];
+wire [1:0]					 	wFtifull;						assign oCddFifoFull = wFtifull[0];
 wire [lpFtiFifoBitWidth*2-1:0] 	wFtiRd;
 reg  						 	qFtiLs;
 reg  						 	qFtiRe;
@@ -148,7 +148,7 @@ reg							 	qnFdcSRst, qnHsRst;
 genvar n;
 
 generate
-	for (n = 0; n < 2; n = n + 1)
+	for (n = 0; n < 1; n = n + 1)
 	begin
 		fifoDualController #(
 			.pFifoDepth(lpFtiFifoDepth),	.pFifoBitWidth(lpFtiFifoBitWidth),

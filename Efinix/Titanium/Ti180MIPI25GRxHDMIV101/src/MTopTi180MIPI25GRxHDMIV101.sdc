@@ -13,24 +13,24 @@
 
 # PLL Constraints
 #################
-create_clock -period 10.0000 iSCLK
-create_clock -period 10.0000 iCfgCLK
-create_clock -period 40.0000 iBCLK
-create_clock -period 50.0000 iPCLK
-create_clock -period  5.0000 iFCLK
+create_clock -period  6.667 iSCLK
+create_clock -period 10.000 iCfgCLK
+create_clock -period 10.000 iFBCLK
+create_clock -period 40.000 iBCLK
+# create_clock -period 50.0000 iPCLK
+# create_clock -period  5.0000 iFCLK
 # create_clock -period 6.7340  iVCLK
-create_clock -period 13.4680  iVCLK
-create_clock -period 7.5008  pll_inst3_CLKOUT0
-create_clock -period 1.6835  pll_ddr_CLKOUT3
-create_clock -period 3.3670  pll_ddr_CLKOUT4
+create_clock -period 13.468  iVCLK
+# create_clock -period 7.5008  pll_inst3_CLKOUT0
+# create_clock -period 1.6835  pll_ddr_CLKOUT3
+# create_clock -period 3.3670  pll_ddr_CLKOUT4
 create_clock -name MipiDphyRx1_WORD_CLKOUT_HS -period 6.4 [get_ports MipiDphyRx1_WORD_CLKOUT_HS]
 # GPIO Constraints
 ####################
 # set_input_delay -clock <CLOCK> [-reference_pin <clkout_pad>] -max <MAX CALCULATION> [get_ports {iOscClk75MHz}]
 # set_input_delay -clock <CLOCK> [-reference_pin <clkout_pad>] -min <MIN CALCULATION> [get_ports {iOscClk75MHz}]
 
-set_clock_groups -exclusive  -group {MipiDphyRx1_WORD_CLKOUT_HS} -group {iSCLK} -group {iBCLK} -group {iVCLK} -group {iPCLK} -group {iFCLK}
-set_clock_groups -exclusive  -group {iCfgCLK} -group {iSCLK} -group {iBCLK} -group {iVCLK} -group {iPCLK} -group {iFCLK}
+set_clock_groups -exclusive  -group {MipiDphyRx1_WORD_CLKOUT_HS} -group {iSCLK} -group {iBCLK} -group {iVCLK}
 
 # MIPI DPHY RX Constraints
 #####################################

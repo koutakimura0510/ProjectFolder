@@ -15,7 +15,9 @@ component edb_top
          vio0_clk      : in  std_logic;
          vio0_Datatype : in  std_logic_vector(5 downto 0);
          vio0_WordCnt  : in  std_logic_vector(15 downto 0);
-         vio0_HsEcc    : in  std_logic_vector(7 downto 0)
+         vio0_Ecc      : in  std_logic_vector(7 downto 0);
+         vio0_Vc       : in  std_logic_vector(1 downto 0);
+         vio0_Vcx      : in  std_logic_vector(1 downto 0)
        );
 end component ;
 ---------------------- End COMPONENT Declaration ------------
@@ -40,7 +42,9 @@ port map (
            vio0_clk      => #INSERT_YOUR_CLOCK_NAME,
            vio0_Datatype => vio0_Datatype,
            vio0_WordCnt  => vio0_WordCnt,
-           vio0_HsEcc    => vio0_HsEcc
+           vio0_Ecc      => vio0_Ecc,
+           vio0_Vc       => vio0_Vc,
+           vio0_Vcx      => vio0_Vcx
          );
 ------------------------ End INSTANTIATION Template ---------
 

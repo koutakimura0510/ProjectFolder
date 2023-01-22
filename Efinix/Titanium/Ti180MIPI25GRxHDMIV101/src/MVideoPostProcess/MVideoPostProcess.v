@@ -42,19 +42,13 @@ input 			i_pll_locked,
 // common
 input 			iSRST,
 input 			inSRST,
-input 			iPRST,
-input 			inPRST,
 input 			iVRST,
 input 			inVRST,
 input 			iBRST,
 input 			inBRST,
-input			iFRST,
-input			inFRST,
 input 			iSCLK,
-input 			iPCLK,
 input 			iVCLK,
-input 			iBCLK,
-input			iFCLK
+input 			iBCLK
 );
 
 
@@ -107,7 +101,7 @@ MVideoTimingGen #(
 //-----------------------------------------------------------------------------
 // 内部用高速クロックをビデオクロックにリタイミング
 //-----------------------------------------------------------------------------
-localparam lpVdcFifoBitWidth	= 2;
+localparam lpVdcFifoBitWidth	= 1;
 localparam lpVdcFifoDepth		= 8192 / lpVdcFifoBitWidth;
 localparam lpVdcFifoBitLoop		= 16   / lpVdcFifoBitWidth;
 localparam lpVdcFifoFullAlMost	= 16;
@@ -166,7 +160,7 @@ assign oAdv7511Data = {wVdcRd[7:0], wVdcRd[15:8]};	// ADV7511, YUYV -> [15:8] U,
 // RST Generate
 // 出力するピクセルデータが一定数溜まるまで VGA の Rst Active をキープする
 //-----------------------------------------------------------------------------
-localparam 	lpVtgRstMaxCnt	  = 960;
+localparam 	lpVtgRstMaxCnt	  = 1920;
 localparam 	lpVtgRstBitWidth  = 11;
 
 reg 						rVtgRstSel, qVtgRstSelCke;

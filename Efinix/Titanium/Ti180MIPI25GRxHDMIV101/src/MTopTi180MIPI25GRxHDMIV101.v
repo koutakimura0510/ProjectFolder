@@ -12,9 +12,6 @@
  *
  *~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*/
 //-----------------------------------------------------------------------------
-// efx_run.bat .\Ti180BramPrimitiveV100.xml --flow program --pgm_opts mode=jtag .\outflow\Ti180BramPrimitiveV100.bit
-// efx_run.bat .\Ti180BramPrimitiveV100.xml --flow compile
-// efx_run.bat .\Ti180BramPrimitiveV100.xml --flow full
 module MTopTi180MIPI25GRxHDMIV101 #(
 	parameter pDdrAxiDatWidth0	= 512,
 	parameter pDdrAxiDatWidth1	= 512
@@ -97,8 +94,6 @@ input  	[ 1:0]	iPushSw,			// Pusw Sw Gpio
 // PLL1 Control
 input			iSCLK,				// 100 [MHz] Port
 input			iBCLK,				// 25 [MHz] Port
-input			iPCLK,				// 25 [MHz] Port
-input			iFCLK,				// 200 [MHz] Port
 input			pll_inst1_LOCKED,	// PLL1 Locked Port
 output			pll_inst1_RSTN,		// PLL1 Rst Active Low Port
 //
@@ -133,8 +128,6 @@ assign 	pll_inst2_RSTN = 1'b1;
 //
 reg 	qLocked;
 reg 	rSRST,		rnSRST, 	qSRST,		qnSRST;
-reg 	rPRST,		rnPRST, 	qPRST,		qnPRST;
-reg 	rFRST,		rnFRST, 	qFRST,		qnFRST;
 reg 	rBRST,		rnBRST,		qBRST,		qnBRST;
 reg 	rVRST, 		rnVRST,		qVRST,		qnVRST;
 
@@ -147,28 +140,6 @@ begin
 	if (!iPushSw[0])			rnSRST <= 1'b0;
 	else if (qLocked)			rnSRST <= 1'b1;
 	else 						rnSRST <= 1'b0;
-end
-//
-always @(posedge iPCLK, negedge iPushSw[0])
-begin
-	if (!iPushSw[0])			rPRST  <= 1'b1;
-	else if (qLocked)			rPRST  <= 1'b0;
-	else 						rPRST  <= 1'b1;
-	//
-	if (!iPushSw[0])			rnPRST <= 1'b0;
-	else if (qLocked)			rnPRST <= 1'b1;
-	else 						rnPRST <= 1'b0;
-end
-//
-always @(posedge iFCLK, negedge iPushSw[0])
-begin
-	if (!iPushSw[0])			rFRST  <= 1'b1;
-	else if (qLocked)			rFRST  <= 1'b0;
-	else 						rFRST  <= 1'b1;
-	//
-	if (!iPushSw[0])			rnFRST <= 1'b0;
-	else if (qLocked)			rnFRST <= 1'b1;
-	else 						rnFRST <= 1'b0;
 end
 //
 always @(posedge iBCLK, negedge iPushSw[0])
@@ -198,10 +169,6 @@ begin
 	qLocked 	<= &{pll_inst1_LOCKED,pll_inst2_LOCKED};
 	qSRST 		<= rSRST;
 	qnSRST 		<= rnSRST;
-	qPRST 		<= rPRST;
-	qnPRST 		<= rnPRST;
-	qFRST 		<= rFRST;
-	qnFRST 		<= rnFRST;
 	qBRST 	 	<= rBRST;
 	qnBRST 	 	<= rnBRST;
 	qVRST  		<= rVRST;
@@ -215,6 +182,8 @@ end
 wire	[ 5:0]	wHsDatatype;
 wire 	[15:0]	wHsWordCnt;
 wire 	[ 7:0]	wHsEcc;
+wire 	[ 1:0]	wHsVc;
+wire 	[ 1:0]	wHsVcx;
 //
 wire 	[31:0]	wVideoPixel;
 wire 			wVideoVd;
@@ -287,6 +256,7 @@ MCsiRxController MCsiRxController (
 	// CSI-2 controller ouptut I/F port
 	.oHsDatatype(wHsDatatype),			.oHsWordCnt(wHsWordCnt),
 	.oHsEcc(wHsEcc),
+	.oHsVc(wHsVc),						.oHsVcx(wHsVcx),
 	// Video Signals
 	.oVideoPixel(wVideoPixel),
 	.oVideoVd(wVideoVd),				.iVideofull(wVideofull),
@@ -296,9 +266,7 @@ MCsiRxController MCsiRxController (
 	// Common
 	.iSRST(qSRST),						.inSRST(qnSRST),
 	.iVRST(qVRST),						.inVRST(qnVRST),
-	.iFRST(qFRST),						.inFRST(qnFRST),
-	.iSCLK(iSCLK),						.iVCLK(iVCLK),
-	.iFCLK(iFCLK)
+	.iSCLK(iSCLK),						.iVCLK(iVCLK)
 );
 
 
@@ -338,13 +306,10 @@ MVideoPostProcess #(
 	.i_pll_locked(pll_inst1_LOCKED),
 	// common
 	.iSRST(qSRST),					.inSRST(qnSRST),
-	.iPRST(qPRST),					.inPRST(qnPRST),
 	.iVRST(qVRST),					.inVRST(qnVRST),
 	.iBRST(qBRST),					.inBRST(qnBRST),
-	.iFRST(qFRST),					.inFRST(qnFRST),
-	.iSCLK(iSCLK),					.iPCLK(iPCLK),
-	.iVCLK(iVCLK),					.iBCLK(iBCLK),
-	.iFCLK(iFCLK)
+	.iSCLK(iSCLK),
+	.iVCLK(iVCLK),					.iBCLK(iBCLK)
 );
 
 
@@ -383,7 +348,7 @@ begin
 			.pCntMax(lpClkDivCnt[32*(n+1)-1:32*n]), .pStartPulse(1'b0)
 		) mPulseGenerator (
 			.oPulse(wPulse[n]),	.iSampling(wSampling[n]),
-			.iRST(qFRST),		.iCLK(iFCLK)
+			.iRST(qSRST),		.iCLK(iSCLK)
 		);
 	end
 end
@@ -470,7 +435,9 @@ assign oTestPort[25] = MipiDphyRx1_RX_VALID_HS_LAN1;	// Pin40
 //     .vio0_clk       	( iSCLK ),
 // 	.vio0_Datatype		( wHsDatatype ),
 // 	.vio0_WordCnt		( wHsWordCnt ),
-// 	.vio0_HsEcc			( wHsEcc )
+// 	.vio0_Ecc			( wHsEcc ),
+// 	.vio0_Vc			( wHsVc ),
+// 	.vio0_Vcx			( wHsVcx )
 // );
 
 

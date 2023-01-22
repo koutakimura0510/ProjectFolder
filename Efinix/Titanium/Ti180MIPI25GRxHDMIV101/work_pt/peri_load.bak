@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efxpt:design_db name="Ti180MIPI25GRxHDMIV101" device_def="Ti180M484" location="D:\workspace\Efinix\Titanium\Ti180MIPI25GRxHDMIV101" version="2022.2.322.1.8" db_version="20222999" last_change_date="Sat Jan 21 21:38:42 2023" xmlns:efxpt="http://www.efinixinc.com/peri_design_db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/peri_design_db peri_design_db.xsd ">
+<efxpt:design_db name="Ti180MIPI25GRxHDMIV101" device_def="Ti180M484" location="D:\workspace\Efinix\Titanium\Ti180MIPI25GRxHDMIV101" version="2022.2.322.1.8" db_version="20222999" last_change_date="Sun Jan 22 19:00:17 2023" xmlns:efxpt="http://www.efinixinc.com/peri_design_db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/peri_design_db peri_design_db.xsd ">
     <efxpt:device_info>
         <efxpt:iobank_info>
             <efxpt:iobank name="2A_2B_2C" iostd="1.8 V LVCMOS" is_dyn_voltage="false" mode_sel_name="2A_2B_2C_MODE_SEL"/>
@@ -280,38 +280,31 @@
             </efxpt:comp_output_clock>
             <efxpt:comp_prop is_outclk_inverted="false"/>
         </efxpt:pll>
-        <efxpt:pll name="pll_inst2" pll_def="PLL_BL1" ref_clock_name="" ref_clock_freq="50.0000" multiplier="2" pre_divider="1" post_divider="2" reset_name="pll_inst2_RSTN" locked_name="pll_inst2_LOCKED" is_ipfrz="false" is_bypass_lock="true">
-            <efxpt:adv_prop ref_clock_mode="external" ref_clock1_name="" ext_ref_clock_id="2" clksel_name="" feedback_clock_name="iSCLK" feedback_mode="local"/>
+        <efxpt:pll name="pll_inst2" pll_def="PLL_BL1" ref_clock_name="" ref_clock_freq="50.0000" multiplier="1" pre_divider="1" post_divider="2" reset_name="pll_inst2_RSTN" locked_name="pll_inst2_LOCKED" is_ipfrz="false" is_bypass_lock="true">
+            <efxpt:adv_prop ref_clock_mode="external" ref_clock1_name="" ext_ref_clock_id="2" clksel_name="" feedback_clock_name="iFBCLK" feedback_mode="core"/>
             <efxpt:gen_pin>
                 <efxpt:pin name="" type_name="DESKEWED" is_bus="false"/>
                 <efxpt:pin name="" type_name="SHIFT_ENA" is_bus="false"/>
                 <efxpt:pin name="" type_name="SHIFT" is_bus="true"/>
                 <efxpt:pin name="" type_name="SHIFT_SEL" is_bus="true"/>
             </efxpt:gen_pin>
-            <efxpt:comp_output_clock name="iSCLK" number="0" out_divider="26" is_dyn_phase="false" phase_setting="0" conn_type="gclk" clkmux_buf_name="">
+            <efxpt:comp_output_clock name="iSCLK" number="0" out_divider="18" is_dyn_phase="false" phase_setting="0" conn_type="gclk" clkmux_buf_name="">
                 <efxpt:gen_pin>
                     <efxpt:pin name="" type_name="CLKMUX_BUF" is_bus="false"/>
                 </efxpt:gen_pin>
             </efxpt:comp_output_clock>
-            <efxpt:comp_output_clock name="iBCLK" number="1" out_divider="104" is_dyn_phase="false" phase_setting="0" conn_type="gclk" clkmux_buf_name="">
+            <efxpt:comp_output_clock name="iBCLK" number="1" out_divider="108" is_dyn_phase="false" phase_setting="0" conn_type="gclk" clkmux_buf_name="">
                 <efxpt:gen_pin>
                     <efxpt:pin name="" type_name="CLKMUX_BUF" is_bus="false"/>
                 </efxpt:gen_pin>
             </efxpt:comp_output_clock>
-            <efxpt:comp_output_clock name="iCfgCLK" number="2" out_divider="26" is_dyn_phase="false" phase_setting="0" conn_type="gclk" clkmux_buf_name="">
+            <efxpt:comp_output_clock name="iCfgCLK" number="2" out_divider="27" is_dyn_phase="false" phase_setting="0" conn_type="gclk" clkmux_buf_name="">
                 <efxpt:gen_pin>
                     <efxpt:pin name="" type_name="CLKMUX_BUF" is_bus="false"/>
                 </efxpt:gen_pin>
             </efxpt:comp_output_clock>
-            <efxpt:comp_output_clock name="iFCLK" number="3" out_divider="13" is_dyn_phase="false" phase_setting="0" conn_type="gclk" clkmux_buf_name="">
-                <efxpt:gen_pin>
-                    <efxpt:pin name="" type_name="CLKMUX_BUF" is_bus="false"/>
-                </efxpt:gen_pin>
-            </efxpt:comp_output_clock>
-            <efxpt:comp_output_clock name="iPCLK" number="4" out_divider="104" is_dyn_phase="false" phase_setting="0" conn_type="gclk" clkmux_buf_name="">
-                <efxpt:gen_pin>
-                    <efxpt:pin name="" type_name="CLKMUX_BUF" is_bus="false"/>
-                </efxpt:gen_pin>
+            <efxpt:comp_output_clock name="iFBCLK" number="3" out_divider="54" is_dyn_phase="false" phase_setting="0" conn_type="gclk" clkmux_buf_name="">
+                <efxpt:gen_pin/>
             </efxpt:comp_output_clock>
             <efxpt:comp_prop is_outclk_inverted="false"/>
         </efxpt:pll>
@@ -440,6 +433,21 @@
                 <efxpt:pin name="jtag_inst1_TMS" type_name="TMS" is_bus="false"/>
                 <efxpt:pin name="jtag_inst1_UPDATE" type_name="UPDATE" is_bus="false"/>
                 <efxpt:pin name="jtag_inst1_TDO" type_name="TDO" is_bus="false"/>
+            </efxpt:gen_pin>
+        </efxpt:jtag>
+        <efxpt:jtag name="jtag_inst2" jtag_def="JTAG_USER2">
+            <efxpt:gen_pin>
+                <efxpt:pin name="jtag_inst2_CAPTURE" type_name="CAPTURE" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_DRCK" type_name="DRCK" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_RESET" type_name="RESET" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_RUNTEST" type_name="RUNTEST" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_SEL" type_name="SEL" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_SHIFT" type_name="SHIFT" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_TCK" type_name="TCK" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_TDI" type_name="TDI" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_TMS" type_name="TMS" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_UPDATE" type_name="UPDATE" is_bus="false"/>
+                <efxpt:pin name="jtag_inst2_TDO" type_name="TDO" is_bus="false"/>
             </efxpt:gen_pin>
         </efxpt:jtag>
     </efxpt:jtag_info>

@@ -1,4 +1,4 @@
-/*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*
+	/*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*
  *
  * File Name   : MCsiRxController.v
  * Description : Ti180M484 dev Kit MIPI RX to HDMI Output Simple Demo.
@@ -82,6 +82,8 @@ output 			oMipiDphyRx1_TX_CLK_ESC,				// Escape Mode TX CLK must be lower than 2
 output [ 5:0] 	oHsDatatype,
 output [15:0] 	oHsWordCnt,
 output [ 7:0] 	oHsEcc,
+output [ 1:0]	oHsVc,
+output [ 1:0]	oHsVcx,
 //
 // Video Signals
 output  [31:0]	oVideoPixel,
@@ -96,11 +98,8 @@ input			iSRST,
 input			inSRST,
 input			iVRST,
 input			inVRST,
-input			iFRST,
-input			inFRST,
 input			iSCLK,
-input			iVCLK,
-input 			iFCLK
+input			iVCLK
 );
   
 //-----------------------------------------------------------------------------
@@ -110,8 +109,8 @@ wire [31:0] wHsPixel;
 wire [ 5:0] wHsDatatype;					assign oHsDatatype 	= wHsDatatype;
 wire [15:0] wHsWordCnt;						assign oHsWordCnt 	= wHsWordCnt;
 wire [ 7:0] wHsEcc;							assign oHsEcc 		= wHsEcc;
-wire [ 1:0]	wHsVc;
-wire [ 1:0]	wHsVcx;
+wire [ 1:0]	wHsVc;							assign oHsVc		= wHsVc;
+wire [ 1:0]	wHsVcx;							assign oHsVcx		= wHsVcx;
 wire 		wHsValid;
 //
 wire 		wCddFifoFull;					assign oCddFifoFull	= wCddFifoFull;
@@ -248,89 +247,122 @@ end
 
 //-----------------------------------------------------------------------------
 // ILA 用モニタリング
+// MipiDphyRx1_WORD_CLKOUT_HS
+// HS モードのクロックドメイン、データの開始前と終了後まで持続する
+
+// MipiDphyRx1_RX_SYNC_HS_LAN0
+// HS モードで、有効データ入力時に開始として立ち上がりされる
+
+// MipiDphyRx1_RX_VALID_HS_LAN0
+// HS モードで、Packet Header, Packet Data, Packet Footer の
+// 出力期間中に Assert される信号
+
+// MipiDphyRx1_STOPSTATE_LAN1
+// WORD_CLKOUT_HS シーケンス開始時(CLK 立ち上がり)に Dissert され、
+// VALID の Dissert と同時に Assert される。
+// HS モードの終了を検出可能。
+
+// MipiDphyRx1_RX_CLK_ACTIVE_HS
+// WORD_CLKOUT_HS 駆動中に Assert され続ける信号
+
+// MipiDphyRx1_RX_ACTIVE_HS_LAN0
+// VALID 期間中 Assert され続ける信号
 //-----------------------------------------------------------------------------
-reg [1:0]	rHsStartTrigger;
-reg 		qNotTrigger;
-reg 		rHsValid;
+// Status
+reg 		rStopStateClk;
 reg 		rStopState;
-reg 		rSkewCalHs;
+reg 		rErrEscLan;
+reg 		rErrControlLan;
+reg 		rRxTriggerEsc;
+reg 		rDirection;
+reg 		rErrContentionLp0;
+reg 		rErrContentionLp1;
+// HS Mode
+reg 		rWordClkHs;
+reg 		rClkActiveHs;
 reg 		rActiveHs;
+reg 		rValidHs;
+reg [1:0]	rStartTriggerHs;
 reg 		rSkewCalHs;
+reg [7:0] 	rLaneData0Hs, rLaneData1Hs;
 reg 		rErrSotHs;
 reg 		rErrSotSyncHs;
-reg [7:0] 	rRxLaneData0, rRxLaneData1;
-reg [15:0]	rValidCnt;
-reg 		rHsClk;
+reg 		qNotTrigger;
+// LP Mode
+reg 		rLpClk;
+reg 		rLpLpdtEsc;
+reg [7:0] 	rLpDataEsc;
+reg 		rLpValidEsc;
+reg 		rLpErrSyncEsc;
 
-always @(posedge iMipiDphyRx1_WORD_CLKOUT_HS, negedge inSRST)
+always @(posedge iSCLK)
 begin
-	if (!inSRST)	rHsClk <= 1'b0;
-	else 			rHsClk <= ~rHsClk;
+	if (iSRST)
+	begin
+		rStopStateClk		<= 1'b0;
+		rStopState			<= 1'b0;
+		rErrEscLan			<= 1'b0;
+		rErrControlLan		<= 1'b0;
+		rRxTriggerEsc		<= 1'b0;
+		rDirection			<= 1'b0;
+		rErrContentionLp0	<= 1'b0;
+		rErrContentionLp1	<= 1'b0;
+		//
+		rWordClkHs			<= 1'b0;
+		rClkActiveHs		<= 1'b0;
+		rActiveHs			<= 1'b0;
+		rValidHs 			<= 1'b0;
+		rStartTriggerHs[0] 	<= 1'b0;
+		rStartTriggerHs[1] 	<= 1'b0;
+		rSkewCalHs 			<= 1'b0;
+		rLaneData0Hs 		<= 8'b0;
+		rLaneData1Hs 		<= 8'b0;
+		rErrSotHs 			<= 1'b0;
+		rErrSotSyncHs 		<= 1'b0;
+		//
+		rLpClk				<= 1'b0;
+		rLpLpdtEsc			<= 1'b0;
+		rLpDataEsc			<= 8'd0;
+		rLpValidEsc			<= 1'b0;
+		rLpErrSyncEsc		<= 1'b0;
+	end
+	else
+	begin
+		// Status
+		rStopStateClk 		<= iMipiDphyRx1_STOPSTATE_CLK;		// N/A = Lane In Stop State , HS 停止中 Assert
+		rStopState 			<= iMipiDphyRx1_STOPSTATE_LAN0; 	// N/A = Data Lane in Stop State, HS 停止中 Assert
+		rErrEscLan 			<= iMipiDphyRx1_ERR_ESC_LAN0;		// N/A = Lane Escape Command Error
+		rErrControlLan 		<= iMipiDphyRx1_ERR_CONTROL_LAN0;	// N/A = Lane Has Line State Error
+		rRxTriggerEsc 		<= iMipiDphyRx1_RX_TRIGGER_ESC;		// RX_CLK_ESC = RX Trigger Event
+		rDirection 			<= iMipiDphyRx1_DIRECTION;			// N/A = Transmit / Rec Direction(0=Tx, 1=Rx)
+		rErrContentionLp0 	<= iMipiDphyRx1_ERR_CONTENTION_LP0;	// N/A = Lane 0 Contention Error when driving 0
+		rErrContentionLp1 	<= iMipiDphyRx1_ERR_CONTENTION_LP1;	// N/A = Lane 0 Contention Error when driving 1
 
-	if (!inSRST)	rHsStartTrigger[0] <= 1'b0;
-	else 			rHsStartTrigger[0] <= iMipiDphyRx1_RX_SYNC_HS_LAN0;
+		// HS Mode
+		rWordClkHs			<= iMipiDphyRx1_WORD_CLKOUT_HS;
+		rClkActiveHs 		<= iMipiDphyRx1_RX_CLK_ACTIVE_HS;	  // N/A = HS Clock Lane Active
+		rActiveHs 			<= iMipiDphyRx1_RX_ACTIVE_HS_LAN0;	  // HS_CLK = HS Reception Active
+		rValidHs 			<= iMipiDphyRx1_RX_VALID_HS_LAN0;	  // HS_CLK = HS Data Valid
+		rStartTriggerHs[0] 	<= iMipiDphyRx1_RX_SYNC_HS_LAN0;	  // HS_CLK = HS Sync Oberved
+		rStartTriggerHs[1] 	<= iMipiDphyRx1_RX_SYNC_HS_LAN1;	  // HS_CLK = 
+		rSkewCalHs 			<= iMipiDphyRx1_RX_SKEW_CAL_HS_LAN0;  // HS_CLK = HS DeSkew Burst Rec
+		rLaneData0Hs 		<= iMipiDphyRx1_RX_DATA_HS_LAN0;	  // HS_CLK = HS DATA
+		rLaneData1Hs 		<= iMipiDphyRx1_RX_DATA_HS_LAN1;	  // HS_CLK = 
+		rErrSotHs 			<= iMipiDphyRx1_ERR_SOT_HS_LAN0;	  // HS_CLK = State-of-Transmission Error
+		rErrSotSyncHs		<= iMipiDphyRx1_ERR_SOT_SYNC_HS_LAN0; // HS_CLK = SOT Sync Error
 
-	if (!inSRST)	rHsStartTrigger[1] <= 1'b0;
-	else 			rHsStartTrigger[1] <= iMipiDphyRx1_RX_SYNC_HS_LAN1;
-
-	if (!inSRST)	rRxLaneData0 <= 8'b0;
-	else 			rRxLaneData0 <= iMipiDphyRx1_RX_DATA_HS_LAN0;
-
-	if (!inSRST)	rRxLaneData1 <= 8'b0;
-	else 			rRxLaneData1 <= iMipiDphyRx1_RX_DATA_HS_LAN1;
-
-	if (!inSRST)	rHsValid <= 1'b0;
-	else 			rHsValid <= iMipiDphyRx1_RX_VALID_HS_LAN0;
-
-	if (!inSRST)	rStopState <= 1'b0;
-	else 			rStopState <= iMipiDphyRx1_STOPSTATE_LAN0;
-
-	if (!inSRST)	rActiveHs <= 1'b0;
-	else 			rActiveHs <= iMipiDphyRx1_RX_ACTIVE_HS_LAN0;
-
-	if (!inSRST)	rSkewCalHs <= 1'b0;
-	else 			rSkewCalHs <= iMipiDphyRx1_RX_SKEW_CAL_HS_LAN0;
-
-	if (!inSRST)	rErrSotHs <= 1'b0;
-	else 			rErrSotHs <= iMipiDphyRx1_ERR_SOT_HS_LAN0;
-
-	if (!inSRST)	rErrSotSyncHs <= 1'b0;
-	else 			rErrSotSyncHs <= iMipiDphyRx1_RX_ERR_SYNC_ESC;
-
-	if (!inSRST)	rValidCnt <= 16'd0;
-	else if (iMipiDphyRx1_RX_VALID_HS_LAN0)	rValidCnt <= rValidCnt + 1'b1;
-	else 									rValidCnt <= 16'd0;
+		// LP Mode
+		rLpClk				<= iMipiDphyRx1_LP_CLK;				//
+		rLpLpdtEsc			<= iMipiDphyRx1_RX_LPDT_ESC;		// RX_CLK_ESC = RX Mode
+		rLpDataEsc			<= iMipiDphyRx1_RX_DATA_ESC;		// RX_CLK_ESC = RX DATA
+		rLpValidEsc			<= iMipiDphyRx1_RX_VALID_ESC;		// RX_CLK_ESC = RX Data Valid
+		rLpErrSyncEsc		<= iMipiDphyRx1_RX_ERR_SYNC_ESC;	// N/A = LP Sync Error
+	end
 end
 
 always @*
 begin
-	qNotTrigger <= rHsStartTrigger[0] != rHsStartTrigger[1];
+	qNotTrigger <= rStartTriggerHs[0] != rStartTriggerHs[1];
 end
-
-/*
-ハード D-PHY 信号メモ
-
-MipiDphyRx1_WORD_CLKOUT_HS
-HS モードのクロックドメイン、データの開始前と終了後まで持続する
-
-MipiDphyRx1_RX_SYNC_HS_LAN0
-HS モードで、有効データ入力時に開始として立ち上がりされる
-
-MipiDphyRx1_RX_VALID_HS_LAN0
-HS モードで、Packet Header, Packet Data, Packet Footer の
-出力期間中に Assert される信号
-
-MipiDphyRx1_STOPSTATE_LAN1
-WORD_CLKOUT_HS シーケンス開始時(CLK 立ち上がり)に Dissert され、
-VALID の Dissert と同時に Assert される。
-HS モードの終了を検出可能。
-
-MipiDphyRx1_RX_CLK_ACTIVE_HS
-WORD_CLKOUT_HS 駆動中に Assert され続ける信号
-
-MipiDphyRx1_RX_ACTIVE_HS_LAN0
-VALID 期間中 Assert され続ける信号
-
-*/
 
 endmodule

@@ -23,7 +23,9 @@ module edb_top (
     input  vio0_clk,
     input  [5:0] vio0_Datatype,
     input  [15:0] vio0_WordCnt,
-    input  [7:0] vio0_HsEcc
+    input  [7:0] vio0_Ecc,
+    input  [1:0] vio0_Vc,
+    input  [1:0] vio0_Vcx
 );
 
     localparam HUB_CS_WIDTH = 15;
@@ -76,12 +78,14 @@ module edb_top (
 
     // debug core instances
     edb_vio_top #(
-        .NUM_PROBE_IN           ( 3 ),
+        .NUM_PROBE_IN           ( 5 ),
         .NUM_PROBE_OUT          ( 0 ),
-        .UUID           ( 128'ha14822a15c9546db998ef0f9f8e49209 ),
+        .UUID           ( 128'h5a33a4f204c5401983bcd318e6786b18 ),
         .PROBE_IN0_WIDTH        ( 6 ),
         .PROBE_IN1_WIDTH        ( 16 ),
-        .PROBE_IN2_WIDTH        ( 8 )
+        .PROBE_IN2_WIDTH        ( 8 ),
+        .PROBE_IN3_WIDTH        ( 2 ),
+        .PROBE_IN4_WIDTH        ( 2 )
     ) vio0 (
         .bscan_CAPTURE          ( bscan_CAPTURE ),
         .bscan_DRCK             ( bscan_DRCK ),
@@ -100,9 +104,9 @@ module edb_top (
         .clk                ( vio0_clk ),
         .probe_in0          ( vio0_Datatype ),
         .probe_in1          ( vio0_WordCnt ),
-        .probe_in2          ( vio0_HsEcc ),
-        .probe_in3          ( 1'b0 ),
-        .probe_in4          ( 1'b0 ),
+        .probe_in2          ( vio0_Ecc ),
+        .probe_in3          ( vio0_Vc ),
+        .probe_in4          ( vio0_Vcx ),
         .probe_in5          ( 1'b0 ),
         .probe_in6          ( 1'b0 ),
         .probe_in7          ( 1'b0 ),

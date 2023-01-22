@@ -1,6 +1,6 @@
 clock {
   name: "iSCLK"
-  period: 10000
+  period: 6667
   target_pin {
     cell: "iSCLK"
     port: "INPAD"
@@ -33,10 +33,10 @@ clock {
   }
 }
 clock {
-  name: "iBCLK"
-  period: 40000
+  name: "iFBCLK"
+  period: 10000
   target_pin {
-    cell: "iBCLK"
+    cell: "iFBCLK"
     port: "INPAD"
   }
   origin: SDC
@@ -50,10 +50,10 @@ clock {
   }
 }
 clock {
-  name: "iFCLK"
-  period: 5000
+  name: "iBCLK"
+  period: 40000
   target_pin {
-    cell: "iFCLK"
+    cell: "iBCLK"
     port: "INPAD"
   }
   origin: SDC
@@ -133,16 +133,6 @@ exception {
 exception {
   type: FALSE_PATH
   from {
-    clock: "MipiDphyRx1_WORD_CLKOUT_HS"
-  }
-  to {
-    clock: "iFCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
     clock: "iSCLK"
   }
   to {
@@ -167,16 +157,6 @@ exception {
   }
   to {
     clock: "iVCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iSCLK"
-  }
-  to {
-    clock: "iFCLK"
   }
   analysis: BOTH
 }
@@ -213,16 +193,6 @@ exception {
 exception {
   type: FALSE_PATH
   from {
-    clock: "iBCLK"
-  }
-  to {
-    clock: "iFCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
     clock: "iVCLK"
   }
   to {
@@ -247,256 +217,6 @@ exception {
   }
   to {
     clock: "iBCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iVCLK"
-  }
-  to {
-    clock: "iFCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iFCLK"
-  }
-  to {
-    clock: "MipiDphyRx1_WORD_CLKOUT_HS"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iFCLK"
-  }
-  to {
-    clock: "iSCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iFCLK"
-  }
-  to {
-    clock: "iBCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iFCLK"
-  }
-  to {
-    clock: "iVCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iCfgCLK"
-  }
-  to {
-    clock: "iSCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iCfgCLK"
-  }
-  to {
-    clock: "iBCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iCfgCLK"
-  }
-  to {
-    clock: "iVCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iCfgCLK"
-  }
-  to {
-    clock: "iFCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iSCLK"
-  }
-  to {
-    clock: "iCfgCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iSCLK"
-  }
-  to {
-    clock: "iBCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iSCLK"
-  }
-  to {
-    clock: "iVCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iSCLK"
-  }
-  to {
-    clock: "iFCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iBCLK"
-  }
-  to {
-    clock: "iCfgCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iBCLK"
-  }
-  to {
-    clock: "iSCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iBCLK"
-  }
-  to {
-    clock: "iVCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iBCLK"
-  }
-  to {
-    clock: "iFCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iVCLK"
-  }
-  to {
-    clock: "iCfgCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iVCLK"
-  }
-  to {
-    clock: "iSCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iVCLK"
-  }
-  to {
-    clock: "iBCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iVCLK"
-  }
-  to {
-    clock: "iFCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iFCLK"
-  }
-  to {
-    clock: "iCfgCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iFCLK"
-  }
-  to {
-    clock: "iSCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iFCLK"
-  }
-  to {
-    clock: "iBCLK"
-  }
-  analysis: BOTH
-}
-exception {
-  type: FALSE_PATH
-  from {
-    clock: "iFCLK"
-  }
-  to {
-    clock: "iVCLK"
   }
   analysis: BOTH
 }

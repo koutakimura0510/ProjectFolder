@@ -13,7 +13,9 @@ edb_top edb_top_inst (
     .vio0_clk       ( $INSERT_YOUR_CLOCK_NAME ),
     .vio0_Datatype  ( vio0_Datatype ),
     .vio0_WordCnt   ( vio0_WordCnt ),
-    .vio0_HsEcc     ( vio0_HsEcc )
+    .vio0_Ecc       ( vio0_Ecc ),
+    .vio0_Vc        ( vio0_Vc ),
+    .vio0_Vcx       ( vio0_Vcx )
 );
 
 ////////////////////////////////////////////////////////////////////////////////
