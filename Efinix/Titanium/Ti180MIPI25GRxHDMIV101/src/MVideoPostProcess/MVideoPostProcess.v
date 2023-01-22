@@ -107,7 +107,7 @@ MVideoTimingGen #(
 //-----------------------------------------------------------------------------
 // 内部用高速クロックをビデオクロックにリタイミング
 //-----------------------------------------------------------------------------
-localparam lpVdcFifoBitWidth	= 4;
+localparam lpVdcFifoBitWidth	= 2;
 localparam lpVdcFifoDepth		= 8192 / lpVdcFifoBitWidth;
 localparam lpVdcFifoBitLoop		= 16   / lpVdcFifoBitWidth;
 localparam lpVdcFifoFullAlMost	= 16;
@@ -166,7 +166,7 @@ assign oAdv7511Data = {wVdcRd[7:0], wVdcRd[15:8]};	// ADV7511, YUYV -> [15:8] U,
 // RST Generate
 // 出力するピクセルデータが一定数溜まるまで VGA の Rst Active をキープする
 //-----------------------------------------------------------------------------
-localparam 	lpVtgRstMaxCnt	  = 1920;
+localparam 	lpVtgRstMaxCnt	  = 960;
 localparam 	lpVtgRstBitWidth  = 11;
 
 reg 						rVtgRstSel, qVtgRstSelCke;

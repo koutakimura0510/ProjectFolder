@@ -406,12 +406,12 @@ end
 //-----------------------------------------------------------------------------
 // TestPort / Led Coonect
 //-----------------------------------------------------------------------------
-assign oLed[0] = wPulse[0];
-assign oLed[1] = wPulse[1];
-assign oLed[2] = rCdcFifoFull;//wPulse[2];
-assign oLed[3] = wPulse[3];
-assign oLed[4] = wPulse[4];
-assign oLed[5] = qLocked;
+assign oLed[0] = qLocked;
+assign oLed[1] = wPulse[4];
+assign oLed[2] = wPulse[3];
+assign oLed[3] = rCdcFifoFull;//wPulse[2];
+assign oLed[4] = wPulse[1];
+assign oLed[5] = wPulse[0];
 // FMC to QSE Adapter Card to J3 MIPI and LVDS Expansion Daughter Card
 // ※ 一部 回路図・データシートと異なる IO の位置
 assign oTestPort[0]  = MipiDphyRx1_RX_SYNC_HS_LAN0;		// Pin2

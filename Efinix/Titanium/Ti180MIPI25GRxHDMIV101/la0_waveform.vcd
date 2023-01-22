@@ -1,0 +1,44 @@
+#0 $dumpon
+$date today $end
+$timescale 1 ns $end
+$scope module top $end
+$var wire 3 0 MCsiRxController/MCsi2Decoder/rHsSt $end
+$var wire 16 1 MCsiRxController/MCsi2Decoder/rWordcnt $end
+$var wire 1 2 MCsiRxController/MCsi2Decoder/rHsValid $end
+$var wire 6 3 MCsiRxController/MCsi2Decoder/rDatatype $end
+$var wire 20 4 MCsiRxController/MCsi2Decoder/wFtiRd $end
+$var wire 32 5 MCsiRxController/MCsi2Decoder/rPixel $end
+$var wire 13 6 MCsiRxController/MCsi2Decoder/rFrameWidthCnt $end
+$var wire 8 7 MCsiRxController/MCsi2Decoder/rEcc $end
+$var wire 2 8 MCsiRxController/MCsi2Decoder/rVcx $end
+$var wire 2 9 MCsiRxController/MCsi2Decoder/rVc $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b100 0
+b0000111100000000 1
+02
+b011110 3
+b00001111111010000001 4
+b00000000000000001111111010000001 5
+b0001001101000 6
+b00010100 7
+b00 8
+b00 9
+$end
+#1763
+b00001111111010000000 4
+#1764
+b00000000000000001111111010000000 5
+#4095
+b100 0
+b0000111100000000 1
+02
+b011110 3
+b00001111111010000000 4
+b00000000000000001111111010000000 5
+b0001001101000 6
+b00010100 7
+b00 8
+b00 9

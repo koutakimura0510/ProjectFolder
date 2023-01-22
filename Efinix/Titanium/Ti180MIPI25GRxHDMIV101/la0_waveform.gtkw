@@ -1,0 +1,21 @@
+[dumpfile] "D:\workspace\Efinix\Titanium\Ti180MIPI25GRxHDMIV101\la0_waveform.vcd"
+[dumpfile_mtime] "Sun Jan 22 03:08:25 2023"
+[dumpfile_size] 1100
+[savefile] "D:\workspace\Efinix\Titanium\Ti180MIPI25GRxHDMIV101\la0_waveform.gtkw"
+[timestart] 0
+[size] 1000 600
+[pos] -1 -1
+*0.000000 c 2048 6144 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[signals_width] 126
+[sst_expanded] 1
+@22
+top.\MCsiRxController/MCsi2Decoder/rHsSt[2:0]
+top.\MCsiRxController/MCsi2Decoder/rWordcnt[15:0]
+top.\MCsiRxController/MCsi2Decoder/rHsValid
+top.\MCsiRxController/MCsi2Decoder/rDatatype[5:0]
+top.\MCsiRxController/MCsi2Decoder/wFtiRd[19:0]
+top.\MCsiRxController/MCsi2Decoder/rPixel[31:0]
+top.\MCsiRxController/MCsi2Decoder/rFrameWidthCnt[12:0]
+top.\MCsiRxController/MCsi2Decoder/rEcc[7:0]
+top.\MCsiRxController/MCsi2Decoder/rVcx[1:0]
+top.\MCsiRxController/MCsi2Decoder/rVc[1:0]
