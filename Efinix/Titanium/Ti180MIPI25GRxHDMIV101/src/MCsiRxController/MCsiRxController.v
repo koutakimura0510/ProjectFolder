@@ -58,7 +58,7 @@ input 			iMipiDphyRx1_RX_ERR_SYNC_ESC,		// LPDT RX Data Sync Error
 output 			oMipiDphyRx1_TX_LPDT_ESC,			// Lane0 Enter LPDT TX Mode , TX_CLK_ESC
 output	[7:0]	oMipiDphyRx1_TX_DATA_ESC,			// Lane0 LPDT TX Data , TX_CLK_ESC
 output 			oMipiDphyRx1_TX_VALID_ESC,			// Lane0 LPDT TX Data Valid , TX_CLK_ESC
-output 			oMipiDphyRx1_TX_READY_ESC,			// Lane0 LPDT TX Data Ready , TX_CLK_ESC
+input 			iMipiDphyRx1_TX_READY_ESC,			// Lane0 LPDT TX Data Ready , TX_CLK_ESC
 //
 // Ultra Low Power Sleep Mode Signals
 output			oMipiDphyRx1_TX_ULPS_ESC,				// Lane 0 Enter ULPS Mode. , TX_CLK_ESC
@@ -162,7 +162,7 @@ MCsi2Decoder MCsi2Decoder(
 	.oMipiDphyRx1_TX_LPDT_ESC(oMipiDphyRx1_TX_LPDT_ESC),
 	.oMipiDphyRx1_TX_DATA_ESC(oMipiDphyRx1_TX_DATA_ESC),
 	.oMipiDphyRx1_TX_VALID_ESC(oMipiDphyRx1_TX_VALID_ESC),
-	.oMipiDphyRx1_TX_READY_ESC(oMipiDphyRx1_TX_READY_ESC),
+	.iMipiDphyRx1_TX_READY_ESC(iMipiDphyRx1_TX_READY_ESC),
 	//
 	// Ultra Low Power Sleep Mode Signals
 	.oMipiDphyRx1_TX_ULPS_ESC(oMipiDphyRx1_TX_ULPS_ESC),
@@ -295,9 +295,9 @@ reg [7:0] 	rLpDataEsc;
 reg 		rLpValidEsc;
 reg 		rLpErrSyncEsc;
 
-always @(posedge iSCLK)
+always @(posedge iMipiDphyRx1_WORD_CLKOUT_HS, negedge inSRST)
 begin
-	if (iSRST)
+	if (!inSRST)
 	begin
 		rStopStateClk		<= 1'b0;
 		rStopState			<= 1'b0;
@@ -320,11 +320,11 @@ begin
 		rErrSotHs 			<= 1'b0;
 		rErrSotSyncHs 		<= 1'b0;
 		//
-		rLpClk				<= 1'b0;
-		rLpLpdtEsc			<= 1'b0;
-		rLpDataEsc			<= 8'd0;
-		rLpValidEsc			<= 1'b0;
-		rLpErrSyncEsc		<= 1'b0;
+		// rLpClk				<= 1'b0;
+		// rLpLpdtEsc			<= 1'b0;
+		// rLpDataEsc			<= 8'd0;
+		// rLpValidEsc			<= 1'b0;
+		// rLpErrSyncEsc		<= 1'b0;
 	end
 	else
 	begin
@@ -339,7 +339,8 @@ begin
 		rErrContentionLp1 	<= iMipiDphyRx1_ERR_CONTENTION_LP1;	// N/A = Lane 0 Contention Error when driving 1
 
 		// HS Mode
-		rWordClkHs			<= iMipiDphyRx1_WORD_CLKOUT_HS;
+		// rWordClkHs			<= iMipiDphyRx1_WORD_CLKOUT_HS;
+		rWordClkHs			<= ~rWordClkHs;
 		rClkActiveHs 		<= iMipiDphyRx1_RX_CLK_ACTIVE_HS;	  // N/A = HS Clock Lane Active
 		rActiveHs 			<= iMipiDphyRx1_RX_ACTIVE_HS_LAN0;	  // HS_CLK = HS Reception Active
 		rValidHs 			<= iMipiDphyRx1_RX_VALID_HS_LAN0;	  // HS_CLK = HS Data Valid
@@ -352,11 +353,11 @@ begin
 		rErrSotSyncHs		<= iMipiDphyRx1_ERR_SOT_SYNC_HS_LAN0; // HS_CLK = SOT Sync Error
 
 		// LP Mode
-		rLpClk				<= iMipiDphyRx1_LP_CLK;				//
-		rLpLpdtEsc			<= iMipiDphyRx1_RX_LPDT_ESC;		// RX_CLK_ESC = RX Mode
-		rLpDataEsc			<= iMipiDphyRx1_RX_DATA_ESC;		// RX_CLK_ESC = RX DATA
-		rLpValidEsc			<= iMipiDphyRx1_RX_VALID_ESC;		// RX_CLK_ESC = RX Data Valid
-		rLpErrSyncEsc		<= iMipiDphyRx1_RX_ERR_SYNC_ESC;	// N/A = LP Sync Error
+		// rLpClk				<= iMipiDphyRx1_LP_CLK;				//
+		// rLpLpdtEsc			<= iMipiDphyRx1_RX_LPDT_ESC;		// RX_CLK_ESC = RX Mode
+		// rLpDataEsc			<= iMipiDphyRx1_RX_DATA_ESC;		// RX_CLK_ESC = RX DATA
+		// rLpValidEsc			<= iMipiDphyRx1_RX_VALID_ESC;		// RX_CLK_ESC = RX Data Valid
+		// rLpErrSyncEsc		<= iMipiDphyRx1_RX_ERR_SYNC_ESC;	// N/A = LP Sync Error
 	end
 end
 

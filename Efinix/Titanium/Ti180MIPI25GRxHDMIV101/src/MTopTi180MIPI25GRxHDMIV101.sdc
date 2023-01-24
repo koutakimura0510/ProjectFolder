@@ -13,7 +13,7 @@
 
 # PLL Constraints
 #################
-create_clock -period  6.667 iSCLK
+create_clock -period 10.000 iSCLK
 create_clock -period 10.000 iCfgCLK
 create_clock -period 10.000 iFBCLK
 create_clock -period 40.000 iBCLK

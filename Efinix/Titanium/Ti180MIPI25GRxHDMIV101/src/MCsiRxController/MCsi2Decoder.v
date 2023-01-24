@@ -57,7 +57,7 @@ input 			iMipiDphyRx1_RX_ERR_SYNC_ESC,		// LPDT RX Data Sync Error
 output 			oMipiDphyRx1_TX_LPDT_ESC,			// Lane0 Enter LPDT TX Mode , TX_CLK_ESC
 output	[7:0]	oMipiDphyRx1_TX_DATA_ESC,			// Lane0 LPDT TX Data , TX_CLK_ESC
 output 			oMipiDphyRx1_TX_VALID_ESC,			// Lane0 LPDT TX Data Valid , TX_CLK_ESC
-output 			oMipiDphyRx1_TX_READY_ESC,			// Lane0 LPDT TX Data Ready , TX_CLK_ESC
+input  			iMipiDphyRx1_TX_READY_ESC,			// Lane0 LPDT TX Data Ready , TX_CLK_ESC
 //
 // Ultra Low Power Sleep Mode Signals
 output			oMipiDphyRx1_TX_ULPS_ESC,				// Lane 0 Enter ULPS Mode. , TX_CLK_ESC
@@ -333,12 +333,12 @@ assign oMipiDphyRx1_TX_TRIGGER_ESC  = 4'd0;
 assign oMipiDphyRx1_TX_LPDT_ESC		= 1'b0;
 assign oMipiDphyRx1_TX_DATA_ESC		= 8'd0;
 assign oMipiDphyRx1_TX_VALID_ESC	= 1'b0;
-assign oMipiDphyRx1_TX_READY_ESC	= 1'b0;
 assign oMipiDphyRx1_TX_ULPS_ESC		= 1'b0;
 assign oMipiDphyRx1_TX_ULPS_EXIT	= 1'b0;
 assign oMipiDphyRx1_TX_CLK_ESC		= 1'b0;
 
-wire [25:0] wUnused = {
+wire [26:0] wUnused = {
+	iMipiDphyRx1_TX_READY_ESC,
 	iMipiDphyRx1_STOPSTATE_CLK,
 	iMipiDphyRx1_RX_TRIGGER_ESC[3:0],
 	iMipiDphyRx1_DIRECTION,

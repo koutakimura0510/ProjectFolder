@@ -59,7 +59,7 @@ input 			MipiDphyRx1_RX_ERR_SYNC_ESC,			// LPDT RX Data Sync Error
 output 			MipiDphyRx1_TX_LPDT_ESC,				// Lane0 Enter LPDT TX Mode , TX_CLK_ESC
 output	[7:0]	MipiDphyRx1_TX_DATA_ESC,				// Lane0 LPDT TX Data , TX_CLK_ESC
 output 			MipiDphyRx1_TX_VALID_ESC,				// Lane0 LPDT TX Data Valid , TX_CLK_ESC
-output 			MipiDphyRx1_TX_READY_ESC,				// Lane0 LPDT TX Data Ready , TX_CLK_ESC
+input 			MipiDphyRx1_TX_READY_ESC,				// Lane0 LPDT TX Data Ready , TX_CLK_ESC
 // Ultra Low Power Sleep Mode Signals
 output			MipiDphyRx1_TX_ULPS_ESC,				// Lane 0 Enter ULPS Mode. , TX_CLK_ESC
 output			MipiDphyRx1_TX_ULPS_EXIT,				// Lane 0 Exit ULPS Mode. , TX_CLK_ESC
@@ -236,7 +236,7 @@ MCsiRxController MCsiRxController (
 	.oMipiDphyRx1_TX_LPDT_ESC				(MipiDphyRx1_TX_LPDT_ESC),
 	.oMipiDphyRx1_TX_DATA_ESC				(MipiDphyRx1_TX_DATA_ESC),
 	.oMipiDphyRx1_TX_VALID_ESC				(MipiDphyRx1_TX_VALID_ESC),
-	.oMipiDphyRx1_TX_READY_ESC				(MipiDphyRx1_TX_READY_ESC),
+	.iMipiDphyRx1_TX_READY_ESC				(MipiDphyRx1_TX_READY_ESC),
 	// Ultra Low Power Sleep Mode Signals
 	.oMipiDphyRx1_TX_ULPS_ESC				(MipiDphyRx1_TX_ULPS_ESC),
 	.oMipiDphyRx1_TX_ULPS_EXIT				(MipiDphyRx1_TX_ULPS_EXIT),

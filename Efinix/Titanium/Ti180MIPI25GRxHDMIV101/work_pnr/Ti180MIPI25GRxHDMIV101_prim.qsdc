@@ -1,6 +1,6 @@
 clock {
   name: "iSCLK"
-  period: 6667
+  period: 10000
   target_pin {
     cell: "iSCLK"
     port: "INPAD"

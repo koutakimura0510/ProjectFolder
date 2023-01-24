@@ -3,7 +3,7 @@
         {
             "name": "la0",
             "type": "la",
-            "uuid": "b0f3dc67795a4eab91b10db6049963a6",
+            "uuid": "a6544f880164460da24ae0bb264fc2ae",
             "trigin_en": false,
             "trigout_en": false,
             "auto_inserted": true,
@@ -12,22 +12,22 @@
             "input_pipeline": 1,
             "probes": [
                 {
+                    "name": "MCsiRxController/rErrControlLan",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
                     "name": "MCsiRxController/rErrContentionLp0",
                     "width": 1,
                     "probe_type": 1
                 },
                 {
-                    "name": "MCsiRxController/rStartTriggerHs",
-                    "width": 2,
+                    "name": "MCsiRxController/rErrEscLan",
+                    "width": 1,
                     "probe_type": 1
                 },
                 {
-                    "name": "MCsiRxController/rLpDataEsc",
-                    "width": 8,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/rRxTriggerEsc",
+                    "name": "MCsiRxController/rErrSotHs",
                     "width": 1,
                     "probe_type": 1
                 },
@@ -37,17 +37,47 @@
                     "probe_type": 1
                 },
                 {
-                    "name": "MCsiRxController/rLpValidEsc",
+                    "name": "MCsiRxController/rLaneData0Hs",
+                    "width": 8,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rLaneData1Hs",
+                    "width": 8,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rActiveHs",
                     "width": 1,
                     "probe_type": 1
                 },
                 {
-                    "name": "MCsiRxController/rLpLpdtEsc",
+                    "name": "MCsiRxController/rErrContentionLp1",
                     "width": 1,
                     "probe_type": 1
                 },
                 {
                     "name": "MCsiRxController/rErrSotSyncHs",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/qNotTrigger",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rClkActiveHs",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rWordClkHs",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "MCsiRxController/rSkewCalHs",
                     "width": 1,
                     "probe_type": 1
                 },
@@ -62,17 +92,7 @@
                     "probe_type": 1
                 },
                 {
-                    "name": "MCsiRxController/rClkActiveHs",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/rErrControlLan",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/rWordClkHs",
+                    "name": "MCsiRxController/rRxTriggerEsc",
                     "width": 1,
                     "probe_type": 1
                 },
@@ -82,48 +102,8 @@
                     "probe_type": 1
                 },
                 {
-                    "name": "MCsiRxController/rLaneData1Hs",
-                    "width": 8,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/rSkewCalHs",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/rLpErrSyncEsc",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/rLpClk",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/rErrEscLan",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/rLaneData0Hs",
-                    "width": 8,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/rErrSotHs",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/rActiveHs",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "MCsiRxController/rErrContentionLp1",
-                    "width": 1,
+                    "name": "MCsiRxController/rStartTriggerHs",
+                    "width": 2,
                     "probe_type": 1
                 }
             ]
@@ -252,89 +232,33 @@
                     },
                     {
                         "name": "la0_clk",
-                        "net": "iSCLK",
+                        "net": "MipiDphyRx1_WORD_CLKOUT_HS",
                         "path": []
                     },
                     {
                         "name": "la0_probe0",
+                        "net": "rErrControlLan",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1",
                         "net": "rErrContentionLp0",
                         "path": [
                             "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe1[0]",
-                        "net": "rStartTriggerHs[0]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe1[1]",
-                        "net": "rStartTriggerHs[1]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe2[0]",
-                        "net": "rLpDataEsc[0]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe2[1]",
-                        "net": "rLpDataEsc[1]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe2[2]",
-                        "net": "rLpDataEsc[2]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe2[3]",
-                        "net": "rLpDataEsc[3]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe2[4]",
-                        "net": "rLpDataEsc[4]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe2[5]",
-                        "net": "rLpDataEsc[5]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe2[6]",
-                        "net": "rLpDataEsc[6]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe2[7]",
-                        "net": "rLpDataEsc[7]",
+                        "name": "la0_probe2",
+                        "net": "rErrEscLan",
                         "path": [
                             "MCsiRxController"
                         ]
                     },
                     {
                         "name": "la0_probe3",
-                        "net": "rRxTriggerEsc",
+                        "net": "rErrSotHs",
                         "path": [
                             "MCsiRxController"
                         ]
@@ -347,50 +271,148 @@
                         ]
                     },
                     {
-                        "name": "la0_probe5",
-                        "net": "rLpValidEsc",
+                        "name": "la0_probe5[0]",
+                        "net": "rLaneData0Hs[0]",
                         "path": [
                             "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe6",
-                        "net": "rLpLpdtEsc",
+                        "name": "la0_probe5[1]",
+                        "net": "rLaneData0Hs[1]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe5[2]",
+                        "net": "rLaneData0Hs[2]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe5[3]",
+                        "net": "rLaneData0Hs[3]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe5[4]",
+                        "net": "rLaneData0Hs[4]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe5[5]",
+                        "net": "rLaneData0Hs[5]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe5[6]",
+                        "net": "rLaneData0Hs[6]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe5[7]",
+                        "net": "rLaneData0Hs[7]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[0]",
+                        "net": "rLaneData1Hs[0]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[1]",
+                        "net": "rLaneData1Hs[1]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[2]",
+                        "net": "rLaneData1Hs[2]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[3]",
+                        "net": "rLaneData1Hs[3]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[4]",
+                        "net": "rLaneData1Hs[4]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[5]",
+                        "net": "rLaneData1Hs[5]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[6]",
+                        "net": "rLaneData1Hs[6]",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[7]",
+                        "net": "rLaneData1Hs[7]",
                         "path": [
                             "MCsiRxController"
                         ]
                     },
                     {
                         "name": "la0_probe7",
-                        "net": "rErrSotSyncHs",
+                        "net": "rActiveHs",
                         "path": [
                             "MCsiRxController"
                         ]
                     },
                     {
                         "name": "la0_probe8",
-                        "net": "rValidHs",
+                        "net": "rErrContentionLp1",
                         "path": [
                             "MCsiRxController"
                         ]
                     },
                     {
                         "name": "la0_probe9",
-                        "net": "rStopState",
+                        "net": "rErrSotSyncHs",
                         "path": [
                             "MCsiRxController"
                         ]
                     },
                     {
                         "name": "la0_probe10",
-                        "net": "rClkActiveHs",
+                        "net": "qNotTrigger",
                         "path": [
                             "MCsiRxController"
                         ]
                     },
                     {
                         "name": "la0_probe11",
-                        "net": "rErrControlLan",
+                        "net": "rClkActiveHs",
                         "path": [
                             "MCsiRxController"
                         ]
@@ -404,168 +426,49 @@
                     },
                     {
                         "name": "la0_probe13",
-                        "net": "rStopStateClk",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe14[0]",
-                        "net": "rLaneData1Hs[0]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe14[1]",
-                        "net": "rLaneData1Hs[1]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe14[2]",
-                        "net": "rLaneData1Hs[2]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe14[3]",
-                        "net": "rLaneData1Hs[3]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe14[4]",
-                        "net": "rLaneData1Hs[4]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe14[5]",
-                        "net": "rLaneData1Hs[5]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe14[6]",
-                        "net": "rLaneData1Hs[6]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe14[7]",
-                        "net": "rLaneData1Hs[7]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe15",
                         "net": "rSkewCalHs",
                         "path": [
                             "MCsiRxController"
                         ]
                     },
                     {
+                        "name": "la0_probe14",
+                        "net": "rValidHs",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe15",
+                        "net": "rStopState",
+                        "path": [
+                            "MCsiRxController"
+                        ]
+                    },
+                    {
                         "name": "la0_probe16",
-                        "net": "rLpErrSyncEsc",
+                        "net": "rRxTriggerEsc",
                         "path": [
                             "MCsiRxController"
                         ]
                     },
                     {
                         "name": "la0_probe17",
-                        "net": "rLpClk",
+                        "net": "rStopStateClk",
                         "path": [
                             "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe18",
-                        "net": "rErrEscLan",
+                        "name": "la0_probe18[0]",
+                        "net": "rStartTriggerHs[0]",
                         "path": [
                             "MCsiRxController"
                         ]
                     },
                     {
-                        "name": "la0_probe19[0]",
-                        "net": "rLaneData0Hs[0]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe19[1]",
-                        "net": "rLaneData0Hs[1]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe19[2]",
-                        "net": "rLaneData0Hs[2]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe19[3]",
-                        "net": "rLaneData0Hs[3]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe19[4]",
-                        "net": "rLaneData0Hs[4]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe19[5]",
-                        "net": "rLaneData0Hs[5]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe19[6]",
-                        "net": "rLaneData0Hs[6]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe19[7]",
-                        "net": "rLaneData0Hs[7]",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe20",
-                        "net": "rErrSotHs",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe21",
-                        "net": "rActiveHs",
-                        "path": [
-                            "MCsiRxController"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe22",
-                        "net": "rErrContentionLp1",
+                        "name": "la0_probe18[1]",
+                        "net": "rStartTriggerHs[1]",
                         "path": [
                             "MCsiRxController"
                         ]
@@ -586,123 +489,9 @@
             "capture_control": false,
             "selected_nets": [
                 {
-                    "name": "rErrContentionLp0",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ]
-                },
-                {
-                    "name": "rStartTriggerHs",
-                    "width": 2,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ],
-                    "net_idx_left": 1,
-                    "net_idx_right": 0
-                },
-                {
-                    "name": "rLpDataEsc",
-                    "width": 8,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ],
-                    "net_idx_left": 7,
-                    "net_idx_right": 0
-                },
-                {
-                    "name": "rRxTriggerEsc",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ]
-                },
-                {
-                    "name": "rDirection",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ]
-                },
-                {
-                    "name": "rLpValidEsc",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ]
-                },
-                {
-                    "name": "rLpLpdtEsc",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ]
-                },
-                {
-                    "name": "rErrSotSyncHs",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ]
-                },
-                {
-                    "name": "rValidHs",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ]
-                },
-                {
-                    "name": "rStopState",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ]
-                },
-                {
-                    "name": "rClkActiveHs",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ]
-                },
-                {
                     "name": "rErrControlLan",
                     "width": 1,
-                    "clk_domain": "iSCLK",
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
                     "path": [
@@ -710,61 +499,9 @@
                     ]
                 },
                 {
-                    "name": "rWordClkHs",
+                    "name": "rErrContentionLp0",
                     "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ]
-                },
-                {
-                    "name": "rStopStateClk",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ]
-                },
-                {
-                    "name": "rLaneData1Hs",
-                    "width": 8,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ],
-                    "net_idx_left": 7,
-                    "net_idx_right": 0
-                },
-                {
-                    "name": "rSkewCalHs",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ]
-                },
-                {
-                    "name": "rLpErrSyncEsc",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "MCsiRxController"
-                    ]
-                },
-                {
-                    "name": "rLpClk",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
                     "path": [
@@ -774,7 +511,27 @@
                 {
                     "name": "rErrEscLan",
                     "width": 1,
-                    "clk_domain": "iSCLK",
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rErrSotHs",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rDirection",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
                     "path": [
@@ -784,7 +541,7 @@
                 {
                     "name": "rLaneData0Hs",
                     "width": 8,
-                    "clk_domain": "iSCLK",
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
                     "path": [
@@ -794,19 +551,21 @@
                     "net_idx_right": 0
                 },
                 {
-                    "name": "rErrSotHs",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
+                    "name": "rLaneData1Hs",
+                    "width": 8,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
                     "path": [
                         "MCsiRxController"
-                    ]
+                    ],
+                    "net_idx_left": 7,
+                    "net_idx_right": 0
                 },
                 {
                     "name": "rActiveHs",
                     "width": 1,
-                    "clk_domain": "iSCLK",
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
                     "path": [
@@ -816,12 +575,114 @@
                 {
                     "name": "rErrContentionLp1",
                     "width": 1,
-                    "clk_domain": "iSCLK",
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
                     "path": [
                         "MCsiRxController"
                     ]
+                },
+                {
+                    "name": "rErrSotSyncHs",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "qNotTrigger",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rClkActiveHs",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rWordClkHs",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rSkewCalHs",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rValidHs",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rStopState",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rRxTriggerEsc",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rStopStateClk",
+                    "width": 1,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ]
+                },
+                {
+                    "name": "rStartTriggerHs",
+                    "width": 2,
+                    "clk_domain": "MipiDphyRx1_WORD_CLKOUT_HS",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "MCsiRxController"
+                    ],
+                    "net_idx_left": 1,
+                    "net_idx_right": 0
                 }
             ],
             "top_module": "MTopTi180MIPI25GRxHDMIV101",
