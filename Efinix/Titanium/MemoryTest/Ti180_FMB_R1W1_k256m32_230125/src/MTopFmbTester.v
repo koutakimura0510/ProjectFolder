@@ -10,13 +10,7 @@
  *
  *~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*/
 //---------------------------------------------------------------------------
-module MTopFmbTester
-#(
-parameter[15:0]	pFpgaVer		= 16'h00_03,	// by 4 Digits BCD
-parameter[15:0]	pFpgaRel		= 16'h01_01,	// by 4 Digits BCD
-parameter[31:0]	pFpgaCcc		= {"POK2"},		// by 4 Characters for SVO-09
-parameter[ 4:0]	pCommitWaitCnt	= 31
-)(
+module MTopFmbTester (
 //---------------------------------------------------------------------------
 // Board User-I/F and Test Port
 output[ 7: 2]	oLedX,
@@ -122,17 +116,17 @@ begin
 	qLocked <= &{iPLLBL1Locked,iPLLTL2Locked};
 end
 
-EFX_GBUFCE # (
-	.CE_POLARITY(1'b1)
-) EFX_GBUFCE_SRST (
-	.O(wSRST),		.I(rSRST),		.CE(1'b1)
-);
+// EFX_GBUFCE # (
+// 	.CE_POLARITY(1'b1)
+// ) EFX_GBUFCE_SRST (
+// 	.O(wSRST),		.I(rSRST),		.CE(1'b1)
+// );
 
-EFX_GBUFCE # (
-	.CE_POLARITY(1'b1)
-) EFX_GBUFCE_SRST (
-	.O(wnSRST),		.I(rnSRST),		.CE(1'b1)
-);
+// EFX_GBUFCE # (
+// 	.CE_POLARITY(1'b1)
+// ) EFX_GBUFCE_nSRST (
+// 	.O(wnSRST),		.I(rnSRST),		.CE(1'b1)
+// );
 
 //---------------------------------------------------------------------------
 // ddr リセット生成
@@ -143,7 +137,7 @@ wire w_ddr_cfg_start;			assign ddr4_CFG_START = w_ddr_cfg_start;
 								assign ddr4_CFG_SEL   = 1'b0;
   
 ddr_reset_sequencer ddr_reset_sequencer_inst (
-	.ddr_rstn_i			(wnSRST),
+	.ddr_rstn_i			(rnSRST),
 	.clk				(iSCLK),
 	.ddr_rstn			(w_ddr_axi_nreset),
 	.ddr_cfg_seq_rst	(w_ddr_cfg_reset),
@@ -157,11 +151,7 @@ ddr_reset_sequencer ddr_reset_sequencer_inst (
 //---------------------------------------------------------------------------
 wire w_test_done, w_test_fail, w_test_run;
 
-memory_checker #(
-	.START_ADDR(32'h0000_0000),
-	.STOP_ADDR(32'h0FFF_FE00),
-	.ALEN(7)
-) memory_checker (
+memory_checker memory_checker (
 // AXI4 Read Address Channel
 	.o_arid_0(ddr4_ARID_0),
 	.i_arready_0(ddr4_ARREADY_0),
@@ -211,7 +201,7 @@ memory_checker #(
 	.o_test_fail(w_test_fail),
 	.o_test_run(w_test_run),
 // common
-	.iAxiRST(wSRST),
+	.iAxiRST(rSRST),
 	.iAxiCLK(iSCLK)
 );
 
@@ -221,7 +211,7 @@ memory_checker #(
 //---------------------------------------------------------------------------
 assign oLedX[2] = iPLLBL1Locked;
 assign oLedX[3] = iPLLTL2Locked;
-assign oLedX[4] = 1'b0;
+assign oLedX[4] = ddr4_CFG_DONE;
 assign oLedX[5] = w_test_fail;
 assign oLedX[6] = w_test_done;
 assign oLedX[7] = w_test_run;

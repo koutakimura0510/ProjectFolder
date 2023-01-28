@@ -14,6 +14,8 @@
 #################
 create_clock -period 10.0000 iSCLK
 create_clock -period 7.5008 iDdrCoreCLK
+create_clock -period 1.6835 iDdrPhy1CLK
+create_clock -period 3.3670 iDdrPhy2CLK
 
 # GPIO Constraints
 ####################

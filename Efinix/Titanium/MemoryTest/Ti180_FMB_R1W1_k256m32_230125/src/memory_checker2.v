@@ -98,51 +98,17 @@ reg             wburst_done,
     always @(states or start_sync[1] or write_cnt or rburst_done or write_done or read_done or bvalid_done or aready) 
     begin
     	case(states) 
-    	IDLE 	   : 
-        if (start_sync[1]) 			
-            nstates = WRITE_ADDR;
-    	else					
-            nstates = IDLE;
-    	WRITE_ADDR : 
-        if (aready)				
-            nstates = PRE_WRITE;
-    	else					
-            nstates = WRITE_ADDR;
-    	PRE_WRITE  : 	
-        nstates = WRITE;
-    	WRITE	   : 
-        if (write_cnt == 9'd0)			
-            nstates = POST_WRITE;
-    	else		 			
-            nstates = WRITE;
-    	POST_WRITE : 
-        if (write_done & bvalid_done) 		
-            nstates = READ_ADDR;
-    	else if (bvalid_done)			
-            nstates = WRITE_ADDR;
-    	else					
-            nstates = POST_WRITE;
-    	READ_ADDR  : 
-        if (aready) 				
-            nstates = PRE_READ;
-    	else					
-            nstates = READ_ADDR;
-    	PRE_READ   :						
-        nstates = READ_COMPARE;
-    	READ_COMPARE  : 
-        if (rburst_done) 			
-            nstates = POST_READ;
-    	else					
-            nstates = READ_COMPARE;
-    	POST_READ  :	
-        if (read_done) 				
-            nstates = DONE;
-    	else					
-            nstates = READ_ADDR;
-    	DONE	   : 						
-        nstates = DONE;
-    	default	   :
-        nstates = IDLE;
+    	IDLE 	   	 : nstates <= (start_sync[1]) ? WRITE_ADDR :IDLE;
+    	WRITE_ADDR 	 : nstates <= (aready) ? PRE_WRITE : WRITE_ADDR;
+    	PRE_WRITE  	 : nstates <= WRITE;
+    	WRITE	   	 : nstates <= (write_cnt == 9'd0) ? POST_WRITE : WRITE;
+    	POST_WRITE 	 : nstates <= (write_done & bvalid_done) ? READ_ADDR : (bvalid_done) ? WRITE_ADDR : POST_WRITE;
+    	READ_ADDR  	 : nstates <= (aready) ? PRE_READ : READ_ADDR;
+    	PRE_READ   	 : nstates <= READ_COMPARE;
+    	READ_COMPARE : nstates <= (rburst_done) ? POST_READ : READ_COMPARE;
+    	POST_READ    : nstates <= (read_done) ? DONE : READ_ADDR;
+    	DONE	     : nstates <= DONE;
+    	default	     : nstates <= IDLE;
     	endcase
     end
     

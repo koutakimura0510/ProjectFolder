@@ -1,0 +1,22 @@
+[dumpfile] "/home/kimura/workspace/ProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125/la0_waveform.vcd"
+[dumpfile_mtime] "土  1月 28 10:28:49 2023"
+[dumpfile_size] 721
+[savefile] "/home/kimura/workspace/ProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125/la0_waveform.gtkw"
+[timestart] 0
+[size] 1000 600
+[pos] -1 -1
+*0.000000 c 2048 6144 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[signals_width] 126
+[sst_expanded] 1
+@22
+top.\memory_checker/r_rready_0
+top.\memory_checker/r_awready
+top.\memory_checker/r_rready
+top.\memory_checker/r_bready_0
+top.\memory_checker/r_arvalid_0
+top.\memory_checker/r_arready
+top.\memory_checker/r_awvalid_0
+top.\memory_checker/r_wvalid_0
+top.\memory_checker/r_wready
+top.\memory_checker/r_wlast_0
+top.\memory_checker/r_wdata_0[15:0]
