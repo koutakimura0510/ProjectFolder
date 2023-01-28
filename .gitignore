@@ -73,7 +73,7 @@
 *.xpr
 *.xci
 *.xcf
-*.xml
+# *.xml
 *.xmi
 *.xlsm
 *.xlsx

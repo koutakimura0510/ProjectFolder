@@ -1,0 +1,55 @@
+{
+    "debug_cores": [
+        {
+            "name": "vio0",
+            "type": "vio",
+            "uuid": "cb99814119104f7eb59f65c2bc159c85",
+            "probes": [
+                {
+                    "name": "rdata_exp0",
+                    "width": 256,
+                    "init": null
+                },
+                {
+                    "name": "rdata_det0",
+                    "width": 256,
+                    "init": null
+                },
+                {
+                    "name": "rdata_exp1",
+                    "width": 256,
+                    "init": null
+                },
+                {
+                    "name": "rdata_det1",
+                    "width": 256,
+                    "init": null
+                },
+                {
+                    "name": "check_rstn",
+                    "width": 1,
+                    "init": "0x1"
+                },
+                {
+                    "name": "pll_rstni",
+                    "width": 1,
+                    "init": "0x1"
+                },
+                {
+                    "name": "axi0_states",
+                    "width": 4,
+                    "init": null
+                },
+                {
+                    "name": "axi1_states",
+                    "width": 4,
+                    "init": null
+                }
+            ]
+        }
+    ],
+    "session": {
+        "debug_widget": [],
+        "wizard": {}
+    }
+}

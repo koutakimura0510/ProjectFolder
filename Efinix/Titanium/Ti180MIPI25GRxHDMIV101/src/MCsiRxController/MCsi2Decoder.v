@@ -182,16 +182,21 @@ end
 //-----------------------------------------------------------------------------
 // HS Mode データ取得ステートマシン
 //-----------------------------------------------------------------------------
-localparam lpStateIdNum	= 3;
+localparam lpStateIdNum	= 4;
 localparam [lpStateIdNum-1:0]
-	lpRxHsStateIdol = 3'd0,
-	lpRxHsState1    = 3'd1,
-	lpRxHsState2    = 3'd2,
-	lpRxHsState3    = 3'd3,
-	lpRxHsState4	= 3'd4,
-	lpRxHsStateNum	= 3'd5;
+	lpRxHsStateIdol = 4'd0,
+	lpRxHsState1    = 4'd1, // 2Lane 
+	lpRxHsState2    = 4'd2, // 2Lane 
+	lpRxHsState3    = 4'd3, // 2Lane 
+	lpRxHsState4	= 4'd4, // 2Lane 
+	lpRxHsState5    = 4'd5, // 4Lane 
+	lpRxHsState6    = 4'd6, // 4Lane 
+	lpRxHsState7    = 4'd7, // 4Lane 
+	lpRxHsStateNum	= 4'd9;
+
 reg [lpStateIdNum-1:0] 		rHsSt;
 reg [lpRxHsStateNum-1:0]	qHsStNextCke;
+reg [1:0]					qMipiLaneN;		// 使用 Lane 数
 
 always @(posedge iSCLK)
 begin
@@ -201,24 +206,35 @@ begin
 	end
 	else
 	begin
-		case (rHsSt)
-			lpRxHsStateIdol:	rHsSt <= (qHsStNextCke[0])	? lpRxHsState1    : lpRxHsStateIdol;	// Line Start チェック
-			lpRxHsState1:		rHsSt <= (qHsStNextCke[1]) 	? lpRxHsState2    : lpRxHsState1;		// Get Datatype and LSB Wordcnt
-			lpRxHsState2:		rHsSt <= (qHsStNextCke[2]) 	? lpRxHsState3    : lpRxHsState2;		// Get MSB Wordcnt and ECC
-			lpRxHsState3:		rHsSt <= (qHsStNextCke[3]) 	? lpRxHsState4    : lpRxHsStateIdol;	// Datatype Check
-			lpRxHsState4:		rHsSt <= (qHsStNextCke[4]) 	? lpRxHsStateIdol : lpRxHsState4;		// Data 転送
-			default:			rHsSt <= lpRxHsStateIdol;
+		case ({qMipiLaneN,rHsSt})
+		// Lane
+		// 2Lane
+		{2'b01,lpRxHsStateIdol}:	rHsSt <= (qHsStNextCke[0])	? lpRxHsState1    : lpRxHsStateIdol;	// Line Start チェック
+		{2'b01,lpRxHsState1}:		rHsSt <= (qHsStNextCke[1]) 	? lpRxHsState2    : lpRxHsState1;		// Get Datatype and LSB Wordcnt
+		{2'b01,lpRxHsState2}:		rHsSt <= (qHsStNextCke[2]) 	? lpRxHsState3    : lpRxHsState2;		// Get MSB Wordcnt and ECC
+		{2'b01,lpRxHsState3}:		rHsSt <= (qHsStNextCke[3]) 	? lpRxHsState4    : lpRxHsStateIdol;	// Datatype Check
+		{2'b01,lpRxHsState4}:		rHsSt <= (qHsStNextCke[4]) 	? lpRxHsStateIdol : lpRxHsState4;		// Data Transfer
+		// 3Lane
+		// 4Lane
+		{2'b11,lpRxHsStateIdol}:	rHsSt <= (qHsStNextCke[5])	? lpRxHsState5    : lpRxHsStateIdol;	// Line Start チェック
+		{2'b11,lpRxHsState5}:		rHsSt <= (qHsStNextCke[6]) 	? lpRxHsState6    : lpRxHsState5;		// Get Datatype and Wordcnt and ECC
+		{2'b11,lpRxHsState6}:		rHsSt <= (qHsStNextCke[7]) 	? lpRxHsState7    : lpRxHsState6;		// Datatype Check
+		{2'b11,lpRxHsState7}:		rHsSt <= (qHsStNextCke[8]) 	? lpRxHsStateIdol : lpRxHsState7;		// Data Transfer
+		default:					rHsSt <= lpRxHsStateIdol;
 		endcase
 	end
 end
 
 always @*
 begin
+	// Lane Number
+	qMipiLaneN <= 2'b01;
+	// Rst
 	qnFdcSRst <= inSRST;//(rHsSt == lpRxHsStateIdol) ? 1'b0 : 1'b1;
 end
 
 //-----------------------------------------------------------------------------
-// 
+// 2Lane のみ対応している
 //-----------------------------------------------------------------------------
 localparam lpPixelBitWidth 	= 32;
 localparam lpFrameWidthBit  = 13;	// 8K Line
@@ -245,9 +261,10 @@ begin
 	rPixel <= {16'd0, wFtiRd[15:0]};
 
 	case ({qWordCntMsb,qWordCntLsb})
-	2'b01:	 rWordcnt <= {rWordcnt[15:8], wFtiRd[15:8]};
-	2'b10:	 rWordcnt <= {wFtiRd[7:0], rWordcnt[7:0]};
-	default: rWordcnt <= rWordcnt;
+		2'b01:	 rWordcnt <= {rWordcnt[15:8], wFtiRd[15:8]};
+		2'b10:	 rWordcnt <= {wFtiRd[7:0], rWordcnt[7:0]};
+		// 2'b11:	 rWordcnt <= wFtiRd[15:0]; 4Lane 対応拡張用
+		default: rWordcnt <= rWordcnt;
 	endcase
 
 	if (iSRST)				rHsValid <= 1'd0;
@@ -277,40 +294,44 @@ always @*
 begin
 	// Wordcnt
 	case (rHsSt)
-		lpRxHsState2:	qWordCntMsb <= 1'b1;
-		default:		qWordCntMsb <= 1'b0;
+	lpRxHsState1:	qWordCntLsb <= 1'b1;
+	default:		qWordCntLsb <= 1'b0;
 	endcase
 
 	case (rHsSt)
-		lpRxHsState1:	qWordCntLsb <= 1'b1;
-		default:		qWordCntLsb <= 1'b0;
+	lpRxHsState2:	qWordCntMsb <= 1'b1;
+	default:		qWordCntMsb <= 1'b0;
 	endcase
 	// Datatype
 	case (rHsSt)
-		lpRxHsState1:	qDatatypeCke <= 1'b1;
-		default:		qDatatypeCke <= 1'b0;
+	lpRxHsState1:	qDatatypeCke <= 1'b1;
+	default:		qDatatypeCke <= 1'b0;
 	endcase
 	// ECC
 	case (rHsSt)
-		lpRxHsState2:	qEccCke <= 1'b1;
-		default:		qEccCke <= 1'b0;
+	lpRxHsState2:	qEccCke <= 1'b1;
+	default:		qEccCke <= 1'b0;
 	endcase
 	// Datatype Check 時に、データ受信があればそのまま転送する
 	casex ({qDatatypeCheck,wFtiRvd[0],rHsSt})
-		{1'b1,1'b1,lpRxHsState3}:	qHsValidCke <= 1'b1;
-		{1'bx,1'b1,lpRxHsState4}:	qHsValidCke <= 1'b1;
-		default:					qHsValidCke <= 1'b0;
+	{1'b1,1'b1,lpRxHsState3}:	qHsValidCke <= 1'b1;
+	{1'bx,1'b1,lpRxHsState4}:	qHsValidCke <= 1'b1;
+	default:					qHsValidCke <= 1'b0;
 	endcase
 	//
 	qDatatypeCheck  <= (6'h13 < rDatatype);
 	//
 	qLineCntRst 	<= |{iSRST,qLineCntMaxCke};
-	qLineCntMaxCke  <= &{((rWordcnt[15:1]-1'b1) == rFrameWidthCnt),wFtiRvd[0]} ? 1'b1 : 1'b0; // 1920 x YUV4228bit = F00
+
+	case ({((rWordcnt[15:1]-1'b1) == rFrameWidthCnt),wFtiRvd[0]})
+	'b11: 		qLineCntMaxCke <= 1'b1;
+	default: 	qLineCntMaxCke <= 1'b0;
+	endcase
 
 	case ({wFtiRvd[0],rHsSt})
-		{1'b1,lpRxHsState3}:	qLineCntCke <= 1'b1;
-		{1'b1,lpRxHsState4}:	qLineCntCke <= 1'b1;
-		default:				qLineCntCke <= 1'b0;
+	{1'b1,lpRxHsState3}:	qLineCntCke <= 1'b1;
+	{1'b1,lpRxHsState4}:	qLineCntCke <= 1'b1;
+	default:				qLineCntCke <= 1'b0;
 	endcase
 	//
 	qHsStNextCke[0] <= qFtiLs;
@@ -318,6 +339,10 @@ begin
 	qHsStNextCke[2] <= wFtiRvd[0];
 	qHsStNextCke[3] <= qDatatypeCheck;
 	qHsStNextCke[4] <= qLineCntMaxCke;
+	qHsStNextCke[5] <= 1'b0;
+	qHsStNextCke[6] <= 1'b0;
+	qHsStNextCke[7] <= 1'b0;
+	qHsStNextCke[8] <= 1'b0;
 end
 
 //-----------------------------------------------------------------------------
