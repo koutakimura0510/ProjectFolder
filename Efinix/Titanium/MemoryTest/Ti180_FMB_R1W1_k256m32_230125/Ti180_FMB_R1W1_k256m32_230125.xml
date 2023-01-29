@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efx:project name="Ti180_FMB_R1W1_k256m32_230125" description="" last_change_date="日 1月 29 2023 13:41:37" location="/home/kimura/workspace/ProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125" sw_version="2022.2.322" last_run_state="fail" last_run_tool="efx_map" last_run_flow="syn" config_result_in_sync="sync" design_ood="" place_ood="sync" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
+<efx:project name="Ti180_FMB_R1W1_k256m32_230125" description="" last_change_date="日 1月 29 2023 21:38:28" location="/home/kimura/workspace/ProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125" sw_version="2022.2.322" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="change" place_ood="sync" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
     <efx:device_info>
         <efx:family name="Titanium"/>
         <efx:device name="Ti180M484"/>
@@ -16,7 +16,9 @@
         <efx:sdc_file name="src/Ti180_FMB_R1W1_k256m32.sdc"/>
         <efx:inter_file name=""/>
     </efx:constraint_info>
-    <efx:sim_info/>
+    <efx:sim_info>
+        <efx:sim_file name="src/ddr_reset_sequencer_tb.v"/>
+    </efx:sim_info>
     <efx:misc_info/>
     <efx:ip_info/>
     <efx:synthesis tool_name="efx_map">
@@ -50,7 +52,7 @@
         <efx:param name="work_dir" value="work_pnr" value_type="e_string"/>
         <efx:param name="verbose" value="off" value_type="e_bool"/>
         <efx:param name="load_delaym" value="on" value_type="e_bool"/>
-        <efx:param name="optimization_level" value="NULL" value_type="e_option"/>
+        <efx:param name="optimization_level" value="CONGESTION_2" value_type="e_option"/>
         <efx:param name="seed" value="1" value_type="e_integer"/>
         <efx:param name="placer_effort_level" value="2" value_type="e_option"/>
         <efx:param name="max_threads" value="-1" value_type="e_integer"/>
@@ -77,7 +79,7 @@
     </efx:bitstream_generation>
     <efx:debugger>
         <efx:param name="work_dir" value="work_dbg" value_type="e_string"/>
-        <efx:param name="auto_instantiation" value="on" value_type="e_bool"/>
+        <efx:param name="auto_instantiation" value="off" value_type="e_bool"/>
         <efx:param name="profile" value="debug_profile.wizard.json" value_type="e_string"/>
     </efx:debugger>
     <efx:security>

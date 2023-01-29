@@ -44,8 +44,8 @@
 module ddr_reset_sequencer #(
 parameter	pStartCntBitWidth	= 8
 )(
-input 		iSRST,					// main user DDR reset, active High
-input 		iSCLK,					// user clock
+input 		iRST,					// main user DDR reset, active High
+input 		iCLK,					// user clock
 input 		iddr_cfg_done,			// DDR_CFG_DONE
 /* Connect these three signals to DDR reset interface */
 output 		o_ddr_axi_rstn,			// Master Reset
@@ -65,38 +65,44 @@ localparam
 	lpStart = 2'd2,
 	lpDone 	= 2'd3;
 
-
 reg r_ddr_axi_rstn;							assign o_ddr_axi_rstn 		= r_ddr_axi_rstn;
 reg r_ddr_cfg_seq_rst;						assign o_ddr_cfg_seq_rst 	= r_ddr_cfg_seq_rst;
 reg r_ddr_cfg_seq_start;					assign o_ddr_cfg_seq_start 	= r_ddr_cfg_seq_start;
 reg r_ddr_init_done;						assign o_ddr_init_done 		= r_ddr_init_done;
 //
 reg [1:0] rs;
-reg [pStartCntBitWidth-1:0] rSeqCnt;		assign o_ddr_cfg_seq_rst = rstn_dly[lpRstDlyBitWidth-1];
+reg [pStartCntBitWidth-1:0] rSeqCnt;
 reg rSeqMaxCke;
 
-always @(posedge iSCLK)
+initial
 begin
-	if (iSRST)
+	r_ddr_axi_rstn		<= 1'b0;
+	r_ddr_cfg_seq_rst	<= 1'b1;
+	r_ddr_cfg_seq_start	<= 1'b0;
+end
+
+always @(posedge iCLK)
+begin
+	if (iRST)
 	begin
 		rs      			<= lpIdol;
 		rSeqCnt 			<= {pStartCntBitWidth{1'b0}};
 		r_ddr_axi_rstn		<= 1'b0;
 		r_ddr_cfg_seq_rst	<= 1'b1;
 		r_ddr_cfg_seq_start	<= 1'b0;
-		r_ddr_init_done		<= 1'b0;
+		r_ddr_init_done		<= 1'b1;
 	end
 	else
 	begin
 		case ( rs )
 			lpIdol:
 			begin
-				rs      			<= lpReset;
-				rSeqCnt 			<= {pStartCntBitWidth{1'b0}};
+				rs      			<= (rSeqMaxCke) ? lpReset : lpIdol;
+				rSeqCnt 			<= (rSeqMaxCke) ? {pStartCntBitWidth{1'b0}} : rSeqCnt + 1'b1;
 				r_ddr_axi_rstn		<= 1'b0;
 				r_ddr_cfg_seq_rst	<= 1'b1;
 				r_ddr_cfg_seq_start	<= 1'b0;
-				r_ddr_init_done		<= 1'b0;
+				r_ddr_init_done		<= 1'b1;
 			end
 
 			lpReset:
@@ -106,7 +112,7 @@ begin
 				r_ddr_axi_rstn		<= 1'b0;
 				r_ddr_cfg_seq_rst	<= 1'b1;
 				r_ddr_cfg_seq_start	<= 1'b0;
-				r_ddr_init_done		<= 1'b0;
+				r_ddr_init_done		<= 1'b1;
 			end
 
 			lpStart:
@@ -116,7 +122,7 @@ begin
 				r_ddr_axi_rstn		<= 1'b0;
 				r_ddr_cfg_seq_rst	<= 1'b0;
 				r_ddr_cfg_seq_start	<= 1'b0;
-				r_ddr_init_done		<= 1'b0;
+				r_ddr_init_done		<= 1'b1;
 			end
 
 			lpDone:

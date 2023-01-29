@@ -66,8 +66,8 @@ output			o_test_done,	// test Complete
 output 			o_test_fail,	// test NG
 output 			o_test_run,		// test running
 // common
-input 			iAxiRST,
-input 			iAxiCLK
+input 			iARST,
+input 			iACLK
 );
   
 
@@ -95,7 +95,7 @@ reg	[2:0]	r_wbank;
 reg [9:0]	r_wcol;					assign o_awaddr_0		= {r_wcs,r_wrow,r_wbank,r_wcol,2'b00};
 									assign o_awcache_0		= 4'b0000;
 									assign o_awqos_0		= 1'b0;
-									assign o_awallstrb_0	= 1'b1;
+									assign o_awallstrb_0	= 1'b0;
 									assign o_awapcmd_0		= 1'b0;
 									assign o_awcobuf_0		= 1'b0;
 									assign o_awid_0			= 6'd0;
@@ -120,9 +120,9 @@ reg 		r_bready_0;				assign o_bready_0 		= r_bready_0;
 reg 		q_awvalid_0_cke;
 reg 		q_wvalid_0_cke;
 
-always @(posedge iAxiCLK)
+always @(posedge iACLK)
 begin
-	if (iAxiRST)
+	if (iARST)
 	begin
 		r_wcs		<= 1'b0;
 		r_wrow		<= 17'd0;
@@ -144,11 +144,13 @@ begin
 		r_wlast_0	<= 1'b1;
 		r_bready_0  <= 1'b1;
 
-		if (q_awvalid_0_cke)r_awvalid_0	<= 1'b0;
-		else				r_awvalid_0 <= 1'b1;
+		// if (q_awvalid_0_cke)r_awvalid_0	<= 1'b0;
+		// else				r_awvalid_0 <= 1'b1;
 
-		if (q_wvalid_0_cke)	r_wvalid_0 <= 1'b0;
-		else				r_wvalid_0 <= 1'b1;
+		// if (q_wvalid_0_cke)	r_wvalid_0 <= 1'b0;
+		// else				r_wvalid_0 <= 1'b1;
+		r_awvalid_0	<= 1'b0;
+		r_wvalid_0 <= 1'b0;
 	end
 end
 
@@ -158,7 +160,7 @@ begin
 	q_wvalid_0_cke  <= i_wready_0;
 end
 
-always @(posedge iAxiCLK)
+always @(posedge iACLK)
 begin
 	r_awready	<= i_awready_0;
 	r_wready	<= i_wready_0;
@@ -192,9 +194,9 @@ reg 		q_rready_0_cke;
 reg 		r_arready;
 reg 		r_rready;
 
-always @(posedge iAxiCLK)
+always @(posedge iACLK)
 begin
-	if (iAxiRST)
+	if (iARST)
 	begin
 		r_rcs		<= 1'b0;
 		r_rrow		<= 17'd0;
@@ -212,11 +214,13 @@ begin
 		r_rcol		<= 10'd0;
 		r_rdata		<= i_rdata_0;
 
-		if (q_arready_0_cke) r_arvalid_0 <= 1'b0;
-		else 				 r_arvalid_0 <= 1'b1;
+		// if (q_arready_0_cke) r_arvalid_0 <= 1'b0;
+		// else 				 r_arvalid_0 <= 1'b1;
 
-		if (q_rready_0_cke) r_rready_0 <= 1'b1;
-		else				r_rready_0 <= 1'b0;
+		// if (q_rready_0_cke) r_rready_0 <= 1'b1;
+		// else				r_rready_0 <= 1'b0;
+		r_arvalid_0 <= 1'b0;
+		r_rready_0  <= 1'b1;
 	end
 end
 
@@ -226,7 +230,7 @@ begin
 	q_rready_0_cke  <= i_rvalid_0;
 end
 
-always @(posedge iAxiCLK)
+always @(posedge iACLK)
 begin
 	r_arready	<= i_arready_0;
 	r_rready	<= i_rvalid_0;
@@ -239,9 +243,9 @@ reg r_test_done;
 reg r_test_fail;
 reg r_test_run;
 
-always @(posedge iAxiCLK)
+always @(posedge iACLK)
 begin
-	if (iAxiRST)
+	if (iARST)
 	begin
 		r_test_done	<= 1'b1;
 		r_test_fail	<= 1'b1;
@@ -260,9 +264,9 @@ assign o_test_fail = r_test_fail;
 assign o_test_run  = r_test_run;
 
 
-// always @(posedge iAxiCLK)
+// always @(posedge iACLK)
 // begin
-// 	if (iAxiRST)
+// 	if (iARST)
 // 	begin
 // 		rs <= lpIdle;
 // 	end

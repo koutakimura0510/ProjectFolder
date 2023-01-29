@@ -24,12 +24,18 @@ module edb_top (
     input  la0_probe0,
     input  la0_probe1,
     input  la0_probe2,
-    input  la0_probe3,
+    input  [1:0] la0_probe3,
     input  la0_probe4,
-    input  [7:0] la0_probe5,
-    input  [4:0] la0_probe6,
+    input  la0_probe5,
+    input  [7:0] la0_probe6,
     input  la0_probe7,
-    input  la0_probe8
+    input  la0_probe8,
+    input  la1_clk,
+    input  la1_probe0,
+    input  la2_clk,
+    input  la2_probe0,
+    input  la3_clk,
+    input  la3_probe0
 );
 
     localparam HUB_CS_WIDTH = 15;
@@ -48,15 +54,30 @@ module edb_top (
     wire la0_module_inhibit;
     wire la0_module_tdo;
 
+    wire la1_module_select;
+    wire la1_module_inhibit;
+    wire la1_module_tdo;
+
+    wire la2_module_select;
+    wire la2_module_inhibit;
+    wire la2_module_tdo;
+
+    wire la3_module_select;
+    wire la3_module_inhibit;
+    wire la3_module_tdo;
+
     assign la0_module_select        = edb_module_selects[0];
     assign edb_module_inhibit[0]    = la0_module_inhibit;
     assign edb_module_tdo[0]        = la0_module_tdo;
-    assign edb_module_inhibit[1]    = 1'b0;
-    assign edb_module_tdo[1]        = 1'b0;
-    assign edb_module_inhibit[2]    = 1'b0;
-    assign edb_module_tdo[2]        = 1'b0;
-    assign edb_module_inhibit[3]    = 1'b0;
-    assign edb_module_tdo[3]        = 1'b0;
+    assign la1_module_select        = edb_module_selects[1];
+    assign edb_module_inhibit[1]    = la1_module_inhibit;
+    assign edb_module_tdo[1]        = la1_module_tdo;
+    assign la2_module_select        = edb_module_selects[2];
+    assign edb_module_inhibit[2]    = la2_module_inhibit;
+    assign edb_module_tdo[2]        = la2_module_tdo;
+    assign la3_module_select        = edb_module_selects[3];
+    assign edb_module_inhibit[3]    = la3_module_inhibit;
+    assign edb_module_tdo[3]        = la3_module_tdo;
     assign edb_module_inhibit[4]    = 1'b0;
     assign edb_module_tdo[4]        = 1'b0;
     assign edb_module_inhibit[5]    = 1'b0;
@@ -88,7 +109,7 @@ module edb_top (
         .TRIGOUT_EN         ( 0 ),
         .INPUT_PIPE_STAGES      ( 1 ),
         .CAPTURE_CONTROL    ( 0 ),
-        .UUID   ( 128'h5197458aa2f9411db857749376f13911 ),
+        .UUID   ( 128'ha14514093e044b9c92d9d23f93a3cef6 ),
         .CNDTNL_STRG_EN     ( 0 ),
         .PROBE0_WIDTH       ( 1 ),
         .PROBE0_TYPE        ( 1 ),
@@ -96,13 +117,13 @@ module edb_top (
         .PROBE1_TYPE        ( 1 ),
         .PROBE2_WIDTH       ( 1 ),
         .PROBE2_TYPE        ( 1 ),
-        .PROBE3_WIDTH       ( 1 ),
+        .PROBE3_WIDTH       ( 2 ),
         .PROBE3_TYPE        ( 1 ),
         .PROBE4_WIDTH       ( 1 ),
         .PROBE4_TYPE        ( 1 ),
-        .PROBE5_WIDTH       ( 8 ),
+        .PROBE5_WIDTH       ( 1 ),
         .PROBE5_TYPE        ( 1 ),
-        .PROBE6_WIDTH       ( 5 ),
+        .PROBE6_WIDTH       ( 8 ),
         .PROBE6_TYPE        ( 1 ),
         .PROBE7_WIDTH       ( 1 ),
         .PROBE7_TYPE        ( 1 ),
@@ -137,6 +158,108 @@ module edb_top (
         .probe6                 ( la0_probe6 ),
         .probe7                 ( la0_probe7 ),
         .probe8                 ( la0_probe8 )
+    );
+
+    edb_la_top #(
+        .NUM_PROBES         ( 1 ),
+        .DATA_DEPTH         ( 4096 ),
+        .TRIGIN_EN          ( 0 ),
+        .TRIGOUT_EN         ( 0 ),
+        .INPUT_PIPE_STAGES      ( 1 ),
+        .CAPTURE_CONTROL    ( 0 ),
+        .UUID   ( 128'h01f13d3f99084128812f30a968ea586b ),
+        .CNDTNL_STRG_EN     ( 0 ),
+        .PROBE0_WIDTH       ( 1 ),
+        .PROBE0_TYPE        ( 1 )
+    ) la1 (
+        .bscan_CAPTURE                  ( bscan_CAPTURE ),
+        .bscan_DRCK                     ( bscan_DRCK ),
+        .bscan_RESET                    ( bscan_RESET ),
+        .bscan_RUNTEST                  ( bscan_RUNTEST ),
+        .bscan_SEL                      ( bscan_SEL ),
+        .bscan_SHIFT                    ( bscan_SHIFT ),
+        .bscan_TCK                      ( bscan_TCK_buffered ),
+        .bscan_TDI                      ( bscan_TDI ),
+        .bscan_TMS                      ( bscan_TMS ),
+        .bscan_UPDATE                   ( bscan_UPDATE ),
+        .edb_user_dr            ( edb_user_dr ),
+        .edb_module_select      ( la1_module_select  ),
+        .edb_module_inhibit     ( la1_module_inhibit ),
+        .edb_module_tdo         ( la1_module_tdo ),
+        .clk                    ( la1_clk ),
+        .trig_in                ( 1'b0 ),
+        .trig_in_ack            (  ),
+        .trig_out               (  ),
+        .trig_out_ack           ( 1'b0 ),
+        .probe0                 ( la1_probe0 )
+    );
+
+    edb_la_top #(
+        .NUM_PROBES         ( 1 ),
+        .DATA_DEPTH         ( 4096 ),
+        .TRIGIN_EN          ( 0 ),
+        .TRIGOUT_EN         ( 0 ),
+        .INPUT_PIPE_STAGES      ( 1 ),
+        .CAPTURE_CONTROL    ( 0 ),
+        .UUID   ( 128'hdb82276f69844d498d94880f99eb2fb2 ),
+        .CNDTNL_STRG_EN     ( 0 ),
+        .PROBE0_WIDTH       ( 1 ),
+        .PROBE0_TYPE        ( 1 )
+    ) la2 (
+        .bscan_CAPTURE                  ( bscan_CAPTURE ),
+        .bscan_DRCK                     ( bscan_DRCK ),
+        .bscan_RESET                    ( bscan_RESET ),
+        .bscan_RUNTEST                  ( bscan_RUNTEST ),
+        .bscan_SEL                      ( bscan_SEL ),
+        .bscan_SHIFT                    ( bscan_SHIFT ),
+        .bscan_TCK                      ( bscan_TCK_buffered ),
+        .bscan_TDI                      ( bscan_TDI ),
+        .bscan_TMS                      ( bscan_TMS ),
+        .bscan_UPDATE                   ( bscan_UPDATE ),
+        .edb_user_dr            ( edb_user_dr ),
+        .edb_module_select      ( la2_module_select  ),
+        .edb_module_inhibit     ( la2_module_inhibit ),
+        .edb_module_tdo         ( la2_module_tdo ),
+        .clk                    ( la2_clk ),
+        .trig_in                ( 1'b0 ),
+        .trig_in_ack            (  ),
+        .trig_out               (  ),
+        .trig_out_ack           ( 1'b0 ),
+        .probe0                 ( la2_probe0 )
+    );
+
+    edb_la_top #(
+        .NUM_PROBES         ( 1 ),
+        .DATA_DEPTH         ( 4096 ),
+        .TRIGIN_EN          ( 0 ),
+        .TRIGOUT_EN         ( 0 ),
+        .INPUT_PIPE_STAGES      ( 1 ),
+        .CAPTURE_CONTROL    ( 0 ),
+        .UUID   ( 128'hbc6ead3d75d24531bc88fe7e288f3bd2 ),
+        .CNDTNL_STRG_EN     ( 0 ),
+        .PROBE0_WIDTH       ( 1 ),
+        .PROBE0_TYPE        ( 1 )
+    ) la3 (
+        .bscan_CAPTURE                  ( bscan_CAPTURE ),
+        .bscan_DRCK                     ( bscan_DRCK ),
+        .bscan_RESET                    ( bscan_RESET ),
+        .bscan_RUNTEST                  ( bscan_RUNTEST ),
+        .bscan_SEL                      ( bscan_SEL ),
+        .bscan_SHIFT                    ( bscan_SHIFT ),
+        .bscan_TCK                      ( bscan_TCK_buffered ),
+        .bscan_TDI                      ( bscan_TDI ),
+        .bscan_TMS                      ( bscan_TMS ),
+        .bscan_UPDATE                   ( bscan_UPDATE ),
+        .edb_user_dr            ( edb_user_dr ),
+        .edb_module_select      ( la3_module_select  ),
+        .edb_module_inhibit     ( la3_module_inhibit ),
+        .edb_module_tdo         ( la3_module_tdo ),
+        .clk                    ( la3_clk ),
+        .trig_in                ( 1'b0 ),
+        .trig_in_ack            (  ),
+        .trig_out               (  ),
+        .trig_out_ack           ( 1'b0 ),
+        .probe0                 ( la3_probe0 )
     );
 
     debug_hub debug_hub_inst (

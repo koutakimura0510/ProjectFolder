@@ -1,6 +1,6 @@
 [dumpfile] "/home/kimura/workspace/ProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125/la0_waveform.vcd"
-[dumpfile_mtime] "日  1月 29 04:19:12 2023"
-[dumpfile_size] 8609
+[dumpfile_mtime] "日  1月 29 07:02:15 2023"
+[dumpfile_size] 36424
 [savefile] "/home/kimura/workspace/ProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125/la0_waveform.gtkw"
 [timestart] 0
 [size] 1000 600
@@ -9,12 +9,12 @@
 [signals_width] 126
 [sst_expanded] 1
 @22
-top.\ddr_reset_sequencer_inst/o_ddr_axi_rstn
-top.\ddr_reset_sequencer_inst/o_ddr_init_done
-top.\ddr_reset_sequencer_inst/o_ddr_cfg_seq_start
-top.\ddr_reset_sequencer_inst/qCntnRST
+top.\ddr_reset_sequencer_inst/r_ddr_axi_rstn
+top.\ddr_reset_sequencer_inst/r_ddr_init_done
 top.\ddr_reset_sequencer_inst/iSRST
-top.\ddr_reset_sequencer_inst/cnt_start[7:0]
-top.\ddr_reset_sequencer_inst/rstn_dly[4:0]
-top.\ddr_reset_sequencer_inst/qCntMaxCke
-top.\ddr_reset_sequencer_inst/o_ddr_cfg_seq_rst
+top.\ddr_reset_sequencer_inst/rs[1:0]
+top.\ddr_reset_sequencer_inst/rSeqMaxCke
+top.\ddr_reset_sequencer_inst/r_ddr_cfg_seq_start
+top.\ddr_reset_sequencer_inst/rSeqCnt[7:0]
+top.\ddr_reset_sequencer_inst/r_ddr_cfg_seq_rst
+top.rClk[0]

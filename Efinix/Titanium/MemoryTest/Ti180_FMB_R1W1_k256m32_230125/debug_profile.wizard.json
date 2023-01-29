@@ -3,7 +3,7 @@
         {
             "name": "la0",
             "type": "la",
-            "uuid": "5197458aa2f9411db857749376f13911",
+            "uuid": "a14514093e044b9c92d9d23f93a3cef6",
             "trigin_en": false,
             "trigout_en": false,
             "auto_inserted": true,
@@ -12,22 +12,12 @@
             "input_pipeline": 1,
             "probes": [
                 {
-                    "name": "ddr_reset_sequencer_inst/o_ddr_axi_rstn",
+                    "name": "ddr_reset_sequencer_inst/r_ddr_axi_rstn",
                     "width": 1,
                     "probe_type": 1
                 },
                 {
-                    "name": "ddr_reset_sequencer_inst/o_ddr_init_done",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "ddr_reset_sequencer_inst/o_ddr_cfg_seq_start",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "ddr_reset_sequencer_inst/qCntnRST",
+                    "name": "ddr_reset_sequencer_inst/r_ddr_init_done",
                     "width": 1,
                     "probe_type": 1
                 },
@@ -37,22 +27,86 @@
                     "probe_type": 1
                 },
                 {
-                    "name": "ddr_reset_sequencer_inst/cnt_start",
-                    "width": 8,
+                    "name": "ddr_reset_sequencer_inst/rs",
+                    "width": 2,
                     "probe_type": 1
                 },
                 {
-                    "name": "ddr_reset_sequencer_inst/rstn_dly",
-                    "width": 5,
-                    "probe_type": 1
-                },
-                {
-                    "name": "ddr_reset_sequencer_inst/qCntMaxCke",
+                    "name": "ddr_reset_sequencer_inst/rSeqMaxCke",
                     "width": 1,
                     "probe_type": 1
                 },
                 {
-                    "name": "ddr_reset_sequencer_inst/o_ddr_cfg_seq_rst",
+                    "name": "ddr_reset_sequencer_inst/r_ddr_cfg_seq_start",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "ddr_reset_sequencer_inst/rSeqCnt",
+                    "width": 8,
+                    "probe_type": 1
+                },
+                {
+                    "name": "ddr_reset_sequencer_inst/r_ddr_cfg_seq_rst",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "rClk[0]",
+                    "width": 1,
+                    "probe_type": 1
+                }
+            ]
+        },
+        {
+            "name": "la1",
+            "type": "la",
+            "uuid": "01f13d3f99084128812f30a968ea586b",
+            "trigin_en": false,
+            "trigout_en": false,
+            "auto_inserted": true,
+            "capture_control": false,
+            "data_depth": 4096,
+            "input_pipeline": 1,
+            "probes": [
+                {
+                    "name": "rClk[2]",
+                    "width": 1,
+                    "probe_type": 1
+                }
+            ]
+        },
+        {
+            "name": "la2",
+            "type": "la",
+            "uuid": "db82276f69844d498d94880f99eb2fb2",
+            "trigin_en": false,
+            "trigout_en": false,
+            "auto_inserted": true,
+            "capture_control": false,
+            "data_depth": 4096,
+            "input_pipeline": 1,
+            "probes": [
+                {
+                    "name": "rClk[1]",
+                    "width": 1,
+                    "probe_type": 1
+                }
+            ]
+        },
+        {
+            "name": "la3",
+            "type": "la",
+            "uuid": "bc6ead3d75d24531bc88fe7e288f3bd2",
+            "trigin_en": false,
+            "trigout_en": false,
+            "auto_inserted": true,
+            "capture_control": false,
+            "data_depth": 4096,
+            "input_pipeline": 1,
+            "probes": [
+                {
+                    "name": "rClk[3]",
                     "width": 1,
                     "probe_type": 1
                 }
@@ -187,143 +241,150 @@
                     },
                     {
                         "name": "la0_probe0",
-                        "net": "o_ddr_axi_rstn",
+                        "net": "r_ddr_axi_rstn",
                         "path": [
                             "ddr_reset_sequencer_inst"
                         ]
                     },
                     {
                         "name": "la0_probe1",
-                        "net": "o_ddr_init_done",
+                        "net": "r_ddr_init_done",
                         "path": [
                             "ddr_reset_sequencer_inst"
                         ]
                     },
                     {
                         "name": "la0_probe2",
-                        "net": "o_ddr_cfg_seq_start",
-                        "path": [
-                            "ddr_reset_sequencer_inst"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe3",
-                        "net": "qCntnRST",
-                        "path": [
-                            "ddr_reset_sequencer_inst"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe4",
                         "net": "iSRST",
                         "path": [
                             "ddr_reset_sequencer_inst"
                         ]
                     },
                     {
-                        "name": "la0_probe5[0]",
-                        "net": "cnt_start[0]",
+                        "name": "la0_probe3[0]",
+                        "net": "rs[0]",
                         "path": [
                             "ddr_reset_sequencer_inst"
                         ]
                     },
                     {
-                        "name": "la0_probe5[1]",
-                        "net": "cnt_start[1]",
+                        "name": "la0_probe3[1]",
+                        "net": "rs[1]",
                         "path": [
                             "ddr_reset_sequencer_inst"
                         ]
                     },
                     {
-                        "name": "la0_probe5[2]",
-                        "net": "cnt_start[2]",
+                        "name": "la0_probe4",
+                        "net": "rSeqMaxCke",
                         "path": [
                             "ddr_reset_sequencer_inst"
                         ]
                     },
                     {
-                        "name": "la0_probe5[3]",
-                        "net": "cnt_start[3]",
-                        "path": [
-                            "ddr_reset_sequencer_inst"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[4]",
-                        "net": "cnt_start[4]",
-                        "path": [
-                            "ddr_reset_sequencer_inst"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[5]",
-                        "net": "cnt_start[5]",
-                        "path": [
-                            "ddr_reset_sequencer_inst"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[6]",
-                        "net": "cnt_start[6]",
-                        "path": [
-                            "ddr_reset_sequencer_inst"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe5[7]",
-                        "net": "cnt_start[7]",
+                        "name": "la0_probe5",
+                        "net": "r_ddr_cfg_seq_start",
                         "path": [
                             "ddr_reset_sequencer_inst"
                         ]
                     },
                     {
                         "name": "la0_probe6[0]",
-                        "net": "rstn_dly[0]",
+                        "net": "rSeqCnt[0]",
                         "path": [
                             "ddr_reset_sequencer_inst"
                         ]
                     },
                     {
                         "name": "la0_probe6[1]",
-                        "net": "rstn_dly[1]",
+                        "net": "rSeqCnt[1]",
                         "path": [
                             "ddr_reset_sequencer_inst"
                         ]
                     },
                     {
                         "name": "la0_probe6[2]",
-                        "net": "rstn_dly[2]",
+                        "net": "rSeqCnt[2]",
                         "path": [
                             "ddr_reset_sequencer_inst"
                         ]
                     },
                     {
                         "name": "la0_probe6[3]",
-                        "net": "rstn_dly[3]",
+                        "net": "rSeqCnt[3]",
                         "path": [
                             "ddr_reset_sequencer_inst"
                         ]
                     },
                     {
                         "name": "la0_probe6[4]",
-                        "net": "rstn_dly[4]",
+                        "net": "rSeqCnt[4]",
+                        "path": [
+                            "ddr_reset_sequencer_inst"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[5]",
+                        "net": "rSeqCnt[5]",
+                        "path": [
+                            "ddr_reset_sequencer_inst"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[6]",
+                        "net": "rSeqCnt[6]",
+                        "path": [
+                            "ddr_reset_sequencer_inst"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6[7]",
+                        "net": "rSeqCnt[7]",
                         "path": [
                             "ddr_reset_sequencer_inst"
                         ]
                     },
                     {
                         "name": "la0_probe7",
-                        "net": "qCntMaxCke",
+                        "net": "r_ddr_cfg_seq_rst",
                         "path": [
                             "ddr_reset_sequencer_inst"
                         ]
                     },
                     {
                         "name": "la0_probe8",
-                        "net": "o_ddr_cfg_seq_rst",
-                        "path": [
-                            "ddr_reset_sequencer_inst"
-                        ]
+                        "net": "rClk[0]",
+                        "path": []
+                    },
+                    {
+                        "name": "la1_clk",
+                        "net": "iPLLCLK",
+                        "path": []
+                    },
+                    {
+                        "name": "la1_probe0",
+                        "net": "rClk[2]",
+                        "path": []
+                    },
+                    {
+                        "name": "la2_clk",
+                        "net": "iACLK",
+                        "path": []
+                    },
+                    {
+                        "name": "la2_probe0",
+                        "net": "rClk[1]",
+                        "path": []
+                    },
+                    {
+                        "name": "la3_clk",
+                        "net": "iDdrFCLK",
+                        "path": []
+                    },
+                    {
+                        "name": "la3_probe0",
+                        "net": "rClk[3]",
+                        "path": []
                     }
                 ]
             }
@@ -341,7 +402,7 @@
             "capture_control": false,
             "selected_nets": [
                 {
-                    "name": "o_ddr_axi_rstn",
+                    "name": "r_ddr_axi_rstn",
                     "width": 1,
                     "clk_domain": "iSCLK",
                     "selected_probe_type": "DATA AND TRIGGER",
@@ -351,27 +412,7 @@
                     ]
                 },
                 {
-                    "name": "o_ddr_init_done",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "ddr_reset_sequencer_inst"
-                    ]
-                },
-                {
-                    "name": "o_ddr_cfg_seq_start",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "ddr_reset_sequencer_inst"
-                    ]
-                },
-                {
-                    "name": "qCntnRST",
+                    "name": "r_ddr_init_done",
                     "width": 1,
                     "clk_domain": "iSCLK",
                     "selected_probe_type": "DATA AND TRIGGER",
@@ -391,7 +432,39 @@
                     ]
                 },
                 {
-                    "name": "cnt_start",
+                    "name": "rs",
+                    "width": 2,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "ddr_reset_sequencer_inst"
+                    ],
+                    "net_idx_left": 1,
+                    "net_idx_right": 0
+                },
+                {
+                    "name": "rSeqMaxCke",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "ddr_reset_sequencer_inst"
+                    ]
+                },
+                {
+                    "name": "r_ddr_cfg_seq_start",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "ddr_reset_sequencer_inst"
+                    ]
+                },
+                {
+                    "name": "rSeqCnt",
                     "width": 8,
                     "clk_domain": "iSCLK",
                     "selected_probe_type": "DATA AND TRIGGER",
@@ -403,19 +476,7 @@
                     "net_idx_right": 0
                 },
                 {
-                    "name": "rstn_dly",
-                    "width": 5,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "ddr_reset_sequencer_inst"
-                    ],
-                    "net_idx_left": 4,
-                    "net_idx_right": 0
-                },
-                {
-                    "name": "qCntMaxCke",
+                    "name": "r_ddr_cfg_seq_rst",
                     "width": 1,
                     "clk_domain": "iSCLK",
                     "selected_probe_type": "DATA AND TRIGGER",
@@ -425,14 +486,36 @@
                     ]
                 },
                 {
-                    "name": "o_ddr_cfg_seq_rst",
+                    "name": "rClk[2]",
+                    "width": 1,
+                    "clk_domain": "iPLLCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": []
+                },
+                {
+                    "name": "rClk[1]",
+                    "width": 1,
+                    "clk_domain": "iACLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": []
+                },
+                {
+                    "name": "rClk[0]",
                     "width": 1,
                     "clk_domain": "iSCLK",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
-                    "path": [
-                        "ddr_reset_sequencer_inst"
-                    ]
+                    "path": []
+                },
+                {
+                    "name": "rClk[3]",
+                    "width": 1,
+                    "clk_domain": "iDdrFCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": []
                 }
             ],
             "top_module": "MTopFmbTester",
