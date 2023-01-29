@@ -26,12 +26,10 @@ module edb_top (
     input  la0_probe2,
     input  la0_probe3,
     input  la0_probe4,
-    input  la0_probe5,
-    input  la0_probe6,
+    input  [7:0] la0_probe5,
+    input  [4:0] la0_probe6,
     input  la0_probe7,
-    input  la0_probe8,
-    input  la0_probe9,
-    input  [15:0] la0_probe10
+    input  la0_probe8
 );
 
     localparam HUB_CS_WIDTH = 15;
@@ -84,13 +82,13 @@ module edb_top (
 
     // debug core instances
     edb_la_top #(
-        .NUM_PROBES         ( 11 ),
+        .NUM_PROBES         ( 9 ),
         .DATA_DEPTH         ( 4096 ),
         .TRIGIN_EN          ( 0 ),
         .TRIGOUT_EN         ( 0 ),
         .INPUT_PIPE_STAGES      ( 1 ),
         .CAPTURE_CONTROL    ( 0 ),
-        .UUID   ( 128'h42f45c0905b3497d9d59b6355c63bc8d ),
+        .UUID   ( 128'h5197458aa2f9411db857749376f13911 ),
         .CNDTNL_STRG_EN     ( 0 ),
         .PROBE0_WIDTH       ( 1 ),
         .PROBE0_TYPE        ( 1 ),
@@ -102,18 +100,14 @@ module edb_top (
         .PROBE3_TYPE        ( 1 ),
         .PROBE4_WIDTH       ( 1 ),
         .PROBE4_TYPE        ( 1 ),
-        .PROBE5_WIDTH       ( 1 ),
+        .PROBE5_WIDTH       ( 8 ),
         .PROBE5_TYPE        ( 1 ),
-        .PROBE6_WIDTH       ( 1 ),
+        .PROBE6_WIDTH       ( 5 ),
         .PROBE6_TYPE        ( 1 ),
         .PROBE7_WIDTH       ( 1 ),
         .PROBE7_TYPE        ( 1 ),
         .PROBE8_WIDTH       ( 1 ),
-        .PROBE8_TYPE        ( 1 ),
-        .PROBE9_WIDTH       ( 1 ),
-        .PROBE9_TYPE        ( 1 ),
-        .PROBE10_WIDTH      ( 16 ),
-        .PROBE10_TYPE       ( 1 )
+        .PROBE8_TYPE        ( 1 )
     ) la0 (
         .bscan_CAPTURE                  ( bscan_CAPTURE ),
         .bscan_DRCK                     ( bscan_DRCK ),
@@ -142,9 +136,7 @@ module edb_top (
         .probe5                 ( la0_probe5 ),
         .probe6                 ( la0_probe6 ),
         .probe7                 ( la0_probe7 ),
-        .probe8                 ( la0_probe8 ),
-        .probe9                 ( la0_probe9 ),
-        .probe10                    ( la0_probe10 )
+        .probe8                 ( la0_probe8 )
     );
 
     debug_hub debug_hub_inst (

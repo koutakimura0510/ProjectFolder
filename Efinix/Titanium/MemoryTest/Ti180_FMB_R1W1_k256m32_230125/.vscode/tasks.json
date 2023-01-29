@@ -23,7 +23,7 @@
 			//-----------------------------------------------------------------------------
 			"label": "Compile",
 			"type": "shell",
-			"command": "python3 efx_run.py ./Ti180_FMB_R1W1_k256m32_230125.xml --flow compile;cp ./outflow/Ti180_FMB_R1W1_k256m32_230125.bit ./outflow/Ti180_FMB_R1W1_k256m32_230125.hex",
+			"command": "make all",
 			"group": {
 				"kind": "build",
 				"isDefault": true

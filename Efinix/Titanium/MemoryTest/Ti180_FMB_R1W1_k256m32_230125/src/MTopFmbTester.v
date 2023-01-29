@@ -96,23 +96,26 @@ input [  1:0] 	ddr4_BRESP_0
 assign oPLLBL1nRST = 1'b1;
 assign oPLLTL2nRST = 1'b1;
 //
-wire wSRST, wnSRST;
-reg  rSRST, rnSRST;
-reg  qLocked;
+reg [4:0] 	rSwRST;
+reg  		qSRST, rSRST, rnSRST;
+reg  		qLocked;
   
-always @(posedge iSCLK, negedge inPbSwX[0])
+always @(posedge iSCLK)
 begin
-	if (!inPbSwX[0])	rSRST <= 1'b1;
-	else if (qLocked) 	rSRST <= 1'b0;
-	else 				rSRST <= rSRST;
+	rSwRST <= {rSwRST[3:0], inPbSwX[0]};
 
-	if (!inPbSwX[0])	rnSRST <= 1'b0;
+	if (qSRST)			rSRST <= 1'b1;
+	else if (qLocked) 	rSRST <= 1'b0;
+	else 				rSRST <= 1'b1;
+
+	if (qSRST)			rnSRST <= 1'b0;
 	else if (qLocked) 	rnSRST <= 1'b1;
-	else 				rnSRST <= rnSRST;
+	else 				rnSRST <= 1'b0;
 end
 
 always @*
 begin
+	qSRST   <= (rSwRST == 5'b00000);
 	qLocked <= &{iPLLBL1Locked,iPLLTL2Locked};
 end
 
@@ -134,14 +137,17 @@ end
 wire w_ddr_axi_nreset;			assign ddr4_ARSTN_0   = w_ddr_axi_nreset;
 wire w_ddr_cfg_reset;			assign ddr4_CFG_RESET = w_ddr_cfg_reset;
 wire w_ddr_cfg_start;			assign ddr4_CFG_START = w_ddr_cfg_start;
-								assign ddr4_CFG_SEL   = 1'b0;
+								assign ddr4_CFG_SEL   = 1'b0;	// datasheet では low固定
+wire w_ddr_init_done;
   
 ddr_reset_sequencer ddr_reset_sequencer_inst (
-	.ddr_rstn_i			(rnSRST),
-	.clk				(iSCLK),
-	.ddr_rstn			(w_ddr_axi_nreset),
-	.ddr_cfg_seq_rst	(w_ddr_cfg_reset),
-	.ddr_cfg_seq_start	(w_ddr_cfg_start)
+	.iSRST				(rSRST),
+	.iSCLK				(iSCLK),
+	.iddr_cfg_done		(ddr4_CFG_DONE),
+	.o_ddr_axi_rstn		(w_ddr_axi_nreset),
+	.o_ddr_cfg_seq_rst	(w_ddr_cfg_reset),
+	.o_ddr_cfg_seq_start(w_ddr_cfg_start),
+	.o_ddr_init_done	(w_ddr_init_done)
 );
 
 //---------------------------------------------------------------------------
@@ -209,13 +215,12 @@ memory_checker memory_checker (
 //---------------------------------------------------------------------------
 // User Led
 //---------------------------------------------------------------------------
-assign oLedX[2] = iPLLBL1Locked;
-assign oLedX[3] = iPLLTL2Locked;
-assign oLedX[4] = ddr4_CFG_DONE;
+assign oLedX[2] = &{iPLLBL1Locked,iPLLTL2Locked};
+assign oLedX[3] = w_ddr_init_done;
+assign oLedX[4] = w_ddr_cfg_start;
 assign oLedX[5] = w_test_fail;
 assign oLedX[6] = w_test_done;
 assign oLedX[7] = w_test_run;
-
 
 //---------------------------------------------------------------------------
 endmodule	// MTopFmbTester

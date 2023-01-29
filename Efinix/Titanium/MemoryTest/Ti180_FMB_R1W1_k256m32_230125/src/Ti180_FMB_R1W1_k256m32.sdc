@@ -12,10 +12,13 @@
 
 # PLL Constraints
 #################
-create_clock -period 10.0000 iSCLK
-create_clock -period 7.5008 iDdrCoreCLK
-create_clock -period 1.6835 iDdrPhy1CLK
-create_clock -period 3.3670 iDdrPhy2CLK
+create_clock -period 10.000 iSCLK
+create_clock -period 30.000 iDdrFCLK
+# create_clock -period 1.6835 iDdrPhy1CLK
+# create_clock -period 1.6835 iDdrPhy1CLK
+# create_clock -period 3.3670 iDdrPhy2CLK
+create_clock -period 2.307 iDdrPCLK
+create_clock -period 4.615 iDdrCCLK
 
 # GPIO Constraints
 ####################

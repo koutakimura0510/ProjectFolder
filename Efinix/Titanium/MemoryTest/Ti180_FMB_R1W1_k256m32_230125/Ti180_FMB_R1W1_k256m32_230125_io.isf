@@ -1,6 +1,6 @@
 # Efinity Interface Configuration
-# Version: 2022.2.322.1.8
-# Date: 2023-01-27 17:42
+# Version: 2022.2.322
+# Date: 2023-01-28 21:03
 #
 # Copyright (C) 2017 - 2022 Efinix Inc. All rights reserved.
 #
@@ -71,7 +71,7 @@ design.set_device_property("Top","DYN_MUX7_EN","0","CLKMUX")
 
 # Create instance
 design.create_input_gpio("inPbSwX",1,0)
-design.create_output_gpio("oLedX",5,0)
+design.create_output_gpio("oLedX",7,2)
 design.create_pll_input_clock_gpio("iOscDdr")
 design.create_pll_input_clock_gpio("iOscSys")
 design.create_block("pll_inst1","PLL")
@@ -79,20 +79,13 @@ design.create_block("pll_inst2","PLL")
 design.create_block("ddr4","DDR")
 
 # Set property, non-defaults
-design.set_property("inPbSwX","PULL_OPTION","WEAK_PULLUP")
 design.set_property("inPbSwX","PULL_UP_ENA_PIN","iPushSw_PULL_UP_ENA[0]")
-design.set_property("inPbSwX[0]","IN_PIN","iPushSw[0]")
-design.set_property("inPbSwX[1]","IN_PIN","iPushSw[1]")
+design.set_property("inPbSwX[0]","IN_PIN","iPushSwX[0]")
+design.set_property("inPbSwX[1]","IN_PIN","iPushSwX[1]")
 design.set_property("inPbSwX[1]","DLY_ENA_PIN","inPbSwX_DLY_ENA[1]")
 design.set_property("inPbSwX[1]","DLY_RST_PIN","inPbSwX_DLY_RST[1]")
 design.set_property("inPbSwX[1]","DLY_INC_PIN","inPbSwX_DLY_CTRL[1]")
 design.set_property("inPbSwX[1]","PULL_UP_ENA_PIN","iPushSw_PULL_UP_ENA[1]")
-design.set_property("oLedX[0]","OUT_PIN","oLed[0]")
-design.set_property("oLedX[1]","OUT_PIN","oLed[1]")
-design.set_property("oLedX[2]","OUT_PIN","oLed[2]")
-design.set_property("oLedX[3]","OUT_PIN","oLed[3]")
-design.set_property("oLedX[4]","OUT_PIN","oLed[4]")
-design.set_property("oLedX[5]","OUT_PIN","oLed[5]")
 design.set_property("iOscDdr","IO_STANDARD","3.3_V_LVCMOS")
 design.set_property("pll_inst1","CLKOUT0_EN","1","PLL")
 design.set_property("pll_inst1","CLKOUT1_EN","0","PLL")
@@ -103,7 +96,7 @@ design.set_property("pll_inst1","REFCLK_SOURCE","EXTERNAL","PLL")
 design.set_property("pll_inst1","CLKOUT0_DIV","16","PLL")
 design.set_property("pll_inst1","CLKOUT0_DYNPHASE_EN","0","PLL")
 design.set_property("pll_inst1","CLKOUT0_PHASE_SETTING","0","PLL")
-design.set_property("pll_inst1","CLKOUT0_PIN","iDdtCoreCLK","PLL")
+design.set_property("pll_inst1","CLKOUT0_PIN","iDdrCoreCLK","PLL")
 design.set_property("pll_inst1","CLKOUT3_CLKMUX_BUF_PIN","","PLL")
 design.set_property("pll_inst1","CLKOUT3_CONN_TYPE","gclk","PLL")
 design.set_property("pll_inst1","CLKOUT3_DIV","2","PLL")
@@ -248,12 +241,12 @@ design.set_property("ddr4","VREF_SETTING","23.000","DDR")
 # Set resource assignment
 design.assign_pkg_pin("inPbSwX[0]","D2")
 design.assign_pkg_pin("inPbSwX[1]","E4")
-design.assign_pkg_pin("oLedX[0]","E1")
-design.assign_pkg_pin("oLedX[1]","F1")
-design.assign_pkg_pin("oLedX[2]","C2")
-design.assign_pkg_pin("oLedX[3]","E3")
-design.assign_pkg_pin("oLedX[4]","B1")
-design.assign_pkg_pin("oLedX[5]","B2")
+design.assign_pkg_pin("oLedX[2]","E1")
+design.assign_pkg_pin("oLedX[3]","F1")
+design.assign_pkg_pin("oLedX[4]","C2")
+design.assign_pkg_pin("oLedX[5]","E3")
+design.assign_pkg_pin("oLedX[6]","B1")
+design.assign_pkg_pin("oLedX[7]","B2")
 design.assign_pkg_pin("iOscDdr","K17")
 design.assign_pkg_pin("iOscSys","C1")
 design.assign_resource("pll_inst1","PLL_TL2","PLL")

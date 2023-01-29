@@ -235,9 +235,29 @@ end
 //-----------------------------------------------------------------------------
 // Rsponce
 //-----------------------------------------------------------------------------
-assign o_test_done = 1'b0;
-assign o_test_fail = 1'b0;
-assign o_test_run  = 1'b0;
+reg r_test_done;
+reg r_test_fail;
+reg r_test_run;
+
+always @(posedge iAxiCLK)
+begin
+	if (iAxiRST)
+	begin
+		r_test_done	<= 1'b1;
+		r_test_fail	<= 1'b1;
+		r_test_run	<= 1'b1;
+	end
+	else
+	begin
+		r_test_done	<= 1'b0;
+		r_test_fail	<= 1'b0;
+		r_test_run	<= 1'b0;
+	end
+end
+
+assign o_test_done = r_test_done;
+assign o_test_fail = r_test_fail;
+assign o_test_run  = r_test_run;
 
 
 // always @(posedge iAxiCLK)
