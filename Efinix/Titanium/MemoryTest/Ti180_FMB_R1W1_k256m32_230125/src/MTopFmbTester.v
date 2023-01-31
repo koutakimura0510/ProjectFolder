@@ -10,7 +10,9 @@
  *
  *~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*/
 //---------------------------------------------------------------------------
-module MTopFmbTester (
+module MTopFmbTester #(
+	pAxiBusWidth	= 512
+)(
 //---------------------------------------------------------------------------
 // Board User-I/F and Test Port
 output[ 7: 2]	oLedX,
@@ -56,7 +58,7 @@ output 			ddr4_ARQOS_0,
 output[ 32:0] 	ddr4_ARADDR_0,
 output 			ddr4_ARAPCMD_0,
 // AXI4 Read Data Channel
-input [255:0] 	ddr4_RDATA_0,
+input [pAxiBusWidth-1:0] 	ddr4_RDATA_0,
 input [  5:0] 	ddr4_RID_0,
 input 			ddr4_RLAST_0,
 output 			ddr4_RREADY_0,
@@ -78,7 +80,7 @@ output 			ddr4_AWAPCMD_0,
 output 			ddr4_AWCOBUF_0,
 // AXI4 Write Data Channel
 input 			ddr4_WREADY_0,
-output[255:0] 	ddr4_WDATA_0,
+output[pAxiBusWidth-1:0] 	ddr4_WDATA_0,
 output 			ddr4_WLAST_0,
 output[ 63:0] 	ddr4_WSTRB_0,
 output 			ddr4_WVALID_0,
@@ -102,7 +104,7 @@ output 			ddr4_ARQOS_1,
 output[ 32:0] 	ddr4_ARADDR_1,
 output 			ddr4_ARAPCMD_1,
 // AXI4 Read Data Channel
-input [255:0] 	ddr4_RDATA_1,
+input [pAxiBusWidth-1:0] 	ddr4_RDATA_1,
 input [  5:0] 	ddr4_RID_1,
 input 			ddr4_RLAST_1,
 output 			ddr4_RREADY_1,
@@ -124,7 +126,7 @@ output 			ddr4_AWAPCMD_1,
 output 			ddr4_AWCOBUF_1,
 // AXI4 Write Data Channel
 input 			ddr4_WREADY_1,
-output[255:0] 	ddr4_WDATA_1,
+output[pAxiBusWidth-1:0] 	ddr4_WDATA_1,
 output 			ddr4_WLAST_1,
 output[ 63:0] 	ddr4_WSTRB_1,
 output 			ddr4_WVALID_1,
@@ -222,7 +224,9 @@ ddr_reset_sequencer #(
 //---------------------------------------------------------------------------
 wire w_test_done, w_test_fail, w_test_run;
 
-memory_checker memory_checker_1 (
+memory_checker #(
+	.pAxiBusWidth(pAxiBusWidth)
+) memory_checker_1 (
 // AXI4 Read Address Channel
 	.o_arid_0(ddr4_ARID_0),
 	.i_arready_0(ddr4_ARREADY_0),
@@ -276,7 +280,9 @@ memory_checker memory_checker_1 (
 	.iACLK(iACLK)
 );
 //
-memory_checker memory_checker_2 (
+memory_checker #(
+	.pAxiBusWidth(pAxiBusWidth)
+) memory_checker_2 (
 // AXI4 Read Address Channel
 	.o_arid_0(ddr4_ARID_1),
 	.i_arready_0(ddr4_ARREADY_1),
