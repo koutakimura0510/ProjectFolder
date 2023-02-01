@@ -1,7 +1,7 @@
-[dumpfile] "/home/kimura/workspace/ProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125/la0_waveform.vcd"
-[dumpfile_mtime] "日  1月 29 07:02:15 2023"
-[dumpfile_size] 36424
-[savefile] "/home/kimura/workspace/ProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125/la0_waveform.gtkw"
+[dumpfile] "C:\Users\kouta\workspace\001_myProjectFolder\Efinix\Titanium\MemoryTest\Ti180_FMB_R1W1_k256m32_230125\la0_waveform.vcd"
+[dumpfile_mtime] "Wed Feb 01 10:22:23 2023"
+[dumpfile_size] 2828
+[savefile] "C:\Users\kouta\workspace\001_myProjectFolder\Efinix\Titanium\MemoryTest\Ti180_FMB_R1W1_k256m32_230125\la0_waveform.gtkw"
 [timestart] 0
 [size] 1000 600
 [pos] -1 -1
@@ -9,12 +9,30 @@
 [signals_width] 126
 [sst_expanded] 1
 @22
-top.\ddr_reset_sequencer_inst/r_ddr_axi_rstn
-top.\ddr_reset_sequencer_inst/r_ddr_init_done
-top.\ddr_reset_sequencer_inst/iSRST
-top.\ddr_reset_sequencer_inst/rs[1:0]
-top.\ddr_reset_sequencer_inst/rSeqMaxCke
-top.\ddr_reset_sequencer_inst/r_ddr_cfg_seq_start
-top.\ddr_reset_sequencer_inst/rSeqCnt[7:0]
-top.\ddr_reset_sequencer_inst/r_ddr_cfg_seq_rst
-top.rClk[0]
+top.\memory_checker_0/iRlast_mon
+top.\memory_checker_0/iBresp_mon[1:0]
+top.\memory_checker_0/iBid_mon[5:0]
+top.\memory_checker_0/iRresp_mon[1:0]
+top.\memory_checker_0/iRid_mon[5:0]
+top.\memory_checker_0/iARready_mon
+top.\memory_checker_0/iWready_mon
+top.\memory_checker_0/iAWready_mon
+top.\memory_checker_0/iRvalid_mon
+top.\memory_checker_0/iBvalid_mon
+top.\memory_checker_0/oARvalid_mon
+top.\memory_checker_0/oWlast_mon
+top.\memory_checker_0/oWvalid_mon
+top.\memory_checker_0/oRcs_mon
+top.\memory_checker_0/oWbank_mon[2:0]
+top.\memory_checker_0/oRbank_mon[2:0]
+top.\memory_checker_0/oRcol_mon[9:0]
+top.\memory_checker_0/oRrow_mon[16:0]
+top.\memory_checker_0/oRdata_mon[31:0]
+top.\memory_checker_0/oRready_mon
+top.\memory_checker_0/oWcs_mon
+top.\memory_checker_0/oWdata_mon[31:0]
+top.\memory_checker_0/oWcol_mon[9:0]
+top.\memory_checker_0/oAWvalid_mon
+top.\memory_checker_0/oBready_mon
+top.\memory_checker_0/oWrow_mon[16:0]
+top.\memory_checker_0/iRST

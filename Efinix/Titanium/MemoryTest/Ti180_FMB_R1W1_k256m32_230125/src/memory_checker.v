@@ -12,11 +12,11 @@
 //---------------------------------------------------------------------------
 module memory_checker #(
 	parameter pAxi4BusWidth = 512,
-    parameter pWidth		= 16,
+    parameter pDataBitWidth	= 16,
     parameter pAlen			= 23,
     parameter pStartAdrs	= 32'h00000000,
-    parameter pStopAdrs		= 32'h00100000,
-    parameter pAdrsOffset	= (pAlen + 1) * (pWidth / 8)
+    parameter pStopAdrs		= 32'h00100000
+    // parameter pAdrsOffset	= (pAlen + 1) * (pWidth / 8)
 )(
 // AXI4 Read Address Channel
 output[  7:0] 				o_arlen,		// Burst Length, arlen + 1
@@ -88,90 +88,142 @@ localparam [2:0]
 
 // [32] CS, [31:15] Row = 17bit, [14:12] Bank, [11:2] Col =10 bit, [1:0] Datapath
 //------------------------------------------------------------------------------
+// localparam  lpWriteSeq;
+reg [2:0] 	rs;
+reg [1:0] 	rBurstCnt;
+reg 		qBurstMaxCke;
+reg 		q_wseq_cke;
 // AXI4 Write Address Channel
-// reg [2:0] 	rs;
-reg 		r_wcs;
-reg [16:0]	r_wrow;
-reg	[2:0]	r_wbank;
-reg [9:0]	r_wcol;					assign o_awaddr		= {r_wcs,r_wrow,r_wbank,r_wcol,2'b00};
-									assign o_awcache	= 4'b0000;
-									assign o_awqos		= 1'b0;
-									assign o_awallstrb	= 1'b0;
-									assign o_awapcmd	= 1'b0;
-									assign o_awcobuf	= 1'b0;
-									assign o_awid		= 6'd0;
-									assign o_awlock		= 1'b0;
-									assign o_awlen		= 8'd1;
-									assign o_awsize		= 3'b000;
-									assign o_awburst	= 2'b00;
-reg 		r_awvalid;				assign o_awvalid	= r_awvalid;
-//------------------------------------------------------------------------------
+reg 					r_wcs;
+reg [16:0]				r_wrow;
+reg	[2:0]				r_wbank;
+reg [9:0]				r_wcol;
+reg 					r_awvalid, q_awvalid_cke;
 // AXI4 Write Data Channel
-reg [pAxi4BusWidth-1:0]	r_wdata;				assign o_wdata		= r_wdata;
-reg 					r_wlast;				assign o_wlast		= r_wlast;
-reg 					r_wvalid;				assign o_wvalid		= r_wvalid;
-												assign o_wstrb		= {64{1'b1}};
-reg 					r_awready;
-reg 					r_wready;
-//------------------------------------------------------------------------------
+reg [pAxi4BusWidth-1:0]	r_wdata;
+reg 					r_wlast;
+reg 					r_wvalid, q_wvalid_cke;
 // AXI4 Write Response Channel
-//
-reg 					r_bready;				assign o_bready 		= r_bready;
-reg 					q_awready;
-reg 					q_wready;
-reg [5:0] 				r_bid;
-reg [1:0] 				r_bresp;
+reg 					r_bready;
 
 always @(posedge iCLK)
 begin
-	if (iRST)
-	begin
-		r_wcs		<= 1'b0;
-		r_wrow		<= 17'd0;
-		r_wbank		<= 3'd0;
-		r_wcol		<= 10'd0;
-		r_awvalid 	<= 1'b0;
-		r_wvalid	<= 1'b0;
-		r_wdata		<= {pAxi4BusWidth{1'b0}};
-		r_wlast		<= 1'b0;
-		r_bready  	<= 1'b0;
-	end
-	else
-	begin 
-		r_wlast		<= 1'b1;
-		r_wcs		<= 1'b0;
-		r_wbank		<= 3'd0;
-		r_wcol		<= 10'd0;
+	// adrs
+	if (iRST)	r_wcs	<= 1'b0;
+	else 		r_wcs	<= 1'b0;
 
-		if (q_awready)		r_wrow	<= r_wrow  + 1'b1;
-		else 				r_wrow	<= r_wrow;
+	if (iRST)	r_wbank	<= 3'd0;
+	else 		r_wbank	<= 3'd0;
 
-		if (q_awready) 		r_wdata	<= r_wdata + 1'b1;
-		else 				r_wdata	<= r_wdata;
-		
-		if (i_bvalid)		r_bready <= 1'b1;
-		else 				r_bready <= 1'b0;
+	if (iRST)	r_wrow	<= 17'd0;
+	else 		r_wrow	<= 17'd0;
 
-		if (q_awready)		r_awvalid <= 1'b0;
-		else				r_awvalid <= 1'b1;
+	if (iRST)	r_wcol	<= 10'd0;
+	else 		r_wcol	<= 10'd0;
 
-		if (q_wready)		r_wvalid <= 1'b0;
-		else				r_wvalid <= 1'b1;
-	end
+	// Data
+	if (iRST)				r_wdata	<= {pAxi4BusWidth{1'b0}};
+	else if (q_wseq_cke) 	r_wdata	<= r_wdata + 1'b1;
+	else 					r_wdata	<= r_wdata;
+
+	if (iRST) 				r_wlast <= 1'b0;
+	else if (qBurstMaxCke)	r_wlast <= 1'b1;
+	else					r_wlast <= 1'b0;
+
+	// ready, valid
+	if (iRST)				r_awvalid 	<= 1'b0;
+	else if (q_awvalid_cke)	r_awvalid 	<= ~r_awvalid;
+	else 					r_awvalid 	<=  r_awvalid;
+
+	if (iRST)				r_wvalid 	<= 1'b0;
+	else if (q_wvalid_cke)	r_wvalid 	<= ~r_wvalid;
+	else 					r_wvalid 	<=  r_wvalid;
+
+	if (iRST)				r_bready 	<= 1'b0;
+	else 					r_bready 	<= 1'b1;	// テスト用なので Master は常時 Assert
+end
+
+always @(posedge iCLK)
+begin
+	if (iRST) 				rBurstCnt <= 2'd0;
+	else if (q_wseq_cke)	rBurstCnt <= rBurstCnt + 1'b1;
+	else 					rBurstCnt <= rBurstCnt;
 end
 
 always @*
 begin
-	q_awready <= i_awready;
-	q_wready  <= i_wready;
+	casex ( {r_awvalid,i_awready,r_wvalid} )
+		'b0x0:		q_awvalid_cke <= 1'b1;	// Assert
+		'b11x:		q_awvalid_cke <= 1'b1;	// Dissert
+		default: 	q_awvalid_cke <= 1'b0;
+	endcase
+
+	casex ( {r_awvalid,qBurstMaxCke,r_wvalid,i_wready} )
+		'b1x0x:		q_wvalid_cke <= 1'b1;	// Assert
+		'bx111:		q_wvalid_cke <= 1'b1;	// Dissert
+		default: 	q_wvalid_cke <= 1'b0;
+	endcase
+	//
+	q_wseq_cke   <= &{r_wvalid,i_wready};	// Master/Slave OK
+	qBurstMaxCke <= rBurstCnt == 2'd3;		// Last 信号用
 end
+
+assign o_wdata		= r_wdata;
+assign o_wlast		= r_wlast;
+assign o_wvalid		= r_wvalid;
+assign o_wstrb		= {64{1'b1}};
+//
+assign o_awaddr		= {r_wcs,r_wrow,r_wbank,r_wcol,2'b00};
+assign o_awcache	= 4'b0000;
+assign o_awqos		= 1'b0;
+assign o_awallstrb	= 1'b0;
+assign o_awapcmd	= 1'b0;
+assign o_awcobuf	= 1'b0;
+assign o_awid		= 6'd0;
+assign o_awlock		= 1'b0;
+assign o_awlen		= 8'd3;
+assign o_awsize		= 3'd0;
+assign o_awburst	= 2'b01;
+assign o_awvalid	= r_awvalid;
+//
+assign o_bready 	= r_bready;
+
+//-----------------------------------------------------------------------------
+// ILA monitor
+//-----------------------------------------------------------------------------
+reg 		oWcs_mon;
+reg [16:0] 	oWrow_mon;
+reg [2:0] 	oWbank_mon;
+reg [9:0] 	oWcol_mon;
+reg 		oAWvalid_mon;
+reg 		oWvalid_mon;
+reg [31:0] 	oWdata_mon;
+reg 		oWlast_mon;
+reg 		iAWready_mon;
+reg 		iWready_mon;
+//
+reg [5:0]	iBid_mon;
+reg 		oBready_mon;
+reg [1:0]	iBresp_mon;
+reg 		iBvalid_mon;
 
 always @(posedge iCLK)
 begin
-	r_awready	<= i_awready;
-	r_wready	<= i_wready;
-	r_bid		<= i_bid;
-	r_bresp		<= i_bresp;
+	oWcs_mon		<= r_wcs;
+	oWrow_mon		<= r_wrow;
+	oWbank_mon		<= r_wbank;
+	oWcol_mon		<= r_wcol;
+	oAWvalid_mon	<= r_awvalid;
+	oWvalid_mon		<= r_wvalid;
+	oWdata_mon		<= r_wdata[31:0];
+	oWlast_mon		<= r_wlast;
+	iAWready_mon	<= i_awready;
+	iWready_mon		<= i_wready;
+	//
+	iBid_mon		<= i_bid;
+	oBready_mon		<= r_bready;
+	iBresp_mon		<= i_bresp;
+	iBvalid_mon		<= i_bvalid;
 end
 
 //-----------------------------------------------------------------------------
@@ -195,14 +247,10 @@ reg 		r_arvalid;				assign o_arvalid	= r_arvalid;
 //-----------------------------------------------------------------------------
 // AXI4 Read Data Channel
 reg 					r_rready;				assign o_rready = r_rready;
-//
 reg [pAxi4BusWidth-1:0] r_rdata;
 reg 					q_arready;
 reg 					q_valid;
-// monitor
-reg 					r_rlast;
-reg 					r_arready;
-reg 					r_rready;
+reg 					q_radrs_cke;
 
 always @(posedge iCLK)
 begin
@@ -222,28 +270,60 @@ begin
 		r_rcol		<= 10'd0;
 		r_rdata		<= i_rdata;
 
-		if (q_arready)	r_rrow <= r_rrow + 1'b1;
-		else			r_rrow <= r_rrow;
+		// if (q_arready)	r_rrow <= r_rrow;
+		r_rrow <= r_rrow;
 
-		if (q_arready)	r_arvalid <= 1'b0;
-		else			r_arvalid <= 1'b1;
+		// if (q_arready)	r_arvalid <= 1'b0;
+		// else			r_arvalid <= 1'b1;
+		r_arvalid <= 1'b0;
 
-		if (q_valid) 	r_rready <= 1'b1;
-		else			r_rready <= 1'b0;
+		// if (q_valid) 	r_rready <= 1'b1;
+		// else			r_rready <= 1'b0;
+		r_rready <= 1'b0;
 	end
 end
 
 always @*
 begin
+	q_radrs_cke <= (r_rcol == r_wcol);
 	q_arready	<= i_arready;
 	q_valid  	<= i_rvalid;
 end
 
+
+//-----------------------------------------------------------------------------
+// ILA monitor
+//-----------------------------------------------------------------------------
+reg [31:0]	oRdata_mon;
+reg 		oRcs_mon;
+reg [16:0] 	oRrow_mon;
+reg [2:0]  	oRbank_mon;
+reg [9:0]  	oRcol_mon;
+reg 		oARvalid_mon;
+reg 		oRready_mon;
+reg			iRlast_mon;
+reg [5:0]	iRid_mon;
+reg [1:0]	iRresp_mon;
+reg 		iRvalid_mon;
+reg			iARready_mon;
+
 always @(posedge iCLK)
 begin
-	r_rlast		<= i_rlast;
-	r_arready	<= i_arready;
+	oRdata_mon		<= r_rdata[31:0];
+	oRcs_mon		<= r_rcs;
+	oRrow_mon		<= r_rrow;
+	oRbank_mon		<= r_rbank;
+	oRcol_mon		<= r_rcol;
+	oARvalid_mon	<= r_arvalid;
+	oRready_mon		<= r_rready;
+	iRlast_mon		<= i_rlast;
+	iRid_mon		<= i_rid;
+	iRresp_mon		<= i_rresp;
+	iRvalid_mon		<= i_rvalid;
+	iARready_mon	<= i_arready;
 end
+
+
 
 //-----------------------------------------------------------------------------
 // Rsponce

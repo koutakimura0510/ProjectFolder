@@ -126,13 +126,10 @@ input [ 1: 0]	inPbSwX,
 //---------------------------------------------------------------------------
 // PLL-I/F Block port
 input 			iSCLK,				// System CLK 100[MHz]
-input 			iACLK,				// Axi CLK 100[MHz]
 input 			iDdrFCLK,
 input 			iPLLBL1Locked,		// BL1 Locked
-input 			iPLLBR0Locked,		// BR0 Locked
 input 			iPLLTL2Locked,		// TL2 Locked
 output 			oPLLBL1nRST,		// PLL BL1 nRST
-output 			oPLLBR0nRST,		// PLL BR0 nRST
 output 			oPLLTL2nRST			// PLL TL2 nRST
 //
 );
@@ -141,11 +138,9 @@ output 			oPLLTL2nRST			// PLL TL2 nRST
 // System リセット生成
 //---------------------------------------------------------------------------
 assign 	oPLLBL1nRST = 1'b1;
-assign 	oPLLBR0nRST = 1'b1;
 assign 	oPLLTL2nRST = 1'b1;
 //
 reg  	rSRST, rnSRST;
-reg  	rARST, rnARST;
 reg  	qLocked;
   
 always @(posedge iSCLK, negedge qLocked)
@@ -157,18 +152,9 @@ begin
 	else 				rnSRST <= 1'b1;
 end
 
-always @(posedge iACLK, negedge qLocked)
-begin
-	if (!qLocked) 		rARST  <= 1'b1;
-	else 				rARST  <= 1'b0;
-
-	if (!qLocked) 		rnARST <= 1'b0;
-	else 				rnARST <= 1'b1;
-end
-
 always @*
 begin
-	qLocked <= &{inPbSwX[0],iPLLBL1Locked,iPLLBR0Locked,iPLLTL2Locked};
+	qLocked <= &{inPbSwX[0],iPLLBL1Locked,iPLLTL2Locked};
 end
 
 // EFX_GBUFCE # (
@@ -199,8 +185,8 @@ ddr_reset_sequencer #(
 	.o_ddr_cfg_reset	(w_ddr_cfg_reset),
 	.o_ddr_cfg_start	(w_ddr_cfg_start),
 	.o_ddr_cfg_done		(w_ddr_cfg_done),
-	.inRST				(rnARST),
-	.iCLK				(iACLK)
+	.inRST				(rnSRST),
+	.iCLK				(iSCLK)
 );
 
 assign ddr4_ARSTN_0	  = w_ddr_axi_nreset;
@@ -216,6 +202,7 @@ assign ddr4_CFG_SEL   = 1'b0;	// 自動キャリブレーション使用時は L
 // [32] CS, [31:15] Row = 17bit, [14:12] Bank, [11:2] Col =10 bit, [1:0] Datapath
 //---------------------------------------------------------------------------
 wire w_test_done, w_test_fail, w_test_run;
+reg  qMemRST;
 
 memory_checker #(
 	.pAxi4BusWidth(pAxi4BusWidth)
@@ -249,27 +236,30 @@ memory_checker #(
 	.i_cfg_done(w_ddr_cfg_done),		.o_test_done(w_test_done),
 	.o_test_fail(w_test_fail),			.o_test_run(w_test_run),
 // common
-	.iARST(rARST),
-	.iACLK(iACLK)
+	.iRST(qMemRST),
+	.iCLK(iSCLK)
 );
 
-
+always @*
+begin
+	qMemRST <= ~w_ddr_cfg_done;
+end
 
 
 //-----------------------------------------------------------------------------
-// debug
+// DDR PLL が正常に動作しているか確認するためのカウンタ
 //-----------------------------------------------------------------------------
 localparam lpCntDgBitWidth = 23;
 reg [lpCntDgBitWidth-1:0] rCntDg;
 reg rCntDgSel, qCntDgCke;
 
-always @(posedge iDdrFCLK)
+always @(posedge iDdrFCLK, negedge qLocked)
 begin
-	if (rSRST)			rCntDgSel <= 1'b1;
+	if (!qLocked)		rCntDgSel <= 1'b1;
 	else if (qCntDgCke)	rCntDgSel <= ~rCntDgSel;
 	else 				rCntDgSel <=  rCntDgSel;
 
-	if (rSRST)			rCntDg <= {lpCntDgBitWidth{1'b0}};
+	if (!qLocked)		rCntDg <= {lpCntDgBitWidth{1'b0}};
 	else if (qCntDgCke) rCntDg <= {lpCntDgBitWidth{1'b0}};
 	else 				rCntDg <= rCntDg + 1'b1;
 end

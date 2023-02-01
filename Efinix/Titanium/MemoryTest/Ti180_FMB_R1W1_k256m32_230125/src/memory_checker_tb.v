@@ -19,8 +19,10 @@ module memory_checker_tb;
 //-----------------------------------------------------------------------------
 localparam lpCLK = 2;
 
-reg rRST = 1'b1;
-reg rCLK = 1'b0;
+reg  rRST = 1'b1;
+reg  rCLK = 1'b0;
+wire wCLK;			assign wCLK = rCLK;
+wire wRST;			assign wRST = rRST;
 
 always
 begin
@@ -39,31 +41,31 @@ endtask
 //-----------------------------------------------------------------------------
 // AMBA AXI4 I/F reg,wire list
 //-----------------------------------------------------------------------------
-localparam lpAxi4BusWidth 	= 512,
-localparam lpWidth			= 16,
-localparam lpAlen			= 23,
-localparam lpStartAdrs		= 32'h00000000,
-localparam lpStopAdrs		= 32'h00100000,
-localparam lpAdrsOffset		= (pAlen + 1) * (pWidth / 8)
+localparam lpAxi4BusWidth 	= 256;
+localparam lpDataBitWidth	= 16;
+localparam lpAlen			= 23;
+localparam lpStartAdrs		= 32'h00000000;
+localparam lpStopAdrs		= 32'h00100000;
+localparam lpAdrsOffset		= (lpAlen + 1) * (lpDataBitWidth / 8);
 
 // AXI4 Read Address Channel
 wire[  7:0] 				w_arlen;		// Burst Length, arlen + 1
 wire[  2:0] 				w_arsize;		// Burst Size, 1,2,4,8,16,32,64,128
 wire[  1:0] 				w_arburst;		// Burst Type, 0.固定アドレス, 1.アドレス自動インクリメント
 wire[ 32:0] 				w_araddr;
-reg  						r_arready;
+reg  						w_arready;
 wire 						w_arvalid;
 wire[  5:0] 				w_arid;
 wire 						w_arlock;		// 0.通常, 1.排他的アクセス
 wire 						w_arqos;
 wire 						w_arapcmd;
 // AXI4 Read Data Channel
-reg  [pAxi4BusWidth-1:0] 	r_rdata;
-reg  [  5:0] 				r_rid;
-reg  						r_rlast;
-reg  [  1:0] 				r_rresp;
+reg  [pAxi4BusWidth-1:0] 	w_rdata;
+reg  [  5:0] 				w_rid;
+reg  						w_rlast;
+reg  [  1:0] 				w_rresp;
 wire 						w_rready;		// 受信完了
-reg 						r_rvalid;
+reg 						w_rvalid;
 // AXI4 Write Address Channel
 wire[  3:0] 				w_awcache;
 wire 						w_awqos;		// 品質?
@@ -76,94 +78,110 @@ wire[  7:0] 				w_awlen;
 wire[  2:0] 				w_awsize;
 wire[  1:0] 				w_awburst;
 wire 						w_awlock;
-reg 						r_awready;
+reg 						w_awready;
 wire 						w_awvalid;
 // AXI4 Write Data Channel
-reg 						r_wready;		// 受信完了
+reg 						w_wready;		// 受信完了
 wire[pAxi4BusWidth-1:0] 	w_wdata;
 wire 						w_wlast;		// Burst 転送最後のときに Assert
 wire[ 63:0] 				w_wstrb;		// 有効レーンBit
 wire 						w_wvalid;
 // AXI4 Write Response Channel
-reg [  5:0] 				r_bid;
-reg [  1:0] 				r_bresp;		// 00.通常のアクセス成功, 10.エラー, 11.エラー
+reg [  5:0] 				w_bid;
+reg [  1:0] 				w_bresp;		// 00.通常のアクセス成功, 10.エラー, 11.エラー
 wire 						w_bready;
-reg 						e_bvalid;
+reg 						w_bvalid;
 // DDR Status
-reg							r_cfg_done;
+reg							w_ddr_cfg_done;	// caribration done
 wire						w_test_done;	// test Complete
 wire 						w_test_fail;	// test NG
 wire 						w_test_run;		// test running
 
-
-//-----------------------------------------------------------------------------
-// DDR Hard IP に見立てた module
-//-----------------------------------------------------------------------------
-
+// ddr_hard_ip
+ddr_hard_ip #(
+	.pAxi4BusWidth(lpAxi4BusWidth),
+    .pDataBitWidth(lpDataBitWidth),
+    .pStartAdrs(lpStartAdrs),
+    .pStopAdrs(lpStopAdrs),
+    .pAdrsOffset(lpAdrsOffset)
+) ddr_hard_ip (
+// AXI4 Read Address Channel
+	.i_arlen(w_arlen),			.i_arsize(w_arsize),
+	.i_arburst(w_arburst),		.i_araddr(w_araddr),
+	.i_arid(w_arid),			.i_arlock(w_arlock),
+	.i_arqos(w_arqos),			.i_arapcmd(w_arapcmd),
+	.o_arready(w_arready),		.i_arvalid(w_arvalid),
+// AXI4 Read Data Channel
+	.o_rdata(w_rdata),			.o_rlast(w_rlast),
+	.o_rid(w_rid),				.o_rresp(w_rresp),
+	.i_rready(w_rready),		.o_rvalid(w_rvalid),
+// AXI4 Write Address Channel
+	.i_awcache(w_awcache),		.i_awqos(w_awqos),
+	.i_awaddr(w_awaddr),		.i_awallstrb(w_awallstrb),
+	.i_awapcmd(w_awapcmd),		.i_awcobuf(w_awcobuf),
+	.i_awlen(w_awlen),
+	.i_awsize(w_awsize),		.i_awburst(w_awburst),
+	.i_awid(w_awid),			.i_awlock(w_awlock),
+	.o_awready(w_awready),		.i_awvalid(w_awvalid),
+// AXI4 Write Data Channel
+	.i_wdata(w_wdata),			.i_wlast(w_wlast),
+	.i_wstrb(w_wstrb),
+	.o_wready(w_wready),		.i_wvalid(w_wvalid),
+// AXI4 Write Response Channel
+	.o_bid(w_bid),				.o_bresp(w_bresp),
+	.i_bready(w_bready),		.o_bvalid(w_bvalid),
+// Configration
+	.o_ddr_cfg_done(w_ddr_cfg_done),
+// common
+	.iRST(wRST),
+	.iCLK(wCLK)
+);
 
 
 //-----------------------------------------------------------------------------
 // Local から DDR Hard IP にアクセス
 //-----------------------------------------------------------------------------
 memory_checker #(
-	.pAxi4BusWidth(),
-    .pWidth(),
-    .pAlen(),
-    .pStartAdrs(),
-    .pStopAdrs(),
-    .pAdrsOffset()
+	.pAxi4BusWidth(lpAxi4BusWidth),
+    .pDataBitWidth(lpDataBitWidth),
+    .pAlen(lpAlen),
+    .pStartAdrs(lpStartAdrs),
+    .pStopAdrs(lpStopAdrs),
+    .pAdrsOffset(lpAdrsOffset)
 ) memory_checker (
 // AXI4 Read Address Channel
-	.o_arlen(o_arlen),
-	.o_arsize(o_arsize),
-	.o_arburst(o_arburst),
-	.o_araddr(o_araddr),
-	.i_arready(i_arready),
-	.o_arvalid(o_arvalid),
-	.o_arid(o_arid),
-	.o_arlock(o_arlock),
-	.o_arqos(o_arqos),
-	.o_arapcmd(o_arapcmd),
+	.o_arlen(w_arlen),			.o_arsize(w_arsize),
+	.o_arburst(w_arburst),		.o_araddr(w_araddr),
+	.o_arid(w_arid),			.o_arlock(w_arlock),
+	.o_arqos(w_arqos),			.o_arapcmd(w_arapcmd),
+	.i_arready(w_arready),		.o_arvalid(w_arvalid),
 // AXI4 Read Data Channel
-	.i_rdata(i_rdata),
-	.i_rid(i_rid),
-	.i_rlast(i_rlast),
-	.i_rresp(i_rresp),
-	.o_rready(o_rready),
-	.i_rvalid(i_rvalid),
+	.i_rdata(w_rdata),			.i_rlast(w_rlast),
+	.i_rid(w_rid),				.i_rresp(w_rresp),
+	.o_rready(w_rready),		.i_rvalid(w_rvalid),
 // AXI4 Write Address Channel
-	.o_awcache(o_awcache),
-	.o_awqos(o_awqos),
-	.o_awaddr(o_awaddr),
-	.o_awallstrb(o_awallstrb),
-	.o_awapcmd(o_awapcmd),
-	.o_awcobuf(o_awcobuf),
-	.o_awid(o_awid),
-	.o_awlen(o_awlen),
-	.o_awsize(o_awsize),
-	.o_awburst(o_awburst),
-	.o_awlock(o_awlock),
-	.i_awready(i_awready),
-	.o_awvalid(o_awvalid),
+	.o_awcache(w_awcache),		.o_awqos(w_awqos),
+	.o_awaddr(w_awaddr),		.o_awallstrb(w_awallstrb),
+	.o_awapcmd(w_awapcmd),		.o_awcobuf(w_awcobuf),
+	.o_awlen(w_awlen),
+	.o_awsize(w_awsize),		.o_awburst(w_awburst),
+	.o_awid(w_awid),			.o_awlock(w_awlock),
+	.i_awready(w_awready),		.o_awvalid(w_awvalid),
 // AXI4 Write Data Channel
-	.i_wready(i_wready),
-	.o_wdata(o_wdata),
-	.o_wlast(o_wlast),
-	.o_wstrb(o_wstrb),
-	.o_wvalid(o_wvalid),
+	.o_wdata(w_wdata),			.o_wlast(w_wlast),
+	.o_wstrb(w_wstrb),
+	.i_wready(w_wready),		.o_wvalid(w_wvalid),
 // AXI4 Write Response Channel
-	.i_bid(i_bid),
-	.i_bresp(i_bresp),
-	.o_bready(o_bready),
-	.i_bvalid(i_bvalid),
+	.i_bid(w_bid),				.i_bresp(w_bresp),
+	.o_bready(w_bready),		.i_bvalid(w_bvalid),
 // DDR Status
-	.i_cfg_done(i_cfg_done),
-	.o_test_done(o_test_done),
-	.o_test_fail(o_test_fail),
-	.o_test_run(o_test_run),
+	.i_cfg_done(w_ddr_cfg_done),
+	.o_test_done(w_test_done),
+	.o_test_fail(w_test_fail),
+	.o_test_run(w_test_run),
 // common
-	.iRST(rARST),
-	.iCLK(rACLK)
+	.iRST(wRST),
+	.iCLK(wCLK)
 );
 
 

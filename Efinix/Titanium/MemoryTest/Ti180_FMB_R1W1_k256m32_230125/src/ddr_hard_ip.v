@@ -11,104 +11,73 @@
  *~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*/
 //---------------------------------------------------------------------------
 module ddr_hard_ip #(
-parameter	pStartCntBitWidth	= 8
+parameter	pAxi4BusWidth 	= 256,
+parameter	pWidth			= 16,
+parameter	pStartAdrs		= 32'h00000000,
+parameter	pStopAdrs		= 32'h00100000,
+parameter	pMemorySize		= 8
 )(
-input 		i_ddr_cfg_done,		// DDR_CFG_DONE
-/* Connect these three signals to DDR reset interface */
-output 		o_ddr_axi_rstn,		// Master Reset
-output 		o_ddr_cfg_reset,	// Sequencer Reset
-output 		o_ddr_cfg_start,	// Sequencer Start
-output 		o_ddr_cfg_done,		// Done status
+// AXI4 Read Address Channel
+input	[7:0] 				i_arlen,		// Burst Length, arlen + 1
+input	[2:0] 				i_arsize,		// Burst Size, 1,2,4,8,16,32,64,128
+input	[1:0] 				i_arburst,		// Burst Type, 0.固定アドレス, 1.アドレス自動インクリメント
+input	[32:0] 				i_araddr,
+output 						o_arready,
+input 						i_arvalid,
+input	[5:0] 				i_arid,
+input 						i_arlock,		// 0.通常, 1.排他的アクセス
+input 						i_arqos,
+input 						i_arapcmd,
+// AXI4 Read Data Channel
+output 	[pAxi4BusWidth-1:0] o_rdata,
+output 	[5:0] 				o_rid,
+output 						o_rlast,
+output 	[1:0] 				o_rresp,
+input 						i_rready,		// 受信完了
+output 						o_rvalid,
+// AXI4 Write Address Channel
+input	[3:0]				i_awcache,
+input 						i_awqos,		// 品質?
+input	[32:0]				i_awaddr,
+input 						i_awallstrb,
+input 						i_awapcmd,
+input 						i_awcobuf,
+input	[5:0]				i_awid,
+input	[7:0]				i_awlen,
+input	[2:0]				i_awsize,
+input	[1:0]				i_awburst,
+input 						i_awlock,
+input 						o_awready,
+output 						i_awvalid,
+// AXI4 Write Data Channel
+output 						o_wready,		// 受信完了
+input	[pAxi4BusWidth-1:0]	i_wdata,
+input 						i_wlast,		// Burst 転送最後のときに Assert
+input	[63:0] 				i_wstrb,		// 有効レーンBit
+input 						i_wvalid,
+// AXI4 Write Response Channel
+output 	[5:0] 				o_bid,
+output 	[1:0] 				o_bresp,		// 00.通常のアクセス成功, 10.エラー, 11.エラー
+input 						i_bready,
+output 						o_bvalid,
+// Configration
+output 						o_ddr_cfg_done,	// DDR_CFG_DONE
 // common
-input 		inRST,
-input 		iCLK				// user clock
+input 						iRST,
+input 						inRST,
+input 						iCLK
 );
 
 
-
 //-----------------------------------------------------------------------------
-// CFG Aequenser RESET, START
+// DDR_CFG_DONE
 //-----------------------------------------------------------------------------
-localparam 
-	lpReset = 2'd0,
-	lpStart = 2'd1,
-	lpDone 	= 2'd2;
-
-reg r_ddr_axi_rstn;							assign o_ddr_axi_rstn 		= r_ddr_axi_rstn;
-reg r_ddr_cfg_seq_rst;						assign o_ddr_cfg_reset		= r_ddr_cfg_seq_rst;
-reg r_ddr_cfg_seq_start;					assign o_ddr_cfg_start		= r_ddr_cfg_seq_start;
-reg r_ddr_init_done;						assign o_ddr_cfg_done 		= r_ddr_init_done;
-//
-reg [1:0] rs;
-reg [pStartCntBitWidth-1:0] rSeqCnt;
-reg rSeqMaxCke;
-
-initial
-begin
-	r_ddr_axi_rstn		<= 1'b0;
-	r_ddr_cfg_seq_rst	<= 1'b1;
-	r_ddr_cfg_seq_start	<= 1'b0;
-end
+reg r_ddr_cfg_done;
 
 always @(posedge iCLK, negedge inRST)
 begin
-	if (!inRST)
-	begin
-		rs      			<= lpReset;
-		rSeqCnt 			<= {pStartCntBitWidth{1'b0}};
-		r_ddr_axi_rstn		<= 1'b0;
-		r_ddr_cfg_seq_rst	<= 1'b1;
-		r_ddr_cfg_seq_start	<= 1'b0;
-		r_ddr_init_done		<= 1'b0;
-	end
-	else
-	begin
-		case ( rs )
-			lpReset:
-			begin
-				rs      			<= (rSeqMaxCke) ? lpStart : lpReset;
-				rSeqCnt 			<= (rSeqMaxCke) ? {pStartCntBitWidth{1'b0}} : rSeqCnt + 1'b1;
-				r_ddr_axi_rstn		<= 1'b0;
-				r_ddr_cfg_seq_rst	<= 1'b0;
-				r_ddr_cfg_seq_start	<= 1'b0;
-				r_ddr_init_done		<= 1'b0;
-			end
-
-			lpStart:
-			begin
-				rs 					<= (i_ddr_cfg_done) ? lpDone : lpStart;
-				rSeqCnt 			<= rSeqCnt;
-				r_ddr_axi_rstn		<= 1'b0;
-				r_ddr_cfg_seq_rst	<= 1'b0;
-				r_ddr_cfg_seq_start	<= 1'b1;
-				r_ddr_init_done		<= 1'b0;
-			end
-
-			lpDone:
-			begin
-				rs 					<= rs;
-				rSeqCnt 			<= rSeqCnt;
-				r_ddr_axi_rstn		<= 1'b1;
-				r_ddr_cfg_seq_rst	<= 1'b0;
-				r_ddr_cfg_seq_start	<= 1'b1;
-				r_ddr_init_done		<= 1'b1;
-			end
-
-			default:
-			begin
-				rs      			<= lpReset;
-				rSeqCnt 			<= {pStartCntBitWidth{1'b0}};
-				r_ddr_axi_rstn		<= 1'b0;
-				r_ddr_cfg_seq_rst	<= 1'b1;
-				r_ddr_cfg_seq_start	<= 1'b0;
-				r_ddr_init_done		<= 1'b0;
-			end
-		endcase
-	end
+	if (inRST) 	r_ddr_cfg_done <= 1'b0;
+	else 		r_ddr_cfg_done <= 1'b1;
 end
 
-always @*
-begin
-	rSeqMaxCke <= (rSeqCnt == {pStartCntBitWidth{1'b1}});
-end
 endmodule
