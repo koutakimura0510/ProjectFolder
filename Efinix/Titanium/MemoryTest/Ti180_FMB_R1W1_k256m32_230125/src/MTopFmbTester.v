@@ -157,18 +157,6 @@ begin
 	qLocked <= &{inPbSwX[0],iPLLBL1Locked,iPLLTL2Locked};
 end
 
-// EFX_GBUFCE # (
-// 	.CE_POLARITY(1'b1)
-// ) EFX_GBUFCE_SRST (
-// 	.O(wLocked),		.I(qLocked),		.CE(1'b1)
-// );
-
-// EFX_GBUFCE # (
-// 	.CE_POLARITY(1'b1)
-// ) EFX_GBUFCE_nSRST (
-// 	.O(wnSRST),		.I(rnSRST),		.CE(1'b1)
-// );
-
 //---------------------------------------------------------------------------
 // ddr hard ip I/F リセット回路
 //---------------------------------------------------------------------------

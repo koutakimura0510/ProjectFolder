@@ -77,18 +77,16 @@ input 						iCLK
 // 
 // 1. 指定アドレス領域にデータ書込
 // 2. 指定アドレス領域のデータ読込しつつ、データ化けが起きていたら終了
+// [32] CS, [31:15] Row = 17bit, [14:12] Bank, [11:2] Col =10 bit, [1:0] Datapath
 //---------------------------------------------------------------------------
 localparam [2:0]
-	lpIdle 		= 0,
-	lpWriteCmd 	= 1,
-	lpWriteTx	= 2,
-	lpReadCmd	= 3,
-	lpReadRx 	= 4,
-	lpDone 		= 5;
+			lpIdle 		= 0,
+			lpWriteCmd 	= 1,
+			lpWriteTx	= 2,
+			lpReadCmd	= 3,
+			lpReadRx 	= 4,
+			lpDone 		= 5;
 
-// [32] CS, [31:15] Row = 17bit, [14:12] Bank, [11:2] Col =10 bit, [1:0] Datapath
-//------------------------------------------------------------------------------
-// localparam  lpWriteSeq;
 reg [2:0] 	rs;
 reg [1:0] 	rBurstCnt;
 reg 		qBurstMaxCke;
@@ -110,16 +108,16 @@ always @(posedge iCLK)
 begin
 	// adrs
 	if (iRST)	r_wcs	<= 1'b0;
-	else 		r_wcs	<= 1'b0;
+	else 		r_wcs	<= r_wcs;
 
 	if (iRST)	r_wbank	<= 3'd0;
-	else 		r_wbank	<= 3'd0;
+	else 		r_wbank	<= r_wbank;
 
 	if (iRST)	r_wrow	<= 17'd0;
-	else 		r_wrow	<= 17'd0;
+	else 		r_wrow	<= r_wrow;
 
 	if (iRST)	r_wcol	<= 10'd0;
-	else 		r_wcol	<= 10'd0;
+	else 		r_wcol	<= r_wcol;
 
 	// Data
 	if (iRST)				r_wdata	<= {pAxi4BusWidth{1'b0}};
@@ -168,6 +166,7 @@ begin
 	qBurstMaxCke <= rBurstCnt == 2'd3;		// Last 信号用
 end
 
+//
 assign o_wdata		= r_wdata;
 assign o_wlast		= r_wlast;
 assign o_wvalid		= r_wvalid;
@@ -191,136 +190,146 @@ assign o_bready 	= r_bready;
 //-----------------------------------------------------------------------------
 // ILA monitor
 //-----------------------------------------------------------------------------
-reg 		oWcs_mon;
-reg [16:0] 	oWrow_mon;
-reg [2:0] 	oWbank_mon;
-reg [9:0] 	oWcol_mon;
-reg 		oAWvalid_mon;
-reg 		oWvalid_mon;
-reg [31:0] 	oWdata_mon;
-reg 		oWlast_mon;
-reg 		iAWready_mon;
-reg 		iWready_mon;
+reg 		Wcs_out;
+reg [16:0] 	Wrow_out;
+reg [2:0] 	Wbank_out;
+reg [9:0] 	Wcol_out;
+reg 		AWvalid_out;
+reg 		Wvalid_out;
+reg [31:0] 	Wdata_out;
+reg 		Wlast_out;
+reg 		AWready_in;
+reg 		Wready_in;
 //
-reg [5:0]	iBid_mon;
-reg 		oBready_mon;
-reg [1:0]	iBresp_mon;
-reg 		iBvalid_mon;
+reg [5:0]	Bid_in;
+reg 		Bready_out;
+reg [1:0]	Bresp_in;
+reg 		Bvalid_in;
 
 always @(posedge iCLK)
 begin
-	oWcs_mon		<= r_wcs;
-	oWrow_mon		<= r_wrow;
-	oWbank_mon		<= r_wbank;
-	oWcol_mon		<= r_wcol;
-	oAWvalid_mon	<= r_awvalid;
-	oWvalid_mon		<= r_wvalid;
-	oWdata_mon		<= r_wdata[31:0];
-	oWlast_mon		<= r_wlast;
-	iAWready_mon	<= i_awready;
-	iWready_mon		<= i_wready;
+	Wcs_out		<= r_wcs;
+	Wrow_out	<= r_wrow;
+	Wbank_out	<= r_wbank;
+	Wcol_out	<= r_wcol;
+	AWvalid_out	<= r_awvalid;
+	Wvalid_out	<= r_wvalid;
+	Wdata_out	<= r_wdata[31:0];
+	Wlast_out	<= r_wlast;
+	AWready_in	<= i_awready;
+	Wready_in	<= i_wready;
 	//
-	iBid_mon		<= i_bid;
-	oBready_mon		<= r_bready;
-	iBresp_mon		<= i_bresp;
-	iBvalid_mon		<= i_bvalid;
+	Bid_in		<= i_bid;
+	Bready_out	<= r_bready;
+	Bresp_in	<= i_bresp;
+	Bvalid_in	<= i_bvalid;
 end
 
 //-----------------------------------------------------------------------------
 // Read Cycle
-//-----------------------------------------------------------------------------
 // [32] CS, [31:15] Row = 17bit, [14:12] Bank, [11:2] Col =10 bit, [1:0] Datapath
 //-----------------------------------------------------------------------------
+reg 					q_rseq_cke;
+
 // AXI4 Read Address Channel
-reg 		r_rcs;
-reg [16:0]	r_rrow;
-reg	[2:0]	r_rbank;
-reg [9:0]	r_rcol;					assign o_araddr		= {r_rcs,r_rrow,r_rbank,r_rcol,2'b00};
-									assign o_arqos		= 1'b0;
-									assign o_arapcmd	= 1'b0;
-									assign o_arid		= 6'd0;
-									assign o_arlock		= 1'b0;
-									assign o_arlen		= 8'd1;
-									assign o_arsize		= 3'b000;
-									assign o_arburst	= 2'b00;
-reg 		r_arvalid;				assign o_arvalid	= r_arvalid;
-//-----------------------------------------------------------------------------
+reg 					r_rcs;
+reg [16:0]				r_rrow;
+reg	[2:0]				r_rbank;
+reg [9:0]				r_rcol;
+reg 					r_arvalid, q_arvalid_cke;
 // AXI4 Read Data Channel
-reg 					r_rready;				assign o_rready = r_rready;
+reg 					r_rready, q_rready_cke;
 reg [pAxi4BusWidth-1:0] r_rdata;
-reg 					q_arready;
-reg 					q_valid;
-reg 					q_radrs_cke;
+
+
 
 always @(posedge iCLK)
 begin
-	if (iRST)
-	begin
-		r_rcs		<= 1'b0;
-		r_rrow		<= 17'd0;
-		r_rbank		<= 3'b000;
-		r_rcol		<= 10'd0;
-		r_arvalid 	<= 1'b0;
-		r_rready  	<= 1'b0;
-	end
-	else
-	begin
-		r_rcs		<= 1'b0;
-		r_rbank		<= 3'd0;
-		r_rcol		<= 10'd0;
-		r_rdata		<= i_rdata;
+	// adrs
+	if (iRST)	r_rcs	<= 1'b0;
+	else 		r_rcs	<= r_rcs;
 
-		// if (q_arready)	r_rrow <= r_rrow;
-		r_rrow <= r_rrow;
+	if (iRST)	r_rrow	<= 1'b0;
+	else 		r_rrow	<= r_rrow;
 
-		// if (q_arready)	r_arvalid <= 1'b0;
-		// else			r_arvalid <= 1'b1;
-		r_arvalid <= 1'b0;
+	if (iRST)	r_rbank	<= 1'b0;
+	else 		r_rbank	<= r_rbank;
 
-		// if (q_valid) 	r_rready <= 1'b1;
-		// else			r_rready <= 1'b0;
-		r_rready <= 1'b0;
-	end
+	if (iRST)	r_rcol	<= 1'b0;
+	else 		r_rcol	<= r_rcol;
+	
+	// data
+	r_rdata		<= i_rdata;
+
+	// ready,valid
+	if (iRST) 				r_arvalid 	<= 1'b0;
+	else if (q_arvalid_cke)	r_arvalid 	<= ~r_arvalid;
+	else 					r_arvalid 	<=  r_arvalid;
+
+	if (iRST) 	r_rready 	<= 1'b0;
+	else 		r_rready 	<= r_rready;
 end
 
 always @*
 begin
-	q_radrs_cke <= (r_rcol == r_wcol);
-	q_arready	<= i_arready;
-	q_valid  	<= i_rvalid;
+	casex ( {r_arvalid, qBurstMaxCke, i_arready} )
+		'b01x:		q_arvalid_cke <= 1'b1;	// Assert
+		'b1x1:		q_arvalid_cke <= 1'b1;	// Dissert
+		default: 	q_arvalid_cke <= 1'b0;
+	endcase
+
+	casex ( {r_rready, i_rlast, i_rvalid} )
+		'b01x:		q_rready_cke <= 1'b1;	// Assert
+		'b1x1:		q_rready_cke <= 1'b1;	// Dissert
+		default: 	q_rready_cke <= 1'b0;
+	endcase
+
+	q_rseq_cke	<= &{i_rvalid,r_rready};
 end
+
+
+assign o_araddr		= {r_rcs,r_rrow,r_rbank,r_rcol,2'b00};
+assign o_arqos		= 1'b0;
+assign o_arapcmd	= 1'b0;
+assign o_arid		= 6'd0;
+assign o_arlock		= 1'b0;
+assign o_arlen		= 8'd3;
+assign o_arsize		= 3'b000;
+assign o_arburst	= 2'b01;	// adrs auto inc
+assign o_arvalid	= r_arvalid;
+assign o_rready 	= r_rready;
 
 
 //-----------------------------------------------------------------------------
 // ILA monitor
 //-----------------------------------------------------------------------------
-reg [31:0]	oRdata_mon;
-reg 		oRcs_mon;
-reg [16:0] 	oRrow_mon;
-reg [2:0]  	oRbank_mon;
-reg [9:0]  	oRcol_mon;
-reg 		oARvalid_mon;
-reg 		oRready_mon;
-reg			iRlast_mon;
-reg [5:0]	iRid_mon;
-reg [1:0]	iRresp_mon;
-reg 		iRvalid_mon;
-reg			iARready_mon;
+reg [31:0]	Rdata_out;
+reg 		Rcs_out;
+reg [16:0] 	Rrow_out;
+reg [2:0]  	Rbank_out;
+reg [9:0]  	Rcol_out;
+reg 		ARvalid_out;
+reg 		Rready_out;
+reg			Rlast_in;
+reg [5:0]	Rid_in;
+reg [1:0]	Rresp_in;
+reg 		Rvalid_in;
+reg			ARready_in;
 
 always @(posedge iCLK)
 begin
-	oRdata_mon		<= r_rdata[31:0];
-	oRcs_mon		<= r_rcs;
-	oRrow_mon		<= r_rrow;
-	oRbank_mon		<= r_rbank;
-	oRcol_mon		<= r_rcol;
-	oARvalid_mon	<= r_arvalid;
-	oRready_mon		<= r_rready;
-	iRlast_mon		<= i_rlast;
-	iRid_mon		<= i_rid;
-	iRresp_mon		<= i_rresp;
-	iRvalid_mon		<= i_rvalid;
-	iARready_mon	<= i_arready;
+	Rdata_out	<= r_rdata[31:0];
+	Rcs_out		<= r_rcs;
+	Rrow_out	<= r_rrow;
+	Rbank_out	<= r_rbank;
+	Rcol_out	<= r_rcol;
+	ARvalid_out	<= r_arvalid;
+	Rready_out	<= r_rready;
+	Rlast_in	<= i_rlast;
+	Rid_in		<= i_rid;
+	Rresp_in	<= i_rresp;
+	Rvalid_in	<= i_rvalid;
+	ARready_in	<= i_arready;
 end
 
 

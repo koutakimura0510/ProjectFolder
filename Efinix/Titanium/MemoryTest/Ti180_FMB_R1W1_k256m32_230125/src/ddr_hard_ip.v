@@ -76,8 +76,15 @@ reg r_ddr_cfg_done;
 
 always @(posedge iCLK, negedge inRST)
 begin
-	if (inRST) 	r_ddr_cfg_done <= 1'b0;
+	if (!inRST) r_ddr_cfg_done <= 1'b0;
 	else 		r_ddr_cfg_done <= 1'b1;
 end
+
+
+//-----------------------------------------------------------------------------
+// AXI4 
+//-----------------------------------------------------------------------------
+
+
 
 endmodule
