@@ -78,6 +78,11 @@ input 						iCLK
 // 1. 指定アドレス領域にデータ書込
 // 2. 指定アドレス領域のデータ読込しつつ、データ化けが起きていたら終了
 // [32] CS, [31:15] Row = 17bit, [14:12] Bank, [11:2] Col =10 bit, [1:0] Datapath
+// 
+// AXI4 ハンドシェイクのデッドロック回避のため下記ルールに則る
+// R/W Valid を '1' にするために、同じグループの Ready 信号を待ってはならない。
+// 
+// https://www.acri.c.titech.ac.jp/wordpress/archives/8503
 //---------------------------------------------------------------------------
 localparam [2:0]
 			lpIdle 		= 0,
@@ -91,6 +96,7 @@ reg [2:0] 	rs;
 reg [1:0] 	rBurstCnt;
 reg 		qBurstMaxCke;
 reg 		q_wseq_cke;
+reg 		r_wstart, q_wstart_cke;
 // AXI4 Write Address Channel
 reg 					r_wcs;
 reg [16:0]				r_wrow;
@@ -103,7 +109,8 @@ reg [pDataBitWidth-1:0]	r_wdata;
 reg 					r_wlast, q_wlast_cke;
 reg 					r_wvalid, q_wvalid_cke;
 // AXI4 Write Response Channel
-reg 					r_bready;
+reg 					r_bready, q_bready_cke;
+//
 
 always @(posedge iCLK)
 begin
@@ -140,7 +147,14 @@ begin
 	else 					r_wvalid 	<=  r_wvalid;
 
 	if (iRST)				r_bready 	<= 1'b0;
-	else 					r_bready 	<= 1'b1;	// テスト用なので Master は常時 Assert
+	else if (q_bready_cke)	r_bready 	<= ~r_bready;
+	else 					r_bready 	<=  r_bready;
+
+	//
+	if (iRST)				r_wstart 	<= 1'b0;
+	else if (q_wstart_cke)	r_wstart 	<= ~r_wstart;
+	else 					r_wstart 	<=  r_wstart;
+
 end
 
 always @(posedge iCLK)
@@ -152,27 +166,39 @@ end
 
 always @*
 begin
-	casex ( {r_awvalid,i_awready,r_wvalid} )
-		'b0x0:		q_awvalid_cke <= 1'b1;	// Assert
-		'b11x:		q_awvalid_cke <= 1'b1;	// Dissert
+	casex ( {r_wstart,r_bready,i_bvalid,r_awvalid,i_arready} )
+		'b0xx11:	q_wstart_cke <= 1'b1;	// Assert
+		'b111xx:	q_wstart_cke <= 1'b1;	// Dissert
+		default: 	q_wstart_cke <= 1'b0;
+	endcase
+
+	casex ( {r_wstart,r_awvalid,i_awready,r_wvalid} )
+		'b00x0:		q_awvalid_cke <= 1'b1;	// Assert
+		'bx11x:		q_awvalid_cke <= 1'b1;	// Dissert
 		default: 	q_awvalid_cke <= 1'b0;
 	endcase
 
-	casex ( {r_awvalid,qBurstMaxCke,r_wvalid,i_wready} )
-		'b1x0x:		q_wvalid_cke <= 1'b1;	// Assert
-		'bx111:		q_wvalid_cke <= 1'b1;	// Dissert
+	casex ( {r_wstart,r_awvalid,qBurstMaxCke,r_wvalid,i_wready} )
+		'b01x0x:	q_wvalid_cke <= 1'b1;	// Assert
+		'bxx111:	q_wvalid_cke <= 1'b1;	// Dissert
 		default: 	q_wvalid_cke <= 1'b0;
 	endcase
 
 	casex ( {r_wlast,(rBurstCnt == 2'd2),r_wvalid,i_wready} )
-		'b0111:		q_wlast_cke <= 1'b1;	// Assert
+		'b011x:		q_wlast_cke <= 1'b1;	// Assert
 		'b1x11:		q_wlast_cke <= 1'b1;	// Dissert
 		default: 	q_wlast_cke <= 1'b0;
 	endcase
 
-	casex ( {r_wlast,r_wvalid,i_wready} )
+	case ( {r_wlast,r_wvalid,i_wready} )
 		'b111:		q_adrs_cke <= 1'b1;
 		default: 	q_adrs_cke <= 1'b0;
+	endcase
+
+	casex ( {r_bready,i_bvalid} )
+		'b01:		q_bready_cke <= 1'b1;	// Assert
+		'b10:		q_bready_cke <= 1'b1;	// Dissert
+		default: 	q_bready_cke <= 1'b0;
 	endcase
 	//
 	q_wseq_cke   <= &{r_wvalid,i_wready};	// Master/Slave OK
@@ -234,6 +260,8 @@ reg 					r_arvalid, q_arvalid_cke;
 // AXI4 Read Data Channel
 reg 					r_rready, q_rready_cke;
 reg [pDataBitWidth-1:0]	r_rdata[0:(pAxi4BusWidth / pDataBitWidth)-1], q_rdata[0:(pAxi4BusWidth / pDataBitWidth)-1];
+//
+reg 					r_rstart, q_rstart_cke;
 
 genvar x;
 
@@ -276,6 +304,11 @@ begin
 	if (iRST) 				r_rready 	<= 1'b0;
 	else if (q_rready_cke)	r_rready	<= ~r_rready;
 	else 					r_rready 	<=  r_rready;
+
+	// バストランザクション start
+	if (iRST)				r_rstart	<= 1'b0;
+	else if (q_rstart_cke)	r_rstart	<= ~r_rstart;
+	else 					r_rstart	<=  r_rstart;
 end
 
 always @*
@@ -286,15 +319,20 @@ begin
 		default: 	q_arvalid_cke <= 1'b0;
 	endcase
 
-	casex ( {r_rready,i_rlast,i_rvalid,i_arready} )
-		'b0xx1:		q_rready_cke <= 1'b1;	// Assert
-		'b111x:		q_rready_cke <= 1'b1;	// Dissert
+	casex ( {r_rready,i_rlast,i_rvalid,r_arvalid,i_arready} )
+		'b0xx11:	q_rready_cke <= 1'b1;	// Assert
+		'b111xx:	q_rready_cke <= 1'b1;	// Dissert
 		default: 	q_rready_cke <= 1'b0;
 	endcase
 
-	casex ( {i_rlast,i_rvalid,i_arready} )
-		'b111:		q_radrs_cke <= 1'b1;	// Assert
+	case ( {r_rready,i_rlast,i_rvalid} )
+		'b111:		q_radrs_cke <= 1'b1;	// last data read時に アドレス更新
 		default: 	q_radrs_cke <= 1'b0;
+	endcase
+
+	case ( {r_rstart,r_arvalid} )
+		'b01:		q_rstart_cke <= 1'b1;	// Bus Transaction start
+		default: 	q_rstart_cke <= 1'b0;
 	endcase
 
 	q_rseq_cke	<= &{i_rvalid,r_rready};
