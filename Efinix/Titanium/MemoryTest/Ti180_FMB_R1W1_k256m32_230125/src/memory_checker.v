@@ -13,10 +13,10 @@
 module memory_checker #(
 	parameter pAxi4BusWidth = 512,
     parameter pDataBitWidth	= 16,
-    parameter pAlen			= 23,
     parameter pStartAdrs	= 32'h00000000,
-    parameter pStopAdrs		= 32'h00100000
-    // parameter pAdrsOffset	= (pAlen + 1) * (pWidth / 8)
+    parameter pStopAdrs		= 32'h00100000,
+    parameter pAlen			= pAxi4BusWidth / pDataBitWidth,
+    parameter pAdrsOffset	= pAlen * (pDataBitWidth / 8)	// LSB 2bit * DataWidth
 )(
 // AXI4 Read Address Channel
 output[  7:0] 				o_arlen,		// Burst Length, arlen + 1
@@ -96,10 +96,11 @@ reg 					r_wcs;
 reg [16:0]				r_wrow;
 reg	[2:0]				r_wbank;
 reg [9:0]				r_wcol;
+reg 					q_adrs_cke;
 reg 					r_awvalid, q_awvalid_cke;
 // AXI4 Write Data Channel
-reg [pAxi4BusWidth-1:0]	r_wdata;
-reg 					r_wlast;
+reg [pDataBitWidth-1:0]	r_wdata;
+reg 					r_wlast, q_wlast_cke;
 reg 					r_wvalid, q_wvalid_cke;
 // AXI4 Write Response Channel
 reg 					r_bready;
@@ -113,20 +114,21 @@ begin
 	if (iRST)	r_wbank	<= 3'd0;
 	else 		r_wbank	<= r_wbank;
 
-	if (iRST)	r_wrow	<= 17'd0;
-	else 		r_wrow	<= r_wrow;
+	if (iRST)				r_wrow	<= 17'd0;
+	else if (q_adrs_cke)	r_wrow	<= r_wrow + pAdrsOffset;
+	else 					r_wrow	<= r_wrow;
 
 	if (iRST)	r_wcol	<= 10'd0;
 	else 		r_wcol	<= r_wcol;
 
 	// Data
-	if (iRST)				r_wdata	<= {pAxi4BusWidth{1'b0}};
-	else if (q_wseq_cke) 	r_wdata	<= r_wdata + 1'b1;
-	else 					r_wdata	<= r_wdata;
+	if (iRST)				r_wdata		<= {pDataBitWidth{1'b0}};
+	else if (q_wseq_cke) 	r_wdata		<= r_wdata + 1'b1;
+	else 					r_wdata		<= r_wdata;
 
-	if (iRST) 				r_wlast <= 1'b0;
-	else if (qBurstMaxCke)	r_wlast <= 1'b1;
-	else					r_wlast <= 1'b0;
+	if (iRST) 				r_wlast 	<= 1'b0;
+	else if (q_wlast_cke)	r_wlast 	<= ~r_wlast;
+	else					r_wlast 	<=  r_wlast;
 
 	// ready, valid
 	if (iRST)				r_awvalid 	<= 1'b0;
@@ -161,13 +163,23 @@ begin
 		'bx111:		q_wvalid_cke <= 1'b1;	// Dissert
 		default: 	q_wvalid_cke <= 1'b0;
 	endcase
+
+	casex ( {r_wlast,(rBurstCnt == 2'd2),r_wvalid,i_wready} )
+		'b0111:		q_wlast_cke <= 1'b1;	// Assert
+		'b1x11:		q_wlast_cke <= 1'b1;	// Dissert
+		default: 	q_wlast_cke <= 1'b0;
+	endcase
+
+	casex ( {r_wlast,r_wvalid,i_wready} )
+		'b111:		q_adrs_cke <= 1'b1;
+		default: 	q_adrs_cke <= 1'b0;
+	endcase
 	//
 	q_wseq_cke   <= &{r_wvalid,i_wready};	// Master/Slave OK
 	qBurstMaxCke <= rBurstCnt == 2'd3;		// Last 信号用
 end
-
 //
-assign o_wdata		= r_wdata;
+assign o_wdata		= {pDataBitWidth{r_wdata}};
 assign o_wlast		= r_wlast;
 assign o_wvalid		= r_wvalid;
 assign o_wstrb		= {64{1'b1}};
@@ -190,39 +202,21 @@ assign o_bready 	= r_bready;
 //-----------------------------------------------------------------------------
 // ILA monitor
 //-----------------------------------------------------------------------------
-reg 		Wcs_out;
-reg [16:0] 	Wrow_out;
-reg [2:0] 	Wbank_out;
-reg [9:0] 	Wcol_out;
-reg 		AWvalid_out;
-reg 		Wvalid_out;
-reg [31:0] 	Wdata_out;
-reg 		Wlast_out;
-reg 		AWready_in;
-reg 		Wready_in;
+reg 		rAWready_mon;
+reg 		rWready_mon;
 //
-reg [5:0]	Bid_in;
-reg 		Bready_out;
-reg [1:0]	Bresp_in;
-reg 		Bvalid_in;
+reg [5:0]	rBid_mon;
+reg [1:0]	rBresp_mon;
+reg 		rBvalid_mon;
 
 always @(posedge iCLK)
 begin
-	Wcs_out		<= r_wcs;
-	Wrow_out	<= r_wrow;
-	Wbank_out	<= r_wbank;
-	Wcol_out	<= r_wcol;
-	AWvalid_out	<= r_awvalid;
-	Wvalid_out	<= r_wvalid;
-	Wdata_out	<= r_wdata[31:0];
-	Wlast_out	<= r_wlast;
-	AWready_in	<= i_awready;
-	Wready_in	<= i_wready;
+	rAWready_mon<= i_awready;
+	rWready_mon	<= i_wready;
 	//
-	Bid_in		<= i_bid;
-	Bready_out	<= r_bready;
-	Bresp_in	<= i_bresp;
-	Bvalid_in	<= i_bvalid;
+	rBid_mon	<= i_bid;
+	rBresp_mon	<= i_bresp;
+	rBvalid_mon	<= i_bvalid;
 end
 
 //-----------------------------------------------------------------------------
@@ -230,7 +224,7 @@ end
 // [32] CS, [31:15] Row = 17bit, [14:12] Bank, [11:2] Col =10 bit, [1:0] Datapath
 //-----------------------------------------------------------------------------
 reg 					q_rseq_cke;
-
+reg 					q_radrs_cke;
 // AXI4 Read Address Channel
 reg 					r_rcs;
 reg [16:0]				r_rrow;
@@ -239,9 +233,24 @@ reg [9:0]				r_rcol;
 reg 					r_arvalid, q_arvalid_cke;
 // AXI4 Read Data Channel
 reg 					r_rready, q_rready_cke;
-reg [pAxi4BusWidth-1:0] r_rdata;
+reg [pDataBitWidth-1:0]	r_rdata[0:(pAxi4BusWidth / pDataBitWidth)-1], q_rdata[0:(pAxi4BusWidth / pDataBitWidth)-1];
 
+genvar x;
 
+generate
+	for (x = 0; x < pDataBitWidth; x = x + 1)
+	begin
+		always @(posedge iCLK)
+		begin
+			r_rdata[x] <= q_rdata[x];
+		end
+
+		always @*
+		begin
+			q_rdata[x] <= i_rdata[((x+1) * pDataBitWidth)-1:x * pDataBitWidth];
+		end
+	end
+endgenerate
 
 always @(posedge iCLK)
 begin
@@ -249,44 +258,47 @@ begin
 	if (iRST)	r_rcs	<= 1'b0;
 	else 		r_rcs	<= r_rcs;
 
-	if (iRST)	r_rrow	<= 1'b0;
-	else 		r_rrow	<= r_rrow;
+	if (iRST)				r_rrow	<= 1'b0;
+	else if (q_radrs_cke)	r_rrow	<= r_rrow + pAdrsOffset;
+	else 					r_rrow	<= r_rrow;
 
 	if (iRST)	r_rbank	<= 1'b0;
 	else 		r_rbank	<= r_rbank;
 
 	if (iRST)	r_rcol	<= 1'b0;
 	else 		r_rcol	<= r_rcol;
-	
-	// data
-	r_rdata		<= i_rdata;
 
 	// ready,valid
 	if (iRST) 				r_arvalid 	<= 1'b0;
 	else if (q_arvalid_cke)	r_arvalid 	<= ~r_arvalid;
 	else 					r_arvalid 	<=  r_arvalid;
 
-	if (iRST) 	r_rready 	<= 1'b0;
-	else 		r_rready 	<= r_rready;
+	if (iRST) 				r_rready 	<= 1'b0;
+	else if (q_rready_cke)	r_rready	<= ~r_rready;
+	else 					r_rready 	<=  r_rready;
 end
 
 always @*
 begin
-	casex ( {r_arvalid, qBurstMaxCke, i_arready} )
-		'b01x:		q_arvalid_cke <= 1'b1;	// Assert
-		'b1x1:		q_arvalid_cke <= 1'b1;	// Dissert
+	casex ( {i_rlast,r_arvalid,qBurstMaxCke,i_arready} )
+		'bx01x:		q_arvalid_cke <= 1'b1;	// Assert
+		'bx1x1:		q_arvalid_cke <= 1'b1;	// Dissert
 		default: 	q_arvalid_cke <= 1'b0;
 	endcase
 
-	casex ( {r_rready, i_rlast, i_rvalid} )
-		'b01x:		q_rready_cke <= 1'b1;	// Assert
-		'b1x1:		q_rready_cke <= 1'b1;	// Dissert
+	casex ( {r_rready,i_rlast,i_rvalid,i_arready} )
+		'b0xx1:		q_rready_cke <= 1'b1;	// Assert
+		'b111x:		q_rready_cke <= 1'b1;	// Dissert
 		default: 	q_rready_cke <= 1'b0;
+	endcase
+
+	casex ( {i_rlast,i_rvalid,i_arready} )
+		'b111:		q_radrs_cke <= 1'b1;	// Assert
+		default: 	q_radrs_cke <= 1'b0;
 	endcase
 
 	q_rseq_cke	<= &{i_rvalid,r_rready};
 end
-
 
 assign o_araddr		= {r_rcs,r_rrow,r_rbank,r_rcol,2'b00};
 assign o_arqos		= 1'b0;
@@ -303,63 +315,59 @@ assign o_rready 	= r_rready;
 //-----------------------------------------------------------------------------
 // ILA monitor
 //-----------------------------------------------------------------------------
-reg [31:0]	Rdata_out;
-reg 		Rcs_out;
-reg [16:0] 	Rrow_out;
-reg [2:0]  	Rbank_out;
-reg [9:0]  	Rcol_out;
-reg 		ARvalid_out;
-reg 		Rready_out;
-reg			Rlast_in;
-reg [5:0]	Rid_in;
-reg [1:0]	Rresp_in;
-reg 		Rvalid_in;
-reg			ARready_in;
+reg			rRlast_mon;
+reg [5:0]	rRid_mon;
+reg [1:0]	rRresp_mon;
+reg 		rRvalid_mon;
+reg			rARready_mon;
 
 always @(posedge iCLK)
 begin
-	Rdata_out	<= r_rdata[31:0];
-	Rcs_out		<= r_rcs;
-	Rrow_out	<= r_rrow;
-	Rbank_out	<= r_rbank;
-	Rcol_out	<= r_rcol;
-	ARvalid_out	<= r_arvalid;
-	Rready_out	<= r_rready;
-	Rlast_in	<= i_rlast;
-	Rid_in		<= i_rid;
-	Rresp_in	<= i_rresp;
-	Rvalid_in	<= i_rvalid;
-	ARready_in	<= i_arready;
+	rRlast_mon	<= i_rlast;
+	rRid_mon	<= i_rid;
+	rRresp_mon	<= i_rresp;
+	rRvalid_mon	<= i_rvalid;
+	rARready_mon<= i_arready;
 end
 
 
+//-----------------------------------------------------------------------------
+// test monitor
+//-----------------------------------------------------------------------------
+localparam lpCntRunBitWidth = 23;
 
-//-----------------------------------------------------------------------------
-// Rsponce
-//-----------------------------------------------------------------------------
-reg r_test_done;
-reg r_test_fail;
-reg r_test_run;
+reg [lpCntRunBitWidth-1:0] 	rCntRun;
+reg 						rCntRunSel, qCntRunCke;
+reg [pDataBitWidth-1:0] 	q_test_done;
 
 always @(posedge iCLK)
 begin
-	if (iRST)
-	begin
-		r_test_done	<= 1'b1;
-		r_test_fail	<= 1'b1;
-		r_test_run	<= 1'b1;
-	end
-	else
-	begin
-		r_test_done	<= 1'b0;
-		r_test_fail	<= 1'b0;
-		r_test_run	<= 1'b0;
-	end
+	if (iRST)				rCntRunSel <= 1'b1;
+	else if (qCntRunCke)	rCntRunSel <= ~rCntRunSel;
+	else 					rCntRunSel <=  rCntRunSel;
+
+	if (iRST)		 		rCntRun <= {lpCntRunBitWidth{1'b0}};
+	else if (qCntRunCke) 	rCntRun <= {lpCntRunBitWidth{1'b0}};
+	else 				 	rCntRun <= rCntRun + 1'b1;
 end
 
-assign o_test_done = r_test_done;
-assign o_test_fail = r_test_fail;
-assign o_test_run  = r_test_run;
+always @*
+begin
+	qCntRunCke <= ({lpCntRunBitWidth{1'b1}} == rCntRun);
+end
+
+generate
+	for (x = 0; x < pDataBitWidth; x = x + 1) begin
+		always @*
+		begin
+			q_test_done[x] <= &{r_rdata[x]};
+		end
+	end
+endgenerate
+
+assign o_test_run  = rCntRunSel;
+assign o_test_fail = 1'b0;
+assign o_test_done = &{q_test_done};
 
 
 // always @(posedge iCLK)

@@ -126,7 +126,6 @@ input [ 1: 0]	inPbSwX,
 //---------------------------------------------------------------------------
 // PLL-I/F Block port
 input 			iSCLK,				// System CLK 100[MHz]
-input 			iDdrFCLK,
 input 			iPLLBL1Locked,		// BL1 Locked
 input 			iPLLTL2Locked,		// TL2 Locked
 output 			oPLLBL1nRST,		// PLL BL1 nRST
@@ -233,39 +232,15 @@ begin
 	qMemRST <= ~w_ddr_cfg_done;
 end
 
-
-//-----------------------------------------------------------------------------
-// DDR PLL が正常に動作しているか確認するためのカウンタ
-//-----------------------------------------------------------------------------
-localparam lpCntDgBitWidth = 23;
-reg [lpCntDgBitWidth-1:0] rCntDg;
-reg rCntDgSel, qCntDgCke;
-
-always @(posedge iDdrFCLK, negedge qLocked)
-begin
-	if (!qLocked)		rCntDgSel <= 1'b1;
-	else if (qCntDgCke)	rCntDgSel <= ~rCntDgSel;
-	else 				rCntDgSel <=  rCntDgSel;
-
-	if (!qLocked)		rCntDg <= {lpCntDgBitWidth{1'b0}};
-	else if (qCntDgCke) rCntDg <= {lpCntDgBitWidth{1'b0}};
-	else 				rCntDg <= rCntDg + 1'b1;
-end
-
-always @*
-begin
-	qCntDgCke <= ({lpCntDgBitWidth{1'b1}} == rCntDg);
-end
-
 //---------------------------------------------------------------------------
 // User Led
 //---------------------------------------------------------------------------
 assign oLedX[2] = qLocked;
 assign oLedX[3] = w_ddr_cfg_start;
 assign oLedX[4] = w_ddr_cfg_done;
-assign oLedX[5] = 1'b0;
-assign oLedX[6] = 1'b0;
-assign oLedX[7] = rCntDgSel;
+assign oLedX[5] = w_test_run;
+assign oLedX[6] = w_test_fail;
+assign oLedX[7] = w_test_done;
 
 //---------------------------------------------------------------------------
 endmodule	// MTopFmbTester
