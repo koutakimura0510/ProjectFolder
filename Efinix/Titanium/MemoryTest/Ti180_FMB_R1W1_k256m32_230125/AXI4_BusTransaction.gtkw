@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
-[*] Fri Feb 03 05:25:43 2023
+[*] Fri Feb 03 01:42:14 2023
 [*]
 [dumpfile] "C:\Users\kouta\workspace\001_myProjectFolder\Efinix\Titanium\MemoryTest\Ti180_FMB_R1W1_k256m32_230125\la0_waveform.vcd"
-[dumpfile_mtime] "Fri Feb 03 05:24:55 2023"
-[dumpfile_size] 131717
-[savefile] "C:\Users\kouta\workspace\001_myProjectFolder\Efinix\Titanium\MemoryTest\Ti180_FMB_R1W1_k256m32_230125\la0_waveform.gtkw"
-[timestart] 2951
-[size] 2497 1417
-[pos] -1 -1
-*-7.000000 4029 2048 6144 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[dumpfile_mtime] "Fri Feb 03 01:13:54 2023"
+[dumpfile_size] 136084
+[savefile] "C:\Users\kouta\workspace\001_myProjectFolder\Efinix\Titanium\MemoryTest\Ti180_FMB_R1W1_k256m32_230125\AXI4_BusTransaction.gtkw"
+[timestart] 2135
+[size] 1248 1417
+[pos] -61 -61
+*-5.000000 2182 2048 6144 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [sst_width] 331
 [signals_width] 329
 [sst_expanded] 1
@@ -17,6 +17,7 @@
 @28
 top.memory_checker_0/i_cfg_done
 top.memory_checker_0/qBurstMaxCke
+top.memory_checker_0/rBurstCnt[1:0]
 @22
 top.memory_checker_0/r_wrow[16:0]
 @28
@@ -24,23 +25,6 @@ top.memory_checker_0/r_awvalid
 top.memory_checker_0/rAWready_mon
 @22
 top.memory_checker_0/r_wdata[15:0]
-top.memory_checker_0/r_wdata[1:1]
-top.memory_checker_0/r_wdata[2:2]
-top.memory_checker_0/r_wdata[3:3]
-top.memory_checker_0/r_wdata[4:4]
-top.memory_checker_0/r_wdata[5:5]
-top.memory_checker_0/r_wdata[6:6]
-top.memory_checker_0/r_wdata[7:7]
-top.memory_checker_0/r_wdata[8:8]
-top.memory_checker_0/r_wdata[9:9]
-top.memory_checker_0/r_wdata[10:10]
-top.memory_checker_0/r_wdata[11:11]
-top.memory_checker_0/r_wdata[12:12]
-@23
-top.memory_checker_0/r_wdata[13:13]
-@22
-top.memory_checker_0/r_wdata[14:14]
-top.memory_checker_0/r_wdata[15:15]
 @28
 top.memory_checker_0/r_wvalid
 top.memory_checker_0/r_wlast
@@ -53,7 +37,7 @@ top.memory_checker_0/q_wstart_cke
 top.memory_checker_0/rBid_mon[5:0]
 @28
 top.memory_checker_0/rBresp_mon[1:0]
-@22
+@23
 [color] 2
 top.memory_checker_0/r_rdata[15:0]
 [color] 2
@@ -86,27 +70,27 @@ top.memory_checker_0/r_rdata[13:13]
 top.memory_checker_0/r_rdata[14:14]
 [color] 2
 top.memory_checker_0/r_rdata[15:15]
-@28
+@29
 [color] 2
 top.memory_checker_0/r_rready
 [color] 2
 top.memory_checker_0/rRlast_mon
 [color] 2
 top.memory_checker_0/rRvalid_mon
-@22
+@23
 [color] 2
 top.memory_checker_0/r_rrow[16:0]
-@28
+@29
 [color] 2
 top.memory_checker_0/r_arvalid
 [color] 2
 top.memory_checker_0/q_arvalid_cke
 [color] 2
 top.memory_checker_0/r_rstart
-@22
+@23
 [color] 2
 top.memory_checker_0/rRid_mon[5:0]
-@28
+@29
 [color] 2
 top.memory_checker_0/rRresp_mon[1:0]
 [pattern_trace] 1
