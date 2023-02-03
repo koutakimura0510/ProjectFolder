@@ -1,0 +1,43 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Fri Feb 03 01:26:37 2023
+[*]
+[dumpfile] "C:\Users\kouta\workspace\001_myProjectFolder\Efinix\Titanium\MemoryTest\Ti180_FMB_R1W1_k256m32_230125\la0_waveform.vcd"
+[dumpfile_mtime] "Fri Feb 03 01:13:54 2023"
+[dumpfile_size] 136084
+[savefile] "C:\Users\kouta\workspace\001_myProjectFolder\Efinix\Titanium\MemoryTest\Ti180_FMB_R1W1_k256m32_230125\la0_waveform.gtkw"
+[timestart] 2012
+[size] 1248 1417
+[pos] -347 -347
+*-5.000000 2071 2048 6144 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 340
+[signals_width] 348
+[sst_expanded] 1
+[sst_vpaned_height] 442
+@28
+top.memory_checker_0/i_cfg_done
+top.memory_checker_0/qBurstMaxCke
+top.memory_checker_0/rBurstCnt[1:0]
+@22
+top.memory_checker_0/r_wrow[16:0]
+@28
+top.memory_checker_0/r_awvalid
+top.memory_checker_0/rAWready_mon
+@22
+top.memory_checker_0/r_wdata[15:0]
+@28
+top.memory_checker_0/r_wvalid
+top.memory_checker_0/r_wlast
+top.memory_checker_0/q_wseq_cke
+top.memory_checker_0/q_bready_cke
+top.memory_checker_0/r_bready
+@29
+top.memory_checker_0/r_wstart
+@28
+top.memory_checker_0/q_wstart_cke
+@22
+top.memory_checker_0/rBid_mon[5:0]
+@28
+top.memory_checker_0/rBresp_mon[1:0]
+[pattern_trace] 1
+[pattern_trace] 0

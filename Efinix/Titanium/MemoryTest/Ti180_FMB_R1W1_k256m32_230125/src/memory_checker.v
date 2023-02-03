@@ -15,12 +15,12 @@ module memory_checker #(
     parameter pDataBitWidth	= 16,
     parameter pStartAdrs	= 32'h00000000,
     parameter pStopAdrs		= 32'h00100000,
-    parameter pAlen			= pAxi4BusWidth / pDataBitWidth,
-    parameter pAdrsOffset	= pAlen * (pDataBitWidth / 8)	// LSB 2bit * DataWidth
+    parameter pBurstSize	= pAxi4BusWidth / pDataBitWidth,
+    parameter pAdrsOffset	= pBurstSize * (pDataBitWidth / 8)	// LSB 2bit * DataWidth
 )(
 // AXI4 Read Address Channel
 output[  7:0] 				o_arlen,		// Burst Length, arlen + 1
-output[  2:0] 				o_arsize,		// Burst Size, 1,2,4,8,16,32,64,128
+output[  2:0] 				o_arsize,		// 一回に転送する場バイト数, 8bit * 000=1,001=2,010=4,011=8,100=16,101=32,110=64,111=128
 output[  1:0] 				o_arburst,		// Burst Type, 0.固定アドレス, 1.アドレス自動インクリメント
 output[ 32:0] 				o_araddr,
 input 						i_arready,
@@ -45,7 +45,7 @@ output 						o_awapcmd,
 output 						o_awcobuf,
 output[  5:0] 				o_awid,
 output[  7:0] 				o_awlen,
-output[  2:0] 				o_awsize,
+output[  2:0] 				o_awsize,		// 一回に転送する場バイト数, 3bit = 1,2,4,8,16,32,64,128
 output[  1:0] 				o_awburst,
 output 						o_awlock,
 input 						i_awready,
@@ -83,20 +83,15 @@ input 						iCLK
 // R/W Valid を '1' にするために、同じグループの Ready 信号を待ってはならない。
 // 
 // https://www.acri.c.titech.ac.jp/wordpress/archives/8503
+// https://www.intel.com/content/www/us/en/docs/programmable/683130/22-2/axi-interface-timing-diagram.html
+// https://en.wikipedia.org/wiki/Advanced_eXtensible_Interface#cite_note-axi34difference-10
 //---------------------------------------------------------------------------
-localparam [2:0]
-			lpIdle 		= 0,
-			lpWriteCmd 	= 1,
-			lpWriteTx	= 2,
-			lpReadCmd	= 3,
-			lpReadRx 	= 4,
-			lpDone 		= 5;
+localparam [3:0] 		lpBurstLen = pBurstSize - 1;
 
-reg [2:0] 	rs;
-reg [1:0] 	rBurstCnt;
-reg 		qBurstMaxCke;
-reg 		q_wseq_cke;
-reg 		r_wstart, q_wstart_cke;
+reg [3:0] 				rBurstCnt;
+reg 					qBurstMaxCke;
+reg 					q_wseq_cke, q_wdata_cke;
+reg 					r_wstart, q_wstart_cke;
 // AXI4 Write Address Channel
 reg 					r_wcs;
 reg [16:0]				r_wrow;
@@ -105,12 +100,32 @@ reg [9:0]				r_wcol;
 reg 					q_adrs_cke;
 reg 					r_awvalid, q_awvalid_cke;
 // AXI4 Write Data Channel
-reg [pDataBitWidth-1:0]	r_wdata;
+// reg [pDataBitWidth-1:0]	r_wdata;
+reg [pDataBitWidth-1:0]	r_wdata[0:(pAxi4BusWidth / pDataBitWidth)-1];
+reg [pAxi4BusWidth-1:0]	q_wdata;
 reg 					r_wlast, q_wlast_cke;
 reg 					r_wvalid, q_wvalid_cke;
 // AXI4 Write Response Channel
 reg 					r_bready, q_bready_cke;
 //
+genvar x;
+
+generate
+	for (x = 0; x < pDataBitWidth; x = x + 1)
+	begin
+		always @(posedge iCLK)
+		begin
+			if (iRST)				r_wdata[x] <= x;
+			else if (q_wdata_cke)	r_wdata[x] <= r_wdata[x] + pDataBitWidth;
+			else 					r_wdata[x] <= r_wdata[x];
+		end
+
+		always @*
+		begin
+			q_wdata[((x+1) * pDataBitWidth)-1:x * pDataBitWidth] <= r_wdata[x];
+		end
+	end
+endgenerate
 
 always @(posedge iCLK)
 begin
@@ -121,17 +136,22 @@ begin
 	if (iRST)	r_wbank	<= 3'd0;
 	else 		r_wbank	<= r_wbank;
 
+	if (iRST)	r_wcol	<= 10'd0;
+	else 		r_wcol	<= r_wcol;
+
 	if (iRST)				r_wrow	<= 17'd0;
 	else if (q_adrs_cke)	r_wrow	<= r_wrow + pAdrsOffset;
 	else 					r_wrow	<= r_wrow;
 
-	if (iRST)	r_wcol	<= 10'd0;
-	else 		r_wcol	<= r_wcol;
-
 	// Data
-	if (iRST)				r_wdata		<= {pDataBitWidth{1'b0}};
-	else if (q_wseq_cke) 	r_wdata		<= r_wdata + 1'b1;
-	else 					r_wdata		<= r_wdata;
+	// if (iRST)				r_wdata		<= {pDataBitWidth{1'b0}};
+	// else if (q_wdata_cke) 	r_wdata		<= r_wdata + 1'b1;
+	// else 					r_wdata		<= r_wdata;
+
+	// Burst Last Data 
+	if (iRST) 				rBurstCnt <= 4'd0;
+	else if (q_wseq_cke)	rBurstCnt <= rBurstCnt + 1'b1;
+	else 					rBurstCnt <= rBurstCnt;
 
 	if (iRST) 				r_wlast 	<= 1'b0;
 	else if (q_wlast_cke)	r_wlast 	<= ~r_wlast;
@@ -150,18 +170,10 @@ begin
 	else if (q_bready_cke)	r_bready 	<= ~r_bready;
 	else 					r_bready 	<=  r_bready;
 
-	//
+	// Write Sequence Start
 	if (iRST)				r_wstart 	<= 1'b0;
 	else if (q_wstart_cke)	r_wstart 	<= ~r_wstart;
 	else 					r_wstart 	<=  r_wstart;
-
-end
-
-always @(posedge iCLK)
-begin
-	if (iRST) 				rBurstCnt <= 2'd0;
-	else if (q_wseq_cke)	rBurstCnt <= rBurstCnt + 1'b1;
-	else 					rBurstCnt <= rBurstCnt;
 end
 
 always @*
@@ -172,40 +184,41 @@ begin
 		default: 	q_wstart_cke <= 1'b0;
 	endcase
 
-	casex ( {r_wstart,r_awvalid,i_awready,r_wvalid} )
-		'b00x0:		q_awvalid_cke <= 1'b1;	// Assert
-		'bx11x:		q_awvalid_cke <= 1'b1;	// Dissert
+	casex ( {r_wstart,r_awvalid,i_awready} )
+		'b00x:		q_awvalid_cke <= 1'b1;	// Assert
+		'bx11:		q_awvalid_cke <= 1'b1;	// Dissert
 		default: 	q_awvalid_cke <= 1'b0;
 	endcase
 
-	casex ( {r_wstart,r_awvalid,qBurstMaxCke,r_wvalid,i_wready} )
-		'b01x0x:	q_wvalid_cke <= 1'b1;	// Assert
-		'bxx111:	q_wvalid_cke <= 1'b1;	// Dissert
+	casex ( {qBurstMaxCke,r_wstart,r_awvalid,r_wvalid,i_wready} )
+		'bx010x:	q_wvalid_cke <= 1'b1;	// Assert
+		'b1xx11:	q_wvalid_cke <= 1'b1;	// Dissert
 		default: 	q_wvalid_cke <= 1'b0;
 	endcase
 
-	casex ( {r_wlast,(rBurstCnt == 2'd2),r_wvalid,i_wready} )
-		'b011x:		q_wlast_cke <= 1'b1;	// Assert
+	casex ( {r_wlast,(rBurstCnt == 4'd14),r_wvalid,i_wready} )
+		'b0111:		q_wlast_cke <= 1'b1;	// Assert
 		'b1x11:		q_wlast_cke <= 1'b1;	// Dissert
 		default: 	q_wlast_cke <= 1'b0;
 	endcase
 
-	case ( {r_wlast,r_wvalid,i_wready} )
+	case ( {r_wstart,r_bready,i_bvalid} )
 		'b111:		q_adrs_cke <= 1'b1;
 		default: 	q_adrs_cke <= 1'b0;
 	endcase
 
 	casex ( {r_bready,i_bvalid} )
 		'b01:		q_bready_cke <= 1'b1;	// Assert
-		'b10:		q_bready_cke <= 1'b1;	// Dissert
+		'b11:		q_bready_cke <= 1'b1;	// Dissert
 		default: 	q_bready_cke <= 1'b0;
 	endcase
 	//
-	q_wseq_cke   <= &{r_wvalid,i_wready};	// Master/Slave OK
-	qBurstMaxCke <= rBurstCnt == 2'd3;		// Last 信号用
+	q_wdata_cke  <= &{r_bready,i_bvalid};
+	q_wseq_cke   <= &{r_wvalid,i_wready};		// Master/Slave OK
+	qBurstMaxCke <= rBurstCnt == lpBurstLen;	// Last 信号用
 end
 //
-assign o_wdata		= {pDataBitWidth{r_wdata}};
+assign o_wdata		= q_wdata;
 assign o_wlast		= r_wlast;
 assign o_wvalid		= r_wvalid;
 assign o_wstrb		= {64{1'b1}};
@@ -218,8 +231,8 @@ assign o_awapcmd	= 1'b0;
 assign o_awcobuf	= 1'b0;
 assign o_awid		= 6'd0;
 assign o_awlock		= 1'b0;
-assign o_awlen		= 8'd3;
-assign o_awsize		= 3'd0;
+assign o_awlen		= 8'd15;
+assign o_awsize		= 3'b101;
 assign o_awburst	= 2'b01;
 assign o_awvalid	= r_awvalid;
 //
@@ -249,7 +262,7 @@ end
 // Read Cycle
 // [32] CS, [31:15] Row = 17bit, [14:12] Bank, [11:2] Col =10 bit, [1:0] Datapath
 //-----------------------------------------------------------------------------
-reg 					q_rseq_cke;
+reg 					r_rstart, q_rstart_cke;
 reg 					q_radrs_cke;
 // AXI4 Read Address Channel
 reg 					r_rcs;
@@ -260,17 +273,14 @@ reg 					r_arvalid, q_arvalid_cke;
 // AXI4 Read Data Channel
 reg 					r_rready, q_rready_cke;
 reg [pDataBitWidth-1:0]	r_rdata[0:(pAxi4BusWidth / pDataBitWidth)-1], q_rdata[0:(pAxi4BusWidth / pDataBitWidth)-1];
-//
-reg 					r_rstart, q_rstart_cke;
-
-genvar x;
 
 generate
 	for (x = 0; x < pDataBitWidth; x = x + 1)
 	begin
 		always @(posedge iCLK)
 		begin
-			r_rdata[x] <= q_rdata[x];
+			if (i_rvalid)	r_rdata[x] <= q_rdata[x];
+			else 			r_rdata[x] <= r_rdata[x];
 		end
 
 		always @*
@@ -286,15 +296,16 @@ begin
 	if (iRST)	r_rcs	<= 1'b0;
 	else 		r_rcs	<= r_rcs;
 
-	if (iRST)				r_rrow	<= 1'b0;
-	else if (q_radrs_cke)	r_rrow	<= r_rrow + pAdrsOffset;
-	else 					r_rrow	<= r_rrow;
-
 	if (iRST)	r_rbank	<= 1'b0;
 	else 		r_rbank	<= r_rbank;
 
 	if (iRST)	r_rcol	<= 1'b0;
 	else 		r_rcol	<= r_rcol;
+
+	if (iRST)				r_rrow	<= 1'b0;
+	else if (q_radrs_cke)	r_rrow	<= r_rrow + pAdrsOffset;
+	else 					r_rrow	<= r_rrow;
+
 
 	// ready,valid
 	if (iRST) 				r_arvalid 	<= 1'b0;
@@ -313,9 +324,15 @@ end
 
 always @*
 begin
-	casex ( {i_rlast,r_arvalid,qBurstMaxCke,i_arready} )
-		'bx01x:		q_arvalid_cke <= 1'b1;	// Assert
-		'bx1x1:		q_arvalid_cke <= 1'b1;	// Dissert
+	casex ( {r_rstart,r_rready,i_rlast,i_rvalid,r_arvalid,i_arready} )
+		'b0xxx11:	q_rstart_cke <= 1'b1;	// Assert
+		'b1111xx:	q_rstart_cke <= 1'b1;	// Dissert
+		default: 	q_rstart_cke <= 1'b0;
+	endcase
+
+	casex ( {qBurstMaxCke,r_rstart,r_arvalid,i_arready} )
+		'b100x:		q_arvalid_cke <= 1'b1;	// Assert
+		'bxx11:		q_arvalid_cke <= 1'b1;	// Dissert
 		default: 	q_arvalid_cke <= 1'b0;
 	endcase
 
@@ -325,17 +342,11 @@ begin
 		default: 	q_rready_cke <= 1'b0;
 	endcase
 
-	case ( {r_rready,i_rlast,i_rvalid} )
-		'b111:		q_radrs_cke <= 1'b1;	// last data read時に アドレス更新
+	// case ( {r_rready,i_rlast,i_rvalid} )
+	casex ( {r_rstart,r_rready,i_rlast,i_rvalid} )
+		'b1111:		q_radrs_cke <= 1'b1;	// アドレス更新
 		default: 	q_radrs_cke <= 1'b0;
 	endcase
-
-	case ( {r_rstart,r_arvalid} )
-		'b01:		q_rstart_cke <= 1'b1;	// Bus Transaction start
-		default: 	q_rstart_cke <= 1'b0;
-	endcase
-
-	q_rseq_cke	<= &{i_rvalid,r_rready};
 end
 
 assign o_araddr		= {r_rcs,r_rrow,r_rbank,r_rcol,2'b00};
@@ -343,9 +354,9 @@ assign o_arqos		= 1'b0;
 assign o_arapcmd	= 1'b0;
 assign o_arid		= 6'd0;
 assign o_arlock		= 1'b0;
-assign o_arlen		= 8'd3;
-assign o_arsize		= 3'b000;
-assign o_arburst	= 2'b01;	// adrs auto inc
+assign o_arlen		= 8'd0;
+assign o_arsize		= 3'b101;
+assign o_arburst	= 2'b00;	// adrs auto inc
 assign o_arvalid	= r_arvalid;
 assign o_rready 	= r_rready;
 
