@@ -229,7 +229,8 @@ end
 
 always @*
 begin
-	q_awready	<= &{rIlaMon,i_awready};
+	q_awready	<= i_awready;
+	// q_awready	<= &{rIlaMon,i_awready};
 	q_wready	<= &{rIlaMon,i_wready};
 	q_bid		<= {6{rIlaMon}} & i_bid[5:0];
 	q_bresp		<= {2{rIlaMon}} & {i_bresp[1:0]};

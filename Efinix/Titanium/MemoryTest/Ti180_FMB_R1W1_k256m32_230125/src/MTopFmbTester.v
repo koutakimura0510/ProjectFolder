@@ -165,15 +165,16 @@ wire w_ddr_cfg_start;
 wire w_ddr_cfg_done;
 
 ddr_reset_sequencer #(
-	.pStartCntBitWidth	(8)
+	.pStartCntBitWidth(8),
+	.pDdrCfgDoneThru("no")
 ) ddr_reset_sequencer (
-	.i_ddr_cfg_done		(ddr4_CFG_DONE),
-	.o_ddr_axi_rstn		(w_ddr_axi_nreset),
-	.o_ddr_cfg_reset	(w_ddr_cfg_reset),
-	.o_ddr_cfg_start	(w_ddr_cfg_start),
-	.o_ddr_cfg_done		(w_ddr_cfg_done),
-	.inRST				(rnSRST),
-	.iCLK				(iSCLK)
+	.i_ddr_cfg_done(ddr4_CFG_DONE),
+	.o_ddr_axi_rstn(w_ddr_axi_nreset),
+	.o_ddr_cfg_reset(w_ddr_cfg_reset),
+	.o_ddr_cfg_start(w_ddr_cfg_start),
+	.o_ddr_cfg_done(w_ddr_cfg_done),
+	.inRST(rnSRST),
+	.iCLK(iSCLK)
 );
 
 assign ddr4_ARSTN_0	  = w_ddr_axi_nreset;

@@ -1,48 +1,18 @@
-/////////////////////////////////////////////////////////////////////////////
-//
-// Copyright (C) 2013-2019 Efinix Inc. All rights reserved.
-//
-// Description:
-//
-// Efinix soft logic DDR system reset controller
-//
-// The Trion DDR controller block, (instantiated in the Interface Designer),
-// has three input pins for reset control.  (when I2C calibration not enabled)
-//
-//     Master Reset (active low)
-//     Sequencer Reset (active high)
-//     Sequencer Start (active high)
-//
-// This Verilog module generates outputs that can directly
-// connect to these pins, given a single reset signal and a clock.
-//
-// The module also generates a "done" status signal, to inform user system
-// when reset + DDR-reinitialization is completed, and read/write operations
-// to the DDR AXI interfaces may resume.  The user should define
-// FREQ parameter to correspond to frequency of their clock signal.
-//
-// NOTE #1:  This reset sequencer resets and re-initializes both the DDR
-//           interface of the Trion device, as well as the DDR module(s)
-//           themselves.
-//
-// NOTE #2:  The user is not expected to pulse reset upon device configuration
-//           and initial entry to user mode.  During the configuration process
-//           DDR reset and initialization will be triggered automatically.  This
-//           soft logic reset is only required if the user needs to reset
-//           the DDR system again while maintaining the Trion device in user mode.
-//
-// Language:  Verilog 2001
-//
-// ------------------------------------------------------------------------------
-// REVISION:
-//  $Snapshot: $
-//  $Id:$
-//
-// History:
-// 1.0 Initial Release. 
-/////////////////////////////////////////////////////////////////////////////////
+/*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*
+ *
+ * File Name   : ddr_reset_sequencer.v
+ * Description : 
+ * Simulator   : VeritakWin Ver.3.84D Build May.23.2011
+ * Implem. Tool: Efinity 2022.2.322.1.8
+ * Explanation : Rev.1.0
+ * Revision    :
+ * 03/Feb-2023 New Release(Rev. 0.10)                                  K.Kimura
+ *
+ *~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*/
+//---------------------------------------------------------------------------
 module ddr_reset_sequencer #(
-parameter	pStartCntBitWidth	= 8
+parameter	pStartCntBitWidth	= 8,
+parameter	pDdrCfgDoneThru		= "no"
 )(
 input 		i_ddr_cfg_done,		// DDR_CFG_DONE
 /* Connect these three signals to DDR reset interface */
@@ -71,8 +41,9 @@ reg r_ddr_cfg_seq_start;					assign o_ddr_cfg_start		= r_ddr_cfg_seq_start;
 reg r_ddr_init_done;						assign o_ddr_cfg_done 		= r_ddr_init_done;
 //
 reg [1:0] rs;
+reg 						qDdrCfgDone;
 reg [pStartCntBitWidth-1:0] rSeqCnt;
-reg rSeqMaxCke;
+reg  						qSeqMaxCke;
 
 initial
 begin
@@ -97,8 +68,8 @@ begin
 		case ( rs )
 			lpReset:
 			begin
-				rs      			<= (rSeqMaxCke) ? lpStart : lpReset;
-				rSeqCnt 			<= (rSeqMaxCke) ? {pStartCntBitWidth{1'b0}} : rSeqCnt + 1'b1;
+				rs      			<= (qSeqMaxCke) ? lpStart : lpReset;
+				rSeqCnt 			<= (qSeqMaxCke) ? {pStartCntBitWidth{1'b0}} : rSeqCnt + 1'b1;
 				r_ddr_axi_rstn		<= 1'b0;
 				r_ddr_cfg_seq_rst	<= 1'b0;
 				r_ddr_cfg_seq_start	<= 1'b0;
@@ -107,8 +78,8 @@ begin
 
 			lpStart:
 			begin
-				rs 					<= (i_ddr_cfg_done) ? lpDone : lpStart;
-				rSeqCnt 			<= rSeqCnt;
+				rs 					<= (qDdrCfgDone) ? lpDone : lpStart;
+				rSeqCnt 			<= rSeqCnt + 1'b1;
 				r_ddr_axi_rstn		<= 1'b0;
 				r_ddr_cfg_seq_rst	<= 1'b0;
 				r_ddr_cfg_seq_start	<= 1'b1;
@@ -118,7 +89,7 @@ begin
 			lpDone:
 			begin
 				rs 					<= rs;
-				rSeqCnt 			<= rSeqCnt;
+				rSeqCnt 			<= {pStartCntBitWidth{1'b0}};
 				r_ddr_axi_rstn		<= 1'b1;
 				r_ddr_cfg_seq_rst	<= 1'b0;
 				r_ddr_cfg_seq_start	<= 1'b1;
@@ -140,6 +111,26 @@ end
 
 always @*
 begin
-	rSeqMaxCke <= (rSeqCnt == {pStartCntBitWidth{1'b1}});
+	qSeqMaxCke <= (rSeqCnt == {pStartCntBitWidth{1'b1}});
 end
+
+generate
+begin
+	if (pDdrCfgDoneThru == "yes")
+	begin
+		always @*
+		begin
+			qDdrCfgDone <= qSeqMaxCke;
+		end
+	end
+	else
+	begin
+		always @*
+		begin
+			qDdrCfgDone <= i_ddr_cfg_done;
+		end
+	end
+end
+endgenerate
+
 endmodule

@@ -19,7 +19,17 @@
  * https://www.acri.c.titech.ac.jp/wordpress/archives/8503
  * https://www.intel.com/content/www/us/en/docs/programmable/683130/22-2/axi-interface-timing-diagram.html
  * https://en.wikipedia.org/wiki/Advanced_eXtensible_Interface#cite_note-axi34difference-10
- *---------------------------------------------------------------------------
+ *
+ * ILA デバッグ時の GTKWave を毎回自動で開かないようにする方法
+ * /tools/efinix/2022.2/debugger/bin/efx_dbg/gui.py を開く
+ * open_wave_viewer と検索し下記の部分をコメントアウトする。
+ * wave_viewer = open_wave_viewer(
+ *     gtkw_path, lambda e: self.error(str(e)))
+ * if not new_viewer:
+ *     self._wave_viewer = wave_viewer
+ * else:
+ *     self._standalone_wave_viewers.append(wave_viewer)
+ *
  *~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*/
 //---------------------------------------------------------------------------
 module memory_checker #(

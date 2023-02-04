@@ -13,28 +13,61 @@ component edb_top
          bscan_UPDATE  : in  std_logic;
          bscan_TDO     : out std_logic;
          la0_clk       : in  std_logic;
-         la0_memory_checker_0/r_Wcs_mon : in  std_logic;
-         la0_memory_checker_0/r_AWvalid_mon : in  std_logic;
-         la0_memory_checker_0/r_Wlast_mon : in  std_logic;
-         la0_memory_checker_0/r_ARready_mon : in  std_logic;
-         la0_memory_checker_0/r_Rrow_mon : in  std_logic_vector(16 downto 0);
-         la0_memory_checker_0/r_Wready_mon : in  std_logic;
-         la0_memory_checker_0/r_ARvalid_mon : in  std_logic;
-         la0_memory_checker_0/r_AWready_mon : in  std_logic;
-         la0_memory_checker_0/r_Bready_mon : in  std_logic;
-         la0_memory_checker_0/r_Rready_mon : in  std_logic;
-         la0_memory_checker_0/r_Rcs_mon : in  std_logic;
-         la0_memory_checker_0/r_Wvalid_mon : in  std_logic;
-         la0_memory_checker_0/r_Rdata_mon : in  std_logic_vector(31 downto 0);
-         la0_memory_checker_0/i_cfg_done : in  std_logic;
-         la0_memory_checker_0/r_Wbank_mon : in  std_logic_vector(2 downto 0);
-         la0_memory_checker_0/r_Wrow_mon : in  std_logic_vector(16 downto 0);
-         la0_memory_checker_0/r_Bresp_mon : in  std_logic_vector(1 downto 0);
-         la0_memory_checker_0/r_Rbank_mon : in  std_logic_vector(2 downto 0);
-         la0_memory_checker_0/r_Rcol_mon : in  std_logic_vector(9 downto 0);
-         la0_memory_checker_0/r_Rlast_mon : in  std_logic;
-         la0_memory_checker_0/r_Wdata_mon : in  std_logic_vector(31 downto 0);
-         la0_memory_checker_0/r_Wcol_mon : in  std_logic_vector(9 downto 0)
+         la0_memory_checker_0/axi4_write_sequence/r_wdata[8] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/r_wdata[12] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/r_wdata[15] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/q_bresp : in  std_logic_vector(1 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/r_wdata[9] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/r_wdata[14] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/r_wdata[4] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/r_wdata[7] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/r_wdata[11] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/r_wstart : in  std_logic;
+         la0_memory_checker_0/axi4_write_sequence/r_wdata[0] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/q_awready : in  std_logic;
+         la0_memory_checker_0/axi4_write_sequence/r_awvalid : in  std_logic;
+         la0_memory_checker_0/axi4_write_sequence/r_wdata[10] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/rBurstCnt : in  std_logic_vector(3 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/r_wdata[5] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/r_wdata[13] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/r_wdata[1] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/r_bready : in  std_logic;
+         la0_memory_checker_0/axi4_write_sequence/r_wrow : in  std_logic_vector(16 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/r_wdone : in  std_logic;
+         la0_memory_checker_0/axi4_write_sequence/r_wlast : in  std_logic;
+         la0_memory_checker_0/axi4_write_sequence/r_wdata[2] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/q_wready : in  std_logic;
+         la0_memory_checker_0/axi4_write_sequence/qBurstMaxCke : in  std_logic;
+         la0_memory_checker_0/axi4_write_sequence/r_wvalid : in  std_logic;
+         la0_memory_checker_0/axi4_write_sequence/r_wdata[3] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/q_bvalid : in  std_logic;
+         la0_memory_checker_0/axi4_write_sequence/r_wdata[6] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/r_rdata[1] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/q_rvalid : in  std_logic;
+         la0_memory_checker_0/axi4_read_sequence/r_rdata[0] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/q_rrast : in  std_logic;
+         la0_memory_checker_0/axi4_read_sequence/r_rdata[3] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/r_rdata[5] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/r_rstart : in  std_logic;
+         la0_memory_checker_0/axi4_read_sequence/r_rdata[9] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/r_rdata[12] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/r_rready : in  std_logic;
+         la0_memory_checker_0/axi4_read_sequence/r_rdata[8] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/r_rdata[2] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/r_rdata[13] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/q_rresp : in  std_logic_vector(1 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/r_rdata[15] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/r_rdata[10] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/r_rrow : in  std_logic_vector(16 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/r_rdata[6] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/r_rdata[14] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/r_rdata[4] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/r_rdata[11] : in  std_logic_vector(15 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/r_arvalid : in  std_logic;
+         la0_memory_checker_0/axi4_read_sequence/q_arready : in  std_logic;
+         la0_memory_checker_0/axi4_read_sequence/r_rdata[7] : in  std_logic_vector(15 downto 0);
+         la0_ddr_reset_sequencer/r_ddr_init_done : in  std_logic;
+         la0_memory_checker_0/iRST : in  std_logic
        );
 end component ;
 ---------------------- End COMPONENT Declaration ------------
@@ -57,28 +90,61 @@ port map (
            bscan_UPDATE  => jtag_inst1_UPDATE,
            bscan_TDO     => jtag_inst1_TDO,
            la0_clk      => #INSERT_YOUR_CLOCK_NAME,
-           la0_memory_checker_0/r_Wcs_mon   => la0_memory_checker_0/r_Wcs_mon,
-           la0_memory_checker_0/r_AWvalid_mon   => la0_memory_checker_0/r_AWvalid_mon,
-           la0_memory_checker_0/r_Wlast_mon => la0_memory_checker_0/r_Wlast_mon,
-           la0_memory_checker_0/r_ARready_mon   => la0_memory_checker_0/r_ARready_mon,
-           la0_memory_checker_0/r_Rrow_mon  => la0_memory_checker_0/r_Rrow_mon,
-           la0_memory_checker_0/r_Wready_mon    => la0_memory_checker_0/r_Wready_mon,
-           la0_memory_checker_0/r_ARvalid_mon   => la0_memory_checker_0/r_ARvalid_mon,
-           la0_memory_checker_0/r_AWready_mon   => la0_memory_checker_0/r_AWready_mon,
-           la0_memory_checker_0/r_Bready_mon    => la0_memory_checker_0/r_Bready_mon,
-           la0_memory_checker_0/r_Rready_mon    => la0_memory_checker_0/r_Rready_mon,
-           la0_memory_checker_0/r_Rcs_mon   => la0_memory_checker_0/r_Rcs_mon,
-           la0_memory_checker_0/r_Wvalid_mon    => la0_memory_checker_0/r_Wvalid_mon,
-           la0_memory_checker_0/r_Rdata_mon => la0_memory_checker_0/r_Rdata_mon,
-           la0_memory_checker_0/i_cfg_done  => la0_memory_checker_0/i_cfg_done,
-           la0_memory_checker_0/r_Wbank_mon => la0_memory_checker_0/r_Wbank_mon,
-           la0_memory_checker_0/r_Wrow_mon  => la0_memory_checker_0/r_Wrow_mon,
-           la0_memory_checker_0/r_Bresp_mon => la0_memory_checker_0/r_Bresp_mon,
-           la0_memory_checker_0/r_Rbank_mon => la0_memory_checker_0/r_Rbank_mon,
-           la0_memory_checker_0/r_Rcol_mon  => la0_memory_checker_0/r_Rcol_mon,
-           la0_memory_checker_0/r_Rlast_mon => la0_memory_checker_0/r_Rlast_mon,
-           la0_memory_checker_0/r_Wdata_mon => la0_memory_checker_0/r_Wdata_mon,
-           la0_memory_checker_0/r_Wcol_mon  => la0_memory_checker_0/r_Wcol_mon
+           la0_memory_checker_0/axi4_write_sequence/r_wdata[8]  => la0_memory_checker_0/axi4_write_sequence/r_wdata[8],
+           la0_memory_checker_0/axi4_write_sequence/r_wdata[12] => la0_memory_checker_0/axi4_write_sequence/r_wdata[12],
+           la0_memory_checker_0/axi4_write_sequence/r_wdata[15] => la0_memory_checker_0/axi4_write_sequence/r_wdata[15],
+           la0_memory_checker_0/axi4_write_sequence/q_bresp => la0_memory_checker_0/axi4_write_sequence/q_bresp,
+           la0_memory_checker_0/axi4_write_sequence/r_wdata[9]  => la0_memory_checker_0/axi4_write_sequence/r_wdata[9],
+           la0_memory_checker_0/axi4_write_sequence/r_wdata[14] => la0_memory_checker_0/axi4_write_sequence/r_wdata[14],
+           la0_memory_checker_0/axi4_write_sequence/r_wdata[4]  => la0_memory_checker_0/axi4_write_sequence/r_wdata[4],
+           la0_memory_checker_0/axi4_write_sequence/r_wdata[7]  => la0_memory_checker_0/axi4_write_sequence/r_wdata[7],
+           la0_memory_checker_0/axi4_write_sequence/r_wdata[11] => la0_memory_checker_0/axi4_write_sequence/r_wdata[11],
+           la0_memory_checker_0/axi4_write_sequence/r_wstart    => la0_memory_checker_0/axi4_write_sequence/r_wstart,
+           la0_memory_checker_0/axi4_write_sequence/r_wdata[0]  => la0_memory_checker_0/axi4_write_sequence/r_wdata[0],
+           la0_memory_checker_0/axi4_write_sequence/q_awready   => la0_memory_checker_0/axi4_write_sequence/q_awready,
+           la0_memory_checker_0/axi4_write_sequence/r_awvalid   => la0_memory_checker_0/axi4_write_sequence/r_awvalid,
+           la0_memory_checker_0/axi4_write_sequence/r_wdata[10] => la0_memory_checker_0/axi4_write_sequence/r_wdata[10],
+           la0_memory_checker_0/axi4_write_sequence/rBurstCnt   => la0_memory_checker_0/axi4_write_sequence/rBurstCnt,
+           la0_memory_checker_0/axi4_write_sequence/r_wdata[5]  => la0_memory_checker_0/axi4_write_sequence/r_wdata[5],
+           la0_memory_checker_0/axi4_write_sequence/r_wdata[13] => la0_memory_checker_0/axi4_write_sequence/r_wdata[13],
+           la0_memory_checker_0/axi4_write_sequence/r_wdata[1]  => la0_memory_checker_0/axi4_write_sequence/r_wdata[1],
+           la0_memory_checker_0/axi4_write_sequence/r_bready    => la0_memory_checker_0/axi4_write_sequence/r_bready,
+           la0_memory_checker_0/axi4_write_sequence/r_wrow  => la0_memory_checker_0/axi4_write_sequence/r_wrow,
+           la0_memory_checker_0/axi4_write_sequence/r_wdone => la0_memory_checker_0/axi4_write_sequence/r_wdone,
+           la0_memory_checker_0/axi4_write_sequence/r_wlast => la0_memory_checker_0/axi4_write_sequence/r_wlast,
+           la0_memory_checker_0/axi4_write_sequence/r_wdata[2]  => la0_memory_checker_0/axi4_write_sequence/r_wdata[2],
+           la0_memory_checker_0/axi4_write_sequence/q_wready    => la0_memory_checker_0/axi4_write_sequence/q_wready,
+           la0_memory_checker_0/axi4_write_sequence/qBurstMaxCke    => la0_memory_checker_0/axi4_write_sequence/qBurstMaxCke,
+           la0_memory_checker_0/axi4_write_sequence/r_wvalid    => la0_memory_checker_0/axi4_write_sequence/r_wvalid,
+           la0_memory_checker_0/axi4_write_sequence/r_wdata[3]  => la0_memory_checker_0/axi4_write_sequence/r_wdata[3],
+           la0_memory_checker_0/axi4_write_sequence/q_bvalid    => la0_memory_checker_0/axi4_write_sequence/q_bvalid,
+           la0_memory_checker_0/axi4_write_sequence/r_wdata[6]  => la0_memory_checker_0/axi4_write_sequence/r_wdata[6],
+           la0_memory_checker_0/axi4_read_sequence/r_rdata[1]   => la0_memory_checker_0/axi4_read_sequence/r_rdata[1],
+           la0_memory_checker_0/axi4_read_sequence/q_rvalid => la0_memory_checker_0/axi4_read_sequence/q_rvalid,
+           la0_memory_checker_0/axi4_read_sequence/r_rdata[0]   => la0_memory_checker_0/axi4_read_sequence/r_rdata[0],
+           la0_memory_checker_0/axi4_read_sequence/q_rrast  => la0_memory_checker_0/axi4_read_sequence/q_rrast,
+           la0_memory_checker_0/axi4_read_sequence/r_rdata[3]   => la0_memory_checker_0/axi4_read_sequence/r_rdata[3],
+           la0_memory_checker_0/axi4_read_sequence/r_rdata[5]   => la0_memory_checker_0/axi4_read_sequence/r_rdata[5],
+           la0_memory_checker_0/axi4_read_sequence/r_rstart => la0_memory_checker_0/axi4_read_sequence/r_rstart,
+           la0_memory_checker_0/axi4_read_sequence/r_rdata[9]   => la0_memory_checker_0/axi4_read_sequence/r_rdata[9],
+           la0_memory_checker_0/axi4_read_sequence/r_rdata[12]  => la0_memory_checker_0/axi4_read_sequence/r_rdata[12],
+           la0_memory_checker_0/axi4_read_sequence/r_rready => la0_memory_checker_0/axi4_read_sequence/r_rready,
+           la0_memory_checker_0/axi4_read_sequence/r_rdata[8]   => la0_memory_checker_0/axi4_read_sequence/r_rdata[8],
+           la0_memory_checker_0/axi4_read_sequence/r_rdata[2]   => la0_memory_checker_0/axi4_read_sequence/r_rdata[2],
+           la0_memory_checker_0/axi4_read_sequence/r_rdata[13]  => la0_memory_checker_0/axi4_read_sequence/r_rdata[13],
+           la0_memory_checker_0/axi4_read_sequence/q_rresp  => la0_memory_checker_0/axi4_read_sequence/q_rresp,
+           la0_memory_checker_0/axi4_read_sequence/r_rdata[15]  => la0_memory_checker_0/axi4_read_sequence/r_rdata[15],
+           la0_memory_checker_0/axi4_read_sequence/r_rdata[10]  => la0_memory_checker_0/axi4_read_sequence/r_rdata[10],
+           la0_memory_checker_0/axi4_read_sequence/r_rrow   => la0_memory_checker_0/axi4_read_sequence/r_rrow,
+           la0_memory_checker_0/axi4_read_sequence/r_rdata[6]   => la0_memory_checker_0/axi4_read_sequence/r_rdata[6],
+           la0_memory_checker_0/axi4_read_sequence/r_rdata[14]  => la0_memory_checker_0/axi4_read_sequence/r_rdata[14],
+           la0_memory_checker_0/axi4_read_sequence/r_rdata[4]   => la0_memory_checker_0/axi4_read_sequence/r_rdata[4],
+           la0_memory_checker_0/axi4_read_sequence/r_rdata[11]  => la0_memory_checker_0/axi4_read_sequence/r_rdata[11],
+           la0_memory_checker_0/axi4_read_sequence/r_arvalid    => la0_memory_checker_0/axi4_read_sequence/r_arvalid,
+           la0_memory_checker_0/axi4_read_sequence/q_arready    => la0_memory_checker_0/axi4_read_sequence/q_arready,
+           la0_memory_checker_0/axi4_read_sequence/r_rdata[7]   => la0_memory_checker_0/axi4_read_sequence/r_rdata[7],
+           la0_ddr_reset_sequencer/r_ddr_init_done  => la0_ddr_reset_sequencer/r_ddr_init_done,
+           la0_memory_checker_0/iRST    => la0_memory_checker_0/iRST
          );
 ------------------------ End INSTANTIATION Template ---------
 
