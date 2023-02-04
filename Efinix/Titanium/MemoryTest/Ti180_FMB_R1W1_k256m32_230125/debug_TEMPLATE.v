@@ -30,7 +30,6 @@ edb_top edb_top_inst (
     .la0_memory_checker_0/axi4_write_sequence/r_wdata[13]       ( la0_memory_checker_0/axi4_write_sequence/r_wdata[13] ),
     .la0_memory_checker_0/axi4_write_sequence/r_wdata[1]        ( la0_memory_checker_0/axi4_write_sequence/r_wdata[1] ),
     .la0_memory_checker_0/axi4_write_sequence/r_bready      ( la0_memory_checker_0/axi4_write_sequence/r_bready ),
-    .la0_memory_checker_0/axi4_write_sequence/r_wrow        ( la0_memory_checker_0/axi4_write_sequence/r_wrow ),
     .la0_memory_checker_0/axi4_write_sequence/r_wdone       ( la0_memory_checker_0/axi4_write_sequence/r_wdone ),
     .la0_memory_checker_0/axi4_write_sequence/r_wlast       ( la0_memory_checker_0/axi4_write_sequence/r_wlast ),
     .la0_memory_checker_0/axi4_write_sequence/r_wdata[2]        ( la0_memory_checker_0/axi4_write_sequence/r_wdata[2] ),
@@ -56,7 +55,6 @@ edb_top edb_top_inst (
     .la0_memory_checker_0/axi4_read_sequence/q_rresp        ( la0_memory_checker_0/axi4_read_sequence/q_rresp ),
     .la0_memory_checker_0/axi4_read_sequence/r_rdata[15]        ( la0_memory_checker_0/axi4_read_sequence/r_rdata[15] ),
     .la0_memory_checker_0/axi4_read_sequence/r_rdata[10]        ( la0_memory_checker_0/axi4_read_sequence/r_rdata[10] ),
-    .la0_memory_checker_0/axi4_read_sequence/r_rrow     ( la0_memory_checker_0/axi4_read_sequence/r_rrow ),
     .la0_memory_checker_0/axi4_read_sequence/r_rdata[6]     ( la0_memory_checker_0/axi4_read_sequence/r_rdata[6] ),
     .la0_memory_checker_0/axi4_read_sequence/r_rdata[14]        ( la0_memory_checker_0/axi4_read_sequence/r_rdata[14] ),
     .la0_memory_checker_0/axi4_read_sequence/r_rdata[4]     ( la0_memory_checker_0/axi4_read_sequence/r_rdata[4] ),
@@ -65,7 +63,13 @@ edb_top edb_top_inst (
     .la0_memory_checker_0/axi4_read_sequence/q_arready      ( la0_memory_checker_0/axi4_read_sequence/q_arready ),
     .la0_memory_checker_0/axi4_read_sequence/r_rdata[7]     ( la0_memory_checker_0/axi4_read_sequence/r_rdata[7] ),
     .la0_ddr_reset_sequencer/r_ddr_init_done        ( la0_ddr_reset_sequencer/r_ddr_init_done ),
-    .la0_memory_checker_0/iRST      ( la0_memory_checker_0/iRST )
+    .la0_memory_checker_0/iRST      ( la0_memory_checker_0/iRST ),
+    .la0_memory_checker_0/axi4_write_sequence/rWSpeedMeas       ( la0_memory_checker_0/axi4_write_sequence/rWSpeedMeas ),
+    .la0_memory_checker_0/axi4_read_sequence/rRSpeedMeas        ( la0_memory_checker_0/axi4_read_sequence/rRSpeedMeas ),
+    .la0_memory_checker_0/axi4_write_sequence/r_wcol        ( la0_memory_checker_0/axi4_write_sequence/r_wcol ),
+    .la0_memory_checker_0/axi4_write_sequence/r_wbank       ( la0_memory_checker_0/axi4_write_sequence/r_wbank ),
+    .la0_memory_checker_0/axi4_write_sequence/r_wrow        ( la0_memory_checker_0/axi4_write_sequence/r_wrow ),
+    .la0_memory_checker_0/axi4_read_sequence/r_rrow     ( la0_memory_checker_0/axi4_read_sequence/r_rrow )
 );
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efx:project name="Ti180_FMB_R1W1_k256m32_230125" description="" last_change_date="土 2月 4 2023 10:24:46" location="/home/kimura/workspace/ProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125" sw_version="2022.2.322" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="change" place_ood="sync" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
+<efx:project name="Ti180_FMB_R1W1_k256m32_230125" description="" last_change_date="土 2月 4 2023 21:00:40" location="/home/kimura/workspace/ProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125" sw_version="2022.2.322" last_run_state="pass" last_run_tool="efx_map" last_run_flow="syn" config_result_in_sync="sync" design_ood="sync" place_ood="change" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
     <efx:device_info>
         <efx:family name="Titanium"/>
         <efx:device name="Ti180M484"/>
@@ -12,6 +12,7 @@
         <efx:design_file name="src/memory_checker.v" version="default" library="default"/>
         <efx:design_file name="src/axi4_read_sequence.v" version="default" library="default"/>
         <efx:design_file name="src/axi4_write_sequence.v" version="default" library="default"/>
+        <efx:design_file name="src/axi4_adrs_generator.v" version="default" library="default"/>
         <efx:top_vhdl_arch name=""/>
     </efx:design_info>
     <efx:constraint_info>
@@ -73,9 +74,9 @@
         <efx:param name="release_tri_then_reset" value="on" value_type="e_bool"/>
         <efx:param name="four_byte_addressing" value="off" value_type="e_bool"/>
         <efx:param name="generate_bit" value="on" value_type="e_bool"/>
-        <efx:param name="generate_bitbin" value="off" value_type="e_bool"/>
+        <efx:param name="generate_bitbin" value="on" value_type="e_bool"/>
         <efx:param name="generate_hex" value="on" value_type="e_bool"/>
-        <efx:param name="generate_hexbin" value="off" value_type="e_bool"/>
+        <efx:param name="generate_hexbin" value="on" value_type="e_bool"/>
         <efx:param name="cold_boot" value="off" value_type="e_bool"/>
         <efx:param name="cascade" value="off" value_type="e_option"/>
     </efx:bitstream_generation>

@@ -3,7 +3,7 @@
         {
             "name": "la0",
             "type": "la",
-            "uuid": "7b0af7e663ad4cbc814b842a1023f533",
+            "uuid": "960c8100fa924b7787b40f5388230522",
             "probes": [
                 {
                     "name": "memory_checker_0/axi4_write_sequence/r_wdata[8]",
@@ -98,11 +98,6 @@
                 {
                     "name": "memory_checker_0/axi4_write_sequence/r_bready",
                     "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "memory_checker_0/axi4_write_sequence/r_wrow",
-                    "width": 17,
                     "probe_type": 1
                 },
                 {
@@ -231,11 +226,6 @@
                     "probe_type": 1
                 },
                 {
-                    "name": "memory_checker_0/axi4_read_sequence/r_rrow",
-                    "width": 17,
-                    "probe_type": 1
-                },
-                {
                     "name": "memory_checker_0/axi4_read_sequence/r_rdata[6]",
                     "width": 16,
                     "probe_type": 1
@@ -278,6 +268,36 @@
                 {
                     "name": "memory_checker_0/iRST",
                     "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "memory_checker_0/axi4_write_sequence/rWSpeedMeas",
+                    "width": 8,
+                    "probe_type": 1
+                },
+                {
+                    "name": "memory_checker_0/axi4_read_sequence/rRSpeedMeas",
+                    "width": 8,
+                    "probe_type": 1
+                },
+                {
+                    "name": "memory_checker_0/axi4_write_sequence/r_wcol",
+                    "width": 10,
+                    "probe_type": 1
+                },
+                {
+                    "name": "memory_checker_0/axi4_write_sequence/r_wbank",
+                    "width": 3,
+                    "probe_type": 1
+                },
+                {
+                    "name": "memory_checker_0/axi4_write_sequence/r_wrow",
+                    "width": 14,
+                    "probe_type": 1
+                },
+                {
+                    "name": "memory_checker_0/axi4_read_sequence/r_rrow",
+                    "width": 14,
                     "probe_type": 1
                 }
             ],

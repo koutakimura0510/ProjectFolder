@@ -34,15 +34,14 @@
 //---------------------------------------------------------------------------
 module memory_checker #(
 	parameter pAxi4BusWidth = 512,
-    parameter pDataBitWidth	= 16,
+    parameter pDataBitWidth	= 32,
     parameter pStartAdrs	= 32'h00000000,
     parameter pStopAdrs		= 32'h00100000,
-    parameter pBurstSize	= pAxi4BusWidth / pDataBitWidth,
-    parameter pAdrsOffset	= pBurstSize * (pDataBitWidth / 8)	// LSB 2bit * DataWidth
+	parameter pDdrBurstSize = 16
 )(
 // AXI4 Read Address Channel
 output[  7:0] 				o_arlen,		// Burst Length, arlen + 1
-output[  2:0] 				o_arsize,		// 一回に転送する場バイト数, 8bit * 000=1,001=2,010=4,011=8,100=16,101=32,110=64,111=128
+output[  2:0] 				o_arsize,		// 一回に転送するバイト数, 8bit * 000=1,001=2,010=4,011=8,100=16,101=32,110=64,111=128
 output[  1:0] 				o_arburst,		// Burst Type, 0.固定アドレス, 1.アドレス自動インクリメント
 output[ 32:0] 				o_araddr,
 input 						i_arready,
@@ -67,7 +66,7 @@ output 						o_awapcmd,
 output 						o_awcobuf,
 output[  5:0] 				o_awid,
 output[  7:0] 				o_awlen,
-output[  2:0] 				o_awsize,		// 一回に転送する場バイト数, 3bit = 1,2,4,8,16,32,64,128
+output[  2:0] 				o_awsize,
 output[  1:0] 				o_awburst,
 output 						o_awlock,
 input 						i_awready,
@@ -102,7 +101,8 @@ axi4_write_sequence #(
 	.pAxi4BusWidth(pAxi4BusWidth),
 	.pDataBitWidth(pDataBitWidth),
 	.pStartAdrs(pStartAdrs),
-	.pStopAdrs(pStopAdrs)
+	.pStopAdrs(pStopAdrs),
+	.pDdrBurstSize(pDdrBurstSize)
 ) axi4_write_sequence (
 	// AXI4 Write Address Channel
 	.o_awcache(o_awcache),			.o_awqos(o_awqos),
@@ -125,6 +125,8 @@ axi4_write_sequence #(
 	.iCLK(iCLK)
 );
 
+
+
 //-----------------------------------------------------------------------------
 // read sequence
 //-----------------------------------------------------------------------------
@@ -134,7 +136,8 @@ axi4_read_sequence #(
 	.pAxi4BusWidth(pAxi4BusWidth),
 	.pDataBitWidth(pDataBitWidth),
 	.pStartAdrs(pStartAdrs),
-	.pStopAdrs(pStopAdrs)
+	.pStopAdrs(pStopAdrs),
+	.pDdrBurstSize(pDdrBurstSize)
 ) axi4_read_sequence (
 	// AXI4 Read Address Channel
 	.o_arlen(o_arlen),			.o_arsize(o_arsize),

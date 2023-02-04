@@ -190,13 +190,15 @@ assign ddr4_CFG_SEL   = 1'b0;	// 自動キャリブレーション使用時は L
 // [32] CS, [31:15] Row = 17bit, [14:12] Bank, [11:2] Col =10 bit, [1:0] Datapath
 //---------------------------------------------------------------------------
 localparam lpDataBitWidth = 16;
+localparam lpDdrBurstSize = 16;
 
 wire w_test_done, w_test_fail, w_test_run;
 reg  qMemRST;
 
 memory_checker #(
 	.pAxi4BusWidth(pAxi4BusWidth),
-	.pDataBitWidth(lpDataBitWidth)
+	.pDataBitWidth(lpDataBitWidth),
+	.pDdrBurstSize(lpDdrBurstSize)
 ) memory_checker_0 (
 // AXI4 Read Address Channel
 	.o_arid(ddr4_ARID_0),				.o_arapcmd(ddr4_ARAPCMD_0),

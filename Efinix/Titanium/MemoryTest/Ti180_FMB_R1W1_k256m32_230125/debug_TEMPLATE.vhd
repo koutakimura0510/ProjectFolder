@@ -32,7 +32,6 @@ component edb_top
          la0_memory_checker_0/axi4_write_sequence/r_wdata[13] : in  std_logic_vector(15 downto 0);
          la0_memory_checker_0/axi4_write_sequence/r_wdata[1] : in  std_logic_vector(15 downto 0);
          la0_memory_checker_0/axi4_write_sequence/r_bready : in  std_logic;
-         la0_memory_checker_0/axi4_write_sequence/r_wrow : in  std_logic_vector(16 downto 0);
          la0_memory_checker_0/axi4_write_sequence/r_wdone : in  std_logic;
          la0_memory_checker_0/axi4_write_sequence/r_wlast : in  std_logic;
          la0_memory_checker_0/axi4_write_sequence/r_wdata[2] : in  std_logic_vector(15 downto 0);
@@ -58,7 +57,6 @@ component edb_top
          la0_memory_checker_0/axi4_read_sequence/q_rresp : in  std_logic_vector(1 downto 0);
          la0_memory_checker_0/axi4_read_sequence/r_rdata[15] : in  std_logic_vector(15 downto 0);
          la0_memory_checker_0/axi4_read_sequence/r_rdata[10] : in  std_logic_vector(15 downto 0);
-         la0_memory_checker_0/axi4_read_sequence/r_rrow : in  std_logic_vector(16 downto 0);
          la0_memory_checker_0/axi4_read_sequence/r_rdata[6] : in  std_logic_vector(15 downto 0);
          la0_memory_checker_0/axi4_read_sequence/r_rdata[14] : in  std_logic_vector(15 downto 0);
          la0_memory_checker_0/axi4_read_sequence/r_rdata[4] : in  std_logic_vector(15 downto 0);
@@ -67,7 +65,13 @@ component edb_top
          la0_memory_checker_0/axi4_read_sequence/q_arready : in  std_logic;
          la0_memory_checker_0/axi4_read_sequence/r_rdata[7] : in  std_logic_vector(15 downto 0);
          la0_ddr_reset_sequencer/r_ddr_init_done : in  std_logic;
-         la0_memory_checker_0/iRST : in  std_logic
+         la0_memory_checker_0/iRST : in  std_logic;
+         la0_memory_checker_0/axi4_write_sequence/rWSpeedMeas : in  std_logic_vector(7 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/rRSpeedMeas : in  std_logic_vector(7 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/r_wcol : in  std_logic_vector(9 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/r_wbank : in  std_logic_vector(2 downto 0);
+         la0_memory_checker_0/axi4_write_sequence/r_wrow : in  std_logic_vector(13 downto 0);
+         la0_memory_checker_0/axi4_read_sequence/r_rrow : in  std_logic_vector(13 downto 0)
        );
 end component ;
 ---------------------- End COMPONENT Declaration ------------
@@ -109,7 +113,6 @@ port map (
            la0_memory_checker_0/axi4_write_sequence/r_wdata[13] => la0_memory_checker_0/axi4_write_sequence/r_wdata[13],
            la0_memory_checker_0/axi4_write_sequence/r_wdata[1]  => la0_memory_checker_0/axi4_write_sequence/r_wdata[1],
            la0_memory_checker_0/axi4_write_sequence/r_bready    => la0_memory_checker_0/axi4_write_sequence/r_bready,
-           la0_memory_checker_0/axi4_write_sequence/r_wrow  => la0_memory_checker_0/axi4_write_sequence/r_wrow,
            la0_memory_checker_0/axi4_write_sequence/r_wdone => la0_memory_checker_0/axi4_write_sequence/r_wdone,
            la0_memory_checker_0/axi4_write_sequence/r_wlast => la0_memory_checker_0/axi4_write_sequence/r_wlast,
            la0_memory_checker_0/axi4_write_sequence/r_wdata[2]  => la0_memory_checker_0/axi4_write_sequence/r_wdata[2],
@@ -135,7 +138,6 @@ port map (
            la0_memory_checker_0/axi4_read_sequence/q_rresp  => la0_memory_checker_0/axi4_read_sequence/q_rresp,
            la0_memory_checker_0/axi4_read_sequence/r_rdata[15]  => la0_memory_checker_0/axi4_read_sequence/r_rdata[15],
            la0_memory_checker_0/axi4_read_sequence/r_rdata[10]  => la0_memory_checker_0/axi4_read_sequence/r_rdata[10],
-           la0_memory_checker_0/axi4_read_sequence/r_rrow   => la0_memory_checker_0/axi4_read_sequence/r_rrow,
            la0_memory_checker_0/axi4_read_sequence/r_rdata[6]   => la0_memory_checker_0/axi4_read_sequence/r_rdata[6],
            la0_memory_checker_0/axi4_read_sequence/r_rdata[14]  => la0_memory_checker_0/axi4_read_sequence/r_rdata[14],
            la0_memory_checker_0/axi4_read_sequence/r_rdata[4]   => la0_memory_checker_0/axi4_read_sequence/r_rdata[4],
@@ -144,7 +146,13 @@ port map (
            la0_memory_checker_0/axi4_read_sequence/q_arready    => la0_memory_checker_0/axi4_read_sequence/q_arready,
            la0_memory_checker_0/axi4_read_sequence/r_rdata[7]   => la0_memory_checker_0/axi4_read_sequence/r_rdata[7],
            la0_ddr_reset_sequencer/r_ddr_init_done  => la0_ddr_reset_sequencer/r_ddr_init_done,
-           la0_memory_checker_0/iRST    => la0_memory_checker_0/iRST
+           la0_memory_checker_0/iRST    => la0_memory_checker_0/iRST,
+           la0_memory_checker_0/axi4_write_sequence/rWSpeedMeas => la0_memory_checker_0/axi4_write_sequence/rWSpeedMeas,
+           la0_memory_checker_0/axi4_read_sequence/rRSpeedMeas  => la0_memory_checker_0/axi4_read_sequence/rRSpeedMeas,
+           la0_memory_checker_0/axi4_write_sequence/r_wcol  => la0_memory_checker_0/axi4_write_sequence/r_wcol,
+           la0_memory_checker_0/axi4_write_sequence/r_wbank => la0_memory_checker_0/axi4_write_sequence/r_wbank,
+           la0_memory_checker_0/axi4_write_sequence/r_wrow  => la0_memory_checker_0/axi4_write_sequence/r_wrow,
+           la0_memory_checker_0/axi4_read_sequence/r_rrow   => la0_memory_checker_0/axi4_read_sequence/r_rrow
          );
 ------------------------ End INSTANTIATION Template ---------
 
