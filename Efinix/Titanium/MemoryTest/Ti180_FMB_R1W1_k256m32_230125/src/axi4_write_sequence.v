@@ -254,7 +254,7 @@ localparam	lpWSpeedAve = 8;
 reg [7:0] 	rWSpeedMeas;				// 転送中カウンタ
 reg [7:0]	rABuff [0:lpWSpeedAve-1];	// 計測値保存
 reg [10:0]	rTotalAverage;				// 移動平均合計値
-reg [7:0]	qTotalAverage;				// 移動平均合計値 / Buffer深さ = 観測用
+reg [7:0]	qTotalAverage;				// 移動平均合計値 / Buffer深さ
 reg [2:0]	rABuffAdrs;
 reg 		rWSpeedMeasSel, qWSpeedMeasSel;
 

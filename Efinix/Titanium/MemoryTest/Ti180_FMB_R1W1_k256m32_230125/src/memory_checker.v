@@ -30,6 +30,8 @@
  * else:
  *     self._standalone_wave_viewers.append(wave_viewer)
  *
+ * Burst16 * 512bit * 100[MHz] / Cycle 95 * R/W 2 = 17.246[Gbps] / DQ 16bit = 1.077[GB/sec]
+ * MAX 1333.2[MHz]
  *~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*/
 //---------------------------------------------------------------------------
 module memory_checker #(
@@ -44,7 +46,7 @@ parameter pDdrBurstSize = 16
 )(
 // AXI4 Read Address Channel
 output[  7:0] 				o_arlen,		// Burst Length, arlen + 1
-output[  2:0] 				o_arsize,		// 一回に転送するバイト数, (Burst回数 * DQpin Byte数) = 000=1,001=2,010=4,011=8,100=16,101=32,110=64,111=128
+output[  2:0] 				o_arsize,		// 一回に転送するバイト数, AXIBusWidth / 8 = 000=1,001=2,010=4,011=8,100=16,101=32,110=64,111=128
 output[  1:0] 				o_arburst,		// Burst Type, 0.固定アドレス, 1.アドレス自動インクリメント
 output[ 32:0] 				o_araddr,
 input 						i_arready,
@@ -77,7 +79,7 @@ output 						o_awvalid,
 // AXI4 Write Data Channel
 input 						i_wready,		// 受信完了
 output[pAxi4BusWidth-1:0] 	o_wdata,
-output 						o_wlast,		// Burst 転送最後のときに Assert
+output 						o_wlast,		// Burst Last Assert
 output[ 63:0] 				o_wstrb,		// 有効レーンBit
 output 						o_wvalid,
 // AXI4 Write Response Channel
