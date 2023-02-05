@@ -140,6 +140,11 @@ begin
 		default: 	q_wstart_cke <= 1'b0;
 	endcase
 
+	case ( {r_wstart,r_bready,i_bvalid} )
+		'b111:		q_wdone_cke <= 1'b1;
+		default: 	q_wdone_cke <= 1'b0;
+	endcase
+	//
 	casex ( {r_wstart,r_awvalid,i_awready} )
 		'b00x:		q_awvalid_cke <= 1'b1;	// Assert
 		'bx11:		q_awvalid_cke <= 1'b1;	// Dissert
@@ -158,11 +163,6 @@ begin
 		default: 	q_wlast_cke <= 1'b0;
 	endcase
 
-	case ( {r_wstart,r_bready,i_bvalid} )
-		'b111:		q_wdone_cke <= 1'b1;
-		default: 	q_wdone_cke <= 1'b0;
-	endcase
-
 	casex ( {r_bready,i_bvalid} )
 		'b01:		q_bready_cke <= 1'b1;	// Assert
 		'b11:		q_bready_cke <= 1'b1;	// Dissert
@@ -171,7 +171,7 @@ begin
 	//
 	q_wdata_cke  <= &{r_bready,i_bvalid};		// next data
 	q_wseq_cke   <= &{r_wvalid,i_wready};		// Master/Slave OK
-	qBurstMaxCke <= rBurstCnt == lpBurstLen;	// Last 信号用
+	qBurstMaxCke <= (rBurstCnt == lpBurstLen);	// Last 信号用
 end
 //
 
@@ -186,7 +186,7 @@ axi4_adrs_generator #(
 	.pDdrBurstSize(pDdrBurstSize),
 	.pDdrMemSize(pDdrMemSize)
 ) axi4_adrs_generator (
-	.oAdrs(wAdrs),
+	.oAdrs(wAdrs),		.oAdrsDone(),
 	// common
 	.iRST(iRST),		.iCKE(qAxi4AdrsCke),
 	.iCLK(iCLK)

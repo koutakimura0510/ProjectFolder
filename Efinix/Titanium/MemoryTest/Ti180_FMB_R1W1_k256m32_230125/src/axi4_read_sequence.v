@@ -39,6 +39,7 @@ output 						o_rready,
 input 						i_rvalid,
 // Core Logic Port
 output[pAxi4BusWidth-1:0]	o_rdata,
+output 						o_rlast,
 input 						i_wdone,
 // common
 input 						iRST,
@@ -62,6 +63,7 @@ reg 					r_arvalid, q_arvalid_cke;
 reg [pDataBitWidth-1:0]	r_rdata[0:(pAxi4BusWidth / pDataBitWidth)-1];
 reg [pAxi4BusWidth-1:0] q_rdata;
 reg 					r_rready, q_rready_cke;
+reg 					r_rlast, q_rlast_cke;
 //
 genvar x;
 
@@ -97,6 +99,9 @@ begin
 	else if (q_rready_cke)	r_rready	<= ~r_rready;
 	else 					r_rready 	<=  r_rready;
 
+	// last
+	if (iRST) 	r_rlast <= 1'b0;
+	else 		r_rlast	<= q_rlast_cke;
 end
 
 always @*
@@ -119,7 +124,10 @@ begin
 		default: 	q_rready_cke <= 1'b0;
 	endcase
 
-	// case ( {r_rready,i_rlast,i_rvalid} )
+	casex ( {r_rready,i_rlast,i_rvalid} )
+		'b111:		q_rlast_cke <= 1'b1;
+		default:	q_rlast_cke <= 1'b0;
+	endcase
 end
 
 
@@ -134,7 +142,7 @@ axi4_adrs_generator #(
 	.pDdrBurstSize(pDdrBurstSize),
 	.pDdrMemSize(pDdrMemSize)
 ) axi4_adrs_generator (
-	.oAdrs(wAdrs),
+	.oAdrs(wAdrs),		.oAdrsDone(),
 	// common
 	.iRST(iRST),		.iCKE(qAxi4AdrsCke),
 	.iCLK(iCLK)
@@ -162,7 +170,9 @@ assign o_arsize		= lpDdrArSize;
 assign o_arburst	= 2'b01;	// adrs auto inc
 assign o_arvalid	= r_arvalid;
 assign o_rready 	= r_rready;
+//
 assign o_rdata		= q_rdata;
+assign o_rlast		= r_rlast;
 
 
 //-----------------------------------------------------------------------------

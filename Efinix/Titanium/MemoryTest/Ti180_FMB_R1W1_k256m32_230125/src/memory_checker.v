@@ -41,7 +41,7 @@ module memory_checker #(
 )(
 // AXI4 Read Address Channel
 output[  7:0] 				o_arlen,		// Burst Length, arlen + 1
-output[  2:0] 				o_arsize,		// 一回に転送するバイト数, 8bit * 000=1,001=2,010=4,011=8,100=16,101=32,110=64,111=128
+output[  2:0] 				o_arsize,		// 一回に転送するバイト数, (Burst回数 * DQpin Byte数) = 000=1,001=2,010=4,011=8,100=16,101=32,110=64,111=128
 output[  1:0] 				o_arburst,		// Burst Type, 0.固定アドレス, 1.アドレス自動インクリメント
 output[ 32:0] 				o_araddr,
 input 						i_arready,
@@ -130,7 +130,8 @@ axi4_write_sequence #(
 //-----------------------------------------------------------------------------
 // read sequence
 //-----------------------------------------------------------------------------
-wire [pAxi4BusWidth-1:0] w_rdata;
+wire [pAxi4BusWidth-1:0] 	w_rdata;
+wire 						w_rlast;
 
 axi4_read_sequence #(
 	.pAxi4BusWidth(pAxi4BusWidth),
@@ -151,6 +152,7 @@ axi4_read_sequence #(
 	.o_rready(o_rready),		.i_rvalid(i_rvalid),
 	// Core Logic Port
 	.o_rdata(w_rdata),
+	.o_rlast(w_rlast),
 	.i_wdone(w_wdone),
 	// common
 	.iRST(iRST),
@@ -159,20 +161,47 @@ axi4_read_sequence #(
 
 
 //-----------------------------------------------------------------------------
+// Data Comperetor
+//-----------------------------------------------------------------------------
+reg 	q_memory_comp_cke;
+wire 	w_test_fail, w_test_done;
+
+memory_comparetor #(
+	.pAxi4BusWidth(pAxi4BusWidth),
+	.pDataBitWidth(pDataBitWidth),
+	.pDdrBurstSize(pDdrBurstSize)
+) memory_comparetor (
+	// Core Logic Port
+	.i_rdata(w_rdata),
+	.o_test_fail(w_test_fail),
+	.o_test_done(w_test_done),
+	// common
+	.iRST(iRST),	.iCKE(q_memory_comp_cke),
+	.iCLK(iCLK)
+);
+
+always @*
+begin
+	q_memory_comp_cke <= w_rlast;
+end
+
+
+//-----------------------------------------------------------------------------
 // test monitor
 //-----------------------------------------------------------------------------
-localparam lpCntRunBitWidth = 23;
+localparam lpCntRunBitWidth = 20;
 
 reg [lpCntRunBitWidth-1:0] 	r_test_run;
 
 always @(posedge iCLK)
 begin
-	if (iRST)	r_test_run <= {lpCntRunBitWidth{1'b0}};
-	else 		r_test_run <= r_test_run + 1'b1;
+	if (iRST)			r_test_run <= {lpCntRunBitWidth{1'b0}};
+	else if (w_rlast)	r_test_run <= r_test_run + 1'b1;
+	else 				r_test_run <= r_test_run;
 end
 
 assign o_test_run  = r_test_run[lpCntRunBitWidth-1];
-assign o_test_fail = 1'b0;
-assign o_test_done = &{w_rdata};
+assign o_test_fail = w_test_fail;
+assign o_test_done = w_test_done;
 
 endmodule

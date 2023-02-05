@@ -14,13 +14,6 @@
 #################
 create_clock -period 10.000 iSCLK
 create_clock -period 7.5008 iDdrFCLK
-# create_clock -period 0.938 pll_ddr_CLKOUT3
-# create_clock -period 1.876 pll_ddr_CLKOUT4
-
-# GPIO Constraints
-####################
-# set_input_delay -clock <CLOCK> [-reference_pin <clkout_pad>] -max <MAX CALCULATION> [get_ports {iOscDdr}]
-# set_input_delay -clock <CLOCK> [-reference_pin <clkout_pad>] -min <MIN CALCULATION> [get_ports {iOscDdr}]
 
 # DDR Constraints
 #####################
