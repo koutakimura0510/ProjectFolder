@@ -13,11 +13,13 @@
 module axi4_write_sequence #(
 parameter pAxi4BusWidth = 512,
 parameter pDataBitWidth	= 16,
-parameter pStartAdrs	= 32'h00000000,
-parameter pStopAdrs		= 32'h00100000,
+parameter pStartPage	= 0,
+parameter pStopPage		= 1024,
+parameter pStartBank	= 0,
+parameter pStopBank		= 7,
 parameter pDdrMemSize 	= "4",	// 単位 Gb
-parameter pDdrBurstSize = 16,
-parameter pAdrsOffset	= pDdrBurstSize * (pDataBitWidth / 8)
+parameter pMemoryTest	= "yes",
+parameter pDdrBurstSize = 16
 )(
 // AXI4 Write Address Channel
 output[3:0] 				o_awcache,
@@ -58,11 +60,10 @@ input 						iCLK
 localparam [3:0] lpBurstLen		= pDdrBurstSize - 1;
 localparam [3:0] lpBurstLen2	= pDdrBurstSize - 2;
 localparam [7:0] lpDdrBurstSize = pDdrBurstSize - 1'b1;
-localparam [2:0] lpDdrArSize    = (pDdrBurstSize == 16) ? 3'b101 : 
-								  (pDdrBurstSize ==  8) ? 3'b100 : 
-								  (pDdrBurstSize ==  4) ? 3'b010 : 
-								  (pDdrBurstSize ==  2) ? 3'b001 : 
-														  3'b000 ;
+localparam [2:0] lpDdrArSize    = (pAxi4BusWidth == 512) ? 3'b110 : 
+								  (pDdrBurstSize == 256) ? 3'b101 : 
+								  (pDdrBurstSize == 128) ? 3'b100 : 
+														   3'b000 ;
 // Core Logic Port
 reg [3:0] 				rBurstCnt;
 reg 					qBurstMaxCke;
@@ -87,7 +88,7 @@ generate
 		always @(posedge iCLK)
 		begin
 			if (iRST)				r_wdata[x] <= x;
-			else if (q_wdata_cke)	r_wdata[x] <= (pDdrBurstSize <= x) ? 16'h1289 : r_wdata[x] + pDdrBurstSize;
+			else if (q_wseq_cke/*q_wdata_cke*/)	r_wdata[x] <= (pDdrBurstSize <= x) ? 16'h1289 : r_wdata[x] + pDdrBurstSize;
 			else 					r_wdata[x] <= r_wdata[x];
 		end
 
@@ -110,9 +111,9 @@ begin
 	else 					r_wdone 	<= 1'b0;
 
 	// Burst Last Data 
-	if (iRST|qBurstMaxCke)	rBurstCnt <= 4'd0;
-	else if (q_wseq_cke)	rBurstCnt <= rBurstCnt + 1'b1;
-	else 					rBurstCnt <= rBurstCnt;
+	if (iRST|qBurstMaxCke)	rBurstCnt 	<= 4'd0;
+	else if (q_wseq_cke)	rBurstCnt 	<= rBurstCnt + 1'b1;
+	else 					rBurstCnt 	<= rBurstCnt;
 
 	if (iRST) 				r_wlast 	<= 1'b0;
 	else if (q_wlast_cke)	r_wlast 	<= ~r_wlast;
@@ -184,7 +185,12 @@ reg 		qAxi4AdrsCke;
 axi4_adrs_generator #(
 	.pDataBitWidth(pDataBitWidth),
 	.pDdrBurstSize(pDdrBurstSize),
-	.pDdrMemSize(pDdrMemSize)
+	.pStartPage(pStartPage),
+	.pStopPage(pStopPage),
+	.pStartBank(pStartBank),
+	.pStopBank(pStopBank),
+	.pDdrMemSize(pDdrMemSize),
+	.pMemoryTest(pMemoryTest)
 ) axi4_adrs_generator (
 	.oAdrs(wAdrs),		.oAdrsDone(),
 	// common
@@ -223,7 +229,6 @@ assign o_wdone  	= r_wdone;
 //-----------------------------------------------------------------------------
 // ILA monitor
 //-----------------------------------------------------------------------------
-reg 		qCLK;
 reg 		q_awready;	// IP の input 信号は内部 Logic に変換しないと確認不可
 reg 		q_wready;
 reg [5:0] 	q_bid;
@@ -232,7 +237,6 @@ reg 		q_bvalid;
 
 always @*
 begin
-	qCLK		<= iCLK;
 	q_awready	<= i_awready;
 	q_awready	<= i_awready;
 	q_wready	<= i_wready;
@@ -242,8 +246,16 @@ begin
 end
 
 
-// 転送速度確認用カウンタ
-reg [7:0] 	rWSpeedMeas;
+//-----------------------------------------------------------------------------
+// 転送速度の移動平均値
+//-----------------------------------------------------------------------------
+localparam	lpWSpeedAve = 8;
+
+reg [7:0] 	rWSpeedMeas;				// 転送中カウンタ
+reg [7:0]	rABuff [0:lpWSpeedAve-1];	// 計測値保存
+reg [10:0]	rTotalAverage;				// 移動平均合計値
+reg [7:0]	qTotalAverage;				// 移動平均合計値 / Buffer深さ = 観測用
+reg [2:0]	rABuffAdrs;
 reg 		rWSpeedMeasSel, qWSpeedMeasSel;
 
 always @(posedge iCLK)
@@ -255,6 +267,15 @@ begin
 	if (iRST) 					rWSpeedMeasSel <= 1'd0;
 	else if (qWSpeedMeasSel)	rWSpeedMeasSel <= ~rWSpeedMeasSel;
 	else 						rWSpeedMeasSel <=  rWSpeedMeasSel;
+
+	if (iRST) 					rABuffAdrs <= 3'd0;
+	else if (q_wdone_cke)		rABuffAdrs <= rABuffAdrs + 1'b1;
+	else 						rABuffAdrs <= rABuffAdrs;
+
+	if (q_wdone_cke)			rABuff[rABuffAdrs] <= rWSpeedMeas;
+	else 						rABuff[rABuffAdrs] <= rABuff[rABuffAdrs];
+
+	rTotalAverage <= rABuff[0] + rABuff[1] + rABuff[2] + rABuff[3] + rABuff[4] + rABuff[5] + rABuff[6] + rABuff[7];
 end
 
 always @*
@@ -264,6 +285,8 @@ begin
 		'b11x:		qWSpeedMeasSel <= 1'b1;		// Dissert
 		default: 	qWSpeedMeasSel <= 1'b0;
 	endcase
+
+	qTotalAverage <= rTotalAverage[10:3];
 end
 
 endmodule

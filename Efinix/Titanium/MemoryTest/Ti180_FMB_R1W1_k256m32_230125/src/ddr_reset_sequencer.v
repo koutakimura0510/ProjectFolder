@@ -20,6 +20,7 @@ output 		o_ddr_axi_rstn,		// Master Reset
 output 		o_ddr_cfg_reset,	// Sequencer Reset
 output 		o_ddr_cfg_start,	// Sequencer Start
 output 		o_ddr_cfg_done,		// Done status
+output 		o_ddr_cfg_ndone,	// Done status
 // common
 input 		inRST,
 input 		iCLK				// user clock
@@ -39,6 +40,7 @@ reg r_ddr_axi_rstn;							assign o_ddr_axi_rstn 		= r_ddr_axi_rstn;
 reg r_ddr_cfg_seq_rst;						assign o_ddr_cfg_reset		= r_ddr_cfg_seq_rst;
 reg r_ddr_cfg_seq_start;					assign o_ddr_cfg_start		= r_ddr_cfg_seq_start;
 reg r_ddr_init_done;						assign o_ddr_cfg_done 		= r_ddr_init_done;
+reg r_ddr_init_ndone;						assign o_ddr_cfg_ndone 		= r_ddr_init_ndone;
 //
 reg [1:0] rs;
 reg 						qDdrCfgDone;
@@ -107,6 +109,9 @@ begin
 			end
 		endcase
 	end
+
+	if (!inRST)	r_ddr_init_ndone <= 1'b1;
+	else 		r_ddr_init_ndone <= ~r_ddr_init_done;
 end
 
 always @*

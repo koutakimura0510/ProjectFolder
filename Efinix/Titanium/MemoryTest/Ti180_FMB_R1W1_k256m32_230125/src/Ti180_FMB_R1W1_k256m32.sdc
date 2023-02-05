@@ -14,6 +14,8 @@
 #################
 create_clock -period 10.000 iSCLK
 create_clock -period 7.5008 iDdrFCLK
+#1066.56
+#533.28
 
 # DDR Constraints
 #####################

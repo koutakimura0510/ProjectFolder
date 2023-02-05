@@ -11,7 +11,7 @@
  *~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*/
 //---------------------------------------------------------------------------
 module MTopFmbTester #(
-	pAxi4BusWidth = 256
+	pAxi4BusWidth = 512
 )(
 //---------------------------------------------------------------------------
 // LPDDR4x-Hard IP port
@@ -74,51 +74,6 @@ input [  5:0] 				ddr4_BID_0,
 output 						ddr4_BREADY_0,
 input 						ddr4_BVALID_0,
 input [  1:0] 				ddr4_BRESP_0,
-// AXI Active Low Reset
-// output 						ddr4_ARSTN_1,
-// // AXI4 Read Address Channel
-// output[  5:0] 				ddr4_ARID_1,
-// input 						ddr4_ARREADY_1,
-// output 						ddr4_ARVALID_1,
-// output[  7:0] 				ddr4_ARLEN_1,
-// output[  2:0] 				ddr4_ARSIZE_1,
-// output[  1:0] 				ddr4_ARBURST_1,
-// output 						ddr4_ARLOCK_1,
-// output 						ddr4_ARQOS_1,
-// output[ 32:0] 				ddr4_ARADDR_1,
-// output 						ddr4_ARAPCMD_1,
-// // AXI4 Read Data Channel
-// input [pAxi4BusWidth-1:0] 	ddr4_RDATA_1,
-// input [  5:0] 				ddr4_RID_1,
-// input 						ddr4_RLAST_1,
-// output 						ddr4_RREADY_1,
-// input [  1:0] 				ddr4_RRESP_1,
-// input 						ddr4_RVALID_1,
-// // AXI4 Write Address Channel
-// output[  5:0] 				ddr4_AWID_1,
-// input 						ddr4_AWREADY_1,
-// output 						ddr4_AWVALID_1,
-// output[  7:0] 				ddr4_AWLEN_1,
-// output[  2:0] 				ddr4_AWSIZE_1,
-// output[  1:0] 				ddr4_AWBURST_1,
-// output 						ddr4_AWLOCK_1,
-// output[  3:0] 				ddr4_AWCACHE_1,
-// output 						ddr4_AWQOS_1,
-// output[ 32:0] 				ddr4_AWADDR_1,
-// output 						ddr4_AWALLSTRB_1,
-// output 						ddr4_AWAPCMD_1,
-// output 						ddr4_AWCOBUF_1,
-// // AXI4 Write Data Channel
-// input 						ddr4_WREADY_1,
-// output[pAxi4BusWidth-1:0] 	ddr4_WDATA_1,
-// output 						ddr4_WLAST_1,
-// output[ 63:0] 				ddr4_WSTRB_1,
-// output 						ddr4_WVALID_1,
-// // AXI4 Write Response Channel
-// input [  5:0] 				ddr4_BID_1,
-// output 						ddr4_BREADY_1,
-// input 						ddr4_BVALID_1,
-// input [  1:0] 				ddr4_BRESP_1,
 //---------------------------------------------------------------------------
 // Board User-I/F and Test Port
 output[ 7: 2]	oLedX,
@@ -141,6 +96,7 @@ assign 	oPLLTL2nRST = 1'b1;
 //
 reg  	rSRST, rnSRST;
 reg  	qLocked;
+reg 	qCLK;
   
 always @(posedge iSCLK, negedge qLocked)
 begin
@@ -153,6 +109,7 @@ end
 
 always @*
 begin
+	qCLK    <= iSCLK;
 	qLocked <= &{inPbSwX[0],iPLLBL1Locked,iPLLTL2Locked};
 end
 
@@ -163,6 +120,7 @@ wire w_ddr_axi_nreset;
 wire w_ddr_cfg_reset;
 wire w_ddr_cfg_start;
 wire w_ddr_cfg_done;
+wire w_ddr_cfg_ndone;
 
 ddr_reset_sequencer #(
 	.pStartCntBitWidth(8),
@@ -173,12 +131,13 @@ ddr_reset_sequencer #(
 	.o_ddr_cfg_reset(w_ddr_cfg_reset),
 	.o_ddr_cfg_start(w_ddr_cfg_start),
 	.o_ddr_cfg_done(w_ddr_cfg_done),
+	.o_ddr_cfg_ndone(w_ddr_cfg_ndone),
 	.inRST(rnSRST),
 	.iCLK(iSCLK)
 );
 
 assign ddr4_ARSTN_0	  = w_ddr_axi_nreset;
-// assign ddr4_ARSTN_1 = w_ddr_axi_nreset;
+// assign ddr4_ARSTN_1   = w_ddr_axi_nreset;
 assign ddr4_CFG_RESET = w_ddr_cfg_reset;
 assign ddr4_CFG_START = w_ddr_cfg_start;
 assign ddr4_CFG_SEL   = 1'b0;	// 自動キャリブレーション使用時は Low固定
@@ -189,8 +148,9 @@ assign ddr4_CFG_SEL   = 1'b0;	// 自動キャリブレーション使用時は L
 // DDRx 4G x16:
 // [32] CS, [31:15] Row = 17bit, [14:12] Bank, [11:2] Col =10 bit, [1:0] Datapath
 //---------------------------------------------------------------------------
-localparam lpDataBitWidth = 16;
-localparam lpDdrBurstSize = 16;
+localparam lpDataBitWidth 	= 32;
+localparam lpDdrBurstSize 	= 16;
+localparam lpMemoryTest		= "no";
 
 wire w_test_done, w_test_fail, w_test_run;
 reg  qMemRST;
@@ -198,6 +158,7 @@ reg  qMemRST;
 memory_checker #(
 	.pAxi4BusWidth(pAxi4BusWidth),
 	.pDataBitWidth(lpDataBitWidth),
+	.pMemoryTest(lpMemoryTest),
 	.pDdrBurstSize(lpDdrBurstSize)
 ) memory_checker_0 (
 // AXI4 Read Address Channel
@@ -235,18 +196,18 @@ memory_checker #(
 
 always @*
 begin
-	qMemRST <= ~w_ddr_cfg_done;
+	qMemRST <= w_ddr_cfg_ndone;
 end
 
 //---------------------------------------------------------------------------
 // User Led
 //---------------------------------------------------------------------------
-assign oLedX[2] = qLocked;
-assign oLedX[3] = w_ddr_cfg_start;
-assign oLedX[4] = w_ddr_cfg_done;
-assign oLedX[5] = w_test_run;
-assign oLedX[6] = w_test_fail;
-assign oLedX[7] = w_test_done;
+assign oLedX[2] = w_ddr_cfg_start;
+assign oLedX[3] = w_ddr_cfg_done;
+assign oLedX[4] = w_test_run;
+assign oLedX[5] = w_test_fail;
+assign oLedX[6] = w_test_done;
+assign oLedX[7] = 1'b0;
 
 //---------------------------------------------------------------------------
 endmodule	// MTopFmbTester

@@ -33,11 +33,14 @@
  *~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*/
 //---------------------------------------------------------------------------
 module memory_checker #(
-	parameter pAxi4BusWidth = 512,
-    parameter pDataBitWidth	= 32,
-    parameter pStartAdrs	= 32'h00000000,
-    parameter pStopAdrs		= 32'h00100000,
-	parameter pDdrBurstSize = 16
+parameter pAxi4BusWidth = 512,
+parameter pDataBitWidth	= 32,
+parameter pStartPage	= 0,
+parameter pStopPage		= 1024,
+parameter pStartBank	= 0,
+parameter pStopBank		= 7,
+parameter pMemoryTest	= "yes",
+parameter pDdrBurstSize = 16
 )(
 // AXI4 Read Address Channel
 output[  7:0] 				o_arlen,		// Burst Length, arlen + 1
@@ -100,8 +103,11 @@ wire w_wdone;
 axi4_write_sequence #(
 	.pAxi4BusWidth(pAxi4BusWidth),
 	.pDataBitWidth(pDataBitWidth),
-	.pStartAdrs(pStartAdrs),
-	.pStopAdrs(pStopAdrs),
+	.pStartPage(pStartPage),
+	.pStopPage(pStopPage),
+	.pStartBank(pStartBank),
+	.pStopBank(pStopBank),
+	.pMemoryTest(pMemoryTest),
 	.pDdrBurstSize(pDdrBurstSize)
 ) axi4_write_sequence (
 	// AXI4 Write Address Channel
@@ -131,13 +137,16 @@ axi4_write_sequence #(
 // read sequence
 //-----------------------------------------------------------------------------
 wire [pAxi4BusWidth-1:0] 	w_rdata;
-wire 						w_rlast;
+wire 						w_rvalid;
 
 axi4_read_sequence #(
 	.pAxi4BusWidth(pAxi4BusWidth),
 	.pDataBitWidth(pDataBitWidth),
-	.pStartAdrs(pStartAdrs),
-	.pStopAdrs(pStopAdrs),
+	.pStartPage(pStartPage),
+	.pStopPage(pStopPage),
+	.pStartBank(pStartBank),
+	.pStopBank(pStopBank),
+	.pMemoryTest(pMemoryTest),
 	.pDdrBurstSize(pDdrBurstSize)
 ) axi4_read_sequence (
 	// AXI4 Read Address Channel
@@ -152,7 +161,7 @@ axi4_read_sequence #(
 	.o_rready(o_rready),		.i_rvalid(i_rvalid),
 	// Core Logic Port
 	.o_rdata(w_rdata),
-	.o_rlast(w_rlast),
+	.o_rvalid(w_rvalid),
 	.i_wdone(w_wdone),
 	// common
 	.iRST(iRST),
@@ -182,21 +191,21 @@ memory_comparetor #(
 
 always @*
 begin
-	q_memory_comp_cke <= w_rlast;
+	q_memory_comp_cke <= w_rvalid;
 end
 
 
 //-----------------------------------------------------------------------------
 // test monitor
 //-----------------------------------------------------------------------------
-localparam lpCntRunBitWidth = 20;
+localparam lpCntRunBitWidth = 21;
 
 reg [lpCntRunBitWidth-1:0] 	r_test_run;
 
 always @(posedge iCLK)
 begin
 	if (iRST)			r_test_run <= {lpCntRunBitWidth{1'b0}};
-	else if (w_rlast)	r_test_run <= r_test_run + 1'b1;
+	else if (w_rvalid)	r_test_run <= r_test_run + 1'b1;
 	else 				r_test_run <= r_test_run;
 end
 

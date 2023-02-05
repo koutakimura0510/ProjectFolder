@@ -13,11 +13,13 @@
 module axi4_read_sequence #(
 parameter pAxi4BusWidth = 512,
 parameter pDataBitWidth	= 16,
-parameter pStartAdrs	= 32'h00000000,
-parameter pStopAdrs		= 32'h00100000,
+parameter pStartPage	= 0,
+parameter pStopPage		= 1024,
+parameter pStartBank	= 0,
+parameter pStopBank		= 7,
 parameter pDdrMemSize 	= "4",	// 単位 Gb
-parameter pDdrBurstSize = 16,
-parameter pAdrsOffset	= pDdrBurstSize * (pDataBitWidth / 8)
+parameter pMemoryTest	= "yes",
+parameter pDdrBurstSize = 16
 )(
 // AXI4 Read Address Channel
 output[  7:0] 				o_arlen,
@@ -39,7 +41,7 @@ output 						o_rready,
 input 						i_rvalid,
 // Core Logic Port
 output[pAxi4BusWidth-1:0]	o_rdata,
-output 						o_rlast,
+output 						o_rvalid,
 input 						i_wdone,
 // common
 input 						iRST,
@@ -50,11 +52,10 @@ input 						iCLK
 // AXI4 Transaction
 //-----------------------------------------------------------------------------
 localparam [7:0] lpDdrBurstSize = pDdrBurstSize - 1'b1;
-localparam [2:0] lpDdrArSize    = 	(pDdrBurstSize == 16) ? 3'b101 : 
-									(pDdrBurstSize ==  8) ? 3'b100 : 
-									(pDdrBurstSize ==  4) ? 3'b010 : 
-									(pDdrBurstSize ==  2) ? 3'b001 : 
-															3'b000 ;
+localparam [2:0] lpDdrArSize    = (pAxi4BusWidth == 512) ? 3'b110 : 
+								  (pDdrBurstSize == 256) ? 3'b101 : 
+								  (pDdrBurstSize == 128) ? 3'b100 : 
+														   3'b000 ;
 // Core Logic Port
 reg 					r_rstart, q_rstart_cke;
 // AXI4 Read Address Channel
@@ -63,7 +64,7 @@ reg 					r_arvalid, q_arvalid_cke;
 reg [pDataBitWidth-1:0]	r_rdata[0:(pAxi4BusWidth / pDataBitWidth)-1];
 reg [pAxi4BusWidth-1:0] q_rdata;
 reg 					r_rready, q_rready_cke;
-reg 					r_rlast, q_rlast_cke;
+reg 					r_rvalid;
 //
 genvar x;
 
@@ -99,9 +100,8 @@ begin
 	else if (q_rready_cke)	r_rready	<= ~r_rready;
 	else 					r_rready 	<=  r_rready;
 
-	// last
-	if (iRST) 	r_rlast <= 1'b0;
-	else 		r_rlast	<= q_rlast_cke;
+	if (iRST) 				r_rvalid 	<= 1'b0;
+	else 					r_rvalid 	<= i_rvalid;
 end
 
 always @*
@@ -123,11 +123,6 @@ begin
 		'b111xx:	q_rready_cke <= 1'b1;	// Dissert
 		default: 	q_rready_cke <= 1'b0;
 	endcase
-
-	casex ( {r_rready,i_rlast,i_rvalid} )
-		'b111:		q_rlast_cke <= 1'b1;
-		default:	q_rlast_cke <= 1'b0;
-	endcase
 end
 
 
@@ -140,7 +135,12 @@ reg 		qAxi4AdrsCke;
 axi4_adrs_generator #(
 	.pDataBitWidth(pDataBitWidth),
 	.pDdrBurstSize(pDdrBurstSize),
-	.pDdrMemSize(pDdrMemSize)
+	.pStartPage(pStartPage),
+	.pStopPage(pStopPage),
+	.pStartBank(pStartBank),
+	.pStopBank(pStopBank),
+	.pDdrMemSize(pDdrMemSize),
+	.pMemoryTest(pMemoryTest)
 ) axi4_adrs_generator (
 	.oAdrs(wAdrs),		.oAdrsDone(),
 	// common
@@ -172,7 +172,7 @@ assign o_arvalid	= r_arvalid;
 assign o_rready 	= r_rready;
 //
 assign o_rdata		= q_rdata;
-assign o_rlast		= r_rlast;
+assign o_rvalid		= r_rvalid;
 
 
 //-----------------------------------------------------------------------------
