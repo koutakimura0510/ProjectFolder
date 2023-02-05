@@ -17,7 +17,7 @@ parameter pStartPage	= 0,
 parameter pStopPage		= 1024,
 parameter pStartBank	= 0,
 parameter pStopBank		= 7,
-parameter pDdrMemSize 	= "4",	// 単位 Gb
+parameter pDdrMemSize 	= "4",
 parameter pMemoryTest	= "yes",
 parameter pDdrBurstSize = 16
 )(
@@ -66,29 +66,28 @@ localparam [2:0] lpDdrArSize    = (pAxi4BusWidth == 512) ? 3'b110 :
 														   3'b000 ;
 // Core Logic Port
 reg [3:0] 				rBurstCnt;
-reg 					qBurstMaxCke;
-reg 					q_wseq_cke, q_wdata_cke;
-reg 					r_wstart, 	q_wstart_cke;
-reg 					r_wdone, 	q_wdone_cke;
+reg 					qBurstMaxCke, q_wnext_cke;
+reg 					r_wstart, 	  q_wstart_cke;
+reg 					r_wdone, 	  q_wdone_cke;
 // AXI4 Write Address Channel
 reg 					r_awvalid, q_awvalid_cke;
 // AXI4 Write Data Channel
 reg [pDataBitWidth-1:0]	r_wdata[0:(pAxi4BusWidth / pDataBitWidth)-1];
 reg [pAxi4BusWidth-1:0]	q_wdata;
-reg 					r_wlast, q_wlast_cke;
-reg 					r_wvalid, q_wvalid_cke;
+reg 					r_wlast, 	q_wlast_cke;
+reg 					r_wvalid, 	q_wvalid_cke;
 // AXI4 Write Response Channel
-reg 					r_bready, q_bready_cke;
+reg 					r_bready, 	q_bready_cke;
 //
 genvar x;
 
-generate
+generate	// sample write data gen
 	for (x = 0; x < pAxi4BusWidth / pDataBitWidth; x = x + 1)
 	begin
 		always @(posedge iCLK)
 		begin
 			if (iRST)				r_wdata[x] <= x;
-			else if (q_wseq_cke/*q_wdata_cke*/)	r_wdata[x] <= (pDdrBurstSize <= x) ? 16'h1289 : r_wdata[x] + pDdrBurstSize;
+			else if (q_wnext_cke)	r_wdata[x] <= (pDdrBurstSize <= x) ? 16'h1289 : r_wdata[x] + pDdrBurstSize;
 			else 					r_wdata[x] <= r_wdata[x];
 		end
 
@@ -101,8 +100,7 @@ endgenerate
 
 always @(posedge iCLK)
 begin
-	// Write Sequence Start, done
-	if (iRST)				r_wstart 	<= 1'b0;
+	if (iRST)				r_wstart 	<= 1'b0;		// write 実行中 Assert される
 	else if (q_wstart_cke)	r_wstart 	<= ~r_wstart;
 	else 					r_wstart 	<=  r_wstart;
 
@@ -110,16 +108,14 @@ begin
 	else if (q_wdone_cke)	r_wdone		<= 1'b1;
 	else 					r_wdone 	<= 1'b0;
 
-	// Burst Last Data 
 	if (iRST|qBurstMaxCke)	rBurstCnt 	<= 4'd0;
-	else if (q_wseq_cke)	rBurstCnt 	<= rBurstCnt + 1'b1;
+	else if (q_wnext_cke)	rBurstCnt 	<= rBurstCnt + 1'b1;
 	else 					rBurstCnt 	<= rBurstCnt;
 
 	if (iRST) 				r_wlast 	<= 1'b0;
 	else if (q_wlast_cke)	r_wlast 	<= ~r_wlast;
 	else					r_wlast 	<=  r_wlast;
 
-	// ready, valid
 	if (iRST)				r_awvalid 	<= 1'b0;
 	else if (q_awvalid_cke)	r_awvalid 	<= ~r_awvalid;
 	else 					r_awvalid 	<=  r_awvalid;
@@ -145,7 +141,16 @@ begin
 		'b111:		q_wdone_cke <= 1'b1;
 		default: 	q_wdone_cke <= 1'b0;
 	endcase
-	//
+
+	casex ( {r_wlast,(rBurstCnt == lpBurstLen2),r_wvalid,i_wready} )
+		'b0111:		q_wlast_cke <= 1'b1;	// Assert
+		'b1x11:		q_wlast_cke <= 1'b1;	// Dissert
+		default: 	q_wlast_cke <= 1'b0;
+	endcase
+
+	q_wnext_cke  <= r_wvalid & i_wready;		// Master/Slave OK
+	qBurstMaxCke <= (rBurstCnt == lpBurstLen);	// Last 信号用
+
 	casex ( {r_wstart,r_awvalid,i_awready} )
 		'b00x:		q_awvalid_cke <= 1'b1;	// Assert
 		'bx11:		q_awvalid_cke <= 1'b1;	// Dissert
@@ -158,21 +163,12 @@ begin
 		default: 	q_wvalid_cke <= 1'b0;
 	endcase
 
-	casex ( {r_wlast,(rBurstCnt == lpBurstLen2),r_wvalid,i_wready} )
-		'b0111:		q_wlast_cke <= 1'b1;	// Assert
-		'b1x11:		q_wlast_cke <= 1'b1;	// Dissert
-		default: 	q_wlast_cke <= 1'b0;
-	endcase
-
 	casex ( {r_bready,i_bvalid} )
 		'b01:		q_bready_cke <= 1'b1;	// Assert
 		'b11:		q_bready_cke <= 1'b1;	// Dissert
 		default: 	q_bready_cke <= 1'b0;
 	endcase
 	//
-	q_wdata_cke  <= &{r_bready,i_bvalid};		// next data
-	q_wseq_cke   <= &{r_wvalid,i_wready};		// Master/Slave OK
-	qBurstMaxCke <= (rBurstCnt == lpBurstLen);	// Last 信号用
 end
 //
 
@@ -200,7 +196,7 @@ axi4_adrs_generator #(
 
 always @*
 begin
-	qAxi4AdrsCke <= q_wdata_cke;
+	qAxi4AdrsCke <= r_bready & i_bvalid;
 end
 
 //-----------------------------------------------------------------------------

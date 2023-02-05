@@ -38,7 +38,7 @@ localparam lpColBitWidth  = (pDdrMemSize == "4") ? 10  : 1;
 localparam lpBankBitWidth = (pDdrMemSize == "4") ? 3   : 1;
 // offset
 localparam [lpRowBitWidth-1:0] 	lpRowOffset = pDdrBurstSize * (pDataBitWidth / 8);
-localparam [lpColBitWidth-1:0] 	lpColOffset = 32;	// バースト転送量に応じて変更
+localparam [lpColBitWidth-1:0] 	lpColOffset = 32;	// TODO 16に変更して確認 バースト転送量に応じて変更
 // adrs max value
 localparam [lpRowBitWidth-1:0]	lpRowAdrsMax  = {lpRowBitWidth{1'b1}} + 1'b1 - lpRowOffset;
 localparam [lpColBitWidth-1:0]	lpColAdrsMax  = (pMemoryTest == "yes") ? pStopPage + 1'b1 - lpColOffset : {lpColBitWidth{1'b1}} + 1'b1 - lpColOffset;

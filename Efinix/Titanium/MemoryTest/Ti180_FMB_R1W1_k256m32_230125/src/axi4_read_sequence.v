@@ -17,7 +17,7 @@ parameter pStartPage	= 0,
 parameter pStopPage		= 1024,
 parameter pStartBank	= 0,
 parameter pStopBank		= 7,
-parameter pDdrMemSize 	= "4",	// 単位 Gb
+parameter pDdrMemSize 	= "4",
 parameter pMemoryTest	= "yes",
 parameter pDdrBurstSize = 16
 )(
@@ -68,7 +68,7 @@ reg 					r_rvalid;
 //
 genvar x;
 
-generate
+generate // rdata を 512bit幅の データに convert
 	for (x = 0; x < pAxi4BusWidth / pDataBitWidth; x = x + 1)
 	begin
 		always @(posedge iCLK)
@@ -86,12 +86,10 @@ endgenerate
 
 always @(posedge iCLK)
 begin
-	// バストランザクション start
 	if (iRST)				r_rstart	<= 1'b0;
 	else if (q_rstart_cke)	r_rstart	<= ~r_rstart;
 	else 					r_rstart	<=  r_rstart;
 
-	// ready,valid
 	if (iRST) 				r_arvalid 	<= 1'b0;
 	else if (q_arvalid_cke)	r_arvalid 	<= ~r_arvalid;
 	else 					r_arvalid 	<=  r_arvalid;
@@ -101,7 +99,7 @@ begin
 	else 					r_rready 	<=  r_rready;
 
 	if (iRST) 				r_rvalid 	<= 1'b0;
-	else 					r_rvalid 	<= i_rvalid;
+	else 					r_rvalid 	<= i_rvalid;	// 後段への有効データ転送タイミング調整
 end
 
 always @*
