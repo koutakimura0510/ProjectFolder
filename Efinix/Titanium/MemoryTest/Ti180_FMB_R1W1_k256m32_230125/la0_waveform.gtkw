@@ -1,7 +1,7 @@
-[dumpfile] "/home/kimura/workspace/ProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125/la0_waveform.vcd"
-[dumpfile_mtime] "日  2月 05 10:16:24 2023"
-[dumpfile_size] 253378
-[savefile] "/home/kimura/workspace/ProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125/la0_waveform.gtkw"
+[dumpfile] "C:\Users\kouta\workspace\001_myProjectFolder\Efinix\Titanium\MemoryTest\Ti180_FMB_R1W1_k256m32_230125\la0_waveform.vcd"
+[dumpfile_mtime] "Tue Feb 07 09:50:02 2023"
+[dumpfile_size] 507281
+[savefile] "C:\Users\kouta\workspace\001_myProjectFolder\Efinix\Titanium\MemoryTest\Ti180_FMB_R1W1_k256m32_230125\la0_waveform.gtkw"
 [timestart] 0
 [size] 1000 600
 [pos] -1 -1

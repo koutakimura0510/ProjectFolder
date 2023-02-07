@@ -1,0 +1,41 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Mon Feb 06 10:43:51 2023
+[*]
+[dumpfile] "C:\Users\kouta\workspace\001_myProjectFolder\Efinix\Titanium\MemoryTest\Ti180_FMB_R1W1_k256m32_230125\la0_waveform.vcd"
+[dumpfile_mtime] "Mon Feb 06 00:45:18 2023"
+[dumpfile_size] 263164
+[savefile] "C:\Users\kouta\workspace\001_myProjectFolder\Efinix\Titanium\MemoryTest\Ti180_FMB_R1W1_k256m32_230125\debug.gtkw"
+[timestart] 259
+[size] 2497 1417
+[pos] -113 -113
+*-8.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 493
+[signals_width] 558
+[sst_expanded] 1
+[sst_vpaned_height] 442
+@28
+top.ddr_reset_sequencer/r_ddr_init_done
+top.memory_checker_0/axi4_read_sequence/axi4_adrs_generator/rBank[2:0]
+@22
+top.memory_checker_0/axi4_read_sequence/axi4_adrs_generator/rCol[9:0]
+top.memory_checker_0/axi4_read_sequence/axi4_adrs_generator/rRow[13:0]
+@28
+top.memory_checker_0/axi4_read_sequence/q_arready
+top.memory_checker_0/axi4_read_sequence/q_rrast
+top.memory_checker_0/axi4_read_sequence/q_rresp[1:0]
+top.memory_checker_0/axi4_read_sequence/q_rvalid
+@22
+top.memory_checker_0/axi4_read_sequence/rRSpeedMeas[7:0]
+@28
+top.memory_checker_0/axi4_read_sequence/r_arvalid
+@22
+top.memory_checker_0/axi4_read_sequence/r_rdata[1:1]
+@28
+top.memory_checker_0/axi4_read_sequence/r_rvalid
+@22
+top.memory_checker_0/axi4_write_sequence/r_wdata[1:1]
+@28
+top.memory_checker_0/axi4_write_sequence/r_bready
+[pattern_trace] 1
+[pattern_trace] 0

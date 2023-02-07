@@ -48,6 +48,7 @@ output 						o_bready,
 input 						i_bvalid,
 // Core Login Port
 output 						o_wdone,
+output 						o_fail,
 // common
 input 						iRST,
 input 						iCLK
@@ -179,6 +180,7 @@ wire [32:0] wAdrs;
 reg 		qAxi4AdrsCke;
 
 axi4_adrs_generator #(
+	.pAxi4BusWidth(pAxi4BusWidth),
 	.pDataBitWidth(pDataBitWidth),
 	.pDdrBurstSize(pDdrBurstSize),
 	.pStartPage(pStartPage),

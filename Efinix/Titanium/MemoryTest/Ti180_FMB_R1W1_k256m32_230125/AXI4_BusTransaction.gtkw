@@ -1,97 +1,112 @@
 [*]
 [*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
-[*] Fri Feb 03 01:42:14 2023
+[*] Tue Feb 07 02:54:54 2023
 [*]
 [dumpfile] "C:\Users\kouta\workspace\001_myProjectFolder\Efinix\Titanium\MemoryTest\Ti180_FMB_R1W1_k256m32_230125\la0_waveform.vcd"
-[dumpfile_mtime] "Fri Feb 03 01:13:54 2023"
-[dumpfile_size] 136084
+[dumpfile_mtime] "Tue Feb 07 02:27:47 2023"
+[dumpfile_size] 523888
 [savefile] "C:\Users\kouta\workspace\001_myProjectFolder\Efinix\Titanium\MemoryTest\Ti180_FMB_R1W1_k256m32_230125\AXI4_BusTransaction.gtkw"
-[timestart] 2135
-[size] 1248 1417
-[pos] -61 -61
-*-5.000000 2182 2048 6144 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
-[sst_width] 331
-[signals_width] 329
+[timestart] 0
+[size] 2497 1417
+[pos] -1 -1
+*-6.000000 219 1024 3072 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 211
+[signals_width] 674
 [sst_expanded] 1
-[sst_vpaned_height] 386
+[sst_vpaned_height] 893
 @28
-top.memory_checker_0/i_cfg_done
-top.memory_checker_0/qBurstMaxCke
-top.memory_checker_0/rBurstCnt[1:0]
+top.ddr_reset_sequencer/r_ddr_init_done
 @22
-top.memory_checker_0/r_wrow[16:0]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/axi4_adrs_generator/rRow[13:0]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/axi4_adrs_generator/rCol[9:0]
 @28
-top.memory_checker_0/r_awvalid
-top.memory_checker_0/rAWready_mon
+[color] 2
+top.memory_checker_0/axi4_read_sequence/axi4_adrs_generator/rBank[2:0]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_arvalid
+[color] 2
+top.memory_checker_0/axi4_read_sequence/q_arready
 @22
-top.memory_checker_0/r_wdata[15:0]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rdata[31:0]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rdata[1:1]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rdata[2:2]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rdata[3:3]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rdata[4:4]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rdata[5:5]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rdata[6:6]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rdata[7:7]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rdata[8:8]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rdata[9:9]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rdata[10:10]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rdata[11:11]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rdata[12:12]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rdata[13:13]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rdata[14:14]
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rdata[15:15]
 @28
-top.memory_checker_0/r_wvalid
-top.memory_checker_0/r_wlast
-top.memory_checker_0/q_wseq_cke
-top.memory_checker_0/q_bready_cke
-top.memory_checker_0/r_bready
-top.memory_checker_0/r_wstart
-top.memory_checker_0/q_wstart_cke
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rvalid
+[color] 2
+top.memory_checker_0/axi4_read_sequence/q_rrast
+[color] 2
+top.memory_checker_0/axi4_read_sequence/r_rready
 @22
-top.memory_checker_0/rBid_mon[5:0]
+top.memory_checker_0/axi4_write_sequence/axi4_adrs_generator/rRow[13:0]
+top.memory_checker_0/axi4_write_sequence/axi4_adrs_generator/rCol[9:0]
 @28
-top.memory_checker_0/rBresp_mon[1:0]
-@23
-[color] 2
-top.memory_checker_0/r_rdata[15:0]
-[color] 2
-top.memory_checker_0/r_rdata[1:1]
-[color] 2
-top.memory_checker_0/r_rdata[2:2]
-[color] 2
-top.memory_checker_0/r_rdata[3:3]
-[color] 2
-top.memory_checker_0/r_rdata[4:4]
-[color] 2
-top.memory_checker_0/r_rdata[5:5]
-[color] 2
-top.memory_checker_0/r_rdata[6:6]
-[color] 2
-top.memory_checker_0/r_rdata[7:7]
-[color] 2
-top.memory_checker_0/r_rdata[8:8]
-[color] 2
-top.memory_checker_0/r_rdata[9:9]
-[color] 2
-top.memory_checker_0/r_rdata[10:10]
-[color] 2
-top.memory_checker_0/r_rdata[11:11]
-[color] 2
-top.memory_checker_0/r_rdata[12:12]
-[color] 2
-top.memory_checker_0/r_rdata[13:13]
-[color] 2
-top.memory_checker_0/r_rdata[14:14]
-[color] 2
-top.memory_checker_0/r_rdata[15:15]
+top.memory_checker_0/axi4_write_sequence/axi4_adrs_generator/rBank[2:0]
+top.memory_checker_0/axi4_write_sequence/r_awvalid
 @29
-[color] 2
-top.memory_checker_0/r_rready
-[color] 2
-top.memory_checker_0/rRlast_mon
-[color] 2
-top.memory_checker_0/rRvalid_mon
-@23
-[color] 2
-top.memory_checker_0/r_rrow[16:0]
-@29
-[color] 2
-top.memory_checker_0/r_arvalid
-[color] 2
-top.memory_checker_0/q_arvalid_cke
-[color] 2
-top.memory_checker_0/r_rstart
-@23
-[color] 2
-top.memory_checker_0/rRid_mon[5:0]
-@29
-[color] 2
-top.memory_checker_0/rRresp_mon[1:0]
+top.memory_checker_0/axi4_write_sequence/q_awready
+@22
+top.memory_checker_0/axi4_write_sequence/r_wdata[31:0]
+top.memory_checker_0/axi4_write_sequence/r_wdata[1:1]
+top.memory_checker_0/axi4_write_sequence/r_wdata[2:2]
+top.memory_checker_0/axi4_write_sequence/r_wdata[3:3]
+top.memory_checker_0/axi4_write_sequence/r_wdata[4:4]
+top.memory_checker_0/axi4_write_sequence/r_wdata[5:5]
+top.memory_checker_0/axi4_write_sequence/r_wdata[6:6]
+top.memory_checker_0/axi4_write_sequence/r_wdata[7:7]
+top.memory_checker_0/axi4_write_sequence/r_wdata[8:8]
+top.memory_checker_0/axi4_write_sequence/r_wdata[9:9]
+top.memory_checker_0/axi4_write_sequence/r_wdata[10:10]
+top.memory_checker_0/axi4_write_sequence/r_wdata[11:11]
+top.memory_checker_0/axi4_write_sequence/r_wdata[12:12]
+top.memory_checker_0/axi4_write_sequence/r_wdata[13:13]
+top.memory_checker_0/axi4_write_sequence/r_wdata[14:14]
+top.memory_checker_0/axi4_write_sequence/r_wdata[15:15]
+@28
+top.memory_checker_0/axi4_write_sequence/r_wvalid
+top.memory_checker_0/axi4_write_sequence/q_wready
+top.memory_checker_0/axi4_write_sequence/r_wlast
+top.memory_checker_0/axi4_write_sequence/q_bvalid
+top.memory_checker_0/axi4_write_sequence/r_bready
+top.memory_checker_0/axi4_write_sequence/r_wdone
+top.memory_checker_0/axi4_write_sequence/r_wstart
+top.memory_checker_0/axi4_write_sequence/qBurstMaxCke
+@22
+top.memory_checker_0/axi4_write_sequence/rBurstCnt[3:0]
+top.memory_checker_0/axi4_write_sequence/qTotalAverage[7:0]
+@28
+top.memory_checker_0/axi4_read_sequence/q_rresp[1:0]
+top.memory_checker_0/axi4_write_sequence/q_bresp[1:0]
 [pattern_trace] 1
 [pattern_trace] 0

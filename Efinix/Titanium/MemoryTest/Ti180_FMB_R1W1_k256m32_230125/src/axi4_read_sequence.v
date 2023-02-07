@@ -43,6 +43,7 @@ input 						i_rvalid,
 output[pAxi4BusWidth-1:0]	o_rdata,
 output 						o_rvalid,
 input 						i_wdone,
+output 						o_fail,
 // common
 input 						iRST,
 input 						iCLK
@@ -131,6 +132,7 @@ wire [32:0] wAdrs;
 reg 		qAxi4AdrsCke;
 
 axi4_adrs_generator #(
+	.pAxi4BusWidth(pAxi4BusWidth),
 	.pDataBitWidth(pDataBitWidth),
 	.pDdrBurstSize(pDdrBurstSize),
 	.pStartPage(pStartPage),

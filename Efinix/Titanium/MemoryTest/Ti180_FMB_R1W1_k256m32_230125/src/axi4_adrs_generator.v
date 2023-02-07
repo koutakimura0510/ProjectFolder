@@ -11,6 +11,7 @@
  *~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*/
 //---------------------------------------------------------------------------
 module axi4_adrs_generator #(
+parameter pAxi4BusWidth = 512,
 parameter pDataBitWidth	= 16,
 parameter pDdrBurstSize	= 16,
 parameter pStartPage	= 0,
@@ -31,14 +32,14 @@ input 			iCLK
 
 
 //-----------------------------------------------------------------------------
-// Adrs 生成
+// Adrs Generator
 //-----------------------------------------------------------------------------
 localparam lpRowBitWidth  = (pDdrMemSize == "4") ? 14  : 1;
 localparam lpColBitWidth  = (pDdrMemSize == "4") ? 10  : 1;
 localparam lpBankBitWidth = (pDdrMemSize == "4") ? 3   : 1;
 // offset
-localparam [lpRowBitWidth-1:0] 	lpRowOffset = pDdrBurstSize * (pDataBitWidth / 8);
-localparam [lpColBitWidth-1:0] 	lpColOffset = 32;	// TODO 16に変更して確認 バースト転送量に応じて変更
+localparam [lpRowBitWidth-1:0] 	lpRowOffset = pAxi4BusWidth / 8; // 列のアドレス計算、512bit = 64byte, 0x40 刻みでセルに書き込まれる
+localparam [lpColBitWidth-1:0] 	lpColOffset = pDdrBurstSize; 	 // 行のアドレス計算、バースト転送16 = page を跨いでセルに書き込まれる
 // adrs max value
 localparam [lpRowBitWidth-1:0]	lpRowAdrsMax  = {lpRowBitWidth{1'b1}} + 1'b1 - lpRowOffset;
 localparam [lpColBitWidth-1:0]	lpColAdrsMax  = (pMemoryTest == "yes") ? pStopPage + 1'b1 - lpColOffset : {lpColBitWidth{1'b1}} + 1'b1 - lpColOffset;
