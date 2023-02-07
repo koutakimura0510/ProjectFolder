@@ -13,13 +13,8 @@
 module axi4_write_sequence #(
 parameter pAxi4BusWidth = 512,
 parameter pDataBitWidth	= 16,
-parameter pStartPage	= 0,
-parameter pStopPage		= 1024,
-parameter pStartBank	= 0,
-parameter pStopBank		= 7,
-parameter pDdrMemSize 	= "4",
-parameter pMemoryTest	= "yes",
-parameter pDdrBurstSize = 16
+parameter pDdrBurstSize = 16,
+parameter pDdrMemSize 	= "4"
 )(
 // AXI4 Write Address Channel
 output[3:0] 				o_awcache,
@@ -61,10 +56,7 @@ input 						iCLK
 localparam [3:0] lpBurstLen		= pDdrBurstSize - 1;
 localparam [3:0] lpBurstLen2	= pDdrBurstSize - 2;
 localparam [7:0] lpDdrBurstSize = pDdrBurstSize - 1'b1;
-localparam [2:0] lpDdrArSize    = (pAxi4BusWidth == 512) ? 3'b110 : 
-								  (pDdrBurstSize == 256) ? 3'b101 : 
-								  (pDdrBurstSize == 128) ? 3'b100 : 
-														   3'b000 ;
+localparam [2:0] lpDdrASize    = (pAxi4BusWidth == 512) ? 3'b110 : 3'b101 : 
 // Core Logic Port
 reg [3:0] 				rBurstCnt;
 reg 					qBurstMaxCke, q_wnext_cke;
@@ -183,12 +175,7 @@ axi4_adrs_generator #(
 	.pAxi4BusWidth(pAxi4BusWidth),
 	.pDataBitWidth(pDataBitWidth),
 	.pDdrBurstSize(pDdrBurstSize),
-	.pStartPage(pStartPage),
-	.pStopPage(pStopPage),
-	.pStartBank(pStartBank),
-	.pStopBank(pStopBank),
-	.pDdrMemSize(pDdrMemSize),
-	.pMemoryTest(pMemoryTest)
+	.pDdrMemSize(pDdrMemSize)
 ) axi4_adrs_generator (
 	.oAdrs(wAdrs),		.oAdrsDone(),
 	// common
@@ -217,7 +204,7 @@ assign o_awcobuf	= 1'b0;
 assign o_awid		= 6'd0;
 assign o_awlock		= 1'b0;
 assign o_awlen		= lpDdrBurstSize;
-assign o_awsize		= lpDdrArSize;
+assign o_awsize		= lpDdrASize;
 assign o_awburst	= 2'b01;
 assign o_awvalid	= r_awvalid;
 assign o_bready 	= r_bready;

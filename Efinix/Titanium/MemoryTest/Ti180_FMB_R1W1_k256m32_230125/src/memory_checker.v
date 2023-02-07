@@ -7,41 +7,11 @@
  * Explanation : Rev.1.0
  * Revision    :
  * 27/Jan-2023 New Release(Rev. 0.10)                                  K.Kimura
- *
- *---------------------------------------------------------------------------
- * 1. 指定アドレス領域にデータ書込
- * 2. 指定アドレス領域のデータ読込しつつ、データ化けが起きていたら終了
- * [32] CS, [31:15] Row = 17bit, [14:12] Bank, [11:2] Col =10 bit, [1:0] Datapath
- * 
- * AXI4 ハンドシェイクのデッドロック回避のため下記ルールに則る
- * R/W Valid を '1' にするために、同じグループの Ready 信号を待ってはならない。
- * 
- * https://www.acri.c.titech.ac.jp/wordpress/archives/8503
- * https://www.intel.com/content/www/us/en/docs/programmable/683130/22-2/axi-interface-timing-diagram.html
- * https://en.wikipedia.org/wiki/Advanced_eXtensible_Interface#cite_note-axi34difference-10
- *
- * ILA デバッグ時の GTKWave を毎回自動で開かないようにする方法
- * /tools/efinix/2022.2/debugger/bin/efx_dbg/gui.py を開く
- * open_wave_viewer と検索し下記の部分をコメントアウトする。
- * wave_viewer = open_wave_viewer(
- *     gtkw_path, lambda e: self.error(str(e)))
- * if not new_viewer:
- *     self._wave_viewer = wave_viewer
- * else:
- *     self._standalone_wave_viewers.append(wave_viewer)
- *
- * Burst16 * 512bit * 100[MHz] / Cycle 95 * R/W 2 = 17.246[Gbps] / DQ 16bit = 1.077[GB/sec]
- * MAX 1333.2[MHz]
  *~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*~`^*/
 //---------------------------------------------------------------------------
 module memory_checker #(
 parameter pAxi4BusWidth = 512,
 parameter pDataBitWidth	= 32,
-parameter pStartPage	= 0,
-parameter pStopPage		= 1024,
-parameter pStartBank	= 0,
-parameter pStopBank		= 7,
-parameter pMemoryTest	= "yes",
 parameter pDdrBurstSize = 16
 )(
 // AXI4 Read Address Channel
@@ -105,11 +75,6 @@ wire w_wdone;
 axi4_write_sequence #(
 	.pAxi4BusWidth(pAxi4BusWidth),
 	.pDataBitWidth(pDataBitWidth),
-	.pStartPage(pStartPage),
-	.pStopPage(pStopPage),
-	.pStartBank(pStartBank),
-	.pStopBank(pStopBank),
-	.pMemoryTest(pMemoryTest),
 	.pDdrBurstSize(pDdrBurstSize)
 ) axi4_write_sequence (
 	// AXI4 Write Address Channel
@@ -144,11 +109,6 @@ wire 						w_rvalid;
 axi4_read_sequence #(
 	.pAxi4BusWidth(pAxi4BusWidth),
 	.pDataBitWidth(pDataBitWidth),
-	.pStartPage(pStartPage),
-	.pStopPage(pStopPage),
-	.pStartBank(pStartBank),
-	.pStopBank(pStopBank),
-	.pMemoryTest(pMemoryTest),
 	.pDdrBurstSize(pDdrBurstSize)
 ) axi4_read_sequence (
 	// AXI4 Read Address Channel

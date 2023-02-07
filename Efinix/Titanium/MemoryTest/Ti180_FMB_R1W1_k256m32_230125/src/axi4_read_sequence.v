@@ -13,13 +13,8 @@
 module axi4_read_sequence #(
 parameter pAxi4BusWidth = 512,
 parameter pDataBitWidth	= 16,
-parameter pStartPage	= 0,
-parameter pStopPage		= 1024,
-parameter pStartBank	= 0,
-parameter pStopBank		= 7,
-parameter pDdrMemSize 	= "4",
-parameter pMemoryTest	= "yes",
-parameter pDdrBurstSize = 16
+parameter pDdrBurstSize = 16,
+parameter pDdrMemSize 	= "4"
 )(
 // AXI4 Read Address Channel
 output[  7:0] 				o_arlen,
@@ -53,10 +48,7 @@ input 						iCLK
 // AXI4 Transaction
 //-----------------------------------------------------------------------------
 localparam [7:0] lpDdrBurstSize = pDdrBurstSize - 1'b1;
-localparam [2:0] lpDdrArSize    = (pAxi4BusWidth == 512) ? 3'b110 : 
-								  (pDdrBurstSize == 256) ? 3'b101 : 
-								  (pDdrBurstSize == 128) ? 3'b100 : 
-														   3'b000 ;
+localparam [2:0] lpDdrASize     = (pAxi4BusWidth == 512) ? 3'b110 : 3'b101 
 // Core Logic Port
 reg 					r_rstart, q_rstart_cke;
 // AXI4 Read Address Channel
@@ -135,12 +127,7 @@ axi4_adrs_generator #(
 	.pAxi4BusWidth(pAxi4BusWidth),
 	.pDataBitWidth(pDataBitWidth),
 	.pDdrBurstSize(pDdrBurstSize),
-	.pStartPage(pStartPage),
-	.pStopPage(pStopPage),
-	.pStartBank(pStartBank),
-	.pStopBank(pStopBank),
-	.pDdrMemSize(pDdrMemSize),
-	.pMemoryTest(pMemoryTest)
+	.pDdrMemSize(pDdrMemSize)
 ) axi4_adrs_generator (
 	.oAdrs(wAdrs),		.oAdrsDone(),
 	// common
@@ -166,7 +153,7 @@ assign o_arapcmd	= 1'b0;
 assign o_arid		= 6'd0;
 assign o_arlock		= 1'b0;
 assign o_arlen		= lpDdrBurstSize;
-assign o_arsize		= lpDdrArSize;
+assign o_arsize		= lpDdrASize;
 assign o_arburst	= 2'b01;	// adrs auto inc
 assign o_arvalid	= r_arvalid;
 assign o_rready 	= r_rready;

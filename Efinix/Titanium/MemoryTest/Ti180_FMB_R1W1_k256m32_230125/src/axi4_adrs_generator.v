@@ -14,12 +14,7 @@ module axi4_adrs_generator #(
 parameter pAxi4BusWidth = 512,
 parameter pDataBitWidth	= 16,
 parameter pDdrBurstSize	= 16,
-parameter pStartPage	= 0,
-parameter pStopPage		= 1024,
-parameter pStartBank	= 0,
-parameter pStopBank		= 7,
-parameter pDdrMemSize 	= "4",	// 単位 Gb
-parameter pMemoryTest	= "yes"
+parameter pDdrMemSize 	= "4"
 )(
 // AXI4 Address Channel
 output [32:0]	oAdrs,	// [32] CS, [31:15] Row = 17bit, [14:12] Bank, [11:2] Col =10 bit, [1:0] Datapath
@@ -34,16 +29,18 @@ input 			iCLK
 //-----------------------------------------------------------------------------
 // Adrs Generator
 //-----------------------------------------------------------------------------
-localparam lpRowBitWidth  = (pDdrMemSize == "4") ? 14  : 1;
-localparam lpColBitWidth  = (pDdrMemSize == "4") ? 10  : 1;
-localparam lpBankBitWidth = (pDdrMemSize == "4") ? 3   : 1;
+localparam lpHardIpRowMaxBitWidth  	= 17								// Hard IP Row 最大 Bit幅
+localparam lpRowBitWidth  	 		= (pDdrMemSize == "4") ? 14 : 14; 	// 拡張予定
+localparam lpColBitWidth  	 		= 10;
+localparam lpBankBitWidth 	 		= 3;
+localparam lpMsb0padding  	 		= lpHardIpRowMaxBitWidth - lpRowBitWidth + 1'b1; // CSbit も 0 で埋めるため, 1bit 余分に確保する
 // offset
 localparam [lpRowBitWidth-1:0] 	lpRowOffset = pAxi4BusWidth / 8; // 列のアドレス計算、512bit = 64byte, 0x40 刻みでセルに書き込まれる
 localparam [lpColBitWidth-1:0] 	lpColOffset = pDdrBurstSize; 	 // 行のアドレス計算、バースト転送16 = page を跨いでセルに書き込まれる
 // adrs max value
 localparam [lpRowBitWidth-1:0]	lpRowAdrsMax  = {lpRowBitWidth{1'b1}} + 1'b1 - lpRowOffset;
-localparam [lpColBitWidth-1:0]	lpColAdrsMax  = (pMemoryTest == "yes") ? pStopPage + 1'b1 - lpColOffset : {lpColBitWidth{1'b1}} + 1'b1 - lpColOffset;
-localparam [lpBankBitWidth-1:0]	lpBankAdrsMax = (pMemoryTest == "yes") ? pStopBank : {lpBankBitWidth{1'b1}};
+localparam [lpColBitWidth-1:0]	lpColAdrsMax  = {lpColBitWidth{1'b1}} + 1'b1 - lpColOffset;
+localparam [lpBankBitWidth-1:0]	lpBankAdrsMax = {lpBankBitWidth{1'b1}};
 
 reg [lpRowBitWidth-1:0]	 rRow;
 reg [lpColBitWidth-1:0]	 rCol;
@@ -51,50 +48,24 @@ reg	[lpBankBitWidth-1:0] rBank;
 reg 					 qRowMax, qColMax;
 reg 					 rAdrsDone, qAdrsMax;
 
-generate
-	if (pMemoryTest == "yes")
-	begin
-	always @(posedge iCLK)
-	begin
-		if (iRST)			rRow	<= {lpRowBitWidth{1'b0}};
-		else if (iCKE)		rRow	<= rRow + lpRowOffset;
-		else 				rRow	<= rRow;
+always @(posedge iCLK)
+begin
+	if (iRST)			rRow	<= {lpRowBitWidth{1'b0}};
+	else if (iCKE)		rRow	<= rRow + lpRowOffset;
+	else 				rRow	<= rRow;
 
-		if (iRST|qColMax)	rCol	<= pStartPage;
-		else if (qRowMax)	rCol	<= rCol + lpColOffset;
-		else 				rCol	<= rCol;
+	if (iRST)			rCol	<= {lpColBitWidth{1'b0}};
+	else if (qRowMax)	rCol	<= rCol + lpColOffset;
+	else 				rCol	<= rCol;
 
-		if (iRST|qAdrsMax)	rBank	<= pStartBank;
-		else if (qColMax)	rBank	<= rBank + 1'b1;
-		else 				rBank	<= rBank;
-		//
-		if (iRST)			rAdrsDone	<= 1'b0;
-		else if (qAdrsMax)	rAdrsDone	<= 1'b1;
-		else 				rAdrsDone	<= 1'b0;
-	end
-	end
-	else
-	begin
-	always @(posedge iCLK)
-	begin
-		if (iRST)			rRow	<= {lpRowBitWidth{1'b0}};
-		else if (iCKE)		rRow	<= rRow + lpRowOffset;
-		else 				rRow	<= rRow;
-
-		if (iRST)			rCol	<= {lpColBitWidth{1'b0}};
-		else if (qRowMax)	rCol	<= rCol + lpColOffset;
-		else 				rCol	<= rCol;
-
-		if (iRST)			rBank	<= {lpBankBitWidth{1'b0}};
-		else if (qColMax)	rBank	<= rBank + 1'b1;
-		else 				rBank	<= rBank;
-		//
-		if (iRST)			rAdrsDone	<= 1'b0;
-		else if (qAdrsMax)	rAdrsDone	<= 1'b1;
-		else 				rAdrsDone	<= 1'b0;
-	end
-	end
-endgenerate
+	if (iRST)			rBank	<= {lpBankBitWidth{1'b0}};
+	else if (qColMax)	rBank	<= rBank + 1'b1;
+	else 				rBank	<= rBank;
+	//
+	if (iRST)			rAdrsDone	<= 1'b0;
+	else if (qAdrsMax)	rAdrsDone	<= 1'b1;
+	else 				rAdrsDone	<= 1'b0;
+end
 
 always @*
 begin
@@ -114,7 +85,7 @@ begin
 	endcase
 end
 
-assign oAdrs 	 = {1'b0,3'd0,rRow,rBank,rCol,2'b00};;
+assign oAdrs 	 = {{lpMsb0padding{1'b0}},rRow,rBank,rCol,2'b00};
 assign oAdrsDone = rAdrsDone;
 
 endmodule
