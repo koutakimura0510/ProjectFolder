@@ -1,32 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
-<efx:project name="Ti180_FMB_R1W1_k256m32_230125" description="" last_change_date="水 2月 8 2023 09:54:59" location="C:/Users/kouta/workspace/001_myProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125" sw_version="2022.2.322.1.8" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="sync" place_ood="sync" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
-=======
-<efx:project name="Ti180_FMB_R1W1_k256m32_230125" description="" last_change_date="水 2月 8 2023 07:53:39" location="/home/kimura/workspace/ProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125" sw_version="2022.2.322" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="sync" place_ood="sync" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
->>>>>>> eb302df3b412159103ebb102c7a698fd3dc113a2
+<efx:project name="BraveFrontier" description="" last_change_date="水 2月 8 2023 08:09:16" location="/home/kimura/workspace/ProjectFolder/Efinix/Titanium/BraveFrontier" sw_version="2022.2.322" last_run_state="" last_run_tool="" last_run_flow="" config_result_in_sync="true" design_ood="" place_ood="" route_ood="" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
     <efx:device_info>
         <efx:family name="Titanium"/>
-        <efx:device name="Ti180M484"/>
-        <efx:timing_model name="C4"/>
+        <efx:device name="Ti35F100S3F2"/>
+        <efx:timing_model name="C3"/>
     </efx:device_info>
     <efx:design_info def_veri_version="verilog_2k" def_vhdl_version="vhdl_2008">
-        <efx:top_module name="MTopFmbTester"/>
-        <efx:design_file name="src/MTopFmbTester.v" version="default" library="default"/>
-        <efx:design_file name="src/ddr_reset_sequencer.v" version="default" library="default"/>
-        <efx:design_file name="src/memory_checker.v" version="default" library="default"/>
-        <efx:design_file name="src/axi4_read_sequence.v" version="default" library="default"/>
-        <efx:design_file name="src/axi4_write_sequence.v" version="default" library="default"/>
-        <efx:design_file name="src/axi4_adrs_generator.v" version="default" library="default"/>
-        <efx:design_file name="src/memory_comparetor.v" version="default" library="default"/>
+        <efx:top_module name=""/>
         <efx:top_vhdl_arch name=""/>
     </efx:design_info>
     <efx:constraint_info>
-        <efx:sdc_file name="src/Ti180_FMB_R1W1_k256m32.sdc"/>
+        <efx:sdc_file name=""/>
         <efx:inter_file name=""/>
     </efx:constraint_info>
-    <efx:sim_info>
-        <efx:sim_file name="src/ddr_reset_sequencer_tb.v"/>
-    </efx:sim_info>
+    <efx:sim_info/>
     <efx:misc_info/>
     <efx:ip_info/>
     <efx:synthesis tool_name="efx_map">
@@ -60,7 +47,7 @@
         <efx:param name="work_dir" value="work_pnr" value_type="e_string"/>
         <efx:param name="verbose" value="off" value_type="e_bool"/>
         <efx:param name="load_delaym" value="on" value_type="e_bool"/>
-        <efx:param name="optimization_level" value="CONGESTION_2" value_type="e_option"/>
+        <efx:param name="optimization_level" value="NULL" value_type="e_option"/>
         <efx:param name="seed" value="1" value_type="e_integer"/>
         <efx:param name="placer_effort_level" value="2" value_type="e_option"/>
         <efx:param name="max_threads" value="-1" value_type="e_integer"/>
@@ -79,16 +66,16 @@
         <efx:param name="release_tri_then_reset" value="on" value_type="e_bool"/>
         <efx:param name="four_byte_addressing" value="off" value_type="e_bool"/>
         <efx:param name="generate_bit" value="on" value_type="e_bool"/>
-        <efx:param name="generate_bitbin" value="on" value_type="e_bool"/>
+        <efx:param name="generate_bitbin" value="off" value_type="e_bool"/>
         <efx:param name="generate_hex" value="on" value_type="e_bool"/>
-        <efx:param name="generate_hexbin" value="on" value_type="e_bool"/>
+        <efx:param name="generate_hexbin" value="off" value_type="e_bool"/>
         <efx:param name="cold_boot" value="off" value_type="e_bool"/>
         <efx:param name="cascade" value="off" value_type="e_option"/>
     </efx:bitstream_generation>
     <efx:debugger>
         <efx:param name="work_dir" value="work_dbg" value_type="e_string"/>
-        <efx:param name="auto_instantiation" value="on" value_type="e_bool"/>
-        <efx:param name="profile" value="debug_profile.wizard.json" value_type="e_string"/>
+        <efx:param name="auto_instantiation" value="off" value_type="e_bool"/>
+        <efx:param name="profile" value="NONE" value_type="e_string"/>
     </efx:debugger>
     <efx:security>
         <efx:param name="randomize_iv_value" value="on" value_type="e_bool"/>
