@@ -119,11 +119,11 @@ begin
 	end
 	else
 	begin
-		rDphyHsDataLane0   	<= iMipiDphyRx1_RX_DATA_HS_LAN0;
-		rDphyHsDataLane1   	<= iMipiDphyRx1_RX_DATA_HS_LAN1;
-		rDphyHsDataLaneLs  	<= iMipiDphyRx1_RX_SYNC_HS_LAN0;
-		rDphyHsDataLaneVd  	<= iMipiDphyRx1_RX_VALID_HS_LAN0 | iMipiDphyRx1_RX_SYNC_HS_LAN0;
-		rDphyHsStopState	<= iMipiDphyRx1_STOPSTATE_LAN0;
+		rDphyHsDataLane0   	<= iMipiDphyRx1_RX_DATA_HS_LAN1;
+		rDphyHsDataLane1   	<= iMipiDphyRx1_RX_DATA_HS_LAN0;
+		rDphyHsDataLaneLs  	<= iMipiDphyRx1_RX_SYNC_HS_LAN1;
+		rDphyHsDataLaneVd  	<= iMipiDphyRx1_RX_VALID_HS_LAN1 | iMipiDphyRx1_RX_SYNC_HS_LAN1;
+		rDphyHsStopState	<= iMipiDphyRx1_STOPSTATE_LAN1;
 	end
 end
 

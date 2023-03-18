@@ -29,9 +29,9 @@ module VideoTxUnit #(
 	parameter						pTestBencth			= "no"
 )(
 	// External port
-	output [7:4] 					oTftColorR,
-	output [7:4] 					oTftColorG,
-	output [7:4] 					oTftColorB,
+	output 	[7:4] 					oTftColorR,
+	output 	[7:4] 					oTftColorG,
+	output 	[7:4] 					oTftColorB,
 	output 							oTftDclk,
 	output 							oTftHSync,
 	output 							oTftVSync,
@@ -39,11 +39,11 @@ module VideoTxUnit #(
 	output 							oTftBackLight,
 	output 							oTftRst,
 	// Ufi Master Read
-	input 	[pUfiBusWidth-1:0]		iMUfiRd,	// Read Data
+	input	[pUfiBusWidth-1:0]		iMUfiRd,	// Read Data
 	input 							iMUfiREd,	// Read Data Enable
 	// Ufi Master Write
-	output [pUfiBusWidth-1:0]		oMUfiWd,
-	output [pBusAdrsBit-1:0]		oMUfiAdrs,
+	output 	[pUfiBusWidth-1:0]		oMUfiWd,
+	output 	[pBusAdrsBit-1:0]		oMUfiAdrs,
 	output 							oMUfiWEd,	// Adrs Data Enable
 	output 							oMUfiREd,	// Adrs Data Enable
 	output 							oMUfiVd,	// Data Valid
@@ -51,8 +51,8 @@ module VideoTxUnit #(
 	// Ufi Master Common
 	input 							iMUfiRdy,	// Ufi Bus 転送可能時 Assert
 	// Vtb Ufi Slave Side
-	input [pUfiBusWidth-1:0] 		iSUfiWd,	// 書き込みデータ
-	input [pBusAdrsBit-1:0] 		iSUfiAdrs,	// 書き込みアドレス
+	input 	[pUfiBusWidth-1:0] 		iSUfiWd,	// 書き込みデータ
+	input 	[pBusAdrsBit-1:0] 		iSUfiAdrs,	// 書き込みアドレス
 	input 							iSUfiWEd,	// 書き込み命令
 	// Csr Display
 	input	[pHdisplayWidth-1:0]	iHdisplay,
@@ -271,15 +271,16 @@ VideoSyncGen #(
 // DMA Read 転送のデータ格納 及び SystemClk = VideoClk のクロック変換用途
 //-----------------------------------------------------------------------------
 localparam lpDualClkFifoDepth	= (pFifoDepthOverride == "yes") ? pDualClkFifoDepth : 32;
+localparam lpDcfWidth			= lpDualFifoWidth + 2'd3;
 
-reg		[pUfiBusWidth-1:0]		qVideoDualFifoWd;
+reg		[pUfiBusWidth+2'd2:0]	qVideoDualFifoWd;
 reg								qVideoDualFifoWEd;
 wire 	[lpDualFifoWidth-1:0] 	wVideoDualFifoRd;
 wire 							wVideoDualFifoFull;
 
 VideoDualClkFIFO #(
 	.pBuffDepth		(lpDualClkFifoDepth),
-	.pBitWidth		(lpDualFifoWidth)
+	.pBitWidth		(lpDcfWidth)
 ) VideoDualClkFIFO (
 	.iWd			(qVideoDualFifoWd),
 	.iWe			(qVideoDualFifoWEd),
@@ -295,40 +296,10 @@ VideoDualClkFIFO #(
 always @*
 begin
 	// TODO フレームバッファ領域を通らなくても動作するようにしたい
-	qVideoDualFifoWd	<= wDmaRd;		//iDmaEn ?   wDmaRd  : wDrawPixel[pUfiBusWidth-1:0];
-	qVideoDualFifoWEd	<= wDmaREd;		//iDmaEn ?   wDmaREd : wDrawPixelWEd;
-	qVideoPixelGenEdd 	<= ~wDmaFull;	//iDmaEn ? (~wDmaFull) : (~wVideoDualFifoFull);
+	qVideoDualFifoWd	<= {wVde,wVSync,wHSync,wDmaRd};		//iDmaEn ?   wDmaRd  : wDrawPixel[pUfiBusWidth-1:0];
+	qVideoDualFifoWEd	<=  wDmaREd;						//iDmaEn ?   wDmaREd : wDrawPixelWEd;
+	qVideoPixelGenEdd 	<= ~wDmaFull;						//iDmaEn ? (~wDmaFull) : (~wVideoDualFifoFull);
 	qDmaRe 				<= (~wVideoDualFifoFull);
-end
-
-// Dual Clk Fifo 経由で 2レイテンシ遅延が発生するため、
-// Sync系統も同様に遅らせる
-localparam lpSyncLatancy = 2;
-
-reg [lpSyncLatancy-1:0] rVideoHSync;
-reg [lpSyncLatancy-1:0] rVideoVSync;
-reg [lpSyncLatancy-1:0] rVideoVde;
-reg qVideoHSync;
-reg qVideoVSync;
-reg qVideoVde;
-
-always @(posedge iVideoClk)
-begin
-	if (iVtbVideoRst) 	rVideoHSync <= {lpSyncLatancy{1'b0}};
-	else 				rVideoHSync <= {rVideoHSync[lpSyncLatancy-2:0], wHSync};
-
-	if (iVtbVideoRst) 	rVideoVSync <= {lpSyncLatancy{1'b0}};
-	else 				rVideoVSync <= {rVideoVSync[lpSyncLatancy-2:0], wVSync};
-
-	if (iVtbVideoRst) 	rVideoVde <= {lpSyncLatancy{1'b0}};
-	else 				rVideoVde <= {rVideoVde[lpSyncLatancy-2:0], wVde};
-end
-
-always @*
-begin
-	qVideoHSync	<= rVideoHSync[lpSyncLatancy-1];
-	qVideoVSync	<= rVideoVSync[lpSyncLatancy-1];
-	qVideoVde	<= rVideoVde[lpSyncLatancy-1];
 end
 
 //-----------------------------------------------------------------------------
@@ -387,9 +358,9 @@ generate
 	end
 	//
 	OBUF TFT_DCLK 	(.O (oTftDclk),			.I (iVideoClk));
-	OBUF TFT_HSync 	(.O (oTftHSync),		.I (qVideoHSync));
-	OBUF TFT_VSync 	(.O (oTftVSync),		.I (qVideoVSync));
-	OBUF TFT_VDE 	(.O (oTftDe),			.I (qVideoVde));
+	OBUF TFT_HSync 	(.O (oTftHSync),		.I (wVideoDualFifoRd[lpDualFifoWidth]));
+	OBUF TFT_VSync 	(.O (oTftVSync),		.I (wVideoDualFifoRd[lpDualFifoWidth+1'd1]));
+	OBUF TFT_VDE 	(.O (oTftDe),			.I (wVideoDualFifoRd[lpDualFifoWidth+2'd2]));
 	OBUF TFT_BL 	(.O (oTftBackLight),	.I (wTftBackLight));
 	OBUF TFT_RST 	(.O (oTftRst),			.I (iDisplayRst));
 endgenerate

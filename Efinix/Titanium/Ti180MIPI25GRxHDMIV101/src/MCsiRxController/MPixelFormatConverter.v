@@ -88,10 +88,10 @@ begin
 	if (iRvd)
 	begin
 		rConvertCnt <= 2'd3;
-		rWd[0] 		<= {iRd[7:0],iRd[15:8]};
-		rWd[1] 		<= {iRd[23:16],iRd[31:24]};
-		rWd[2] 		<= {iRd[39:32],iRd[47:40]};
-		rWd[3] 		<= {iRd[55:48],iRd[63:56]};
+		rWd[0] 		<= {iRd[15:8],  iRd[7:0] };
+		rWd[1] 		<= {iRd[31:24], iRd[23:16]};
+		rWd[2] 		<= {iRd[47:40], iRd[39:32]};
+		rWd[3] 		<= {iRd[63:56], iRd[55:48]};
 		rWe			<= 1'b1;
 	end
 	else if (rRvd & ifull)
