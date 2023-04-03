@@ -48,8 +48,8 @@ module RAMDualClkFifo #(
 // FIFO の制御信号は、各FIFO が同じタイミングで動作することを
 // 前提とするため一つのみ使用する。
 //-----------------------------------------------------------------------------
-
 // SysCLK -> MemClk 変換
+
 fifoDualControllerGray #(
 	.pBuffDepth	(pDualClkFifoDepth),
 	.pBitWidth	(pRamDqWidth)
