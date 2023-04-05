@@ -9,63 +9,66 @@
  * 
  *-----------------------------------------------------------------------------*/	
 module K5Stack10MidiTop (
-//
-// GPIOL
-input 	[ 5:0] ioGPIOL_I,
-output 	[ 5:0] ioGPIOL_O,
-output 	[ 5:0] ioGPIOL_OE,
-// GPIOR
-input 	[17:0] ioGPIOR_I,
-output 	[17:0] ioGPIOR_O,
-output 	[17:0] ioGPIOR_OE,
-// GPIOB
-input	[23:0] ioGPIOB_I,
-output 	[23:0] ioGPIOB_O,
-output 	[23:0] ioGPIOB_OE,
-//
-// External IO
-input 	ioCSI_I,
-output 	ioCSI_O,
-output 	ioCSI_OE,
-//
-// SRAM
-input 	[15:0] ioSRAMD_I,
-output 	[15:0] ioSRAMD_O,
-output 	[15:0] ioSRAMD_OE,
-output 	[14:0] oSRAMA,
-output 	oSRAM_CE,
-output 	oSRAM_LB,
-output 	oSRAM_OE,
-output 	oSRAM_UB,
-output 	oSRAM_WE,
-//
-// USB UART
-input 	iUSB_RX,
-output 	oUSB_TX,
-//
-// Flash ROM SPI
-input 	ioMOSI_I,
-output 	ioMOSI_O,
-output 	ioMOSI_OE,
-input 	ioMISO_I,
-output 	ioMISO_O,
-output 	ioMISO_OE,
-input 	ioCCK_I,
-output 	ioCCK_O,
-output 	ioCCK_OE,
-input 	ioSSN_I,
-output 	ioSSN_O,
-output 	ioSSN_OE,
-//
-input 	iOSC_IN,
-// PLL BR0
-input 	iMCLK,
-output 	PLL_BR0_RSTN,
-input 	PLL_BR0_LOCKED,
-// PLL TL0
-input 	iSCLK,
-output 	PLL_TL0_RSTN,
-input 	PLL_TL0_LOCKED,
+	//
+	// GPIOL
+	input 	[ 5:0] ioGPIOL_I,
+	output 	[ 5:0] ioGPIOL_O,
+	output 	[ 5:0] ioGPIOL_OE,
+	// GPIOR
+	input 	[17:0] ioGPIOR_I,
+	output 	[17:0] ioGPIOR_O,
+	output 	[17:0] ioGPIOR_OE,
+	// GPIOB
+	input	[23:0] ioGPIOB_I,
+	output 	[23:0] ioGPIOB_O,
+	output 	[23:0] ioGPIOB_OE,
+	//
+	// External IO
+	input 	ioCSI_I,
+	output 	ioCSI_O,
+	output 	ioCSI_OE,
+	//
+	// SRAM
+	input 	[15:0] ioSRAMD_I,
+	output 	[15:0] ioSRAMD_O,
+	output 	[15:0] ioSRAMD_OE,
+	output 	[14:0] oSRAMA,
+	output 	oSRAM_CE,
+	output 	oSRAM_LB,
+	output 	oSRAM_OE,
+	output 	oSRAM_UB,
+	output 	oSRAM_WE,
+	//
+	// USB UART
+	input 	iUSB_RX,
+	output 	oUSB_TX,
+	//
+	// Flash ROM SPI
+	input 	ioMOSI_I,
+	output 	ioMOSI_O,
+	output 	ioMOSI_OE,
+	input 	ioMISO_I,
+	output 	ioMISO_O,
+	output 	ioMISO_OE,
+	input 	ioCCK_I,
+	output 	ioCCK_O,
+	output 	ioCCK_OE,
+	input 	ioSSN_I,
+	output 	ioSSN_O,
+	output 	ioSSN_OE,
+	//
+	// External OSC
+	input 	iOSC_IN,
+	//
+	// PLL BR0
+	input 	iMCLK,
+	output 	PLL_BR0_RSTN,
+	input 	PLL_BR0_LOCKED,
+	//
+	// PLL TL0
+	input 	iSCLK,
+	output 	PLL_TL0_RSTN,
+	input 	PLL_TL0_LOCKED,
 );
 
 
@@ -77,20 +80,20 @@ reg rMRST, rnMRST;
 
 always @(posedge iMCLK, negedge qlocked)
 begin
-	if (!qlocked) rnMRST <= 1'b0;
-	else rnMRST <= 1'b1;
+	if (!qlocked) 	rnMRST <= 1'b0;
+	else 			rnMRST <= 1'b1;
 
-	if (!qlocked) rMRST <= 1'b1;
-	else rMRST <= 1'b0;
+	if (!qlocked) 	rMRST <= 1'b1;
+	else 			rMRST <= 1'b0;
 end
 
 always @(posedge iSCLK, negedge qlocked)
 begin
-	if (!qlocked) rnSRST <= 1'b0;
-	else rnSRST <= 1'b1;
+	if (!qlocked) 	rnSRST <= 1'b0;
+	else 			rnSRST <= 1'b1;
 	
-	if (!qlocked) rSRST <= 1'b1;
-	else rSRST <= 1'b0;
+	if (!qlocked) 	rSRST <= 1'b1;
+	else 			rSRST <= 1'b0;
 end
 
 always @*
