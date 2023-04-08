@@ -25,7 +25,7 @@
 			"label": "Compile",
 			"type": "shell",
 			// "command": "C:/Efinity/2022.2/bin/efx_run.bat ./Ti180_FMB_R1W1_k256m32_230125.xml --flow compile;cp ./outflow/Ti180_FMB_R1W1_k256m32_230125.bit ./outflow/Ti180_FMB_R1W1_k256m32_230125.hex;C:/Efinity/2022.2/bin/efx_run.bat ./Ti180_FMB_R1W1_k256m32_230125.xml --flow program --pgm_opts mode=jtag",
-			"command": "C:/Efinity/2022.2/bin/efx_run.bat ./Ti180_FMB_R1W1_k256m32_230125.xml --flow compile",
+			"command": "make compile",
 			"group": {
 				"kind": "build",
 				"isDefault": true

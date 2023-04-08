@@ -25,34 +25,41 @@ module GpioCsr #(
 	input  [pUsiBusWidth-1:0] iSUsiWd,	// Write Data
 	input  [pUsiBusWidth-1:0] iSUsiAdrs,  // R/W Adrs
 	// Csr Output
-	output [pGpioWidth-1:0]	oGpioEn,
+	output [pGpioWidth-1:0]	oGpioOutCtrl,
+	output [pGpioWidth-1:0]	oGpioDir,
 	output [pGpioWidth-1:0]	oGpioAltMode,
-    // CLK RST
-    input iSRST,
-    input iSCLK
+	// Csr Input
+	input  [pGpioWidth-1:0]	iGpioIn,
+	// CLK RST
+	input iSRST,
+	input iSCLK
 );
 
 
 //----------------------------------------------------------
 // レジスタマップ
 //----------------------------------------------------------
-reg [pGpioWidth-1:0]	rGpioEn;			assign 	oGpioEn  		= rGpioEn;		// 汎用 GPIO ON/OFF 制御
+reg [pGpioWidth-1:0]	rGpioOutCtrl;		assign 	oGpioOutCtrl	= rGpioOutCtrl;	// 汎用 GPIO ON/OFF 制御
+reg [pGpioWidth-1:0]	rGpioDir;			assign 	oGpioDir  		= rGpioDir;		// 汎用 GPIO IN/OUT 制御
 reg [pGpioWidth-1:0]	rGpioAltMode;		assign 	oGpioAltMode	= rGpioAltMode;	// 汎用 GPIO Altnate Mode
 //
 reg qCsrWCke00;
 reg qCsrWCke04;
+reg qCsrWCke08;
 //
 always @(posedge iSCLK)
 begin
 	if (iSRST)
 	begin
-		rGpioEn			<= {pGpioWidth{1'b1}};
+		rGpioOutCtrl	<= {pGpioWidth{1'b0}};
+		rGpioDir		<= {pGpioWidth{1'b1}};
 		rGpioAltMode 	<= {pGpioWidth{1'b0}};
 	end
 	else
 	begin
-		rGpioEn			<= qCsrWCke00 ? iSUsiWd[pGpioWidth-1:0] : rGpioEn;
-		rGpioAltMode	<= qCsrWCke04 ? iSUsiWd[pGpioWidth-1:0] : rGpioAltMode;
+		rGpioOutCtrl	<= qCsrWCke00 ? iSUsiWd[pGpioWidth-1:0] : rGpioOutCtrl;
+		rGpioDir		<= qCsrWCke04 ? iSUsiWd[pGpioWidth-1:0] : rGpioDir;
+		rGpioAltMode	<= qCsrWCke08 ? iSUsiWd[pGpioWidth-1:0] : rGpioAltMode;
 	end
 end
 
@@ -60,6 +67,7 @@ always @*
 begin
 	qCsrWCke00 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
 	qCsrWCke04 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
+	qCsrWCke08 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
 end
 
 //----------------------------------------------------------
@@ -71,8 +79,10 @@ always @(posedge iSCLK)
 begin
 	// {{(32 - パラメータ名	){1'b0}}, レジスタ名} -> パラメータ可変に対応し 0 で埋められるように設定
 	case (iSUsiAdrs[pCsrActiveWidth-1:0])
-		'h00:	 rSUsiRd <= {{(32 - pGpioWidth	){1'b0}}, rGpioEn};
-		'h04:	 rSUsiRd <= {{(32 - pGpioWidth	){1'b0}}, rGpioAltMode};
+		'h00:	 rSUsiRd <= {{(32 - pGpioWidth	){1'b0}}, rGpioOutCtrl};
+		'h04:	 rSUsiRd <= {{(32 - pGpioWidth	){1'b0}}, rGpioDir};
+		'h08:	 rSUsiRd <= {{(32 - pGpioWidth	){1'b0}}, rGpioAltMode};
+		'h40:	 rSUsiRd <= {{(32 - pGpioWidth	){1'b0}}, iGpioIn};
 	endcase
 end
 

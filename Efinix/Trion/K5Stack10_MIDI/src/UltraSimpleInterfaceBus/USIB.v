@@ -9,11 +9,11 @@
  *-----------------------------------------------------------------------------*/
 module USIB #(
 	// variable parameter
-	parameter pBlockConnectNum = 1,	// UsiBus 接続ブロック数
+	parameter pBlockConnectNum = 2,	// UsiBus 接続ブロック数
 	parameter pUsiBusWidth = 32,	// UsiBus 幅
 	parameter pCsrAdrsWidth = 16,	// 各ブロック共通の基本CSR幅
 	// not variable parameter
-	parameter pBlockAdrsWidth = func_getwidth(pBlockConnectNum),
+	parameter pBlockAdrsWidth = 3,
 	parameter pSUsibWidth = pUsiBusWidth * pBlockConnectNum
 )(
 	// Bus Master Read
@@ -32,6 +32,7 @@ module USIB #(
 //----------------------------------------------------------
 // バスクロックで バス経由データ保存
 //----------------------------------------------------------
+genvar x;
 reg  [pUsiBusWidth-1:0]		rMUsiWd;				assign oSUsiWd		= rMUsiWd;
 reg  [pUsiBusWidth-1:0]		rMUsiAdrs;				assign oSUsiAdrs	= rMUsiAdrs;
 reg	 [pUsiBusWidth-1:0]		rSUsiRd;				assign oMUsiRd		= rSUsiRd;
@@ -61,22 +62,5 @@ always @*
 begin
 	qBusAdrs <= iMUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:pCsrAdrsWidth];
 end
-
-
-//---------------------------------------------------------------------------
-// msb側の1を検出しbit幅を取得する
-//---------------------------------------------------------------------------
-function[  7:0]	func_getwidth;
-    input [31:0] iVAL;
-    integer			i;
-
-    begin
-    func_getwidth = 1;
-    for (i = 0; i < 32; i = i+1 )
-        if (iVAL[i]) begin
-            func_getwidth = i+1;
-        end
-    end
-endfunction
 
 endmodule

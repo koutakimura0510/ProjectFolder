@@ -90,7 +90,7 @@ SPICsr #(
 wire wDivCke;
 
 CkeGenerator #(
-	.pDivReg("yes"),	.pDivWidth(pDivClk)
+	.pDivReg("yes"),	.pDivWidth(lpDivClk)
 ) SpiCkeGen (
 	.iCke(wSPIEnCsr),	.iDiv(wSPIDivCsr),	.oCke(wDivCke),
 	.iRST(iSRST),		.iCLK(iSCLK)
@@ -100,7 +100,7 @@ CkeGenerator #(
 //----------------------------------------------------------
 // FPGA Slave の際の データ操作
 //----------------------------------------------------------
-wire [pUsiBusWidth-1:0]	wSpiMiso;
+wire [pUsiBusWidth-1:0]	wMUsiRd;
 wire [pUsiBusWidth-1:0]	wSpiRd;
 wire [pUsiBusWidth-1:0]	wSpiAdrs;
 wire wSpiREd;
@@ -110,10 +110,10 @@ SPISignalMux # (
 	// .pUfiBusWidth(pUfiBusWidth)
 ) SPISignalMux (
 	// SPI USIB Bridge
-	.oSpiMiso(wSpiMiso), .iSpiRd(wSpiRd),
-	.iSpiAdrs(wSpiAdrs), .iSpiREd(wSpiREd),
+	.iSpiRd(wSpiRd),	.iSpiAdrs(wSpiAdrs),
+	.iSpiREd(wSpiREd),
 	// Bus Master Write/Read
-	.iMUsiRd(iMUsiRd),
+	.oMUsiRd(wMUsiRd), .iMUsiRd(iMUsiRd),
 	.oMUsiWd(oMUsiWd),	.oMUsiAdrs(oMUsiAdrs),
 	// Ufi Bus Master Write
 	// .oMUfiWd		(oMUfiWd),
@@ -132,18 +132,18 @@ SPISignalMux # (
 SPISignal SPISignal (
 	// External Port
 	// FPGA Slave
-	.iSpiSck(iSpiSck),	.oSpiMiso(oSpiMiso),
-	.iSpiMosi(iSpiMosi),.iSpiCs(iSpiCs),
+	.iSlaveSck(iSpiSck),	.oSlaveMiso(oSpiMiso),
+	.iSlaveMosi(iSpiMosi),	.iSlaveCs(iSpiCs),
 	// FPGA Master
-	.oSpiSck(oSpiSck),	.iSpiMiso(iSpiMiso),
-	.oSpiMosi(oSpiMosi),.oSpiCs(oSpiCs),
+	.oMasterSck(oSpiSck),	.iMasterMiso(iSpiMiso),
+	.oMasterMosi(oSpiMosi),	.oMasterCs(oSpiCs),
 	.iSpiDir(iSpiDir),
 	// Internal Port FPGA Slave Side
-	.iSpiMiso(wSpiMiso),.oSpiRd(wSpiRd),
-	.oSpiAdrs(wSpiAdrs),.oSpiREd(wSpiREd),
+	.iMUsiRd(wMUsiRd),		.oSpiRd(wSpiRd),
+	.oSpiAdrs(wSpiAdrs),	.oSpiREd(wSpiREd),
 	// Internal Port FPGA Master Side
-	.iSPIEn(wSPIEnCsr),	.iDivCke(wDivCke),
-	.iMWd(wMWdCsr),		.oMRd(wMRdCsr),
+	.iSPIEn(wSPIEnCsr),		.iDivCke(wDivCke),
+	.iMWd(wMWdCsr),			.oMRd(wMRdCsr),
 	.oMSpiIntr(wMSpiIntrCsr),	.iMSPICs(wMSpiCsCsr),
 	// Control
 	.oSpiDir(oSpiDir),	.onSpiDir(onSpiDir),

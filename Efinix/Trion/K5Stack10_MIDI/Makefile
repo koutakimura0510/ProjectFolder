@@ -17,9 +17,9 @@ TBTOPRTL = ./src/ddr_reset_sequencer_tb.v
 TBRTL 	 = ./src/ddr_reset_sequencer.v
 
 #
-PROJECT = ./Ti180_FMB_R1W1_k256m32_230125.xml
-BIT = ./outflow/Ti180_FMB_R1W1_k256m32_230125.bit
-HEX = ./outflow/Ti180_FMB_R1W1_k256m32_230125.hex
+PROJECT = ./K5Stack10_MIDI.xml
+BIT = ./outflow/K5Stack10_MIDI.bit
+HEX = ./outflow/K5Stack10_MIDI.hex
 FILE = efx_run.py
 
 all: compile convert jtag

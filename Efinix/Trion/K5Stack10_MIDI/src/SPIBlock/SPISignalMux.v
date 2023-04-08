@@ -10,11 +10,11 @@ module SPISignalMux #(
 	// parameter pUfiBusWidth = 32
 )(
 	// SPI USIB Bridge
-	output [pUsiBusWidth-1:0] oSpiMiso,
 	input  [pUsiBusWidth-1:0] iSpiRd,
 	input  [pUsiBusWidth-1:0] iSpiAdrs,
 	input  iSpiREd,
 	// Bus Master Write/Read
+	output [pUsiBusWidth-1:0] oMUsiRd,
 	input  [pUsiBusWidth-1:0] iMUsiRd,
 	output [pUsiBusWidth-1:0] oMUsiWd,
 	output [pUsiBusWidth-1:0] oMUsiAdrs,
@@ -47,11 +47,11 @@ always @(posedge iSCLK)
 begin
 	rMUsiWd	<= iSpiRd;
 
-	if (iSREd)	rMUsiAdrs <= iSpiAdrs;
-	else 		rMUsiAdrs <= {pUsiBusWidth{1'b0}};
+	if (iSpiREd)	rMUsiAdrs <= iSpiAdrs;
+	else 			rMUsiAdrs <= {pUsiBusWidth{1'b0}};
 end
 
-assign oSpiMiso	 	= iMUsiRd; 	// Csr RData はそのまま経由させる
+assign oMUsiRd	 	= iMUsiRd; 	// Csr RData はそのまま経由させる
 assign oMUsiWd   	= rMUsiWd;
 assign oMUsiAdrs 	= rMUsiAdrs;
 

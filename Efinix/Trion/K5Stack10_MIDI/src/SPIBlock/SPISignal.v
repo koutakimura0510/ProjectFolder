@@ -14,17 +14,17 @@
 //----------------------------------------------------------
 module SPISignal (
 	// External Port
-	input 			iSpiSck,
-	input 			iSpiMosi,
-	output 			oSpiMiso,
-	input 			iSpiCs,
-	output 			oSpiSck,
-	output 			oSpiMosi,
-	input 			iSpiMiso,
-	output 			oSpiCs,
+	input 			iSlaveSck,
+	input 			iSlaveMosi,
+	output 			oSlaveMiso,
+	input 			iSlaveCs,
+	output 			oMasterSck,
+	output 			oMasterMosi,
+	input 			iMasterMiso,
+	output 			oMasterCs,
 	input 			iSpiDir,
 	// Internal Port FPGA Slave Side
-	input	[31:0]	iSpiMiso,
+	input	[31:0]	iMUsiRd,
 	output 	[31:0]	oSpiRd,
 	output 	[31:0]	oSpiAdrs,
 	output 			oSpiREd,
@@ -64,7 +64,7 @@ end
 // FPGA Slave
 // Adrs -> Data の順番で受信する
 //----------------------------------------------------------
-reg [31:0]	rSlaveMiso;				assign oSpiMiso = rSlaveMiso[31];
+reg [31:0]	rSlaveMiso;				assign oSlaveMiso = rSlaveMiso[31];
 reg [2:0] 	rSlaveSck, rSlaveCs;
 reg [1:0]	rSlaveMosi;
 reg [31:0]	rSRd;					assign oSpiRd  	= rSRd;
@@ -78,13 +78,13 @@ reg qSSckCntNegCke;
 always @(posedge iSCLK)
 begin
 	// Master からの Signal をシフトレジスタで受信
-	if (rSpiDir[2]) rSlaveMosi <= {rSlaveMosi[0:0], iSpiMosi};
+	if (rSpiDir[2]) rSlaveMosi <= {rSlaveMosi[0:0], iSlaveMosi};
 	else 			rSlaveMosi <= 3'b000;
 
-	if (rSpiDir[2]) rSlaveSck <= {rSlaveSck[1:0], iSpiSck};
+	if (rSpiDir[2]) rSlaveSck <= {rSlaveSck[1:0], iSlaveSck};
 	else			rSlaveSck <= 3'b000;
 
-	if (rSpiDir[2]) rSlaveCs <= {rSlaveCs[1:0],iSpiCs};
+	if (rSpiDir[2]) rSlaveCs <= {rSlaveCs[1:0],iSlaveCs};
 	else 			rSlaveCs <= 3'b111;
 
 	if (rSlaveCs[2])		 rGetDataSel <= 1'b0;	// Adrs -> Data Byte 切り替え
@@ -111,7 +111,7 @@ begin
 	case ({qNedgeSck, rGetDataSel})	// CLK の立ち下がりで MISO データ更新 
 		'b01:	 rSlaveMiso	<= rSlaveMiso;
 		'b11:	 rSlaveMiso	<= {rSlaveMiso[30:0], 1'b1};
-		default: rSlaveMiso	<= iSpiMiso;
+		default: rSlaveMiso	<= iMUsiRd;
 	endcase
 end
 
@@ -191,7 +191,7 @@ begin
 
 	// MISO 設定 Mode の SCK エッジで受信
 	case ({rMScl, iDivCke})
-		2'b01:    		rMRd <= {rMRd[6:0], iSpiMiso};
+		2'b01:    		rMRd <= {rMRd[6:0], iMasterMiso};
 		default: 		rMRd <= rMRd;
 	endcase
 
@@ -211,9 +211,9 @@ end
 
 assign oMRd		= rMRd;
 assign oMSpiIntr= rMSpiIntr;
-assign oSpiSck	= rMScl;
-assign oSpiMosi	= rMMosi[7];
-assign oSpiCs	= iMSPICs;
+assign oMasterSck	= rMScl;
+assign oMasterMosi	= rMMosi[7];
+assign oMasterCs	= iMSPICs;
 
 
 endmodule
