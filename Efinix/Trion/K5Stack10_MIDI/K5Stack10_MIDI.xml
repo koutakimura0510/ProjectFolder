@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efx:project name="K5Stack10_MIDI" description="" last_change_date="水 4月 5 2023 08:20:58" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI" sw_version="2022.2.322" last_run_state="" last_run_tool="" last_run_flow="" config_result_in_sync="true" design_ood="" place_ood="" route_ood="" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
+<efx:project name="K5Stack10_MIDI" description="" last_change_date="土 4月 8 2023 19:46:43" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI" sw_version="2022.2.322" last_run_state="" last_run_tool="" last_run_flow="" config_result_in_sync="true" design_ood="new" place_ood="" route_ood="" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
     <efx:device_info>
         <efx:family name="Trion"/>
         <efx:device name="T20Q144"/>
         <efx:timing_model name="C3"/>
     </efx:device_info>
     <efx:design_info def_veri_version="verilog_2k" def_vhdl_version="vhdl_2008">
-        <efx:top_module name=""/>
+        <efx:top_module name="K5Stack10MidiTop"/>
+        <efx:design_file name="src/K5Stack10MidiTop.v" version="default" library="default"/>
+        <efx:design_file name="src/GpioBlock/GpioCsr.v" version="default" library="default"/>
+        <efx:design_file name="src/GpioBlock/GpioBlock.v" version="default" library="default"/>
+        <efx:design_file name="src/UltraSimpleInterfaceBus/USIB.v" version="default" library="default"/>
+        <efx:design_file name="src/SPIBlock/SPICsr.v" version="default" library="default"/>
+        <efx:design_file name="src/SPIBlock/SPIBlock.v" version="default" library="default"/>
+        <efx:design_file name="src/SPIBlock/SPISignal.v" version="default" library="default"/>
+        <efx:design_file name="src/SPIBlock/SPISignalMux.v" version="default" library="default"/>
         <efx:top_vhdl_arch name=""/>
     </efx:design_info>
     <efx:constraint_info>
-        <efx:sdc_file name=""/>
+        <efx:sdc_file name="src/K5Stack10_MIDI.sdc"/>
         <efx:inter_file name=""/>
     </efx:constraint_info>
     <efx:sim_info/>

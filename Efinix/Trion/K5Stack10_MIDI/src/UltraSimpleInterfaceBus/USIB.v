@@ -35,7 +35,7 @@ module USIB #(
 reg  [pUsiBusWidth-1:0]		rMUsiWd;				assign oSUsiWd		= rMUsiWd;
 reg  [pUsiBusWidth-1:0]		rMUsiAdrs;				assign oSUsiAdrs	= rMUsiAdrs;
 reg	 [pUsiBusWidth-1:0]		rSUsiRd;				assign oMUsiRd		= rSUsiRd;
-wire [pUsiBusWidth-1:0]		wSUsiRd[pBusBlockConnect-1:0];
+wire [pUsiBusWidth-1:0]		wSUsiRd[pBlockConnectNum-1:0];
 reg  [pBlockAdrsWidth-1:0]	qBusAdrs;
 
 always @(posedge iSCLK)

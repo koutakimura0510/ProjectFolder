@@ -7,7 +7,7 @@
 // BUS に接続されている Slaveブロック の操作を行う。
 //----------------------------------------------------------
 module MicroControllerBlock #(
-	parameter							pBusBlockConnect 	= 1,
+	parameter							pBlockConnectNum 	= 1,
 	parameter 							pBlockAdrsWidth 		= 8,
 	parameter [pBlockAdrsWidth-1:0] 		pAdrsMap  			= 'h01,
 	parameter							pUsiBusWidth			= 16,	// Usi,Ufi 共通
@@ -22,7 +22,7 @@ module MicroControllerBlock #(
     // Internal Port
 	// Bus Master Read
 	input	[31:0]						iMUsiRd,	// CSR Read Data
-	input	[pBusBlockConnect-1:0]		iMUsiREd,	// Read Assert
+	input	[pBlockConnectNum-1:0]		iMUsiREd,	// Read Assert
 	// Bus Master Write
 	output	[31:0]						oMUsiWd,	// Write Data
 	output	[pUsiBusWidth-1:0]			oMUsiAdrs,	// Write address
@@ -79,7 +79,7 @@ assign oMUfiCmd		= 1'b0;
 // Read
 wire [31:0]					wMcbManualRd;
 wire [31:0]					wMUsiRd;
-wire [pBusBlockConnect-1:0]	wMUsiREd;
+wire [pBlockConnectNum-1:0]	wMUsiREd;
 // Write
 wire [31:0] 				wMcbCsrWd;
 wire [pUsiBusWidth-1:0] 		wMcbCsrAdrs;
@@ -92,7 +92,7 @@ wire 						wMcbCsrCke;
 // 	.UART_txd		(oUartTx),
 // 	.GPIO1_tri_i	(wMcbManualRd),
 // 	.GPIO2_tri_i	(wMUsiRd),
-// 	.GPIO3_tri_i	({{(32-pBusBlockConnect){1'b0}}, wMUsiREd}),
+// 	.GPIO3_tri_i	({{(32-pBlockConnectNum){1'b0}}, wMUsiREd}),
 // 	// .GPIO4_tri_i	(0),
 // 	.GPIO1_tri_o	(wMcbCsrWd),
 // 	.GPIO2_tri_o	(wMcbCsrAdrs),
@@ -105,7 +105,7 @@ wire 						wMcbCsrCke;
 // MCS
 //-----------------------------------------------------------------------------
 // wire [31:0]					wMUsiRd;
-// wire [pBusBlockConnect-1:0]	wMUsiREd;
+// wire [pBlockConnectNum-1:0]	wMUsiREd;
 // wire [31:0] 				wMcbCsrWd;
 // wire [pUsiBusWidth-1:0] 		wMcbCsrAdrs;
 // wire 						wMcbCsrCke;
@@ -129,7 +129,7 @@ wire 						wMcbCsrCke;
 // CSR
 //-----------------------------------------------------------------------------
 MicroControllerCsr #(
-	.pBusBlockConnect		(pBusBlockConnect),
+	.pBlockConnectNum		(pBlockConnectNum),
 	.pBlockAdrsWidth			(pBlockAdrsWidth),
 	.pAdrsMap				(pAdrsMap),
 	.pUsiBusWidth			(pUsiBusWidth),

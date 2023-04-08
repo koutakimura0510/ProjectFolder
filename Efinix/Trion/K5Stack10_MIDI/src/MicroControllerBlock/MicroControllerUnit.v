@@ -5,7 +5,7 @@
 // MCUnit Master として、システムを駆動させる。
 //----------------------------------------------------------
 module MicroControllerUnit #(
-	parameter							pBusBlockConnect	= 1,
+	parameter							pBlockConnectNum	= 1,
 	parameter							pUsiBusWidth			= 16,
 	parameter							pUfiBusWidth		= 8,
 	parameter							pMemAdrsWidth		= 19
@@ -16,7 +16,7 @@ module MicroControllerUnit #(
     // Internal Port
 	// Bus Master Read
 	input	[31:0]						iMUsiRd,	// Slave の CSR Read値
-	input	[pBusBlockConnect-1:0]		iMUsiREd,	// Slave CSR Read値入力時 Assert
+	input	[pBlockConnectNum-1:0]		iMUsiREd,	// Slave CSR Read値入力時 Assert
 	// Bus Master Write
 	output	[31:0]						oMUsiWd,	// 書き込みデータ
 	output	[pUsiBusWidth-1:0]			oMUsiAdrs,

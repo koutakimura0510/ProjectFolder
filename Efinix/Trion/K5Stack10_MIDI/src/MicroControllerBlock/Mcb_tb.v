@@ -12,20 +12,20 @@ module Mcb_tb;
 // Top Module Connect
 //----------------------------------------------------------
 parameter 			CYCLE 		= 2;				// CLK サイクル
-parameter [3:0]		pBusBlockConnect		= 10; 				// Busに接続する Slave数 最大16
-parameter [3:0]		pBusBlockConnectWidth 	= pBusBlockConnect - 1'b1;	// Busに接続する Slave数 最大16
+parameter [3:0]		pBlockConnectNum		= 10; 				// Busに接続する Slave数 最大16
+parameter [3:0]		pBlockConnectNumWidth 	= pBlockConnectNum - 1'b1;	// Busに接続する Slave数 最大16
 
 reg 				rSysClk = 0;
 reg 				rSysRst = 1;
 reg  [31:0] 		rSUsiRd;
-reg  [pBusBlockConnectWidth:0] 	rSUsiREd;
-reg  [pBusBlockConnectWidth:0] 	rSUsiCke;
+reg  [pBlockConnectNumWidth:0] 	rSUsiREd;
+reg  [pBlockConnectNumWidth:0] 	rSUsiCke;
 wire [31:0] 		wMUsiWd;
 wire [31:0] 		wMUsiAdrs;
 wire 				wMUsiCke;
 
 MicroControllerBlock #(
-	.pBusBlockConnect	(pBusBlockConnect)
+	.pBlockConnectNum	(pBlockConnectNum)
 ) MCB (
 	.iSUsiRd	(rSUsiRd),
 	.iSUsiREd	(rSUsiREd),
