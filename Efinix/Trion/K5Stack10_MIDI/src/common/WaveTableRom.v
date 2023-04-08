@@ -14,7 +14,7 @@ module WaveTableRom #(
 	output 	[pSamplingBitWidth-1:0]	oWave,
 	input 	[pSamplingBitWidth-1:0]	iWaveIndex,
     // CLK Reset
-	input 							iClk
+	input 							iCLK
 );
 
 
@@ -33,7 +33,7 @@ end
 //-----------------------------------------------------------------------------
 reg [pSamplingBitWidth-1:0] rWave;			assign oWave = rWave;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
 	rWave <= rWaveFifo[iWaveIndex];
 end

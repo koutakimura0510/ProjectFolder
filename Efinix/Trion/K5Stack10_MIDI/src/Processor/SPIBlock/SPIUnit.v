@@ -65,8 +65,8 @@ CkeGenerator #(
 	.iCke			(iSPIEn),
 	.iDiv			(iSPIDiv),
 	.oCke			(wDivCke),
-	.iClk			(iSCLK),
-	.iRst			(iSRST)
+	.iCLK			(iSCLK),
+	.iRST			(iSRST)
 );
 
 

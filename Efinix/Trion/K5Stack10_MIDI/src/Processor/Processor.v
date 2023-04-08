@@ -290,8 +290,8 @@ SPIBlock #(
 // 	.iSUfiREdRam	(wSUfiREdRamI),
 // 	.iSUfiRdyRam	(wSUfiRdy),
 // 	//
-// 	.iUfiRst		(iSRST),
-// 	.iUfiClk		(iUfibClk)
+// 	.iUfiRST		(iSRST),
+// 	.iUfiCLK		(iUfibClk)
 // );
 
 // always @*

@@ -10,7 +10,7 @@ module enGen #(
     parameter pTimeCke = 1          // Enable 出力の時間指定
 )(
     input   iSCLK, 
-    input   iRst,
+    input   iRST,
     output  oCke
 );
 
@@ -30,7 +30,7 @@ reg qCke;
 
 always @(posedge iSCLK) 
 begin
-    if (iRst)       tmp_count <= 0;
+    if (iRST)       tmp_count <= 0;
     else if (qCke)  tmp_count <= 0;
     else            tmp_count <= tmp_count + 1'b1;
 end
@@ -49,7 +49,7 @@ reg qTimeCke;                               assign oCke = qTimeCke;
 
 always @(posedge iSCLK)
 begin
-    if (iRst)           rTimeCkeCnt <= 0;
+    if (iRST)           rTimeCkeCnt <= 0;
     else if (qTimeCke)  rTimeCkeCnt <= 0;
     else if (qCke)      rTimeCkeCnt <= rTimeCkeCnt + 1'b1;
     else                rTimeCkeCnt <= rTimeCkeCnt;

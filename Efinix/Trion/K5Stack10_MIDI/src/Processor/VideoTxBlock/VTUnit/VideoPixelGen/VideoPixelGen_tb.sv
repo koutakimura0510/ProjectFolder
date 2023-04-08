@@ -82,8 +82,8 @@ VideoPixelGen #(
 	.oWEd				(wVd),
 	.iEdd				(1'b1),
 	//
-	.iRst				(rSysRst),
-	.iClk				(rSysClk)
+	.iRST				(rSysRst),
+	.iCLK				(rSysClk)
 );
 
 //-----------------------------------------------------------------------------

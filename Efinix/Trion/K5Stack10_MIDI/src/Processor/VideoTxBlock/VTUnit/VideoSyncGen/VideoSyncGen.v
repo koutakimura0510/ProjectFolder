@@ -26,7 +26,7 @@ module VideoSyncGen #(
     output          				oVde,				// video data enable 描画エリア時High
     output          				oFe,				// frame end
 	//
-    input           				iRst,
+    input           				iRST,
 	input 							iVideoClk
 );
 
@@ -40,11 +40,11 @@ reg qHMaxCntCke, qHSync;
 
 always @(posedge iVideoClk)
 begin 
-    if (iRst)        		rHpos <= {(pHdisplayWidth+1){1'b0}};
+    if (iRST)        		rHpos <= {(pHdisplayWidth+1){1'b0}};
     else if (qHMaxCntCke)  	rHpos <= {(pHdisplayWidth+1){1'b0}};
     else                	rHpos <= rHpos + 1'b1;
 
-    if (iRst)        		rHSync <= 1'b1;
+    if (iRST)        		rHSync <= 1'b1;
 	else if (qHSync)		rHSync <= 1'b0;
     else                	rHSync <= 1'b1;
 end
@@ -65,14 +65,14 @@ reg qVMaxCntCke, qVSync;
 
 always @(posedge iVideoClk) 
 begin
-	casex ({iRst, qVMaxCntCke, qHMaxCntCke})
+	casex ({iRST, qVMaxCntCke, qHMaxCntCke})
 		3'b1xx:			rVpos <= {(pVdisplayWidth+1){1'b0}};
 		3'b001:			rVpos <= rVpos + 1'b1;
 		3'b011:			rVpos <= {(pVdisplayWidth+1){1'b0}};
 		default: 		rVpos <= rVpos;
 	endcase
 
-    if (iRst)			rVSync <= 1'b1;
+    if (iRST)			rVSync <= 1'b1;
 	else if (qVSync)	rVSync <= 1'b0;
     else                rVSync <= 1'b1;
 end
@@ -92,11 +92,11 @@ reg qVde, qFe;
 
 always @(posedge iVideoClk) 
 begin
-    if (iRst)           	rVde <= 1'b0;
+    if (iRST)           	rVde <= 1'b0;
 	else if (qVde)			rVde <= 1'b1;
     else                	rVde <= 1'b0;
 
-    if (iRst)           	rFe <= 1'b0;
+    if (iRST)           	rFe <= 1'b0;
 	else if (qFe)			rFe <= 1'b1;
     else                	rFe <= 1'b0;
 	//

@@ -52,8 +52,8 @@ module ObjectPosGen #(
 	output 									oRightWallPointX,
 	output 									oLeftWallPointX,
 	// Clk rst
-	input									iRst,
-	input									iClk
+	input									iRST,
+	input									iCLK
 );
 
 
@@ -84,7 +84,7 @@ wire 	signed [pVdisplayWidth:0] 	wJumpPeakY  = rJumpPeakY - rJumpGainY;
 wire 	signed [pVdisplayWidth:0]	wJumpRiseY	= qJumpUpdateTiming ? rJumpGainY - 1'b1 : rJumpGainY;
 wire 	signed [pVdisplayWidth:0]	wJumpFallY	= qJumpUpdateTiming ? rJumpGainY + 1'b1 : rJumpGainY;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
 	//-----------------------------------------------------------------------------
 	// ジャンプ後は 次回ジャンプ可能地点に着地するまで、ジャンプの一連の動作を継続する
@@ -92,7 +92,7 @@ begin
 	// 後段の 計算などには 無駄な Sel を使用しないようにする。
 	// 基本的には 座標の更新は Frame単位で行われるため、Cke の生成がレジスタ経由で 1Clk 遅れたとしても全く問題ない
 	//-----------------------------------------------------------------------------
-	if (iRst)
+	if (iRST)
 	begin
 		rJumpCkeY <= 1'b0;
 	end
@@ -162,7 +162,7 @@ end
 // reg 									qDashFrameCntCke;
 // reg 									qDashPeak;
 
-// always @(posedge iClk)
+// always @(posedge iCLK)
 // begin
 // 	// Dash は指定回数のフレームの更新があった場合に、移動量を増幅させる
 // 	casex ({iFe, iDashCkeX})
@@ -240,12 +240,12 @@ reg 	qDUnderOverflow;
 reg rRightWallPointX;						assign oRightWallPointX = rRightWallPointX;
 reg rLeftWallPointX;						assign oLeftWallPointX  = rLeftWallPointX;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
-	if (iRst)	{rRightWallPointX, rLeftWallPointX}	<= 2'b00;
+	if (iRST)	{rRightWallPointX, rLeftWallPointX}	<= 2'b00;
 	else		{rRightWallPointX, rLeftWallPointX}	<= {qRightWallPointX, qLeftWallPointX};
 
-	if (iRst)
+	if (iRST)
 	begin
 		rDLeftX  <= wDLeftXinit;
 		rDRightX <= wDRightXinit;
@@ -294,9 +294,9 @@ end
 //-----------------------------------------------------------------------------
 // y軸座標更新
 //-----------------------------------------------------------------------------
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
-	if (iRst)
+	if (iRST)
 	begin
 		rDTopY   <= wDTopYinit;
 		rDUnderY <= wDUnderYinit;

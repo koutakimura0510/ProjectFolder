@@ -29,8 +29,8 @@ module DotMargeToPixelConverter #(
 	input 							iEdd,
 	output 							oEmp,
 	// Clk rst
-    input                       	iRst,
-    input                       	iClk
+    input                       	iRST,
+    input                       	iCLK
 );
 
 
@@ -49,8 +49,8 @@ OverlayMerge #(
 	.iWe			(iEds),
 	.oDstPixel		(wDstPixel),
 	.oWe			(wWe),
-	.iRst			(iRst),
-	.iClk			(iClk)
+	.iRST			(iRST),
+	.iCLK			(iCLK)
 );
 
 
@@ -71,8 +71,8 @@ OverlayMerge #(
 // 	.iRe			(iEdd),
 // 	.oEmp			(oEmp),
 // 	//
-// 	.iRst			(iRst),
-// 	.iClk			(iClk)
+// 	.iRST			(iRST),
+// 	.iCLK			(iCLK)
 // );
 fifoControllerLutRam #(
 	.pFifoDepth			(pFifoDepth),
@@ -89,8 +89,8 @@ fifoControllerLutRam #(
 	.iRe			(iEdd),
 	.oEmp			(oEmp),
 	//
-	.iRst			(iRst),
-	.iClk			(iClk)
+	.iRST			(iRST),
+	.iCLK			(iCLK)
 );
 
 

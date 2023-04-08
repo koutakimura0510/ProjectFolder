@@ -8,7 +8,7 @@
 module upbWrapper
 (
     input           iSCLK,      // Sys clk
-    input           iRst,       // Active High
+    input           iRST,       // Active High
     input  [ 5:0]   iBtn,
     input  [ 9:0]   iStartX,    // 描画開始開始x座標
     input  [ 9:0]   iStartY,    // 描画開始開始y座標
@@ -25,7 +25,7 @@ module upbWrapper
 );
 
 userPos USER_POS (
-    .iClk       (iSCLK),      .iRst         (iRst),
+    .iCLK       (iSCLK),      .iRST         (iRST),
     .iBtn       (iBtn),
     .iStartX    (0),          .iStartY      (416),
     .oUXS       (oUXS),       .oUYS         (oUYS), 

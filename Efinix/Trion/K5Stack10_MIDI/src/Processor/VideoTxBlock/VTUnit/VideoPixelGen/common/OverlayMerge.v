@@ -27,16 +27,16 @@ module OverlayMerge #(
 	output	[pColorDepth-1:0]		oDstPixel,		// 合成後の色データ
 	output 							oWe,
     // CLK Reset
-    input           				iRst,
-    input							iClk
+    input           				iRST,
+    input							iCLK
 	// copy paste
 	// .iSrcPixel		(),
 	// .iOverlayPixel	(),
 	// .iWe			(),
 	// .oDstPixel		(),
 	// .oWe			(),
-	// .iRst			(),
-	// .iClk			()
+	// .iRST			(),
+	// .iCLK			()
 );
 
 /*
@@ -64,7 +64,7 @@ reg [pDspBitWidth-1:0] 	rOverlayBstage1;
 reg [pRGBBitWidth-1:0] 	rSrcAstage1;
 reg 					rWestage1;
 
-always @( posedge iClk )
+always @( posedge iCLK )
 begin
 	rSrcPixelstage1	<= iSrcPixel;
 	rOverlayRstage1	<= wOverlayRstage1;
@@ -72,7 +72,7 @@ begin
 	rOverlayBstage1	<= wOverlayBstage1;
 	rSrcAstage1		<= wSrcAstage1;
 
-	if (iRst)	rWestage1	<= 1'b0;
+	if (iRST)	rWestage1	<= 1'b0;
 	else 		rWestage1	<= iWe;
 end
 
@@ -96,7 +96,7 @@ reg [pDspBitWidth-1:0] 	rSrcGstage2;
 reg [pDspBitWidth-1:0] 	rSrcBstage2;
 reg 					rWestage2;
 
-always @( posedge iClk )
+always @( posedge iCLK )
 begin
 	rSrcAstage2		<= rSrcPixelstage1[pAlphaBitMsb:pAlphaBitLsb];
 	rOverlayRstage2	<= wOverlayRstage2;
@@ -106,7 +106,7 @@ begin
 	rSrcGstage2		<= wSrcGstage2;
 	rSrcBstage2		<= wSrcBstage2;
 	
-	if (iRst)	rWestage2	<= 1'b0;
+	if (iRST)	rWestage2	<= 1'b0;
 	else 		rWestage2	<= rWestage1;
 end
 
@@ -124,14 +124,14 @@ reg [pRGBBitWidth-1:0]  rSrcGstage3;
 reg [pRGBBitWidth-1:0]  rSrcBstage3;			assign oDstPixel = {rSrcAstage3, rSrcBstage3, rSrcGstage3, rSrcRstage3};
 reg 					rWestage3;				assign oWe		 =  rWestage3;
 
-always @( posedge iClk )
+always @( posedge iCLK )
 begin
 	rSrcAstage3	<= rSrcAstage2;
 	rSrcRstage3	<= wSrcRstage3[pRGBBitWidth+:pRGBBitWidth];
 	rSrcGstage3	<= wSrcGstage3[pRGBBitWidth+:pRGBBitWidth];
 	rSrcBstage3	<= wSrcBstage3[pRGBBitWidth+:pRGBBitWidth];
 
-	if (iRst)	rWestage3	<= 1'b0;
+	if (iRST)	rWestage3	<= 1'b0;
 	else 		rWestage3	<= rWestage2;
 end
 

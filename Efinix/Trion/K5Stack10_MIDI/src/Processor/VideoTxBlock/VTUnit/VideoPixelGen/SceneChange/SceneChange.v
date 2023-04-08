@@ -43,8 +43,8 @@ module SceneChange #(
 	output									oSceneAlphaMax,
 	output 									oSceneAlphaMin,
 	// Clk rst
-	input 									iRst,
-    input                       			iClk
+	input 									iRST,
+    input                       			iCLK
 );
 
 
@@ -63,7 +63,7 @@ reg 					qAlphaMin;
 wire [pColorDepth-1:0] 	wColorAdd = rScenePixel + pAlphaNum;
 wire [pColorDepth-1:0] 	wColorSub = rScenePixel - pAlphaNum;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
 	casex ({iSceneFrameRst, qFrameUpdateEn, iFe, qAlphaMin, qAlphaMax, iSceneFrameSubEn, iSceneFrameAddEn})
 		'b1x_x_xx_xx:	rScenePixel <= iSceneColor;

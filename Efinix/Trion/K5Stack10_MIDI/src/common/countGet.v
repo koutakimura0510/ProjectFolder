@@ -13,8 +13,8 @@ module countGet
 #(
     parameter                   pCntSize     = 60  // Count Size
 )(
-    input                       iClk,               // clk
-    input                       iRst,               // Active High system rst
+    input                       iCLK,               // clk
+    input                       iRST,               // Active High system rst
     input                       iCKE,               // update enable
     output                      oCKE                // output enable
 );
@@ -33,9 +33,9 @@ localparam lpCntSize = pCntSize - 1'b1;
 reg [lpBitSize-1:0] rCnt;
 reg qEn;                    assign oCKE = qEn;
 
-always @(posedge iClk) 
+always @(posedge iCLK) 
 begin
-    if (iRst)       rCnt <= 0;
+    if (iRST)       rCnt <= 0;
     else if (iCKE)  rCnt <= (qEn) ? 0 : rCnt + 1'b1;
     else            rCnt <= rCnt;
 end

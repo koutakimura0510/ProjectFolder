@@ -12,7 +12,7 @@ module userFifo #(
     parameter 	pAddrWidth 		= 16,     // addr size
 	parameter	pFifoBlockRam	= "yes"
 )(
-    input                      iClk,
+    input                      iCLK,
     input   [pBitWidth-1:0]    iWD,    // write data
     input   [pAddrWidth-1:0]   iWA,    // write addr
     input                      iWE,    // write enable
@@ -30,7 +30,7 @@ generate
 		// assign oRD = fifo[iRA];
 
 		// rwポート
-		always @(posedge iClk)
+		always @(posedge iCLK)
 		begin
 			if (iWE) fifo[iWA] <= iWD;
 			rd <= fifo[iRA];
@@ -41,7 +41,7 @@ generate
 		assign oRD = fifo[iRA];
 
 		// rwポート
-		always @(posedge iClk)
+		always @(posedge iCLK)
 		begin
 			if (iWE) fifo[iWA] <= iWD;
 		end

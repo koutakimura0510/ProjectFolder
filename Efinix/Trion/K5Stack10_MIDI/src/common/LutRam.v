@@ -15,12 +15,12 @@ module LutRam #(
     input                      iWE,    // write enable
     output  [pBitWidth-1:0]    oRD,    // read data
     input   [pAddrWidth-1:0]   iRA,    // read address
-    input                      iClk
+    input                      iCLK
 );
 
 reg [pBitWidth-1:0] fifo [0:pBuffDepth-1];		assign oRD = fifo[iRA];
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
     if (iWE) 	fifo[iWA] <= iWD;
 end

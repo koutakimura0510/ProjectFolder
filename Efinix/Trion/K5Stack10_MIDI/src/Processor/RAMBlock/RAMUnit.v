@@ -118,7 +118,7 @@ RAMIf #(
 	.oRd			(wMemRdIf),
 	.oREd			(wMemREdIf),
 	//
-	.iRst			(iSRST),
+	.iRST			(iSRST),
 	.iMemClk		(iMemClk)
 );
 

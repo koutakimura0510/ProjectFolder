@@ -95,8 +95,8 @@ module VideoPixelGen #(
     output                       	oWEd,
 	input 							iEdd,
     // CLK Reset
-    input           				iRst,
-    input           				iClk
+    input           				iRST,
+    input           				iCLK
 );
 
 
@@ -115,7 +115,7 @@ begin
 	rVdisplay = {pVdisplayWidth{1'b0}};
 end
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
 	rHdisplay <= iHdisplay - 1'b1;
 	rVdisplay <= iVdisplay - 1'b1;
@@ -152,7 +152,7 @@ end
 // 	.oSUfiWd					(wSUfiWd),
 // 	.oSUfiAdrs					(wSUfiAdrs),
 // 	.oSUfiWEd					(wSUfiWEd),
-//     .iClk						(iClk)
+//     .iCLK						(iCLK)
 // );
 
 
@@ -178,9 +178,9 @@ PixelDrawPosition #(
 	.oHposBs				(wInfoHposBs),
 	.oVposBs				(wInfoVposBs),
 	.oAFE					(wAFe),
-	.iRst					(iRst),
+	.iRST					(iRST),
 	.iCke					(qPixelDrawPositionCke),
-	.iClk					(iClk)
+	.iCLK					(iCLK)
 );
 
 
@@ -215,8 +215,8 @@ PixelDrawPosition #(
 // 	.oInfoObjectId			(wInfoObjectId),
 // 	.oInfoField2Id			(wInfoField2Id),
 // 	.oInfoForegroundId		(wInfoForegroundId),
-// 	.iRst					(iRst),
-// 	.iClk					(iClk)
+// 	.iRST					(iRST),
+// 	.iCLK					(iCLK)
 // );
 
 
@@ -273,8 +273,8 @@ PlayerDraw #(
 	.iPDRadrsNext			(iPDRadrsNext),
 	.iPDRst					(iPDRst),
 	.oPDFeCntCke			(oPDFeCntCke),
-	.iRst					(iRst),
-	.iClk					(iClk)
+	.iRST					(iRST),
+	.iCLK					(iCLK)
 );
 
 
@@ -310,8 +310,8 @@ SceneChange #(
 	.oSceneAlphaMax		(oSceneAlphaMax),
 	.oSceneAlphaMin		(oSceneAlphaMin),
 	//
-	.iRst				(iRst),
-	.iClk				(iClk)
+	.iRST				(iRST),
+	.iCLK				(iCLK)
 );
 
 //-----------------------------------------------------------------------------
@@ -346,8 +346,8 @@ VpgDemo #(
 	.oVdd				(wVpgDemoVdd),
 	.iEdd				(qVpgDemoEdd),
 	.oEmp				(wVpgDemoEmp),
-	.iRst				(iRst),
-	.iClk				(iClk)
+	.iRST				(iRST),
+	.iCLK				(iCLK)
 );
 
 always @*
@@ -395,8 +395,8 @@ DotMargeToPixelConverter #(
 	.oVdd				(wPixelMargeVdd),
 	.iEdd				(qPixelMargeEdd),
 	.oEmp				(wPixelMargeEmp),
-	.iRst				(iRst),
-	.iClk				(iClk)
+	.iRST				(iRST),
+	.iCLK				(iCLK)
 );
 
 always @*

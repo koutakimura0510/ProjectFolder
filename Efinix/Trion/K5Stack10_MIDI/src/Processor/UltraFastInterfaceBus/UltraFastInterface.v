@@ -71,8 +71,8 @@ module UltraFastInterface #(
 	input  								iSUfiREdRam,	// Master に対する 読み込み有効信号
 	input 								iSUfiRdyRam,	// Master に対する Ready 信号
     // CLK Reset
-    input								iUfiRst,
-    input								iUfiClk 
+    input								iUfiRST,
+    input								iUfiCLK 
 );
 
 
@@ -106,7 +106,7 @@ reg [pUfiBusWidth-1:0] 	rSUfiWdVtb;			assign oSUfiWdVtb	= rSUfiWdVtb;
 reg [pUsiBusWidth-1:0] 	rSUfiAdrsVtb;		assign oSUfiAdrsVtb	= rSUfiAdrsVtb;
 reg 					rSUfiWEdVtb;		assign oSUfiWEdVtb	= rSUfiWEdVtb;
 
-always @(posedge iUfiClk)
+always @(posedge iUfiCLK)
 begin
 	// UFIB 制御ステートマシン、ハブとして機能
 	// Master Side
@@ -168,13 +168,13 @@ begin
 		end
 	endcase
 	//
-	if (iUfiRst)	rMUfiRdy <= 1'b0;
+	if (iUfiRST)	rMUfiRdy <= 1'b0;
 	else 			rMUfiRdy <= iSUfiRdyRam;
 	//
 	rSUfiWdVtb		<=	iMUfiWdMcs;
 	rSUfiAdrsVtb	<=	iMUfiAdrsMcs;
 
-	if (iUfiRst) 	rSUfiWEdVtb <= 1'b0;
+	if (iUfiRST) 	rSUfiWEdVtb <= 1'b0;
 	else 			rSUfiWEdVtb <= iMUfiWEdMcs & iMUfiAdrsMcs[26];
 end
 
@@ -190,19 +190,19 @@ reg 					qIdCkeMcs;
 reg 					qIdCkeVtb;
 reg 					qIdCkeAtb;
 
-always @(posedge iUfiClk)
+always @(posedge iUfiCLK)
 begin
 	rMUfiRd	<= iSUfiRdRam;
 
-	if (iUfiRst)		rMUfiEddMcs <= 1'b0;
+	if (iUfiRST)		rMUfiEddMcs <= 1'b0;
 	else if (qIdCkeMcs)	rMUfiEddMcs <= iSUfiREdRam;
 	else 				rMUfiEddMcs <= 1'b0;
 
-	if (iUfiRst)		rMUfiEddVtb <= 1'b0;
+	if (iUfiRST)		rMUfiEddVtb <= 1'b0;
 	else if (qIdCkeVtb)	rMUfiEddVtb <= iSUfiREdRam;
 	else 				rMUfiEddVtb <= 1'b0;
 
-	if (iUfiRst)		rMUfiEddAtb <= 1'b0;
+	if (iUfiRST)		rMUfiEddAtb <= 1'b0;
 	else if (qIdCkeAtb)	rMUfiEddAtb <= iSUfiREdRam;
 	else 				rMUfiEddAtb <= 1'b0;
 end

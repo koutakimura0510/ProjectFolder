@@ -162,8 +162,8 @@ VideoPixelGen #(
 	.oWEd				(wDrawPixelWEd),
 	.iEdd				(qVideoPixelGenEdd),
 	// 
-	.iRst				(iVtbSystemRst),
-	.iClk				(iSCLK)
+	.iRST				(iVtbSystemRst),
+	.iCLK				(iSCLK)
 );
 
 
@@ -210,8 +210,8 @@ VideoDmaUnit #(
 	.iFbufLen2			(iFbufLen2),
 	.iDmaEn				(iDmaEn),
 	//
-	.iRst				(iVtbSystemRst),
-	.iClk				(iSCLK)
+	.iRST				(iVtbSystemRst),
+	.iCLK				(iSCLK)
 );
 
 generate
@@ -251,7 +251,7 @@ VideoSyncGen #(
 	.oVSync			(wVSync),
 	.oVde			(wVde),
 	.oFe			(wFe),
-	.iRst			(iVtbVideoRst),
+	.iRST			(iVtbVideoRst),
 	.iVideoClk		(iVideoClk)
 );
 
@@ -317,8 +317,8 @@ DutyGenerator #(
 	.iPWMEn			(1'b1),
 	.iDutyRatio		(iBlDutyRatio),
 	.iIVtimer		(100),
-	.iClk			(iSCLK),
-	.iRst			(iSRST)
+	.iCLK			(iSCLK),
+	.iRST			(iSRST)
 );
 
 

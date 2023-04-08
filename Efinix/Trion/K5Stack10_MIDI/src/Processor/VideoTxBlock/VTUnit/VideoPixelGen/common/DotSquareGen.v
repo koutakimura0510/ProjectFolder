@@ -22,8 +22,8 @@ module DotSquareGen #(
     input signed 	[pVdisplayWidth:0]		iDTopY,		// 描画開始 Y座標 Draw Y Start
     input signed 	[pVdisplayWidth:0]		iDUnderY,	// 描画終了 Y座標 Draw Y End
 	// Clk rst
-    input									iRst,
-    input									iClk
+    input									iRST,
+    input									iCLK
 );
 
 
@@ -41,7 +41,7 @@ reg [pColorDepth-1:0] rPixel;		assign oPixel = rPixel;
 reg qCke;
 reg [3:0] qPosMatch;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
 	if (qCke) 		rPixel <= iColor;
     else 			rPixel <= {pColorDepth{1'b0}};

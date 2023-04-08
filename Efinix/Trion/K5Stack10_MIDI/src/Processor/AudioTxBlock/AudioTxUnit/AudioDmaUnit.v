@@ -34,8 +34,8 @@ module AudioDmaUnit #(
 	input [pMemAdrsWidth-1:0]	iDmaLen,
 	input 						iDmaEn,
     // CLK Reset
-	input 						iRst,
-	input 						iClk
+	input 						iRST,
+	input 						iCLK
 );
 
 
@@ -63,7 +63,7 @@ reg 						qDmaRAdrsMatch;
 reg		[pSwBitWidth-1:0]	rSwitchCnt;
 reg 						qSwicthCke;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
 	casex ({qSwicthCke, iDmaRe, iMUfiRdy, iDmaEn})
 		'bxxx0: 	rSwitchCnt	<= {pSwBitWidth{1'b0}};
@@ -81,15 +81,15 @@ begin
 
 	rMUfiAdrs	<= rDmaRAdrs;
 
-	if (iRst)			rMUfiWEd	<= 1'b0;
+	if (iRST)			rMUfiWEd	<= 1'b0;
 	else if (iDmaEn)	rMUfiWEd	<= qMUfiWEd;
 	else				rMUfiWEd	<= 1'b0;
 
-	if (iRst)			rMUfiREd	<= 1'b0;
+	if (iRST)			rMUfiREd	<= 1'b0;
 	else if (iDmaEn)	rMUfiREd	<= qMUfiREd;
 	else 				rMUfiREd	<= 1'b0;
 
-	if (iRst)			rMUfiVd		<= 1'b0;
+	if (iRST)			rMUfiVd		<= 1'b0;
 	else if (iDmaEn)	rMUfiVd 	<= qMUfiVd;
 	else				rMUfiVd 	<= 1'b0;
 
@@ -118,11 +118,11 @@ end
 reg [pUfiBusWidth-1:0]	rDmaRd;			assign oDmaRd	= rDmaRd;
 reg 					rDmaREd;		assign oDmaREd	= rDmaREd;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
 	rDmaRd	<= iMUfiRd;
 
-	if (iRst)	rDmaREd	<= 1'b0;
+	if (iRST)	rDmaREd	<= 1'b0;
 	else 		rDmaREd	<= iMUfiREd;
 end
 

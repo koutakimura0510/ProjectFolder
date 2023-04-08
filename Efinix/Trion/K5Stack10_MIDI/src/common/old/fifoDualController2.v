@@ -11,10 +11,10 @@ module fifoDualController #(
     parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
     parameter pBitWidth   = 32      // bitサイズ
 )(
-    input                       iClkA,  // clk write side
-    input                       iClkB,  // clk read  side
-    input                       iRstA,  // Active High
-    input                       iRstB,  // Active High
+    input                       iCLKA,  // clk write side
+    input                       iCLKB,  // clk read  side
+    input                       iRSTA,  // Active High
+    input                       iRSTB,  // Active High
     input   [pBitWidth-1:0]     iWD,    // write data
     input                       iWE,    // write enable 有効データ書き込み
     output                      oFLL,   // 最大書き込み時High
@@ -47,26 +47,26 @@ reg qWE, qRE, qRst;
 
 ////////////////////////////////////////////////////////////
 // write pointer
-always @(posedge iClkA)
+always @(posedge iCLKA)
 begin
-    if (iRstA)      rWA <= 0;
+    if (iRSTA)      rWA <= 0;
     else if (qWE)   rWA <= rWA + 1'b1;
     else            rWA <= rWA;
 end
 
 ////////////////////////////////////////////////////////////
 // read pointer
-always @(posedge iClkB)
+always @(posedge iCLKB)
 begin
-    if (iRstB)     rRA <= 0;
+    if (iRSTB)     rRA <= 0;
     else if (qRE)  rRA <= rRA + 1'b1;
     else           rRA <= rRA;
 end
 
 // 前回のrpが更新されていたら新規データを出力できる状態と判断する
-always @(posedge iClkB)
+always @(posedge iCLKB)
 begin
-    if (iRstB)  rORP <= 0;
+    if (iRSTB)  rORP <= 0;
     else        rORP <= rRA;
 end
 
@@ -97,7 +97,7 @@ userFifoDual #(
     .pAddrWidth    (lpAddrWidth)
 ) USER_FIFO_DUAL (
     // write side       read side
-    .iClkA  (iClkA),    .iClkB  (iClkB),
+    .iCLKA  (iCLKA),    .iCLKB  (iCLKB),
     .iWD    (iWD),      .oRD    (wRD),
     .iWA    (rWA),      .iRA    (rRA),
     .iWE    (qWE)

@@ -459,8 +459,8 @@ UltraFastInterface #(
 	.iSUfiREdRam		(iwSUfiREdRam),
 	.iSUfiRdyRam		(wSUfiRdyRam),
 	//
-	.iUfiRst			(rSysRst),
-	.iUfiClk			(wBusClk)
+	.iUfiRST			(rSysRst),
+	.iUfiCLK			(wBusClk)
 );
 
 
@@ -479,8 +479,8 @@ wire wSaveEnd;
 // 	.iVde		(wTftDe),
 // 	.iAFE		(wAFE),
 // 	.oSaveEnd	(wSaveEnd),
-// 	.iRst		(rVtbVideoRst),
-// 	.iClk		(wVideoClk)
+// 	.iRST		(rVtbVideoRst),
+// 	.iCLK		(wVideoClk)
 // );
 BmpFileSaver #(
 	.pRawFileSave 	(lpRawFileSave),
@@ -493,8 +493,8 @@ BmpFileSaver #(
 	.iVde			(wTftDe),
 	.iAFE			(wAFE),
 	.oSaveEnd		(wSaveEnd),
-	.iRst			(rVtbVideoRst),
-	.iClk			(wVideoClk)
+	.iRST			(rVtbVideoRst),
+	.iCLK			(wVideoClk)
 );
 
 

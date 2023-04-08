@@ -24,8 +24,8 @@ module DrawMapIdInfo #(
 	//
 	input	[7:0]				 		iInfoVpos,				// (DisplayVpos + UnitXpos + FiledXpos) / MapchipXSize の値
 	// Clk rst
-    input								iRst,
-    input								iClk
+    input								iRST,
+    input								iCLK
 );
 
 //-----------------------------------------------------------------------------
@@ -34,7 +34,7 @@ module DrawMapIdInfo #(
 reg [pMapInfoWidth-1:0]		rMapInfo;
 reg [15:0] 					qInfoRAdrs;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
 	if (iInfoWCke)	rMapInfoFifo[iInfoWAdrs] <= iInfoWd;
 

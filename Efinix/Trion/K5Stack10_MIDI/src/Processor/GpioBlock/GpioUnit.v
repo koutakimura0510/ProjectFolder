@@ -65,8 +65,8 @@ generate
 			.iPWMEn			(qDutyEn[i]),
 			.iDutyRatio		(qGpioDutyRatio[i]),
 			.iIVtimer		(qGpioIVtimer[i]),
-			.iClk			(iSCLK),
-			.iRst			(iSRST)
+			.iCLK			(iSCLK),
+			.iRST			(iSRST)
 		);
 
 		always @*

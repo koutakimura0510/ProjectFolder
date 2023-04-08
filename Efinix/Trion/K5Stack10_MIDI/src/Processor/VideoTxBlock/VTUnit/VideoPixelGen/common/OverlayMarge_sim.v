@@ -63,8 +63,8 @@ OverlayMarge #(
 	.iWe			(1'b1),
 	.oDstPixel		(wDst),
 	.oWe			(wWe),
-	.iRst			(rSysRst),
-	.iClk			(rSysClk)
+	.iRST			(rSysRst),
+	.iCLK			(rSysClk)
 );
 
 endmodule

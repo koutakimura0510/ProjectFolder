@@ -22,8 +22,8 @@ module SlaveUfiAllocation #(
 	output 	[pUsiBusWidth-1:0]			oSUfiWAdrs,					// Slave に対する R/W 共通のアドレス指定バス
 	output 	[pUfiAllocationNum-1:0]		oSUfiWEd,					// Slave に対する 書き込み有効信号
 	
-    // input								iRst,
-    input								iClk
+    // input								iRST,
+    input								iCLK
 );
 
 
@@ -37,7 +37,7 @@ reg [pUfiAllocationNum-1:0] rSUfiWEd;			assign oSUfiWEd		= rSUfiWEd;
 //
 reg [pUfiAllocationNum-1:0] qAllocationCke;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
 	rSUfiWd		<=	iSUfiWd;
 	rSUfiWAdrs	<=	iSUfiWAdrs;

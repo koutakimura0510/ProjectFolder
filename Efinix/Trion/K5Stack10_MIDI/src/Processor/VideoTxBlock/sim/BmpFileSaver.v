@@ -23,8 +23,8 @@ module BmpFileSaver #(
 	//
 	output 				oSaveEnd,	// 書き出し終了
 	//
-	input 				iRst,
-	input 				iClk
+	input 				iRST,
+	input 				iCLK
 );
 
 
@@ -43,9 +43,9 @@ integer fd = 0;	// ファイルディスクリプタ
 reg rSaveEnd;							assign oSaveEnd = rSaveEnd;
 reg [2:0] rFileSt;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
-	if (iRst)
+	if (iRST)
 	begin
 		rSaveEnd 	= 1'b0;
 		rFileSt		= lpFileOpen;

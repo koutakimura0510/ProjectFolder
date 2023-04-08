@@ -17,8 +17,8 @@ module DutyGenerator #(
 	input 	[pPWMDutyWidth-1:0]	iDutyRatio,		// Duty 比入力
 	input 	[pIVtimerWidth-1:0]	iIVtimer,		// PWM 周期
     // CLK Reset
-    input           			iClk,
-    input           			iRst
+    input           			iCLK,
+    input           			iRST
 );
 
 
@@ -34,8 +34,8 @@ CkeGenerator #(
 	.iDiv		(iIVtimer),
 	.iCke		(iPWMEn),
 	.oCke		(wDivCke),
-	.iClk		(iClk),
-	.iRst		(iRst)
+	.iCLK		(iCLK),
+	.iRST		(iRST)
 );
 
 
@@ -50,17 +50,17 @@ reg 					rDutyCycleCke;				assign oDutyCycleCke = rDutyCycleCke;		// 1周期カ�
 reg						qDutyCycleCke;
 reg						qCntCompare;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
-	if (iRst) 				rDutyCnt <= {pPWMDutyWidth{1'b0}};
+	if (iRST) 				rDutyCnt <= {pPWMDutyWidth{1'b0}};
 	else if (iPWMEn)		rDutyCnt <= rDutyCnt + wDivCke;
 	else 					rDutyCnt <= {pPWMDutyWidth{1'b0}};
 
-	if (iRst) 				rDutyCycleCke <= 1'b0;
+	if (iRST) 				rDutyCycleCke <= 1'b0;
 	else if (qDutyCycleCke)	rDutyCycleCke <= 1'b1;
 	else 					rDutyCycleCke <= 1'b0;
 
-	if (iRst)				rPwm <= 1'b0;
+	if (iRST)				rPwm <= 1'b0;
 	else if (qCntCompare)	rPwm <= 1'b1;
 	else 					rPwm <= 1'b0;
 end

@@ -32,8 +32,8 @@ module PlayerDraw #(
 	input 									iPDRst,
 	output 									oPDFeCntCke,
 	// Clk rst
-	input 									iRst,
-    input                       			iClk
+	input 									iRST,
+    input                       			iCLK
 );
 
 
@@ -51,14 +51,14 @@ end
 //-----------------------------------------------------------------------------
 reg	rLocalRst, qLocalRst;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
 	rLocalRst <= qLocalRst;
 end
 
 always @*
 begin
-	qLocalRst <= |{iPDRst,iRst,iFe};
+	qLocalRst <= |{iPDRst,iRST,iFe};
 end
 
 //-----------------------------------------------------------------------------
@@ -77,7 +77,7 @@ reg 					qRadrsCke;
 wire wRadrs = rRadrs + 1'b1;
 wire wWadrs = rWadrs + 1'b1;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
 	// Read
 	if (rLocalRst)				rRadrs <= iPDRadrsNext;
@@ -110,7 +110,7 @@ reg 		rFeCke, qFeCke;				assign oPDFeCntCke = rFeCke;
 //
 wire wFeCnt = rFeCnt + 1'b1;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
 	rFeCke <= qFeCke;
 

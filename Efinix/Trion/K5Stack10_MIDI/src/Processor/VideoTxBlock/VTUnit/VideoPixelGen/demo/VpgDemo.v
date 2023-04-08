@@ -27,8 +27,8 @@ module VpgDemo #(
 	input 									iEdd,		// Enable Data Dest
 	output 									oEmp,		// FIFO Empty
 	// Clk rst
-    input                       			iRst,
-    input                       			iClk
+    input                       			iRST,
+    input                       			iCLK
 );
 
 
@@ -40,9 +40,9 @@ reg rRightDir;
 wire wRWallPX;
 wire wLWallPX;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
-	if (iRst)
+	if (iRST)
 	begin 
 		rLeftDir  <= 1'b0;
 		rRightDir <= 1'b1;
@@ -116,8 +116,8 @@ ObjectPosGen #(
 	.oRightWallPointX	(wRWallPX),
 	.oLeftWallPointX	(wLWallPX),
 	//
-	.iRst				(iRst),
-	.iClk				(iClk)
+	.iRST				(iRST),
+	.iCLK				(iCLK)
 );
 
 
@@ -142,8 +142,8 @@ DotSquareGen #(
 	.iDTopY				(wDTopY),
 	.iDUnderY			(wDUnderY),
 	//
-	.iRst				(iRst),
-	.iClk				(iClk)
+	.iRST				(iRST),
+	.iCLK				(iCLK)
 );
 
 
@@ -166,13 +166,13 @@ fifoController #(
 	.iRe			(iEdd),
 	.oEmp			(oEmp),
 	//
-	.iRst			(iRst),
-	.iClk			(iClk)
+	.iRST			(iRST),
+	.iCLK			(iCLK)
 );
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
-	if (iRst) 		rWe <= 1'b0;
+	if (iRST) 		rWe <= 1'b0;
 	else if (iEds)	rWe <= 1'b1;
 	else 			rWe <= 1'b0;
 end

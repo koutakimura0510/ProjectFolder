@@ -32,7 +32,7 @@ module RAMIf #(
 	output 	[pRamDqWidth-1:0]		oRd,
 	output 							oREd,
     // Internal Port
-    input							iRst,
+    input							iRST,
     input							iMemClk
 );
 
@@ -75,7 +75,7 @@ begin
 	if (rWE)	rRd <= wRd;
 	else  		rRd <= rRd;
 
-	if (iRst)		rREd <= 1'b0;
+	if (iRST)		rREd <= 1'b0;
 	else if (rWE) 	rREd <= 1'b1;
 	else  			rREd <= 1'b0;
 end

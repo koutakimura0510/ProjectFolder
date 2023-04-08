@@ -20,8 +20,8 @@ module fifoControllerLutRam #(
     input                       iRe,        // read enable
     output                      oEmp,       // バッファ空時High
 	//
-    input                       iRst,
-    input                       iClk
+    input                       iRST,
+    input                       iCLK
 );
 
 //----------------------------------------------------------
@@ -36,13 +36,13 @@ localparam pAddrWidth  = fBitWidth(pFifoDepth);
 reg [pAddrWidth-1:0] rWA, rRA;
 reg [pAddrWidth-1:0] qWA [0:pFifoFastOutValue-1];
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
-    if (iRst)       rWA <= {pAddrWidth{1'b0}};
+    if (iRST)       rWA <= {pAddrWidth{1'b0}};
     else if (iWe)   rWA <= rWA + 1'b1;
     else            rWA <= rWA;
 	//
-    if (iRst)      	rRA <= {pAddrWidth{1'b0}};
+    if (iRST)      	rRA <= {pAddrWidth{1'b0}};
     else if (iRe)  	rRA <= rRA + 1'b1;
     else           	rRA <= rRA;
 end
@@ -57,9 +57,9 @@ reg rFull;							assign oFull = rFull;
 reg qEMP;							assign oEmp  = qEMP;
 									assign oRVd  = iRe & (~qEMP);
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
-    if (iRst)       rFull <= 1'b0;
+    if (iRST)       rFull <= 1'b0;
     else            rFull <= |{qFull};
 end
 
@@ -94,7 +94,7 @@ LutRam #(
     .iWA    (rWA),      .iRA    (rRA),
     .iWE    (iWe),
 	//
-    .iClk   (iClk)
+    .iCLK   (iCLK)
 );
 
 // msb側の1を検出しbit幅を取得する

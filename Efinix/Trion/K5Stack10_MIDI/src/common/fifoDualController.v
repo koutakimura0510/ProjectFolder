@@ -14,9 +14,9 @@ module fifoDualController #(
     parameter pBuffDepth  = 256,    // FIFO BRAMのサイズ指定
     parameter pBitWidth   = 32      // bitサイズ
 )(
-    input                       iClkA,  // clk write side
-    input                       iClkB,  // clk read  side
-    input                       iRst,   // Active High
+    input                       iCLKA,  // clk write side
+    input                       iCLKB,  // clk read  side
+    input                       iRST,   // Active High
     input   [pBitWidth-1:0]     iWD,    // write data
     input                       iWE,    // write enable 有効データ書き込み
     output                      oFLL,   // 最大書き込み時High
@@ -53,26 +53,26 @@ reg qWE, qRE, qRst;
 //----------------------------------------------------------
 // write pointer
 //----------------------------------------------------------
-always @(posedge iClkA)
+always @(posedge iCLKA)
 begin
     if (qRst)       rWA <= 0;
     else if (rWE)   rWA <= rWA + 1'b1;
     else            rWA <= rWA;
 end
 
-always @(posedge iClkA)
+always @(posedge iCLKA)
 begin
     if (qRst)       rOWP <= 0;
     else            rOWP <= rWA;
 end
 
-always @(posedge iClkA)
+always @(posedge iCLKA)
 begin
     if (qRst)       rWAb <= 0;
     else            rWAb <= rWA - 1'b1;
 end
 
-always @(posedge iClkA)
+always @(posedge iCLKA)
 begin
     if (qRst)       rWAb2 <= 0;
     else            rWAb2 <= rWA - 2'd2;
@@ -83,26 +83,26 @@ end
 // read pointer
 // 前回のrpが更新されていたら新規データを出力できる状態と判断する
 //----------------------------------------------------------
-always @(posedge iClkB)
+always @(posedge iCLKB)
 begin
     if (qRst)       rRA <= 0;
     else if (rRE)   rRA <= rRA + 1'b1;
     else            rRA <= rRA;
 end
 
-always @(posedge iClkB)
+always @(posedge iCLKB)
 begin
     if (qRst)       rRAb <= 0;
     else            rRAb <= rRA - 4'd9;
 end
 
-always @(posedge iClkB)
+always @(posedge iCLKB)
 begin
     if (qRst)       rRAb2 <= 0;
     else            rRAb2 <= rRA - 4'd8;
 end
 
-always @(posedge iClkB)
+always @(posedge iCLKB)
 begin
     if (qRst)       rORP <= 0;
     else            rORP <= rRA;
@@ -110,19 +110,19 @@ end
 
 ////////////////////////////////////////////////////////////
 // Hnad Shake信号、タイミング結合のためDFFに一度通す
-always @(posedge iClkA)
+always @(posedge iCLKA)
 begin
     if (qRst)       {rFLL, rEMP} <= {1'b1, 1'b1};
     else            {rFLL, rEMP} <= {qFLL, qEMP};
 end
 
-always @(posedge iClkB)
+always @(posedge iCLKB)
 begin
     if (qRst)       {rRVD, rRE} <= 2'b00;
     else            {rRVD, rRE} <= {qRVD, qRE};
 end
 
-always @(posedge iClkA)
+always @(posedge iCLKA)
 begin
     if (qRst)       rWE <= 1'b0;
     else            rWE <= qWE;
@@ -131,7 +131,7 @@ end
 // DFFの段数により3clk遅延するため、3clk分のraポインタを先取りして計算しておく
 always @*
 begin
-    qRst    <= iRst;
+    qRst    <= iRST;
     qFLL    <= ((rRAb < rWA || rRAb2 < rWA) && (rWA < rRA || rRA == 0)) || ((rRA < 4'd9) && (rWA < rRA));
     qEMP    <= (rWA == rRA || rOWP == rRA || rWAb2 == rRA || rWAb == rRA) ? 1'b1 : 1'b0;
     qRVD    <= (rRA != rORP);
@@ -152,19 +152,19 @@ userFifoDual #(
     .pAddrWidth    (pAddrWidth)
 ) USER_FIFO_DUAL (
     // write side       read side
-    .iClkA  (iClkA),    .iClkB  (iClkB),
+    .iCLKA  (iCLKA),    .iCLKB  (iCLKB),
     .iWD    (rWD),      .oRD    (wRD),
     .iWA    (rWA),      .iRA    (rRA),
     .iWE    (rWE)
 );
 
-always @(posedge iClkA)
+always @(posedge iCLKA)
 begin
     if (qRst)       rWD  <= 0;
     else            rWD  <= iWD;
 end
 
-always @(posedge iClkB)
+always @(posedge iCLKB)
 begin
     if (qRst)       rRD  <= 0;
     else            rRD  <= wRD;

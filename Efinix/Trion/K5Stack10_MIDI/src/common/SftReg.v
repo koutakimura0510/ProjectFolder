@@ -11,8 +11,8 @@ module SftReg #(
 )(
     input   [pBitWidth-1:0] iD,
     output  [pBitWidth-1:0] oQ,
-	input 					iRst,
-    input                   iClk
+	input 					iRST,
+    input                   iCLK
 );
 
 //-----------------------------------------------------------------------------
@@ -26,9 +26,9 @@ integer i;
 generate
 	if (pLutRam == "no")
 	begin
-		always @(posedge iClk)
+		always @(posedge iCLK)
 		begin
-			if (iRst)
+			if (iRST)
 			begin
 				for (i = 0; i < pSftRegDepth; i = i + 1)
 				begin
@@ -48,7 +48,7 @@ generate
 	end
 	else
 	begin
-		always @(posedge iClk)
+		always @(posedge iCLK)
 		begin
 			rD[0] <= iD;
 			for (i = 0; i < lpSftRegDepth; i = i + 1)

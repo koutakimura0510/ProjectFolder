@@ -26,8 +26,8 @@ module DrawMapIdInfo #(
 	output 	[pMapIdWidth-1:0]			oInfoField2Id,			// Filed2 のマップチップID
 	output 	[pMapIdWidth-1:0]			oInfoForegroundId,		// Foreground のマップチップID
 	// Clk rst
-    input								iRst,
-    input								iClk
+    input								iRST,
+    input								iCLK
 );
 
 
@@ -59,7 +59,7 @@ module DrawMapIdInfo #(
 //-----------------------------------------------------------------------------
 reg [pMapInfoWidth-1:0]		rMapInfo;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
 	if (iMapInfoWCke)	rMapInfoFifo[iMapInfoWAdrs] <= iMapInfoWd;
 

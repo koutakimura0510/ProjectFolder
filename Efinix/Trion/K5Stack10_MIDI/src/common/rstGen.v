@@ -9,7 +9,7 @@ module rstGen # (
     parameter [7:0] pRstFallTime 	= 150,
 	parameter 		pBufgUsed 		= "no"
 )(
-    input   iClk,
+    input   iCLK,
     output  oRst
 );
 
@@ -41,12 +41,12 @@ generate
 	end
 endgenerate
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
     rCnt <= rCnt + 1'b1;
 end
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
     if (qEn)    rRst <= 1'b0;
     else        rRst <= rRst;

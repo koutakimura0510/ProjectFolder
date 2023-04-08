@@ -34,8 +34,8 @@ CkeGenerator #(
 	.iDiv		(iI2CDiv),
 	.iCke		(iI2CEn),
 	.oCke		(wDivCke),
-	.iClk		(iSCLK),
-	.iRst		(iSRST)
+	.iCLK		(iSCLK),
+	.iRST		(iSRST)
 );
 
 

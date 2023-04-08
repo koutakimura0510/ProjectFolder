@@ -24,8 +24,8 @@ module DrawMapChipInfo #(
 	input 	[63:0]						iMapChipId,				// BYTE 区切りで ID 取得
 	input 	[7:0]						iMapId,					// 現在の座標の MAP ID
 	// Clk rst
-    input								iRst,
-    input								iClk
+    input								iRST,
+    input								iCLK
 );
 
 
@@ -34,7 +34,7 @@ module DrawMapChipInfo #(
 //-----------------------------------------------------------------------------
 (* ram_style = "block" *) reg [pInfoWidth-1:0] rMapChipRam [0:2047];
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
 	if (iInfoWCke)	rInfoFifo[iInfoWAdrs] <= iInfoWd;
 

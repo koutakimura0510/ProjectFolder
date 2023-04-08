@@ -162,8 +162,8 @@ fifoController #(
 	.iRe			(qREdId),
 	.oRvd			(),
 	.oEmp			(),
-	.iRst			(iSrcRst),
-	.iClk			(iSCLK)
+	.iRST			(iSrcRst),
+	.iCLK			(iSCLK)
 );
 
 always @*

@@ -39,7 +39,7 @@ module GpioCsr #(
 	output  [pIVtimerWidth-1:0]		oGpioIVtimer2,
 	output  [pIVtimerWidth-1:0]		oGpioIVtimer3,
 	output  [pIVtimerWidth-1:0]		oGpioIVtimer4,
-    // CLK Reset
+    // CLK RST
     input           				iSRST,
     input           				iSCLK
 );

@@ -15,9 +15,9 @@ module AudioToneIndex #(
 	output 	[pSamplingBitWidth-1:0]	oToneIndex,
 	input 	[ 6:0]					iAudioTone,
     // CLK Reset
-	input 							iRst,
+	input 							iRST,
 	input 							iCke,
-	input 							iClk
+	input 							iCLK
 );
 
 
@@ -45,13 +45,13 @@ reg [pSamplingBitWidth:0]	rDecIndex;
 reg [pSamplingBitWidth:0]	qDecCarrySum [0:1];
 reg qDecCarry;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
-	if (iRst)			rIntIndex <= {pSamplingBitWidth{1'b0}};
+	if (iRST)			rIntIndex <= {pSamplingBitWidth{1'b0}};
 	else if (iCke)		rIntIndex <= rIntFifo[iAudioTone] + rIntIndex + qDecCarry;
 	else				rIntIndex <= rIntIndex;
 
-	if (iRst)			rDecIndex <= {(pSamplingBitWidth + 1){1'b0}};
+	if (iRST)			rDecIndex <= {(pSamplingBitWidth + 1){1'b0}};
 	else if (iCke)		rDecIndex <= qDecCarry ? qDecCarrySum[0] : qDecCarrySum[1];
 	else 				rDecIndex <= rDecIndex;
 end

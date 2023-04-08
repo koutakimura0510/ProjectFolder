@@ -73,8 +73,8 @@ AudioDmaUnit #(
 	.iDmaAdrs			(iDmaAdrs),
 	.iDmaLen			(iDmaLen),
 	.iDmaEn				(iDmaEn),
-	.iRst				(iSRST),
-	.iClk				(iSCLK)
+	.iRST				(iSRST),
+	.iCLK				(iSCLK)
 );
 
 
@@ -136,9 +136,9 @@ AudioToneIndex # (
 ) AudioToneIndex (
 	.oToneIndex			(wToneIndex),
 	.iAudioTone			(qAudioTone),
-	.iRst				(iAudioRst),
+	.iRST				(iAudioRst),
 	.iCke				(qToneIndexCke),
-	.iClk				(iAudioClk)
+	.iCLK				(iAudioClk)
 );
 
 always @*
@@ -162,7 +162,7 @@ WaveTableRom #(
 ) WaveTableRom (
 	.oWave				(wWave),
 	.iWaveIndex			(wToneIndex),
-	.iClk				(iAudioClk)
+	.iCLK				(iAudioClk)
 );
 
 
@@ -183,8 +183,8 @@ DutyGenerator #(
 	.iPWMEn			(1'b1),			// 音源は基本出力固定
 	.iDutyRatio		(qDutyRatio),
 	.iIVtimer		(1'b0),			// インターバルタイマーによる分周は生成しない
-	.iRst			(iAudioRst),
-	.iClk			(iAudioClk)
+	.iRST			(iAudioRst),
+	.iCLK			(iAudioClk)
 );
 
 always @*

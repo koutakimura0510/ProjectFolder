@@ -36,8 +36,8 @@ module fifoController #(
     output                      oRvd,       // 有効データ出力
     output                      oEmp,       // バッファ空時High
 	//
-    input                       iRst,
-    input                       iClk
+    input                       iRST,
+    input                       iCLK
 );
 
 //----------------------------------------------------------
@@ -52,17 +52,17 @@ localparam pAddrWidth  = fBitWidth(pFifoDepth);
 reg [pAddrWidth-1:0] rWA, rRA, rORP;
 reg qWE, qRE;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
-    if (iRst)       rWA <= {pAddrWidth{1'b0}};
+    if (iRST)       rWA <= {pAddrWidth{1'b0}};
     else if (qWE)   rWA <= rWA + 1'b1;
     else            rWA <= rWA;
 	//
-    if (iRst)      	rRA <= {pAddrWidth{1'b0}};
+    if (iRST)      	rRA <= {pAddrWidth{1'b0}};
     else if (qRE)  	rRA <= rRA + 1'b1;
     else           	rRA <= rRA;
 	// 前回のrpが更新されていたら新規データを出力できる状態と判断する
-    if (iRst)   	rORP <= {pAddrWidth{1'b0}};
+    if (iRST)   	rORP <= {pAddrWidth{1'b0}};
     else        	rORP <= rRA;
 end
 
@@ -75,15 +75,15 @@ reg rEMP;							assign oEmp  = rEMP;
 reg rRvd;							assign oRvd = rRvd;
 reg [pAddrWidth-1:0] qWAn [0:5];
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
-    if (iRst)       rFLL <= 1'b0;
+    if (iRST)       rFLL <= 1'b0;
     else            rFLL <= qFLL;
 
-    if (iRst)       rEMP <= 1'b0;
+    if (iRST)       rEMP <= 1'b0;
     else            rEMP <= qEMP;
 
-    if (iRst)       rRvd <= 1'b0;
+    if (iRST)       rRvd <= 1'b0;
     else            rRvd <= qRVD;
 end
 
@@ -119,14 +119,14 @@ userFifo #(
 	.pFifoBlockRam	(pFifoBlockRam)
 ) USER_FIFO (
     // write side       read side
-    .iClk   (iClk),
+    .iCLK   (iCLK),
     .iWD    (iWd),      .oRD    (wRD),
     .iWA    (rWA),      .iRA    (rRA),
     .iWE    (qWE)
 );
 
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
 	rRD <= wRD;
 end

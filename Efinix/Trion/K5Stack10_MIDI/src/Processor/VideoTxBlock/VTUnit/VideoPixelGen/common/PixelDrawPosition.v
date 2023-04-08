@@ -20,9 +20,9 @@ module PixelDrawPosition #(
 	output	[pVdisplayWidth-1:pMapChipBasicBs]	oVposBs,	// 
     output                      				oAFE,		// Active Frame End
     // CLK Reset
-    input           							iRst,
+    input           							iRST,
     input                       				iCke,
-    input           							iClk
+    input           							iCLK
 );
 
 
@@ -34,9 +34,9 @@ reg [pHdisplayWidth-1:0] rHpos;			assign oHpos   = rHpos;
 reg [pHdisplayWidth-1:0] qHposMux;
 reg qHposMuxSel;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin 
-    if (iRst)		rHpos <= {pHdisplayWidth{1'b0}};
+    if (iRST)		rHpos <= {pHdisplayWidth{1'b0}};
     else if (iCke)	rHpos <= qHposMux;
     else			rHpos <= rHpos;
 end
@@ -56,9 +56,9 @@ reg [pVdisplayWidth-1:0] rVpos;         assign oVpos   = rVpos;
 reg [pVdisplayWidth-1:0] qVposMux;
 reg qVposMuxSel;
 
-always @(posedge iClk) 
+always @(posedge iCLK) 
 begin
-    if (iRst)    	rVpos <= {pVdisplayWidth{1'b0}};
+    if (iRST)    	rVpos <= {pVdisplayWidth{1'b0}};
     else if (iCke)	rVpos <= qVposMux;
     else			rVpos <= rVpos;
 end
@@ -78,9 +78,9 @@ reg qAFE;
 //
 wire [pVdisplayWidth-1:0]	wHFast = iHdisplay - 2'd2;
 
-always @(posedge iClk) 
+always @(posedge iCLK) 
 begin
-    if (iRst) 		rAFE <= 1'b0;
+    if (iRST) 		rAFE <= 1'b0;
 	else if (iCke)	rAFE <= qAFE;
     else			rAFE <= 1'b0;
 end

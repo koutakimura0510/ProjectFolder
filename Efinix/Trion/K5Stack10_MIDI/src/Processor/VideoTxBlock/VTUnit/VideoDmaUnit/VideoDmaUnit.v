@@ -42,8 +42,8 @@ module VideoDmaUnit #(
 	input [pMemAdrsWidth-1:0]	iFbufLen2,	// DMA 読み込み長さ
 	input 						iDmaEn,
     // CLK Reset
-	input 						iRst,
-	input 						iClk
+	input 						iRST,
+	input 						iCLK
 );
 
 
@@ -74,8 +74,8 @@ fifoControllerLutRam #(
 	.iRe			(qDmaFifoRe),
 	.oRVd			(wRVd),
 	.oEmp			(wEmp),
-	.iRst			(iRst),
-	.iClk			(iClk)
+	.iRST			(iRST),
+	.iCLK			(iCLK)
 );
 
 
@@ -105,7 +105,7 @@ reg 						qDmaRAdrsMatch;
 reg 	[pSwBitWidth-1:0]	rTargetSwitchCnt;
 reg 						qTargetSwitch;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
 	// Frame Buffer 領域の切り替え
 	// 60FPS 固定のつもりではあるが、
@@ -143,22 +143,22 @@ begin
 	if (wRVd) 			rMUfiAdrs	<= rDmaWAdrs;
 	else 				rMUfiAdrs	<= rDmaRAdrs;
 
-	if (iRst)			rMUfiWEd	<= 1'b0;
+	if (iRST)			rMUfiWEd	<= 1'b0;
 	else if (iDmaEn)	rMUfiWEd	<= qMUfiWEd;
 	else				rMUfiWEd	<= 1'b0;
 
-	if (iRst)			rMUfiREd	<= 1'b0;
+	if (iRST)			rMUfiREd	<= 1'b0;
 	else if (iDmaEn)	rMUfiREd	<= qMUfiREd;
 	else 				rMUfiREd	<= 1'b0;
 
-	if (iRst)			rMUfiVd		<= 1'b0;
+	if (iRST)			rMUfiVd		<= 1'b0;
 	else if (iDmaEn)	rMUfiVd 	<= qMUfiVd;
 	else				rMUfiVd 	<= 1'b0;
 
 	if (iDmaEn)			rMUfiCmd	<= qMUfiCmd;
 	else 				rMUfiCmd	<= 1'b0;
 
-	if 	(iRst)					rTargetSwitchCnt <= {pSwBitWidth{1'b0}};
+	if 	(iRST)					rTargetSwitchCnt <= {pSwBitWidth{1'b0}};
 	else if (!qTargetSwitch)	rTargetSwitchCnt <= {pSwBitWidth{1'b0}};
 	else if (iMUfiRdy)			rTargetSwitchCnt <= rTargetSwitchCnt + 1'b1;
 	else 						rTargetSwitchCnt <= rTargetSwitchCnt;
@@ -190,11 +190,11 @@ end
 reg [pUfiBusWidth-1:0]	rDmaRd;			assign oDmaRd		= rDmaRd;
 reg 					rDmaREd;		assign oDmaREd		= rDmaREd;
 
-always @(posedge iClk)
+always @(posedge iCLK)
 begin
 	rDmaRd	<= iMUfiRd;
 
-	if (iRst)	rDmaREd	<= 1'b0;
+	if (iRST)	rDmaREd	<= 1'b0;
 	else 		rDmaREd	<= iMUfiREd;
 end
 
