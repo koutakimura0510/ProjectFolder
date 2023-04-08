@@ -9,7 +9,7 @@
 //----------------------------------------------------------
 module AudioDmaUnit #(
 	parameter					pUfiBusWidth		= 16,
-	parameter					pBusAdrsBit			= 32,
+	parameter					pUsiBusWidth			= 32,
 	parameter 					pMemAdrsWidth 		= 19,
 	parameter					pDmaFifoDepth		= 32
 )(
@@ -18,7 +18,7 @@ module AudioDmaUnit #(
 	input 	[pUfiBusWidth-1:0]	iMUfiRd,	// Memory からの Read Data
 	input 						iMUfiREd,
 	// Ufi Master Write
-	output 	[pBusAdrsBit-1:0]	oMUfiAdrs,	// Memory に対するデータ出力
+	output 	[pUsiBusWidth-1:0]	oMUfiAdrs,	// Memory に対するデータ出力
 	output 						oMUfiWEd,
 	output 						oMUfiREd,
 	output 						oMUfiVd,

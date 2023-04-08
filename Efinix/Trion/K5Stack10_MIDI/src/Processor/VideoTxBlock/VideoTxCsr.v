@@ -9,9 +9,9 @@
 // 上位モジュールへの output port は必ずレジスタ経由で出力する。
 //----------------------------------------------------------
 module VideoTxCsr #(
-	parameter 						pBlockAdrsMap 	= 8,
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h04,
-	parameter						pBusAdrsBit		= 16,
+	parameter 						pBlockAdrsWidth 	= 8,
+	parameter [pBlockAdrsWidth-1:0] 	pAdrsMap  		= 'h04,
+	parameter						pUsiBusWidth		= 16,
 	parameter 						pCsrAdrsWidth   = 16,
 	parameter						pCsrActiveWidth = 16,
 	parameter						pMemAdrsWidth	= 19,
@@ -46,7 +46,7 @@ module VideoTxCsr #(
 	output							oSUsiREd,	// Read Valid Assert
 	// Bus Slave Write
 	input	[31:0]					iSUsiWd,	// Write Data
-	input	[pBusAdrsBit-1:0]		iSUsiAdrs,  // R/W Adrs
+	input	[pUsiBusWidth-1:0]		iSUsiAdrs,  // R/W Adrs
 	input							iSUsiWCke,	// Write Enable
 	// Csr Display
 	output 	[pHdisplayWidth-1:0]	oHdisplay,
@@ -85,8 +85,8 @@ module VideoTxCsr #(
 	output 							oPDRst,
 	input 							iPDFeCntCke,
     // CLK Reset
-    input           				iSysRst,
-    input           				iSysClk
+    input           				iSRST,
+    input           				iSCLK
 );
 
 
@@ -172,9 +172,9 @@ reg 						qCsrWCke0410, qCsrWCke0414, qCsrWCke0418, qCsrWCke041c;
 reg 						qCsrWCke0420, qCsrWCke0424, qCsrWCke0428, qCsrWCke042c;
 reg 						qCsrWCke0430, qCsrWCke0434, qCsrWCke0438, qCsrWCke043c;
 //
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
-	if (iSysRst)
+	if (iSRST)
 	begin
 		rHdisplay				<= pHdisplay;
 		rHfront					<= pHfront;
@@ -252,26 +252,26 @@ end
 
 always @*
 begin
-	qCsrWCke0000 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
+	qCsrWCke0000 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
 	//
-	qCsrWCke0010 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0010});
-	qCsrWCke0014 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
-	qCsrWCke0018 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0018});
-	qCsrWCke001c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h001c});
-	qCsrWCke0100 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0100});
-	qCsrWCke0104 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0104});
-	qCsrWCke0108 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0108});
-	qCsrWCke010c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h010c});
-	qCsrWCke0110 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0110});
-	qCsrWCke0114 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0114});
-	qCsrWCke0200 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0200});
-	qCsrWCke0300 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0300});
-	qCsrWCke0304 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0304});
-	qCsrWCke0308 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0308});
-	qCsrWCke0400 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0400});
-	qCsrWCke0404 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0404});
-	qCsrWCke0408 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0408});
-	qCsrWCke040c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h040C});
+	qCsrWCke0010 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0010});
+	qCsrWCke0014 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
+	qCsrWCke0018 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0018});
+	qCsrWCke001c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h001c});
+	qCsrWCke0100 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0100});
+	qCsrWCke0104 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0104});
+	qCsrWCke0108 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0108});
+	qCsrWCke010c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h010c});
+	qCsrWCke0110 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0110});
+	qCsrWCke0114 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0114});
+	qCsrWCke0200 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0200});
+	qCsrWCke0300 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0300});
+	qCsrWCke0304 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0304});
+	qCsrWCke0308 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0308});
+	qCsrWCke0400 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0400});
+	qCsrWCke0404 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0404});
+	qCsrWCke0408 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0408});
+	qCsrWCke040c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h040C});
 end
 
 
@@ -282,9 +282,9 @@ reg [31:0]		rSUsiRd;		assign oSUsiRd  = rSUsiRd;
 reg 			rSUsiREd;		assign oSUsiREd = rSUsiREd;
 reg 			qAdrsComp;
 
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
-	if (iSysRst)
+	if (iSRST)
 	begin
 		rSUsiRd  <= 'h0;
 		rSUsiREd <= 1'b0;
@@ -320,14 +320,14 @@ begin
 		endcase
 	end
 
-	if (iSysRst)		rSUsiREd <= 1'b0;
+	if (iSRST)		rSUsiREd <= 1'b0;
 	else if (qAdrsComp)	rSUsiREd <= 1'b1;
 	else				rSUsiREd <= 1'b0;
 end
 
 always @*
 begin
-	qAdrsComp <= {iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:pCsrAdrsWidth] == pAdrsMap};
+	qAdrsComp <= {iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:pCsrAdrsWidth] == pAdrsMap};
 end
 
 endmodule

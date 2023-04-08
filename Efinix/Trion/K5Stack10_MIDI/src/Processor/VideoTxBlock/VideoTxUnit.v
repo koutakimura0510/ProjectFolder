@@ -7,7 +7,7 @@
 //----------------------------------------------------------
 module VideoTxUnit #(
 	parameter						pUfiBusWidth		= 16,
-	parameter						pBusAdrsBit			= 16,
+	parameter						pUsiBusWidth			= 16,
 	parameter						pMemAdrsWidth		= 19,
 	// Display Size
     parameter       				pHdisplayWidth		= 11,
@@ -43,7 +43,7 @@ module VideoTxUnit #(
 	input 							iMUfiREd,	// Read Data Enable
 	// Ufi Master Write
 	output 	[pUfiBusWidth-1:0]		oMUfiWd,
-	output 	[pBusAdrsBit-1:0]		oMUfiAdrs,
+	output 	[pUsiBusWidth-1:0]		oMUfiAdrs,
 	output 							oMUfiWEd,	// Adrs Data Enable
 	output 							oMUfiREd,	// Adrs Data Enable
 	output 							oMUfiVd,	// Data Valid
@@ -52,7 +52,7 @@ module VideoTxUnit #(
 	input 							iMUfiRdy,	// Ufi Bus 転送可能時 Assert
 	// Vtb Ufi Slave Side
 	input 	[pUfiBusWidth-1:0] 		iSUfiWd,	// 書き込みデータ
-	input 	[pBusAdrsBit-1:0] 		iSUfiAdrs,	// 書き込みアドレス
+	input 	[pUsiBusWidth-1:0] 		iSUfiAdrs,	// 書き込みアドレス
 	input 							iSUfiWEd,	// 書き込み命令
 	// Csr Display
 	input	[pHdisplayWidth-1:0]	iHdisplay,
@@ -94,9 +94,9 @@ module VideoTxUnit #(
 	input 							iPDRst,
 	output 							oPDFeCntCke,
     // CLK Reset
-    input           				iSysClk,
+    input           				iSCLK,
 	input 							iVideoClk,
-    input           				iSysRst,
+    input           				iSRST,
 	// debug
 	output 							oFe
 );
@@ -117,7 +117,7 @@ reg  					qVideoPixelGenEdd;
 
 VideoPixelGen #(
 	.pUfiBusWidth		(pUfiBusWidth),
-	.pBusAdrsBit		(pBusAdrsBit),
+	.pUsiBusWidth		(pUsiBusWidth),
 	//
 	.pHdisplayWidth		(pHdisplayWidth),
 	.pVdisplayWidth		(pVdisplayWidth),
@@ -163,7 +163,7 @@ VideoPixelGen #(
 	.iEdd				(qVideoPixelGenEdd),
 	// 
 	.iRst				(iVtbSystemRst),
-	.iClk				(iSysClk)
+	.iClk				(iSCLK)
 );
 
 
@@ -182,7 +182,7 @@ reg							qDmaRe;
 
 VideoDmaUnit #(
 	.pUfiBusWidth		(pUfiBusWidth),
-	.pBusAdrsBit		(pBusAdrsBit),
+	.pUsiBusWidth		(pUsiBusWidth),
 	.pMemAdrsWidth		(pMemAdrsWidth),
 	.pFifoDepth			(lpDmaFifoDepth)
 ) VideoDmaUnit (
@@ -211,7 +211,7 @@ VideoDmaUnit #(
 	.iDmaEn				(iDmaEn),
 	//
 	.iRst				(iVtbSystemRst),
-	.iClk				(iSysClk)
+	.iClk				(iSCLK)
 );
 
 generate
@@ -289,7 +289,7 @@ VideoDualClkFIFO #(
 	.iRe			(wVde),
 	.iSrcRst		(iVtbSystemRst),
 	.iDstRst		(iVtbVideoRst),
-	.iSrcClk		(iSysClk),
+	.iSrcClk		(iSCLK),
 	.iDstClk		(iVideoClk)
 );
 
@@ -317,8 +317,8 @@ DutyGenerator #(
 	.iPWMEn			(1'b1),
 	.iDutyRatio		(iBlDutyRatio),
 	.iIVtimer		(100),
-	.iClk			(iSysClk),
-	.iRst			(iSysRst)
+	.iClk			(iSCLK),
+	.iRst			(iSRST)
 );
 
 

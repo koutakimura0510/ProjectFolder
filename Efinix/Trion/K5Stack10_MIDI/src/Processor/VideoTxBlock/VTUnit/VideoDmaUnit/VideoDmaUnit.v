@@ -7,7 +7,7 @@
 //----------------------------------------------------------
 module VideoDmaUnit #(
 	parameter					pUfiBusWidth		= 16,
-	parameter					pBusAdrsBit			= 32,
+	parameter					pUsiBusWidth			= 32,
 	parameter 					pMemAdrsWidth 		= 19,
 	parameter					pFifoDepth			= 1024,
 	// not variable
@@ -19,7 +19,7 @@ module VideoDmaUnit #(
 	input 						iMUfiREd,	// FBUF Read Data Cke
 	// Ufi Master Write
 	output	[pUfiBusWidth-1:0]	oMUfiWd,
-	output 	[pBusAdrsBit-1:0]	oMUfiAdrs,
+	output 	[pUsiBusWidth-1:0]	oMUfiAdrs,
 	output 						oMUfiWEd,	// VDMA の Write 要求時 Assert
 	output 						oMUfiREd,	// VDMA の Read 要求時 Assert
 	output 						oMUfiVd,	// VDMA が 転送要求時 Assert

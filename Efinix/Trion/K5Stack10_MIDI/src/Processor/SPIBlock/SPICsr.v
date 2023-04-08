@@ -9,11 +9,11 @@
 //----------------------------------------------------------
 module SPICsr #(
 	// variable parameter
-	parameter 						pBlockAdrsMap 		= 8,
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  		= 'h03,
+	parameter 						pBlockAdrsWidth 		= 8,
+	parameter [pBlockAdrsWidth-1:0] 	pAdrsMap	  		= 'h03,
 	parameter 						pCsrAdrsWidth		= 8,
 	parameter 						pCsrActiveWidth		= 8,
-	parameter						pBusAdrsBit			= 32,
+	parameter						pUsiBusWidth			= 32,
 	parameter 						pDivClk 			= 16
 )(
     // Internal Port
@@ -22,7 +22,7 @@ module SPICsr #(
 	output 							oSUsiREd,
 	// Csr Write
 	input	[31:0]					iSUsiWd,
-	input	[pBusAdrsBit-1:0]		iSUsiAdrs,
+	input	[pUsiBusWidth-1:0]		iSUsiAdrs,
 	input							iSUsiWCke,
 	// Csr Output
 	output 							oSPIEn,
@@ -33,8 +33,8 @@ module SPICsr #(
 	input  	[7:0]					iMRd,
 	input 							iMSpiIntr,
     // CLK Reset
-    input           				iSysClk,
-    input           				iSysRst
+    input           				iSCLK,
+    input           				iSRST
 );
 
 
@@ -55,9 +55,9 @@ reg 				qCsrWCke04;
 reg 				qCsrWCke08;
 reg 				qCsrWCke0c;
 
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
-	if (iSysRst)
+	if (iSRST)
 	begin
 		rSPIEn			<= 1'b0;
 		rSPIDiv			<= {pDivClk{1'b1}};
@@ -78,10 +78,10 @@ end
 
 always @*
 begin
-	qCsrWCke00 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
-	qCsrWCke04 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
-	qCsrWCke08 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
-	qCsrWCke0c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h000c});
+	qCsrWCke00 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
+	qCsrWCke04 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
+	qCsrWCke08 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
+	qCsrWCke0c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h000c});
 end
 
 //----------------------------------------------------------
@@ -91,9 +91,9 @@ reg [31:0]		rSUsiRd;		assign oSUsiRd = rSUsiRd;
 reg 			rSUsiREd;		assign oSUsiREd = rSUsiREd;
 reg 			qAdrsComp;
 
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
-	if (iSysRst)
+	if (iSRST)
 	begin
 		rSUsiRd  <= 'h0;
 		rSUsiREd <= 1'b0;
@@ -110,14 +110,14 @@ begin
 		endcase
 	end
 
-	if (iSysRst)		rSUsiREd <= 1'b0;
+	if (iSRST)		rSUsiREd <= 1'b0;
 	else if (qAdrsComp)	rSUsiREd <= 1'b1;
 	else				rSUsiREd <= 1'b0;
 end
 
 always @*
 begin
-	qAdrsComp <= {iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:pCsrAdrsWidth] == pAdrsMap};
+	qAdrsComp <= {iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:pCsrAdrsWidth] == pAdrsMap};
 end
 
 endmodule

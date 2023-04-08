@@ -15,9 +15,9 @@
 //----------------------------------------------------------
 module SPIBlock #(
 	// variable parameter
-	parameter 							pBlockAdrsMap 		= 8,	// ブロックのアドレス幅を指定
-	parameter [pBlockAdrsMap-1:0] 		pAdrsMap	  		= 'h03,
-	parameter							pBusAdrsBit			= 16,
+	parameter 							pBlockAdrsWidth 		= 8,	// ブロックのアドレス幅を指定
+	parameter [pBlockAdrsWidth-1:0] 		pAdrsMap	  		= 'h03,
+	parameter							pUsiBusWidth			= 16,
 	parameter 							pCsrAdrsWidth	 	= 8,
 	parameter 							pCsrActiveWidth		= 8,
 	parameter [3:0]						pBusBlockConnect	= 1,	// Busに接続する Slave数 最大16
@@ -40,18 +40,18 @@ module SPIBlock #(
 	input	[pBusBlockConnect-1:0]		iMUsiREd,		// Read Assert
 	// Usi Bus Master Write
 	output	[31:0]						oMUsiWd,		// Write Data
-	output	[pBusAdrsBit-1:0]			oMUsiAdrs,		// R/W Adrs
+	output	[pUsiBusWidth-1:0]			oMUsiAdrs,		// R/W Adrs
 	output								oMUsiWEd,		// Write Enable
 	// Usi Bus Slave Read
 	output	[31:0]						oSUsiRd,		// Read Data
 	output								oSUsiREd,		// Read Data Enable
 	// Usi Bus Slave Write
 	input	[31:0]						iSUsiWd,		// Master Write Data
-	input	[pBusAdrsBit-1:0]			iSUsiAdrs,		// Csr Access Adrs
+	input	[pUsiBusWidth-1:0]			iSUsiAdrs,		// Csr Access Adrs
 	input								iSUsiWCke,		// Data Enable
 	// Ufi Bus Master Write
 	output	[pUfiBusWidth-1:0]			oMUfiWd,		// Write Data
-	output	[pBusAdrsBit-1:0]			oMUfiAdrs,		// Write address
+	output	[pUsiBusWidth-1:0]			oMUfiAdrs,		// Write address
 	output								oMUfiEd,		// Write Data Enable
 	output 								oMUfiVd,		// 転送期間中 Assert
 	output 								oMUfiCmd,
@@ -60,8 +60,8 @@ module SPIBlock #(
 	// Usi Bus Master to Slave Select
 	output 								oMUsiSel,		// 0. Slave として機能 / 1. Master バスを独占
     // CLK Reset
-    input           					iSysRst,
-    input           					iSysClk,
+    input           					iSRST,
+    input           					iSCLK,
 	//
 	output [pTestPortNum-1:0]			oTestPort
 );
@@ -86,7 +86,7 @@ wire 	[7:0]			wMRdUnit;
 wire 					wMSpiIntr;			assign oMSpiIntr = wMSpiIntr;
 
 SPIUnit #(
-	.pBusAdrsBit		(pBusAdrsBit),
+	.pUsiBusWidth		(pUsiBusWidth),
 	.pDivClk			(lpDivClk),
 	.pUfiBusWidth		(pUfiBusWidth),
 	.pTestPortUsed		(pTestPortUsed),
@@ -123,8 +123,8 @@ SPIUnit #(
 	// Interrupt
 	.oMSpiIntr			(wMSpiIntr),
 	// CLK Reset
-	.iSysClk			(iSysClk),
-	.iSysRst			(iSysRst),
+	.iSCLK			(iSCLK),
+	.iSRST			(iSRST),
 	//
 	.oTestPort			(oTestPort)
 );
@@ -141,9 +141,9 @@ wire 					wMSpiCsCsr;
 reg 	[7:0]			qMRdCsr;
 
 SPICsr #(
-	.pBlockAdrsMap		(pBlockAdrsMap),
+	.pBlockAdrsWidth		(pBlockAdrsWidth),
 	.pAdrsMap			(pAdrsMap),
-	.pBusAdrsBit		(pBusAdrsBit),
+	.pUsiBusWidth		(pUsiBusWidth),
 	.pCsrAdrsWidth		(pCsrAdrsWidth),
 	.pCsrActiveWidth	(pCsrActiveWidth),
 	.pDivClk			(lpDivClk)
@@ -163,8 +163,8 @@ SPICsr #(
 	.iMRd				(qMRdCsr),
 	.iMSpiIntr			(wMSpiIntr),
 	// CLK Reset
-	.iSysClk			(iSysClk),
-	.iSysRst			(iSysRst)
+	.iSCLK			(iSCLK),
+	.iSRST			(iSRST)
 );
 
 always @*

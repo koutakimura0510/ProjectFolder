@@ -23,8 +23,8 @@ module I2CMaster (
 	output			oI2CByteVd,		// 1バイト送受信 .Scl 8CLK nege Delay 後に Assign
 	output [7:0]	oSdaByte,		// Slave からの 1バイトデータ出力
 	// Clk Rst
-    input           iSysClk,
-    input           iSysRst
+    input           iSCLK,
+    input           iSRST
 );
 
 
@@ -68,7 +68,7 @@ reg 		qStoplssueCke;						// Stop Condition 保持
 OBUF  I2C_SCL 	(.O (oI2CScl), .I (rScl));
 IOBUF I2C_SDA 	(.O (wISda), .IO (ioI2CSda), .I (rOSda), .T (iTriState));
 
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
 	// I2C ステートマシン
 	casex ({iI2CEn, qStoplssueCke, qDisconRdy, qStopRdy, qStartRdy, rI2CState})

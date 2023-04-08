@@ -61,7 +61,7 @@ AudioTxUnit #(
 	.oAudioMclk			(wAudioMClk),
 	.iAudioCke		(rAudioRst),
 	.iAudioTone			(lpTone),
-	.iSysRst			(rSysRst),
+	.iSRST			(rSysRst),
 	.iAudioClk			(wSysClk)
 );
 

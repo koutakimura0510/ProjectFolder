@@ -26,8 +26,8 @@ module I2CMasterMux (
 	input			iI2CByteVd,		// 1バイト送受信 .Scl 8CLK nege Delay 後に Assign
 	input 	[ 7:0]	iSdaByte,		// Slave からの 1バイトデータ入力
 	// Clk Rst
-    input           iSysClk,
-    input           iSysRst
+    input           iSCLK,
+    input           iSRST
 );
 
 
@@ -57,10 +57,10 @@ reg 		rI2CEn;				assign oI2CEn		 	= rI2CEn;
 reg [2:0] 	rDeviceSel;
 //
 
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
 	// Device Select
-	casex ({iSysRst, iI2CEn, iI2CBufVd, rDeviceSel[2:0]})
+	casex ({iSRST, iI2CEn, iI2CBufVd, rDeviceSel[2:0]})
 		6'b1x_x_xxx:	rDeviceSel <= lpDeviceStop;
 		// 6'b00_x_000:	rDeviceSel <= lpDeviceStop;
 		6'b01_x_000:	rDeviceSel <= lpDeviceKey1;
@@ -102,11 +102,11 @@ begin
 	endcase
 
 	// KeyPad 受信データ
-	if (iSysRst) 		rRecData <= 16'd0;
+	if (iSRST) 		rRecData <= 16'd0;
 	else if (iI2CBufVd)	rRecData <= {rRecData[7:0], iSdaByte};
 	else				rRecData <= rRecData;
 
-	if (iSysRst) 		rI2CBufLen <= 8'd2;
+	if (iSRST) 		rI2CBufLen <= 8'd2;
 	else 		 		rI2CBufLen <= 8'd2;
 end
 

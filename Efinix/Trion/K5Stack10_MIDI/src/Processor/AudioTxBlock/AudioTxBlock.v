@@ -6,9 +6,9 @@
 // 
 //----------------------------------------------------------
 module AudioTxBlock #(
-	parameter 						pBlockAdrsMap 		= 8,
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  		= 'h05,
-	parameter						pBusAdrsBit			= 32,
+	parameter 						pBlockAdrsWidth 		= 8,
+	parameter [pBlockAdrsWidth-1:0] 	pAdrsMap	  		= 'h05,
+	parameter						pUsiBusWidth			= 32,
 	parameter						pUfiBusWidth		= 16,
 	parameter 						pCsrAdrsWidth 		= 8,
 	parameter						pCsrActiveWidth 	= 8,
@@ -27,21 +27,21 @@ module AudioTxBlock #(
 	output							oSUsiREd,	// Read Valid Assert
 	// Bus Slave Write
 	input	[31:0]					iSUsiWd,	// Write Data
-	input	[pBusAdrsBit-1:0]		iSUsiAdrs,  // R/W Adrs
+	input	[pUsiBusWidth-1:0]		iSUsiAdrs,  // R/W Adrs
 	input							iSUsiWCke,	// Write Enable
 	// Ufi Master Read
 	input 	[pUfiBusWidth-1:0]		iMUfiRd,	// Read Data
 	input 							iMUfiREd,	// Read Data Enable
 	// Ufi Master Write
-	output	[pBusAdrsBit-1:0]		oMUfiAdrs,
+	output	[pUsiBusWidth-1:0]		oMUfiAdrs,
 	output 							oMUfiWEd,	// Adrs Data Enable
 	output 							oMUfiREd,	// Adrs Data Enable
 	output 							oMUfiVd,
 	// Ufi Master Common
 	input 							iMUfiRdy,	// Ufi Bus 転送可能時 Assert
     // CLK Reset
-    input           				iSysRst,
-    input           				iSysClk,
+    input           				iSRST,
+    input           				iSCLK,
     input           				iAudioRst,
 	input 							iAudioClk,
 	//
@@ -61,7 +61,7 @@ wire 	[pMemAdrsWidth-1:0] 	wDmaLenCsr;
 wire 							wDmaEnCsr;
 
 AudioTxUnit #(
-	.pBusAdrsBit		(pBusAdrsBit),
+	.pUsiBusWidth		(pUsiBusWidth),
 	.pUfiBusWidth		(pUfiBusWidth),
 	.pMemAdrsWidth		(pMemAdrsWidth),
 	.pSamplingBitWidth	(pSamplingBitWidth),
@@ -85,8 +85,8 @@ AudioTxUnit #(
 	.iDmaAdrs			(wDmaAdrsCsr),
 	.iDmaLen			(wDmaLenCsr),
 	.iDmaEn				(wDmaEnCsr),
-    .iSysRst			(iSysRst),
-	.iSysClk 			(iSysClk),
+    .iSRST			(iSRST),
+	.iSCLK 			(iSCLK),
 	.iAudioRst			(iAudioRst),
 	.iAudioClk			(iAudioClk),
 	//
@@ -98,9 +98,9 @@ AudioTxUnit #(
 // Csr space
 //----------------------------------------------------------
 AudioTxCsr #(
-	.pBlockAdrsMap		(pBlockAdrsMap),
+	.pBlockAdrsWidth		(pBlockAdrsWidth),
 	.pAdrsMap			(pAdrsMap),
-	.pBusAdrsBit		(pBusAdrsBit),
+	.pUsiBusWidth		(pUsiBusWidth),
 	.pCsrAdrsWidth		(pCsrAdrsWidth),
 	.pCsrActiveWidth	(pCsrActiveWidth),
 	.pMemAdrsWidth		(pMemAdrsWidth)
@@ -113,8 +113,8 @@ AudioTxCsr #(
 	.oDmaAdrs			(wDmaAdrsCsr),
 	.oDmaLen			(wDmaLenCsr),
 	.oDmaEn				(wDmaEnCsr),
-	.iSysRst			(iSysRst),
-	.iSysClk			(iSysClk)
+	.iSRST			(iSRST),
+	.iSCLK			(iSCLK)
 );
 
 endmodule

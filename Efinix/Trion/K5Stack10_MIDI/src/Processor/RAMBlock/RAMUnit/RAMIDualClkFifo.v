@@ -39,7 +39,7 @@ module RAMDualClkFifo #(
 	input 							iSrcRst,
 	input 							iDstRst,
     // Internal Port
-	input 							iSysClk,
+	input 							iSCLK,
     input							iMemClk
 );
 
@@ -64,7 +64,7 @@ fifoDualControllerGray #(
 	.oEMP		(oEmp),
 	.iSrcRst	(iSrcRst),
 	.iDstRst	(iDstRst),
-	.iSrcClk	(iSysClk),
+	.iSrcClk	(iSCLK),
 	.iDstClk	(iMemClk)
 );
 
@@ -82,7 +82,7 @@ fifoDualControllerGray #(
 	.oEMP		(),
 	.iSrcRst	(iSrcRst),
 	.iDstRst	(iDstRst),
-	.iSrcClk	(iSysClk),
+	.iSrcClk	(iSCLK),
 	.iDstClk	(iMemClk)
 );
 
@@ -100,7 +100,7 @@ fifoDualControllerGray #(
 	.oEMP		(),
 	.iSrcRst	(iSrcRst),
 	.iDstRst	(iDstRst),
-	.iSrcClk	(iSysClk),
+	.iSrcClk	(iSCLK),
 	.iDstClk	(iMemClk)
 );
 
@@ -136,7 +136,7 @@ fifoDualControllerGray3 #(
 	.iSrcRst		(iSrcRst),
 	.iDstRst		(iDstRst),
 	.iSrcClk		(iMemClk),
-	.iDstClk		(iSysClk)
+	.iDstClk		(iSCLK)
 );
 
 always @*
@@ -163,7 +163,7 @@ fifoController #(
 	.oRvd			(),
 	.oEmp			(),
 	.iRst			(iSrcRst),
-	.iClk			(iSysClk)
+	.iClk			(iSCLK)
 );
 
 always @*

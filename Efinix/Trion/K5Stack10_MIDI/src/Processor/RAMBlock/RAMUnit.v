@@ -8,7 +8,7 @@
 module RAMUnit #(
 	// variable parameter
 	parameter					pUfiBusWidth	= 16,
-	parameter					pBusAdrsBit		= 32,
+	parameter					pUsiBusWidth		= 32,
 	parameter					pUfiIdNumber	= 3,
 	parameter					pRamFifoDepth	= 16,
 	parameter					pRamDqWidth		= 8,
@@ -22,7 +22,7 @@ module RAMUnit #(
 	output 						oMemCE,			// Chip Select
 	// Ufi Bus Slave Write
 	input	[pUfiBusWidth-1:0]	iSUfiWd,		// Write Data
-	input	[pBusAdrsBit-1:0]	iSUfiAdrs,		// Ufi address
+	input	[pUsiBusWidth-1:0]	iSUfiAdrs,		// Ufi address
 	input						iSUfiWEd,		// Adrs Enable
 	input						iSUfiREd,		// Adrs Enable
 	input   					iSUfiCmd,		// High Read, Low Write
@@ -37,8 +37,8 @@ module RAMUnit #(
 	input 						iRamDualFifoSrcRst,
 	input 						iRamDualFifoDstRst,
 	//
-    input						iSysRst,
-    input						iSysClk,
+    input						iSRST,
+    input						iSCLK,
     input						iMemClk
 );
 
@@ -86,7 +86,7 @@ RAMDualClkFifo #(
 	.oSUfiIdO			(oSUfiIdO),
 	.iSrcRst			(iRamDualFifoSrcRst),
 	.iDstRst			(iRamDualFifoDstRst),
-	.iSysClk			(iSysClk),
+	.iSCLK			(iSCLK),
 	.iMemClk			(iMemClk)
 );
 
@@ -118,7 +118,7 @@ RAMIf #(
 	.oRd			(wMemRdIf),
 	.oREd			(wMemREdIf),
 	//
-	.iRst			(iSysRst),
+	.iRst			(iSRST),
 	.iMemClk		(iMemClk)
 );
 

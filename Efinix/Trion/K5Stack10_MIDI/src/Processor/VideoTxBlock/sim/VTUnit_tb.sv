@@ -108,13 +108,13 @@ endtask
 //-----------------------------------------------------------------------------
 // UfiBus パラメータ
 //-----------------------------------------------------------------------------
-localparam lpBusAdrsBit			= 32;
+localparam lpUsiBusWidth			= 32;
 localparam lpUfiBusWidth		= 12;
 localparam lpMemAdrsWidth		= 19;
 localparam lpUfiIdNumber		=  3;
 //
 wire [lpUfiBusWidth-1:0] 		wMUfiWdVtb;
-wire [lpBusAdrsBit-1:0]			wMUfiAdrsVtb;
+wire [lpUsiBusWidth-1:0]			wMUfiAdrsVtb;
 wire 							wMUfiWEdVtb;
 wire 							wMUfiREdVtb;
 wire 							wMUfiVdVtb;		// 転送期間中 Assert
@@ -122,7 +122,7 @@ wire 							wMUfiCmdVtb;	// High Read / Lor Write
 wire 							wMUfiRdyVtb;	// Vtb に対する Ready 信号
 reg 							qMUfiRdyVtb;
 //
-wire [lpBusAdrsBit-1:0]			wMUfiAdrsAtb;
+wire [lpUsiBusWidth-1:0]			wMUfiAdrsAtb;
 wire 							wMUfiWEdAtb;
 wire 							wMUfiREdAtb;
 wire 							wMUfiVdAtb;		// 転送期間中 Assert
@@ -138,7 +138,7 @@ wire [lpUfiIdNumber-1:0]		wMUfiIdI;
 wire [lpUfiIdNumber-1:0]		wMUfiIdO;
 // Slave Memory Block Side
 wire [lpUfiBusWidth-1:0] 		wSUfiWdRam;		// Slave に対する 書き込みデータ
-wire [lpBusAdrsBit-1:0]			wSUfiAdrsRam;	// Slave に対する R/W 共通のアドレス指定バス
+wire [lpUsiBusWidth-1:0]			wSUfiAdrsRam;	// Slave に対する R/W 共通のアドレス指定バス
 wire 							wSUfiWEdRam;	// Slave に対する 書き込み有効信号
 wire 							iwSUfiREdRam;	// Slave に対する 書き込み有効信号
 wire 							wSUfiCmdRam;	// Slave に対する High Read, Low Write
@@ -193,7 +193,7 @@ assign wTftColorG[3:0] = 4'b0000;	// GPIO 下位 4bit は GND 接続
 assign wTftColorB[3:0] = 4'b0000;	// GPIO 下位 4bit は GND 接続
 //
 VideoTxUnit #(
-	.pBusAdrsBit		(lpBusAdrsBit),
+	.pUsiBusWidth		(lpUsiBusWidth),
 	.pUfiBusWidth		(lpUfiBusWidth),
 	.pMemAdrsWidth		(lpMemAdrsWidth),
 	.pHdisplayWidth		(lpHdisplayWidth),
@@ -263,9 +263,9 @@ VideoTxUnit #(
 	.oSceneAlphaMax		(),
 	.oSceneAlphaMin		(),
 	//
-	.iSysClk			(wSysClk),
+	.iSCLK			(wSysClk),
 	.iVideoClk			(wVideoClk),
-	.iSysRst			(rSysRst),
+	.iSRST			(rSysRst),
 	.oFe				(wAFE)
 );
 
@@ -287,7 +287,7 @@ localparam 						lpFifoDepthOverrideAudio	= "yes";
 wire wAudioMClk;
 
 AudioTxUnit #(
-	.pBusAdrsBit		(lpBusAdrsBit),
+	.pUsiBusWidth		(lpUsiBusWidth),
 	.pUfiBusWidth		(lpUfiBusWidth),
 	.pMemAdrsWidth		(lpMemAdrsWidth),
 	.pSamplingBitWidth	(8),
@@ -310,8 +310,8 @@ AudioTxUnit #(
 	.iDmaAdrs			(lpDmaAdrs),
 	.iDmaLen			(lpDmaLen),
 	.iDmaEn				(rDmaEn),
-	.iSysRst			(rSysRst),
-	.iSysClk			(wSysClk),
+	.iSRST			(rSysRst),
+	.iSCLK			(wSysClk),
 	.iAudioRst			(rAudioRst),
 	.iAudioClk			(wAudioClk),
 	.oTestPort			()
@@ -342,7 +342,7 @@ assign wMemDq = qMemDq;
 
 RAMUnit #(
 	.pUfiBusWidth		(lpUfiBusWidth),
-	.pBusAdrsBit		(lpBusAdrsBit),
+	.pUsiBusWidth		(lpUsiBusWidth),
 	.pUfiIdNumber		(lpUfiIdNumber),
 	.pRamFifoDepth		(lpRamFifoDepth),
 	.pRamAdrsWidth		(lpMemAdrsWidth),
@@ -369,8 +369,8 @@ RAMUnit #(
 	.iRamDualFifoSrcRst	(rRamSrcRst),
 	.iRamDualFifoDstRst	(rRamDstRst),
 	//
-	.iSysRst			(rSysRst),
-	.iSysClk			(wSysClk),
+	.iSRST			(rSysRst),
+	.iSCLK			(wSysClk),
 	.iMemClk			(wMemClk)
 );
 //
@@ -408,7 +408,7 @@ end
 //-----------------------------------------------------------------------------
 UltraFastInterface #(
 	.pUfiBusWidth		(lpUfiBusWidth),
-	.pBusAdrsBit		(lpBusAdrsBit)
+	.pUsiBusWidth		(lpUsiBusWidth)
 ) UltraFastInterface (
 	.iMUfiWdMcs			({lpUfiBusWidth{1'b0}}),
 	.iMUfiAdrsMcs		('h0000_0000),

@@ -6,9 +6,9 @@
 //----------------------------------------------------------
 module RAMBlock #(
 	// variable parameter
-	parameter 							pBlockAdrsMap 		= 8,
-	parameter [pBlockAdrsMap-1:0] 		pAdrsMap	  		= 'h06,
-	parameter							pBusAdrsBit			= 32,
+	parameter 							pBlockAdrsWidth 		= 8,
+	parameter [pBlockAdrsWidth-1:0] 		pAdrsMap	  		= 'h06,
+	parameter							pUsiBusWidth			= 32,
 	parameter 							pCsrAdrsWidth	 	= 16,
 	parameter							pCsrActiveWidth 	= 8,
 	parameter							pUfiBusWidth		= 8,
@@ -29,11 +29,11 @@ module RAMBlock #(
 	output								oSUsiREd,		// Read Data Enable
 	// Usi Bus Slave Write
 	input	[31:0]						iSUsiWd,		// Master Write Data
-	input	[pBusAdrsBit-1:0]			iSUsiAdrs,		// Csr Access Adrs
+	input	[pUsiBusWidth-1:0]			iSUsiAdrs,		// Csr Access Adrs
 	input								iSUsiWCke,		// Data Enable
 	// Ufi Bus Slave Write
 	input	[pUfiBusWidth-1:0]			iSUfiWd,		// Write Data
-	input	[pBusAdrsBit-1:0]			iSUfiAdrs,		// Ufi address
+	input	[pUsiBusWidth-1:0]			iSUfiAdrs,		// Ufi address
 	input								iSUfiWEd,		// Adrs Enable
 	input								iSUfiREd,		// Adrs Enable
 	input   							iSUfiCmd,		// High Read, Low Write
@@ -45,8 +45,8 @@ module RAMBlock #(
 	input 	[pUfiIdNumber-1:0]			iSUfiIdI,
 	output 	[pUfiIdNumber-1:0]			oSUfiIdO,
     // CLK Reset
-    input           					iSysRst,
-    input           					iSysClk,
+    input           					iSRST,
+    input           					iSCLK,
 	input 								iMemClk
 );
 
@@ -62,7 +62,7 @@ reg [pUfiBusWidth-1:0]	qMemRdCsr;
 
 RAMUnit #(
 	.pUfiBusWidth		(pUfiBusWidth),
-	.pBusAdrsBit		(pBusAdrsBit),
+	.pUsiBusWidth		(pUsiBusWidth),
 	.pUfiIdNumber		(pUfiIdNumber),
 	.pRamFifoDepth		(lpFifoDepath),
 	.pRamAdrsWidth		(pRamAdrsWidth),
@@ -89,8 +89,8 @@ RAMUnit #(
 	.iRamDualFifoSrcRst	(wRamDualFifoSrcRstCsr),
 	.iRamDualFifoDstRst	(wRamDualFifoDstRstCsr),
 	//
-	.iSysRst			(iSysRst),
-	.iSysClk			(iSysClk),
+	.iSRST			(iSRST),
+	.iSCLK			(iSCLK),
 	.iMemClk			(iMemClk)
 );
 
@@ -99,9 +99,9 @@ RAMUnit #(
 // Csr space
 //----------------------------------------------------------
 RAMCsr #(
-	.pBlockAdrsMap		(pBlockAdrsMap),
+	.pBlockAdrsWidth		(pBlockAdrsWidth),
 	.pAdrsMap			(pAdrsMap),	
-	.pBusAdrsBit		(pBusAdrsBit),
+	.pUsiBusWidth		(pUsiBusWidth),
 	.pCsrAdrsWidth		(pCsrAdrsWidth),
 	.pCsrActiveWidth	(pCsrActiveWidth),
 	.pRamAdrsWidth		(pRamAdrsWidth),
@@ -119,8 +119,8 @@ RAMCsr #(
 	//
 	.iMemRd				(qMemRdCsr),
 	//
-	.iSysClk			(iSysClk),
-	.iSysRst			(iSysRst)
+	.iSCLK			(iSCLK),
+	.iSRST			(iSRST)
 );
 
 always @*

@@ -42,8 +42,8 @@ module SPISignal # (
 	// Master Slave Select
 	output 			oMSSel,
 	// CLK Reset
-    input           iSysClk,
-	input 			iSysRst,
+    input           iSCLK,
+	input 			iSRST,
 	//
 	output [pTestPortNum-1:0]	oTestPort
 );
@@ -88,18 +88,18 @@ reg qPosScl, qNegScl;
 reg qSSckCntNegCke;
 reg qSActive;
 
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
 	// Master からの Signal をシフトレジスタで受信
-	if (iSysRst)		rSftSMosi <= 3'b000;
+	if (iSRST)		rSftSMosi <= 3'b000;
 	else if (qSActive)	rSftSMosi <= {rSftSMosi[0:0], wSMosi};
 	else 				rSftSMosi <= 3'b000;
 
-	if (iSysRst)		rSftSScl <= 3'b000;
+	if (iSRST)		rSftSScl <= 3'b000;
 	else if (qSActive)	rSftSScl <= {rSftSScl[1:0], wSScl};
 	else				rSftSScl <= 3'b000;
 
-	if (iSysRst)		rSftCs	<= 3'b111;
+	if (iSRST)		rSftCs	<= 3'b111;
 	else if (qSActive)	rSftCs	<= {rSftCs[1:0],wSCs};
 	else 				rSftCs	<= 3'b111;
 
@@ -208,7 +208,7 @@ reg [0:0]	rMHoldTimeState;
 reg 		qMSckCntCke;		// Master CLK の立ち下がり最大カウント
 reg 		qMHoldTimeCke;		// データ出力の Hold 時間経過
 //
-always @(posedge iSysClk) 
+always @(posedge iSCLK) 
 begin
 	// Sck の生成
 	if (!iSPIEn)            rMScl <= 1'b0;
@@ -272,9 +272,9 @@ reg [2:0]	rMSSel;						assign oMSSel = rMSSel[2];
 reg 		qMSSel;
 wire 		wMSSel;
 //
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
-	if (iSysRst)	rMSSel <= 3'b111;
+	if (iSRST)	rMSSel <= 3'b111;
 	else 			rMSSel <= {rMSSel[1:0], wMSSel};
 end
 
@@ -299,7 +299,7 @@ IOBUF SPI_HOLD 	(.O (wSHold),	.IO (ioSpiHold), 	.I (1'b1),			.T (rMSSel[2])	);
 generate
 	if (pTestPortUsed == "yes")
 	begin
-		assign oTestPort[0] = iSysRst;
+		assign oTestPort[0] = iSRST;
 		assign oTestPort[1] = rSMiso;
 		assign oTestPort[2] = wSMosi;
 		assign oTestPort[3] = wSCs;

@@ -9,7 +9,7 @@ module enGen #(
     parameter pSysClk  = 25000000,  // 分周クロックの値を指定
     parameter pTimeCke = 1          // Enable 出力の時間指定
 )(
-    input   iSysClk, 
+    input   iSCLK, 
     input   iRst,
     output  oCke
 );
@@ -28,7 +28,7 @@ localparam [lpCtuCNTBits-1:0] lpSysCnt = pSysClk-1'b1;
 reg [lpCtuCNTBits-1:0] tmp_count;
 reg qCke;
 
-always @(posedge iSysClk) 
+always @(posedge iSCLK) 
 begin
     if (iRst)       tmp_count <= 0;
     else if (qCke)  tmp_count <= 0;
@@ -47,7 +47,7 @@ end
 reg [7:0] rTimeCkeCnt;
 reg qTimeCke;                               assign oCke = qTimeCke;
 
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
     if (iRst)           rTimeCkeCnt <= 0;
     else if (qTimeCke)  rTimeCkeCnt <= 0;

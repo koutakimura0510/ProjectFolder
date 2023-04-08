@@ -33,8 +33,8 @@ MicroControllerBlock #(
 	.oMUsiWd	(wMUsiWd),
 	.oMUsiAdrs	(wMUsiAdrs),
 	.oMUsiCke	(wMUsiCke),
-	.iSysClk	(rSysClk),
-	.iSysRst	(rSysRst)
+	.iSCLK	(rSysClk),
+	.iSRST	(rSysRst)
 );
 
 always @(posedge rSysClk)

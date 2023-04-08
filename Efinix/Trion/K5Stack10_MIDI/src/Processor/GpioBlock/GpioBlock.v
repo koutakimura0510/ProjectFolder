@@ -3,52 +3,30 @@
 // Author koutakimura
 // -
 // 汎用 GPIO の管理を司るブロック
-// 
+// 2023/04/08 V1.1 USIBの更新版に対応
 //----------------------------------------------------------
 module GpioBlock #(
 	// variable
-	parameter 						pBlockAdrsMap 	= 8,
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h01,
-	parameter						pBusAdrsBit		= 16,
-	parameter 						pCsrAdrsWidth 	= 8,
-	parameter						pCsrActiveWidth = 8,
-	// variable csr bit width
-	//-----------------------------------------------------------------------------
-	// プロジェクトで使用する LED の個数
-	//-----------------------------------------------------------------------------
-	parameter						pExLedNumber	= 5,
-
-	//-----------------------------------------------------------------------------
-	// LED 点灯パターンの種類の数
-	//-----------------------------------------------------------------------------
-	parameter						pExLedFlashMode	= 2,
-
-	//-----------------------------------------------------------------------------
-	// PWM Duty比 Bit幅
-	//-----------------------------------------------------------------------------
-	parameter						pPWMDutyWidth	= 8,
-
-	//-----------------------------------------------------------------------------
-	// インターバルタイマー Bit幅
-	//-----------------------------------------------------------------------------
-	parameter						pIVtimerWidth	= 32
+	parameter pBlockAdrsWidth = 8,
+	parameter [pBlockAdrsWidth-1:0] pAdrsMap = 'h01,
+	parameter pUsiBusWidth = 32,
+	parameter pCsrAdrsWidth = 8,
+	parameter pCsrActiveWidth = 8,
+	parameter pExLedNumber = 5,	// プロジェクトで使用する LED の個数
+	parameter pExLedFlashMode = 2,// LED 点灯パターンの種類の数
+	parameter pPWMDutyWidth	= 8,	// PWM Duty比 Bit幅
+	parameter pIVtimerWidth	= 32	// インターバルタイマー Bit幅
 )(
 	// External Port
-	output	[1:0]				oLed,
-	output 						oLedB,
-	output 						oLedG,
-	output 						oLedR,
-    // Internal Port
-	// Bus Slave Read
-	output	[31:0]				oSUsiRd,	// Read Data
-	output						oSUsiREd,	// Read Valid Assert
-	// Bus Slave Write
-	input	[31:0]				iSUsiWd,	// Write Data
-	input	[pBusAdrsBit-1:0]	iSUsiAdrs,  // R/W Adrs
-	input						iSUsiWCke,	// Write Enable
+	output [1:0] oLed,
+	// Bus Master Read
+	output [pUsiBusWidth-1:0] oSUsiRd,
+	// Bus Master Write
+	input  [pUsiBusWidth-1:0] iSUsiWd,
+	input  [pUsiBusWidth-1:0] iSUsiAdrs,
     // CLK Reset
-    input           			iSysClk,
-    input           			iSysRst
+    input  iSCLK,
+    input  iSRST
 );
 
 
@@ -90,17 +68,17 @@ GpioUnit #(
 	.iGpioIVtimer2	(wGpioIVtimer2Csr),
 	.iGpioIVtimer3	(wGpioIVtimer3Csr),
 	.iGpioIVtimer4	(wGpioIVtimer4Csr),
-	.iSysClk		(iSysClk),
-	.iSysRst		(iSysRst)
+	.iSCLK		(iSCLK),
+	.iSRST		(iSRST)
 );
 
 //----------------------------------------------------------
 // Csr space
 //----------------------------------------------------------
 GpioCsr #(
-	.pBlockAdrsMap	(pBlockAdrsMap),
+	.pBlockAdrsWidth	(pBlockAdrsWidth),
 	.pAdrsMap		(pAdrsMap),
-	.pBusAdrsBit	(pBusAdrsBit),
+	.pUsiBusWidth	(pUsiBusWidth),
 	.pCsrAdrsWidth	(pCsrAdrsWidth),
 	.pCsrActiveWidth(pCsrActiveWidth),
 	.pExLedNumber	(pExLedNumber),
@@ -125,8 +103,8 @@ GpioCsr #(
 	.oGpioIVtimer2	(wGpioIVtimer2Csr),
 	.oGpioIVtimer3	(wGpioIVtimer3Csr),
 	.oGpioIVtimer4	(wGpioIVtimer4Csr),
-	.iSysClk		(iSysClk),
-	.iSysRst		(iSysRst)
+	.iSCLK		(iSCLK),
+	.iSRST		(iSRST)
 );
 
 

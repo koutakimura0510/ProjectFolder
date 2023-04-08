@@ -16,13 +16,13 @@
 module UltraFastInterface #(
 	// variable parameter
 	parameter 							pUfiBusWidth	=  8,	// バスのデータ幅は、使用する外部RAMのデータ幅と合わせている。 2022-09-14 現在
-	parameter							pBusAdrsBit		= 32,	// アドレスBit幅
+	parameter							pUsiBusWidth		= 32,	// アドレスBit幅
 	parameter							pUfiIdNumber	=  3
 )(
     // Internal Port
 	// Mcs Master Side
 	input [pUfiBusWidth-1:0] 			iMUfiWdMcs,
-	input [pBusAdrsBit-1:0] 			iMUfiAdrsMcs,
+	input [pUsiBusWidth-1:0] 			iMUfiAdrsMcs,
 	input 								iMUfiWEdMcs,
 	input 								iMUfiREdMcs,	// データ読み込み命令 Assert 
 	input 								iMUfiCmdMcs,
@@ -30,13 +30,13 @@ module UltraFastInterface #(
 	// Mcs のアクセスは優先度が一番高いため、Mcs 個別の Rdy 信号は無い、Slaveが動けるかどうかだけ確認する
 	//
 	input [pUfiBusWidth-1:0] 			iMUfiWdSpi,
-	input [pBusAdrsBit-1:0] 			iMUfiAdrsSpi,
+	input [pUsiBusWidth-1:0] 			iMUfiAdrsSpi,
 	input 								iMUfiEdSpi,
 	input 								iMUfiCmdSpi,	// High Read / Lor Write
 	input 								iMUfiVdSpi,		// 転送期間中 Assert
 	// Vtb Master Side
 	input [pUfiBusWidth-1:0] 			iMUfiWdVtb,
-	input [pBusAdrsBit-1:0] 			iMUfiAdrsVtb,
+	input [pUsiBusWidth-1:0] 			iMUfiAdrsVtb,
 	input 								iMUfiWEdVtb,	// 有効データ入力命令 Assert
 	input 								iMUfiREdVtb,	// データ読み込み命令 Assert 
 	input 								iMUfiCmdVtb,	// High Read / Lor Write
@@ -44,10 +44,10 @@ module UltraFastInterface #(
 	output 								oMUfiRdyVtb,	// Vtb に対する Ready 信号
 	// Vtb Slave Side
 	output [pUfiBusWidth-1:0] 			oSUfiWdVtb,		// Mcs から Vtb に対する書き込みデータ
-	output [pBusAdrsBit-1:0] 			oSUfiAdrsVtb,	// Mcs から Vtb に対する書き込みアドレス
+	output [pUsiBusWidth-1:0] 			oSUfiAdrsVtb,	// Mcs から Vtb に対する書き込みアドレス
 	output 								oSUfiWEdVtb,	// Mcs から Vtb に対する書き込み命令
 	// Atb Master Side
-	input [pBusAdrsBit-1:0] 			iMUfiAdrsAtb,
+	input [pUsiBusWidth-1:0] 			iMUfiAdrsAtb,
 	input 								iMUfiWEdAtb,	// 有効データ入力命令 Assert
 	input 								iMUfiREdAtb,	// データ読み込み命令 Assert
 	input 								iMUfiVdAtb,		// 転送期間中 Assert
@@ -63,7 +63,7 @@ module UltraFastInterface #(
 	output	[pUfiIdNumber-1:0]			oMUfiIdO,		// どのブロックからアクセス中かを表す ID
 	// Slave Memory Block Side
 	output [pUfiBusWidth-1:0] 			oSUfiWdRam,		// Slave に対する 書き込みデータ
-	output [pBusAdrsBit-1:0]			oSUfiAdrsRam,	// Slave に対する R/W 共通のアドレス指定バス
+	output [pUsiBusWidth-1:0]			oSUfiAdrsRam,	// Slave に対する R/W 共通のアドレス指定バス
 	output 								oSUfiWEdRam,	// Slave に対する 書き込み有効信号
 	output 								oSUfiREdRam,	// Slave に対する 書き込み有効信号
 	output 								oSUfiCmd,		// Slave に対する High Read, Low Write
@@ -93,7 +93,7 @@ localparam [pUfiIdNumber-1:0]
 	lpIdAtb  = 4;
 
 reg [pUfiBusWidth-1:0]	rMUfiWdRam;			assign oSUfiWdRam 	= rMUfiWdRam;
-reg [pBusAdrsBit-1:0]	rMUfiAdrsRam;		assign oSUfiAdrsRam = rMUfiAdrsRam;
+reg [pUsiBusWidth-1:0]	rMUfiAdrsRam;		assign oSUfiAdrsRam = rMUfiAdrsRam;
 reg 					rMUfiWEdRam;		assign oSUfiWEdRam	= rMUfiWEdRam;
 reg 					rMUfiREdRam;		assign oSUfiREdRam	= rMUfiREdRam;
 reg 					rMUfiCmdRam;		assign oSUfiCmd 	= rMUfiCmdRam;
@@ -103,7 +103,7 @@ reg 					rMUfiRdy;			assign oMUfiRdy 	= rMUfiRdy;
 reg [pUfiIdNumber-1:0]	rMUfiIdO;			assign oMUfiIdO		= rMUfiIdO;
 //
 reg [pUfiBusWidth-1:0] 	rSUfiWdVtb;			assign oSUfiWdVtb	= rSUfiWdVtb;
-reg [pBusAdrsBit-1:0] 	rSUfiAdrsVtb;		assign oSUfiAdrsVtb	= rSUfiAdrsVtb;
+reg [pUsiBusWidth-1:0] 	rSUfiAdrsVtb;		assign oSUfiAdrsVtb	= rSUfiAdrsVtb;
 reg 					rSUfiWEdVtb;		assign oSUfiWEdVtb	= rSUfiWEdVtb;
 
 always @(posedge iUfiClk)

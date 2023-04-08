@@ -114,9 +114,9 @@ end
 // Simlation Module Connect
 //----------------------------------------------------------
 I2CBlock #(
-	.pBlockAdrsMap	(8),
+	.pBlockAdrsWidth	(8),
 	.pAdrsMap		(4),
-	.pBusAdrsBit	(16)
+	.pUsiBusWidth	(16)
 ) I2C_BLOCK (
 	.oI2CScl	(wScl),
 	.ioI2CSda	(wSda),
@@ -125,8 +125,8 @@ I2CBlock #(
 	.iSUsiWd	(rSUsiWd),
 	.iSUsiAdrs	(rSUsiAdrs),
 	.iSUsiWCke	(rSUsiWCke),
-	.iSysClk	(rSysClk),
-	.iSysRst	(rSysRst)
+	.iSCLK	(rSysClk),
+	.iSRST	(rSysRst)
 );
 
 endmodule

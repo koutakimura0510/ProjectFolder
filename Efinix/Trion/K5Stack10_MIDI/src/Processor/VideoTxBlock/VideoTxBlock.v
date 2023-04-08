@@ -7,9 +7,9 @@
 //----------------------------------------------------------
 module VideoTxBlock #(
 	// variable
-	parameter 						pBlockAdrsMap 	= 8,
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h04,
-	parameter						pBusAdrsBit		= 16,
+	parameter 						pBlockAdrsWidth 	= 8,
+	parameter [pBlockAdrsWidth-1:0] 	pAdrsMap  		= 'h04,
+	parameter						pUsiBusWidth		= 16,
 	parameter						pUfiBusWidth	= 16,
 	parameter 						pCsrAdrsWidth   = 16,
 	parameter						pCsrActiveWidth = 16,
@@ -62,14 +62,14 @@ module VideoTxBlock #(
 	output							oSUsiREd,	// Read Valid Assert
 	// Ufi Slave Write
 	input	[31:0]					iSUsiWd,	// Write Data
-	input	[pBusAdrsBit-1:0]		iSUsiAdrs,  // R/W Adrs
+	input	[pUsiBusWidth-1:0]		iSUsiAdrs,  // R/W Adrs
 	input							iSUsiWCke,	// Write Enable
 	// Ufi Master Read
 	input 	[pUfiBusWidth-1:0]		iMUfiRd,	// Read Data
 	input 							iMUfiREd,	// Read Data Enable
 	// Ufi Master Write
 	output [pUfiBusWidth-1:0]		oMUfiWd,
-	output [pBusAdrsBit-1:0]		oMUfiAdrs,
+	output [pUsiBusWidth-1:0]		oMUfiAdrs,
 	output 							oMUfiWEd,	// Write Adrs Data Enable
 	output 							oMUfiREd,	// Read Adrs Data Enable
 	output 							oMUfiVd,	// Data Valid
@@ -78,11 +78,11 @@ module VideoTxBlock #(
 	input 							iMUfiRdy,	// Ufi Bus 転送可能時 Assert
 	// Vtb Slave Side
 	input [pUfiBusWidth-1:0] 		iSUfiWd,	// 書き込みデータ
-	input [pBusAdrsBit-1:0] 		iSUfiAdrs,	// 書き込みアドレス
+	input [pUsiBusWidth-1:0] 		iSUfiAdrs,	// 書き込みアドレス
 	input 							iSUfiWEd,	// 書き込み命令
 	// CLK Rst
-	input  							iSysRst,
-	input 							iSysClk,
+	input  							iSRST,
+	input 							iSCLK,
 	input 							iVideoClk,
 	//
 	output [pTestPortNum-1:0]		oTestPort
@@ -141,7 +141,7 @@ wire						wPDRst,
 wire 						wFe;
 
 VideoTxUnit #(
-	.pBusAdrsBit		(pBusAdrsBit),
+	.pUsiBusWidth		(pUsiBusWidth),
 	.pUfiBusWidth		(pUfiBusWidth),
 	.pMemAdrsWidth		(pMemAdrsWidth),
 	//
@@ -223,9 +223,9 @@ VideoTxUnit #(
 	.iPDRst				(wPDRst),
 	.oPDFeCntCke		(wPDFeCntCke),
 	//
-	.iSysClk			(iSysClk),
+	.iSCLK			(iSCLK),
 	.iVideoClk			(iVideoClk),
-	.iSysRst			(iSysRst),
+	.iSRST			(iSRST),
 	// debug
 	.oFe 				(wFe)
 );
@@ -235,9 +235,9 @@ VideoTxUnit #(
 // Video Tx Csr Space
 //-----------------------------------------------------------------------------
 VideoTxCsr #(
-	.pBlockAdrsMap		(pBlockAdrsMap),
+	.pBlockAdrsWidth		(pBlockAdrsWidth),
 	.pAdrsMap			(pAdrsMap),	
-	.pBusAdrsBit		(pBusAdrsBit),
+	.pUsiBusWidth		(pUsiBusWidth),
 	.pCsrAdrsWidth		(pCsrAdrsWidth),
 	.pCsrActiveWidth	(pCsrActiveWidth),
 	.pMemAdrsWidth		(pMemAdrsWidth),
@@ -309,8 +309,8 @@ VideoTxCsr #(
 	.oPDRst				(wPDRst),
 	.iPDFeCntCke		(wPDFeCntCke),
 	//
-	.iSysClk			(iSysClk),
-	.iSysRst			(iSysRst)
+	.iSCLK			(iSCLK),
+	.iSRST			(iSRST)
 );
 
 
@@ -322,7 +322,7 @@ generate
 	if (pTestPortUsed == "yes")
 	begin
 		assign oTestPort[0] = wFe;
-		assign oTestPort[1] = iSysRst;
+		assign oTestPort[1] = iSRST;
 		assign oTestPort[2] = 1'b0;
 		assign oTestPort[3] = 1'b0;
 	end

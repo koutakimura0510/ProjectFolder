@@ -49,7 +49,7 @@
 module VideoPixelGen #(
 	// Ufi
 	parameter						pUfiBusWidth		= 16,
-	parameter						pBusAdrsBit			= 16,
+	parameter						pUsiBusWidth			= 16,
 	// Display Size
     parameter       				pHdisplayWidth		= 11,	// 11bit だと FHD まで
     parameter       				pVdisplayWidth		= 11,
@@ -70,7 +70,7 @@ module VideoPixelGen #(
 	// Internal Port
 	// Vtb Slave Side
 	input [pUfiBusWidth-1:0] 		iSUfiWd,	// 書き込みデータ
-	input [pBusAdrsBit-1:0] 		iSUfiAdrs,	// 書き込みアドレス
+	input [pUsiBusWidth-1:0] 		iSUfiAdrs,	// 書き込みアドレス
 	input 							iSUfiWEd,	// 書き込み命令
 	// Csr Display
 	input	[pHdisplayWidth-1:0]	iHdisplay,
@@ -138,12 +138,12 @@ end
 // 	lpBram8		= 8;
 
 // wire [pUfiBusWidth-1:0] 		wSUfiWd;
-// wire [pBusAdrsBit-1:0] 			wSUfiAdrs;
+// wire [pUsiBusWidth-1:0] 			wSUfiAdrs;
 // wire [lpUfiAllocationNum-1:0] 	wSUfiWEd;
 
 // SlaveUfiAllocation #(
 // 	.pUfiBusWidth				(pUfiBusWidth),
-// 	.pBusAdrsBit				(pBusAdrsBit),
+// 	.pUsiBusWidth				(pUsiBusWidth),
 // 	.pUfiAllocationNum			(lpUfiAllocationNum)
 // ) SlaveUfiAllocation (
 // 	.iSUfiWd					(iSUfiWd),

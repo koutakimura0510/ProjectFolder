@@ -9,9 +9,9 @@
 // 上位モジュールへの output port は必ずレジスタ経由で出力する。
 //----------------------------------------------------------
 module RAMCsr #(
-	parameter 						pBlockAdrsMap 	= 8,
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap  		= 'h06,
-	parameter						pBusAdrsBit		= 16,
+	parameter 						pBlockAdrsWidth 	= 8,
+	parameter [pBlockAdrsWidth-1:0] 	pAdrsMap  		= 'h06,
+	parameter						pUsiBusWidth		= 16,
 	parameter 						pCsrAdrsWidth   = 16,
 	parameter						pCsrActiveWidth = 8,
 	//
@@ -24,7 +24,7 @@ module RAMCsr #(
 	output							oSUsiREd,	// Read Valid Assert
 	// Bus Slave Write
 	input	[31:0]					iSUsiWd,	// Write Data
-	input	[pBusAdrsBit-1:0]		iSUsiAdrs,  // R/W Adrs
+	input	[pUsiBusWidth-1:0]		iSUsiAdrs,  // R/W Adrs
 	input							iSUsiWCke,	// Write Enable
 	// Csr Output
 	output 							oRamDualFifoSrcRst,
@@ -32,8 +32,8 @@ module RAMCsr #(
 	//
 	input 	[pRamDqWidth-1:0]		iMemRd,
     // CLK Reset
-    input           				iSysRst,
-    input           				iSysClk
+    input           				iSRST,
+    input           				iSCLK
 );
 
 
@@ -50,9 +50,9 @@ reg 						qCsrWCke00;
 // reg 						qCsrWCke08;
 // reg 						qCsrWCke0c;
 //
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
-	if (iSysRst)
+	if (iSRST)
 	begin
 		rRamDualFifoSrcRst	<= 1'b1;
 		rRamDualFifoDstRst	<= 1'b1;
@@ -68,10 +68,10 @@ end
 
 always @*
 begin
-	qCsrWCke00 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
-	// qCsrWCke04 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
-	// qCsrWCke08 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
-	// qCsrWCke0c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h000c});
+	qCsrWCke00 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
+	// qCsrWCke04 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
+	// qCsrWCke08 <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
+	// qCsrWCke0c <= iSUsiWCke & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h000c});
 end
 
 //----------------------------------------------------------
@@ -81,9 +81,9 @@ reg [31:0]		rSUsiRd;		assign oSUsiRd  = rSUsiRd;
 reg 			rSUsiREd;		assign oSUsiREd = rSUsiREd;
 reg 			qAdrsComp;
 
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
-	if (iSysRst)
+	if (iSRST)
 	begin
 		rSUsiRd <= 'h0;
 		rSUsiREd <= 1'b0;
@@ -99,14 +99,14 @@ begin
 		endcase
 	end
 
-	if (iSysRst)		rSUsiREd <= 1'b0;
+	if (iSRST)		rSUsiREd <= 1'b0;
 	else if (qAdrsComp)	rSUsiREd <= 1'b1;
 	else				rSUsiREd <= 1'b0;
 end
 
 always @*
 begin
-	qAdrsComp <= {iSUsiAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:pCsrAdrsWidth] == pAdrsMap};
+	qAdrsComp <= {iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:pCsrAdrsWidth] == pAdrsMap};
 end
 
 endmodule

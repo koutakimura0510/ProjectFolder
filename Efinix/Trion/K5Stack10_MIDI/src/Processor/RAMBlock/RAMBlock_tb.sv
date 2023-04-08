@@ -248,9 +248,9 @@ end
 // Simlation Module Connect
 //----------------------------------------------------------
 SPIBlock #(
-	.pBlockAdrsMap		(8),
+	.pBlockAdrsWidth		(8),
 	.pAdrsMap			('h03),
-	.pBusAdrsBit		(16),
+	.pUsiBusWidth		(16),
 	.pBusBlockConnect	(1)
 ) SPI_BLOCK (
 	// External Port
@@ -287,8 +287,8 @@ SPIBlock #(
 	// Usi Bus Master to Slave Select
 	.oMUsiSel		(wMUsiSel),// 0. Slave として機能 / 1. Master バスを独占
 	// CLK Reset
-	.iSysClk			(rSysClk),
-	.iSysRst			(rSysRst)
+	.iSCLK			(rSysClk),
+	.iSRST			(rSysRst)
 );
 
 endmodule

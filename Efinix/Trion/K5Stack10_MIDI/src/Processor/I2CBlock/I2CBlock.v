@@ -6,9 +6,9 @@
 // 
 //----------------------------------------------------------
 module I2CBlock #(
-	parameter 						pBlockAdrsMap 	= 8,
-	parameter [pBlockAdrsMap-1:0] 	pAdrsMap	  	= 'h04,
-	parameter						pBusAdrsBit		= 16,
+	parameter 						pBlockAdrsWidth 	= 8,
+	parameter [pBlockAdrsWidth-1:0] 	pAdrsMap	  	= 'h04,
+	parameter						pUsiBusWidth		= 16,
 	parameter 						pCsrAdrsWidth 	= 8,
 	parameter 						pCsrActiveWidth	= 8
 )(
@@ -21,11 +21,11 @@ module I2CBlock #(
 	output						oSUsiREd,	// Read Valid Assert
 	// Bus Slave Write
 	input	[31:0]				iSUsiWd,	// Write Data
-	input	[pBusAdrsBit-1:0]	iSUsiAdrs,  // R/W Adrs
+	input	[pUsiBusWidth-1:0]	iSUsiAdrs,  // R/W Adrs
 	input						iSUsiWCke,	// Write Enable
     // CLK Reset
-    input           			iSysClk,
-    input           			iSysRst
+    input           			iSCLK,
+    input           			iSRST
 );
 
 
@@ -52,8 +52,8 @@ I2CUnit #(
 	.iI2CDiv		(qI2CDivUnit),
 	.oI2CGetKeyPad	(wI2CGetKeyPadUnit),
 	.oI2CSeqComp	(wI2CSeqCompUnit),
-	.iSysClk		(iSysClk),
-	.iSysRst		(iSysRst)
+	.iSCLK		(iSCLK),
+	.iSRST		(iSRST)
 );
 
 
@@ -66,9 +66,9 @@ reg		[15:0]				qI2CGetKeyPadCsr;
 reg  						qI2CSeqCompCsr;
 
 I2CCsr #(
-	.pBlockAdrsMap	(pBlockAdrsMap),
+	.pBlockAdrsWidth	(pBlockAdrsWidth),
 	.pAdrsMap		(pAdrsMap),
-	.pBusAdrsBit	(pBusAdrsBit),
+	.pUsiBusWidth	(pUsiBusWidth),
 	.pCsrAdrsWidth	(pCsrAdrsWidth),
 	.pCsrActiveWidth(pCsrActiveWidth),
 	.pI2CDivClk		(lpI2CDivClk)
@@ -82,8 +82,8 @@ I2CCsr #(
 	.iI2CSeqComp	(qI2CSeqCompCsr),
 	.oI2CEn			(wI2CEnCsr),
 	.oI2CDiv		(wI2CDivCsr),
-	.iSysClk		(iSysClk),
-	.iSysRst		(iSysRst)
+	.iSCLK		(iSCLK),
+	.iSRST		(iSRST)
 );
 
 always @*

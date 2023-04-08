@@ -7,7 +7,7 @@
 //----------------------------------------------------------
 module SPIUnit #(
 	// variable parameter
-	parameter					pBusAdrsBit		= 16,
+	parameter					pUsiBusWidth		= 16,
 	parameter 					pDivClk 		= 16,
 	parameter					pUfiBusWidth	= 16,
 	parameter					pTestPortUsed 	= "no",
@@ -30,7 +30,7 @@ module SPIUnit #(
 	// input	[pBusBlockConnectWidth:0]	iMUsiREd,	// Slave アクセス可能時 Assert
 	// Usi Bus Master Write
 	output	[31:0]				oMUsiWd,		// Write Data
-	output	[pBusAdrsBit-1:0]	oMUsiAdrs,		// R/W Adrs
+	output	[pUsiBusWidth-1:0]	oMUsiAdrs,		// R/W Adrs
 	output						oMUsiWEd,		// Write Enable
 	// Ufi Bus Master
 	output	[pUfiBusWidth-1:0]	oMUfiWd,		// Write Data
@@ -47,8 +47,8 @@ module SPIUnit #(
 	// Interrupt
 	output 						oMSpiIntr,
     // CLK Reset
-    input           			iSysClk,
-    input           			iSysRst,
+    input           			iSCLK,
+    input           			iSRST,
 	//
 	output [pTestPortNum-1:0]	oTestPort
 );
@@ -65,8 +65,8 @@ CkeGenerator #(
 	.iCke			(iSPIEn),
 	.iDiv			(iSPIDiv),
 	.oCke			(wDivCke),
-	.iClk			(iSysClk),
-	.iRst			(iSysRst)
+	.iClk			(iSCLK),
+	.iRst			(iSRST)
 );
 
 
@@ -81,7 +81,7 @@ reg 	[15:0]		qSDLenMux;
 reg 				qSREdMux;
 
 SPISignalMux # (
-	.pBusAdrsBit	(pBusAdrsBit),
+	.pUsiBusWidth	(pUsiBusWidth),
 	.pUfiBusWidth	(pUfiBusWidth)
 ) SPISignalMux (
 	// Internal Port FPGA Slave Side SPI Module Connect
@@ -103,8 +103,8 @@ SPISignalMux # (
 	.oMUfiVd		(oMUfiVd),
 	.oMUfiCmd		(oMUfiCmd),
 	// CLK Reset
-	.iSysClk		(iSysClk),
-	.iSysRst		(iSysRst)
+	.iSCLK		(iSCLK),
+	.iSRST		(iSRST)
 );
 
 
@@ -149,8 +149,8 @@ SPISignal # (
 	// Master Slave Select
 	.oMSSel			(oMUsiSel),
 	//
-	.iSysClk		(iSysClk),
-	.iSysRst		(iSysRst),
+	.iSCLK		(iSCLK),
+	.iSRST		(iSRST),
 	//
 	.oTestPort		(oTestPort)
 );

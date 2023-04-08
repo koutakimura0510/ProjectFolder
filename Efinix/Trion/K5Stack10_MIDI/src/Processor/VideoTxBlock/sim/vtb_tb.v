@@ -65,9 +65,9 @@ wire 				wLedG;
 wire 				wLedR;
 //
 GpioBlock #(
-	.pBlockAdrsMap	(8),
+	.pBlockAdrsWidth	(8),
 	.pAdrsMap		(1),
-	.pBusAdrsBit	(16),
+	.pUsiBusWidth	(16),
 	.pPWMDutyWidth	(8),
 	.pIVtimerWidth	(32)
 ) GPIO_BLOCK (
@@ -80,8 +80,8 @@ GpioBlock #(
 	.iSUsiWd		(rSUsiWd),
 	.iSUsiAdrs		(rSUsiAdrs),
 	.iSUsiWCke		(rSUsiWCke),
-	.iSysClk		(wSysClk),
-	.iSysRst		(rSysRst)
+	.iSCLK		(wSysClk),
+	.iSRST		(rSysRst)
 );
 
 //----------------------------------------------------------

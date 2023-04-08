@@ -6,7 +6,7 @@
 // 
 //----------------------------------------------------------
 module AudioTxUnit #(
-	parameter					pBusAdrsBit			= 32,
+	parameter					pUsiBusWidth			= 32,
 	parameter					pUfiBusWidth		= 16,
 	parameter					pMemAdrsWidth		= 19,	// 外部メモリアドレスサイズ
 	parameter					pSamplingBitWidth	= 8,	// 分解能
@@ -25,7 +25,7 @@ module AudioTxUnit #(
 	input 	[pUfiBusWidth-1:0]	iMUfiRd,
 	input 						iMUfiREd,
 	// Ufi Master Write
-	output 	[pBusAdrsBit-1:0]	oMUfiAdrs,
+	output 	[pUsiBusWidth-1:0]	oMUfiAdrs,
 	output 						oMUfiWEd,
 	output 						oMUfiREd,
 	output 						oMUfiVd,
@@ -36,8 +36,8 @@ module AudioTxUnit #(
 	input [pMemAdrsWidth-1:0]	iDmaLen,
 	input 						iDmaEn,
     // CLK Reset
-    input           			iSysRst,
-    input           			iSysClk,
+    input           			iSRST,
+    input           			iSCLK,
 	input 						iAudioRst,
 	input 						iAudioClk,
 	//
@@ -55,7 +55,7 @@ wire 							wDmaREd;
 reg 							qDmaRe;
 
 AudioDmaUnit #(
-	.pBusAdrsBit		(pBusAdrsBit),
+	.pUsiBusWidth		(pUsiBusWidth),
 	.pUfiBusWidth		(pUfiBusWidth),
 	.pMemAdrsWidth		(pMemAdrsWidth),
 	.pDmaFifoDepth		(lpDmaFifoDepth)
@@ -73,8 +73,8 @@ AudioDmaUnit #(
 	.iDmaAdrs			(iDmaAdrs),
 	.iDmaLen			(iDmaLen),
 	.iDmaEn				(iDmaEn),
-	.iRst				(iSysRst),
-	.iClk				(iSysClk)
+	.iRst				(iSRST),
+	.iClk				(iSCLK)
 );
 
 
@@ -102,9 +102,9 @@ fifoDualControllerGray # (
     .oRVD           (),
     .iRE            (qAudioDualFifoRde),
     .oEMP           (),
-    .iSrcRst        (iSysRst),
+    .iSrcRst        (iSRST),
     .iDstRst        (iAudioRst),
-    .iSrcClk        (iSysClk),
+    .iSrcClk        (iSCLK),
     .iDstClk        (iAudioClk)
 );
 
@@ -204,7 +204,7 @@ generate
 	if (pTestPortUsed == "yes")
 	begin
 		assign oTestPort[0] = wPwm;
-		assign oTestPort[1] = iSysRst;
+		assign oTestPort[1] = iSRST;
 		assign oTestPort[2] = 1'b0;
 		assign oTestPort[3] = 1'b0;
 	end

@@ -243,9 +243,9 @@ end
 // Simlation Module Connect
 //----------------------------------------------------------
 SPIBlock #(
-	.pBlockAdrsMap		(8),
+	.pBlockAdrsWidth		(8),
 	.pAdrsMap			('h03),
-	.pBusAdrsBit		(32),
+	.pUsiBusWidth		(32),
 	.pCsrAdrsWidth		(16),
 	.pUfiBusWidth		(lpUfiBusWidth),
 	.pBusBlockConnect	(1)
@@ -285,8 +285,8 @@ SPIBlock #(
 	// Usi Bus Master to Slave Select
 	.oMUsiSel			(wMUsiSel),		// 1. FPGA Slave 0. FPGA Master
 	// CLK Reset
-	.iSysClk			(rSysClk),
-	.iSysRst			(rSysRst),
+	.iSCLK			(rSysClk),
+	.iSRST			(rSysRst),
 	//
 	.oTestPort			()
 );

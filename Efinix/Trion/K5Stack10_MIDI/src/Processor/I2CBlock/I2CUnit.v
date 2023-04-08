@@ -18,8 +18,8 @@ module I2CUnit #(
 	output 	[15:0]				oI2CGetKeyPad,
 	output 						oI2CSeqComp,
     // CLK Reset
-    input           			iSysClk,
-    input           			iSysRst
+    input           			iSCLK,
+    input           			iSRST
 );
 
 //----------------------------------------------------------
@@ -34,8 +34,8 @@ CkeGenerator #(
 	.iDiv		(iI2CDiv),
 	.iCke		(iI2CEn),
 	.oCke		(wDivCke),
-	.iClk		(iSysClk),
-	.iRst		(iSysRst)
+	.iClk		(iSCLK),
+	.iRst		(iSRST)
 );
 
 
@@ -61,8 +61,8 @@ I2CMasterMux I2CMasterMux (
 	.iI2CBufVd		(wBufVd),
 	.iI2CByteVd		(wByteVd),
 	.iSdaByte		(wSdaByte),
-	.iSysClk		(iSysClk),
-	.iSysRst		(iSysRst)
+	.iSCLK		(iSCLK),
+	.iSRST		(iSRST)
 );
 
 
@@ -80,8 +80,8 @@ I2CMaster I2CMaster (
 	.oI2CBufVd		(wBufVd),
 	.oI2CByteVd		(wByteVd),
 	.oSdaByte		(wSdaByte),
-	.iSysClk		(iSysClk),
-	.iSysRst		(iSysRst)
+	.iSCLK		(iSCLK),
+	.iSRST		(iSRST)
 );
 
 endmodule

@@ -12,8 +12,8 @@ module LedSftReg (
 	input  [7:0]			iGpioLed,
 	input  [7:0]			iGpioDiv,
     // CLK Reset
-    input           		iSysClk,
-    input           		iSysRst
+    input           		iSCLK,
+    input           		iSRST
 );
 
 
@@ -24,13 +24,13 @@ reg rSftClk;
 reg [7:0] rGpioDivCnt;
 reg qGpioDivEn;
 
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
-	if (iSysRst)			rGpioDivCnt <= 8'd0;
+	if (iSRST)			rGpioDivCnt <= 8'd0;
 	else if (qGpioDivEn)	rGpioDivCnt <= 8'd0;
 	else					rGpioDivCnt <= rGpioDivCnt + 1'b1;
 
-	if (iSysRst)			rSftClk <= 1'd0;
+	if (iSRST)			rSftClk <= 1'd0;
 	else if (qGpioDivEn) 	rSftClk <= ~rSftClk;
 	else					rSftClk <= rSftClk;
 end
@@ -52,14 +52,14 @@ reg qGpioBitSftEn;
 reg [1:0] rGpioLedCnt;
 reg [2:0] rGpioBitSftCnt;
 
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
-	if (iSysRst)			rGpioLedCnt <= 2'd0;
+	if (iSRST)			rGpioLedCnt <= 2'd0;
 	else if (qGpioBitSftEn)	rGpioLedCnt <= 2'd0;
 	else if (qGpioDivEn) 	rGpioLedCnt <= rGpioLedCnt + 1'b1;
 	else					rGpioLedCnt <= rGpioLedCnt;
 
-	if (iSysRst)			rGpioBitSftCnt <= 3'd0;
+	if (iSRST)			rGpioBitSftCnt <= 3'd0;
 	else if (qGpioBitSftEn)	rGpioBitSftCnt <= rGpioBitSftCnt + 1'b1;
 	else 					rGpioBitSftCnt <= rGpioBitSftCnt;
 

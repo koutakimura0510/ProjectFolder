@@ -7,7 +7,7 @@
 //----------------------------------------------------------
 module SPISignalMux #(
 	// variable parameter
-	parameter					pBusAdrsBit	= 16,
+	parameter					pUsiBusWidth	= 16,
 	parameter					pUfiBusWidth= 16
 )(
 	// Internal Port FPGA Slave Side SPI Module Connect
@@ -20,7 +20,7 @@ module SPISignalMux #(
 	// Internal Port FPGA Slave Side Upper Module Connect
 	input	[31:0]				iMUsiRd,
 	output 	[31:0]				oMUsiWd,
-	output 	[pBusAdrsBit-1:0]	oMUsiAdrs,
+	output 	[pUsiBusWidth-1:0]	oMUsiAdrs,
 	output 						oMUsiWEd,
 	// Ufi Bus Master Write
 	output	[pUfiBusWidth-1:0]	oMUfiWd,	// Write Data
@@ -29,8 +29,8 @@ module SPISignalMux #(
 	output 						oMUfiVd,	// 転送期間中 Assert
 	output 						oMUfiCmd,	// High Read, Low Write
 	// CLK Reset
-    input           			iSysClk,
-	input 						iSysRst
+    input           			iSCLK,
+	input 						iSRST
 );
 
 
@@ -44,13 +44,13 @@ module SPISignalMux #(
 // USI Bus
 //----------------------------------------------------------
 reg [31:0]				rMUsiWd;		assign oMUsiWd   	= rMUsiWd;
-reg [pBusAdrsBit-1:0]	rMUsiAdrs;		assign oMUsiAdrs 	= rMUsiAdrs;
+reg [pUsiBusWidth-1:0]	rMUsiAdrs;		assign oMUsiAdrs 	= rMUsiAdrs;
 reg 					rMUsiWEd;		assign oMUsiWEd		= rMUsiWEd;
 										assign oSMiso	 	= iMUsiRd; 	// Csr RData はそのまま経由させる
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
 	rMUsiWd		<= iSRd;
-	rMUsiAdrs	<= iSAdrs[pBusAdrsBit-1:0];
+	rMUsiAdrs	<= iSAdrs[pUsiBusWidth-1:0];
 
 	// Csr Write のみ判定
 	case ({iSREd, iSCmd})
@@ -70,7 +70,7 @@ reg  					rMUfiCmd;		assign oMUfiCmd		= rMUfiCmd;
 //
 reg 					qMUfiVd;
 //
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
 	rMUfiWd		<= iSRd[pUfiBusWidth-1:0];
 	rMUfiAdrs	<= iSAdrs;

@@ -35,8 +35,8 @@ module GpioUnit #(
 	input  [pIVtimerWidth-1:0]		iGpioIVtimer3,
 	input  [pIVtimerWidth-1:0]		iGpioIVtimer4,
     // CLK Reset
-    input           				iSysRst,
-    input           				iSysClk
+    input           				iSRST,
+    input           				iSCLK
 );
 
 
@@ -65,8 +65,8 @@ generate
 			.iPWMEn			(qDutyEn[i]),
 			.iDutyRatio		(qGpioDutyRatio[i]),
 			.iIVtimer		(qGpioIVtimer[i]),
-			.iClk			(iSysClk),
-			.iRst			(iSysRst)
+			.iClk			(iSCLK),
+			.iRst			(iSRST)
 		);
 
 		always @*
@@ -102,7 +102,7 @@ localparam [pExLedFlashMode-1:0]
 //
 reg [pExLedNumber-1:0]	rLed;
 //
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
 	case (iGpioFlashMode)
 		lpGpioModeDefault:

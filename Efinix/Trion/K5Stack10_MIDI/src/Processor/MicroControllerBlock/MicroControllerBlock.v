@@ -8,9 +8,9 @@
 //----------------------------------------------------------
 module MicroControllerBlock #(
 	parameter							pBusBlockConnect 	= 1,
-	parameter 							pBlockAdrsMap 		= 8,
-	parameter [pBlockAdrsMap-1:0] 		pAdrsMap  			= 'h01,
-	parameter							pBusAdrsBit			= 16,	// Usi,Ufi 共通
+	parameter 							pBlockAdrsWidth 		= 8,
+	parameter [pBlockAdrsWidth-1:0] 		pAdrsMap  			= 'h01,
+	parameter							pUsiBusWidth			= 16,	// Usi,Ufi 共通
 	parameter							pUfiBusWidth		= 8,
 	parameter 							pCsrAdrsWidth   	= 16,
 	parameter							pCsrActiveWidth 	= 16,
@@ -25,7 +25,7 @@ module MicroControllerBlock #(
 	input	[pBusBlockConnect-1:0]		iMUsiREd,	// Read Assert
 	// Bus Master Write
 	output	[31:0]						oMUsiWd,	// Write Data
-	output	[pBusAdrsBit-1:0]			oMUsiAdrs,	// Write address
+	output	[pUsiBusWidth-1:0]			oMUsiAdrs,	// Write address
 	output								oMUsiWEd,	// Write Data Enable
 	// Ufi Master Read
 	input 	[pUfiBusWidth-1:0]			iMUfiRd,	// Read Data
@@ -48,7 +48,7 @@ module MicroControllerBlock #(
 	外部RAM,ROM に保存されているシステムデータを BRAM に書き込むことはするが、現状読み込み動作は想定していない。(writeだけで十分なはず)
 	*/
 	output 	[pUfiBusWidth-1:0]			oMUfiWd,	// Write Data
-	output 	[pBusAdrsBit-1:0]			oMUfiAdrs,	// R/W Common Adrs
+	output 	[pUsiBusWidth-1:0]			oMUfiAdrs,	// R/W Common Adrs
 	output 								oMUfiWEd,	// Write Adrs Data Enable
 	output 								oMUfiREd,	// Read Adrs Data Enable
 	output 								oMUfiVd,	// Data Valid
@@ -56,8 +56,8 @@ module MicroControllerBlock #(
 	// Ufi Master Common
 	input 								iMUfiRdy,	// Ufi Bus 転送可能時 Assert
     // CLK Reset
-    input           					iSysRst,
-    input           					iSysClk
+    input           					iSRST,
+    input           					iSCLK
 );
 
 
@@ -65,7 +65,7 @@ module MicroControllerBlock #(
 // 未使用 pin
 //-----------------------------------------------------------------------------
 assign oMUfiWd		= {pUfiBusWidth{1'b0}}; // のちのち UFI 処理追加
-assign oMUfiAdrs	= {pBusAdrsBit{1'b0}};
+assign oMUfiAdrs	= {pUsiBusWidth{1'b0}};
 assign oMUfiWEd		= 1'b0;
 assign oMUfiREd		= 1'b0;
 assign oMUfiVd		= 1'b0;
@@ -82,12 +82,12 @@ wire [31:0]					wMUsiRd;
 wire [pBusBlockConnect-1:0]	wMUsiREd;
 // Write
 wire [31:0] 				wMcbCsrWd;
-wire [pBusAdrsBit-1:0] 		wMcbCsrAdrs;
+wire [pUsiBusWidth-1:0] 		wMcbCsrAdrs;
 wire 						wMcbCsrCke;
 
 // microblaze_mcs_0 MCS (
-// 	.Clk			(iSysClk),
-// 	.Reset			(iSysRst),
+// 	.Clk			(iSCLK),
+// 	.Reset			(iSRST),
 // 	.UART_rxd		(iUartRx),
 // 	.UART_txd		(oUartTx),
 // 	.GPIO1_tri_i	(wMcbManualRd),
@@ -107,11 +107,11 @@ wire 						wMcbCsrCke;
 // wire [31:0]					wMUsiRd;
 // wire [pBusBlockConnect-1:0]	wMUsiREd;
 // wire [31:0] 				wMcbCsrWd;
-// wire [pBusAdrsBit-1:0] 		wMcbCsrAdrs;
+// wire [pUsiBusWidth-1:0] 		wMcbCsrAdrs;
 // wire 						wMcbCsrCke;
 
 // MicroControllerUnit #(
-// 	.pBusAdrsBit			(pBusAdrsBit),
+// 	.pUsiBusWidth			(pUsiBusWidth),
 // 	.pUfiBusWidth			(pUfiBusWidth),
 // 	.pMemAdrsWidth			(pMemAdrsWidth)
 // ) MicroControllerUnit (
@@ -120,8 +120,8 @@ wire 						wMcbCsrCke;
 // 	.oMUsiWd				(wMcbCsrWd),
 // 	.oMUsiAdrs				(wMcbCsrAdrs),
 // 	.oMUsiWEd				(wMcbCsrCke),
-// 	.iSysRst				(iSysRst),
-// 	.iSysClk				(iSysClk)
+// 	.iSRST				(iSRST),
+// 	.iSCLK				(iSCLK)
 // );
 
 
@@ -130,9 +130,9 @@ wire 						wMcbCsrCke;
 //-----------------------------------------------------------------------------
 MicroControllerCsr #(
 	.pBusBlockConnect		(pBusBlockConnect),
-	.pBlockAdrsMap			(pBlockAdrsMap),
+	.pBlockAdrsWidth			(pBlockAdrsWidth),
 	.pAdrsMap				(pAdrsMap),
-	.pBusAdrsBit			(pBusAdrsBit),
+	.pUsiBusWidth			(pUsiBusWidth),
 	.pCsrAdrsWidth			(pCsrAdrsWidth),
 	.pCsrActiveWidth		(pCsrActiveWidth),
 	.pMemAdrsWidth			(pMemAdrsWidth)
@@ -152,8 +152,8 @@ MicroControllerCsr #(
 	.oMUsiRd				(wMUsiRd),
 	.oMUsiREd				(wMUsiREd),
 	//
-	.iSysRst				(iSysRst),
-	.iSysClk				(iSysClk)
+	.iSRST				(iSRST),
+	.iSCLK				(iSCLK)
 );
 
 endmodule

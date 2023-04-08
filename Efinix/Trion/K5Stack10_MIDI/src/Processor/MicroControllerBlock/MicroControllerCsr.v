@@ -23,9 +23,9 @@
 //----------------------------------------------------------
 module MicroControllerCsr #(
 	parameter							pBusBlockConnect 	= 1,
-	parameter 							pBlockAdrsMap 		= 8,
-	parameter [pBlockAdrsMap-1:0] 		pAdrsMap  			= 'h01,
-	parameter							pBusAdrsBit			= 16,
+	parameter 							pBlockAdrsWidth 		= 8,
+	parameter [pBlockAdrsWidth-1:0] 		pAdrsMap  			= 'h01,
+	parameter							pUsiBusWidth			= 16,
 	parameter 							pCsrAdrsWidth   	= 16,
 	parameter							pCsrActiveWidth 	= 16,
 	parameter							pMemAdrsWidth		= 19
@@ -33,7 +33,7 @@ module MicroControllerCsr #(
     // Internal Port
 	// Csr Manual
 	input  	[31:0]						iWd,		// Ckeによる手動レジスタ更新時の Write Data
-	input  	[pBusAdrsBit-1:0]			iAdrs,		// R/W アドレス指定
+	input  	[pUsiBusWidth-1:0]			iAdrs,		// R/W アドレス指定
 	input 								iWCke,		// 有効データ書き込み時 Assert
 	output 	[31:0]						oRd,		// Slaveに対してのデータを確認できる
 	// Csr Slave
@@ -41,14 +41,14 @@ module MicroControllerCsr #(
 	input  	[pBusBlockConnect-1:0]		iMUsiREd,
 	// Csr Master
 	output	[31:0]						oMUsiWd,	// 書き込みデータ
-	output	[pBusAdrsBit-1:0]			oMUsiAdrs,
+	output	[pUsiBusWidth-1:0]			oMUsiAdrs,
 	output								oMUsiWEd,	// コマンド有効時 Assert
 	// Csr Output
 	output	[31:0]						oMUsiRd,
 	output	[pBusBlockConnect-1:0]		oMUsiREd,
     // CLK Reset
-    input           					iSysRst,
-    input           					iSysClk
+    input           					iSRST,
+    input           					iSCLK
 );
 
 
@@ -57,7 +57,7 @@ module MicroControllerCsr #(
 //----------------------------------------------------------
 // Manual
 reg [31:0] 						rMUsiWd;		assign oMUsiWd   	= rMUsiWd;		// Bus 書き込みデータ
-reg [pBusAdrsBit-1:0]			rMUsiAdrs;		assign oMUsiAdrs 	= rMUsiAdrs;	// Bus 書き込みアドレス
+reg [pUsiBusWidth-1:0]			rMUsiAdrs;		assign oMUsiAdrs 	= rMUsiAdrs;	// Bus 書き込みアドレス
 reg [ 0:0]		 				rMUsiWEd;		assign oMUsiWEd 	= rMUsiWEd;		// Bus 書き込み Enable 自動で 0クリア
 // Auto
 reg [31:0]						rMUsiRd;		assign oMUsiRd	 	= rMUsiRd;		// 
@@ -66,12 +66,12 @@ reg [pBusBlockConnect-1:0]	 	rMUsiREd;		assign oMUsiREd	 	= rMUsiREd;		// 指定
 // reg 							qCsrWCke00;
 // reg 							qCsrWCke08;
 
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
-	if (iSysRst)
+	if (iSRST)
 	begin
 		rMUsiWd		<= 'h0;
-		rMUsiAdrs	<= {pBusAdrsBit{1'b0}};
+		rMUsiAdrs	<= {pUsiBusWidth{1'b0}};
 		rMUsiWEd	<= 1'b0;
 		rMUsiRd		<= 'h0;
 		rMUsiREd	<= {pBusBlockConnect{1'b0}};
@@ -95,9 +95,9 @@ end
 
 always @*
 begin
-	// qCsrWCke00 <= iWCke & (iAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
-	// qCsrWCke04 <= iWCke & (iAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
-	// qCsrWCke08 <= iWCke & (iAdrs[pBlockAdrsMap + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
+	// qCsrWCke00 <= iWCke & (iAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
+	// qCsrWCke04 <= iWCke & (iAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
+	// qCsrWCke08 <= iWCke & (iAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
 end
 
 //----------------------------------------------------------
@@ -106,9 +106,9 @@ end
 //----------------------------------------------------------
 reg [31:0] rRd;			assign oRd = rRd;
 
-always @(posedge iSysClk)
+always @(posedge iSCLK)
 begin
-	if (iSysRst)
+	if (iSRST)
 	begin
 		rRd <= 'h0;
 	end
