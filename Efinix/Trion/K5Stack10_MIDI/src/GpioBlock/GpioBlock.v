@@ -58,32 +58,37 @@ GpioCsr #(
 );
 
 
-//----------------------------------------------------------
-// GPIO 制御
-//----------------------------------------------------------
+//-----------------------------------------------------------------------------
+// LED Toggle
+//-----------------------------------------------------------------------------
+localparam lpCntMax = 100000000-1;
+
+reg [27:0] rCnt;
+reg rLed;
+
+always @(posedge iSCLK)
+begin
+	if (iSRST) rCnt<= 0;
+	else if (lpCntMax==rCnt) rCnt <= 0;
+	else rCnt <= rCnt + 1'b1;
+
+	if (iSRST) rLed<= 0;
+	else if (lpCntMax==rCnt) rLed <= ~rLed;
+	else rLed <= rLed;
+end
+
+
+//-----------------------------------------------------------------------------
+// IO Part
+//-----------------------------------------------------------------------------
 genvar x;
 reg [pGpioWidth-1:0] rGpioR; 		assign oGpioR = rGpioR;
 
 always @(posedge iSCLK)
 begin
-	rGpioR[0]  <= wGpioAltModeCsr[0]  ? 1'b0 : wGpioOutCtrl[0];
-	rGpioR[1]  <= wGpioAltModeCsr[1]  ? 1'b0 : wGpioOutCtrl[1];
-	rGpioR[2]  <= wGpioAltModeCsr[2]  ? 1'b0 : wGpioOutCtrl[2];
-	rGpioR[3]  <= wGpioAltModeCsr[3]  ? 1'b0 : wGpioOutCtrl[3];
-	rGpioR[4]  <= wGpioAltModeCsr[4]  ? 1'b0 : wGpioOutCtrl[4];
-	rGpioR[5]  <= wGpioAltModeCsr[5]  ? 1'b0 : wGpioOutCtrl[5];
-	rGpioR[6]  <= wGpioAltModeCsr[6]  ? 1'b0 : wGpioOutCtrl[6];
-	rGpioR[7]  <= wGpioAltModeCsr[7]  ? 1'b0 : wGpioOutCtrl[7];
-	rGpioR[8]  <= wGpioAltModeCsr[8]  ? 1'b0 : wGpioOutCtrl[8];
-	rGpioR[9]  <= wGpioAltModeCsr[9]  ? 1'b0 : wGpioOutCtrl[9];
-	rGpioR[10] <= wGpioAltModeCsr[10] ? 1'b0 : wGpioOutCtrl[10];
-	rGpioR[11] <= wGpioAltModeCsr[11] ? 1'b0 : wGpioOutCtrl[11];
-	rGpioR[12] <= wGpioAltModeCsr[12] ? 1'b0 : wGpioOutCtrl[12];
-	rGpioR[13] <= wGpioAltModeCsr[13] ? 1'b0 : wGpioOutCtrl[13];
-	rGpioR[14] <= wGpioAltModeCsr[14] ? iLocked : wGpioOutCtrl[14];
-	rGpioR[15] <= wGpioAltModeCsr[15] ? 1'b0 : wGpioOutCtrl[15];
-	rGpioR[16] <= wGpioAltModeCsr[16] ? 1'b0 : wGpioOutCtrl[16];
-	rGpioR[17] <= wGpioAltModeCsr[17] ? 1'b0 : wGpioOutCtrl[17];
+	rGpioR[0] <= wGpioAltModeCsr[0] ? iLocked : wGpioOutCtrl[0];
+	rGpioR[1] <= wGpioAltModeCsr[1] ? 1'b0 : wGpioOutCtrl[1];
+	rGpioR[2] <= wGpioAltModeCsr[2] ? rLed : wGpioOutCtrl[2];
 end
 
 endmodule

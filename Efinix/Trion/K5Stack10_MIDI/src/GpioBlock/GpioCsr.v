@@ -53,7 +53,7 @@ begin
 	begin
 		rGpioOutCtrl	<= {pGpioWidth{1'b0}};
 		rGpioDir		<= {pGpioWidth{1'b1}};
-		rGpioAltMode 	<= {pGpioWidth{1'b0}};
+		rGpioAltMode 	<= {pGpioWidth{1'b1}};
 	end
 	else
 	begin
@@ -83,6 +83,7 @@ begin
 		'h04:	 rSUsiRd <= {{(32 - pGpioWidth	){1'b0}}, rGpioDir};
 		'h08:	 rSUsiRd <= {{(32 - pGpioWidth	){1'b0}}, rGpioAltMode};
 		'h40:	 rSUsiRd <= {{(32 - pGpioWidth	){1'b0}}, iGpioIn};
+		default: rSUsiRd <= iSUsiWd;
 	endcase
 end
 

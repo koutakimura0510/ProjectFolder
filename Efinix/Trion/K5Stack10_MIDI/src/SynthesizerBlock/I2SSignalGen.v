@@ -30,8 +30,8 @@ PCM5102Aの仕様上、32bit SDATA は [0][31][30][29]...[1]の順番で送信�
  *-----------------------------------------------------------------------------*/
 localparam lpMclkCntWidth = 8;
 reg  [lpMclkCntWidth-1:0] rMclkCnt;	// 最大カウント時 = 48KHzの周波数
-reg  rBclk, rBclkCke;
-reg  rLRclk, rLRclkCke;
+reg  rBclk, qBclkCke;
+reg  rLRclk, qLRclkCke;
 reg  [31:0] rSdata;
 // control
 reg  rRdy, qRdyCke;
@@ -42,27 +42,27 @@ begin
 	else 				rMclkCnt <= rMclkCnt + 1'b1;
 
 	if (iMRST) 			rBclk <= 1'b0;
-	else if	(rBclkCke)	rBclk <= ~rBclk;
+	else if	(qBclkCke)	rBclk <= ~rBclk;
 	else 				rBclk <=  rBclk;
 
 	if (iMRST) 			rLRclk <= 1'b0;
-	else if	(rLRclkCke)	rLRclk <= ~rLRclk;
+	else if	(qLRclkCke)	rLRclk <= ~rLRclk;
 	else 				rLRclk <=  rLRclk;
 
-	if (rLRclkCke)		rSdata <= {iAudioData[0],iAudioData[31:1]};
-	else if	(rBclkCke)	rSdata <= {rSdata[30:0],1'b0};
+	if (qLRclkCke)		rSdata <= {iAudioData[0],iAudioData[31:1]};
+	else if	(qBclkCke)	rSdata <= {rSdata[30:0],1'b0};
 	else 				rSdata <=  rSdata;
 
-	if (iMRST) 			rRdy <= 1'b0;
-	else if	(qRdyCke)	rRdy <= 1'b1;
-	else 				rRdy <= 1'b0;
+	if (iMRST) 			rRdy <= 1'b0;	//Right音源出力のときに、次の音源データを読みこみ
+	else if	(qRdyCke)	rRdy <= 1'b1;	// Ready Valid のタイミング入れ違い対策として
+	else 				rRdy <= 1'b0;	// Rdy は 1パルスショットの動作とする
 end
 
 always @*
 begin
-	rBclkCke  <= rMclkCnt[1];
-	rLRclkCke <= rMclkCnt == {lpMclkCntWidth{1'b1}};
-	qRdyCke   <= rLRclkCke & (~rLRclk);
+	qBclkCke  <= rMclkCnt[1];
+	qLRclkCke <= rMclkCnt == {lpMclkCntWidth{1'b1}};
+	qRdyCke   <= qLRclkCke & (~rLRclk);
 end
 
 assign oI2S_MCLK	= iMCLK;

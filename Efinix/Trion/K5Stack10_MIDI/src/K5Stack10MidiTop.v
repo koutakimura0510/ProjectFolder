@@ -117,14 +117,15 @@ assign PLL_TL0_RSTN = 1'b1;
 // USI/F BUS
 //------------------------------------------------------------------------------
 localparam lpUsiBusWidth = 32;		// USIB Width
-localparam lpBlockConnectNum = 2;	// 現在接続している ブロックの個数
+localparam lpBlockConnectNum = 3;	// 現在接続しているブロックの個数
 localparam lpBlockAdrsWidth = func_getwidth(lpBlockConnectNum);
 localparam lpCsrAdrsWidth = 16;		// 各ブロック共通の基本CSR幅
 localparam lpSUsiBusWidth = (lpUsiBusWidth * lpBlockConnectNum);
 localparam [lpBlockAdrsWidth-1:0] 	// ブロックアドレスマッピング ※プロジェクトの Readme.md 参照
-	lpGpioAdrsMap	= 'h0,
-	lpSPIAdrsMap	= 'h1,
-	lpNullAdrsMap	= 0;
+	lpGpioAdrsMap = 'h0,
+	lpSPIAdrsMap = 'h1,
+	lpSynthesizerAdrsMap = 'h2,
+	lpNullAdrsMap = 0;
 
 // ブロック内 Csr のアドレス幅
 // 基本となる lpCsrAdrsWidth のアドレス幅で Csr を利用しない場合は、
@@ -133,6 +134,7 @@ localparam [lpBlockAdrsWidth-1:0] 	// ブロックアドレスマッピング �
 localparam 
 	lpGpioCsrActiveWidth = 8,
 	lpSPICsrActiveWidth  = 8,
+	lpSynCsrActiveWidth  = 8,
 	lpNullActiveWidth	 = 8;	// 使用しない、ソースの追加がやりやすいように
 	// lpI2CCsrActiveWidth  = 8,
 	// lpVTBCsrActiveWidth  = 16,
@@ -151,7 +153,7 @@ wire wMSpiIntr;
 
 USIB #(
 	.pBlockConnectNum(lpBlockConnectNum),	.pBlockAdrsWidth(lpBlockAdrsWidth),
-	.pUsiBusWidth(lpUsiBusWidth),			.pCsrAdrsWidth(lpCsrAdrsWidth),
+	.pUsiBusWidth(lpUsiBusWidth),			.pCsrAdrsWidth(lpCsrAdrsWidth)
 ) USIB (
 	// Bus Master Read
 	.oMUsiRd(wMUsiRd),	.iSUsiRd(qSUsiRd),
@@ -192,7 +194,7 @@ localparam	lpUfiIdNumber		= 3;
 //-----------------------------------------------------------------------------
 // GPIO Block
 //-----------------------------------------------------------------------------
-localparam lpGpioWidth = 18;
+localparam lpGpioWidth = 3;
 wire [lpGpioWidth-1:0] wGPIOR_O;
 wire [lpGpioWidth-1:0] wGPIOR_Dir;
 wire [lpGpioWidth-1:0] wGPIOR_In;
@@ -248,42 +250,69 @@ SPIBlock #(
 	.iSRST(wSRST),			.iSCLK(iSCLK)
 );
 
+//-----------------------------------------------------------------------------
+// External CPU Master SPI Block or Slave SPI Block
+//-----------------------------------------------------------------------------
+wire wMIDI_In;	// Input Only
+wire wI2S_MCLK;
+wire wI2S_BCLK;
+wire wI2S_LRCLK;
+wire wI2S_SDATA;
+
+SynthesizerBlock #(
+	.pBlockAdrsWidth(lpBlockAdrsWidth),		.pAdrsMap(lpSynthesizerAdrsMap),
+	.pUsiBusWidth(lpUsiBusWidth),			.pCsrAdrsWidth(lpCsrAdrsWidth),
+	.pCsrActiveWidth(lpSynCsrActiveWidth)
+) SynthesizerBlock (
+	// External Port
+	.iMIDI(wMIDI_In),
+	.oI2S_MCLK(wI2S_MCLK),		.oI2S_BCLK(wI2S_BCLK),
+	.oI2S_LRCLK(wI2S_LRCLK),	.oI2S_SDATA(wI2S_SDATA),
+	// Bus Master Read
+	.oSUsiRd(wSUsiRd[lpSynthesizerAdrsMap]),
+	// Bus Master Write
+	.iSUsiWd(wSUsiWd),		.iSUsiAdrs(wSUsiAdrs),
+	// CLK, RST
+	.iMRST(wMRST),			.iMCLK(iMCLK),
+	.iSRST(wSRST),			.iSCLK(iSCLK)
+);
+
 
 
 //-----------------------------------------------------------------------------
 // IO Connect
 // Trion,Titanium はユーザーが使用可能な IOプリミティブは無いため、
 // 階層を深くせずソースの修正が簡単にすることを目的として Top module に接続する仕様にした
-// 
-// 使用していない IO は Input 設定にしておく。
+// OE "0"=Input, "1"=Output
 //-----------------------------------------------------------------------------
 // GPIOL
 wire [5:0] wIunsedL;
-assign ioGPIOL_O[0]     = 1'b0;			assign  wIunsedL[0]  = ioGPIOL_I[0];	assign ioGPIOL_OE[0] = 1'b1;
-assign ioGPIOL_O[1]     = 1'b0;			assign  wIunsedL[1]  = ioGPIOL_I[1];	assign ioGPIOL_OE[1] = 1'b1;
-assign ioGPIOL_O[2]     = 1'b0;			assign  wIunsedL[2]  = ioGPIOL_I[2];	assign ioGPIOL_OE[2] = 1'b1;
-assign ioGPIOL_O[3]     = 1'b0;			assign  wIunsedL[3]  = ioGPIOL_I[3];	assign ioGPIOL_OE[3] = 1'b1;
-assign ioGPIOL_O[4]     = 1'b0;			assign  wIunsedL[4]  = ioGPIOL_I[4];	assign ioGPIOL_OE[4] = 1'b1;
-assign ioGPIOL_O[5]     = 1'b0;			assign  wIunsedL[5]  = ioGPIOL_I[5];	assign ioGPIOL_OE[5] = 1'b1;
+wire [17:0] wIunsedR;
+assign ioGPIOL_O[0]     = 1'b0;			assign  wIunsedL[0]  = ioGPIOL_I[0];	assign ioGPIOL_OE[0] = 1'b0;
+assign ioGPIOL_O[1]     = 1'b0;			assign  wIunsedL[1]  = ioGPIOL_I[1];	assign ioGPIOL_OE[1] = 1'b0;
+assign ioGPIOL_O[2]     = 1'b0;			assign  wIunsedL[2]  = ioGPIOL_I[2];	assign ioGPIOL_OE[2] = 1'b0;
+assign ioGPIOL_O[3]     = 1'b0;			assign  wIunsedL[3]  = ioGPIOL_I[3];	assign ioGPIOL_OE[3] = 1'b0;
+assign ioGPIOL_O[4]     = 1'b0;			assign  wIunsedL[4]  = ioGPIOL_I[4];	assign ioGPIOL_OE[4] = 1'b0;
+assign ioGPIOL_O[5]     = 1'b0;			assign  wIunsedL[5]  = ioGPIOL_I[5];	assign ioGPIOL_OE[5] = 1'b0;
 // GPIOR
-assign ioGPIOR_O[0]     = wGPIOR_O[0];	assign  wGPIOR_In[0]  = ioGPIOR_I[0];	assign ioGPIOR_OE[0]  = wGPIOR_Dir[0];
-assign ioGPIOR_O[1]     = wGPIOR_O[1];	assign  wGPIOR_In[1]  = ioGPIOR_I[1];	assign ioGPIOR_OE[1]  = wGPIOR_Dir[1];
-assign ioGPIOR_O[2]     = wGPIOR_O[2];	assign  wGPIOR_In[2]  = ioGPIOR_I[2];	assign ioGPIOR_OE[2]  = wGPIOR_Dir[2];
-assign ioGPIOR_O[3]     = wGPIOR_O[3];	assign  wGPIOR_In[3]  = ioGPIOR_I[3];	assign ioGPIOR_OE[3]  = wGPIOR_Dir[3];
-assign ioGPIOR_O[4]     = wGPIOR_O[4];	assign  wGPIOR_In[4]  = ioGPIOR_I[4];	assign ioGPIOR_OE[4]  = wGPIOR_Dir[4];
-assign ioGPIOR_O[5]     = wGPIOR_O[5];	assign  wGPIOR_In[5]  = ioGPIOR_I[5];	assign ioGPIOR_OE[5]  = wGPIOR_Dir[5];
-assign ioGPIOR_O[6]     = wGPIOR_O[6];	assign  wGPIOR_In[6]  = ioGPIOR_I[6];	assign ioGPIOR_OE[6]  = wGPIOR_Dir[6];
-assign ioGPIOR_O[7]     = wGPIOR_O[7];	assign  wGPIOR_In[7]  = ioGPIOR_I[7];	assign ioGPIOR_OE[7]  = wGPIOR_Dir[7];
-assign ioGPIOR_O[8]     = wGPIOR_O[8];	assign  wGPIOR_In[8]  = ioGPIOR_I[8];	assign ioGPIOR_OE[8]  = wGPIOR_Dir[8];
-assign ioGPIOR_O[9]     = wGPIOR_O[9];	assign  wGPIOR_In[9]  = ioGPIOR_I[9];	assign ioGPIOR_OE[9]  = wGPIOR_Dir[9];
-assign ioGPIOR_O[10]    = wGPIOR_O[10];	assign  wGPIOR_In[10] = ioGPIOR_I[10];	assign ioGPIOR_OE[10] = wGPIOR_Dir[10];
-assign ioGPIOR_O[11]    = wGPIOR_O[11];	assign  wGPIOR_In[11] = ioGPIOR_I[11];	assign ioGPIOR_OE[11] = wGPIOR_Dir[11];
-assign ioGPIOR_O[12]    = wGPIOR_O[12];	assign  wGPIOR_In[12] = ioGPIOR_I[12];	assign ioGPIOR_OE[12] = wGPIOR_Dir[12];
-assign ioGPIOR_O[13]    = wGPIOR_O[13];	assign  wGPIOR_In[13] = ioGPIOR_I[13];	assign ioGPIOR_OE[13] = wGPIOR_Dir[13];
+assign ioGPIOR_O[0]     = 1'b0;			assign  wIunsedR[0]  = ioGPIOR_I[0];	assign ioGPIOR_OE[0]  = 1'b0;
+assign ioGPIOR_O[1]     = 1'b0;			assign  wIunsedR[1]  = ioGPIOR_I[1];	assign ioGPIOR_OE[1]  = 1'b0;
+assign ioGPIOR_O[2]     = 1'b0;			assign  wIunsedR[2]  = ioGPIOR_I[2];	assign ioGPIOR_OE[2]  = 1'b0;
+assign ioGPIOR_O[3]     = 1'b0;			assign  wIunsedR[3]  = ioGPIOR_I[3];	assign ioGPIOR_OE[3]  = 1'b0;
+assign ioGPIOR_O[4]     = 1'b0;			assign  wIunsedR[4]  = ioGPIOR_I[4];	assign ioGPIOR_OE[4]  = 1'b0;
+assign ioGPIOR_O[5]     = 1'b0;			assign  wIunsedR[5]  = ioGPIOR_I[5];	assign ioGPIOR_OE[5]  = 1'b0;
+assign ioGPIOR_O[6]     = 1'b0;			assign  wIunsedR[6]  = ioGPIOR_I[6];	assign ioGPIOR_OE[6]  = 1'b0;
+assign ioGPIOR_O[7]     = 1'b0;			assign  wMIDI_In 	 = ioGPIOR_I[7];	assign ioGPIOR_OE[7]  = 1'b0;
+assign ioGPIOR_O[8]     = 1'b0;			assign  wIunsedR[8]  = ioGPIOR_I[8];	assign ioGPIOR_OE[8]  = 1'b0;
+assign ioGPIOR_O[9]     = 1'b0;			assign  wIunsedR[9]  = ioGPIOR_I[9];	assign ioGPIOR_OE[9]  = 1'b0;
+assign ioGPIOR_O[10]    = 1'b0;			assign  wIunsedR[10] = ioGPIOR_I[10];	assign ioGPIOR_OE[10] = 1'b0;
+assign ioGPIOR_O[11]    = 1'b0;			assign  wIunsedR[11] = ioGPIOR_I[11];	assign ioGPIOR_OE[11] = 1'b0;
+assign ioGPIOR_O[12]    = 1'b0;			assign  wIunsedR[12] = ioGPIOR_I[12];	assign ioGPIOR_OE[12] = 1'b0;
+assign ioGPIOR_O[13]    = 1'b0;			assign  wIunsedR[13] = ioGPIOR_I[13];	assign ioGPIOR_OE[13] = 1'b0;
 assign ioGPIOR_O[14] 	= wGPIOR_O[14];	assign  wGPIOR_In[14] = ioGPIOR_I[14];	assign ioGPIOR_OE[14] = wGPIOR_Dir[14];
 assign ioGPIOR_O[15] 	= wGPIOR_O[15];	assign  wGPIOR_In[15] = ioGPIOR_I[15];	assign ioGPIOR_OE[15] = wGPIOR_Dir[15];
 assign ioGPIOR_O[16] 	= wGPIOR_O[16];	assign  wGPIOR_In[16] = ioGPIOR_I[16];	assign ioGPIOR_OE[16] = wGPIOR_Dir[16];
-assign ioGPIOR_O[17]    = wGPIOR_O[17];	assign  wGPIOR_In[17] = ioGPIOR_I[17];	assign ioGPIOR_OE[17] = wGPIOR_Dir[17];
+assign ioGPIOR_O[17]    = 1'b0;			assign  wIunsedR[17] = ioGPIOR_I[17];	assign ioGPIOR_OE[17] = 1'b0;
 // GPIOB
 wire [23:0] wIunsedB;
 assign ioGPIOB_O[0]  = 1'b0;			assign wIunsedB[0]	= ioGPIOB_I[0];		assign ioGPIOB_OE[0]  = 1'b1;
@@ -304,10 +333,10 @@ assign ioGPIOB_O[14] = wMasterSck;		assign wSlaveSck	= ioGPIOB_I[14];	assign ioG
 assign ioGPIOB_O[15] = wMasterMosi;		assign wSlaveMosi	= ioGPIOB_I[15];	assign ioGPIOB_OE[15] = wSpiDir;
 assign ioGPIOB_O[16] = wMasterCs;		assign wSlaveCs		= ioGPIOB_I[16];	assign ioGPIOB_OE[16] = wSpiDir;
 assign ioGPIOB_O[17] = 1'b0;			assign wIoSpiDir	= ioGPIOB_I[17];	assign ioGPIOB_OE[17] = 1'b1;
-assign ioGPIOB_O[18] = 1'b0;			assign wIunsedB[18]	= ioGPIOB_I[18];	assign ioGPIOB_OE[18] = 1'b1;
-assign ioGPIOB_O[19] = 1'b0;			assign wIunsedB[19]	= ioGPIOB_I[19];	assign ioGPIOB_OE[19] = 1'b1;
-assign ioGPIOB_O[20] = 1'b0;			assign wIunsedB[20]	= ioGPIOB_I[20];	assign ioGPIOB_OE[20] = 1'b1;
-assign ioGPIOB_O[21] = 1'b0;			assign wIunsedB[21]	= ioGPIOB_I[21];	assign ioGPIOB_OE[21] = 1'b1;
+assign ioGPIOB_O[18] = wI2S_MCLK;		assign wIunsedB[18]	= ioGPIOB_I[18];	assign ioGPIOB_OE[18] = 1'b1; // Out Only
+assign ioGPIOB_O[19] = wI2S_BCLK;		assign wIunsedB[19]	= ioGPIOB_I[19];	assign ioGPIOB_OE[19] = 1'b1; // Out Only
+assign ioGPIOB_O[20] = wI2S_SDATA;		assign wIunsedB[20]	= ioGPIOB_I[20];	assign ioGPIOB_OE[20] = 1'b1; // Out Only
+assign ioGPIOB_O[21] = wI2S_LRCLK;		assign wIunsedB[21]	= ioGPIOB_I[21];	assign ioGPIOB_OE[21] = 1'b1; // Out Only
 assign ioGPIOB_O[22] = 1'b0;			assign wIunsedB[22]	= ioGPIOB_I[22];	assign ioGPIOB_OE[22] = 1'b1;
 assign ioGPIOB_O[23] = 1'b0;			assign wIunsedB[23]	= ioGPIOB_I[23];	assign ioGPIOB_OE[23] = 1'b1;
 // External IO

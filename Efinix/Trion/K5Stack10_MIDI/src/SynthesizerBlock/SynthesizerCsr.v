@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// Create 2023/4/09
+// Create 2023/4/15
 // Author koutakimura
 // -
 // Slave コントロール・ステータス・レジスタ
@@ -8,9 +8,9 @@
 // 自動レジスタ更新は、上位モジュールからの input port とレジスタを接続する。
 // 上位モジュールへの output port は必ずレジスタ経由で出力する。
 // 
-// 2023/04/08 V1.0 nre release
+// 2023/04/15 V1.0 nre release
 //------------------------------------------------------------------------------
-module I2SCsr #(
+module SynthesizerCsr #(
 	parameter pBlockAdrsWidth = 8,
 	parameter [pBlockAdrsWidth-1:0] pAdrsMap = 'h01,
 	parameter pUsiBusWidth = 32,
@@ -19,11 +19,7 @@ module I2SCsr #(
 	parameter p_non_variable = 0
 )(
 	// Csr Output
-	output [pGpioWidth-1:0]	oGpioOutCtrl,
-	output [pGpioWidth-1:0]	oGpioDir,
-	output [pGpioWidth-1:0]	oGpioAltMode,
-	// Csr Input
-	input  [pGpioWidth-1:0]	iGpioIn,
+	output oI2SModuleRst,
 	// Bus Master Read
 	output [pUsiBusWidth-1:0] oSUsiRd,	// Read Data
 	// Bus Master Write
@@ -38,35 +34,25 @@ module I2SCsr #(
 //----------------------------------------------------------
 // レジスタマップ
 //----------------------------------------------------------
-reg [pGpioWidth-1:0]	rGpioOutCtrl;		assign 	oGpioOutCtrl	= rGpioOutCtrl;	// 汎用 GPIO ON/OFF 制御
-reg [pGpioWidth-1:0]	rGpioDir;			assign 	oGpioDir  		= rGpioDir;		// 汎用 GPIO IN/OUT 制御
-reg [pGpioWidth-1:0]	rGpioAltMode;		assign 	oGpioAltMode	= rGpioAltMode;	// 汎用 GPIO Altnate Mode
+reg rI2SModuleRst;		assign 	oI2SModuleRst	= rI2SModuleRst;	// 汎用 GPIO ON/OFF 制御
 //
 reg qCsrWCke00;
-reg qCsrWCke04;
-reg qCsrWCke08;
 //
 always @(posedge iSCLK)
 begin
 	if (iSRST)
 	begin
-		rGpioOutCtrl	<= {pGpioWidth{1'b0}};
-		rGpioDir		<= {pGpioWidth{1'b1}};
-		rGpioAltMode 	<= {pGpioWidth{1'b0}};
+		rI2SModuleRst	<= 1'b0;
 	end
 	else
 	begin
-		rGpioOutCtrl	<= qCsrWCke00 ? iSUsiWd[pGpioWidth-1:0] : rGpioOutCtrl;
-		rGpioDir		<= qCsrWCke04 ? iSUsiWd[pGpioWidth-1:0] : rGpioDir;
-		rGpioAltMode	<= qCsrWCke08 ? iSUsiWd[pGpioWidth-1:0] : rGpioAltMode;
+		rI2SModuleRst	<= qCsrWCke00 ? iSUsiWd[0:0] : rI2SModuleRst;
 	end
 end
 
 always @*
 begin
 	qCsrWCke00 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
-	qCsrWCke04 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
-	qCsrWCke08 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
 end
 
 //----------------------------------------------------------
@@ -78,10 +64,8 @@ always @(posedge iSCLK)
 begin
 	// {{(32 - パラメータ名	){1'b0}}, レジスタ名} -> パラメータ可変に対応し 0 で埋められるように設定
 	case (iSUsiAdrs[pCsrActiveWidth-1:0])
-		'h00:	 rSUsiRd <= {{(32 - pGpioWidth	){1'b0}}, rGpioOutCtrl};
-		'h04:	 rSUsiRd <= {{(32 - pGpioWidth	){1'b0}}, rGpioDir};
-		'h08:	 rSUsiRd <= {{(32 - pGpioWidth	){1'b0}}, rGpioAltMode};
-		'h40:	 rSUsiRd <= {{(32 - pGpioWidth	){1'b0}}, iGpioIn};
+		'h00:	 rSUsiRd <= {{(32 - 1){1'b0}}, rI2SModuleRst};
+		default: rSUsiRd <= iSUsiWd;
 	endcase
 end
 
