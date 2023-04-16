@@ -9,7 +9,6 @@
  * 
  *-----------------------------------------------------------------------------*/	
 module K5Stack10MidiTop(
-	//
 	// GPIOL
 	input 	[ 5:0] ioGPIOL_I,
 	output 	[ 5:0] ioGPIOL_O,
