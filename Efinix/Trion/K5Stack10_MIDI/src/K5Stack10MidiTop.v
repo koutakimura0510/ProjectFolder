@@ -309,9 +309,9 @@ assign ioGPIOR_O[10]    = 1'b0;			assign  wIunsedR[10] = ioGPIOR_I[10];	assign i
 assign ioGPIOR_O[11]    = 1'b0;			assign  wIunsedR[11] = ioGPIOR_I[11];	assign ioGPIOR_OE[11] = 1'b0;
 assign ioGPIOR_O[12]    = 1'b0;			assign  wIunsedR[12] = ioGPIOR_I[12];	assign ioGPIOR_OE[12] = 1'b0;
 assign ioGPIOR_O[13]    = 1'b0;			assign  wIunsedR[13] = ioGPIOR_I[13];	assign ioGPIOR_OE[13] = 1'b0;
-assign ioGPIOR_O[14] 	= wGPIOR_O[14];	assign  wGPIOR_In[14] = ioGPIOR_I[14];	assign ioGPIOR_OE[14] = wGPIOR_Dir[14];
-assign ioGPIOR_O[15] 	= wGPIOR_O[15];	assign  wGPIOR_In[15] = ioGPIOR_I[15];	assign ioGPIOR_OE[15] = wGPIOR_Dir[15];
-assign ioGPIOR_O[16] 	= wGPIOR_O[16];	assign  wGPIOR_In[16] = ioGPIOR_I[16];	assign ioGPIOR_OE[16] = wGPIOR_Dir[16];
+assign ioGPIOR_O[14] 	= wGPIOR_O[0];	assign  wGPIOR_In[0] = ioGPIOR_I[14];	assign ioGPIOR_OE[14] = wGPIOR_Dir[0];
+assign ioGPIOR_O[15] 	= wGPIOR_O[1];	assign  wGPIOR_In[1] = ioGPIOR_I[15];	assign ioGPIOR_OE[15] = wGPIOR_Dir[1];
+assign ioGPIOR_O[16] 	= wGPIOR_O[2];	assign  wGPIOR_In[2] = ioGPIOR_I[16];	assign ioGPIOR_OE[16] = wGPIOR_Dir[2];
 assign ioGPIOR_O[17]    = 1'b0;			assign  wIunsedR[17] = ioGPIOR_I[17];	assign ioGPIOR_OE[17] = 1'b0;
 // GPIOB
 wire [23:0] wIunsedB;

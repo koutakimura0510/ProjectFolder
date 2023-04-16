@@ -29,39 +29,48 @@ PCM5102Aの仕様上、32bit SDATA は [0][31][30][29]...[1]の順番で送信�
 
  *-----------------------------------------------------------------------------*/
 localparam lpMclkCntWidth = 8;
-reg  [lpMclkCntWidth-1:0] rMclkCnt;	// 最大カウント時 = 48KHzの周波数
+genvar x;
+reg  [1:0] rMclkBCnt;	// BCLK 生成カウンタ  = 3.072MHz
+reg  [lpMclkCntWidth-1:0] rMclkLRCnt;	// LRCLK 生成カウンタ = 48KHz
 reg  rBclk, qBclkCke;
 reg  rLRclk, qLRclkCke;
-reg  [31:0] rSdata;
+reg  [31:0] rSdata, qSdata;
+reg  qSdataSftCke;
 // control
 reg  rRdy, qRdyCke;
 
 always @(negedge iMCLK)
 begin
-	if (iMRST) 			rMclkCnt <= {lpMclkCntWidth{1'b0}};
-	else 				rMclkCnt <= rMclkCnt + 1'b1;
+
+	if (iMRST) 			rMclkBCnt <= 2'd0;
+	else if	(qBclkCke)	rMclkBCnt <= 2'd0;
+	else 				rMclkBCnt <= rMclkBCnt + 1'b1;
 
 	if (iMRST) 			rBclk <= 1'b0;
 	else if	(qBclkCke)	rBclk <= ~rBclk;
 	else 				rBclk <=  rBclk;
 
+	if (iMRST) 			rMclkLRCnt <= {lpMclkCntWidth{1'b0}};
+	else 				rMclkLRCnt <= rMclkLRCnt + 1'b1;
+
 	if (iMRST) 			rLRclk <= 1'b0;
 	else if	(qLRclkCke)	rLRclk <= ~rLRclk;
 	else 				rLRclk <=  rLRclk;
 
-	if (qLRclkCke)		rSdata <= {iAudioData[0],iAudioData[31:1]};
-	else if	(qBclkCke)	rSdata <= {rSdata[30:0],1'b0};
-	else 				rSdata <=  rSdata;
+	if (qLRclkCke)			rSdata <=  qSdata;
+	else if	(qSdataSftCke)	rSdata <= {rSdata[30:0],1'b0};
+	else 					rSdata <=  rSdata;
 
 	if (iMRST) 			rRdy <= 1'b0;	//Right音源出力のときに、次の音源データを読みこみ
 	else if	(qRdyCke)	rRdy <= 1'b1;	// Ready Valid のタイミング入れ違い対策として
-	else 				rRdy <= 1'b0;	// Rdy は 1パルスショットの動作とする
+	else 				rRdy <= 1'b0;	// Rdy は 1ショットパルスの動作とする
 end
 
 always @*
 begin
-	qBclkCke  <= rMclkCnt[1];
-	qLRclkCke <= rMclkCnt == {lpMclkCntWidth{1'b1}};
+	qBclkCke  <= rMclkBCnt == 2'd3;
+	qLRclkCke <= rMclkLRCnt == {lpMclkCntWidth{1'b1}};
+	qSdataSftCke <= qBclkCke & rBclk;	// BCLK のたち下がりエッジで SDATAシフト
 	qRdyCke   <= qLRclkCke & (~rLRclk);
 end
 
@@ -70,5 +79,45 @@ assign oI2S_BCLK	= rBclk;
 assign oI2S_LRCLK	= rLRclk;
 assign oI2S_SDATA	= rSdata[31];
 assign oAudioDataRdy= rRdy;
+
+
+//-----------------------------------------------------------------------------
+// PCM5102 I2S仕様に則り、ビット位置を変更
+//-----------------------------------------------------------------------------
+always @*
+begin
+	qSdata[0] <= iAudioData[30];
+	qSdata[1] <= iAudioData[29];
+	qSdata[2] <= iAudioData[28];
+	qSdata[3] <= iAudioData[27];
+	qSdata[4] <= iAudioData[26];
+	qSdata[5] <= iAudioData[25];
+	qSdata[6] <= iAudioData[24];
+	qSdata[7] <= iAudioData[23];
+	qSdata[8] <= iAudioData[22];
+	qSdata[9] <= iAudioData[21];
+	qSdata[10] <= iAudioData[20];
+	qSdata[11] <= iAudioData[19];
+	qSdata[12] <= iAudioData[18];
+	qSdata[13] <= iAudioData[17];
+	qSdata[14] <= iAudioData[16];
+	qSdata[15] <= iAudioData[15];
+	qSdata[16] <= iAudioData[14];
+	qSdata[17] <= iAudioData[13];
+	qSdata[18] <= iAudioData[12];
+	qSdata[19] <= iAudioData[11];
+	qSdata[20] <= iAudioData[10];
+	qSdata[21] <= iAudioData[9];
+	qSdata[22] <= iAudioData[8];
+	qSdata[23] <= iAudioData[7];
+	qSdata[24] <= iAudioData[6];
+	qSdata[25] <= iAudioData[5];
+	qSdata[26] <= iAudioData[4];
+	qSdata[27] <= iAudioData[3];
+	qSdata[28] <= iAudioData[2];
+	qSdata[29] <= iAudioData[1];
+	qSdata[30] <= iAudioData[0];
+	qSdata[31] <= iAudioData[31];
+end
 
 endmodule

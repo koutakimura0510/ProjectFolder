@@ -60,7 +60,7 @@ I2SSignalGen I2SSignalGen(
 	.oI2S_MCLK(oI2S_MCLK),		.oI2S_BCLK(oI2S_BCLK),
 	.oI2S_LRCLK(oI2S_LRCLK),	.oI2S_SDATA(oI2S_SDATA),
 	// Control and Data
-	.iAudioData(32),	.oAudioDataRdy(),
+	.iAudioData('h8000_0002),	.oAudioDataRdy(),
 	// CLK RST
 	.iMRST(iMRST),	.iSRST(iSRST),
 	.iMCLK(iMCLK),	.iSCLK(iSCLK)
@@ -71,14 +71,16 @@ I2SSignalGen I2SSignalGen(
 // RST Gen
 // 異なるクロックドメインのクロック切り替え用途
 //-----------------------------------------------------------------------------
-always @(posedge iCLK)
-begin
-	if (iRST) Q <= D;
-	else Q <= D;
-end
-always @*
-begin
+// reg [1:0] rI2SModuleRst;
+
+// always @(posedge iMCLK)
+// begin
+// 	if (iMRST) 	rI2SModuleRst <= 2'b11;
+// 	else 		rI2SModuleRst <= {rI2SModuleRst[0],wI2SModuleRst};
+// end
+// always @*
+// begin
 	
-end
+// end
 
 endmodule
