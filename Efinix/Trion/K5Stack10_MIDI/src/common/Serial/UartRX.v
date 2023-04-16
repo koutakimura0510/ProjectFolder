@@ -1,9 +1,3 @@
-//----------------------------------------------------------
-// Clk Enable信号生成モジュール
-// 
-// 	2022-7-18:	pSysClk のタイミングで pTimeCke 分カウント時 Cke 出力
-// 	2022-7-28:	Enable 生成タイミングをパラメータ設定とレジスタ経由から設定できるように変更
-//----------------------------------------------------------
 /*-----------------------------------------------------------------------------
  * Create  2023/04/15
  * Author  kouta kimura
@@ -42,7 +36,7 @@ reg  qBaudRateCntMaxCke;
 reg  [3:0] rSampCnt;
 reg  qSampCke;
 reg  qRdCke;
-reg  [7:0] rRd;			assign oRd = {rRd[0],rRd[1],rRd[2],rRd[3],rRd[4],rRd[5],rRd[6],rRd[7]};	// LSB から取得するので Bit Swap する
+reg  [7:0] rRd;			assign oRd = {rRd[0],rRd[1],rRd[2],rRd[3],rRd[4],rRd[5],rRd[6],rRd[7]};	// iUartRX は LSB から取得するので Bit Swap する
 reg  rVd, qVdCke;		assign oVd = rVd;
 
 always @(posedge iCLK)
@@ -54,9 +48,9 @@ begin
 	else
 	begin
 		case (rState)
-			lpStartBit:	rState	<= (iUartRX) ? lpStartBit : lpSampling;
+			lpStartBit:	rState	<= (iUartRX) ? lpStartBit : lpSampling;		// Low遷移検出
 			lpSampling:	rState	<= (qSampCke) ? lpStopBit : lpSampling;
-			lpStopBit: 	rState	<= (qBaudRateCntMaxCke) ? lpStartBit : lpStopBit;
+			lpStopBit: 	rState	<= (qBaudRateCntMaxCke) ? lpStartBit : lpStopBit;	// StopBit は送信されるものとして、特に検出せずにボーレートの速度で lpStartBit に遷移
 			default: 	rState	<= lpStartBit;
 		endcase
 	end
@@ -64,18 +58,18 @@ end
 
 always @(posedge iCLK)
 begin
-	if (qRdCke) rRd <= {rRd[6:0], iUartRX};	// ボーレートの速度でサンプル
+	if (qRdCke) rRd <= {rRd[6:0], iUartRX};	// ボーレートの速度でサンプリング
 	else 		rRd <=  rRd;
 
 	if (iRST)				rVd <= 1'b0;
-	else if (qVdCke)		rVd <= 1'b1;
+	else if (qVdCke)		rVd <= 1'b1;	// 1ショットパルスの生成
 	else 					rVd <= 1'b0;
 
 	if (rState==lpStartBit)			rSampCnt <= 4'd0;
-	else if (qBaudRateCntMaxCke)	rSampCnt <= rSampCnt + 1'b1;	// 8bit検出時にサンプリング完了信号生成
+	else if (qBaudRateCntMaxCke)	rSampCnt <= rSampCnt + 1'b1;	// サンプリング回数をカウント
 	else 							rSampCnt <= rSampCnt;
 
-	if (rState==lpStartBit) 		rBaudRateCnt <= {lpBaudRateWidth{1'b0}};
+	if (rState==lpStartBit) 		rBaudRateCnt <= {lpBaudRateWidth{1'b0}};	// Start Bit 検出から、カウンターを動作させて、TX側とボーレートの同期を取る。
 	else if (qBaudRateCntMaxCke)	rBaudRateCnt <= {lpBaudRateWidth{1'b0}};
 	else 							rBaudRateCnt <= rBaudRateCnt + 1'b1;
 end
