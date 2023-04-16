@@ -6,7 +6,7 @@
  * 
  *-----------------------------------------------------------------------------*/
 module UartRX #(
-	parameter	pBaudRate 	= 31250
+	parameter	pBaudRateGenDiv = 3200	// 100[MHz]/3200=31250[kbps]
 )(
 	// UART RX
 	input  iUartRX,
@@ -23,8 +23,8 @@ module UartRX #(
 //-----------------------------------------------------------------------------
 // UART Decord
 //-----------------------------------------------------------------------------
-localparam lpBaudRateWidth = func_getwidth(pBaudRate);
-localparam [lpBaudRateWidth-1:0] lpBaudRate = pBaudRate;
+localparam lpBaudRateWidth = func_getwidth(pBaudRateGenDiv);
+localparam [lpBaudRateWidth-1:0] lpBaudRateGenDiv = pBaudRateGenDiv;
 localparam [1:0]
 	lpStartBit = 0,
 	lpSampling = 1,
@@ -76,7 +76,7 @@ end
 
 always @*
 begin
-	qBaudRateCntMaxCke <= (rBaudRateCnt == lpBaudRate);
+	qBaudRateCntMaxCke <= (rBaudRateCnt == lpBaudRateGenDiv);
 	qSampCke <= (rSampCnt == 4'd8);
 	qRdCke   <= &{qBaudRateCntMaxCke,rState==lpSampling};
 	qVdCke   <= &{qBaudRateCntMaxCke,qSampCke};

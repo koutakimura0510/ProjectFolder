@@ -16,9 +16,7 @@ module I2SSignalGen (
 	output oAudioDataRdy,
     // CLK Reset
 	input  iMRST,
-    input  iSRST,
-	input  iMCLK,
-    input  iSCLK
+	input  iMCLK
 );
 
 

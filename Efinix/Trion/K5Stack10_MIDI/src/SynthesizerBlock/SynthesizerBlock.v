@@ -19,6 +19,9 @@ module SynthesizerBlock #(
 	output oI2S_BCLK,
 	output oI2S_LRCLK,
 	output oI2S_SDATA,
+	// Control Status data
+	output [7:0] oMidiRd,	// デバッグ用途に外部出力しておく
+	output oMidiVd,			// ;;
 	// Bus Master Read
 	output [pUsiBusWidth-1:0] oSUsiRd,
 	// Bus Master Write
@@ -53,8 +56,34 @@ SynthesizerCsr #(
 	.iSRST(iSRST),			.iSCLK(iSCLK)
 );
 
-// synthesizer
 
+//-----------------------------------------------------------------------------
+// MIDI Decorder
+//-----------------------------------------------------------------------------
+wire [7:0] wMidiRd;			assign oMidiRd = wMidiRd;
+wire wMidiVd;				assign oMidiVd = wMidiVd;
+
+UartRX #(
+	.pBaudRateGenDiv(3200)
+) UartRX (
+	// External Port
+	.iUartRX(iMIDI),
+	// Decord Data
+	.oRd(wMidiRd),	.oVd(wMidiVd),
+	// CLK RST
+	.iRST(iSRST),	.iCLK(iSCLK)
+);
+
+
+//-----------------------------------------------------------------------------
+// Synthesizer
+//-----------------------------------------------------------------------------
+// SynthesizerUnit
+
+
+//-----------------------------------------------------------------------------
+// I2S Encorder
+//-----------------------------------------------------------------------------
 I2SSignalGen I2SSignalGen(
 	// I2S Output Ctrl
 	.oI2S_MCLK(oI2S_MCLK),		.oI2S_BCLK(oI2S_BCLK),
@@ -62,8 +91,7 @@ I2SSignalGen I2SSignalGen(
 	// Control and Data
 	.iAudioData('h8000_0002),	.oAudioDataRdy(),
 	// CLK RST
-	.iMRST(iMRST),	.iSRST(iSRST),
-	.iMCLK(iMCLK),	.iSCLK(iSCLK)
+	.iMRST(iMRST),	.iMCLK(iMCLK)
 );
 
 
