@@ -253,10 +253,9 @@ SPIBlock #(
 // External CPU Master SPI Block or Slave SPI Block
 //-----------------------------------------------------------------------------
 wire wMIDI_In;	// Input Only
-wire wI2S_MCLK;
-wire wI2S_BCLK;
-wire wI2S_LRCLK;
-wire wI2S_SDATA;
+wire wI2S_MCLK, wI2S_BCLK, wI2S_LRCLK, wI2S_SDATA;
+wire [7:0] wMidiRd;
+wire wMidiVd;
 
 SynthesizerBlock #(
 	.pBlockAdrsWidth(lpBlockAdrsWidth),		.pAdrsMap(lpSynthesizerAdrsMap),
@@ -267,6 +266,8 @@ SynthesizerBlock #(
 	.iMIDI(wMIDI_In),
 	.oI2S_MCLK(wI2S_MCLK),		.oI2S_BCLK(wI2S_BCLK),
 	.oI2S_LRCLK(wI2S_LRCLK),	.oI2S_SDATA(wI2S_SDATA),
+	// Control Status data
+	.oMidiRd(wMidiRd),		.oMidiVd(wMidiVd),
 	// Bus Master Read
 	.oSUsiRd(wSUsiRd[lpSynthesizerAdrsMap]),
 	// Bus Master Write
@@ -275,6 +276,11 @@ SynthesizerBlock #(
 	.iMRST(wMRST),			.iMCLK(iMCLK),
 	.iSRST(wSRST),			.iSCLK(iSCLK)
 );
+
+
+//-----------------------------------------------------------------------------
+// Debug Core Block
+//-----------------------------------------------------------------------------
 
 
 
