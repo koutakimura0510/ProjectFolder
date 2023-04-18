@@ -18,6 +18,7 @@
         <efx:design_file name="src/SynthesizerBlock/SynthesizerCsr.v" version="default" library="default" />
         <efx:design_file name="src/SynthesizerBlock/I2SSignalGen.v" version="default" library="default" />
         <efx:design_file name="src/common/pulse/CkeGenerator.v" version="default" library="default" />
+        <efx:design_file name="src/common/Serial/UartRX.v" version="default" library="default" />
         <efx:top_vhdl_arch name="" />
     </efx:design_info>
     <efx:constraint_info>

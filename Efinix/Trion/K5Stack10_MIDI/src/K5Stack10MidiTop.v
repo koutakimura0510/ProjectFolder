@@ -372,7 +372,7 @@ assign oSRAM_OE = 1'b1;
 assign oSRAM_UB = 1'b1;
 assign oSRAM_WE = 1'b1;
 // USB UART
-assign oUSB_TX = iUSB_RX;
+assign oUSB_TX = wMIDI_In;//iUSB_RX;
 // Flash ROM SPI
 wire [3:0] wIunusedConfig;
 assign ioMOSI_O = 1'b0;		assign wIunusedConfig[0] = ioMOSI_I;	assign ioMOSI_OE = 1'b1;

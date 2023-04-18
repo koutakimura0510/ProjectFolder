@@ -1,51 +1,44 @@
 //-----------------------------------------------------------------------------
-// Create 2023/4/9
+// Create 2023/4/17
 // Author koutakimura
 // -
-// V1.0 : new Relaese I2S の制御を司る
+// V1.0 : new Relaese
 // 
 //-----------------------------------------------------------------------------
-module SynthesizerBlock #(
+module DebugCoreBlock #(
 	parameter pBlockAdrsWidth = 8,
-	parameter [pBlockAdrsWidth-1:0] pAdrsMap = 'h03,
+	parameter [pBlockAdrsWidth-1:0] pAdrsMap = 'h04,
 	parameter pUsiBusWidth = 32,
 	parameter pCsrAdrsWidth = 8,
 	parameter pCsrActiveWidth = 8
 )(
-	// MIPI Input Ctrl
-	input  iMIDI,
-	// I2S Output Ctrl
-	output oI2S_MCLK,
-	output oI2S_BCLK,
-	output oI2S_LRCLK,
-	output oI2S_SDATA,
+	// MIPI Output Ctrl
+	input  oUART_TX,
 	// Control Status data
-	output [7:0] oMidiRd,	// デバッグ用途に外部出力しておく
-	output oMidiVd,			// ;;
+	input  [7:0] iMidiRd,
+	input  iMidiVd,
 	// Bus Master Read
 	output [pUsiBusWidth-1:0] oSUsiRd,
 	// Bus Master Write
 	input  [pUsiBusWidth-1:0] iSUsiWd,
 	input  [pUsiBusWidth-1:0] iSUsiAdrs,
     // CLK Reset
-	input  iMRST,
     input  iSRST,
-	input  iMCLK,
     input  iSCLK
 );
 
 //-----------------------------------------------------------------------------
 // Csr Space
 //-----------------------------------------------------------------------------
-wire wI2SModuleRst;
+wire [2:0] wDebugMonitorSel;
 
-SynthesizerCsr #(
+DebugCoreCsr #(
 	.pBlockAdrsWidth(pBlockAdrsWidth),
 	.pAdrsMap(pAdrsMap),
 	.pUsiBusWidth(pUsiBusWidth),
 	.pCsrAdrsWidth(pCsrAdrsWidth),
 	.pCsrActiveWidth(pCsrActiveWidth)
-) SynthesizerCsr (
+) DebugCoreCsr (
 	// CSR
 	.oI2SModuleRst(wI2SModuleRst),
 	// Bus Master Read
@@ -58,57 +51,27 @@ SynthesizerCsr #(
 
 
 //-----------------------------------------------------------------------------
-// MIDI Decorder
+// UART TX
 //-----------------------------------------------------------------------------
-wire [7:0] wMidiRd;			assign oMidiRd = wMidiRd;
-wire wMidiVd;				assign oMidiVd = wMidiVd;
+reg  [7:0] qUartTxData;
 
-UartRX #(
+UartTX #(
 	.pBaudRateGenDiv(3200)
-) UartRX (
+) UartTX (
 	// External Port
-	.iUartRX(iMIDI),
-	// Decord Data
-	.oRd(wMidiRd),	.oVd(wMidiVd),
+	.oUART_TX(oUART_TX),
+	// Encord Data
+	.oRd(iMidiRd),	.oVd(iMidiVd),
 	// CLK RST
 	.iRST(iSRST),	.iCLK(iSCLK)
 );
 
-
-//-----------------------------------------------------------------------------
-// Synthesizer
-//-----------------------------------------------------------------------------
-// SynthesizerUnit
-
-
-//-----------------------------------------------------------------------------
-// I2S Encorder
-//-----------------------------------------------------------------------------
-I2SSignalGen I2SSignalGen(
-	// I2S Output Ctrl
-	.oI2S_MCLK(oI2S_MCLK),		.oI2S_BCLK(oI2S_BCLK),
-	.oI2S_LRCLK(oI2S_LRCLK),	.oI2S_SDATA(oI2S_SDATA),
-	// Control and Data
-	.iAudioData('h8000_0002),	.oAudioDataRdy(),
-	// CLK RST
-	.iMRST(iMRST),	.iMCLK(iMCLK)
-);
-
-
-//-----------------------------------------------------------------------------
-// RST Gen
-// 異なるクロックドメインのクロック切り替え用途
-//-----------------------------------------------------------------------------
-// reg [1:0] rI2SModuleRst;
-
-// always @(posedge iMCLK)
-// begin
-// 	if (iMRST) 	rI2SModuleRst <= 2'b11;
-// 	else 		rI2SModuleRst <= {rI2SModuleRst[0],wI2SModuleRst};
-// end
-// always @*
-// begin
-	
-// end
+always @*
+begin
+	case ({wDebugMonitorSel})
+	'h00:	qUartTxData <= iMidiRd;
+	default:qUartTxData <= 8'h12;
+	endcase
+end
 
 endmodule
