@@ -2,7 +2,7 @@
 // Create 2023/4/9
 // Author koutakimura
 // -
-// V1.0 : new Relaese I2S の制御を司る
+// V1.0 : new Relaese
 // 
 //-----------------------------------------------------------------------------
 module SynthesizerBlock #(
