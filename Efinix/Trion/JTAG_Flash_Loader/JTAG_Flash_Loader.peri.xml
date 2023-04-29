@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efxpt:design_db name="JTAG_Flash_Loader" device_def="T20Q144" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/JTAG_Flash_Loader" version="2022.2.322" db_version="20222999" last_change_date="Sat Apr 22 10:55:34 2023" xmlns:efxpt="http://www.efinixinc.com/peri_design_db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/peri_design_db peri_design_db.xsd ">
+<efxpt:design_db name="JTAG_Flash_Loader" device_def="T20Q144" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/JTAG_Flash_Loader" version="2022.2.322" db_version="20222999" last_change_date="Sat Apr 29 13:43:16 2023" xmlns:efxpt="http://www.efinixinc.com/peri_design_db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/peri_design_db peri_design_db.xsd ">
     <efxpt:device_info>
         <efxpt:iobank_info>
             <efxpt:iobank name="1A" iostd="3.3 V LVTTL / LVCMOS"/>
