@@ -87,7 +87,7 @@ reg [pGpioWidth-1:0] rGpioR; 		assign oGpioR = rGpioR;
 always @(posedge iSCLK)
 begin
 	rGpioR[0] <= wGpioAltModeCsr[0] ? iLocked : wGpioOutCtrl[0];
-	rGpioR[1] <= wGpioAltModeCsr[1] ? rLed : wGpioOutCtrl[1];
+	rGpioR[1] <= wGpioAltModeCsr[1] ? 1'b0 : wGpioOutCtrl[1];
 	rGpioR[2] <= wGpioAltModeCsr[2] ? rLed : wGpioOutCtrl[2];
 end
 

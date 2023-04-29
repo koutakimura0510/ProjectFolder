@@ -1,131 +1,160 @@
-//----------------------------------------------------------
-// Create 2022/9/11
-// Author koutakimura
-// -
-// 外部 RAM の管理を司るブロック
-//----------------------------------------------------------
+/*-----------------------------------------------------------------------------
+ * Create  2023/4/28
+ * Author  koutakimura
+ * -
+ * 外部 RAM の制御を行う module
+ * V1.0 : new Relaese
+ * 
+ *-----------------------------------------------------------------------------*/
 module RAMBlock #(
-	// variable parameter
-	parameter 							pBlockAdrsWidth 		= 8,
-	parameter [pBlockAdrsWidth-1:0] 		pAdrsMap	  		= 'h06,
-	parameter							pUsiBusWidth			= 32,
-	parameter 							pCsrAdrsWidth	 	= 16,
-	parameter							pCsrActiveWidth 	= 8,
-	parameter							pUfiBusWidth		= 8,
-	parameter							pUfiIdNumber		= 3,
-	//
-	parameter							pRamAdrsWidth		= 19,	// GPIO アドレス幅
-	parameter							pRamDqWidth			= 8		// GPIO データ幅
+	parameter pBlockAdrsWidth = 8,
+	parameter [pBlockAdrsWidth-1:0]	pAdrsMap = 'h04,
+	parameter pUsiBusWidth = 32,
+	parameter pCsrAdrsWidth = 16,
+	parameter pCsrActiveWidth = 8,
+	// parameter pUfiBusWidth = 8,
+	// parameter pUfiIdNumber = 3,
+	parameter pRamAdrsWidth = 16,	// GPIO アドレス幅
+	parameter pRamDqWidth = 16		// GPIO データ幅
 )(
-	// External Port
-	output 	[pRamAdrsWidth-1:0]			oMemAdrs,
-	inout	[pRamDqWidth-1:0]			ioMemDq,
-	output 								oMemOE,			// Output Enable
-	output 								oMemWE,			// Write Enable
-	output 								oMemCE,			// Chip Select
-    // Internal Port
-	// Usi Bus Slave Read
-	output	[31:0]						oSUsiRd,		// Read Data
-	output								oSUsiREd,		// Read Data Enable
-	// Usi Bus Slave Write
-	input	[31:0]						iSUsiWd,		// Master Write Data
-	input	[pUsiBusWidth-1:0]			iSUsiAdrs,		// Csr Access Adrs
-	input								iSUsiWCke,		// Data Enable
+	// SRAM I/F Port
+	output [pRamAdrsWidth-1:0] oSRAMA,
+	output [pRamDqWidth-1:0] oSRAMD,
+	input  [pRamDqWidth-1:0] iSRAMD,
+	output oSRAM_LB,	// N Lower Byte Control
+	output oSRAM_UB,	// N Upper Byte Control
+	output oSRAM_OE,	// N Output Enable
+	output oSRAM_WE,	// N Write Enable
+	output oSRAM_CE,	// N Chip Select 
+	// Bus Master Read
+	output [pUsiBusWidth-1:0] oSUsiRd,
+	// Bus Master Write
+	input  [pUsiBusWidth-1:0] iSUsiWd,
+	input  [pUsiBusWidth-1:0] iSUsiAdrs,
 	// Ufi Bus Slave Write
-	input	[pUfiBusWidth-1:0]			iSUfiWd,		// Write Data
-	input	[pUsiBusWidth-1:0]			iSUfiAdrs,		// Ufi address
-	input								iSUfiWEd,		// Adrs Enable
-	input								iSUfiREd,		// Adrs Enable
-	input   							iSUfiCmd,		// High Read, Low Write
+	// input	[pUfiBusWidth-1:0]			iSUfiWd,		// Write Data
+	// input	[pUsiBusWidth-1:0]			iSUfiAdrs,		// Ufi address
+	// input								iSUfiWEd,		// Adrs Enable
+	// input								iSUfiREd,		// Adrs Enable
+	// input   							iSUfiCmd,		// High Read, Low Write
 	// Ufi Bus Slave Read
-	output	[pUfiBusWidth-1:0]			oSUfiRd,		// Read Data
-	output								oSUfiREd,		// Read Data Enable
-	output 								oSUfiRdy,
-	// Ufi ID Lssue
-	input 	[pUfiIdNumber-1:0]			iSUfiIdI,
-	output 	[pUfiIdNumber-1:0]			oSUfiIdO,
+	// output	[pUfiBusWidth-1:0]			oSUfiRd,		// Read Data
+	// output								oSUfiREd,		// Read Data Enable
+	// output 								oSUfiRdy,
+	// // Ufi ID Lssue
+	// input 	[pUfiIdNumber-1:0]			iSUfiIdI,
+	// output 	[pUfiIdNumber-1:0]			oSUfiIdO,
     // CLK Reset
-    input           					iSRST,
-    input           					iSCLK,
-	input 								iMemClk
+    input  iSRST,
+    input  iSCLK
 );
 
 
-//----------------------------------------------------------
-// RAM Unit
-//----------------------------------------------------------
-localparam lpFifoDepath = 1024;
 
-wire wRamDualFifoSrcRstCsr;
-wire wRamDualFifoDstRstCsr;
-reg [pUfiBusWidth-1:0]	qMemRdCsr;
-
-RAMUnit #(
-	.pUfiBusWidth		(pUfiBusWidth),
-	.pUsiBusWidth		(pUsiBusWidth),
-	.pUfiIdNumber		(pUfiIdNumber),
-	.pRamFifoDepth		(lpFifoDepath),
-	.pRamAdrsWidth		(pRamAdrsWidth),
-	.pRamDqWidth		(pRamDqWidth)
-) RamUnit (
-	.oMemAdrs			(oMemAdrs),
-	.ioMemDq			(ioMemDq),
-	.oMemOE				(oMemOE),
-	.oMemWE				(oMemWE),
-	.oMemCE				(oMemCE),
-	//
-	.iSUfiWd			(iSUfiWd),
-	.iSUfiAdrs			(iSUfiAdrs),
-	.iSUfiWEd			(iSUfiWEd),
-	.iSUfiREd			(iSUfiREd),
-	.iSUfiCmd			(iSUfiCmd),
-	.oSUfiRd			(oSUfiRd),
-	.oSUfiREd			(oSUfiREd),
-	.oSUfiRdy			(oSUfiRdy),
-	//
-	.iSUfiIdI			(iSUfiIdI),
-	.oSUfiIdO			(oSUfiIdO),
-	//
-	.iRamDualFifoSrcRst	(wRamDualFifoSrcRstCsr),
-	.iRamDualFifoDstRst	(wRamDualFifoDstRstCsr),
-	//
-	.iSRST			(iSRST),
-	.iSCLK			(iSCLK),
-	.iMemClk			(iMemClk)
-);
-
-
-//----------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Csr space
-//----------------------------------------------------------
+//-----------------------------------------------------------------------------
+wire wCsrRamRst;
+reg  [pRamDqWidth-1:0] qMemRdCsr;
+
 RAMCsr #(
-	.pBlockAdrsWidth		(pBlockAdrsWidth),
-	.pAdrsMap			(pAdrsMap),	
-	.pUsiBusWidth		(pUsiBusWidth),
-	.pCsrAdrsWidth		(pCsrAdrsWidth),
-	.pCsrActiveWidth	(pCsrActiveWidth),
-	.pRamAdrsWidth		(pRamAdrsWidth),
-	.pRamDqWidth		(pRamDqWidth)
+	.pBlockAdrsWidth(pBlockAdrsWidth),		.pAdrsMap(pAdrsMap),	
+	.pUsiBusWidth(pUsiBusWidth),			
+	.pCsrAdrsWidth(pCsrAdrsWidth),			.pCsrActiveWidth(pCsrActiveWidth),
+	.pRamAdrsWidth(pRamAdrsWidth),			.pRamDqWidth(pRamDqWidth)
 ) RamCsr (
-	.oSUsiRd			(oSUsiRd),
-	.oSUsiREd			(oSUsiREd),
-	//
-	.iSUsiWd			(iSUsiWd),
-	.iSUsiAdrs			(iSUsiAdrs),
-	.iSUsiWCke			(iSUsiWCke),
-	//
-	.oRamDualFifoSrcRst	(wRamDualFifoSrcRstCsr),
-	.oRamDualFifoDstRst	(wRamDualFifoDstRstCsr),
-	//
-	.iMemRd				(qMemRdCsr),
-	//
-	.iSCLK			(iSCLK),
-	.iSRST			(iSRST)
+	.oSUsiRd(oSUsiRd),
+	.iSUsiWd(iSUsiWd),
+	.iSUsiAdrs(iSUsiAdrs),
+	// CSR
+	.oRamRst(wCsrRamRst),
+	.iMemRd(qMemRdCsr),
+	// CLK Reset
+	.iSRST(iSRST),
+	.iSCLK(iSCLK)
 );
 
-always @*
-begin
-	qMemRdCsr <= oSUfiRd;
-end
+
+//-----------------------------------------------------------------------------
+// System Clk <-> Memory Clk
+//-----------------------------------------------------------------------------
+// wire 	[pUfiBusWidth-1:0]	wMemWd;
+// wire 	[pRamAdrsWidth-1:0]	wMemAdrs;
+// wire 						wMemCmd;
+// wire 						wRVd;
+// wire 						wEmp;
+// reg 						qREd;
+// wire 						wFull;			assign oSUfiRdy = ~wFull;
+// //
+// wire 	[pUfiBusWidth-1:0]	wMemRdIf;
+// wire 						wMemREdIf;
+// wire 						wMemFull;
+
+// RAMDualClkFifo #(
+// 	.pUfiIdNumber		(pUfiIdNumber),
+// 	.pDualClkFifoDepth 	(pRamFifoDepth),
+// 	.pRamDqWidth		(pRamDqWidth),
+// 	.pRamAdrsWidth		(pRamAdrsWidth),
+// 	.pFullAlMost		(16)
+// ) RamDualClkFifo (
+// 	.iWd				(iSUfiWd),
+// 	.iAdrs				(iSUfiAdrs[pRamAdrsWidth-1:0]),
+// 	.iCmd				(iSUfiCmd),
+// 	.iWEd				(iSUfiWEd),
+// 	.oFull				(wFull),
+// 	.oWd				(wMemWd),
+// 	.oAdrs				(wMemAdrs),
+// 	.oCmd				(wMemCmd),
+// 	.iREd				(qREd),
+// 	.oEmp 				(wEmp),
+// 	.oRVd				(wRVd),
+// 	.iMemWd				(wMemRdIf),
+// 	.iMemWEd			(wMemREdIf),
+// 	.oMemRd				(oSUfiRd),
+// 	.oMemREd			(oSUfiREd),
+// 	.iMemRe				(iSUfiREd),
+// 	.oMemFull 			(wMemFull),
+// 	.iSUfiIdI			(iSUfiIdI),
+// 	.oSUfiIdO			(oSUfiIdO),
+// 	.iSrcRst			(iRamDualFifoSrcRst),
+// 	.iDstRst			(iRamDualFifoDstRst),
+// 	.iSCLK			(iSCLK),
+// 	.iMemClk			(iMemClk)
+// );
+
+// always @*
+// begin
+// 	// Read アクセス時は、読み出し元の Block の速度によっては
+// 	// FIFO にデータが蓄積されていくため、両方の状態で Ram にデータを転送するか判断する
+// 	qREd <= (~wEmp) & (~wMemFull);
+// end
+
+
+//-----------------------------------------------------------------------------
+// RAM I/F
+//-----------------------------------------------------------------------------
+RAMIf #(
+	.pRamAdrsWidth(pRamAdrsWidth),
+	.pRamDqWidth(pRamDqWidth)
+) RamIf (
+	.oSRAMA(oSRAMA),
+	.oSRAMD(oSRAMD),
+	.oSRAM_LB(oSRAM_LB),
+	.oSRAM_UB(oSRAM_UB),
+	.oSRAM_OE(oSRAM_OE),
+	.oSRAM_WE(oSRAM_WE),
+	.oSRAM_CE(oSRAM_CE),
+	//
+	.iWd(wMemWd),
+	.iAdrs(wMemAdrs),
+	.iCE(~wRVd),
+	.iCmd(wMemCmd),
+	.oRd(wMemRdIf),
+	.oREd(wMemREdIf),
+	//
+	.iRST(iSRST),
+	.iMemClk(iMemClk)
+);
+
 
 endmodule

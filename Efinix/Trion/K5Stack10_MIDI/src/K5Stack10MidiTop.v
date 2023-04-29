@@ -279,6 +279,11 @@ SynthesizerBlock #(
 
 
 //-----------------------------------------------------------------------------
+// Memory Block
+//-----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
 // Debug Core Block
 //-----------------------------------------------------------------------------
 
@@ -366,11 +371,11 @@ assign ioSRAMD_O[13] = 1'b0;	assign wIoSrandd[13] = ioSRAMD_I[13];		assign ioSRA
 assign ioSRAMD_O[14] = 1'b0;	assign wIoSrandd[14] = ioSRAMD_I[14];		assign ioSRAMD_OE[14] = 1'b1;
 assign ioSRAMD_O[15] = 1'b0;	assign wIoSrandd[15] = ioSRAMD_I[15];		assign ioSRAMD_OE[15] = 1'b1;
 assign oSRAMA = 15'd0;
-assign oSRAM_CE = 1'b1;
 assign oSRAM_LB = 1'b1;
-assign oSRAM_OE = 1'b1;
 assign oSRAM_UB = 1'b1;
+assign oSRAM_OE = 1'b1;
 assign oSRAM_WE = 1'b1;
+assign oSRAM_CE = 1'b1;
 // USB UART
 assign oUSB_TX = wMIDI_In;//iUSB_RX;
 // Flash ROM SPI

@@ -8,17 +8,42 @@
  * V1.0 new release
  *-----------------------------------------------------------------------------*/
 module SynthesizerUnit (
+	// 音階入力
+	input  [6:0]  iTone,	// 0 ~ 127
+	input  [7:0]  iToneLen,	// 鳴らす長さ
 	// AUDIO OUT
-	output [31:0] oAUDIO,
+	output [31:0] oSound,
     // CLK Reset
-	input  iMRST,
     input  iSRST,
-	input  iMCLK,
     input  iSCLK
 );
 
 
+//-----------------------------------------------------------------------------
+// 入力音源から基本周波数を選択
+//-----------------------------------------------------------------------------
+reg [12:0] qSoundHz;
+
+always @*
+begin
+	case (iTone)
+		// 0~56 追加
+		7'd57:	qSoundHz <= 220;	// 中央のド
+		// 58 ~ 127追加
+		default:qSoundHz <= 440;	// ラ
+	endcase
+end
 
 
+//-----------------------------------------------------------------------------
+// 基本周波数から音源データ生成
+//-----------------------------------------------------------------------------
+reg [14:0] rSoundHzCnt;	// 48kHz周期カウンター
+
+always @(posedge iSCLK)
+begin
+	if (iSRST) 	rSoundHzCnt <= 15'd0;
+	else 		rSoundHzCnt <= rSoundHzCnt + 1'b1;
+end
 
 endmodule
