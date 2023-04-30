@@ -31,7 +31,7 @@ module K5Stack10MidiTop(
 	input 	[15:0] ioSRAMD_I,
 	output 	[15:0] ioSRAMD_O,
 	output 	[15:0] ioSRAMD_OE,
-	output 	[14:0] oSRAMA,
+	output 	[17:0] oSRAMA,
 	output 	oSRAM_CE,
 	output 	oSRAM_LB,
 	output 	oSRAM_OE,
@@ -79,29 +79,32 @@ reg rSRST, rnSRST;
 reg rMRST, rnMRST;
 wire wSRST, wnSRST;
 wire wMRST, wnMRST;
+wire wnARST;
+reg  qnARST;
 reg  qlocked;
 
-always @(posedge iMCLK, negedge qlocked)
+always @(posedge iMCLK, negedge qnARST)
 begin
-	if (!qlocked) 	rnMRST <= 1'b0;
+	if (!qnARST) 	rnMRST <= 1'b0;
 	else 			rnMRST <= 1'b1;
 
-	if (!qlocked) 	rMRST <= 1'b1;
+	if (!qnARST) 	rMRST <= 1'b1;
 	else 			rMRST <= 1'b0;
 end
 
-always @(posedge iSCLK, negedge qlocked)
+always @(posedge iSCLK, negedge qnARST)
 begin
-	if (!qlocked) 	rnSRST <= 1'b0;
+	if (!qnARST) 	rnSRST <= 1'b0;
 	else 			rnSRST <= 1'b1;
 	
-	if (!qlocked) 	rSRST <= 1'b1;
+	if (!qnARST) 	rSRST <= 1'b1;
 	else 			rSRST <= 1'b0;
 end
 
 always @*
 begin
-	qlocked = &{PLL_BR0_LOCKED, PLL_TL0_LOCKED};
+	qlocked <= &{PLL_BR0_LOCKED, PLL_TL0_LOCKED};
+	qnARST  <= wnARST & qlocked;
 end
 
 assign wSRST	= rSRST;
@@ -116,7 +119,7 @@ assign PLL_TL0_RSTN = 1'b1;
 // USI/F BUS
 //------------------------------------------------------------------------------
 localparam lpUsiBusWidth = 32;		// USIB Width
-localparam lpBlockConnectNum = 3;	// 現在接続しているブロックの個数
+localparam lpBlockConnectNum = 4;	// 現在接続しているブロックの個数
 localparam lpBlockAdrsWidth = func_getwidth(lpBlockConnectNum);
 localparam lpCsrAdrsWidth = 16;		// 各ブロック共通の基本CSR幅
 localparam lpSUsiBusWidth = (lpUsiBusWidth * lpBlockConnectNum);
@@ -124,6 +127,7 @@ localparam [lpBlockAdrsWidth-1:0] 	// ブロックアドレスマッピング �
 	lpGpioAdrsMap = 'h0,
 	lpSPIAdrsMap = 'h1,
 	lpSynthesizerAdrsMap = 'h2,
+	lpRAMAdrsMap = 'h3,
 	lpNullAdrsMap = 0;
 
 // ブロック内 Csr のアドレス幅
@@ -134,6 +138,7 @@ localparam
 	lpGpioCsrActiveWidth = 8,
 	lpSPICsrActiveWidth  = 8,
 	lpSynCsrActiveWidth  = 8,
+	lpRAMCsrActiveWidth  = 8,
 	lpNullActiveWidth	 = 8;	// 使用しない、ソースの追加がやりやすいように
 	// lpI2CCsrActiveWidth  = 8,
 	// lpVTBCsrActiveWidth  = 16,
@@ -184,10 +189,10 @@ endgenerate
 //----------------------------------------------------------
 // USIF 
 //----------------------------------------------------------
-localparam 	lpRamAdrsWidth		= 19;
-localparam 	lpRamDqWidth		= 8;
-localparam  lpUfiBusWidth		= 8;
-localparam	lpUfiIdNumber		= 3;
+localparam 	lpRamAdrsWidth	= 18;
+localparam 	lpRamDqWidth	= 16;
+localparam  lpUfiBusWidth	= 8;
+localparam	lpUfiIdNumber	= 3;
 
 
 //-----------------------------------------------------------------------------
@@ -197,6 +202,7 @@ localparam lpGpioWidth = 3;
 wire [lpGpioWidth-1:0] wGPIOR_O;
 wire [lpGpioWidth-1:0] wGPIOR_Dir;
 wire [lpGpioWidth-1:0] wGPIOR_In;
+reg  [lpGpioWidth-1:0] qGpioAltMode;
 
 GpioBlock #(
 	.pBlockAdrsWidth(lpBlockAdrsWidth),		.pAdrsMap(lpGpioAdrsMap),
@@ -208,7 +214,7 @@ GpioBlock #(
 	.oGpioR(wGPIOR_O),
 	.oGpioDir(wGPIOR_Dir),
 	// GPIO Alt Mode
-	.iLocked(qlocked),
+	.iGpioAltMode(qGpioAltMode),
 	// GPIO Input
 	.iGpioIn(wGPIOR_In),
 	// Bus Master Read
@@ -281,6 +287,37 @@ SynthesizerBlock #(
 //-----------------------------------------------------------------------------
 // Memory Block
 //-----------------------------------------------------------------------------
+wire [lpRamAdrsWidth-1:0] wSRAMA;
+wire [lpRamDqWidth-1:0]	wSRAMD_O;
+wire [lpRamDqWidth-1:0]	wSRAMD_I;
+wire wSRAM_LB;
+wire wSRAM_UB;
+wire wSRAM_OE;
+wire wSRAM_WE;
+wire wSRAM_CE;
+wire wTestErr, wDone;
+
+RAMBlock #(
+	.pBlockAdrsWidth(lpBlockAdrsWidth),		.pAdrsMap(lpRAMAdrsMap),
+	.pUsiBusWidth(lpUsiBusWidth),			.pCsrAdrsWidth(lpCsrAdrsWidth),
+	.pCsrActiveWidth(lpRAMCsrActiveWidth),
+	.pRamAdrsWidth(lpRamAdrsWidth),			.pRamDqWidth(lpRamDqWidth)
+) RAMBlock (
+	// SRAM I/F Port
+	.oSRAMA(wSRAMA),		.oSRAMD(wSRAMD_O),
+	.iSRAMD(wSRAMD_I),
+	.oSRAM_LB(wSRAM_LB),	.oSRAM_UB(wSRAM_UB),
+	.oSRAM_OE(wSRAM_OE),	.oSRAM_WE(wSRAM_WE),
+	.oSRAM_CE(wSRAM_CE),
+	// Bus Master Read
+	.oSUsiRd(wSUsiRd[lpRAMAdrsMap]),
+	// Bus Master Write
+	.iSUsiWd(wSUsiWd),		.iSUsiAdrs(wSUsiAdrs),
+	// Status
+	.oTestErr(wTestErr),	.oDone(wDone),
+	// CLK, RST
+	.iSRST(wSRST),			.iSCLK(iSCLK)
+);
 
 
 //-----------------------------------------------------------------------------
@@ -300,8 +337,8 @@ wire [5:0] wIunsedL;
 wire [17:0] wIunsedR;
 assign ioGPIOL_O[0]     = 1'b0;			assign  wIunsedL[0]  = ioGPIOL_I[0];	assign ioGPIOL_OE[0] = 1'b0;
 assign ioGPIOL_O[1]     = 1'b0;			assign  wIunsedL[1]  = ioGPIOL_I[1];	assign ioGPIOL_OE[1] = 1'b0;
-assign ioGPIOL_O[2]     = 1'b0;			assign  wIunsedL[2]  = ioGPIOL_I[2];	assign ioGPIOL_OE[2] = 1'b0;
-assign ioGPIOL_O[3]     = 1'b0;			assign  wIunsedL[3]  = ioGPIOL_I[3];	assign ioGPIOL_OE[3] = 1'b0;
+assign ioGPIOL_O[2]     = 1'b0;			assign  wIunsedL[2]  = ioGPIOL_I[2];	assign ioGPIOL_OE[2] = 1'b1;
+assign ioGPIOL_O[3]     = 1'b0;			assign  wnARST  	 = ioGPIOL_I[3];	assign ioGPIOL_OE[3] = 1'b0;
 assign ioGPIOL_O[4]     = 1'b0;			assign  wIunsedL[4]  = ioGPIOL_I[4];	assign ioGPIOL_OE[4] = 1'b0;
 assign ioGPIOL_O[5]     = 1'b0;			assign  wIunsedL[5]  = ioGPIOL_I[5];	assign ioGPIOL_OE[5] = 1'b0;
 // GPIOR
@@ -353,38 +390,48 @@ assign ioGPIOB_O[23] = 1'b0;			assign wIunsedB[23]	= ioGPIOB_I[23];	assign ioGPI
 assign ioCSI_O = ioCSI_I;
 assign ioCSI_OE = 1'b0;
 // SRAM
-wire [15:0] wIoSrandd;
-assign ioSRAMD_O[0]  = 1'b0;	assign wIoSrandd[0]  = ioSRAMD_I[0];		assign ioSRAMD_OE[0]  = 1'b1;
-assign ioSRAMD_O[1]  = 1'b0;	assign wIoSrandd[1]  = ioSRAMD_I[1];		assign ioSRAMD_OE[1]  = 1'b1;
-assign ioSRAMD_O[2]  = 1'b0;	assign wIoSrandd[2]  = ioSRAMD_I[2];		assign ioSRAMD_OE[2]  = 1'b1;
-assign ioSRAMD_O[3]  = 1'b0;	assign wIoSrandd[3]  = ioSRAMD_I[3];		assign ioSRAMD_OE[3]  = 1'b1;
-assign ioSRAMD_O[4]  = 1'b0;	assign wIoSrandd[4]  = ioSRAMD_I[4];		assign ioSRAMD_OE[4]  = 1'b1;
-assign ioSRAMD_O[5]  = 1'b0;	assign wIoSrandd[5]  = ioSRAMD_I[5];		assign ioSRAMD_OE[5]  = 1'b1;
-assign ioSRAMD_O[6]  = 1'b0;	assign wIoSrandd[6]  = ioSRAMD_I[6];		assign ioSRAMD_OE[6]  = 1'b1;
-assign ioSRAMD_O[7]  = 1'b0;	assign wIoSrandd[7]  = ioSRAMD_I[7];		assign ioSRAMD_OE[7]  = 1'b1;
-assign ioSRAMD_O[8]  = 1'b0;	assign wIoSrandd[8]  = ioSRAMD_I[8];		assign ioSRAMD_OE[8]  = 1'b1;
-assign ioSRAMD_O[9]  = 1'b0;	assign wIoSrandd[9]  = ioSRAMD_I[9];		assign ioSRAMD_OE[9]  = 1'b1;
-assign ioSRAMD_O[10] = 1'b0;	assign wIoSrandd[10] = ioSRAMD_I[10];		assign ioSRAMD_OE[10] = 1'b1;
-assign ioSRAMD_O[11] = 1'b0;	assign wIoSrandd[11] = ioSRAMD_I[11];		assign ioSRAMD_OE[11] = 1'b1;
-assign ioSRAMD_O[12] = 1'b0;	assign wIoSrandd[12] = ioSRAMD_I[12];		assign ioSRAMD_OE[12] = 1'b1;
-assign ioSRAMD_O[13] = 1'b0;	assign wIoSrandd[13] = ioSRAMD_I[13];		assign ioSRAMD_OE[13] = 1'b1;
-assign ioSRAMD_O[14] = 1'b0;	assign wIoSrandd[14] = ioSRAMD_I[14];		assign ioSRAMD_OE[14] = 1'b1;
-assign ioSRAMD_O[15] = 1'b0;	assign wIoSrandd[15] = ioSRAMD_I[15];		assign ioSRAMD_OE[15] = 1'b1;
-assign oSRAMA = 15'd0;
-assign oSRAM_LB = 1'b1;
-assign oSRAM_UB = 1'b1;
-assign oSRAM_OE = 1'b1;
-assign oSRAM_WE = 1'b1;
-assign oSRAM_CE = 1'b1;
+assign ioSRAMD_O = wSRAMD_O;			assign wSRAMD_I = ioSRAMD_I;		assign ioSRAMD_OE = {lpRamDqWidth{wSRAM_OE}};
+assign oSRAMA = wSRAMA;
+assign oSRAM_LB = wSRAM_LB;
+assign oSRAM_UB = wSRAM_UB;
+assign oSRAM_OE = wSRAM_OE;
+assign oSRAM_WE = wSRAM_WE;
+assign oSRAM_CE = wSRAM_CE;
 // USB UART
 assign oUSB_TX = wMIDI_In;//iUSB_RX;
 // Flash ROM SPI
 wire [3:0] wIunusedConfig;
-assign ioMOSI_O = 1'b0;		assign wIunusedConfig[0] = ioMOSI_I;	assign ioMOSI_OE = 1'b1;
-assign ioMISO_O = 1'b0;		assign wIunusedConfig[1] = ioMISO_I;	assign ioMISO_OE = 1'b1;
-assign ioCCK_O = 1'b0;		assign wIunusedConfig[2] = ioCCK_I;		assign ioCCK_OE  = 1'b1;
-assign ioSSN_O = 1'b0;		assign wIunusedConfig[3] = ioSSN_I;		assign ioSSN_OE  = 1'b1;
+assign ioMOSI_O = 1'b0;		assign wIunusedConfig[0] = ioMOSI_I;	assign ioMOSI_OE = 1'b0;
+assign ioMISO_O = 1'b0;		assign wIunusedConfig[1] = ioMISO_I;	assign ioMISO_OE = 1'b0;
+assign ioCCK_O = 1'b0;		assign wIunusedConfig[2] = ioCCK_I;		assign ioCCK_OE  = 1'b0;
+assign ioSSN_O = 1'b0;		assign wIunusedConfig[3] = ioSSN_I;		assign ioSSN_OE  = 1'b0;
 //
+
+//-----------------------------------------------------------------------------
+// LED Toggle
+//-----------------------------------------------------------------------------
+localparam lpCntMax = 10000000-1;
+
+reg [27:0] rCnt;
+reg rLed;
+
+always @(posedge iSCLK)
+begin
+	if (rSRST) 					rCnt <= 0;
+	else if (lpCntMax==rCnt) 	rCnt <= 0;
+	else 						rCnt <= rCnt + 1'b1;
+
+	if (rSRST) 					rLed <= 0;
+	else if (lpCntMax==rCnt) 	rLed <= ~rLed;
+	else 						rLed <= rLed;
+end
+
+always @*
+begin
+	qGpioAltMode[0] <= qlocked;
+	qGpioAltMode[1] <= wTestErr;
+	qGpioAltMode[2] <= rLed;
+end
 
 //---------------------------------------------------------------------------
 // msb側の1を検出しbit幅を取得する

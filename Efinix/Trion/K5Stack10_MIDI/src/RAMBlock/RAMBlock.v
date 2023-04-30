@@ -44,6 +44,9 @@ module RAMBlock #(
 	// // Ufi ID Lssue
 	// input 	[pUfiIdNumber-1:0]			iSUfiIdI,
 	// output 	[pUfiIdNumber-1:0]			oSUfiIdO,
+	// Status
+	output oTestErr,
+	output oDone,
     // CLK Reset
     input  iSRST,
     input  iSCLK
@@ -63,9 +66,10 @@ RAMCsr #(
 	.pCsrAdrsWidth(pCsrAdrsWidth),			.pCsrActiveWidth(pCsrActiveWidth),
 	.pRamAdrsWidth(pRamAdrsWidth),			.pRamDqWidth(pRamDqWidth)
 ) RamCsr (
+	// Bus Master Read
 	.oSUsiRd(oSUsiRd),
-	.iSUsiWd(iSUsiWd),
-	.iSUsiAdrs(iSUsiAdrs),
+	// Bus Master Write
+	.iSUsiWd(iSUsiWd),		.iSUsiAdrs(iSUsiAdrs),
 	// CSR
 	.oRamRst(wCsrRamRst),
 	.iMemRd(qMemRdCsr),
@@ -131,30 +135,55 @@ RAMCsr #(
 
 
 //-----------------------------------------------------------------------------
-// RAM I/F
+// Read Write Tester
 //-----------------------------------------------------------------------------
-RAMIf #(
+wire [pRamAdrsWidth-1:0] wAdrs;
+wire [pRamDqWidth-1:0] wWd, wRd;
+wire wCmd, wCe;
+wire wREd;
+
+MemoryReadWriteTester #(
 	.pRamAdrsWidth(pRamAdrsWidth),
 	.pRamDqWidth(pRamDqWidth)
-) RamIf (
-	.oSRAMA(oSRAMA),
-	.oSRAMD(oSRAMD),
-	.oSRAM_LB(oSRAM_LB),
-	.oSRAM_UB(oSRAM_UB),
-	.oSRAM_OE(oSRAM_OE),
-	.oSRAM_WE(oSRAM_WE),
-	.oSRAM_CE(oSRAM_CE),
-	//
-	.iWd(wMemWd),
-	.iAdrs(wMemAdrs),
-	.iCE(~wRVd),
-	.iCmd(wMemCmd),
-	.oRd(wMemRdIf),
-	.oREd(wMemREdIf),
-	//
-	.iRST(iSRST),
-	.iMemClk(iMemClk)
+) MemoryReadWriteTester (
+	// R/W Signal
+	.oAdrs(wAdrs),	.oWd(wWd),
+	.oCmd(wCmd),	.oCe(wCe),
+	.iRd(wRd),		.iREd(wREd),
+	// Status
+	.oErr(oTestErr),.oDone(oDone),
+	// CLK Reset
+    .iRST(iSRST),	.iCLK(iSCLK)
 );
 
+
+//-----------------------------------------------------------------------------
+// RAM I/F
+//-----------------------------------------------------------------------------
+reg qRamIfPortUnitCke;
+
+RAMIfPortUnit #(
+	.pRamAdrsWidth(pRamAdrsWidth),
+	.pRamDqWidth(pRamDqWidth)
+) RAMIfPortUnit (
+	// SRAM I/F Port
+	.oSRAMA(oSRAMA),		.oSRAMD(oSRAMD),
+	.iSRAMD(iSRAMD),
+	.oSRAM_LB(oSRAM_LB),	.oSRAM_UB(oSRAM_UB),
+	.oSRAM_OE(oSRAM_OE),	.oSRAM_WE(oSRAM_WE),
+	.oSRAM_CE(oSRAM_CE),
+	//
+	.iAdrs(wAdrs),	.iWd(wWd),
+	.oRd(wRd),		.oREd(wREd),
+	.iCmd(wCmd),
+	// CLK Reset
+	.iRST(iSRST),	.iCKE(qRamIfPortUnitCke),
+	.iCLK(iSCLK)
+);
+
+always @*
+begin
+	qRamIfPortUnitCke <= ~wCe;
+end
 
 endmodule

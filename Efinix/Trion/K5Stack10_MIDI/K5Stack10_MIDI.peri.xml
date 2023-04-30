@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efxpt:design_db name="K5Stack10_MIDI" device_def="T20Q144" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI" version="2022.2.322" db_version="20222999" last_change_date="Wed Apr  5 07:43:40 2023" xmlns:efxpt="http://www.efinixinc.com/peri_design_db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/peri_design_db peri_design_db.xsd ">
+<efxpt:design_db name="K5Stack10_MIDI" device_def="T20Q144" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI" version="2022.2.322" db_version="20222999" last_change_date="Sun Apr 30 20:05:35 2023" xmlns:efxpt="http://www.efinixinc.com/peri_design_db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/peri_design_db peri_design_db.xsd ">
     <efxpt:device_info>
         <efxpt:iobank_info>
             <efxpt:iobank name="1A" iostd="3.3 V LVTTL / LVCMOS"/>
@@ -390,6 +390,15 @@
         <efxpt:gpio name="oSRAMA[14]" gpio_def="GPIOL_32" mode="output" bus_name="oSRAMA" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
             <efxpt:output_config name="oSRAMA[14]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" drive_strength="4"/>
         </efxpt:gpio>
+        <efxpt:gpio name="oSRAMA[15]" gpio_def="GPIOR_104" mode="output" bus_name="oSRAMA" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
+            <efxpt:output_config name="oSRAMA[15]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" drive_strength="4"/>
+        </efxpt:gpio>
+        <efxpt:gpio name="oSRAMA[16]" gpio_def="GPIOR_95" mode="output" bus_name="oSRAMA" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
+            <efxpt:output_config name="oSRAMA[16]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" drive_strength="4"/>
+        </efxpt:gpio>
+        <efxpt:gpio name="oSRAMA[17]" gpio_def="GPIOR_94" mode="output" bus_name="oSRAMA" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
+            <efxpt:output_config name="oSRAMA[17]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" drive_strength="4"/>
+        </efxpt:gpio>
         <efxpt:gpio name="oSRAMA[1]" gpio_def="GPIOR_87" mode="output" bus_name="oSRAMA" is_lvds_gpio="false" io_standard="3.3 V LVTTL / LVCMOS">
             <efxpt:output_config name="oSRAMA[1]" name_ddio_lo="" register_option="none" clock_name="" is_clock_inverted="false" is_slew_rate="true" tied_option="none" ddio_type="none" drive_strength="4"/>
         </efxpt:gpio>
@@ -439,15 +448,15 @@
         <efxpt:bus name="ioGPIOB" mode="inout" msb="23" lsb="0"/>
         <efxpt:bus name="ioGPIOL" mode="inout" msb="5" lsb="0"/>
         <efxpt:bus name="ioSRAMD" mode="inout" msb="15" lsb="0"/>
-        <efxpt:bus name="oSRAMA" mode="output" msb="14" lsb="0"/>
+        <efxpt:bus name="oSRAMA" mode="output" msb="17" lsb="0"/>
         <efxpt:bus name="ioGPIOR" mode="inout" msb="17" lsb="0"/>
     </efxpt:gpio_info>
     <efxpt:pll_info>
         <efxpt:pll name="PLL_BR0" pll_def="PLL_BR0" ref_clock_name="" ref_clock_freq="25.0000" multiplier="64" pre_divider="1" post_divider="8" reset_name="PLL_BR0_RSTN" locked_name="PLL_BR0_LOCKED" is_ipfrz="false" is_bypass_lock="true">
-            <efxpt:output_clock name="iSCLK" number="0" out_divider="2" adv_out_phase_shift="0"/>
+            <efxpt:output_clock name="iSCLK" number="0" out_divider="4" adv_out_phase_shift="0"/>
             <efxpt:adv_prop ref_clock_mode="external" ref_clock1_name="" ext_ref_clock_id="3" clksel_name="" feedback_clock_name="" feedback_mode="internal"/>
         </efxpt:pll>
-        <efxpt:pll name="PLL_TL0" pll_def="PLL_TL0" ref_clock_name="iSCLK" ref_clock_freq="100.0000" multiplier="29" pre_divider="2" post_divider="1" reset_name="PLL_TL0_RSTN" locked_name="PLL_TL0_LOCKED" is_ipfrz="false" is_bypass_lock="true">
+        <efxpt:pll name="PLL_TL0" pll_def="PLL_TL0" ref_clock_name="iSCLK" ref_clock_freq="50.0000" multiplier="29" pre_divider="1" post_divider="1" reset_name="PLL_TL0_RSTN" locked_name="PLL_TL0_LOCKED" is_ipfrz="false" is_bypass_lock="true">
             <efxpt:output_clock name="iMCLK" number="0" out_divider="59" adv_out_phase_shift="0"/>
             <efxpt:adv_prop ref_clock_mode="core" ref_clock1_name="" ext_ref_clock_id="2" clksel_name="" feedback_clock_name="" feedback_mode="internal"/>
         </efxpt:pll>

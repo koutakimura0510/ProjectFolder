@@ -1,0 +1,696 @@
+{
+    "debug_cores": [
+        {
+            "name": "la0",
+            "type": "la",
+            "uuid": "6f5d7361742d4293b43dc48e0dc3f291",
+            "trigin_en": false,
+            "trigout_en": false,
+            "auto_inserted": true,
+            "capture_control": false,
+            "data_depth": 4096,
+            "input_pipeline": 1,
+            "probes": [
+                {
+                    "name": "RAMBlock/MemoryReadWriteTester/iRd",
+                    "width": 16,
+                    "probe_type": 1
+                },
+                {
+                    "name": "RAMBlock/MemoryReadWriteTester/iREd",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "RAMBlock/RAMIfPortUnit/rRd",
+                    "width": 16,
+                    "probe_type": 1
+                },
+                {
+                    "name": "RAMBlock/MemoryReadWriteTester/rErr",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "RAMBlock/MemoryReadWriteTester/rComp",
+                    "width": 16,
+                    "probe_type": 1
+                },
+                {
+                    "name": "RAMBlock/oDone",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "RAMBlock/oTestErr",
+                    "width": 1,
+                    "probe_type": 1
+                }
+            ]
+        }
+    ],
+    "connections": [
+        {
+            "command": "add_ports",
+            "id": 1,
+            "args": {
+                "netlist": "K5Stack10MidiTop",
+                "ports": [
+                    {
+                        "name": "jtag_inst2_CAPTURE",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_DRCK",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_RESET",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_RUNTEST",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_SEL",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_SHIFT",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_TCK",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_TDI",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_TMS",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_UPDATE",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_TDO",
+                        "dir": "out",
+                        "width": 1
+                    }
+                ]
+            }
+        },
+        {
+            "command": "instantiate",
+            "netlist": "edb_top",
+            "id": 2,
+            "instance": "edb_top_inst"
+        },
+        {
+            "command": "connect",
+            "id": 3,
+            "args": {
+                "instance": "edb_top_inst",
+                "ports": [
+                    {
+                        "name": "bscan_CAPTURE",
+                        "net": "jtag_inst2_CAPTURE"
+                    },
+                    {
+                        "name": "bscan_DRCK",
+                        "net": "jtag_inst2_DRCK"
+                    },
+                    {
+                        "name": "bscan_RESET",
+                        "net": "jtag_inst2_RESET"
+                    },
+                    {
+                        "name": "bscan_RUNTEST",
+                        "net": "jtag_inst2_RUNTEST"
+                    },
+                    {
+                        "name": "bscan_SEL",
+                        "net": "jtag_inst2_SEL"
+                    },
+                    {
+                        "name": "bscan_SHIFT",
+                        "net": "jtag_inst2_SHIFT"
+                    },
+                    {
+                        "name": "bscan_TCK",
+                        "net": "jtag_inst2_TCK"
+                    },
+                    {
+                        "name": "bscan_TDI",
+                        "net": "jtag_inst2_TDI"
+                    },
+                    {
+                        "name": "bscan_TMS",
+                        "net": "jtag_inst2_TMS"
+                    },
+                    {
+                        "name": "bscan_UPDATE",
+                        "net": "jtag_inst2_UPDATE"
+                    },
+                    {
+                        "name": "bscan_TDO",
+                        "net": "jtag_inst2_TDO"
+                    },
+                    {
+                        "name": "la0_clk",
+                        "net": "iSCLK",
+                        "path": []
+                    },
+                    {
+                        "name": "la0_probe0[0]",
+                        "net": "iRd[0]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe0[1]",
+                        "net": "iRd[1]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe0[2]",
+                        "net": "iRd[2]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe0[3]",
+                        "net": "iRd[3]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe0[4]",
+                        "net": "iRd[4]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe0[5]",
+                        "net": "iRd[5]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe0[6]",
+                        "net": "iRd[6]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe0[7]",
+                        "net": "iRd[7]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe0[8]",
+                        "net": "iRd[8]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe0[9]",
+                        "net": "iRd[9]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe0[10]",
+                        "net": "iRd[10]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe0[11]",
+                        "net": "iRd[11]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe0[12]",
+                        "net": "iRd[12]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe0[13]",
+                        "net": "iRd[13]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe0[14]",
+                        "net": "iRd[14]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe0[15]",
+                        "net": "iRd[15]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1",
+                        "net": "iREd",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2[0]",
+                        "net": "rRd[0]",
+                        "path": [
+                            "RAMBlock",
+                            "RAMIfPortUnit"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2[1]",
+                        "net": "rRd[1]",
+                        "path": [
+                            "RAMBlock",
+                            "RAMIfPortUnit"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2[2]",
+                        "net": "rRd[2]",
+                        "path": [
+                            "RAMBlock",
+                            "RAMIfPortUnit"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2[3]",
+                        "net": "rRd[3]",
+                        "path": [
+                            "RAMBlock",
+                            "RAMIfPortUnit"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2[4]",
+                        "net": "rRd[4]",
+                        "path": [
+                            "RAMBlock",
+                            "RAMIfPortUnit"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2[5]",
+                        "net": "rRd[5]",
+                        "path": [
+                            "RAMBlock",
+                            "RAMIfPortUnit"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2[6]",
+                        "net": "rRd[6]",
+                        "path": [
+                            "RAMBlock",
+                            "RAMIfPortUnit"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2[7]",
+                        "net": "rRd[7]",
+                        "path": [
+                            "RAMBlock",
+                            "RAMIfPortUnit"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2[8]",
+                        "net": "rRd[8]",
+                        "path": [
+                            "RAMBlock",
+                            "RAMIfPortUnit"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2[9]",
+                        "net": "rRd[9]",
+                        "path": [
+                            "RAMBlock",
+                            "RAMIfPortUnit"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2[10]",
+                        "net": "rRd[10]",
+                        "path": [
+                            "RAMBlock",
+                            "RAMIfPortUnit"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2[11]",
+                        "net": "rRd[11]",
+                        "path": [
+                            "RAMBlock",
+                            "RAMIfPortUnit"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2[12]",
+                        "net": "rRd[12]",
+                        "path": [
+                            "RAMBlock",
+                            "RAMIfPortUnit"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2[13]",
+                        "net": "rRd[13]",
+                        "path": [
+                            "RAMBlock",
+                            "RAMIfPortUnit"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2[14]",
+                        "net": "rRd[14]",
+                        "path": [
+                            "RAMBlock",
+                            "RAMIfPortUnit"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2[15]",
+                        "net": "rRd[15]",
+                        "path": [
+                            "RAMBlock",
+                            "RAMIfPortUnit"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe3",
+                        "net": "rErr",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4[0]",
+                        "net": "rComp[0]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4[1]",
+                        "net": "rComp[1]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4[2]",
+                        "net": "rComp[2]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4[3]",
+                        "net": "rComp[3]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4[4]",
+                        "net": "rComp[4]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4[5]",
+                        "net": "rComp[5]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4[6]",
+                        "net": "rComp[6]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4[7]",
+                        "net": "rComp[7]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4[8]",
+                        "net": "rComp[8]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4[9]",
+                        "net": "rComp[9]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4[10]",
+                        "net": "rComp[10]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4[11]",
+                        "net": "rComp[11]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4[12]",
+                        "net": "rComp[12]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4[13]",
+                        "net": "rComp[13]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4[14]",
+                        "net": "rComp[14]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4[15]",
+                        "net": "rComp[15]",
+                        "path": [
+                            "RAMBlock",
+                            "MemoryReadWriteTester"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe5",
+                        "net": "oDone",
+                        "path": [
+                            "RAMBlock"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe6",
+                        "net": "oTestErr",
+                        "path": [
+                            "RAMBlock"
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "vdbs": [
+        {
+            "file": "debug_top.post.vdb",
+            "instance": "edb_top_inst"
+        }
+    ],
+    "session": {
+        "wizard": {
+            "data_depth": 4096,
+            "capture_control": false,
+            "selected_nets": [
+                {
+                    "name": "iRd",
+                    "width": 16,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "RAMBlock",
+                        "MemoryReadWriteTester"
+                    ],
+                    "net_idx_left": 15,
+                    "net_idx_right": 0
+                },
+                {
+                    "name": "iREd",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "RAMBlock",
+                        "MemoryReadWriteTester"
+                    ]
+                },
+                {
+                    "name": "rRd",
+                    "width": 16,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "RAMBlock",
+                        "RAMIfPortUnit"
+                    ],
+                    "net_idx_left": 15,
+                    "net_idx_right": 0
+                },
+                {
+                    "name": "rErr",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "RAMBlock",
+                        "MemoryReadWriteTester"
+                    ]
+                },
+                {
+                    "name": "rComp",
+                    "width": 16,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "RAMBlock",
+                        "MemoryReadWriteTester"
+                    ],
+                    "net_idx_left": 15,
+                    "net_idx_right": 0
+                },
+                {
+                    "name": "oDone",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "RAMBlock"
+                    ]
+                },
+                {
+                    "name": "oTestErr",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "RAMBlock"
+                    ]
+                }
+            ],
+            "top_module": "K5Stack10MidiTop",
+            "db_checksum": "ba5fce12098a2c03e7bae2e9a172d1842464edfca8e284870b3519e987537970",
+            "src": "elaborate",
+            "jtag_user": "USER2",
+            "input_pipeline": 1
+        }
+    }
+}

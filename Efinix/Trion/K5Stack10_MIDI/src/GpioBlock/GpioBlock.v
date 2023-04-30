@@ -17,7 +17,7 @@ module GpioBlock #(
 	output [pGpioWidth-1:0] oGpioR,
 	output [pGpioWidth-1:0] oGpioDir,
 	// GPIO Alt Mode Signal
-	input  iLocked,
+	input  [pGpioWidth-1:0] iGpioAltMode,
 	// GPIO Input
 	input  [pGpioWidth-1:0] iGpioIn,
 	// Bus Master Read
@@ -59,26 +59,6 @@ GpioCsr #(
 
 
 //-----------------------------------------------------------------------------
-// LED Toggle
-//-----------------------------------------------------------------------------
-localparam lpCntMax = 100000000-1;
-
-reg [27:0] rCnt;
-reg rLed;
-
-always @(posedge iSCLK)
-begin
-	if (iSRST) 					rCnt <= 0;
-	else if (lpCntMax==rCnt) 	rCnt <= 0;
-	else 						rCnt <= rCnt + 1'b1;
-
-	if (iSRST) 					rLed <= 0;
-	else if (lpCntMax==rCnt) 	rLed <= ~rLed;
-	else 						rLed <= rLed;
-end
-
-
-//-----------------------------------------------------------------------------
 // IO Part
 //-----------------------------------------------------------------------------
 genvar x;
@@ -86,9 +66,9 @@ reg [pGpioWidth-1:0] rGpioR; 		assign oGpioR = rGpioR;
 
 always @(posedge iSCLK)
 begin
-	rGpioR[0] <= wGpioAltModeCsr[0] ? iLocked : wGpioOutCtrl[0];
-	rGpioR[1] <= wGpioAltModeCsr[1] ? 1'b0 : wGpioOutCtrl[1];
-	rGpioR[2] <= wGpioAltModeCsr[2] ? rLed : wGpioOutCtrl[2];
+	rGpioR[0] <= wGpioAltModeCsr[0] ? iGpioAltMode[0] : wGpioOutCtrl[0];
+	rGpioR[1] <= wGpioAltModeCsr[1] ? iGpioAltMode[1] : wGpioOutCtrl[1];
+	rGpioR[2] <= wGpioAltModeCsr[2] ? iGpioAltMode[2] : wGpioOutCtrl[2];
 end
 
 endmodule
