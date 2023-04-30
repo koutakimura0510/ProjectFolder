@@ -410,7 +410,7 @@ assign ioSSN_O = 1'b0;		assign wIunusedConfig[3] = ioSSN_I;		assign ioSSN_OE  = 
 //-----------------------------------------------------------------------------
 // LED Toggle
 //-----------------------------------------------------------------------------
-localparam lpCntMax = 10000000-1;
+localparam lpCntMax = 25000000-1;
 
 reg [27:0] rCnt;
 reg rLed;
