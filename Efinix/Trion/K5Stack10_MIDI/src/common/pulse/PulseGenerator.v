@@ -9,9 +9,9 @@ module PulseGenerator #(
     parameter [7:0]	pTimeCke 	= 8'd1,     // Enable 出力の時間指定
 	parameter [0:0] pStartPulse = 1'b1		// 起動時の Pulse の High/Low 指定
 )(
-    input   iSCLK, 
-    input   iSRST,
-    output  oPulse
+    output  oPulse,
+    input   iRST,
+    input   iCLK
 );
 
 
@@ -29,9 +29,9 @@ localparam [lpCtuCNTBits-1:0] 	lpRstCnt 	= 0;
 reg [lpCtuCNTBits-1:0] rTmpCount;
 reg qCke;
 
-always @( posedge iSCLK )
+always @( posedge iCLK )
 begin
-    if (iSRST)    rTmpCount <= lpRstCnt;
+    if (iRST)    rTmpCount <= lpRstCnt;
     else if (qCke)  rTmpCount <= lpRstCnt;
     else            rTmpCount <= rTmpCount + 1'b1;
 end
@@ -47,9 +47,9 @@ end
 reg [7:0] rTimeCkeCnt;
 reg qTimeCke;
 
-always @( posedge iSCLK )
+always @( posedge iCLK )
 begin
-    if (iSRST)        rTimeCkeCnt <= 8'd0;
+    if (iRST)        rTimeCkeCnt <= 8'd0;
     else if (qTimeCke)  rTimeCkeCnt <= 8'd0;
     else if (qCke)      rTimeCkeCnt <= rTimeCkeCnt + 1'b1;
     else                rTimeCkeCnt <= rTimeCkeCnt;
@@ -65,9 +65,9 @@ end
 //----------------------------------------------------------
 reg  rPulse;			assign oPulse = rPulse;
 
-always @(posedge iSCLK)
+always @(posedge iCLK)
 begin
-	if (iSRST) 		rPulse <= pStartPulse;
+	if (iRST) 		rPulse <= pStartPulse;
 	else if (qTimeCke)	rPulse <= ~rPulse;
 	else 				rPulse <= rPulse;
 end

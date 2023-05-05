@@ -15,8 +15,8 @@ module DualPortBramTrion #(
     input   [pAddrWidth-1:0]   iWa,    // write addr
     input                      iWe,    // write enable
     output  [pBitWidth-1:0]    oRd,    // read data
-    input   [pAddrWidth-1:0]   iRa     // read address
-    input                      iCLK,
+    input   [pAddrWidth-1:0]   iRa,     // read address
+    input                      iCLK
 );
 
 (* ram_style = "block" *) reg [pBitWidth-1:0] bram [0:pBuffDepth-1];

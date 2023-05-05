@@ -10,18 +10,14 @@ module SyncFifoController #(
     parameter 	pFifoBitWidth     	= 8,		// bitサイズ
 	parameter	pFifoBlockRam		= "yes"		// yes BRAM, no reg
 )(
-	// src side
     input   [pFifoBitWidth-1:0] iWd,        // write data
     input                       iWe,        // write enable 有効データ書き込み
     output                      oFull,      // 最大書き込み時High
-	// dst side
     output  [pFifoBitWidth-1:0] oRd,        // read data
     input                       iRe,        // read enable
     output                      oRvd,       // 有効データ出力
     output                      oEmp,       // バッファ空時High
-	// CLK, Reset
     input                       inARST,
-    input                       iRST,
     input                       iCLK
 );
 
@@ -35,10 +31,11 @@ localparam pAddrWidth  = fBitWidth(pFifoDepth);
 // アドレスの更新
 //-----------------------------------------------------------------------------
 reg  [pAddrWidth-1:0] rWa, rRa;
-wire [pAddrWidth:0]   wWa = rWa + 1'b1;
+wire [pAddrWidth-1:0] wWa = rWa + 1'b1;
 reg  qWe,qRe;
 reg  qFull;							assign oFull = qFull;
 reg  qEmp;							assign oEmp = qEmp;
+reg  rRe;							assign oRvd = rRe;
 
 always @(posedge iCLK, negedge inARST)
 begin
@@ -49,6 +46,10 @@ begin
 	if (!inARST)	rRa <= {pAddrWidth{1'b0}};
 	else if	(qRe)	rRa <= rRa + 1'b1;
 	else 			rRa <= rRa;
+
+	if (!inARST)	rRe <= 1'b0;
+	else if	(qRe)	rRe <= 1'b1;
+	else 			rRe <= 1'b0;
 end
 
 always @*
@@ -68,13 +69,13 @@ DualPortBramTrion #(
     .pBitWidth(pFifoBitWidth),
     .pAddrWidth(pAddrWidth),
 	.pFifoBlockRam(pFifoBlockRam)
-) USER_FIFO (
+) DualPortBramTrion (
 	.iWd(iWd),
 	.iWa(rWa),
 	.iWe(qWe),
 	.oRd(oRd),
 	.iRa(rRa),
-	.iCLK(iCLK),
+	.iCLK(iCLK)
 );
 
 
