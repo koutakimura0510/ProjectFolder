@@ -8,13 +8,13 @@
 TBOUT    = tbwave.out
 
 # Tb Top Module名
-TBTOP 	 = SyncFifoController_tb
+TBTOP 	 = ASyncFifoController_tb
 
 # Tb Top Module.v
-TBTOPRTL = SyncFifoController_tb.v
+TBTOPRTL = ASyncFifoController_tb.v
 
 # Tb Instance.v
-TBRTL 	 = ../SyncFifoController.v ../DualPortBramTrion.v
+TBRTL 	 = ../ASyncFifoController.v ../ASyncDualPortBramTrion.v
 COMMON   = ../../pulse/*.v
 
 sim:
