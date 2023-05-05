@@ -14,7 +14,7 @@ TBTOP 	 = RAMBlock_tb
 TBTOPRTL = RAMBlock_tb.v
 
 # Tb Instance.v
-TBRTL 	 = RAMBlock.v RAMIfPortUnit.v RAMCsr.v MemoryReadWriteTester.v
+TBRTL 	 = ../RAMBlock.v ../RAMIfPortUnit.v ../RAMCsr.v ../MemoryReadWriteTester.v
 
 sim:
 	iverilog -o $(TBOUT) -s $(TBTOP) $(TBRTL) $(TBTOPRTL)
