@@ -3,7 +3,7 @@
  * Author  koutakimura
  * -
  * 非同期リセット付き非同期クロックFIFOコントローラ module
- * 
+ * アドレス -> グレイコード変換 -> バイナリコード(２進数)変換を使用
  *-----------------------------------------------------------------------------*/
 module ASyncFifoController #(
     parameter 	pFifoDepth        	= 16,		// FIFO BRAMのサイズ指定
@@ -48,7 +48,7 @@ begin
 	else if	(qWe)	rWa <= wWa;
 	else 			rWa <= rWa;
 
-	if (!inARST)	rWGa[0] <= {pAddrWidth{1'b0}};
+	if (!inARST)	rWGa[0] <= {pAddrWidth{1'b0}};	// Binary -> GrayCode
 	else 			rWGa[0] <= {rWa[pAddrWidth-1],rWa[pAddrWidth-2:0] ^ rWa[pAddrWidth-1:1]};
 end
 
@@ -58,7 +58,7 @@ begin
 	else 			{rWGa[2],rWGa[1]} <= {rWGa[1],rWGa[0]};
 end
 
-generate
+generate	// GrayCode -> Binary
 always @*
 begin
 	for (x = pAddrWidth-1; x >= 0; x = x-1)

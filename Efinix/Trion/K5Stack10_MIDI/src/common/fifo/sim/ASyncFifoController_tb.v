@@ -11,7 +11,7 @@ module ASyncFifoController_tb;
 // Top Module Connect
 //----------------------------------------------------------
 localparam	lpSCLKCycle   = 2;	// CLK サイクル
-localparam	lpBCLKCycle   = 7;	// CLK サイクル
+localparam	lpBCLKCycle   = 16;	// CLK サイクル
 localparam	lpSimlationTime = 2000;	// シミュレーション時間を指定
 // parameter [3:0]		pBlockConnectNum		= 10; 				// Busに接続する Slave数 最大16
 // parameter [3:0]		pBlockConnectNumWidth 	= pBlockConnectNum - 1'b1;	// Busに接続する Slave数 最大16
@@ -49,8 +49,8 @@ endtask
 //-----------------------------------------------------------------------------
 // Fifo Read Write Tester
 //-----------------------------------------------------------------------------
-localparam lpFifoDepth		= 1024;
-localparam lpFifoBitWidth 	= 4;
+localparam lpFifoDepth		= 16;
+localparam lpFifoBitWidth 	= 8;
 
 reg  [lpFifoBitWidth-1:0] rWd, rRd;
 wire [lpFifoBitWidth-1:0] wRd;
@@ -87,8 +87,8 @@ end
 wire wTimingGen;
 
 PulseGenerator #(
-	.pSysClk(1),
-	.pTimeCke(1),
+	.pSysClk(lpSCLKCycle),
+	.pTimeCke(2),
 	.pStartPulse(0)
 ) PulseGenerator (
 	.oPulse(wTimingGen),
