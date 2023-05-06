@@ -80,61 +80,6 @@ RAMCsr #(
 
 
 //-----------------------------------------------------------------------------
-// System Clk <-> Memory Clk
-//-----------------------------------------------------------------------------
-// wire 	[pUfiBusWidth-1:0]	wMemWd;
-// wire 	[pRamAdrsWidth-1:0]	wMemAdrs;
-// wire 						wMemCmd;
-// wire 						wRVd;
-// wire 						wEmp;
-// reg 						qREd;
-// wire 						wFull;			assign oSUfiRdy = ~wFull;
-// //
-// wire 	[pUfiBusWidth-1:0]	wMemRdIf;
-// wire 						wMemREdIf;
-// wire 						wMemFull;
-
-// RAMDualClkFifo #(
-// 	.pUfiIdNumber		(pUfiIdNumber),
-// 	.pDualClkFifoDepth 	(pRamFifoDepth),
-// 	.pRamDqWidth		(pRamDqWidth),
-// 	.pRamAdrsWidth		(pRamAdrsWidth),
-// 	.pFullAlMost		(16)
-// ) RamDualClkFifo (
-// 	.iWd				(iSUfiWd),
-// 	.iAdrs				(iSUfiAdrs[pRamAdrsWidth-1:0]),
-// 	.iCmd				(iSUfiCmd),
-// 	.iWEd				(iSUfiWEd),
-// 	.oFull				(wFull),
-// 	.oWd				(wMemWd),
-// 	.oAdrs				(wMemAdrs),
-// 	.oCmd				(wMemCmd),
-// 	.iREd				(qREd),
-// 	.oEmp 				(wEmp),
-// 	.oRVd				(wRVd),
-// 	.iMemWd				(wMemRdIf),
-// 	.iMemWEd			(wMemREdIf),
-// 	.oMemRd				(oSUfiRd),
-// 	.oMemREd			(oSUfiREd),
-// 	.iMemRe				(iSUfiREd),
-// 	.oMemFull 			(wMemFull),
-// 	.iSUfiIdI			(iSUfiIdI),
-// 	.oSUfiIdO			(oSUfiIdO),
-// 	.iSrcRst			(iRamDualFifoSrcRst),
-// 	.iDstRst			(iRamDualFifoDstRst),
-// 	.iSCLK			(iSCLK),
-// 	.iMemClk			(iMemClk)
-// );
-
-// always @*
-// begin
-// 	// Read アクセス時は、読み出し元の Block の速度によっては
-// 	// FIFO にデータが蓄積されていくため、両方の状態で Ram にデータを転送するか判断する
-// 	qREd <= (~wEmp) & (~wMemFull);
-// end
-
-
-//-----------------------------------------------------------------------------
 // Read Write Tester
 //-----------------------------------------------------------------------------
 wire [pRamAdrsWidth-1:0] wAdrs;
@@ -155,6 +100,12 @@ MemoryReadWriteTester #(
 	// CLK Reset
     .iRST(iSRST),	.iCLK(iSCLK)
 );
+
+
+//-----------------------------------------------------------------------------
+// Fifo Read Write Tester
+//-----------------------------------------------------------------------------
+
 
 
 //-----------------------------------------------------------------------------

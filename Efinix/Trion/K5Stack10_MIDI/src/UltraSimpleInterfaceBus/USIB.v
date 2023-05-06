@@ -6,6 +6,11 @@
  * Master が Slaveの各ブロックにある CSRに R/W を行う。
  * アドレスポートに、データ・アドレスが有効であることを示す Bitと、R/W を判定する Bit を持つ。
  *
+ * UsiAdrs Bit Assign
+ * [31:30] 2'b00 無効, 2'b01 WriteCmd, 2'b10 ReadCmd, 2'b11 WRCmd
+ * [29:20] 未実装
+ * [19:16] Block ID
+ * [15: 0] Csr Adrs
  *-----------------------------------------------------------------------------*/
 module USIB #(
 	// variable parameter
@@ -20,8 +25,8 @@ module USIB #(
 	input	[pSUsibWidth-1:0]	iSUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
 	output	[pUsiBusWidth-1:0]	oMUsiRd,
 	// Bus Master Write
-	input 	[pUsiBusWidth-1:0]	iMUsiWd,	// Write Data
-	input 	[pUsiBusWidth-1:0]	iMUsiAdrs,	// {31:30} / 0.Cmd 無効, 1. WriteCmd, 2. ReadCmd, 3.WRCmd / {29:21} 未実装 / {20:16} Busアドレス / {15:0} Csrアドレス
+	input 	[pUsiBusWidth-1:0]	iMUsiWd,
+	input 	[pUsiBusWidth-1:0]	iMUsiAdrs,
 	output	[pUsiBusWidth-1:0]	oSUsiWd,
 	output	[pUsiBusWidth-1:0]	oSUsiAdrs,
     // CLK Reset
