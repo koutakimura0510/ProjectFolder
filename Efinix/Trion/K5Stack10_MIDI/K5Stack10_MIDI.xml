@@ -21,9 +21,12 @@
         <efx:design_file name="src/RAMBlock/RAMBlock.v" version="default" library="default"/>
         <efx:design_file name="src/RAMBlock/RAMCsr.v" version="default" library="default"/>
         <efx:design_file name="src/RAMBlock/MemoryReadWriteTester.v" version="default" library="default"/>
+        <efx:design_file name="src/RAMBlock/RamReadWriteArbiter.v" version="default" library="default"/>
         <efx:design_file name="src/RAMBlock/RAMIfPortUnit.v" version="default" library="default"/>
         <efx:design_file name="src/common/pulse/CkeGenerator.v" version="default" library="default"/>
         <efx:design_file name="src/common/Serial/UartRX.v" version="default" library="default"/>
+        <efx:design_file name="src/common/fifo/SyncFifoController.v" version="default" library="default"/>
+        <efx:design_file name="src/common/fifo/DualPortBramTrion.v" version="default" library="default"/>
         <efx:top_vhdl_arch name=""/>
     </efx:design_info>
     <efx:constraint_info>

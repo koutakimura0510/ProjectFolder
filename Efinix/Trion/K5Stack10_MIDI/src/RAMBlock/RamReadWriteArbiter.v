@@ -7,15 +7,15 @@
  * 
  * UsiAdrs Bit Assign
  * [31]    1'b1 Enable, 1'b0 Disable
- * [30:29] 2'b00 無効, 2'b01 WriteCmd, 2'b10 ReadCmd, 2'b11 無効
+ * [30]    1'b0 WriteCmd,  1'b1 ReadCmd
  * [28:25] Block ID
  * [24: 0] RAM Adrs
  *-----------------------------------------------------------------------------*/
-module RamReadWriteBridge #(
+module RamReadWriteArbiter #(
 	parameter pUfiDqBusWidth = 16,
 	parameter pUfiAdrsBusWidth = 32,
 	parameter pFifoDepth = 256,
-	parameter pUfiEnableBit = 31
+	parameter pUfiEnableBit = 32
 )(
 	// Bus Slave Write
 	input  [pUfiDqBusWidth-1:0] iSUfiWd,
@@ -49,7 +49,7 @@ SyncFifoController #(
 	.pFifoBitWidth(pUfiDqBusWidth)
 ) DqWriteSyncFifoController (
 	.iWd(iSUfiWd),
-	.iWe(iSUfiAdrs[pUfiEnableBit]),
+	.iWe(iSUfiAdrs[pUfiEnableBit-1]),
 	.oFull(wFifoWriteFull[0]),
 	.oRd(oRamIfPortUnitWd),
 	.iRe(qFifoWriteRe),
@@ -65,7 +65,7 @@ SyncFifoController #(
 	.pFifoBitWidth(pUfiAdrsBusWidth)
 ) AdrsWriteSyncFifoController (
 	.iWd(iSUfiAdrs),
-	.iWe(iSUfiAdrs[pUfiEnableBit]),
+	.iWe(iSUfiAdrs[pUfiEnableBit-1]),
 	.oFull(wFifoWriteFull[1]),
 	.oRd(oRamIfPortUnitAdrs),
 	.iRe(qFifoWriteRe),
@@ -123,7 +123,7 @@ SyncFifoController #(
 
 always @*
 begin
-	qAdrsReadFifoWe <= iSUfiAdrs[pUfiEnableBit] & (iSUfiAdrs[30:29] == 2'b10)
+	qAdrsReadFifoWe <= iSUfiAdrs[pUfiEnableBit-1] & iSUfiAdrs[30];
 	qAdrsReadFifoRe <= ~wFifoReadEmp;
 end
 

@@ -7,14 +7,13 @@
  * 
  *-----------------------------------------------------------------------------*/
 module MemoryReadWriteTester #(
-	parameter pRamAdrsWidth = 16,
+	parameter pRamAdrsWidth = 18,
 	parameter pRamDqWidth = 16
 )(
 	// R/W Signal
-	output [pRamAdrsWidth-1:0] oAdrs,
+	output [31:0] oAdrs,
 	output [pRamDqWidth-1:0] oWd,
-	output oCmd,
-	output oCe,
+	input  iWEd,
 	input  [pRamDqWidth-1:0] iRd,
 	input  iREd,
 	// Status
@@ -35,48 +34,59 @@ localparam [1:0]
 	lpREAD  = 2;
 
 reg  [1:0] rState;
-reg  [pRamAdrsWidth-1:0] rAdrs;			assign oAdrs = rAdrs;
-reg  [pRamDqWidth-1:0] rWd, rRd;		assign oWd = rWd;
-reg  rCmd;								assign oCmd = rCmd;
-reg  rCe;								assign oCe = rCe;
-reg  rDone;								assign oDone = rDone;
+reg  [pRamAdrsWidth-1:0] rAdrs;
+reg  [pRamDqWidth-1:0] rWd, rRd;
+reg  rCmd;
+reg  rCe;
+reg  rDone;
 reg  qMaxAdrs;
 
 always @(posedge iCLK)
 begin
 	if (iRST)
 	begin
-		rState <= lpIDOL;
-		rAdrs  <= {pRamAdrsWidth{1'b0}};
-		rWd <= {pRamDqWidth{1'b0}};
-		rRd <= {pRamDqWidth{1'b0}};
-		rCmd <= 1'b0;
-		rCe <= 1'b1;
-		rDone <= 1'b0;
+		rState 	<= lpIDOL;
+		rAdrs  	<= {pRamAdrsWidth{1'b0}};
+		rWd 	<= {pRamDqWidth{1'b0}};
+		rRd 	<= {pRamDqWidth{1'b0}};
+		rCmd 	<= 1'b0;
+		rCe 	<= 1'b0;
+		rDone 	<= 1'b0;
 	end
 	else
 	begin
 		case (rState)
 			lpIDOL:
 			begin
-				rState <= lpWRITE;
-				rAdrs  <= {pRamAdrsWidth{1'b0}};
-				rWd <= {pRamDqWidth{1'b0}};
-				rRd <= {pRamDqWidth{1'b0}};
-				rCmd <= 1'b0;
-				rCe <= 1'b0;
-				rDone <= 1'b0;
+				rState 	<= lpWRITE;
+				rAdrs  	<= {pRamAdrsWidth{1'b0}};
+				rWd 	<= {pRamDqWidth{1'b0}};
+				rRd 	<= {pRamDqWidth{1'b0}};
+				rCmd 	<= 1'b0;
+				rCe 	<= 1'b0;
+				rDone 	<= 1'b0;
 			end 
 
 			lpWRITE:
 			begin
-				rState <= qMaxAdrs ? lpREAD : lpWRITE;
-				rAdrs  <= rAdrs + 1'b1;
-				rWd <= rWd + 1'b1;
-				rRd <= {pRamDqWidth{1'b0}};
-				rCmd <= qMaxAdrs ? 1'b1 : 1'b0;
-				rCe <= qMaxAdrs ? 1'b1 :1'b0;
-				rDone <= 1'b0;
+				if (iWEd)
+				begin
+					rState 	<= qMaxAdrs ? lpREAD : lpWRITE;
+					rAdrs  	<= rAdrs + 1'b1;
+					rWd 	<= rWd + 1'b1;
+					rCmd 	<= qMaxAdrs ? 1'b1 : 1'b0;
+					rCe 	<= qMaxAdrs ? 1'b0 : 1'b1;
+				end
+				else
+				begin
+					rState 	<= lpWRITE;
+					rAdrs  	<= rAdrs;
+					rWd 	<= rWd;
+					rCmd 	<= 1'b0;
+					rCe 	<= 1'b0;
+				end
+				rRd 	<= {pRamDqWidth{1'b0}};
+				rDone 	<= 1'b0;
 			end
 
 			lpREAD:
@@ -85,29 +95,29 @@ begin
 				
 				if (iREd)
 				begin
-					rAdrs <= rAdrs + 1'b1;
-					rRd <= iRd;
+					rAdrs 	<= rAdrs + 1'b1;
+					rRd 	<= iRd;
 				end
 				else
 				begin
-					rAdrs <= rAdrs;
-					rRd <= rRd;
+					rAdrs 	<= rAdrs;
+					rRd 	<= rRd;
 				end
 
-				rCmd <= 1'b1;
-				rCe  <= qMaxAdrs ? 1'b1 : 1'b0;
-				rDone <= qMaxAdrs ? 1'b1 : 1'b0;
+				rCmd 	<= qMaxAdrs ? 1'b0 : 1'b1;
+				rCe  	<= qMaxAdrs ? 1'b0 : 1'b1;
+				rDone 	<= qMaxAdrs ? 1'b1 : 1'b0;
 			end
 
 			default:
 			begin
-				rState <= lpIDOL;
-				rAdrs  <= {pRamAdrsWidth{1'b0}};
-				rWd <= {pRamDqWidth{1'b0}};
-				rRd <= {pRamDqWidth{1'b0}};
-				rCmd <= 1'b0;
-				rCe <= 1'b1;
-				rDone <= 1'b0;
+				rState 	<= lpIDOL;
+				rAdrs  	<= {pRamAdrsWidth{1'b0}};
+				rWd 	<= {pRamDqWidth{1'b0}};
+				rRd 	<= {pRamDqWidth{1'b0}};
+				rCmd 	<= 1'b0;
+				rCe 	<= 1'b0;
+				rDone 	<= 1'b0;
 			end
 		endcase
 	end
@@ -124,13 +134,13 @@ end
 //-----------------------------------------------------------------------------
 reg  [pRamDqWidth-1:0] rComp;
 reg  [1:0] rREd;
-reg  rErr, qErrCke;							assign oErr = rErr;
+reg  rErr, qErrCke;
 
 always @(posedge iCLK)
 begin
 	rREd <= {rREd[0],iREd};
 
-	if (iRST | (rState != lpREAD & ~iREd)) 		rComp <= {pRamDqWidth{1'b0}};
+	if (iRST | (rState != lpREAD & ~iREd)) 	rComp <= {pRamDqWidth{1'b0}};
 	else if (rREd[1] & (rState == lpREAD))	rComp <= rComp + 1'b1;
 	else 			rComp <= rComp;
 
@@ -143,5 +153,13 @@ always @*
 begin
 	qErrCke <= iREd & (rComp != iRd) & (rState == lpREAD);
 end
+
+
+assign oAdrs = rAdrs;
+assign oAdrs[30] = rCmd;
+assign oAdrs[31] = rCe;
+assign oWd = rWd;
+assign oDone = rDone;
+assign oErr = rErr;
 
 endmodule

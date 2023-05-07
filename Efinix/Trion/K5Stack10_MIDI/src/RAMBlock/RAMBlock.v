@@ -12,9 +12,10 @@ module RAMBlock #(
 	parameter pUsiBusWidth = 32,
 	parameter pCsrAdrsWidth = 16,
 	parameter pCsrActiveWidth = 8,
-	// parameter pUfiBusWidth = 8,
-	// parameter pUfiIdNumber = 3,
-	parameter pRamAdrsWidth = 16,	// GPIO アドレス幅
+	parameter pUfiDqBusWidth = 16,
+	parameter pUfiAdrsBusWidth = 32,
+	parameter pUfiEnableBit = 32,
+	parameter pRamAdrsWidth = 18,	// GPIO アドレス幅
 	parameter pRamDqWidth = 16		// GPIO データ幅
 )(
 	// SRAM I/F Port
@@ -49,6 +50,7 @@ module RAMBlock #(
 	output oDone,
     // CLK Reset
     input  iSRST,
+	input  inSRST,
     input  iSCLK
 );
 
@@ -105,13 +107,45 @@ MemoryReadWriteTester #(
 //-----------------------------------------------------------------------------
 // Fifo Read Write Tester
 //-----------------------------------------------------------------------------
+localparam lpFifoDepth = 256;
 
+wire [pUfiDqBusWidth-1:0] wRamIfPortUnitWd;
+wire [pUfiAdrsBusWidth-1:0] wRamIfPortUnitAdrs;
+wire [pUfiDqBusWidth-1:0] wRamIfPortUnitRd;
+wire wRamIfPortUnitRvd;
+
+RamReadWriteArbiter #(
+	.pUfiDqBusWidth(pUfiDqBusWidth),
+	.pUfiAdrsBusWidth(pUfiAdrsBusWidth),
+	.pFifoDepth(lpFifoDepth),
+	.pUfiEnableBit(pUfiEnableBit)
+) RamReadWriteArbiter (
+	// Ufi Write
+	.iSUfiWd(),
+	.iSUfiAdrs(),
+	.oSUfiRdy(),
+	// UFI Read
+	.oSUfiRd(),
+	.oSUfiAdrs(),
+	// RamIfPort Bridge
+	.oRamIfPortUnitWd(wRamIfPortUnitWd),
+	.oRamIfPortUnitAdrs(wRamIfPortUnitAdrs),
+	.iRamIfPortUnitDq(wRamIfPortUnitRd),
+	.iRamIfPortUnitWe(wRamIfPortUnitRvd),
+	// common
+	.iRST(iSRST),
+	.inARST(inSRST),
+	.iCLK(iSCLK)
+);
 
 
 //-----------------------------------------------------------------------------
 // RAM I/F
 //-----------------------------------------------------------------------------
-reg qRamIfPortUnitCke;
+reg [pRamDqWidth-1:0] qRamIfPortUnitWd;
+reg [pRamAdrsWidth-1:0] qRamIfPortUnitAdrs;
+reg  qRamIfPortUnitCmd;
+reg  qRamIfPortUnitCke;
 
 RAMIfPortUnit #(
 	.pRamAdrsWidth(pRamAdrsWidth),
@@ -124,17 +158,23 @@ RAMIfPortUnit #(
 	.oSRAM_OE(oSRAM_OE),	.oSRAM_WE(oSRAM_WE),
 	.oSRAM_CE(oSRAM_CE),
 	//
-	.iAdrs(wAdrs),	.iWd(wWd),
-	.oRd(wRd),		.oREd(wREd),
-	.iCmd(wCmd),
+	.iAdrs(qRamIfPortUnitAdrs),
+	.iCmd(qRamIfPortUnitCmd),
+	.iWd(qRamIfPortUnitWd),
+	.oRd(wRamIfPortUnitRd),
+	.oRvd(wRamIfPortUnitRvd),
 	// CLK Reset
-	.iRST(iSRST),	.iCKE(qRamIfPortUnitCke),
+	.iRST(iSRST),
+	.iCKE(qRamIfPortUnitCke),
 	.iCLK(iSCLK)
 );
 
 always @*
 begin
-	qRamIfPortUnitCke <= ~wCe;
+	qRamIfPortUnitWd <= wRamIfPortUnitWd;
+	qRamIfPortUnitAdrs <= wRamIfPortUnitAdrs[pRamAdrsWidth-1:0];
+	qRamIfPortUnitCmd <= wRamIfPortUnitAdrs[30];
+	qRamIfPortUnitCke <= wRamIfPortUnitAdrs[pUfiEnableBit-1];
 end
 
 endmodule

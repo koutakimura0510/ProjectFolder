@@ -26,12 +26,12 @@ module RAMIfPortUnit #(
 	output oSRAM_OE,	// N Output Enable
 	output oSRAM_WE,	// N Write Enable
 	output oSRAM_CE,	// N Chip Select 
-	//
+	// Common Port
 	input  [pRamAdrsWidth-1:0] iAdrs,
+	input  iCmd,  // "1" Read, "0" Write
 	input  [pRamDqWidth-1:0] iWd,
 	output [pRamDqWidth-1:0] oRd,
-	output oREd,
-	input  iCmd,  // "1" Read, "0" Write
+	output oRvd,
     // Clk Reset
     input  iRST,
 	input  iCKE,
@@ -53,7 +53,7 @@ reg  [pRamDqWidth-1:0] rWd;
 reg  rOE, rWE, rCE;
 wire [pRamDqWidth-1:0] wRd;
 reg  [pRamDqWidth-1:0] rRd;
-reg  rREd;
+reg  rRvd;
 
 always @(posedge iCLK)
 begin
@@ -76,9 +76,9 @@ begin
 	if (rWE) rRd <= iSRAMD;
 	else  	 rRd <= rRd;
 
-	if (iRST)		rREd <= 1'b0;
-	else if (rWE) 	rREd <= 1'b1;
-	else  			rREd <= 1'b0;
+	if (iRST)		rRvd <= 1'b0;
+	else if (rWE) 	rRvd <= 1'b1;
+	else  			rRvd <= 1'b0;
 end
 
 assign oSRAMA = rAdrs;
@@ -89,6 +89,6 @@ assign oSRAM_OE = rOE;
 assign oSRAM_WE = rWE;
 assign oSRAM_CE = rCE;
 assign oRd = rRd;
-assign oREd = rREd;
+assign oRvd = rRvd;
 
 endmodule
