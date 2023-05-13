@@ -53,7 +53,7 @@ SyncFifoController #(
 	.oFull(wFifoWriteFull[0]),
 	.oRd(oRamIfPortUnitWd),
 	.iRe(qFifoWriteRe),
-	.oRvd(oRamIfPortUnitAdrs[31]),
+	.oRvd(),
 	.oEmp(wFifoWriteEmp),
 	// CLK Reset
 	.inARST(inARST),
@@ -69,7 +69,7 @@ SyncFifoController #(
 	.oFull(wFifoWriteFull[1]),
 	.oRd(oRamIfPortUnitAdrs[30:0]),
 	.iRe(qFifoWriteRe),
-	.oRvd(),
+	.oRvd(oRamIfPortUnitAdrs[31]),
 	.oEmp(),
 	// CLK Reset
 	.inARST(inARST),

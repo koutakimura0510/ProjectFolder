@@ -316,7 +316,8 @@ RAMBlock #(
 	// Status
 	.oTestErr(wTestErr),	.oDone(wDone),
 	// CLK, RST
-	.iSRST(wSRST),			.iSCLK(iSCLK)
+	.iSRST(wSRST),			.inSRST(wnSRST),
+	.iSCLK(iSCLK)
 );
 
 

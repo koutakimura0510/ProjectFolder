@@ -119,7 +119,7 @@ begin
 				
 				if (iWEd)
 				begin
-					rAdrs 	<= qMaxAdrs ? {pRamAdrsWidth{1'b0}} : rAdrs + 1'b1;;
+					rAdrs 	<= qMaxAdrs ? {pRamAdrsWidth{1'b0}} : rAdrs + 1'b1;
 					rCe  	<= qMaxAdrs ? 1'b0 : 1'b1;
 				end
 				else

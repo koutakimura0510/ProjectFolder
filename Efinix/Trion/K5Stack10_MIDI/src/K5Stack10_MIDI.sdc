@@ -11,7 +11,7 @@
 
 # PLL Constraints
 #################
-create_clock -period 12.5000 iSCLK
+create_clock -period 20.0000 iSCLK
 create_clock -period 40.6897 iMCLK
 
 # GPIO Constraints

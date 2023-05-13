@@ -1,6 +1,6 @@
 [dumpfile] "/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI/la0_waveform.vcd"
-[dumpfile_mtime] "日  4月 30 10:56:50 2023"
-[dumpfile_size] 135568
+[dumpfile_mtime] "土  5月 13 11:41:00 2023"
+[dumpfile_size] 196106
 [savefile] "/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI/la0_waveform.gtkw"
 [timestart] 0
 [size] 1000 600
@@ -9,10 +9,13 @@
 [signals_width] 126
 [sst_expanded] 1
 @22
-top.\RAMBlock/MemoryReadWriteTester/iRd[15:0]
-top.\RAMBlock/MemoryReadWriteTester/iREd
-top.\RAMBlock/RAMIfPortUnit/rRd[15:0]
 top.\RAMBlock/MemoryReadWriteTester/rErr
-top.\RAMBlock/MemoryReadWriteTester/rComp[15:0]
 top.\RAMBlock/oDone
 top.\RAMBlock/oTestErr
+top.\RAMBlock/oSRAMD[15:0]
+top.\RAMBlock/oSRAM_OE
+top.\RAMBlock/oSRAM_CE
+top.\RAMBlock/oSRAMA[17:0]
+top.\RAMBlock/oSRAM_WE
+top.\RAMBlock/RAMIfPortUnit/oRvd
+top.\RAMBlock/RAMIfPortUnit/oRd[15:0]

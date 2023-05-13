@@ -87,7 +87,7 @@ RAMCsr #(
 wire [31:0] wMemTesterAdrs;
 wire [pRamDqWidth-1:0] wMemTesterWd, wMemTesterRd;
 wire wMemTesterWEd;
-wire[31:0] wMemTesterREd;
+wire [31:0] wMemTesterREd;
 
 MemoryReadWriteTester #(
 	.pRamAdrsWidth(pRamAdrsWidth),
