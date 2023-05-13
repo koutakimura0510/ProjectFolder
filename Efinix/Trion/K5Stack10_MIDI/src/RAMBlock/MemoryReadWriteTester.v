@@ -29,13 +29,14 @@ module MemoryReadWriteTester #(
 // Read Write Tester State
 //-----------------------------------------------------------------------------
 localparam [1:0]
-	lpIDOL  = 0,
+	lpWIDOL = 0,
 	lpWRITE = 1,
-	lpREAD  = 2;
+	lpRIDOL = 2,
+	lpREAD  = 3;
 
 reg  [1:0] rState;
 reg  [pRamAdrsWidth-1:0] rAdrs;
-reg  [pRamDqWidth-1:0] rWd, rRd;
+reg  [pRamDqWidth-1:0] rWd;
 reg  rCmd;
 reg  rCe;
 reg  rDone;
@@ -45,10 +46,9 @@ always @(posedge iCLK)
 begin
 	if (iRST)
 	begin
-		rState 	<= lpIDOL;
+		rState 	<= lpWIDOL;
 		rAdrs  	<= {pRamAdrsWidth{1'b0}};
 		rWd 	<= {pRamDqWidth{1'b0}};
-		rRd 	<= {pRamDqWidth{1'b0}};
 		rCmd 	<= 1'b0;
 		rCe 	<= 1'b0;
 		rDone 	<= 1'b0;
@@ -56,23 +56,30 @@ begin
 	else
 	begin
 		case (rState)
-			lpIDOL:
+			lpWIDOL:
 			begin
-				rState 	<= lpWRITE;
+				if (iWEd)
+				begin
+					rState 	<= lpWRITE;
+					rCe 	<= 1'b1;
+				end
+				else
+				begin
+					rState 	<= lpWIDOL;
+					rCe 	<= 1'b0;
+				end
 				rAdrs  	<= {pRamAdrsWidth{1'b0}};
 				rWd 	<= {pRamDqWidth{1'b0}};
-				rRd 	<= {pRamDqWidth{1'b0}};
 				rCmd 	<= 1'b0;
-				rCe 	<= 1'b0;
 				rDone 	<= 1'b0;
-			end 
+			end
 
 			lpWRITE:
 			begin
 				if (iWEd)
 				begin
-					rState 	<= qMaxAdrs ? lpREAD : lpWRITE;
-					rAdrs  	<= rAdrs + 1'b1;
+					rState 	<= qMaxAdrs ? lpRIDOL : lpWRITE;
+					rAdrs  	<= qMaxAdrs ? {pRamAdrsWidth{1'b0}} : rAdrs + 1'b1;
 					rWd 	<= rWd + 1'b1;
 					rCmd 	<= qMaxAdrs ? 1'b1 : 1'b0;
 					rCe 	<= qMaxAdrs ? 1'b0 : 1'b1;
@@ -85,36 +92,51 @@ begin
 					rCmd 	<= 1'b0;
 					rCe 	<= 1'b0;
 				end
-				rRd 	<= {pRamDqWidth{1'b0}};
+				rDone 	<= 1'b0;
+			end
+
+			lpRIDOL:
+			begin
+				if (iWEd)
+				begin
+					rState 	<= lpREAD;
+					rCe 	<= 1'b1;
+				end
+				else
+				begin
+					rState 	<= lpRIDOL;
+					rCe 	<= 1'b0;
+				end
+				rAdrs  	<= {pRamAdrsWidth{1'b0}};
+				rWd 	<= {pRamDqWidth{1'b0}};
+				rCmd 	<= 1'b1;
 				rDone 	<= 1'b0;
 			end
 
 			lpREAD:
 			begin
-				rState <= qMaxAdrs ? lpIDOL : lpREAD;
+				rState <= qMaxAdrs ? lpWIDOL : lpREAD;
 				
-				if (iREd)
+				if (iWEd)
 				begin
-					rAdrs 	<= rAdrs + 1'b1;
-					rRd 	<= iRd;
+					rAdrs 	<= qMaxAdrs ? {pRamAdrsWidth{1'b0}} : rAdrs + 1'b1;;
+					rCe  	<= qMaxAdrs ? 1'b0 : 1'b1;
 				end
 				else
 				begin
 					rAdrs 	<= rAdrs;
-					rRd 	<= rRd;
+					rCe  	<= 1'b0;
 				end
 
 				rCmd 	<= qMaxAdrs ? 1'b0 : 1'b1;
-				rCe  	<= qMaxAdrs ? 1'b0 : 1'b1;
 				rDone 	<= qMaxAdrs ? 1'b1 : 1'b0;
 			end
 
 			default:
 			begin
-				rState 	<= lpIDOL;
+				rState 	<= lpWIDOL;
 				rAdrs  	<= {pRamAdrsWidth{1'b0}};
 				rWd 	<= {pRamDqWidth{1'b0}};
-				rRd 	<= {pRamDqWidth{1'b0}};
 				rCmd 	<= 1'b0;
 				rCe 	<= 1'b0;
 				rDone 	<= 1'b0;
@@ -132,17 +154,21 @@ end
 //-----------------------------------------------------------------------------
 // Comparetor
 //-----------------------------------------------------------------------------
-reg  [pRamDqWidth-1:0] rComp;
-reg  [1:0] rREd;
+reg  [pRamDqWidth-1:0] rComp, rRd;
 reg  rErr, qErrCke;
 
 always @(posedge iCLK)
 begin
-	rREd <= {rREd[0],iREd};
+	if (iRST) 		rRd <= {pRamDqWidth{1'b0}};
+	else if (iREd)	rRd <= iRd;
+	else 			rRd	<= rRd;
 
-	if (iRST | (rState != lpREAD & ~iREd)) 	rComp <= {pRamDqWidth{1'b0}};
-	else if (rREd[1] & (rState == lpREAD))	rComp <= rComp + 1'b1;
-	else 			rComp <= rComp;
+	casex ({iRST,(rState==lpREAD),iREd})
+		'b1xx: 		rComp <= {pRamDqWidth{1'b0}};
+		'bx0x: 		rComp <= {pRamDqWidth{1'b0}};
+		'b011:		rComp <= rComp + 1'b1;
+		default: 	rComp <= rComp;
+	endcase
 
 	if (iRST) 			rErr <= 1'b0;
 	else if (qErrCke)	rErr <= 1'b1;
@@ -151,11 +177,15 @@ end
 
 always @*
 begin
-	qErrCke <= iREd & (rComp != iRd) & (rState == lpREAD);
+	casex ({iREd,(rComp==iRd),(rState==lpREAD)})
+		'b101: 	 qErrCke <= 1'b1;
+		default: qErrCke <= 1'b0;
+	endcase
 end
 
 
-assign oAdrs = rAdrs;
+assign oAdrs[pRamAdrsWidth-1:0] = rAdrs;
+assign oAdrs[29:pRamAdrsWidth]  = {29-pRamAdrsWidth{1'b0}};
 assign oAdrs[30] = rCmd;
 assign oAdrs[31] = rCe;
 assign oWd = rWd;

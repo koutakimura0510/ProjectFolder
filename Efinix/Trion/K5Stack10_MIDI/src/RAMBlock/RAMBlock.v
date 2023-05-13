@@ -84,19 +84,21 @@ RAMCsr #(
 //-----------------------------------------------------------------------------
 // Read Write Tester
 //-----------------------------------------------------------------------------
-wire [pRamAdrsWidth-1:0] wAdrs;
-wire [pRamDqWidth-1:0] wWd, wRd;
-wire wCmd, wCe;
-wire wREd;
+wire [31:0] wMemTesterAdrs;
+wire [pRamDqWidth-1:0] wMemTesterWd, wMemTesterRd;
+wire wMemTesterWEd;
+wire[31:0] wMemTesterREd;
 
 MemoryReadWriteTester #(
 	.pRamAdrsWidth(pRamAdrsWidth),
 	.pRamDqWidth(pRamDqWidth)
 ) MemoryReadWriteTester (
 	// R/W Signal
-	.oAdrs(wAdrs),	.oWd(wWd),
-	.oCmd(wCmd),	.oCe(wCe),
-	.iRd(wRd),		.iREd(wREd),
+	.oAdrs(wMemTesterAdrs),
+	.oWd(wMemTesterWd),
+	.iWEd(wMemTesterWEd),
+	.iRd(wMemTesterRd),
+	.iREd(wMemTesterREd[31]),
 	// Status
 	.oErr(oTestErr),.oDone(oDone),
 	// CLK Reset
@@ -121,12 +123,12 @@ RamReadWriteArbiter #(
 	.pUfiEnableBit(pUfiEnableBit)
 ) RamReadWriteArbiter (
 	// Ufi Write
-	.iSUfiWd(),
-	.iSUfiAdrs(),
-	.oSUfiRdy(),
+	.iSUfiWd(wMemTesterWd),
+	.iSUfiAdrs(wMemTesterAdrs),
+	.oSUfiRdy(wMemTesterWEd),
 	// UFI Read
-	.oSUfiRd(),
-	.oSUfiAdrs(),
+	.oSUfiRd(wMemTesterRd),
+	.oSUfiAdrs(wMemTesterREd),
 	// RamIfPort Bridge
 	.oRamIfPortUnitWd(wRamIfPortUnitWd),
 	.oRamIfPortUnitAdrs(wRamIfPortUnitAdrs),

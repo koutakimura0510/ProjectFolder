@@ -53,8 +53,8 @@ SyncFifoController #(
 	.oFull(wFifoWriteFull[0]),
 	.oRd(oRamIfPortUnitWd),
 	.iRe(qFifoWriteRe),
-	.oRvd(),				// AdrsBus に Enabel信号が含まれているため使用しない
-	.oEmp(),
+	.oRvd(oRamIfPortUnitAdrs[31]),
+	.oEmp(wFifoWriteEmp),
 	// CLK Reset
 	.inARST(inARST),
 	.iCLK(iCLK)
@@ -67,7 +67,7 @@ SyncFifoController #(
 	.iWd(iSUfiAdrs),
 	.iWe(iSUfiAdrs[pUfiEnableBit-1]),
 	.oFull(wFifoWriteFull[1]),
-	.oRd(oRamIfPortUnitAdrs),
+	.oRd(oRamIfPortUnitAdrs[30:0]),
 	.iRe(qFifoWriteRe),
 	.oRvd(),
 	.oEmp(),
@@ -75,10 +75,9 @@ SyncFifoController #(
 	.inARST(inARST),
 	.iCLK(iCLK)
 );
-
 always @*
 begin
-	qFifoWriteRe <= 1'b1;//~wFifoWriteEmp;	// FIFOにデータがある場合は常にRAMへ出力する。
+	qFifoWriteRe <= ~wFifoWriteEmp;	// FIFOにデータがある場合は常にRAMへ出力する。
 end
 
 
@@ -88,6 +87,8 @@ end
 wire [1:0] wFifoReadFull;
 wire wFifoReadEmp;
 reg  qAdrsReadFifoWe, qAdrsReadFifoRe;
+wire [31:0] wAdrsReadFifoRd;
+wire wDqReadFifoRvd;
 
 SyncFifoController #(
 	.pFifoDepth(pFifoDepth),
@@ -98,7 +99,7 @@ SyncFifoController #(
 	.oFull(wFifoReadFull[0]),
 	.oRd(oSUfiRd),
 	.iRe(qAdrsReadFifoRe),
-	.oRvd(),
+	.oRvd(wDqReadFifoRvd),
 	.oEmp(wFifoReadEmp),
 	// CLK Reset
 	.inARST(inARST),
@@ -112,9 +113,9 @@ SyncFifoController #(
 	.iWd(iSUfiAdrs),
 	.iWe(qAdrsReadFifoWe),
 	.oFull(wFifoReadFull[1]),
-	.oRd(oSUfiAdrs[30:0]),
+	.oRd(wAdrsReadFifoRd),
 	.iRe(qAdrsReadFifoRe),
-	.oRvd(oSUfiAdrs[31:0]),
+	.oRvd(),
 	.oEmp(),
 	// CLK Reset
 	.inARST(inARST),
@@ -127,6 +128,8 @@ begin
 	qAdrsReadFifoRe <= ~wFifoReadEmp;
 end
 
-assign oMUfiRdy = &{~wFifoReadFull[0],wFifoWriteFull[0],~wFifoWriteFull[1],~wFifoWriteFull[1]};
+assign oSUfiAdrs[30:0] = wAdrsReadFifoRd[30:0];
+assign oSUfiAdrs[31] = wDqReadFifoRvd;
+assign oSUfiRdy = &{~wFifoReadFull[0],~wFifoReadFull[1],~wFifoWriteFull[1],~wFifoWriteFull[1]};
 
 endmodule

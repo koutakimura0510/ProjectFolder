@@ -21,6 +21,15 @@ module DualPortBramTrion #(
 
 (* ram_style = "block" *) reg [pBitWidth-1:0] bram [0:pBuffDepth-1];
 reg [pBitWidth-1:0] rRd;		assign oRd = rRd;
+integer x_ini;
+
+initial
+begin
+	for (x_ini = 0; x_ini < pBuffDepth; x_ini = x_ini + 1)
+	begin
+		bram[x_ini] <= {pBitWidth{1'b0}};
+	end
+end
 
 always @(posedge iCLK)
 begin
