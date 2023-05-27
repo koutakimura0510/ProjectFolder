@@ -5,7 +5,7 @@
  * RAM IF moudle の Write/Read 処理
  * V1.0 : new Relaese
  * 
- * UsiAdrs Bit Assign
+ * UfiAdrs Bit Assign
  * [31]    1'b1 Enable, 1'b0 Disable
  * [30]    1'b0 WriteCmd,  1'b1 ReadCmd
  * [28:25] Block ID

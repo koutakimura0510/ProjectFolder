@@ -1,18 +1,19 @@
 /*-----------------------------------------------------------------------------
- * Create  2023/04/15
+ * Create  2023/05/13
  * Author  kouta kimura
  * -
- * UART RX module
+ * UART TX module
  * 
  *-----------------------------------------------------------------------------*/
-module UartRX #(
-	parameter	pBaudRateGenDiv = 1600	// 100[MHz]/3200=31250[kbps]
+module UartTX #(
+	parameter pBaudRateGenDiv = 1600,	// 100[MHz]/3200=31250[kbps]
+	parameter pDqBitWidth = 16
 )(
-	// UART RX
-	input  iUartRX,
-	// Status
-	output [7:0] oRd,
-	output oVd,
+	output oUartTX,
+	// status
+	input  [pDqBitWidth-1:0] iWd,
+	input  iWe,
+	output oRdy,	
 	// Clk Reset
     input  iRST,
     input  iCLK
@@ -27,17 +28,16 @@ localparam lpBaudRateWidth = func_getwidth(pBaudRateGenDiv);
 localparam [lpBaudRateWidth-1:0] lpBaudRateGenDiv = pBaudRateGenDiv;
 localparam [1:0]
 	lpStartBit = 0,
-	lpSampling = 1,
-	lpStopBit  = 2;
+	lpEncode   = 1,
+	lpStopBit  = 2,
+	lpCRLF     = 3;
 
 reg  [1:0] rState;
-reg  [lpBaudRateWidth-1:0] rBaudRateCnt;
-reg  qBaudRateCntMaxCke;
-reg  [3:0] rSampCnt;
-reg  qSampCke;
-reg  qRdCke;
-reg  [7:0] rRd;			assign oRd = {rRd[0],rRd[1],rRd[2],rRd[3],rRd[4],rRd[5],rRd[6],rRd[7]};	// iUartRX は LSB から取得するので Bit Swap する
-reg  rVd, qVdCke;		assign oVd = rVd;
+reg  [lpBaudRateWidth-1:0] rBaudRateCnt; reg qBaudRateCntMaxCke;
+reg  [3:0] rSampCnt; reg qSampCke;
+reg  [(pDqBitWidth*2)+8-1:0] rDqAscii;	// Data + "\n"
+reg  qDqCaptureCke;
+integer x;
 
 always @(posedge iCLK)
 begin
@@ -56,14 +56,47 @@ begin
 	end
 end
 
+generate
+for (x = 0; x < pDqBitWidth/4; x = x + 1)
+begin
+	always @(posedge iCLK)
+	begin
+		if (qDqCaptureCke)
+		begin
+			case (iWd[((x+1)*4)-1:x*4])
+			4'd0: 	 rDqAscii[((x+1)*8)-1:x*8] <= "0";
+			4'd1: 	 rDqAscii[((x+1)*8)-1:x*8] <= "1";
+			4'd2: 	 rDqAscii[((x+1)*8)-1:x*8] <= "2";
+			4'd3: 	 rDqAscii[((x+1)*8)-1:x*8] <= "3";
+			4'd4: 	 rDqAscii[((x+1)*8)-1:x*8] <= "4";
+			4'd5: 	 rDqAscii[((x+1)*8)-1:x*8] <= "5";
+			4'd6: 	 rDqAscii[((x+1)*8)-1:x*8] <= "6";
+			4'd7: 	 rDqAscii[((x+1)*8)-1:x*8] <= "7";
+			4'd8: 	 rDqAscii[((x+1)*8)-1:x*8] <= "8";
+			4'd9: 	 rDqAscii[((x+1)*8)-1:x*8] <= "9";
+			4'dA: 	 rDqAscii[((x+1)*8)-1:x*8] <= "A";
+			4'dB: 	 rDqAscii[((x+1)*8)-1:x*8] <= "B";
+			4'dC: 	 rDqAscii[((x+1)*8)-1:x*8] <= "C";
+			4'dD: 	 rDqAscii[((x+1)*8)-1:x*8] <= "D";
+			4'dE: 	 rDqAscii[((x+1)*8)-1:x*8] <= "E";
+			4'dF: 	 rDqAscii[((x+1)*8)-1:x*8] <= "F";
+			default: rDqAscii[((x+1)*8)-1:x*8] <= "\n";
+			endcase
+		end
+		else
+		begin
+			rDqAscii[((x+1)*8)-1:x*8] <= "\n";
+		end
+	end
+end
+endgenerate
+
 always @(posedge iCLK)
 begin
-	if (qRdCke) rRd <= {rRd[6:0], iUartRX};	// ボーレートの速度でサンプリング
-	else 		rRd <=  rRd;
+	rDqAscii[(pDqBitWidth*2)+8-1:pDqBitWidth+8] <= "\n";
 
-	if (iRST)				rVd <= 1'b0;
-	else if (qVdCke)		rVd <= 1'b1;	// 1ショットパルスの生成
-	else 					rVd <= 1'b0;
+	else if (qBaudRateCntMaxCke)	rDqAscii <= {rDqAscii[pDqBitWidth-2:0],1'b1}
+	else 							rDqAscii <= rDqAscii;
 
 	if (rState==lpStartBit)			rSampCnt <= 4'd0;
 	else if (qBaudRateCntMaxCke)	rSampCnt <= rSampCnt + 1'b1;	// サンプリング回数をカウント
@@ -76,10 +109,9 @@ end
 
 always @*
 begin
+	qDqCaptureCke <= iWe & ;
 	qBaudRateCntMaxCke <= (rBaudRateCnt == lpBaudRateGenDiv);
 	qSampCke <= (rSampCnt == 4'd8);
-	qRdCke   <= &{qBaudRateCntMaxCke,rState==lpSampling};
-	qVdCke   <= &{qBaudRateCntMaxCke,qSampCke};
 end
 
 //---------------------------------------------------------------------------

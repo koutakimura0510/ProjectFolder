@@ -9,14 +9,14 @@
 module RAMBlock #(
 	parameter pBlockAdrsWidth = 8,
 	parameter [pBlockAdrsWidth-1:0]	pAdrsMap = 'h04,
-	parameter pUsiBusWidth = 32,
-	parameter pCsrAdrsWidth = 16,
-	parameter pCsrActiveWidth = 8,
-	parameter pUfiDqBusWidth = 16,
-	parameter pUfiAdrsBusWidth = 32,
-	parameter pUfiEnableBit = 32,
-	parameter pRamAdrsWidth = 18,	// GPIO アドレス幅
-	parameter pRamDqWidth = 16		// GPIO データ幅
+	parameter pUsiBusWidth 		= 32,
+	parameter pCsrAdrsWidth 	= 16,
+	parameter pCsrActiveWidth 	= 8,
+	parameter pUfiDqBusWidth 	= 16,
+	parameter pUfiAdrsBusWidth 	= 32,
+	parameter pUfiEnableBit 	= 32,
+	parameter pRamAdrsWidth 	= 18,	// GPIO アドレス幅
+	parameter pRamDqWidth 		= 16	// GPIO データ幅
 )(
 	// SRAM I/F Port
 	output [pRamAdrsWidth-1:0] oSRAMA,
@@ -32,19 +32,13 @@ module RAMBlock #(
 	// Bus Master Write
 	input  [pUsiBusWidth-1:0] iSUsiWd,
 	input  [pUsiBusWidth-1:0] iSUsiAdrs,
-	// Ufi Bus Slave Write
-	// input	[pUfiBusWidth-1:0]			iSUfiWd,		// Write Data
-	// input	[pUsiBusWidth-1:0]			iSUfiAdrs,		// Ufi address
-	// input								iSUfiWEd,		// Adrs Enable
-	// input								iSUfiREd,		// Adrs Enable
-	// input   							iSUfiCmd,		// High Read, Low Write
-	// Ufi Bus Slave Read
-	// output	[pUfiBusWidth-1:0]			oSUfiRd,		// Read Data
-	// output								oSUfiREd,		// Read Data Enable
-	// output 								oSUfiRdy,
-	// // Ufi ID Lssue
-	// input 	[pUfiIdNumber-1:0]			iSUfiIdI,
-	// output 	[pUfiIdNumber-1:0]			oSUfiIdO,
+	// Ufi Bus Master Read
+	output [pUfiDqBusWidth-1:0] oSUfiRd,
+	output [pUfiAdrsBusWidth-1:0] oSUfiAdrs,
+	// Ufi Bus Master Write
+	input  [pUfiDqBusWidth-1:0] iSUfiWd,
+	input  [pUfiAdrsBusWidth-1:0] iSUfiAdrs,
+	output oSUfiRdy,
 	// Status
 	output oTestErr,
 	output oDone,
@@ -84,27 +78,29 @@ RAMCsr #(
 //-----------------------------------------------------------------------------
 // Read Write Tester
 //-----------------------------------------------------------------------------
-wire [31:0] wMemTesterAdrs;
-wire [pRamDqWidth-1:0] wMemTesterWd, wMemTesterRd;
-wire wMemTesterWEd;
-wire [31:0] wMemTesterREd;
+// wire [31:0] wMemTesterAdrs;
+// wire [pRamDqWidth-1:0] wMemTesterWd, wMemTesterRd;
+// wire wMemTesterWEd;
+// wire [31:0] wMemTesterREd;
 
-MemoryReadWriteTester #(
-	.pRamAdrsWidth(pRamAdrsWidth),
-	.pRamDqWidth(pRamDqWidth)
-) MemoryReadWriteTester (
-	// R/W Signal
-	.oAdrs(wMemTesterAdrs),
-	.oWd(wMemTesterWd),
-	.iWEd(wMemTesterWEd),
-	.iRd(wMemTesterRd),
-	.iREd(wMemTesterREd[31]),
-	// Status
-	.oErr(oTestErr),.oDone(oDone),
-	// CLK Reset
-    .iRST(iSRST),	.iCLK(iSCLK)
-);
+// MemoryReadWriteTester #(
+// 	.pRamAdrsWidth(pRamAdrsWidth),
+// 	.pRamDqWidth(pRamDqWidth)
+// ) MemoryReadWriteTester (
+// 	// R/W Signal
+// 	.oAdrs(wMemTesterAdrs),
+// 	.oWd(wMemTesterWd),
+// 	.iWEd(wMemTesterWEd),
+// 	.iRd(wMemTesterRd),
+// 	.iREd(wMemTesterREd[31]),
+// 	// Status
+// 	.oErr(oTestErr),.oDone(oDone),
+// 	// CLK Reset
+//     .iRST(iSRST),	.iCLK(iSCLK)
+// );
 
+assign oTestErr = 1'b0;
+assign oDone = 1'b0;
 
 //-----------------------------------------------------------------------------
 // Fifo Read Write Tester
@@ -123,12 +119,12 @@ RamReadWriteArbiter #(
 	.pUfiEnableBit(pUfiEnableBit)
 ) RamReadWriteArbiter (
 	// Ufi Write
-	.iSUfiWd(wMemTesterWd),
-	.iSUfiAdrs(wMemTesterAdrs),
-	.oSUfiRdy(wMemTesterWEd),
+	.iSUfiWd(iSUfiWd),
+	.iSUfiAdrs(iSUfiAdrs),
+	.oSUfiRdy(oSUfiRdy),
 	// UFI Read
-	.oSUfiRd(wMemTesterRd),
-	.oSUfiAdrs(wMemTesterREd),
+	.oSUfiRd(oSUfiRd),
+	.oSUfiAdrs(oSUfiAdrs),
 	// RamIfPort Bridge
 	.oRamIfPortUnitWd(wRamIfPortUnitWd),
 	.oRamIfPortUnitAdrs(wRamIfPortUnitAdrs),

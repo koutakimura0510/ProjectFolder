@@ -14,12 +14,12 @@
  *-----------------------------------------------------------------------------*/
 module USIB #(
 	// variable parameter
-	parameter pBlockConnectNum = 2,	// UsiBus 接続ブロック数
-	parameter pUsiBusWidth = 32,	// UsiBus 幅
-	parameter pCsrAdrsWidth = 16,	// 各ブロック共通の基本CSR幅
+	parameter pBlockConnectNum 	= 2,	// UsiBus 接続ブロック数
+	parameter pUsiBusWidth 		= 32,	// UsiBus 幅
+	parameter pCsrAdrsWidth 	= 16,	// 各ブロック共通の基本CSR幅
 	// not variable parameter
-	parameter pBlockAdrsWidth = 3,
-	parameter pSUsibWidth = pUsiBusWidth * pBlockConnectNum
+	parameter pBlockAdrsWidth 	= 3,
+	parameter pSUsibWidth 		= pUsiBusWidth * pBlockConnectNum
 )(
 	// Bus Master Read
 	input	[pSUsibWidth-1:0]	iSUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される

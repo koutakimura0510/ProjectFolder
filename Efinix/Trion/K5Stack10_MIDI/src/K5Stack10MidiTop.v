@@ -118,17 +118,17 @@ assign PLL_TL0_RSTN = 1'b1;
 //------------------------------------------------------------------------------
 // USI/F BUS
 //------------------------------------------------------------------------------
-localparam lpUsiBusWidth = 32;		// USIB Width
-localparam lpBlockConnectNum = 4;	// 現在接続しているブロックの個数
-localparam lpBlockAdrsWidth = func_getwidth(lpBlockConnectNum);
-localparam lpCsrAdrsWidth = 16;		// 各ブロック共通の基本CSR幅
-localparam lpSUsiBusWidth = (lpUsiBusWidth * lpBlockConnectNum);
-localparam [lpBlockAdrsWidth-1:0] 	// ブロックアドレスマッピング ※プロジェクトの Readme.md 参照
-	lpGpioAdrsMap = 'h0,
-	lpSPIAdrsMap = 'h1,
+localparam lpUsiBusWidth 		= 32;	// USIB Width
+localparam lpBlockConnectNum 	= 4;	// 現在接続しているブロックの個数
+localparam lpBlockAdrsWidth 	= func_getwidth(lpBlockConnectNum);
+localparam lpCsrAdrsWidth 		= 16;	// 各ブロック共通の基本CSR幅
+localparam lpSUsiBusWidth 		= (lpUsiBusWidth * lpBlockConnectNum);
+localparam [lpBlockAdrsWidth-1:0] 		// ブロックアドレスマッピング ※プロジェクトの Readme.md 参照
+	lpGpioAdrsMap 		 = 'h0,
+	lpSPIAdrsMap 		 = 'h1,
 	lpSynthesizerAdrsMap = 'h2,
-	lpRAMAdrsMap = 'h3,
-	lpNullAdrsMap = 0;
+	lpRAMAdrsMap 		 = 'h3,
+	lpNullAdrsMap 		 = 0;
 
 // ブロック内 Csr のアドレス幅
 // 基本となる lpCsrAdrsWidth のアドレス幅で Csr を利用しない場合は、
@@ -151,6 +151,7 @@ reg  [lpSUsiBusWidth-1:0] qSUsiRd;	// 二次元配列で取得した Slave Read�
 // Bus Master Write
 reg  [lpUsiBusWidth-1:0] qMUsiWd,		qMUsiAdrs;
 wire [lpUsiBusWidth-1:0] wSUsiWd,		wSUsiAdrs;
+wire [lpUsiBusWidth-1:0] wMUsiWdMcb,	wMUsiAdrsMcb;
 wire [lpUsiBusWidth-1:0] wMUsiWdSpi,	wMUsiAdrsSpi;
 wire wSpiDir, wnSpiDir;
 wire wMSpiIntr;
@@ -170,10 +171,10 @@ USIB #(
 
 always @*
 begin
-	qMUsiWd		<= wMUsiWdSpi;
-	qMUsiAdrs	<= wMUsiAdrsSpi;
-	// qMUsiWd		<= wSpiDir ? wMUsiWdSpi   : wMUsiWdMcb;
-	// qMUsiAdrs	<= wSpiDir ? wMUsiAdrsSpi : wMUsiAdrsMcb;
+	// qMUsiWd		<= wMUsiWdSpi;
+	// qMUsiAdrs	<= wMUsiAdrsSpi;
+	qMUsiWd		<= wSpiDir ? wMUsiWdSpi   : wMUsiWdMcb;
+	qMUsiAdrs	<= wSpiDir ? wMUsiAdrsSpi : wMUsiAdrsMcb;
 end
 
 generate
@@ -187,12 +188,68 @@ generate
 endgenerate
 
 //----------------------------------------------------------
-// USIF 
+// USIB
 //----------------------------------------------------------
-localparam 	lpRamAdrsWidth	= 18;
-localparam 	lpRamDqWidth	= 16;
-localparam  lpUfiBusWidth	= 8;
-localparam	lpUfiIdNumber	= 3;
+localparam 	lpRamAdrsWidth		= 18;
+localparam 	lpRamDqWidth		= 16;
+localparam  lpUfiDqBusWidth		= lpRamDqWidth;
+localparam  lpUfiAdrsBusWidth 	= 32;
+localparam	lpUfiIdNumber		= 3;
+
+wire [lpUfiDqBusWidth-1:0] wSUfiRd;
+wire [lpUfiAdrsBusWidth-1:0] wSUfiAdrs;
+wire [lpUfiDqBusWidth-1:0] wMUfiRd;
+wire [lpUfiAdrsBusWidth-1:0] wMUfiAdrs;
+
+wire [lpUfiDqBusWidth-1:0] wSUfiWd;
+wire [lpUfiAdrsBusWidth-1:0] wSUfiWAdrs;
+reg  qSUfiRdy;  wire wSUfiRamRdy;
+
+wire [lpUfiDqBusWidth-1:0] wMUfiWd;
+wire [lpUfiAdrsBusWidth-1:0] wMUfiWAdrs;
+wire wMUfiRdy;
+
+UFIB #(
+	.pUfiDqBusWidth(lpUfiDqBusWidth),
+	.pUfiAdrsBusWidth(lpUfiAdrsBusWidth)
+) UFIB (
+	// Ufi Bus Master Read
+	.iSUfiRd(wSUfiRd),	.iSUfiAdrs(wSUfiAdrs),
+	.oMUfiRd(wMUfiRd),	.oMUfiAdrs(wMUfiAdrs),
+	// Ufi Bus Master Write
+	.oSUfiWd(wSUfiWd),	.oSUfiAdrs(wSUfiWAdrs),
+	.iSUfiRdy(qSUfiRdy),
+	.iMUfiWd(wMUfiWd),	.iMUfiAdrs(wMUfiWAdrs),
+	.oMUfiRdy(wMUfiRdy),
+	// CLK Reset
+	.iRST(wSRST),		.iCLK(iSCLK)
+);
+
+always @*
+begin
+	qSUfiRdy <= wSUfiRamRdy;
+end
+
+//-----------------------------------------------------------------------------
+// MCB
+//-----------------------------------------------------------------------------
+MicroControllerBlock #(
+	.pUsiBusWidth(lpUsiBusWidth),
+	.pUfiDqBusWidth(lpUfiDqBusWidth),
+	.pUfiAdrsBusWidth(lpUfiAdrsBusWidth)
+) MicroControllerBlock (
+	// Usi Bus Master Read
+	.iMUsiRd(wMUsiRd),
+	// Usi Bus Master Write
+	.oMUsiWd(wMUsiWdMcb),	.oMUsiAdrs(wMUsiAdrsMcb),
+	// Ufi Bus Master Read
+	.iMUfiRd(wMUfiRd),		.iMUfiAdrs(wMUfiAdrs),
+	// Ufi Bus Master Write
+	.oMUfiWd(wMUfiWd),		.oMUfiAdrs(wMUfiWAdrs),
+	.iMUfiRdy(wMUfiRdy),
+	// common
+	.iSRST(wSRST),			.iSCLK(iSCLK)
+);
 
 
 //-----------------------------------------------------------------------------
@@ -205,8 +262,10 @@ wire [lpGpioWidth-1:0] wGPIOR_In;
 reg  [lpGpioWidth-1:0] qGpioAltMode;
 
 GpioBlock #(
-	.pBlockAdrsWidth(lpBlockAdrsWidth),		.pAdrsMap(lpGpioAdrsMap),
-	.pUsiBusWidth(lpUsiBusWidth),			.pCsrAdrsWidth(lpCsrAdrsWidth),
+	.pBlockAdrsWidth(lpBlockAdrsWidth),
+	.pAdrsMap(lpGpioAdrsMap),
+	.pUsiBusWidth(lpUsiBusWidth),
+	.pCsrAdrsWidth(lpCsrAdrsWidth),
 	.pCsrActiveWidth(lpGpioCsrActiveWidth),
 	.pGpioWidth(lpGpioWidth)
 ) GpioBlock (
@@ -238,11 +297,17 @@ SPIBlock #(
 	.pCsrActiveWidth(lpSPICsrActiveWidth)
 ) SPIBlock (
 	// External Port
+	// SPI Bus Connected External CPU
 	.iSpiSck(wSlaveSck),	.iSpiMosi(wSlaveMosi),
 	.oSpiMiso(wSlaveMiso),	.iSpiCs(wSlaveCs),
 	.oSpiSck(wMasterSck),	.oSpiMosi(wMasterMosi),
 	.iSpiMiso(wMasterMiso),	.oSpiCs(wMasterCs),
 	.iSpiDir(wIoSpiDir),
+	// SPI Bus Connected External Flash Rom
+	.oFlashRomSck(wFlashRomSck),
+	.iFlashRomMiso(wFlashRomMiso),
+	.oFlashRomMosi(wFlashRomMosi),
+	.oFlashRomCs(wFlashRomCs),
 	// Bus Master Read
 	.iMUsiRd(wMUsiRd),		.oSUsiRd(wSUsiRd[lpSPIAdrsMap]),
 	// Bus Master Write
@@ -269,6 +334,7 @@ SynthesizerBlock #(
 	.pCsrActiveWidth(lpSynCsrActiveWidth)
 ) SynthesizerBlock (
 	// External Port
+	// Connected External PCM5102A and MIPI Host
 	.iMIDI(wMIDI_In),
 	.oI2S_MCLK(wI2S_MCLK),		.oI2S_BCLK(wI2S_BCLK),
 	.oI2S_LRCLK(wI2S_LRCLK),	.oI2S_SDATA(wI2S_SDATA),
@@ -299,8 +365,9 @@ wire wTestErr, wDone;
 
 RAMBlock #(
 	.pBlockAdrsWidth(lpBlockAdrsWidth),		.pAdrsMap(lpRAMAdrsMap),
-	.pUsiBusWidth(lpUsiBusWidth),			.pCsrAdrsWidth(lpCsrAdrsWidth),
-	.pCsrActiveWidth(lpRAMCsrActiveWidth),
+	.pUsiBusWidth(lpUsiBusWidth),
+	.pCsrAdrsWidth(lpCsrAdrsWidth),			.pCsrActiveWidth(lpRAMCsrActiveWidth),
+	.pUfiDqBusWidth(lpUfiDqBusWidth),		.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
 	.pRamAdrsWidth(lpRamAdrsWidth),			.pRamDqWidth(lpRamDqWidth)
 ) RAMBlock (
 	// SRAM I/F Port
@@ -309,10 +376,15 @@ RAMBlock #(
 	.oSRAM_LB(wSRAM_LB),	.oSRAM_UB(wSRAM_UB),
 	.oSRAM_OE(wSRAM_OE),	.oSRAM_WE(wSRAM_WE),
 	.oSRAM_CE(wSRAM_CE),
-	// Bus Master Read
+	// Usi Bus Master Read
 	.oSUsiRd(wSUsiRd[lpRAMAdrsMap]),
-	// Bus Master Write
+	// Usi Bus Master Write
 	.iSUsiWd(wSUsiWd),		.iSUsiAdrs(wSUsiAdrs),
+	// Ufi Bus Master Read
+	.oSUfiRd(wSUfiRd),		.oSUfiAdrs(wSUfiAdrs),
+	// Ufi Bus Master Write
+	.iSUfiWd(wSUfiWd),		.iSUfiAdrs(wSUfiWAdrs),
+	.oSUfiRdy(wSUfiRamRdy),
 	// Status
 	.oTestErr(wTestErr),	.oDone(wDone),
 	// CLK, RST
@@ -380,7 +452,7 @@ assign ioGPIOB_O[13] = wSlaveMiso;		assign wMasterMiso	= ioGPIOB_I[13];	assign i
 assign ioGPIOB_O[14] = wMasterSck;		assign wSlaveSck	= ioGPIOB_I[14];	assign ioGPIOB_OE[14] = wSpiDir;
 assign ioGPIOB_O[15] = wMasterMosi;		assign wSlaveMosi	= ioGPIOB_I[15];	assign ioGPIOB_OE[15] = wSpiDir;
 assign ioGPIOB_O[16] = wMasterCs;		assign wSlaveCs		= ioGPIOB_I[16];	assign ioGPIOB_OE[16] = wSpiDir;
-assign ioGPIOB_O[17] = 1'b0;			assign wIoSpiDir	= ioGPIOB_I[17];	assign ioGPIOB_OE[17] = 1'b1;
+assign ioGPIOB_O[17] = 1'b0;			assign wIoSpiDir	= ioGPIOB_I[17];	assign ioGPIOB_OE[17] = 1'b0; // "1" で SPI Block が Bus Master として動作, "0" では MCB操作
 assign ioGPIOB_O[18] = wI2S_MCLK;		assign wIunsedB[18]	= ioGPIOB_I[18];	assign ioGPIOB_OE[18] = 1'b1; // Out Only
 assign ioGPIOB_O[19] = wI2S_BCLK;		assign wIunsedB[19]	= ioGPIOB_I[19];	assign ioGPIOB_OE[19] = 1'b1; // Out Only
 assign ioGPIOB_O[20] = wI2S_SDATA;		assign wIunsedB[20]	= ioGPIOB_I[20];	assign ioGPIOB_OE[20] = 1'b1; // Out Only
