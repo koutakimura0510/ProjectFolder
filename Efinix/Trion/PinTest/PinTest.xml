@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efx:project name="PinTest" description="" last_change_date="火 4月 4 2023 07:18:13" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/PinTest" sw_version="2022.2.322" last_run_state="" last_run_tool="" last_run_flow="" config_result_in_sync="true" design_ood="" place_ood="" route_ood="" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
+<efx:project name="PinTest" description="" last_change_date="土 6月 3 2023 09:43:27" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/PinTest" sw_version="2022.2.322" last_run_state="" last_run_tool="" last_run_flow="" config_result_in_sync="true" design_ood="" place_ood="" route_ood="" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
     <efx:device_info>
         <efx:family name="Trion"/>
         <efx:device name="T20Q144"/>

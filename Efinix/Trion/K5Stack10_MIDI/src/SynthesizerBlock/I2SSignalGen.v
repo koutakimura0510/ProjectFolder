@@ -66,10 +66,10 @@ end
 
 always @*
 begin
-	qBclkCke  <= rMclkBCnt == 2'd3;
-	qLRclkCke <= rMclkLRCnt == {lpMclkCntWidth{1'b1}};
+	qBclkCke  	 <= rMclkBCnt == 2'd3;
+	qLRclkCke 	 <= rMclkLRCnt == {lpMclkCntWidth{1'b1}};
 	qSdataSftCke <= qBclkCke & rBclk;	// BCLK のたち下がりエッジで SDATAシフト
-	qRdyCke   <= qLRclkCke & (~rLRclk);
+	qRdyCke   	 <= qLRclkCke & (~rLRclk);
 end
 
 assign oI2S_MCLK	= iMCLK;

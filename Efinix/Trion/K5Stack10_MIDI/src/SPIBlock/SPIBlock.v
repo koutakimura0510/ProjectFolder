@@ -32,6 +32,11 @@ module SPIBlock #(
 	input  iSpiMiso,
 	output oSpiCs,
 	input  iSpiDir,
+	//
+	output oFlashRomSck,
+	output oFlashRomMosi,
+	input  iFlashRomMiso,
+	output oFlashRomCs,
 	// Bus Master Read
 	input  [pUsiBusWidth-1:0] iMUsiRd,
 	output [pUsiBusWidth-1:0] oSUsiRd,
@@ -98,7 +103,7 @@ CkeGenerator #(
 
 
 //----------------------------------------------------------
-// FPGA Slave の際の データ操作
+// FPGA Slave の際のデータ操作
 //----------------------------------------------------------
 wire [pUsiBusWidth-1:0]	wMUsiRd;
 wire [pUsiBusWidth-1:0]	wSpiRd;
@@ -127,7 +132,7 @@ SPISignalMux # (
 
 
 //----------------------------------------------------------
-// SPI 通信信号生成
+// 外部 CPU との SPI 通信信号生成
 //----------------------------------------------------------
 SPISignal SPISignal (
 	// External Port
@@ -150,5 +155,26 @@ SPISignal SPISignal (
 	//
 	.iSRST(iSRST), .iSCLK(iSCLK)
 );
+
+
+//-----------------------------------------------------------------------------
+// Flash Rom との SPI 通信
+//-----------------------------------------------------------------------------
+// SpiFlashRom SpiFlashRom (
+// 	// External Port
+// 	.oFlashRomSck(wFlashRomSck),
+// 	.oFlashRomMosi(wFlashRomMosi),
+// 	.iFlashRomMiso(wFlashRomMiso),
+// 	.oFlashRomCs(wFlashRomCs),
+// 	// Internal Port FPGA Master Side
+// 	.iSPIEn(wSPIEnCsr),			.iDivCke(wDivCke),
+// 	.iMWd(wMWdCsr),				.oMRd(wMRdCsr),
+// 	.oMSpiIntr(wMSpiIntrCsr),	.iMSPICs(wMSpiCsCsr),
+// 	// Control
+// 	.oSpiDir(oSpiDir),	.onSpiDir(onSpiDir),
+// 	//
+// 	.iSRST(iSRST), .iSCLK(iSCLK)
+// );
+
 
 endmodule

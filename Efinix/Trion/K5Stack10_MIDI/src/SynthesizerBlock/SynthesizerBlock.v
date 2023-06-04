@@ -82,18 +82,43 @@ UartRX #(
 
 
 //-----------------------------------------------------------------------------
+// Sound Generator
+//-----------------------------------------------------------------------------
+wire 
+reg qSawCke;
+
+SawGen #(
+	.pAudioBitWidth(),
+	.pDivBitWidth()
+) SawGen (
+	.oSaw(),
+	.iCke(qSawCke),
+	.iDiv(),
+	// CLK, RST
+	.iRST(iMRST),
+	.iCLK(iMCLK)
+);
+
+
+//-----------------------------------------------------------------------------
 // I2S Encorder
 //-----------------------------------------------------------------------------
+wire wI2SRdy;
+
 I2SSignalGen I2SSignalGen(
 	// I2S Output Ctrl
 	.oI2S_MCLK(oI2S_MCLK),		.oI2S_BCLK(oI2S_BCLK),
 	.oI2S_LRCLK(oI2S_LRCLK),	.oI2S_SDATA(oI2S_SDATA),
 	// Control and Data
-	.iAudioData('h8000_0002),	.oAudioDataRdy(),
+	.iAudioData('h8000_0002),	.oAudioDataRdy(wI2SRdy),
 	// CLK RST
 	.iMRST(iMRST),	.iMCLK(iMCLK)
 );
 
+always @*
+begin
+	qSawCke <= wI2SRdy;
+end
 
 //-----------------------------------------------------------------------------
 // RST Gen

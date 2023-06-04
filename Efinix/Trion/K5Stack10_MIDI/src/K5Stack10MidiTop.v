@@ -289,6 +289,7 @@ GpioBlock #(
 //-----------------------------------------------------------------------------
 wire wSlaveSck, wSlaveMosi, wSlaveMiso, wSlaveCs;
 wire wMasterSck, wMasterMosi, wMasterMiso, wMasterCs;
+wire wFlashRomSck, wFlashRomMosi, wFlashRomMiso, wFlashRomCs;
 wire wIoSpiDir;
 
 SPIBlock #(
@@ -305,8 +306,8 @@ SPIBlock #(
 	.iSpiDir(wIoSpiDir),
 	// SPI Bus Connected External Flash Rom
 	.oFlashRomSck(wFlashRomSck),
-	.iFlashRomMiso(wFlashRomMiso),
 	.oFlashRomMosi(wFlashRomMosi),
+	.iFlashRomMiso(wFlashRomMiso),
 	.oFlashRomCs(wFlashRomCs),
 	// Bus Master Read
 	.iMUsiRd(wMUsiRd),		.oSUsiRd(wSUsiRd[lpSPIAdrsMap]),
