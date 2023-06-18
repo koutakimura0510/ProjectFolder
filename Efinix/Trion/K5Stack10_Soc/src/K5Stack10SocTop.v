@@ -170,6 +170,10 @@ SapphireSoc soc_inst (
 	.jtagCtrl_shift(jtag_inst1_SHIFT),
 	.jtagCtrl_update(jtag_inst1_UPDATE),
 	.jtagCtrl_reset(jtag_inst1_RESET),
+	// .io_jtag_tck(jtag_inst1_TCK),
+	// .io_jtag_tdi(jtag_inst1_TDI),
+	// .io_jtag_tdo(jtag_inst1_TDO),
+	// .io_jtag_tms(jtag_inst1_TMS),
 	// GPIO
 	.system_gpio_0_io_read(wSocGpioIn),
 	.system_gpio_0_io_write(wSocGpioOut),
@@ -179,7 +183,7 @@ SapphireSoc soc_inst (
 	.system_uart_0_io_rxd(wSocUartRx),
 	// common
 	.io_systemClk(iSCLK),
-	.io_asyncReset(wnSRST),
+	.io_asyncReset(wSRST),
 	.io_systemReset(wSocRst)		
 );
 
@@ -570,11 +574,11 @@ reg rLed;
 
 always @(posedge iSCLK)
 begin
-	if (rSRST) 					rCnt <= 0;
+	if (wSRST) 					rCnt <= 0;
 	else if (lpCntMax==rCnt) 	rCnt <= 0;
 	else 						rCnt <= rCnt + 1'b1;
 
-	if (rSRST) 					rLed <= 0;
+	if (wSRST) 					rLed <= 0;
 	else if (lpCntMax==rCnt) 	rLed <= ~rLed;
 	else 						rLed <= rLed;
 end
