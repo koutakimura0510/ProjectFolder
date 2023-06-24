@@ -5,7 +5,6 @@
 - [3. レジスタマップ](#3-レジスタマップ)
 - [4. W25N01GVxxIG 1Gbit 使用方法](#4-w25n01gvxxig-1gbit-使用方法)
 - [5. W25N01 32MB 使用方法](#5-w25n01-32mb-使用方法)
-</br></br>
 
 ## 1. デバイス
 Winbond W25N01GVxxIG 1Gbit 128MB
@@ -26,11 +25,11 @@ all         | 65536 page = 1024 Block
 Commands | OpCode | Byte2 | Byte3 | Byte4 | Byte4
 -|-|-|-|-|-
 Device RESET | FFh | 
-Read Status Register | 0Fh / 05h | SR Addr | S7-n
+Read Status Register | 0Fh / 05h | SR(Status Reg) Addr | S7-n
 Write Status Register | 1Fh / 01h | SR Addr | S7-n
 Write Enable | 06h | 
 Write Disable | 04h | 
-Program Data Load (write) | 02h | CA15-8 | CA7-0 | Data-n |
+Program Data Load (write) | 02h or 84h | CA15-8 | CA7-0 | Data-n |
 Program Execute | 10h | dummy | PA15-8 | PA7-0
 Page Data Read | 13h | dummy | PA15-8 | PA7-0
 Read | 03h | CA15-8 | CA7-0 | Dummy | D7-0n
@@ -49,7 +48,7 @@ ID | Exp
 5 | WEL レジスタが 0 にクリアされる</br>
 6 | Write Enable (WREN) コマンドを発行し、WEL レジスタに 1 を設定し CS を High にする</br>
 7 | Program Data Load を発行し、次にセクタの書き込みアドレスを発行し、書き込みデータをメモリの FIFO に順次送信 CS を High にする</br>
-8 | Program Execute を発行し、次に Block と page アドレスを発行し、CS を Highにし、書き込みを開始する</br>
+8 | Program Execute を発行し、次に page アドレスを発行し、CS を Highにし、書き込みを開始する</br>
 9 | Program Execute 後は、最大 700us 完了にかかる</br>
 10 | このとき、ステータス・レジスタの BUSY bit を確認し、0 になっていれば、プログラムは終了している</br>
 11 | WEL レジスタが 0 にクリアされる</br>

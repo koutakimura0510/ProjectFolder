@@ -1,0 +1,6 @@
+{
+	"files.associations": {
+		"*.v": "verilog",
+		"spi.h": "c"
+	}
+}
