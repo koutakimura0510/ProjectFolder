@@ -36,7 +36,7 @@
 *.mk
 *.o
 *.olb
-*.pdf
+# *.pdf
 *.png
 *.pb
 *.pdom
@@ -108,6 +108,7 @@ Android/
 Cad/
 picture/
 Renesas/
+Reference/
 Business/
 Waveform/
 .history/
