@@ -9,7 +9,6 @@
 - [RaspberryPi](#raspberrypi)
 - [Ubuntu](#ubuntu)
 - [Xilinx](#xilinx)
-</br></br>
 
 ## 概要
 主に下記のプロジェクトのソースコードを管理するディレクトリTree 構成
@@ -44,5 +43,5 @@ C言語のサンプルコードやZynqプロジェクトで使用するファイ
 https://github.com/koutakimura0510/ProjectFolder/tree/master/Ubuntu</br></br>
 
 ## Xilinx
-FPGA の ソースコードを管理</br>
-https://github.com/**koutakimura0510**/ProjectFolder/tree/master/Xilinx/workspace
+Zynq, Artix7 FPGA の ソースコードを管理</br>
+https://github.com/koutakimura0510/ProjectFolder/tree/master/Xilinx/
