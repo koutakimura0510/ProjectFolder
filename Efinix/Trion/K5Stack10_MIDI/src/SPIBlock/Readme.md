@@ -24,16 +24,16 @@ all         | 65536 page = 1024 Block
 ## 3. レジスタマップ
 Commands | OpCode | Byte2 | Byte3 | Byte4 | Byte4
 -|-|-|-|-|-
-Device RESET | FFh | 
-Read Status Register | 0Fh / 05h | SR(Status Reg) Addr | S7-n
-Write Status Register | 1Fh / 01h | SR Addr | S7-n
-Write Enable | 06h | 
-Write Disable | 04h | 
-Program Data Load (write) | 02h or 84h | CA15-8 | CA7-0 | Data-n |
-Program Execute | 10h | dummy | PA15-8 | PA7-0
-Page Data Read | 13h | dummy | PA15-8 | PA7-0
-Read | 03h | CA15-8 | CA7-0 | Dummy | D7-0n
-Block Erase | d8h | dummy | PA15-8 | PA7-0
+Device RESET 			| FFh | 
+Read Status Register 	| 0Fh / 05h 	| SR Addr 	| S7-n
+Write Status Register 	| 1Fh / 01h 	| SR Addr 	| S7-n
+Write Enable 			| 06h | 
+Write Disable 			| 04h | 
+Program Data Load 		| 02h / 84h 	| CA15-8 	| CA7-0 | Data-n
+Program Execute 		| 10h | dummy 	| PA15-8 	| PA7-0
+Page Data Read 			| 13h | dummy 	| PA15-8 	| PA7-0
+Read 					| 03h | CA15-8 	| CA7-0 	| Dummy | Data-n
+Block Erase 			| d8h | dummy 	| PA15-8 	| PA7-0
 </br>
 
 ## 4. W25N01GVxxIG 1Gbit 使用方法

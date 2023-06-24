@@ -574,13 +574,13 @@ reg rLed;
 
 always @(posedge iSCLK)
 begin
-	if (wSRST) 					rCnt <= 0;
+	if (wSRST) 					      rCnt <= 0;
 	else if (lpCntMax==rCnt) 	rCnt <= 0;
-	else 						rCnt <= rCnt + 1'b1;
+	else 						          rCnt <= rCnt + 1'b1;
 
-	if (wSRST) 					rLed <= 0;
+	if (wSRST) 					      rLed <= 0;
 	else if (lpCntMax==rCnt) 	rLed <= ~rLed;
-	else 						rLed <= rLed;
+	else 						          rLed <= rLed;
 end
 
 always @*
