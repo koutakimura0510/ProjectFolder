@@ -22,7 +22,7 @@ module USIB #(
 	parameter pSUsibWidth 		= pUsiBusWidth * pBlockConnectNum
 )(
 	// Bus Master Read
-	input	[pSUsibWidth-1:0]	iSUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
+	input	  [pSUsibWidth-1:0]	iSUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
 	output	[pUsiBusWidth-1:0]	oMUsiRd,
 	// Bus Master Write
 	input 	[pUsiBusWidth-1:0]	iMUsiWd,
@@ -30,8 +30,8 @@ module USIB #(
 	output	[pUsiBusWidth-1:0]	oSUsiWd,
 	output	[pUsiBusWidth-1:0]	oSUsiAdrs,
     // CLK Reset
-    input	iSRST,
-    input	iSCLK 
+  input	iSRST,
+  input	iSCLK 
 );
 
 //----------------------------------------------------------

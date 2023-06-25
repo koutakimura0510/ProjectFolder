@@ -1,6 +1,7 @@
 {
 	"files.associations": {
-		"*.v": "verilog",
-		"spi.h": "c"
-	}
+    "*.v": "verilog",
+    "spi.h": "c",
+    "apb3_cl.h": "c"
+  }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efxpt:design_db name="K5Stack10_MIDI" device_def="T20Q144" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI" version="2022.2.322" db_version="20222999" last_change_date="Sat May 13 20:46:32 2023" xmlns:efxpt="http://www.efinixinc.com/peri_design_db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/peri_design_db peri_design_db.xsd ">
+<efxpt:design_db name="K5Stack10_MIDI" device_def="T20Q144" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI" version="2022.2.322" db_version="20222999" last_change_date="Sun Jun 25 15:14:33 2023" xmlns:efxpt="http://www.efinixinc.com/peri_design_db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/peri_design_db peri_design_db.xsd ">
     <efxpt:device_info>
         <efxpt:iobank_info>
             <efxpt:iobank name="1A" iostd="3.3 V LVTTL / LVCMOS"/>
@@ -462,5 +462,21 @@
         </efxpt:pll>
     </efxpt:pll_info>
     <efxpt:lvds_info/>
-    <efxpt:jtag_info/>
+    <efxpt:jtag_info>
+        <efxpt:jtag name="jtag_inst1" jtag_def="JTAG_USER1">
+            <efxpt:gen_pin>
+                <efxpt:pin name="jtag_inst1_CAPTURE" type_name="CAPTURE" is_bus="false"/>
+                <efxpt:pin name="jtag_inst1_DRCK" type_name="DRCK" is_bus="false"/>
+                <efxpt:pin name="jtag_inst1_RESET" type_name="RESET" is_bus="false"/>
+                <efxpt:pin name="jtag_inst1_RUNTEST" type_name="RUNTEST" is_bus="false"/>
+                <efxpt:pin name="jtag_inst1_SEL" type_name="SEL" is_bus="false"/>
+                <efxpt:pin name="jtag_inst1_SHIFT" type_name="SHIFT" is_bus="false"/>
+                <efxpt:pin name="jtag_inst1_TCK" type_name="TCK" is_bus="false"/>
+                <efxpt:pin name="jtag_inst1_TDI" type_name="TDI" is_bus="false"/>
+                <efxpt:pin name="jtag_inst1_TMS" type_name="TMS" is_bus="false"/>
+                <efxpt:pin name="jtag_inst1_UPDATE" type_name="UPDATE" is_bus="false"/>
+                <efxpt:pin name="jtag_inst1_TDO" type_name="TDO" is_bus="false"/>
+            </efxpt:gen_pin>
+        </efxpt:jtag>
+    </efxpt:jtag_info>
 </efxpt:design_db>

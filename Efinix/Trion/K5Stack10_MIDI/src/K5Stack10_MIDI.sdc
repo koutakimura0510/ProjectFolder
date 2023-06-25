@@ -1,7 +1,7 @@
 
 # Efinity Interface Designer SDC
 # Version: 2022.2.322
-# Date: 2023-04-05 07:43
+# Date: 2023-06-25 15:14
 
 # Copyright (C) 2017 - 2022 Efinix Inc. All rights reserved.
 
@@ -14,12 +14,24 @@
 create_clock -period 20.0000 iSCLK
 create_clock -period 40.6897 iMCLK
 
+# 非同期信号の場合は下記
+
+### set_max_delay -from <source> -to <destination> <delay_value>
+# 上記の構文の要素を説明します：
+# -from <source>: 遅延を設定する信号の出力元（送信元）を指定します。
+# -to <destination>: 遅延を受ける信号の入力先（受信先）を指定します。
+# <delay_value>: 信号の最大遅延を指定します。単位は、タイムスケールに依存します（例：ns、ps）。
+
+# set_max_delay -from [get_pins source_reg/Q] -to [get_pins dest_reg/D] 5.0
+# 上記の例では、"source_reg/Q" から "dest_reg/D" への非同期信号の最大遅延を 5.0ns に設定しています。
+
+# set_output_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {oSRAM_CE}]
+# set_output_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {oSRAM_CE}]
+
 # GPIO Constraints
 ####################
 # set_input_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {iOSC_IN}]
 # set_input_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {iOSC_IN}]
-# set_output_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {oSRAM_CE}]
-# set_output_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {oSRAM_CE}]
 # set_output_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {oSRAM_LB}]
 # set_output_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {oSRAM_LB}]
 # set_output_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {oSRAM_OE}]
@@ -58,6 +70,12 @@ create_clock -period 40.6897 iMCLK
 # set_output_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {oSRAMA[13]}]
 # set_output_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {oSRAMA[14]}]
 # set_output_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {oSRAMA[14]}]
+# set_output_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {oSRAMA[15]}]
+# set_output_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {oSRAMA[15]}]
+# set_output_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {oSRAMA[16]}]
+# set_output_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {oSRAMA[16]}]
+# set_output_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {oSRAMA[17]}]
+# set_output_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {oSRAMA[17]}]
 # set_input_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {ioCCK_I}]
 # set_input_delay -clock <CLOCK> -min <MIN CALCULATION> [get_ports {ioCCK_I}]
 # set_output_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {ioCCK_O}]
@@ -488,3 +506,22 @@ create_clock -period 40.6897 iMCLK
 
 # LVDS Tx Constraints
 ####################
+
+# JTAG Constraints
+####################
+# create_clock -period <USER_PERIOD> [get_ports {jtag_inst1_TCK}]
+# create_clock -period <USER_PERIOD> [get_ports {jtag_inst1_DRCK}]
+set_output_delay -clock jtag_inst1_TCK -max 0.144 [get_ports {jtag_inst1_TDO}]
+set_output_delay -clock jtag_inst1_TCK -min -0.053 [get_ports {jtag_inst1_TDO}]
+set_input_delay -clock_fall -clock jtag_inst1_TCK -max 0.347 [get_ports {jtag_inst1_CAPTURE}]
+set_input_delay -clock_fall -clock jtag_inst1_TCK -min 0.134 [get_ports {jtag_inst1_CAPTURE}]
+set_input_delay -clock_fall -clock jtag_inst1_TCK -max 0.347 [get_ports {jtag_inst1_RESET}]
+set_input_delay -clock_fall -clock jtag_inst1_TCK -min 0.134 [get_ports {jtag_inst1_RESET}]
+set_input_delay -clock_fall -clock jtag_inst1_TCK -max 0.347 [get_ports {jtag_inst1_RUNTEST}]
+set_input_delay -clock_fall -clock jtag_inst1_TCK -min 0.134 [get_ports {jtag_inst1_RUNTEST}]
+set_input_delay -clock_fall -clock jtag_inst1_TCK -max 0.300 [get_ports {jtag_inst1_SEL}]
+set_input_delay -clock_fall -clock jtag_inst1_TCK -min 0.116 [get_ports {jtag_inst1_SEL}]
+set_input_delay -clock_fall -clock jtag_inst1_TCK -max 0.347 [get_ports {jtag_inst1_UPDATE}]
+set_input_delay -clock_fall -clock jtag_inst1_TCK -min 0.134 [get_ports {jtag_inst1_UPDATE}]
+set_input_delay -clock_fall -clock jtag_inst1_TCK -max 0.417 [get_ports {jtag_inst1_SHIFT}]
+set_input_delay -clock_fall -clock jtag_inst1_TCK -min 0.161 [get_ports {jtag_inst1_SHIFT}]
