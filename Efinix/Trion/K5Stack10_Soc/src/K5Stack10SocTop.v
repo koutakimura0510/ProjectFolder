@@ -148,12 +148,12 @@ SapphireSoc soc_inst (
 	// SPI 0
 	.system_spi_0_io_sclk_write(wSocSpiSclk),
 	.system_spi_0_io_data_0_writeEnable(wSocSpiOe),
-	.system_spi_0_io_data_0_read(wSocSpiMiso),
+	.system_spi_0_io_data_0_read(),
 	.system_spi_0_io_data_0_write(wSocSpiMosi),
 	.system_spi_0_io_ss(wSocSpiCs),
 	// 
 	.system_spi_0_io_data_1_writeEnable(),
-	.system_spi_0_io_data_1_read(),
+	.system_spi_0_io_data_1_read(wSocSpiMiso),
 	.system_spi_0_io_data_1_write(),
 	.system_spi_0_io_data_2_writeEnable(),
 	.system_spi_0_io_data_2_read(),
@@ -482,31 +482,31 @@ reg  [lpGpioWidth-1:0] qGpioAltMode;
 // GPIOL
 wire [5:0] wIunsedL;
 wire [17:0] wIunsedR;
-assign ioGPIOL_O[0]     = wSocSpiSclk;	assign  wIunsedL[0]  = ioGPIOL_I[0];	assign ioGPIOL_OE[0] = 1'b1;	// SCLK
-assign ioGPIOL_O[1]     = wSocSpiMosi;	assign  wIunsedL[1]  = ioGPIOL_I[1];	assign ioGPIOL_OE[1] = 1'b1;	// MOSI
-assign ioGPIOL_O[2]     = 1'b0;			assign  wSocSpiMiso  = ioGPIOL_I[2];	assign ioGPIOL_OE[2] = 1'b0;	// MISO
-assign ioGPIOL_O[3]     = wSocSpiCs;	assign  wIunsedL[3]	 = ioGPIOL_I[3];	assign ioGPIOL_OE[3] = 1'b1;	// CS
-assign ioGPIOL_O[4]     = 1'b1;			assign  wIunsedL[4]  = ioGPIOL_I[4];	assign ioGPIOL_OE[4] = 1'b1;
-assign ioGPIOL_O[5]     = 1'b0;			assign  wnARST       = ioGPIOL_I[5];	assign ioGPIOL_OE[5] = 1'b0;
+assign ioGPIOL_O[0]     = wSocSpiSclk;    assign  wIunsedL[0]  = ioGPIOL_I[0];	assign ioGPIOL_OE[0] = 1'b1;	// SCLK
+assign ioGPIOL_O[1]     = wSocSpiMosi;    assign  wIunsedL[1]  = ioGPIOL_I[1];	assign ioGPIOL_OE[1] = 1'b1;	// MOSI
+assign ioGPIOL_O[2]     = 1'b0;           assign  wSocSpiMiso  = ioGPIOL_I[2];	assign ioGPIOL_OE[2] = 1'b0;	// MISO
+assign ioGPIOL_O[3]     = wSocSpiCs;      assign  wIunsedL[3]	 = ioGPIOL_I[3];	assign ioGPIOL_OE[3] = 1'b1;	// CS
+assign ioGPIOL_O[4]     = 1'b1;           assign  wIunsedL[4]  = ioGPIOL_I[4];	assign ioGPIOL_OE[4] = 1'b1;
+assign ioGPIOL_O[5]     = 1'b0;           assign  wnARST       = ioGPIOL_I[5];	assign ioGPIOL_OE[5] = 1'b0;
 // GPIOR
-assign ioGPIOR_O[0]     = 1'b0;				assign  wIunsedR[0]  = ioGPIOR_I[0];	assign ioGPIOR_OE[0]  = 1'b0;
-assign ioGPIOR_O[1]     = 1'b0;				assign  wIunsedR[1]  = ioGPIOR_I[1];	assign ioGPIOR_OE[1]  = 1'b0;
-assign ioGPIOR_O[2]     = 1'b0;				assign  wIunsedR[2]  = ioGPIOR_I[2];	assign ioGPIOR_OE[2]  = 1'b0;
-assign ioGPIOR_O[3]     = 1'b0;				assign  wIunsedR[3]  = ioGPIOR_I[3];	assign ioGPIOR_OE[3]  = 1'b0;
-assign ioGPIOR_O[4]     = 1'b0;				assign  wIunsedR[4]  = ioGPIOR_I[4];	assign ioGPIOR_OE[4]  = 1'b0;
-assign ioGPIOR_O[5]     = 1'b0;				assign  wIunsedR[5]  = ioGPIOR_I[5];	assign ioGPIOR_OE[5]  = 1'b0;
-assign ioGPIOR_O[6]     = 1'b0;				assign  wIunsedR[6]  = ioGPIOR_I[6];	assign ioGPIOR_OE[6]  = 1'b0;
-assign ioGPIOR_O[7]     = 1'b0;				assign  wIunsedR[7]  = ioGPIOR_I[7];	assign ioGPIOR_OE[7]  = 1'b0;
-assign ioGPIOR_O[8]     = 1'b0;				assign  wIunsedR[8]  = ioGPIOR_I[8];	assign ioGPIOR_OE[8]  = 1'b0;
-assign ioGPIOR_O[9]     = 1'b0;				assign  wIunsedR[9]  = ioGPIOR_I[9];	assign ioGPIOR_OE[9]  = 1'b0;
-assign ioGPIOR_O[10]    = 1'b0;				assign  wIunsedR[10] = ioGPIOR_I[10];	assign ioGPIOR_OE[10] = 1'b0;
-assign ioGPIOR_O[11]    = 1'b0;				assign  wIunsedR[11] = ioGPIOR_I[11];	assign ioGPIOR_OE[11] = 1'b0;
-assign ioGPIOR_O[12]    = 1'b0;				assign  wIunsedR[12] = ioGPIOR_I[12];	assign ioGPIOR_OE[12] = 1'b0;
-assign ioGPIOR_O[13]    = 1'b0;				assign  wIunsedR[13] = ioGPIOR_I[13];	assign ioGPIOR_OE[13] = 1'b0;
-assign ioGPIOR_O[14] 	= wSocGpioOut[0];	assign  wIunsedR[14] = ioGPIOR_I[14];	assign ioGPIOR_OE[14] = 1'b1;
-assign ioGPIOR_O[15] 	= qGpioAltMode[0];	assign  wIunsedR[15] = ioGPIOR_I[15];	assign ioGPIOR_OE[15] = 1'b1;
-assign ioGPIOR_O[16] 	= qGpioAltMode[2];	assign  wIunsedR[16] = ioGPIOR_I[16];	assign ioGPIOR_OE[16] = 1'b1;
-assign ioGPIOR_O[17]    = 1'b0;				assign  wIunsedR[17] = ioGPIOR_I[17];	assign ioGPIOR_OE[17] = 1'b0;
+assign ioGPIOR_O[0]     = 1'b0;           assign  wIunsedR[0]  = ioGPIOR_I[0];	assign ioGPIOR_OE[0]  = 1'b0;
+assign ioGPIOR_O[1]     = 1'b0;           assign  wIunsedR[1]  = ioGPIOR_I[1];	assign ioGPIOR_OE[1]  = 1'b0;
+assign ioGPIOR_O[2]     = 1'b0;           assign  wIunsedR[2]  = ioGPIOR_I[2];	assign ioGPIOR_OE[2]  = 1'b0;
+assign ioGPIOR_O[3]     = 1'b0;           assign  wIunsedR[3]  = ioGPIOR_I[3];	assign ioGPIOR_OE[3]  = 1'b0;
+assign ioGPIOR_O[4]     = 1'b0;           assign  wIunsedR[4]  = ioGPIOR_I[4];	assign ioGPIOR_OE[4]  = 1'b0;
+assign ioGPIOR_O[5]     = 1'b0;           assign  wIunsedR[5]  = ioGPIOR_I[5];	assign ioGPIOR_OE[5]  = 1'b0;
+assign ioGPIOR_O[6]     = 1'b0;           assign  wIunsedR[6]  = ioGPIOR_I[6];	assign ioGPIOR_OE[6]  = 1'b0;
+assign ioGPIOR_O[7]     = 1'b0;           assign  wIunsedR[7]  = ioGPIOR_I[7];	assign ioGPIOR_OE[7]  = 1'b0;
+assign ioGPIOR_O[8]     = 1'b0;           assign  wIunsedR[8]  = ioGPIOR_I[8];	assign ioGPIOR_OE[8]  = 1'b0;
+assign ioGPIOR_O[9]     = 1'b0;           assign  wIunsedR[9]  = ioGPIOR_I[9];	assign ioGPIOR_OE[9]  = 1'b0;
+assign ioGPIOR_O[10]    = 1'b0;           assign  wIunsedR[10] = ioGPIOR_I[10];	assign ioGPIOR_OE[10] = 1'b0;
+assign ioGPIOR_O[11]    = 1'b0;           assign  wIunsedR[11] = ioGPIOR_I[11];	assign ioGPIOR_OE[11] = 1'b0;
+assign ioGPIOR_O[12]    = 1'b0;           assign  wIunsedR[12] = ioGPIOR_I[12];	assign ioGPIOR_OE[12] = 1'b0;
+assign ioGPIOR_O[13]    = 1'b0;           assign  wIunsedR[13] = ioGPIOR_I[13];	assign ioGPIOR_OE[13] = 1'b0;
+assign ioGPIOR_O[14] 	= wSocGpioOut[0];	  assign  wIunsedR[14] = ioGPIOR_I[14];	assign ioGPIOR_OE[14] = 1'b1;
+assign ioGPIOR_O[15] 	= qGpioAltMode[0];  assign  wIunsedR[15] = ioGPIOR_I[15];	assign ioGPIOR_OE[15] = 1'b1;
+assign ioGPIOR_O[16] 	= qGpioAltMode[2];  assign  wIunsedR[16] = ioGPIOR_I[16];	assign ioGPIOR_OE[16] = 1'b1;
+assign ioGPIOR_O[17]    = 1'b0;           assign  wIunsedR[17] = ioGPIOR_I[17];	assign ioGPIOR_OE[17] = 1'b0;
 // GPIOB
 wire [23:0] wIunsedB;
 assign ioGPIOB_O[0]  = 1'b0;			assign wIunsedB[0]	= ioGPIOB_I[0];		assign ioGPIOB_OE[0]  = 1'b1;
