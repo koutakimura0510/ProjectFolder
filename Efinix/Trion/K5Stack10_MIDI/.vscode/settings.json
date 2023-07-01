@@ -3,6 +3,10 @@
     "*.v": "verilog",
     "apb3_cl.h": "c",
     "soc.h": "c",
-    "bsp.h": "c"
+    "bsp.h": "c",
+    "io.h": "c",
+    "type.h": "c",
+    "clint.h": "c",
+    "uart.h": "c"
   }
 }
