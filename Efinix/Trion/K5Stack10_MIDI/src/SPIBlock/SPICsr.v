@@ -37,10 +37,10 @@ module SPICsr #(
 //----------------------------------------------------------
 // Csr Write
 //----------------------------------------------------------
-reg 				rSPIEn;				assign oSPIEn 		= rSPIEn;			// 通信開始
-reg [pDivClk-1:0]	rSPIDiv;			assign oSPIDiv 		= rSPIDiv;			// CLK Division
-reg [7:0]			rMWd;				assign oMWd			= rMWd;				// Send Data
-reg 				rMSpiCs;			assign oMSpiCs		= rMSpiCs;			// chip select 
+reg 			        rSPIEn;				assign oSPIEn 		= rSPIEn;			// 通信開始
+reg [pDivClk-1:0]	rSPIDiv;			assign oSPIDiv 		= rSPIDiv;		// CLK Division
+reg [7:0]	        rMWd;				  assign oMWd 			= rMWd;				// Send Data
+reg 			        rMSpiCs;			assign oMSpiCs		= rMSpiCs;		// chip select 
 //
 reg [7:0]			rMRd;	// 読み込みデータ
 //

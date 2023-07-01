@@ -1,0 +1,8 @@
+{
+  "files.associations": {
+    "*.v": "verilog",
+    "apb3_cl.h": "c",
+    "soc.h": "c",
+    "bsp.h": "c"
+  }
+}

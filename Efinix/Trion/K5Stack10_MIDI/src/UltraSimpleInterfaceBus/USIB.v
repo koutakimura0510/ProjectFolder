@@ -18,11 +18,11 @@ module USIB #(
 	parameter pUsiBusWidth 		= 32,	// UsiBus 幅
 	parameter pCsrAdrsWidth 	= 16,	// 各ブロック共通の基本CSR幅
 	// not variable parameter
-	parameter pBlockAdrsWidth 	= 3,
+	parameter pBlockAdrsWidth = 3,
 	parameter pSUsibWidth 		= pUsiBusWidth * pBlockConnectNum
 )(
 	// Bus Master Read
-	input	  [pSUsibWidth-1:0]	iSUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
+	input	  [pSUsibWidth-1:0]	  iSUsiRd,	// RCmd 発行時に各ブロックのCSR値が入力される
 	output	[pUsiBusWidth-1:0]	oMUsiRd,
 	// Bus Master Write
 	input 	[pUsiBusWidth-1:0]	iMUsiWd,
@@ -38,18 +38,18 @@ module USIB #(
 // バスクロックで バス経由データ保存
 //----------------------------------------------------------
 genvar x;
-reg  [pUsiBusWidth-1:0]		rMUsiWd;				assign oSUsiWd		= rMUsiWd;
-reg  [pUsiBusWidth-1:0]		rMUsiAdrs;				assign oSUsiAdrs	= rMUsiAdrs;
-reg	 [pUsiBusWidth-1:0]		rSUsiRd;				assign oMUsiRd		= rSUsiRd;
-wire [pUsiBusWidth-1:0]		wSUsiRd[pBlockConnectNum-1:0];
+reg  [pUsiBusWidth-1:0]		  rMUsiWd;				assign oSUsiWd		= rMUsiWd;
+reg  [pUsiBusWidth-1:0]		  rMUsiAdrs;			assign oSUsiAdrs	= rMUsiAdrs;
+reg	 [pUsiBusWidth-1:0]		  rSUsiRd;				assign oMUsiRd		= rSUsiRd;
+wire [pUsiBusWidth-1:0]		  wSUsiRd[pBlockConnectNum-1:0];
 reg  [pBlockAdrsWidth-1:0]	qBusAdrs;
 
 always @(posedge iSCLK)
 begin
-	rMUsiWd 	<= iMUsiWd;
+	rMUsiWd <= iMUsiWd;
 
 	if (iSRST) 	rMUsiAdrs 	<= {pUsiBusWidth{1'b0}};
-	else 		rMUsiAdrs 	<= iMUsiAdrs;
+	else 		    rMUsiAdrs 	<= iMUsiAdrs;
 
 	rSUsiRd <= wSUsiRd[qBusAdrs];
 end

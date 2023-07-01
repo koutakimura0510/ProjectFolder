@@ -24,7 +24,7 @@ EFX_DEVICE = "T20Q144"
 EFX_FAMILY = "Trion"
 EFX_PROJECT = "K5Stack10_MIDI"
 EFX_TOP = "K5Stack10MidiTop"
-EFX_MAP_PATH = /tools/efinity/2022.2/bin/efx_map
+EFX_MAP_PATH = /tools/efinity/2023.1/bin/efx_map
 
 # シンボリックリンクで実行可能
 PROJECT = ./K5Stack10_MIDI.xml

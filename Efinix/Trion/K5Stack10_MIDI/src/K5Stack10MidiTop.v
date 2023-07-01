@@ -68,7 +68,7 @@ module K5Stack10MidiTop(
   input   iSCLK,
   output  PLL_TL0_RSTN,
   input   PLL_TL0_LOCKED,
-  // JTAG
+  // JTAG Soc
   input   jtag_inst1_TCK,
   output  jtag_inst1_TDO,
   input   jtag_inst1_TDI,
@@ -184,8 +184,10 @@ always @*
 begin
   // qMUsiWd    <= wMUsiWdSpi;
   // qMUsiAdrs  <= wMUsiAdrsSpi;
-  qMUsiWd    <= wSpiDir ? wMUsiWdSpi   : wMUsiWdMcb;
-  qMUsiAdrs  <= wSpiDir ? wMUsiAdrsSpi : wMUsiAdrsMcb;
+  // qMUsiWd    <= wSpiDir ? wMUsiWdSpi   : wMUsiWdMcb;
+  // qMUsiAdrs  <= wSpiDir ? wMUsiAdrsSpi : wMUsiAdrsMcb;
+  qMUsiWd    <= wMUsiWdMcb;
+  qMUsiAdrs  <= wMUsiAdrsMcb;
 end
 
 generate
@@ -201,11 +203,11 @@ endgenerate
 //----------------------------------------------------------
 // USIB
 //----------------------------------------------------------
-localparam   lpRamAdrsWidth    = 18;
-localparam   lpRamDqWidth    = 16;
-localparam  lpUfiDqBusWidth    = lpRamDqWidth;
-localparam  lpUfiAdrsBusWidth   = 32;
-localparam  lpUfiIdNumber    = 3;
+localparam  lpRamAdrsWidth    = 18;
+localparam  lpRamDqWidth      = 16;
+localparam  lpUfiDqBusWidth   = lpRamDqWidth;
+localparam  lpUfiAdrsBusWidth = 32;
+localparam  lpUfiIdNumber     = 3;
 
 wire [lpUfiDqBusWidth-1:0] wSUfiRd;
 wire [lpUfiAdrsBusWidth-1:0] wSUfiAdrs;
@@ -244,6 +246,8 @@ end
 //-----------------------------------------------------------------------------
 // MCB ここRISC-V に変更。別プロジェクトでデバッグ中
 //-----------------------------------------------------------------------------
+wire wSocTxd, wSocRxd;
+
 MicroControllerBlock #(
   .pUsiBusWidth(lpUsiBusWidth),
   .pUfiDqBusWidth(lpUfiDqBusWidth),
@@ -259,17 +263,16 @@ MicroControllerBlock #(
   .oMUfiWd(wMUfiWd),    .oMUfiAdrs(wMUfiWAdrs),
   .iMUfiRdy(wMUfiRdy),
   // GPIO
-  .oTXD(),    .iRXD(),
-  .oGPIO(),
+  .oTxd(wSocTxd),       .iRxd(wSocRxd),
   // JTAG
-  .jtagCtrl_tck(jtag_inst1_TCK),
-  .jtagCtrl_tdi(jtag_inst1_TDI),
-  .jtagCtrl_tdo(jtag_inst1_TDO),
-  .jtagCtrl_enable(jtag_inst1_SEL),
-  .jtagCtrl_capture(jtag_inst1_CAPTURE),
-  .jtagCtrl_shift(jtag_inst1_SHIFT),
-  .jtagCtrl_update(jtag_inst1_UPDATE),
-  .jtagCtrl_reset(jtag_inst1_RESET),
+  .jtag_inst1_TCK(jtag_inst1_TCK),
+  .jtag_inst1_TDI(jtag_inst1_TDI),
+  .jtag_inst1_TDO(jtag_inst1_TDO),
+  .jtag_inst1_SEL(jtag_inst1_SEL),
+  .jtag_inst1_CAPTURE(jtag_inst1_CAPTURE),
+  .jtag_inst1_SHIFT(jtag_inst1_SHIFT),
+  .jtag_inst1_UPDATE(jtag_inst1_UPDATE),
+  .jtag_inst1_RESET(jtag_inst1_RESET),
   // common
   .iSRST(wSRST),      .iSCLK(iSCLK)
 );
@@ -495,7 +498,8 @@ assign oSRAM_OE = wSRAM_OE;
 assign oSRAM_WE = wSRAM_WE;
 assign oSRAM_CE = wSRAM_CE;
 // USB UART
-assign oUSB_TX = wMIDI_In;//iUSB_RX;
+// assign oUSB_TX = wMIDI_In;//iUSB_RX;
+assign oUSB_TX = wSocTxd;
 // Configration ROM SPI
 wire [3:0] wIunusedConfig;
 assign ioMOSI_O = 1'b0;     assign wIunusedConfig[0] = ioMOSI_I;  assign ioMOSI_OE = 1'b0;
