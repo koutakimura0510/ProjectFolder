@@ -129,16 +129,17 @@ assign PLL_TL0_RSTN = 1'b1;
 //------------------------------------------------------------------------------
 // USI/F BUS
 //------------------------------------------------------------------------------
-localparam lpUsiBusWidth      = 32;  // USIB Width
-localparam lpBlockConnectNum  = 4;  // 現在接続しているブロックの個数
+localparam lpUsiBusWidth      = 32;		// USIB Width
+localparam lpBlockConnectNum  = 5;		// 現在接続しているブロックの個数
 localparam lpBlockAdrsWidth   = func_getwidth(lpBlockConnectNum);
-localparam lpCsrAdrsWidth     = 16;  // 各ブロック共通の基本CSR幅
+localparam lpCsrAdrsWidth     = 16;		// 各ブロック共通の基本CSR幅
 localparam lpSUsiBusWidth     = (lpUsiBusWidth * lpBlockConnectNum);
-localparam [lpBlockAdrsWidth-1:0]     // ブロックアドレスマッピング ※プロジェクトの Readme.md 参照
+localparam [lpBlockAdrsWidth-1:0]		// ブロックアドレスマッピング ※プロジェクトの Readme.md 参照
   lpGpioAdrsMap         = 'h0,
   lpSPIAdrsMap          = 'h1,
   lpSynthesizerAdrsMap  = 'h2,
   lpRAMAdrsMap          = 'h3,
+  lpSysTimerAdrsMap     = 'h4,
   lpNullAdrsMap         = 0;
 
 // ブロック内 Csr のアドレス幅
@@ -150,6 +151,7 @@ localparam
   lpSPICsrActiveWidth   = 8,
   lpSynCsrActiveWidth   = 8,
   lpRAMCsrActiveWidth   = 8,
+  lpTimerCsrActiveWidth = 8,
   lpNullActiveWidth     = 8;  // 使用しない、ソースの追加がやりやすいように
   // lpI2CCsrActiveWidth  = 8,
   // lpVTBCsrActiveWidth  = 16,
@@ -417,6 +419,24 @@ RAMBlock #(
   .iSCLK(iSCLK)
 );
 
+//---------------------------------------------------------------------------
+// Systick Timer Block
+//---------------------------------------------------------------------------
+localparam lpSysClk = 50000000;
+
+SysTimerBlock #(
+	.pBlockAdrsWidth(lpBlockAdrsWidth),	.pAdrsMap(lpSysTimerAdrsMap),
+	.pUsiBusWidth(lpUsiBusWidth),
+	.pCsrAdrsWidth(lpCsrAdrsWidth),		.pCsrActiveWidth(lpTimerCsrActiveWidth),
+	.pSysClk(lpSysClk)
+) SysTimerBlock (
+  // Usi Bus Master Read
+  .oSUsiRd(wSUsiRd[lpSysTimerAdrsMap]),
+  // Usi Bus Master Write
+  .iSUsiWd(wSUsiWd),    .iSUsiAdrs(wSUsiAdrs),
+  // CLK, RST
+  .iSRST(wSRST),		.iSCLK(iSCLK)
+);
 
 //-----------------------------------------------------------------------------
 // Debug Core Block

@@ -12,26 +12,26 @@ module SynthesizerBlock #(
   parameter pCsrAdrsWidth = 8,
   parameter pCsrActiveWidth = 8
 )(
-  // MIPI Input Ctrl
-  input  iMIDI,
-  // I2S Output Ctrl
-  output oI2S_MCLK,
-  output oI2S_BCLK,
-  output oI2S_LRCLK,
-  output oI2S_SDATA,
-  // Control Status data
-  output [7:0] oMidiRd,  // デバッグ用途に外部出力しておく
-  output oMidiVd,      // ;;
-  // Bus Master Read
-  output [pUsiBusWidth-1:0] oSUsiRd,
-  // Bus Master Write
-  input  [pUsiBusWidth-1:0] iSUsiWd,
-  input  [pUsiBusWidth-1:0] iSUsiAdrs,
-    // CLK Reset
-  input  iMRST,
-    input  iSRST,
-  input  iMCLK,
-    input  iSCLK
+	// MIPI Input Ctrl
+	input  iMIDI,
+	// I2S Output Ctrl
+	output oI2S_MCLK,
+	output oI2S_BCLK,
+	output oI2S_LRCLK,
+	output oI2S_SDATA,
+	// Control Status data
+	output [7:0] oMidiRd,  // デバッグ用途に外部出力しておく
+	output oMidiVd,      // ;;
+	// Bus Master Read
+	output [pUsiBusWidth-1:0] oSUsiRd,
+	// Bus Master Write
+	input  [pUsiBusWidth-1:0] iSUsiWd,
+	input  [pUsiBusWidth-1:0] iSUsiAdrs,
+	// CLK Reset
+	input  iMRST,
+	input  iSRST,
+	input  iMCLK,
+	input  iSCLK
 );
 
 //-----------------------------------------------------------------------------

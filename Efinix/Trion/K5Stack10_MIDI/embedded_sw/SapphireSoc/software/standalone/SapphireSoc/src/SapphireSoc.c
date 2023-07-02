@@ -62,25 +62,30 @@ void usi_write_cmd(uint32_t wd, uint32_t adrs)
 	write_u32(0, ADRS_GPIO_1_IO_CTRL_EN);
 }
 
+/**-----------------------------------------------------------------------------
+ * LED FLASH
+ *-----------------------------------------------------------------------------*/
+void led_flash(void)
+{
+	for (uint8_t i = 0; i < 3; i++)
+	{
+		usi_write_cmd(0x1 << i, BASE_BLOCK_ADRS_GPIO);
+		bsp_uDelay(200000);
+	}
+}
 
 /**-----------------------------------------------------------------------------
  * main 関数
  *-----------------------------------------------------------------------------*/
 void main()
 {
-	uint32_t d = 255;
 	// bsp_init();
 	usi_write_cmd(0, BASE_BLOCK_ADRS_GPIO + 0x8);
 	
 	while (1)
 	{
-		usi_write_cmd(d, BASE_BLOCK_ADRS_GPIO);
-		bsp_uDelay(1000000);
-		d = usi_read_cmd(BASE_BLOCK_ADRS_GPIO);
-		usi_write_cmd(0, BASE_BLOCK_ADRS_GPIO);
-		bsp_uDelay(1000000);
-	
-	//     usi_write_cmd(0xffffffff, 0x40000000);
-		bsp_printf("Teeeeeee!! \r\n");
+		led_flash();
+		// d = usi_read_cmd(BASE_BLOCK_ADRS_GPIO);
+		// bsp_printf("Teeeeeee!! \r\n");
 	}
 }
