@@ -23,6 +23,7 @@
  * Block Base Adrs
  *-----------------------------------------------------------------------------*/
 #define BASE_BLOCK_ADRS_GPIO	(0x00000000)
+#define BASE_BLOCK_ADRS_TIMER	(0x00040000)
 
 
 /**-----------------------------------------------------------------------------
@@ -67,11 +68,16 @@ void usi_write_cmd(uint32_t wd, uint32_t adrs)
  *-----------------------------------------------------------------------------*/
 void led_flash(void)
 {
-	for (uint8_t i = 0; i < 3; i++)
-	{
-		usi_write_cmd(0x1 << i, BASE_BLOCK_ADRS_GPIO);
-		bsp_uDelay(200000);
+	static uint32_t t = 0;
+	static uint8_t flash = 0x01;
+
+	if ((t + 20) < usi_read_cmd(BASE_BLOCK_ADRS_TIMER)) {
+		t = usi_read_cmd(BASE_BLOCK_ADRS_TIMER);
+		flash++;
+		flash &= 0x07;
 	}
+
+	usi_write_cmd(flash, BASE_BLOCK_ADRS_GPIO);
 }
 
 /**-----------------------------------------------------------------------------
@@ -80,7 +86,8 @@ void led_flash(void)
 void main()
 {
 	// bsp_init();
-	usi_write_cmd(0, BASE_BLOCK_ADRS_GPIO + 0x8);
+	uint8_t ss = usi_read_cmd(BASE_BLOCK_ADRS_GPIO + 0x8);
+	usi_write_cmd(ss, BASE_BLOCK_ADRS_GPIO + 0x8);
 	
 	while (1)
 	{

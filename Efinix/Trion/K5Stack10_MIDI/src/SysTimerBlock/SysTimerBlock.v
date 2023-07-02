@@ -60,21 +60,21 @@ localparam lpClk1us		= pSysClk / 1000000;
 ClkCounter #(
 	.pDivNum(lpClk10ms)
 ) ClkCounter10ms (
-	.oTimerCnt(rCnt10msCsr),
+	.oTimerCnt(wCnt10msCsr),
 	.iRST(iSRST),	.iCLK(iSCLK)
 );
 
 ClkCounter #(
 	.pDivNum(lpClk1ms)
 ) ClkCounter1ms (
-	.oTimerCnt(rCnt1msCsr),
+	.oTimerCnt(wCnt1msCsr),
 	.iRST(iSRST),	.iCLK(iSCLK)
 );
 
 ClkCounter #(
 	.pDivNum(lpClk1us)
 ) ClkCounter1us (
-	.oTimerCnt(rCnt1usCsr),
+	.oTimerCnt(wCnt1usCsr),
 	.iRST(iSRST),	.iCLK(iSCLK)
 );
 

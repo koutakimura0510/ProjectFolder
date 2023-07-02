@@ -21,7 +21,7 @@ localparam [lpTimerBitWidth-1:0] lpTimerMaxCnt = pDivNum-1;
 
 reg [lpTimerBitWidth-1:0] 	rSystickCnt;
 reg 						qSystickCntCke;
-reg [pTimerCntBitWidth-1:0]	rTimerCnt;
+reg [pTimerCntBitWidth-1:0]	rTimerCnt;			assign oTimerCnt = rTimerCnt;
 
 always @(posedge iCLK)
 begin
