@@ -31,13 +31,15 @@
  *-----------------------------------------------------------------------------*/
 uint32_t usi_read_cmd(uint32_t adrs)
 {
+	uint32_t rd;
+
 	adrs |= USI_READ_CMD;
 	write_u32(adrs, ADRS_GPIO_0_IO_CTRL_OUT);
 	write_u32(adrs >> 16, ADRS_GPIO_1_IO_CTRL_OUT);
 	write_u32(1, ADRS_GPIO_1_IO_CTRL_EN);
+	rd = (read_u32(ADRS_GPIO_1_IO_CTRL) << 16) | read_u32(ADRS_GPIO_0_IO_CTRL);
 	write_u32(0, ADRS_GPIO_1_IO_CTRL_EN);
 	
-	uint32_t rd = (read_u32(ADRS_GPIO_1_IO_CTRL) << 16) | read_u32(ADRS_GPIO_0_IO_CTRL);
 	return rd;
 }
 
@@ -67,8 +69,8 @@ void usi_write_cmd(uint32_t wd, uint32_t adrs)
 void main()
 {
 	uint32_t d = 255;
-	bsp_init();
-	usi_write_cmd(0x00000000, BASE_BLOCK_ADRS_GPIO + 0x8);
+	// bsp_init();
+	usi_write_cmd(0, BASE_BLOCK_ADRS_GPIO + 0x8);
 	
 	while (1)
 	{
