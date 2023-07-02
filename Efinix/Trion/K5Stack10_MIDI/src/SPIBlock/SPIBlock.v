@@ -32,7 +32,7 @@ module SPIBlock #(
 	input  iSpiMiso,
 	output oSpiCs,
 	input  iSpiDir,
-	//
+	// Flash Rom Only
 	output oFlashRomSck,
 	output oFlashRomMosi,
 	input  iFlashRomMiso,
@@ -46,7 +46,6 @@ module SPIBlock #(
 	input  [pUsiBusWidth-1:0] iSUsiWd,
 	input  [pUsiBusWidth-1:0] iSUsiAdrs,
 	// Interrupt
-	output oMSpiIntr,	// FPGA Master Byte Read Data Enable
 	output oSpiDir,		// 0. Slave として機能 / 1. Master バスを独占
 	output onSpiDir,	// 0. Slave として機能 / 1. Master バスを独占
     // CLK Reset
@@ -68,7 +67,14 @@ wire [lpDivClk-1:0]	wSPIDivCsr;
 wire [7:0] 			wMWdCsr;
 wire 				wMSpiCsCsr;
 wire [7:0]			wMRdCsr;
-wire 				wMSpiIntrCsr;		assign oMSpiIntr = wMSpiIntrCsr;
+wire 				wMSpiIntrCsr;
+// Flash Rom
+wire 				wFlashSpiEnCsr;
+wire [lpDivClk-1:0]	wFlashSpiDivCsr;
+wire [7:0] 			wFlashWdCsr;
+wire 				wFlashCsOutCtrlCsr;
+wire [7:0]			wFlashRdCsr;
+wire 				wFlashSpiIntrCsr;
 
 SPICsr #(
 	.pBlockAdrsWidth(pBlockAdrsWidth),		.pAdrsMap(pAdrsMap),
@@ -81,10 +87,13 @@ SPICsr #(
 	// Bus Master Write
 	.iSUsiWd(iSUsiWd),	.iSUsiAdrs(iSUsiAdrs),
 	// Csr Output
-	.oSPIEn(wSPIEnCsr),	.oSPIDiv(wSPIDivCsr),
-	.oMWd(wMWdCsr),		.oMSpiCs(wMSpiCsCsr),
+	.oSPIEn(wSPIEnCsr),				.oSPIDiv(wSPIDivCsr),
+	.oMWd(wMWdCsr),					.oMSpiCs(wMSpiCsCsr),
+	.oFlashSpiEn(wFlashSpiEnCsr),	.oFlashSpiDiv(wFlashSpiDivCsr),
+	.oFlashWd(wFlashWdCsr),			.oFlashCsOutCtrl(wFlashCsOutCtrlCsr),
 	// Csr Input
-	.iMRd(wMRdCsr),		.iMSpiIntr(wMSpiIntrCsr),
+	.iMRd(wMRdCsr),					.iMSpiIntr(wMSpiIntrCsr),
+	.iFlashRd(wFlashRdCsr),			.iFlashSpiIntr(wFlashSpiIntrCsr),
 	// CLK Reset
 	.iSRST(iSRST),		.iSCLK(iSCLK)
 );
@@ -98,7 +107,7 @@ CkeGenerator #(
 	.pDivReg("yes"),	.pDivWidth(lpDivClk)
 ) SpiCkeGen (
 	.iCke(wSPIEnCsr),	.iDiv(wSPIDivCsr),	.oCke(wDivCke),
-	.iRST(iSRST),		.iCLK(iSCLK)
+	.iRST(iSRST),		  .iCLK(iSCLK)
 );
 
 
@@ -137,21 +146,21 @@ SPISignalMux # (
 SPISignal SPISignal (
 	// External Port
 	// FPGA Slave
-	.iSlaveSck(iSpiSck),	.oSlaveMiso(oSpiMiso),
-	.iSlaveMosi(iSpiMosi),	.iSlaveCs(iSpiCs),
+	.iSlaveSck(iSpiSck),	    .oSlaveMiso(oSpiMiso),
+	.iSlaveMosi(iSpiMosi),	  .iSlaveCs(iSpiCs),
 	// FPGA Master
-	.oMasterSck(oSpiSck),	.iMasterMiso(iSpiMiso),
-	.oMasterMosi(oSpiMosi),	.oMasterCs(oSpiCs),
+	.oMasterSck(oSpiSck),	    .iMasterMiso(iSpiMiso),
+	.oMasterMosi(oSpiMosi),	  .oMasterCs(oSpiCs),
 	.iSpiDir(iSpiDir),
 	// Internal Port FPGA Slave Side
-	.iMUsiRd(wMUsiRd),		.oSpiRd(wSpiRd),
-	.oSpiAdrs(wSpiAdrs),	.oSpiREd(wSpiREd),
+	.iMUsiRd(wMUsiRd),		    .oSpiRd(wSpiRd),
+	.oSpiAdrs(wSpiAdrs),	    .oSpiREd(wSpiREd),
 	// Internal Port FPGA Master Side
-	.iSPIEn(wSPIEnCsr),		.iDivCke(wDivCke),
-	.iMWd(wMWdCsr),			.oMRd(wMRdCsr),
+	.iSPIEn(wSPIEnCsr),		    .iDivCke(wDivCke),
+	.iMWd(wMWdCsr),			      .oMRd(wMRdCsr),
 	.oMSpiIntr(wMSpiIntrCsr),	.iMSPICs(wMSpiCsCsr),
 	// Control
-	.oSpiDir(oSpiDir),	.onSpiDir(onSpiDir),
+	.oSpiDir(oSpiDir),	      .onSpiDir(onSpiDir),
 	//
 	.iSRST(iSRST), .iSCLK(iSCLK)
 );
@@ -160,21 +169,27 @@ SPISignal SPISignal (
 //-----------------------------------------------------------------------------
 // Flash Rom との SPI 通信
 //-----------------------------------------------------------------------------
-// SpiFlashRom SpiFlashRom (
-// 	// External Port
-// 	.oFlashRomSck(wFlashRomSck),
-// 	.oFlashRomMosi(wFlashRomMosi),
-// 	.iFlashRomMiso(wFlashRomMiso),
-// 	.oFlashRomCs(wFlashRomCs),
-// 	// Internal Port FPGA Master Side
-// 	.iSPIEn(wSPIEnCsr),			.iDivCke(wDivCke),
-// 	.iMWd(wMWdCsr),				.oMRd(wMRdCsr),
-// 	.oMSpiIntr(wMSpiIntrCsr),	.iMSPICs(wMSpiCsCsr),
-// 	// Control
-// 	.oSpiDir(oSpiDir),	.onSpiDir(onSpiDir),
-// 	//
-// 	.iSRST(iSRST), .iSCLK(iSCLK)
-// );
+wire wFlashDivCke;
 
+SpiFlashRom SpiFlashRom (
+	// External Port
+	.oFlashRomSck(oFlashRomSck),
+	.oFlashRomMosi(oFlashRomMosi),
+	.iFlashRomMiso(iFlashRomMiso),
+	.oFlashRomCs(oFlashRomCs),
+	// Internal Port FPGA Master Side
+	.iWd(wFlashWdCsr),					.oRd(wFlashRdCsr),
+	.iDivCke(wFlashDivCke),				.iSpiEn(wFlashSpiEnCsr),
+	.iCsOutCtrl(wFlashCsOutCtrlCsr),  	.oSpiIntr(wFlashSpiIntrCsr),
+	// common
+	.iSRST(iSRST), 		.iSCLK(iSCLK)
+);
+
+CkeGenerator #(
+	.pDivReg("yes"),	.pDivWidth(lpDivClk)
+) FlashSpiCkeGen (
+	.iCke(wFlashSpiEnCsr),	.iDiv(wFlashSpiDivCsr),	.oCke(wFlashDivCke),
+	.iRST(iSRST),			.iCLK(iSCLK)
+);
 
 endmodule

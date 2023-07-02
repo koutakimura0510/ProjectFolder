@@ -11,13 +11,17 @@ module SpiFlashRom (
 	output oFlashRomMosi,
 	input  iFlashRomMiso,
 	output oFlashRomCs,
-	// Control Status
+	// data
 	input  [7:0] iWd,
-	input  iSpiEn,
 	output [7:0] oRd,
+	// Control Status
+	input  iDivCke,
+	input  iSpiEn,
+	input  iCsOutCtrl,
+	output oSpiIntr,
 	// CLK Reset
 	input  iSRST,
-    input  iSCLK
+	input  iSCLK
 );
 
 
@@ -28,14 +32,14 @@ module SpiFlashRom (
 // このロジックはあくまで、1byte 送受信を行うだけにとどめる。
 //----------------------------------------------------------
 localparam [0:0]
-    lpHolTimeIdle 		= 0,
-    lpHoldTimeActive 	= 1;
+	lpHolTimeIdle 		= 0,
+	lpHoldTimeActive 	= 1;
 localparam [2:0]
 	lpHoldTimeMax   	= 2,
 	lpHoldTimeClear 	= 0;
 
 reg [7:0] 	rRd;
-reg 		rMSpiIntr;
+reg 		rSpiIntr;
 reg 		rSck;
 reg [7:0] 	rMosi;
 reg [2:0] 	rSckNegCnt;
@@ -87,22 +91,22 @@ begin
 	// 1byte データ操作完了の割り込み出力
 	// Assert されると、CSR 空間の SpiEn がクリアされる。
 	case ({qSckCntCke, iDivCke, rSck})
-		3'b111:			rMSpiIntr <= 1'b1;
-		default:		rMSpiIntr <= 1'b0;
+		3'b111:			rSpiIntr <= 1'b1;
+		default:		rSpiIntr <= 1'b0;
 	endcase
 end
 
 always @*
 begin
 	qSckCntCke		<= (rSckNegCnt == 3'd7);
-    qHoldTimeCke 	<= (rHoldTime == lpHoldTimeMax);
+	qHoldTimeCke 	<= (rHoldTime == lpHoldTimeMax);
 end
 
-assign oRd			 = rRd;
-assign oMSpiIntr	 = rMSpiIntr;
-assign oFlashRomSck	 = rSck;
-assign oFlashRomMosi = rMosi[7];
-assign oFlashRomCs	 = ~iSpiEn;
+assign oRd				= rRd;
+assign oSpiIntr			= rSpiIntr;
+assign oFlashRomSck	  	= rSck;
+assign oFlashRomMosi  	= rMosi[7];
+assign oFlashRomCs	  	= iCsOutCtrl;
 
 
 endmodule

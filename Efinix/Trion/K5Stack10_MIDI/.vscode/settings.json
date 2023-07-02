@@ -8,5 +8,10 @@
     "type.h": "c",
     "clint.h": "c",
     "uart.h": "c"
-  }
+  },
+
+  "[verilog]": {
+		"editor.insertSpaces": false,		// 2023-07-01 タブでスペース挿入
+		"editor.tabSize": 4 // 2023-07-01
+	},
 }

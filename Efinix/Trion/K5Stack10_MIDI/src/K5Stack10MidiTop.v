@@ -165,7 +165,6 @@ wire [lpUsiBusWidth-1:0] wSUsiWd,    wSUsiAdrs;
 wire [lpUsiBusWidth-1:0] wMUsiWdMcb,  wMUsiAdrsMcb;
 wire [lpUsiBusWidth-1:0] wMUsiWdSpi,  wMUsiAdrsSpi;
 wire wSpiDir, wnSpiDir;
-wire wMSpiIntr;
 
 USIB #(
   .pBlockConnectNum(lpBlockConnectNum),  .pBlockAdrsWidth(lpBlockAdrsWidth),
@@ -341,7 +340,6 @@ SPIBlock #(
   .oMUsiWd(wMUsiWdSpi),  .oMUsiAdrs(wMUsiAdrsSpi),
   .iSUsiWd(wSUsiWd),    .iSUsiAdrs(wSUsiAdrs),
   // MUsi 制御信号
-  .oMSpiIntr(wMSpiIntr),
   .oSpiDir(wSpiDir),    .onSpiDir(wnSpiDir),
   // CLK, RST
   .iSRST(wSRST),      .iSCLK(iSCLK)
@@ -435,12 +433,12 @@ RAMBlock #(
 // GPIOL
 wire [5:0] wIunsedL;
 wire [17:0] wIunsedR;
-assign ioGPIOL_O[0]     = 1'b0;        assign  wIunsedL[0]  = ioGPIOL_I[0];  assign ioGPIOL_OE[0] = 1'b0;
-assign ioGPIOL_O[1]     = 1'b0;        assign  wIunsedL[1]  = ioGPIOL_I[1];  assign ioGPIOL_OE[1] = 1'b0;
-assign ioGPIOL_O[2]     = 1'b0;        assign  wIunsedL[2]  = ioGPIOL_I[2];  assign ioGPIOL_OE[2] = 1'b1;
-assign ioGPIOL_O[3]     = 1'b0;        assign  wnARST       = ioGPIOL_I[3];  assign ioGPIOL_OE[3] = 1'b0;
-assign ioGPIOL_O[4]     = 1'b0;        assign  wIunsedL[4]  = ioGPIOL_I[4];  assign ioGPIOL_OE[4] = 1'b0;
-assign ioGPIOL_O[5]     = 1'b0;        assign  wIunsedL[5]  = ioGPIOL_I[5];  assign ioGPIOL_OE[5] = 1'b0;
+assign ioGPIOL_O[0]     = wFlashRomSck;		assign  wIunsedL[0]  	= ioGPIOL_I[0];  assign ioGPIOL_OE[0] = 1'b1;
+assign ioGPIOL_O[1]     = wFlashRomMosi;	assign  wIunsedL[1]  	= ioGPIOL_I[1];  assign ioGPIOL_OE[1] = 1'b1;
+assign ioGPIOL_O[2]     = 1'b0;				assign  wFlashRomMiso	= ioGPIOL_I[2];  assign ioGPIOL_OE[2] = 1'b0;
+assign ioGPIOL_O[3]     = wFlashRomCs;		assign  wIunsedL[3]  	= ioGPIOL_I[3];  assign ioGPIOL_OE[3] = 1'b1;
+assign ioGPIOL_O[4]     = 1'b0;				assign  wnARST		 	= ioGPIOL_I[4];  assign ioGPIOL_OE[4] = 1'b0;
+assign ioGPIOL_O[5]     = 1'b1;				assign  wIunsedL[5]  	= ioGPIOL_I[5];  assign ioGPIOL_OE[5] = 1'b1;
 // GPIOR
 assign ioGPIOR_O[0]     = 1'b0;        assign  wIunsedR[0]  = ioGPIOR_I[0];  assign ioGPIOR_OE[0]  = 1'b0;
 assign ioGPIOR_O[1]     = 1'b0;        assign  wIunsedR[1]  = ioGPIOR_I[1];  assign ioGPIOR_OE[1]  = 1'b0;
