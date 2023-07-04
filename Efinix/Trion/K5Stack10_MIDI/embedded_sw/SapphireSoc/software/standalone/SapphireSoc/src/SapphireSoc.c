@@ -32,16 +32,17 @@
  *-----------------------------------------------------------------------------*/
 uint32_t usi_read_cmd(uint32_t adrs)
 {
-	uint32_t rd;
+	uint32_t lsbrd, msbrd;
 
 	adrs |= USI_READ_CMD;
 	write_u32(adrs, ADRS_GPIO_0_IO_CTRL_OUT);
 	write_u32(adrs >> 16, ADRS_GPIO_1_IO_CTRL_OUT);
 	write_u32(1, ADRS_GPIO_1_IO_CTRL_EN);
-	rd = (read_u32(ADRS_GPIO_1_IO_CTRL) << 16) | read_u32(ADRS_GPIO_0_IO_CTRL);
+	lsbrd = read_u32(ADRS_GPIO_0_IO_CTRL);
+	msbrd = read_u32(ADRS_GPIO_1_IO_CTRL) << 16;
 	write_u32(0, ADRS_GPIO_1_IO_CTRL_EN);
 	
-	return rd;
+	return msbrd | lsbrd;
 }
 
 /**-----------------------------------------------------------------------------
@@ -70,14 +71,14 @@ void led_flash(void)
 {
 	static uint32_t t = 0;
 	static uint8_t flash = 0x01;
+	uint32_t now_t = usi_read_cmd(BASE_BLOCK_ADRS_TIMER);
 
-	if ((t + 20) < usi_read_cmd(BASE_BLOCK_ADRS_TIMER)) {
-		t = usi_read_cmd(BASE_BLOCK_ADRS_TIMER);
+	if ((t + 100) < now_t) {
+		t = now_t;
 		flash++;
 		flash &= 0x07;
+		usi_write_cmd(flash, BASE_BLOCK_ADRS_GPIO);
 	}
-
-	usi_write_cmd(flash, BASE_BLOCK_ADRS_GPIO);
 }
 
 /**-----------------------------------------------------------------------------
@@ -86,8 +87,8 @@ void led_flash(void)
 void main()
 {
 	// bsp_init();
-	uint8_t ss = usi_read_cmd(BASE_BLOCK_ADRS_GPIO + 0x8);
-	usi_write_cmd(ss, BASE_BLOCK_ADRS_GPIO + 0x8);
+	// uint8_t ss = usi_read_cmd(BASE_BLOCK_ADRS_GPIO + 0x8);
+	usi_write_cmd(0x00, BASE_BLOCK_ADRS_GPIO + 0x8);
 	
 	while (1)
 	{

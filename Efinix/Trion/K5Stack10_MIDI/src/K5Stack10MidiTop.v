@@ -320,16 +320,16 @@ wire wFlashRomSck, wFlashRomMosi, wFlashRomMiso, wFlashRomCs;
 wire wIoSpiDir;
 
 SPIBlock #(
-  .pBlockAdrsWidth(lpBlockAdrsWidth),    .pAdrsMap(lpSPIAdrsMap),
-  .pUsiBusWidth(lpUsiBusWidth),      .pCsrAdrsWidth(lpCsrAdrsWidth),
+  .pBlockAdrsWidth(lpBlockAdrsWidth),	.pAdrsMap(lpSPIAdrsMap),
+  .pUsiBusWidth(lpUsiBusWidth),			.pCsrAdrsWidth(lpCsrAdrsWidth),
   .pCsrActiveWidth(lpSPICsrActiveWidth)
 ) SPIBlock (
   // External Port
   // SPI Bus Connected External CPU
-  .iSpiSck(wSlaveSck),  .iSpiMosi(wSlaveMosi),
-  .oSpiMiso(wSlaveMiso),  .iSpiCs(wSlaveCs),
-  .oSpiSck(wMasterSck),  .oSpiMosi(wMasterMosi),
-  .iSpiMiso(wMasterMiso),  .oSpiCs(wMasterCs),
+  .iSpiSck(wSlaveSck),		.iSpiMosi(wSlaveMosi),
+  .oSpiMiso(wSlaveMiso),	.iSpiCs(wSlaveCs),
+  .oSpiSck(wMasterSck),  	.oSpiMosi(wMasterMosi),
+  .iSpiMiso(wMasterMiso),  	.oSpiCs(wMasterCs),
   .iSpiDir(wIoSpiDir),
   // SPI Bus Connected External Flash Rom
   .oFlashRomSck(wFlashRomSck),
@@ -356,8 +356,8 @@ wire [7:0] wMidiRd;
 wire wMidiVd;
 
 SynthesizerBlock #(
-  .pBlockAdrsWidth(lpBlockAdrsWidth),    .pAdrsMap(lpSynthesizerAdrsMap),
-  .pUsiBusWidth(lpUsiBusWidth),      .pCsrAdrsWidth(lpCsrAdrsWidth),
+  .pBlockAdrsWidth(lpBlockAdrsWidth),	.pAdrsMap(lpSynthesizerAdrsMap),
+  .pUsiBusWidth(lpUsiBusWidth),			.pCsrAdrsWidth(lpCsrAdrsWidth),
   .pCsrActiveWidth(lpSynCsrActiveWidth)
 ) SynthesizerBlock (
   // External Port
@@ -398,7 +398,7 @@ RAMBlock #(
   .pRamAdrsWidth(lpRamAdrsWidth),      .pRamDqWidth(lpRamDqWidth)
 ) RAMBlock (
   // SRAM I/F Port
-  .oSRAMA(wSRAMA),    .oSRAMD(wSRAMD_O),
+  .oSRAMA(wSRAMA),		.oSRAMD(wSRAMD_O),
   .iSRAMD(wSRAMD_I),
   .oSRAM_LB(wSRAM_LB),  .oSRAM_UB(wSRAM_UB),
   .oSRAM_OE(wSRAM_OE),  .oSRAM_WE(wSRAM_WE),

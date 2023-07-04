@@ -8,7 +8,7 @@
 module SysTimerBlock #(
 	// variable parameter
 	parameter pBlockAdrsWidth = 8,	// ブロックのアドレス幅を指定
-	parameter [pBlockAdrsWidth-1:0] pAdrsMap = 'h08,
+	parameter [pBlockAdrsWidth-1:0] pAdrsMap = 'h04,
 	parameter pUsiBusWidth = 32,
 	parameter pCsrAdrsWidth = 8,
 	parameter pCsrActiveWidth = 8,

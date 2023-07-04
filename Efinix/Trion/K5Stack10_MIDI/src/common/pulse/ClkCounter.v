@@ -26,12 +26,12 @@ reg [pTimerCntBitWidth-1:0]	rTimerCnt;			assign oTimerCnt = rTimerCnt;
 always @(posedge iCLK)
 begin
 	if (iRST) 					rSystickCnt <= {lpTimerBitWidth{1'b0}};
-	else if (qSystickCntCke)	rSystickCnt <= rSystickCnt + 1'b1;
-	else 						rSystickCnt <= rSystickCnt;
+	else if (qSystickCntCke)	rSystickCnt <= {lpTimerBitWidth{1'b0}};
+	else 						rSystickCnt <= rSystickCnt + 1'b1;
 
 	if (iRST) 					rTimerCnt <= {pTimerCntBitWidth{1'b0}};
-	else if (qSystickCntCke)	rTimerCnt <= rSystickCnt + 1'b1;
-	else 						rTimerCnt <= rSystickCnt;
+	else if (qSystickCntCke)	rTimerCnt <= rTimerCnt + 1'b1;
+	else 						rTimerCnt <= rTimerCnt;
 end
 
 always @*

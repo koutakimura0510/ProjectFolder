@@ -41,8 +41,10 @@ endtask
 //----------------------------------------------------------
 initial
 begin
+	$dumpfile("SysTimer_tb.vcd");
+	$dumpvars(0, SysTimer_tb);	// 引数0:下位モジュール表示, 1:Topのみ
 	reset_init();
-	#(lpSCLKCycle * 50)
+	#(lpSCLKCycle * 5000)
     $finish;
 end
 
@@ -61,7 +63,7 @@ SysTimerBlock #(
 	.oSUsiRd(),
 	// Bus Master Write
 	.iSUsiWd(0),
-	.iSUsiAdrs(32'h00040000),
+	.iSUsiAdrs(32'h00040004),
 	// CLK Reset
 	.iSCLK(rSCLK),
 	.iSRST(rSRST)
