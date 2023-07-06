@@ -37,30 +37,19 @@ end
 endtask
 
 //----------------------------------------------------------
-// Simlation Start
-//----------------------------------------------------------
-initial
-begin
-	$dumpfile("SysTimer_tb.vcd");
-	$dumpvars(0, SysTimer_tb);	// 引数0:下位モジュール表示, 1:Topのみ
-	reset_init();
-	#(lpSCLKCycle * 5000)
-    $finish;
-end
-
-
-//----------------------------------------------------------
 // Simlation Module Connect
 //----------------------------------------------------------
+wire [31:0] wSUsiRd;
+
 SysTimerBlock #(
 	.pBlockAdrsWidth(8),
 	.pAdrsMap('h04),
 	.pUsiBusWidth(32),
 	.pCsrAdrsWidth(16),
-	.pSysClk(1000)
+	.pSysClk(50000000)
 ) SysTimerBlock (
 	// Bus Master Read
-	.oSUsiRd(),
+	.oSUsiRd(wSUsiRd),
 	// Bus Master Write
 	.iSUsiWd(0),
 	.iSUsiAdrs(32'h00040004),
@@ -68,5 +57,36 @@ SysTimerBlock #(
 	.iSCLK(rSCLK),
 	.iSRST(rSRST)
 );
+
+
+//-----------------------------------------------------------------------------
+// 
+//-----------------------------------------------------------------------------
+task Wait(
+	input [31:0] flag
+);
+begin
+	while (wSUsiRd == flag)	// iverilog の場合、等しい場合ループする
+	begin
+		#(lpSCLKCycle);
+	end
+end
+endtask
+
+
+//----------------------------------------------------------
+// Simlation Start
+//----------------------------------------------------------
+initial
+begin
+	$dumpfile("SysTimer_tb.vcd");
+	$dumpvars(0, SysTimer_tb);	// 引数0:下位モジュール表示, 1:Topのみ
+	reset_init();
+	Wait(0);
+    $finish;
+end
+
+
+
 
 endmodule
