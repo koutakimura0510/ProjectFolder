@@ -1,17 +1,19 @@
 /**-----------------------------------------------------------------------------
- * Create  2023/1/21
+ * Create  2023/7/8
  * Author  koutakimura
  * 
  * Efinity FPGA tasks.json
  * Ctrl + Shift + B で実行するコマンドを選択。
  * 使用プロジェクトを変更する場合は、下記の文字列を task.json内で一括変換する。
- * ※[] 内を一括変換 [Ti180_FMB_R1W1_k256m32_230125]
- * 					 [C:/Efinity/2022.2/bin/efx_run.bat]
+ * ※[] 内を一括変換 [Ti180_FMB_R1W1_k256m32_230125] < Windows
+ * 					 [C:/Efinity/2022.2/bin/efx_run.bat] <- Windows
+ * 					 [/tools/efinity/2023.1/bin/setup.sh] <- Linux
+ * 					 [/src/SysTimerBlock/sim/make] <- Simlation
+ * 
+ * tasks.json と端末は別プロセスなので、setup.sh を実行してシンボリックリンクの設定必要あり。 <- Linux
  *
- * Windows 動作用なので、Linux の場合は .bat を .py に変更が必要。
  * https://qiita.com/ShortArrow/items/dc0c8cacd696154510f1 <- tasks.json 参考
  *-----------------------------------------------------------------------------*/
-
 {
 	// See https://go.microsoft.com/fwlink/?LinkId=733558
 	// for the documentation about the tasks.json format
@@ -19,13 +21,24 @@
 	"tasks": [
 		{
 			//-----------------------------------------------------------------------------
+			// Simlation
+			//-----------------------------------------------------------------------------
+			"label": "Sim",
+			"type": "shell",
+			"command": "./src/SysTimerBlock/sim/make",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		{
+			//-----------------------------------------------------------------------------
 			// bitstream 出力まで一括実行
-			// 現在 コマンドで Jtag 書き込み時に bit ファイル指定方法が分からないので、bit を hex に上書きしている。
 			//-----------------------------------------------------------------------------
 			"label": "Compile",
 			"type": "shell",
-			// "command": "C:/Efinity/2022.2/bin/efx_run.bat ./Ti180_FMB_R1W1_k256m32_230125.xml --flow compile;cp ./outflow/Ti180_FMB_R1W1_k256m32_230125.bit ./outflow/Ti180_FMB_R1W1_k256m32_230125.hex;C:/Efinity/2022.2/bin/efx_run.bat ./Ti180_FMB_R1W1_k256m32_230125.xml --flow program --pgm_opts mode=jtag",
-			"command": "make all",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make compile",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -38,7 +51,7 @@
 		{
 			"label": "Synthesis",
 			"type": "shell",
-			"command": "C:/Efinity/2022.2/bin/efx_run.bat ./Ti180_FMB_R1W1_k256m32_230125.xml --flow map",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make synthesis",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -51,7 +64,7 @@
 		{
 			"label": "Debugger auto instantion",
 			"type": "shell",
-			"command": "C:/Efinity/2022.2/bin/efx_run.bat ./Ti180_FMB_R1W1_k256m32_230125.xml --flow dbg_auto",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make synthesis",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -64,7 +77,7 @@
 		{
 			"label": "Interface",
 			"type": "shell",
-			"command": "C:/Efinity/2022.2/bin/efx_run.bat ./Ti180_FMB_R1W1_k256m32_230125.xml --flow interface",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make interface",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -77,7 +90,7 @@
 		{
 			"label": "Place + Routing",
 			"type": "shell",
-			"command": "C:/Efinity/2022.2/bin/efx_run.bat ./Ti180_FMB_R1W1_k256m32_230125.xml --flow pnr",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make place",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -90,7 +103,7 @@
 		{
 			"label": "Pgm",
 			"type": "shell",
-			"command": "C:/Efinity/2022.2/bin/efx_run.bat ./Ti180_FMB_R1W1_k256m32_230125.xml --flow pgm",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make pgm",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -98,25 +111,12 @@
 		},
 
 		//-----------------------------------------------------------------------------
-		// Bitstream to Hex File
-		//-----------------------------------------------------------------------------
-		{
-			"label": "Bit to Hex Convert",
-			"type": "shell",
-			"command": "cp ./outflow/Ti180_FMB_R1W1_k256m32_230125.bit ./outflow/Ti180_FMB_R1W1_k256m32_230125.hex",
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			}
-		},
-		
-		//-----------------------------------------------------------------------------
 		// Jtag FPGA に直接書き込み
 		//-----------------------------------------------------------------------------
 		{
 			"label": "Jtag",
 			"type": "shell",
-			"command": "C:/Efinity/2022.2/bin/efx_run.bat ./Ti180_FMB_R1W1_k256m32_230125.xml --flow program --pgm_opts ./outflow/Ti180_FMB_R1W1_k256m32_230125.bit mode=jtag",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make jtag",
 			"group": {
 				"kind": "build",
 				"isDefault": true

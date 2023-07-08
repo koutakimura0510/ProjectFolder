@@ -19,11 +19,12 @@
 #define USI_READ_CMD		(0x80000000)
 #define USI_WRITE_CMD		(0x40000000)
 
-/**-----------------------------------------------------------------------------
+/**------------------------------------------------usi_write_cmd(0x7, BASE_BLOCK_ADRS_TIMER + 0xC);-----------------------------
  * Block Base Adrs
  *-----------------------------------------------------------------------------*/
 #define BASE_BLOCK_ADRS_GPIO	(0x00000000)
 #define BASE_BLOCK_ADRS_TIMER	(0x00040000)
+#define BASE_BLOCK_ADRS_NULL	(0x0fffffff)
 
 
 /**-----------------------------------------------------------------------------
@@ -34,10 +35,12 @@ uint32_t usi_read_cmd(uint32_t adrs)
 {
 	uint32_t lsbrd, msbrd;
 
-	adrs |= USI_READ_CMD;
+	// adrs |= USI_READ_CMD;
 	write_u32(adrs, ADRS_GPIO_0_IO_CTRL_OUT);
 	write_u32(adrs >> 16, ADRS_GPIO_1_IO_CTRL_OUT);
 	write_u32(1, ADRS_GPIO_1_IO_CTRL_EN);
+	write_u32(BASE_BLOCK_ADRS_NULL,0);		// Port に Read値が入力されるまで数クロックサイクル必要なため
+	write_u32(BASE_BLOCK_ADRS_NULL,0);		// 空の write 動作を行い数クロック待つ
 	lsbrd = read_u32(ADRS_GPIO_0_IO_CTRL);
 	msbrd = read_u32(ADRS_GPIO_1_IO_CTRL) << 16;
 	write_u32(0, ADRS_GPIO_1_IO_CTRL_EN);
@@ -64,6 +67,22 @@ void usi_write_cmd(uint32_t wd, uint32_t adrs)
 	write_u32(0, ADRS_GPIO_1_IO_CTRL_EN);
 }
 
+
+/**-----------------------------------------------------------------------------
+ * USI Bus Adrs printf
+ * adrs = block adrs
+ *-----------------------------------------------------------------------------*/
+void usi_read_printf(uint32_t adrs)
+{
+	uint32_t rd = usi_read_cmd(adrs);
+	bsp_printf("%x \r\n", rd);
+}
+
+/**-----------------------------------------------------------------------------
+ * SPI Read
+ *-----------------------------------------------------------------------------*/
+
+
 /**-----------------------------------------------------------------------------
  * LED FLASH
  *-----------------------------------------------------------------------------*/
@@ -71,9 +90,9 @@ void led_flash(void)
 {
 	static uint32_t t = 0;
 	static uint8_t flash = 0x01;
-	uint32_t now_t = usi_read_cmd(BASE_BLOCK_ADRS_TIMER);
+	uint32_t now_t = usi_read_cmd(BASE_BLOCK_ADRS_TIMER+0x40);
 
-	if ((t + 100) < now_t) {
+	if (t +99 < now_t) {
 		t = now_t;
 		flash++;
 		flash &= 0x07;
@@ -86,9 +105,19 @@ void led_flash(void)
  *-----------------------------------------------------------------------------*/
 void main()
 {
-	// bsp_init();
-	// uint8_t ss = usi_read_cmd(BASE_BLOCK_ADRS_GPIO + 0x8);
-	usi_write_cmd(0x00, BASE_BLOCK_ADRS_GPIO + 0x8);
+	bsp_init();
+	usi_write_cmd(0x0, BASE_BLOCK_ADRS_GPIO  + 0x8);
+	usi_write_cmd(0x0, BASE_BLOCK_ADRS_TIMER + 0xC);
+	usi_write_cmd(499999, BASE_BLOCK_ADRS_TIMER + 0x0);
+	usi_write_cmd(49999, BASE_BLOCK_ADRS_TIMER + 0x4);
+	usi_write_cmd(49, BASE_BLOCK_ADRS_TIMER + 0x8);
+	usi_write_cmd(0x7, BASE_BLOCK_ADRS_TIMER + 0xC);
+
+	usi_read_printf(BASE_BLOCK_ADRS_TIMER+0x0);
+	usi_read_printf(BASE_BLOCK_ADRS_TIMER+0x4);
+	usi_read_printf(BASE_BLOCK_ADRS_TIMER+0x8);
+	usi_read_printf(BASE_BLOCK_ADRS_TIMER+0xC);
+	usi_read_printf(BASE_BLOCK_ADRS_GPIO  + 0x8);
 	
 	while (1)
 	{

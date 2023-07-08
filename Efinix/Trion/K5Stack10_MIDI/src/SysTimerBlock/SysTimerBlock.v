@@ -11,8 +11,7 @@ module SysTimerBlock #(
 	parameter [pBlockAdrsWidth-1:0] pAdrsMap = 'h04,
 	parameter pUsiBusWidth = 32,
 	parameter pCsrAdrsWidth = 8,
-	parameter pCsrActiveWidth = 8,
-	parameter pSysClk = 50000000
+	parameter pCsrActiveWidth = 8
 )(
 	// Bus Master Read
 	output [pUsiBusWidth-1:0] oSUsiRd,
@@ -25,26 +24,39 @@ module SysTimerBlock #(
 );
 
 
+//-----------------------------------------------------------------------------
+// locparama
+//-----------------------------------------------------------------------------
+localparam lpSystickTimerBitWidth 	= 32;
+localparam lpSystickTimerNum 		= 3;	// Timer Numver
+
 //----------------------------------------------------------
 // Csr space
 //----------------------------------------------------------
-wire [31:0] wCnt10msCsr;
-wire [31:0] wCnt1msCsr;
-wire [31:0] wCnt1usCsr;
+wire [31:0] wSysteickTimerCntCsr [0:lpSystickTimerNum-1];
+wire [31:0] wSysteickTimerDivCsr [0:lpSystickTimerNum-1];
+wire [lpSystickTimerNum-1:0] wSystickTimerEnCsr;
 
 SysTimerCsr #(
 	.pBlockAdrsWidth(pBlockAdrsWidth),		.pAdrsMap(pAdrsMap),
 	.pUsiBusWidth(pUsiBusWidth),			.pCsrAdrsWidth(pCsrAdrsWidth),
-	.pCsrActiveWidth(pCsrActiveWidth)
+	.pCsrActiveWidth(pCsrActiveWidth),
+	.pSystickTimerBitWidth(lpSystickTimerBitWidth),
+	.pSystickTimerNum(lpSystickTimerNum)
 ) SysTimerCsr (
 	// Bus Master Read
 	.oSUsiRd(oSUsiRd),
 	// Bus Master Write
 	.iSUsiWd(iSUsiWd),	.iSUsiAdrs(iSUsiAdrs),
+	// Csr Output
+	.oSystickTimerDiv1(wSysteickTimerDivCsr[0]),
+	.oSystickTimerDiv2(wSysteickTimerDivCsr[1]),
+	.oSystickTimerDiv3(wSysteickTimerDivCsr[2]),
+	.oSystickTimerEn(wSystickTimerEnCsr),
 	// Csr Input
-	.iTimerCnt10ms(wCnt10msCsr),
-	.iTimerCnt1ms(wCnt1msCsr),
-	.iTimerCnt1us(wCnt1usCsr),
+	.iSystickTimerCnt1(wSysteickTimerCntCsr[0]),
+	.iSystickTimerCnt2(wSysteickTimerCntCsr[1]),
+	.iSystickTimerCnt3(wSysteickTimerCntCsr[2]),
 	// CLK Reset
 	.iSRST(iSRST),		.iSCLK(iSCLK)
 );
@@ -53,29 +65,20 @@ SysTimerCsr #(
 //-----------------------------------------------------------------------------
 // Counter
 //-----------------------------------------------------------------------------
-localparam lpClk10ms 	= pSysClk / 100;
-localparam lpClk1ms		= pSysClk / 1000;
-localparam lpClk1us		= pSysClk / 1000000;
+genvar genx;
 
-ClkCounter #(
-	.pDivNum(lpClk10ms)
-) ClkCounter10ms (
-	.oTimerCnt(wCnt10msCsr),
-	.iRST(iSRST),	.iCLK(iSCLK)
-);
-
-ClkCounter #(
-	.pDivNum(lpClk1ms)
-) ClkCounter1ms (
-	.oTimerCnt(wCnt1msCsr),
-	.iRST(iSRST),	.iCLK(iSCLK)
-);
-
-ClkCounter #(
-	.pDivNum(lpClk1us)
-) ClkCounter1us (
-	.oTimerCnt(wCnt1usCsr),
-	.iRST(iSRST),	.iCLK(iSCLK)
-);
+generate
+	for (genx = 0; genx < lpSystickTimerNum; genx = genx + 1)
+	begin
+		ClkCounter #(
+			.pTimerCntBitWidth(lpSystickTimerBitWidth)
+		) SysteickTimer (
+			.oTimerCnt(wSysteickTimerCntCsr[genx]),
+			.iTimerDiv(wSysteickTimerDivCsr[genx]),
+			.iRST(wSystickTimerEnCsr[genx]),
+			.iCLK(iSCLK)
+		);
+	end
+endgenerate
 
 endmodule

@@ -37,30 +37,25 @@ end
 endtask
 
 //----------------------------------------------------------
-// Simlation Module Connect
+// Usi Buf 経由の CSR 設定
 //----------------------------------------------------------
-wire [31:0] wSUsiRd;
+wire [31:0]	wSUsiRd;
+reg  [31:0] rSUsiWd = 0;
+reg  [31:0] rSUsiAdrs = 0;
 
-SysTimerBlock #(
-	.pBlockAdrsWidth(8),
-	.pAdrsMap('h04),
-	.pUsiBusWidth(32),
-	.pCsrAdrsWidth(16),
-	.pSysClk(50000000)
-) SysTimerBlock (
-	// Bus Master Read
-	.oSUsiRd(wSUsiRd),
-	// Bus Master Write
-	.iSUsiWd(0),
-	.iSUsiAdrs(32'h00040004),
-	// CLK Reset
-	.iSCLK(rSCLK),
-	.iSRST(rSRST)
+task usi_csr_setting (
+	input [31:0] wd,
+	input [31:0] adrs
 );
-
+begin
+	rSUsiWd   = wd;
+	rSUsiAdrs = adrs;
+	#(lpSCLKCycle);
+end
+endtask //usi_csr_setting
 
 //-----------------------------------------------------------------------------
-// 
+// Wait 関数 
 //-----------------------------------------------------------------------------
 task Wait(
 	input [31:0] flag
@@ -75,6 +70,29 @@ endtask
 
 
 //----------------------------------------------------------
+// Simlation Module Connect
+//----------------------------------------------------------
+SysTimerBlock #(
+	.pBlockAdrsWidth(8),
+	.pAdrsMap('h04),
+	.pUsiBusWidth(32),
+	.pCsrAdrsWidth(16),
+	.pSysClk(50000000)
+) SysTimerBlock (
+	// Bus Master Read
+	.oSUsiRd(wSUsiRd),
+	// Bus Master Write
+	.iSUsiWd(rSUsiWd),
+	.iSUsiAdrs(rSUsiAdrs),
+	// CLK Reset
+	.iSCLK(rSCLK),
+	.iSRST(rSRST)
+);
+
+
+
+
+//----------------------------------------------------------
 // Simlation Start
 //----------------------------------------------------------
 initial
@@ -82,6 +100,11 @@ begin
 	$dumpfile("SysTimer_tb.vcd");
 	$dumpvars(0, SysTimer_tb);	// 引数0:下位モジュール表示, 1:Topのみ
 	reset_init();
+	usi_csr_setting('d5000-1, 	'h40040000);
+	usi_csr_setting('d500-1,	'h40040004);
+	usi_csr_setting('d50-1, 	'h40040008);
+	usi_csr_setting('b001, 		'h4004000C);
+	usi_csr_setting('d0,	'h00040040);
 	Wait(0);
     $finish;
 end

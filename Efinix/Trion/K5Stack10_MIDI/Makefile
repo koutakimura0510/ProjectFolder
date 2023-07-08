@@ -24,7 +24,7 @@ PROJECT = ./K5Stack10_MIDI.xml
 
 all: synthesis interface place pgm jtag
 
-# compile:
+compile:
 	$(FILE) $(PROJECT) --flow compile
 
 synthesis:

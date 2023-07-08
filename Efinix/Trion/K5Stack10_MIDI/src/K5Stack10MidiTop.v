@@ -422,13 +422,10 @@ RAMBlock #(
 //---------------------------------------------------------------------------
 // Systick Timer Block
 //---------------------------------------------------------------------------
-localparam lpSysClk = 50000000;
-
 SysTimerBlock #(
 	.pBlockAdrsWidth(lpBlockAdrsWidth),	.pAdrsMap(lpSysTimerAdrsMap),
 	.pUsiBusWidth(lpUsiBusWidth),
-	.pCsrAdrsWidth(lpCsrAdrsWidth),		.pCsrActiveWidth(lpTimerCsrActiveWidth),
-	.pSysClk(lpSysClk)
+	.pCsrAdrsWidth(lpCsrAdrsWidth),		.pCsrActiveWidth(lpTimerCsrActiveWidth)
 ) SysTimerBlock (
   // Usi Bus Master Read
   .oSUsiRd(wSUsiRd[lpSysTimerAdrsMap]),
