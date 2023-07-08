@@ -1,13 +1,18 @@
+`timescale 1ns / 1ps
+//----------------------------------------------------------
+// Create  2022/08/12
+// Author  KoutaKimura
+// SPI の Master Slave を切り替えながらデータの送受信を行う。
+// 
+//----------------------------------------------------------
 /*-----------------------------------------------------------------------------
- * Create  2023/7/3
+ * Create  2023/07/08
  * Author  kouta kimura
- * Editor  VSCode ver1.73.1
- * Build   iverilog ver11.0
  * -
- * SysTimerBlock testbench
+ * SPIBlock Testbench
  * 
  *-----------------------------------------------------------------------------*/
-module SysTimer_tb;
+module SPIBlock_tb;
 
 //----------------------------------------------------------
 // Top Module Connect
@@ -36,6 +41,7 @@ begin
 end
 endtask
 
+
 //----------------------------------------------------------
 // Usi Buf 経由の CSR 設定
 //----------------------------------------------------------
@@ -57,7 +63,7 @@ endtask //usi_csr_setting
 //-----------------------------------------------------------------------------
 // Wait 関数 
 //-----------------------------------------------------------------------------
-task Wait(
+task wait_flag(
 	input [31:0] flag
 );
 begin
@@ -68,27 +74,63 @@ begin
 end
 endtask
 
+//-----------------------------------------------------------------------------
+// SPI GPIO
+//-----------------------------------------------------------------------------
+reg  rExMasterSck = 0;
+reg  rExMasterMosi = 0;
+wire wExMasterMiso;
+reg  rExMasterCs = 0;
+//
+wire wFpgaSck;
+wire wFpgaMosi;
+reg  rFpgaMiso = 0;
+wire wFpgaCs;
+//
+wire wFlashRomSck;
+wire wFlashRomMosi;
+reg  rFlashRomMiso = 0;
+wire wFlashRomCs;
 
 //----------------------------------------------------------
 // Simlation Module Connect
 //----------------------------------------------------------
-SysTimerBlock #(
+SPIBlock #(
 	.pBlockAdrsWidth(8),
-	.pAdrsMap('h04),
+	.pAdrsMap('h01),
 	.pUsiBusWidth(32),
 	.pCsrAdrsWidth(16)
-) SysTimerBlock (
+) SPI_BLOCK (
+	// External Port
+	.iSpiSck(rExMasterSck),
+	.iSpiMosi(rExMasterMosi),
+	.oSpiMiso(wExMasterMiso),
+	.iSpiCs(rExMasterCs),
+	.oSpiSck(wFpgaSck),
+	.oSpiMosi(wFpgaMosi),
+	.iSpiMiso(rFpgaMiso),
+	.oSpiCs(wFpgaCs),
+	.iSpiDir(1'b0),
+	//
+	.oFlashRomSck(wFlashRomSck),
+	.oFlashRomMosi(wFlashRomMosi),
+	.iFlashRomMiso(rFlashRomMiso),
+	.oFlashRomCs(wFlashRomCs),
 	// Bus Master Read
+	.iMUsiRd(0),
 	.oSUsiRd(wSUsiRd),
 	// Bus Master Write
+	.oMUsiWd(),
+	.oMUsiAdrs(),
 	.iSUsiWd(rSUsiWd),
 	.iSUsiAdrs(rSUsiAdrs),
+	// Interrupt
+	.oSpiDir(),
+	.onSpiDir(),
 	// CLK Reset
 	.iSCLK(rSCLK),
 	.iSRST(rSRST)
 );
-
-
 
 
 //----------------------------------------------------------
@@ -96,19 +138,18 @@ SysTimerBlock #(
 //----------------------------------------------------------
 initial
 begin
-	$dumpfile("SysTimer_tb.vcd");
-	$dumpvars(0, SysTimer_tb);	// 引数0:下位モジュール表示, 1:Topのみ
+	$dumpfile("SPIBlock_tb.vcd");
+	$dumpvars(0, SPIBlock_tb);	// 引数0:下位モジュール表示, 1:Topのみ
 	reset_init();
-	usi_csr_setting('d5000-1, 	'h40040000);
-	usi_csr_setting('d500-1,	'h40040004);
-	usi_csr_setting('d50-1, 	'h40040008);
-	usi_csr_setting('b001, 		'h4004000C);
-	usi_csr_setting('d0,	'h00040040);
-	Wait(0);
+	usi_csr_setting('h10, 'h40010014);
+	usi_csr_setting('haa, 'h40010018);
+	usi_csr_setting('h0, 'h4001001C);
+	usi_csr_setting('h1, 'h40010010);
+	usi_csr_setting('h1, 'h40010088);
+	wait_flag(0);
+	usi_csr_setting('h1, 'h4001001C);
+	#(lpSCLKCycle*100);
     $finish;
 end
-
-
-
 
 endmodule

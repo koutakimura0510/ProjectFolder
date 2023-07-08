@@ -126,7 +126,7 @@ begin
 		'h04:		rSUsiRd <= {{(32 - pDivClk){1'b0}}, rSPIDiv};	// パラメータ可変なので、可変に対応して0で埋めるようにした
 		'h08:		rSUsiRd <= {24'd0, rMWd};
 		'h0c:		rSUsiRd <= {31'd0, rMSpiCs};
-		'h10:		rSUsiRd <= {31'd0, rSPIEn};
+		'h10:		rSUsiRd <= {31'd0, rFlashSpiEn};
 		'h14:		rSUsiRd <= {{(32 - pDivClk){1'b0}}, rFlashSpiDiv};	// パラメータ可変なので、可変に対応して0で埋めるようにした
 		'h18:		rSUsiRd <= {24'd0, rFlashWd};
 		'h1c:		rSUsiRd <= {31'd0, rFlashCsOutCtrl};
