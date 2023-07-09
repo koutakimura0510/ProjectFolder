@@ -7,7 +7,9 @@
     "io.h": "c",
     "type.h": "c",
     "clint.h": "c",
-    "uart.h": "c"
+    "uart.h": "c",
+    "flash_rom_func.h": "c",
+    "spi_func.h": "c"
   },
 
   "[verilog]": {

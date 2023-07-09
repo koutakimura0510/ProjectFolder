@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "*.v": "verilog",
+        "game_wrapper.h": "c",
+        "sdl_wrapper.h": "c",
+        "calc_func.h": "c",
+        "event_local.h": "c",
+        "hard_func.h": "c",
+        "calc.h": "c",
+        "msg.h": "c",
+        "story_local.h": "c",
+        "fpga_func.h": "c",
+        "rom_func.h": "c"
+    }
+}
