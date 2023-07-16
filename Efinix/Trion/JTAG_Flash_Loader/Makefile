@@ -18,8 +18,7 @@ TBRTL 	 = ./src/ddr_reset_sequencer.v
 
 # シンボリックリンクで実行可能
 FILE = efx_run.py
-PROJECT = ./K5Stack10_MIDI.xml
-JTAG_PROJECT = ../JTAG_Flash_Loader
+PROJECT = ./JTAG_Flash_Loader.xml
 # BIT = ./outflow/K5Stack10_MIDI.bit
 # HEX = ./outflow/K5Stack10_MIDI.hex
 
@@ -43,13 +42,16 @@ place:
 pgm:
 	$(FILE) $(PROJECT) --flow pgm
 
+# 2022.2 で JTAGコマンド書き込みのバグにバッチが当てられためコメントアウト
+# convert:
+# 	cp $(BIT) $(HEX)
+
 jtag:
 	$(FILE) $(PROJECT) --flow program --pgm_opts mode=jtag
 
 flash:
-	make -C $(JTAG_PROJECT) jtag
-	$(FILE) $(PROJECT) --flow program --pgm_opts mode=jtag_bridge
-
+	$(FILE) $(PROJECT) --flow program --pgm_opts mode=jtag
+# $(FILE) $(PROJECT) --flow program --pgm_opts mode=jtag_bridge
 sim:
 	iverilog -o $(TBOUT) -s $(TBTOP) $(TBRTL) $(TBTOPRTL)
 	vvp -n $(TBOUT)
