@@ -14,11 +14,11 @@
  *-----------------------------------------------------------------------------*/
 module USIB #(
 	// variable parameter
-	parameter pBlockConnectNum 	= 2,	// UsiBus 接続ブロック数
+	parameter pBlockConnectNum 	= 2,	// UsiBus Slave 接続ブロック数
 	parameter pUsiBusWidth 		= 32,	// UsiBus 幅
 	parameter pCsrAdrsWidth 	= 16,	// 各ブロック共通の基本CSR幅
 	// not variable parameter
-	parameter pBlockAdrsWidth = 3,
+	parameter pBlockAdrsWidth 	= 4,
 	parameter pSUsibWidth 		= pUsiBusWidth * pBlockConnectNum
 )(
 	// Bus Master Read
@@ -30,8 +30,8 @@ module USIB #(
 	output	[pUsiBusWidth-1:0]	oSUsiWd,
 	output	[pUsiBusWidth-1:0]	oSUsiAdrs,
     // CLK Reset
-  input	iSRST,
-  input	iSCLK 
+  	input	iSRST,
+  	input	iSCLK 
 );
 
 //----------------------------------------------------------

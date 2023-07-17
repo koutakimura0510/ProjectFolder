@@ -47,7 +47,7 @@ begin
 	if (iSRST)
 	begin
 		rRamRst	<= 1'b1;
-		rMemRd				<= {pRamDqWidth{1'b0}};
+		rMemRd	<= {pRamDqWidth{1'b0}};
 	end
 	else
 	begin

@@ -8,12 +8,13 @@
 // 上位モジュールへの output port は必ずレジスタ経由で出力する。
 //----------------------------------------------------------
 module SPICsr #(
-	// variable parameter
+	// 各 Block 共通
 	parameter pBlockAdrsWidth = 8,
 	parameter [pBlockAdrsWidth-1:0] pAdrsMap = 'h03,
 	parameter pUsiBusWidth = 32,
 	parameter pCsrAdrsWidth = 8,
 	parameter pCsrActiveWidth = 8,
+	// Block origin
 	parameter pDivClk = 16
 )(
 	// Bus Master Read
@@ -30,6 +31,7 @@ module SPICsr #(
 	output [pDivClk-1:0] oFlashSpiDiv,
 	output [7:0] oFlashWd,
 	output oFlashCsOutCtrl,
+	output oFlashSpiIoHiz,
 	// Csr Input
 	input  [7:0] iMRd,
 	input  iMSpiIntr,
@@ -52,6 +54,7 @@ reg					rFlashSpiEn;		assign oFlashSpiEn 		= rFlashSpiEn;		// 通信開始
 reg [pDivClk-1:0]	rFlashSpiDiv;		assign oFlashSpiDiv 	= rFlashSpiDiv;		// CLK Division
 reg [7:0]			rFlashWd;			assign oFlashWd 		= rFlashWd;			// Send Data
 reg 				rFlashCsOutCtrl;	assign oFlashCsOutCtrl	= rFlashCsOutCtrl;	// chip select 
+reg 				rFlashSpiIoHiz;		assign oFlashSpiIoHiz	= rFlashSpiIoHiz;	// "1" SPI 機能有効, "0" 通常GPIO
 //
 reg [7:0]			rMRd;			// 読み込みデータ
 reg [7:0]			rFlashRd;		// 読み込みデータ
@@ -65,6 +68,7 @@ reg 				qCsrWCke10;
 reg 				qCsrWCke14;
 reg 				qCsrWCke18;
 reg 				qCsrWCke1c;
+reg 				qCsrWCke20;
 reg 				qCsrWCke88;
 
 always @(posedge iSCLK)
@@ -81,6 +85,7 @@ begin
 		rFlashSpiDiv	<= {pDivClk{1'b1}};
 		rFlashWd		<= 8'd0;
 		rFlashCsOutCtrl	<= 1'b1;
+		rFlashSpiIoHiz	<= 1'b0;
 		rFlashRd		<= 8'd0;
 		rFlashIntrMon	<= 1'b0;
 	end
@@ -91,11 +96,12 @@ begin
 		rMWd		<= qCsrWCke08 ? iSUsiWd[7:0] : rMWd;
 		rMSpiCs		<= qCsrWCke0c ? iSUsiWd[0:0] : rMSpiCs;
 		rMRd		<= iMRd;
-
+		//
 		rFlashSpiEn		<= iFlashSpiIntr ? 1'b0 : qCsrWCke10 ? iSUsiWd[0:0] : rFlashSpiEn;	// 1バイト送受信完了時の割り込みで Enable Auto Dissert
 		rFlashSpiDiv	<= qCsrWCke14 ? iSUsiWd[pDivClk-1:0] : rFlashSpiDiv;
 		rFlashWd		<= qCsrWCke18 ? iSUsiWd[7:0] : rFlashWd;
 		rFlashCsOutCtrl	<= qCsrWCke1c ? iSUsiWd[0:0] : rFlashCsOutCtrl;
+		rFlashSpiIoHiz	<= qCsrWCke20 ? iSUsiWd[0:0] : rFlashSpiIoHiz;
 		rFlashRd		<= iFlashSpiIntr ? iFlashRd : rFlashRd;
 		rFlashIntrMon	<= iFlashSpiIntr ? 1'b1 : qCsrWCke88 ? 1'b0 : rFlashIntrMon;
 	end
@@ -111,6 +117,7 @@ begin
 	qCsrWCke14 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
 	qCsrWCke18 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0018});
 	qCsrWCke1c <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h001c});
+	qCsrWCke20 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0020});
 	qCsrWCke88 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0088});
 end
 
@@ -130,6 +137,7 @@ begin
 		'h14:		rSUsiRd <= {{(32 - pDivClk){1'b0}}, rFlashSpiDiv};	// パラメータ可変なので、可変に対応して0で埋めるようにした
 		'h18:		rSUsiRd <= {24'd0, rFlashWd};
 		'h1c:		rSUsiRd <= {31'd0, rFlashCsOutCtrl};
+		'h20:		rSUsiRd <= {31'd0, rFlashSpiIoHiz};
 		'h80:		rSUsiRd <= {24'd0, rMRd};
 		'h84:		rSUsiRd <= {24'd0, rFlashRd};
 		'h88:		rSUsiRd <= {31'd0, rFlashIntrMon};

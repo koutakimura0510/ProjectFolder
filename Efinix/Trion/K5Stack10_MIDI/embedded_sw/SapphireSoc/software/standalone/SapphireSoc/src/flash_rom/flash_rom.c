@@ -77,6 +77,10 @@ void flash_read(uint8_t *rbuff, uint16_t col_adrs, uint16_t page_adrs, uint16_t 
 
 /**-----------------------------------------------------------------------------
  * Flash Rom ID Read
+ * 
+ * mfr_id 0xef
+ * device_id_msi 0xba
+ * device_id_lsb 0x21
  *-----------------------------------------------------------------------------*/
 void flash_id_read(void)
 {

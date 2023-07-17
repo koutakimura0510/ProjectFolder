@@ -37,6 +37,8 @@ module SPIBlock #(
 	output oFlashRomMosi,
 	input  iFlashRomMiso,
 	output oFlashRomCs,
+	// Flash Rom Dir
+	output [1:0] oFlashSpiOe,
 	// Bus Master Read
 	input  [pUsiBusWidth-1:0] iMUsiRd,
 	output [pUsiBusWidth-1:0] oSUsiRd,
@@ -73,6 +75,7 @@ wire 				wFlashSpiEnCsr;
 wire [lpDivClk-1:0]	wFlashSpiDivCsr;
 wire [7:0] 			wFlashWdCsr;
 wire 				wFlashCsOutCtrlCsr;
+wire 				wFlashSpiIoHiz;
 wire [7:0]			wFlashRdCsr;
 wire 				wFlashSpiIntrCsr;
 
@@ -91,12 +94,26 @@ SPICsr #(
 	.oMWd(wMWdCsr),					.oMSpiCs(wMSpiCsCsr),
 	.oFlashSpiEn(wFlashSpiEnCsr),	.oFlashSpiDiv(wFlashSpiDivCsr),
 	.oFlashWd(wFlashWdCsr),			.oFlashCsOutCtrl(wFlashCsOutCtrlCsr),
+	.oFlashSpiIoHiz(wFlashSpiIoHiz),
 	// Csr Input
 	.iMRd(wMRdCsr),					.iMSpiIntr(wMSpiIntrCsr),
 	.iFlashRd(wFlashRdCsr),			.iFlashSpiIntr(wFlashSpiIntrCsr),
 	// CLK Reset
 	.iSRST(iSRST),		.iSCLK(iSCLK)
 );
+
+
+//---------------------------------------------------------------------------
+// SPI OE
+//---------------------------------------------------------------------------
+reg [1:0] rFlashSpiOe;		assign oFlashSpiOe = rFlashSpiOe;	// [1] MISO / [0] SCK,MOSI,CS
+
+always @(posedge iSCLK)
+begin
+	if (wFlashSpiIoHiz)	rFlashSpiOe <= 2'b01;	// FPGA が Flash Mem にアクセス
+	else 				rFlashSpiOe <= 2'b00;	// 外部 Master が Flash Mem にアクセス
+end
+
 
 //----------------------------------------------------------
 // 指定分周値 の CKE 信号生成

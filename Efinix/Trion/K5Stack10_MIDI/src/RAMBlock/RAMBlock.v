@@ -169,10 +169,10 @@ RAMIfPortUnit #(
 
 always @*
 begin
-	qRamIfPortUnitWd <= wRamIfPortUnitWd;
-	qRamIfPortUnitAdrs <= wRamIfPortUnitAdrs[pRamAdrsWidth-1:0];
-	qRamIfPortUnitCmd <= wRamIfPortUnitAdrs[30];
-	qRamIfPortUnitCke <= wRamIfPortUnitAdrs[pUfiEnableBit-1];
+	qRamIfPortUnitWd	<= wRamIfPortUnitWd;
+	qRamIfPortUnitAdrs 	<= wRamIfPortUnitAdrs[pRamAdrsWidth-1:0];
+	qRamIfPortUnitCmd 	<= wRamIfPortUnitAdrs[30];
+	qRamIfPortUnitCke 	<= wRamIfPortUnitAdrs[pUfiEnableBit-1];
 end
 
 endmodule

@@ -1,126 +1,95 @@
 //----------------------------------------------------------
-// Create 2022/7/10
+// Create 2023/7/15
 // Author koutakimura
 // -
-// Master コントロール・ステータス・レジスタ
-// [Write]
-// iCke Assert を確認し指定アドレスのレジスタに iWd のデータを書き込む。
-// バス経由をしない手動レジスタ更新は、CSR の上位モジュールが直接管理を行う
-// 
-// [Read]
-// 読み込みの場合はアドレスを変更するだけにする。
-// ハンドシェイク信号は用意せずに、iAdrs の入力アドレスに応じて、
-// レジスタ値を常時出力しておくことで、アドレス指定後に oRd の値を確認すれば、
-// レジスタ値を取得することができる。
-// 
-// [Latency]
-// W/R ともにレイテンシはレジスタ経由のため 1 とする。
-// レイテンシによる遅延は上位モジュールが調整することとし、他の Csr と仕様を合わせるとする。
-// 
 // [Csr 規則]
 // 自動レジスタ更新は、上位モジュールからの input port とレジスタを接続する。
 // 上位モジュールへの output port は必ずレジスタ経由で出力する。
+// 
 //----------------------------------------------------------
 module MicroControllerCsr #(
-	parameter							pBlockConnectNum 	= 1,
-	parameter 							pBlockAdrsWidth 		= 8,
-	parameter [pBlockAdrsWidth-1:0] 		pAdrsMap  			= 'h01,
-	parameter							pUsiBusWidth			= 16,
-	parameter 							pCsrAdrsWidth   	= 16,
-	parameter							pCsrActiveWidth 	= 16,
-	parameter							pMemAdrsWidth		= 19
+	// 各ブロック共通のパラメータ
+	parameter pBlockAdrsWidth	= 8,
+	parameter [pBlockAdrsWidth-1:0] pAdrsMap = 'h06,
+	parameter pUsiBusWidth		= 32,
+	parameter pCsrAdrsWidth		= 8,
+	parameter pCsrActiveWidth	= 8,
+	// Block 固有のパラメータ
+	parameter pUfiDqBusWdith	= 16,
+	parameter pUfiAdrsBusWdith	= 32,
+	//
+	parameter p_non_variable	= 0
 )(
-    // Internal Port
-	// Csr Manual
-	input  	[31:0]						iWd,		// Ckeによる手動レジスタ更新時の Write Data
-	input  	[pUsiBusWidth-1:0]			iAdrs,		// R/W アドレス指定
-	input 								iWCke,		// 有効データ書き込み時 Assert
-	output 	[31:0]						oRd,		// Slaveに対してのデータを確認できる
-	// Csr Slave
-	input	[31:0]						iMUsiRd,
-	input  	[pBlockConnectNum-1:0]		iMUsiREd,
-	// Csr Master
-	output	[31:0]						oMUsiWd,	// 書き込みデータ
-	output	[pUsiBusWidth-1:0]			oMUsiAdrs,
-	output								oMUsiWEd,	// コマンド有効時 Assert
+	// Bus Master Read
+	output [pUsiBusWidth-1:0] oSUsiRd,	// Read Data
+	// Bus Master Write
+	input  [pUsiBusWidth-1:0] iSUsiWd,	// Write Data
+	input  [pUsiBusWidth-1:0] iSUsiAdrs,  // R/W Adrs
 	// Csr Output
-	output	[31:0]						oMUsiRd,
-	output	[pBlockConnectNum-1:0]		oMUsiREd,
-    // CLK Reset
-    input           					iSRST,
-    input           					iSCLK
+	output [15:0] 	oRamWd,
+	output [31:0] 	oRamAdrs,
+	output 			oRamEn,
+	// Csr Input
+	input 			iRamRdy,
+	// CLK RST
+	input iSRST,
+	input iSCLK
 );
 
 
 //----------------------------------------------------------
 // レジスタマップ
 //----------------------------------------------------------
-// Manual
-reg [31:0] 						rMUsiWd;		assign oMUsiWd   	= rMUsiWd;		// Bus 書き込みデータ
-reg [pUsiBusWidth-1:0]			rMUsiAdrs;		assign oMUsiAdrs 	= rMUsiAdrs;	// Bus 書き込みアドレス
-reg [ 0:0]		 				rMUsiWEd;		assign oMUsiWEd 	= rMUsiWEd;		// Bus 書き込み Enable 自動で 0クリア
-// Auto
-reg [31:0]						rMUsiRd;		assign oMUsiRd	 	= rMUsiRd;		// 
-reg [pBlockConnectNum-1:0]	 	rMUsiREd;		assign oMUsiREd	 	= rMUsiREd;		// 指定Bit が Assert されていればデータ書き込み可能と判断
+reg [15:0]	rRamWd;				assign 	oRamWd		= rRamWd;
+reg [31:0]	rRamAdrs;			assign 	oRamAdrs  	= rRamAdrs;
+reg 		rRamEn;				assign 	oRamEn		= rRamEn;
 //
-// reg 							qCsrWCke00;
-// reg 							qCsrWCke08;
-
+reg qCsrWCke00;
+reg qCsrWCke04;
+reg qCsrWCke08;
+//
 always @(posedge iSCLK)
 begin
 	if (iSRST)
 	begin
-		rMUsiWd		<= 'h0;
-		rMUsiAdrs	<= {pUsiBusWidth{1'b0}};
-		rMUsiWEd	<= 1'b0;
-		rMUsiRd		<= 'h0;
-		rMUsiREd	<= {pBlockConnectNum{1'b0}};
+		rRamWd		<= {16{1'b0}};
+		rRamAdrs	<= {32{1'b0}};
+		rRamEn 		<= 1'b0;
+		//
+		rRamRdy		<= 1'b0;
 	end
 	else
 	begin
-		// Manual
-		rMUsiWd		<= iWd;
-		rMUsiAdrs	<= iAdrs;
-		rMUsiWEd	<= iWCke;
-		// Auto
-		rMUsiRd		<= iMUsiRd;
-		rMUsiREd	<= iMUsiREd;
-
-		// Ufi 
-		// rSUfiBusRd	<= iSUfiBusRd;
-		// rSUfiCke	<= iSUfiCke;
-		// rSUfiRdy	<= iSUfiRdy;
+		rRamWd		<= qCsrWCke00 ? iSUsiWd[pGpioWidth-1:0] : rRamWd;
+		rRamAdrs	<= qCsrWCke04 ? iSUsiWd[pGpioWidth-1:0] : rRamAdrs;
+		rRamEn		<= qCsrWCke08 ? iSUsiWd[pGpioWidth-1:0] : rRamEn;
+		//
+		rRamRdy		<= iRamRdy;
 	end
 end
 
 always @*
 begin
-	// qCsrWCke00 <= iWCke & (iAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
-	// qCsrWCke04 <= iWCke & (iAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
-	// qCsrWCke08 <= iWCke & (iAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
+	qCsrWCke00 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
+	qCsrWCke04 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
+	qCsrWCke08 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0008});
 end
 
 //----------------------------------------------------------
 // Csr Read
-// この Read データはプロセッサに入力する
 //----------------------------------------------------------
-reg [31:0] rRd;			assign oRd = rRd;
+reg [pUsiBusWidth-1:0] rSUsiRd;			assign oSUsiRd = rSUsiRd;
 
 always @(posedge iSCLK)
 begin
-	if (iSRST)
-	begin
-		rRd <= 'h0;
-	end
-	else
-	begin
-		case (iAdrs)
-			'h0000:		rRd <= rMUsiWd;
-			'h0004:		rRd <= rMUsiAdrs;
-			'h0008:		rRd <= rMUsiWEd;
-			default: 	rRd <= rRd;
-		endcase
-	end
+	// {{(32 - パラメータ名	){1'b0}}, レジスタ名} -> パラメータ可変に対応し 0 で埋められるように設定
+	case (iSUsiAdrs[pCsrActiveWidth-1:0])
+		'h00:	 rSUsiRd <= {{(32 - 16	){1'b0}}, rRamWd};
+		'h04:	 rSUsiRd <= {rRamAdrs};
+		'h08:	 rSUsiRd <= {{(32 - 1	){1'b0}}, rRamEn};
+		'h40:	 rSUsiRd <= {{(32 - 1	){1'b0}}, rRamRdy};
+		default: rSUsiRd <= iSUsiWd;
+	endcase
 end
 
 endmodule

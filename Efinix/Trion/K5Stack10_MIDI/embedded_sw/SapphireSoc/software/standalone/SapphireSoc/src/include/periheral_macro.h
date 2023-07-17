@@ -36,6 +36,7 @@
 #define FLASH_MEM_PAGE_LEN	(2048)
 #define SPI_REG_DIV		    (BASE_BLOCK_ADRS_SPI + 0x14)
 #define SPI_REG_CS		    (BASE_BLOCK_ADRS_SPI + 0x1C)
+#define SPI_REG_GPIO_ALT    (BASE_BLOCK_ADRS_SPI + 0x20)
 #define SPI_REG_MOSI	    (BASE_BLOCK_ADRS_SPI + 0x18)
 #define SPI_REG_ENABLE	    (BASE_BLOCK_ADRS_SPI + 0x10)
 #define SPI_REG_MISO	    (BASE_BLOCK_ADRS_SPI + 0x84)
@@ -52,9 +53,15 @@
 
 
 /**-----------------------------------------------------------------------------
- * USI コマンド
+ * Bus Cmd
  *-----------------------------------------------------------------------------*/
+#define USI_BUS_SELECT		(0x20)
+#define UFI_BUS_SELECT		(0x30)
 #define USI_READ_CMD		(0x80000000)
 #define USI_WRITE_CMD		(0x40000000)
+//
+#define UFI_ENABLE_CMD		(0x80000000)
+#define UFI_READ_CMD		(0x40000000 | UFI_ENABLE_CMD)
+#define UFI_WRITE_CMD		(0x00000000 | UFI_ENABLE_CMD)
 
 #endif

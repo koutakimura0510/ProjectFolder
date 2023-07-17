@@ -130,7 +130,7 @@ assign PLL_TL0_RSTN = 1'b1;
 // USI/F BUS
 //------------------------------------------------------------------------------
 localparam lpUsiBusWidth      = 32;		// USIB Width
-localparam lpBlockConnectNum  = 5;		// 現在接続しているブロックの個数
+localparam lpBlockConnectNum  = 6;		// 現在接続しているブロックの個数
 localparam lpBlockAdrsWidth   = func_getwidth(lpBlockConnectNum);
 localparam lpCsrAdrsWidth     = 16;		// 各ブロック共通の基本CSR幅
 localparam lpSUsiBusWidth     = (lpUsiBusWidth * lpBlockConnectNum);
@@ -140,6 +140,7 @@ localparam [lpBlockAdrsWidth-1:0]		// ブロックアドレスマッピング �
   lpSynthesizerAdrsMap  = 'h2,
   lpRAMAdrsMap          = 'h3,
   lpSysTimerAdrsMap     = 'h4,
+  lpMCBAdrsMap		    = 'h5,
   lpNullAdrsMap         = 0;
 
 // ブロック内 Csr のアドレス幅
@@ -152,6 +153,7 @@ localparam
   lpSynCsrActiveWidth   = 8,
   lpRAMCsrActiveWidth   = 8,
   lpTimerCsrActiveWidth = 8,
+  lpMCBCsrActiveWidth	= 8,
   lpNullActiveWidth     = 8;  // 使用しない、ソースの追加がやりやすいように
   // lpI2CCsrActiveWidth  = 8,
   // lpVTBCsrActiveWidth  = 16,
@@ -202,47 +204,71 @@ generate
 endgenerate
 
 //----------------------------------------------------------
-// USIB
+// UFI/F BUS
 //----------------------------------------------------------
-localparam  lpRamAdrsWidth    = 18;
-localparam  lpRamDqWidth      = 16;
-localparam  lpUfiDqBusWidth   = lpRamDqWidth;
-localparam  lpUfiAdrsBusWidth = 32;
-localparam  lpUfiIdNumber     = 3;
+localparam  lpRamAdrsWidth    		= 18;
+localparam  lpRamDqWidth      		= 16;
+localparam  lpUfiDqBusWidth   		= lpRamDqWidth;
+localparam  lpUfiAdrsBusWidth 		= 32;
+localparam  lpUfiBlockConnectNum 	= 1;
+localparam 	lpUfiBlockAdrsWidth		= func_getwidth(lpUfiBlockConnectNum);
+localparam	lpMUfiDqWidth 			= lpUfiDqBusWidth   * lpUfiBlockConnectNum;
+localparam	lpMUfiAdrsWidth			= lpUfiAdrsBusWidth * lpUfiBlockConnectNum;
 
-wire [lpUfiDqBusWidth-1:0] wSUfiRd;
-wire [lpUfiAdrsBusWidth-1:0] wSUfiAdrs;
-wire [lpUfiDqBusWidth-1:0] wMUfiRd;
-wire [lpUfiAdrsBusWidth-1:0] wMUfiAdrs;
-
-wire [lpUfiDqBusWidth-1:0] wSUfiWd;
-wire [lpUfiAdrsBusWidth-1:0] wSUfiWAdrs;
-reg  qSUfiRdy;  wire wSUfiRamRdy;
-
-wire [lpUfiDqBusWidth-1:0] wMUfiWd;
-wire [lpUfiAdrsBusWidth-1:0] wMUfiWAdrs;
-wire wMUfiRdy;
+// initial begin
+// 	$display("%d", lpUfiBlockAdrsWidth);
+// end
+//
+localparam [lpUfiBlockAdrsWidth-1:0]	// UFI ブロックアドレスマッピング
+	lpUfiMcbAdrsMap		= 'h0,
+	lpUfiVtbAdrsMap		= 'h1,
+	lpUfiSBAdrsMap		= 'h2,
+	lpUfiNullAdrsMap	= 	0;
+//
+wire [lpUfiDqBusWidth-1:0] 		wSUfiRd;
+wire [lpUfiAdrsBusWidth-1:0] 	wSUfiAdrs;
+wire [lpUfiDqBusWidth-1:0] 		wMUfiRd;
+wire [lpUfiAdrsBusWidth-1:0] 	wMUfiAdrs;
+//
+wire [lpUfiDqBusWidth-1:0] 		wSUfiWd;
+wire [lpUfiAdrsBusWidth-1:0] 	wSUfiWAdrs;
+wire 							wSUfiRdy;
+wire [lpUfiDqBusWidth-1:0] 		wMUfiWd[0:lpUfiBlockConnectNum-1];
+wire [lpUfiAdrsBusWidth-1:0] 	wMUfiWAdrs[0:lpUfiBlockConnectNum-1];
+wire [lpUfiBlockConnectNum-1:0]	wMUfiRdy;
+//
+reg [lpMUfiDqWidth-1:0]			qMUfiWd;
+reg [lpMUfiAdrsWidth-1:0]		qMUfiWAdrs;
 
 UFIB #(
-  .pUfiDqBusWidth(lpUfiDqBusWidth),
-  .pUfiAdrsBusWidth(lpUfiAdrsBusWidth)
+	.pBlockConnectNum(lpUfiBlockConnectNum),
+	.pBlockAdrsWidth(lpUfiBlockAdrsWidth),
+	.pUfiDqBusWidth(lpUfiDqBusWidth),
+	.pUfiAdrsBusWidth(lpUfiAdrsBusWidth)
 ) UFIB (
-  // Ufi Bus Master Read
-  .iSUfiRd(wSUfiRd),  .iSUfiAdrs(wSUfiAdrs),
-  .oMUfiRd(wMUfiRd),  .oMUfiAdrs(wMUfiAdrs),
-  // Ufi Bus Master Write
-  .oSUfiWd(wSUfiWd),  .oSUfiAdrs(wSUfiWAdrs),
-  .iSUfiRdy(qSUfiRdy),
-  .iMUfiWd(wMUfiWd),  .iMUfiAdrs(wMUfiWAdrs),
-  .oMUfiRdy(wMUfiRdy),
-  // CLK Reset
-  .iRST(wSRST),    .iCLK(iSCLK)
+	// Ufi Bus Master Read
+	.iSUfiRd(wSUfiRd),  .iSUfiAdrs(wSUfiAdrs),
+	.oMUfiRd(wMUfiRd),  .oMUfiAdrs(wMUfiAdrs),
+	// Ufi Bus Master Write
+	.oSUfiWd(wSUfiWd),  .oSUfiAdrs(wSUfiWAdrs),
+	.iSUfiRdy(wSUfiRdy),
+	.iMUfiWd(qMUfiWd),  .iMUfiAdrs(qMUfiWAdrs),
+	.oMUfiRdy(wMUfiRdy),
+	// CLK Reset
+	.iRST(wSRST),    	.iCLK(iSCLK)
 );
 
-always @*
-begin
-  qSUfiRdy <= wSUfiRamRdy;
-end
+
+generate
+	for (x = 0; x < lpUfiBlockConnectNum; x = x + 1)
+	begin
+		always @*
+		begin
+			qMUfiWd[((x+1)*lpUfiDqBusWidth)-1:x*lpUfiDqBusWidth]		<= wMUfiWd[x];
+			qMUfiWAdrs[((x+1)*lpUfiAdrsBusWidth)-1:x*lpUfiAdrsBusWidth]	<= wMUfiWAdrs[x];
+		end
+	end
+endgenerate
 
 //-----------------------------------------------------------------------------
 // MCB ここRISC-V に変更。別プロジェクトでデバッグ中
@@ -250,32 +276,40 @@ end
 wire wSocTxd, wSocRxd;
 
 MicroControllerBlock #(
+  .pBlockAdrsWidth(lpBlockAdrsWidth),
+  .pAdrsMap(lpMCBAdrsMap),
+  .pCsrAdrsWidth(lpCsrAdrsWidth),
+  .pCsrActiveWidth(lpMCBCsrActiveWidth),
   .pUsiBusWidth(lpUsiBusWidth),
   .pUfiDqBusWidth(lpUfiDqBusWidth),
   .pUfiAdrsBusWidth(lpUfiAdrsBusWidth)
 ) MicroControllerBlock (
   // Usi Bus Master Read
-  .iMUsiRd(wMUsiRd),
-  // Usi Bus Master Write
-  .oMUsiWd(wMUsiWdMcb),  .oMUsiAdrs(wMUsiAdrsMcb),
-  // Ufi Bus Master Read
-  .iMUfiRd(wMUfiRd),    .iMUfiAdrs(wMUfiAdrs),
-  // Ufi Bus Master Write
-  .oMUfiWd(wMUfiWd),    .oMUfiAdrs(wMUfiWAdrs),
-  .iMUfiRdy(wMUfiRdy),
-  // GPIO
-  .oTxd(wSocTxd),       .iRxd(wSocRxd),
-  // JTAG
-  .jtag_inst1_TCK(jtag_inst1_TCK),
-  .jtag_inst1_TDI(jtag_inst1_TDI),
-  .jtag_inst1_TDO(jtag_inst1_TDO),
-  .jtag_inst1_SEL(jtag_inst1_SEL),
-  .jtag_inst1_CAPTURE(jtag_inst1_CAPTURE),
-  .jtag_inst1_SHIFT(jtag_inst1_SHIFT),
-  .jtag_inst1_UPDATE(jtag_inst1_UPDATE),
-  .jtag_inst1_RESET(jtag_inst1_RESET),
-  // common
-  .iSRST(wSRST),      .iSCLK(iSCLK)
+	.iMUsiRd(wMUsiRd),
+	.oSUsiRd(wSUsiRd[lpMCBAdrsMap]),
+	// Usi Bus Master Write
+	.oMUsiWd(wMUsiWdMcb),  .oMUsiAdrs(wMUsiAdrsMcb),
+	.iSUsiWd(wSUsiWd),		.iSUsiAdrs(wSUsiAdrs),
+	// Ufi Bus Master Read
+	.iMUfiRd(wMUfiRd),    .iMUfiAdrs(wMUfiAdrs),
+	// Ufi Bus Master Write
+	.oMUfiWd(wMUfiWd[lpUfiMcbAdrsMap]),
+	.oMUfiAdrs(wMUfiWAdrs[lpUfiMcbAdrsMap]),
+	.iMUfiRdy(wMUfiRdy[lpUfiMcbAdrsMap]),
+	// GPIO
+	.oTxd(wSocTxd),       .iRxd(wSocRxd),
+	// JTAG
+	.jtag_inst1_TCK(jtag_inst1_TCK),
+	.jtag_inst1_TDI(jtag_inst1_TDI),
+	.jtag_inst1_TDO(jtag_inst1_TDO),
+	.jtag_inst1_SEL(jtag_inst1_SEL),
+	.jtag_inst1_CAPTURE(jtag_inst1_CAPTURE),
+	.jtag_inst1_SHIFT(jtag_inst1_SHIFT),
+	.jtag_inst1_UPDATE(jtag_inst1_UPDATE),
+	.jtag_inst1_RESET(jtag_inst1_RESET),
+	// common
+	.iSRST(wSRST),      .inSRST(rnSRST),
+	.iSCLK(iSCLK)
 );
 
 
@@ -317,6 +351,7 @@ GpioBlock #(
 wire wSlaveSck, wSlaveMosi, wSlaveMiso, wSlaveCs;
 wire wMasterSck, wMasterMosi, wMasterMiso, wMasterCs;
 wire wFlashRomSck, wFlashRomMosi, wFlashRomMiso, wFlashRomCs;
+wire [1:0] wFlashSpiOe;
 wire wIoSpiDir;
 
 SPIBlock #(
@@ -336,6 +371,8 @@ SPIBlock #(
   .oFlashRomMosi(wFlashRomMosi),
   .iFlashRomMiso(wFlashRomMiso),
   .oFlashRomCs(wFlashRomCs),
+  // Flash Rom Dir
+  .oFlashSpiOe(wFlashSpiOe),
   // Bus Master Read
   .iMUsiRd(wMUsiRd),    .oSUsiRd(wSUsiRd[lpSPIAdrsMap]),
   // Bus Master Write
@@ -411,7 +448,7 @@ RAMBlock #(
   .oSUfiRd(wSUfiRd),    .oSUfiAdrs(wSUfiAdrs),
   // Ufi Bus Master Write
   .iSUfiWd(wSUfiWd),    .iSUfiAdrs(wSUfiWAdrs),
-  .oSUfiRdy(wSUfiRamRdy),
+  .oSUfiRdy(wSUfiRdy),
   // Status
   .oTestErr(wTestErr),  .oDone(wDone),
   // CLK, RST
@@ -450,10 +487,10 @@ SysTimerBlock #(
 // GPIOL
 wire [5:0] wIunsedL;
 wire [17:0] wIunsedR;
-assign ioGPIOL_O[0]     = wFlashRomSck;		assign  wIunsedL[0]  	= ioGPIOL_I[0];  assign ioGPIOL_OE[0] = 1'b1;
-assign ioGPIOL_O[1]     = wFlashRomMosi;	assign  wIunsedL[1]  	= ioGPIOL_I[1];  assign ioGPIOL_OE[1] = 1'b1;
-assign ioGPIOL_O[2]     = 1'b0;				assign  wFlashRomMiso	= ioGPIOL_I[2];  assign ioGPIOL_OE[2] = 1'b0;
-assign ioGPIOL_O[3]     = wFlashRomCs;		assign  wIunsedL[3]  	= ioGPIOL_I[3];  assign ioGPIOL_OE[3] = 1'b1;
+assign ioGPIOL_O[0]     = wFlashRomSck;		assign  wIunsedL[0]  	= ioGPIOL_I[0];  assign ioGPIOL_OE[0] = wFlashSpiOe[0];
+assign ioGPIOL_O[1]     = wFlashRomMosi;	assign  wIunsedL[1]  	= ioGPIOL_I[1];  assign ioGPIOL_OE[1] = wFlashSpiOe[0];
+assign ioGPIOL_O[2]     = 1'b0;				assign  wFlashRomMiso	= ioGPIOL_I[2];  assign ioGPIOL_OE[2] = wFlashSpiOe[1];
+assign ioGPIOL_O[3]     = wFlashRomCs;		assign  wIunsedL[3]  	= ioGPIOL_I[3];  assign ioGPIOL_OE[3] = wFlashSpiOe[0];
 assign ioGPIOL_O[4]     = 1'b0;				assign  wnARST		 	= ioGPIOL_I[4];  assign ioGPIOL_OE[4] = 1'b0;
 assign ioGPIOL_O[5]     = 1'b1;				assign  wIunsedL[5]  	= ioGPIOL_I[5];  assign ioGPIOL_OE[5] = 1'b1;
 // GPIOR

@@ -57,3 +57,22 @@ void usi_read_printf(uint32_t adrs)
 	uint32_t rd = usi_read_cmd(adrs);
 	bsp_printf("%x \r\n", rd);
 }
+
+/**-----------------------------------------------------------------------------
+ * USI Bus Enable
+ * 
+ * bus_sel
+ * 0x10:Bus Rst
+ * 0x20:USI Enable
+ * 0x30:UFI Enable
+ *-----------------------------------------------------------------------------*/
+void bus_enable_select(uint8_t bus_sel)
+{
+	write_u32(0x10, ADRS_GPIO_1_IO_CTRL_OUT);
+	write_u32(1, ADRS_GPIO_0_IO_CTRL_EN);
+	write_u32(1, ADRS_GPIO_1_IO_CTRL_EN);
+	write_u32(bus_sel, ADRS_GPIO_1_IO_CTRL_OUT);
+	write_u32(BASE_BLOCK_ADRS_NULL,0);
+	write_u32(0, ADRS_GPIO_0_IO_CTRL_EN);
+	write_u32(0, ADRS_GPIO_1_IO_CTRL_EN);
+}
