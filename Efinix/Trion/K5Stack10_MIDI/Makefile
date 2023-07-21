@@ -1,27 +1,13 @@
-#
-# makeを実行して ./programを行う
-#
-# iverilog -o [出力ファイル名] -s [トップモジュール名] [トップモジュールファイル] [.vファイルの羅列]
-# -oオプションを省略すると出力ファイルはa.outになる。-sオプションは省略可能だが、省略せずにトップモジュールを明示したほうが良さげである
+# ------------------------------------------------------------------------------
+# 2023-07-22
+# Author Kouta Kimura
+# Efinity Compile Makefile
+# ------------------------------------------------------------------------------
 
-# Sim 出力ファイル名
-TBOUT    = tbwave.out
-
-# Tb Top Module名
-TBTOP 	 = ddr_reset_sequencer_tb
-
-# Tb Top Module.v
-TBTOPRTL = ./src/ddr_reset_sequencer_tb.v
-
-# Tb Instance.v
-TBRTL 	 = ./src/ddr_reset_sequencer.v
-
-# シンボリックリンクで実行可能
 FILE = efx_run.py
 PROJECT = ./K5Stack10_MIDI.xml
 JTAG_PROJECT = ../JTAG_Flash_Loader
-# BIT = ./outflow/K5Stack10_MIDI.bit
-# HEX = ./outflow/K5Stack10_MIDI.hex
+SIM_PROJECT = ./src/UltraFastInterfaceBus/sim
 
 all: synthesis interface place pgm jtag
 
@@ -51,8 +37,7 @@ flash:
 	$(FILE) $(PROJECT) --flow program --pgm_opts mode=jtag_bridge
 
 sim:
-	iverilog -o $(TBOUT) -s $(TBTOP) $(TBRTL) $(TBTOPRTL)
-	vvp -n $(TBOUT)
+	make -C $(SIM_PROJECT) sim
 
 py:
 	python3 python/InfoLog.py

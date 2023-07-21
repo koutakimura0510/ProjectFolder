@@ -15,17 +15,15 @@
  * https://qiita.com/ShortArrow/items/dc0c8cacd696154510f1 <- tasks.json 参考
  *-----------------------------------------------------------------------------*/
 {
-	// See https://go.microsoft.com/fwlink/?LinkId=733558
-	// for the documentation about the tasks.json format
 	"version": "2.0.0",
 	"tasks": [
 		{
 			//-----------------------------------------------------------------------------
-			// Simlation
+			// Simlation 2023-07-22 Add
 			//-----------------------------------------------------------------------------
 			"label": "Sim",
 			"type": "shell",
-			"command": "./src/SysTimerBlock/sim/make",
+			"command": "make sim",
 			"group": {
 				"kind": "build",
 				"isDefault": true
