@@ -44,6 +44,8 @@ reg [15:0]	rRamWd;				assign 	oRamWd		= rRamWd;
 reg [31:0]	rRamAdrs;			assign 	oRamAdrs  	= rRamAdrs;
 reg 		rRamEn;				assign 	oRamEn		= rRamEn;
 //
+reg 		rRamRdy;
+//
 reg qCsrWCke00;
 reg qCsrWCke04;
 reg qCsrWCke08;
@@ -60,9 +62,9 @@ begin
 	end
 	else
 	begin
-		rRamWd		<= qCsrWCke00 ? iSUsiWd[pGpioWidth-1:0] : rRamWd;
-		rRamAdrs	<= qCsrWCke04 ? iSUsiWd[pGpioWidth-1:0] : rRamAdrs;
-		rRamEn		<= qCsrWCke08 ? iSUsiWd[pGpioWidth-1:0] : rRamEn;
+		rRamWd		<= qCsrWCke00 ? iSUsiWd[15:0] : rRamWd;
+		rRamAdrs	<= qCsrWCke04 ? iSUsiWd[31:0] : rRamAdrs;
+		rRamEn		<= qCsrWCke08 ? iSUsiWd[ 0:0] : rRamEn;
 		//
 		rRamRdy		<= iRamRdy;
 	end

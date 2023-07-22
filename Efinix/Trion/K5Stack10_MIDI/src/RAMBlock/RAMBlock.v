@@ -33,12 +33,12 @@ module RAMBlock #(
 	input  [pUsiBusWidth-1:0] iSUsiWd,
 	input  [pUsiBusWidth-1:0] iSUsiAdrs,
 	// Ufi Bus Master Read
-	output [pUfiDqBusWidth-1:0] oSUfiRd,
-	output [pUfiAdrsBusWidth-1:0] oSUfiAdrs,
+	output [pUfiDqBusWidth-1:0] 	oSUfiRd,
+	output [pUfiAdrsBusWidth-1:0] 	oSUfiAdrs,
 	// Ufi Bus Master Write
-	input  [pUfiDqBusWidth-1:0] iSUfiWd,
-	input  [pUfiAdrsBusWidth-1:0] iSUfiAdrs,
-	output oSUfiRdy,
+	input  [pUfiDqBusWidth-1:0] 	iSUfiWd,
+	input  [pUfiAdrsBusWidth-1:0] 	iSUfiAdrs,
+	output 							oSUfiRdy,
 	// Status
 	output oTestErr,
 	output oDone,

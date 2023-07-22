@@ -10,6 +10,7 @@ module MicroControllerBlock #(
 	parameter pUsiBusWidth 		= 32,
 	parameter pUfiDqBusWidth 	= 16,
 	parameter pUfiAdrsBusWidth	= 32,
+	parameter pUfiAdrsMap		= 'h01,
 	parameter pUfiEnableBit 	= 32,
 	parameter pCsrAdrsWidth 	= 8,
 	parameter pCsrActiveWidth 	= 8

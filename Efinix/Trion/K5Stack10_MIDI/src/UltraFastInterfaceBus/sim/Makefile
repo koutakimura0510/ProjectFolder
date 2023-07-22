@@ -15,8 +15,7 @@ TBTOPRTL = UFIB_tb.v
 
 # Tb Instance.v
 TBRTL 	= ../*.v ../../RAMBlock/*.v
-COMMON	= ../../common/pulse/*.v
-COMMON	= ../../common/fifo/*.v
+COMMON	= ../../common/pulse/*.v ../../common/fifo/*.v
 
 sim:
 	iverilog -o $(TBOUT) -s $(TBTOP) $(TBRTL) $(COMMON) $(TBTOPRTL)

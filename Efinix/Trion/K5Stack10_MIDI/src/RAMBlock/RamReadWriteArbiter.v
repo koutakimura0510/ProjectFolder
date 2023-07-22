@@ -18,18 +18,18 @@ module RamReadWriteArbiter #(
 	parameter pUfiEnableBit = 32
 )(
 	// Bus Slave Write
-	input  [pUfiDqBusWidth-1:0] iSUfiWd,
-	input  [pUfiAdrsBusWidth-1:0] iSUfiAdrs,
-	output oSUfiRdy,
+	input  [pUfiDqBusWidth-1:0] 	iSUfiWd,
+	input  [pUfiAdrsBusWidth-1:0] 	iSUfiAdrs,
+	output 							oSUfiRdy,
 	// Bus Slave Read
-	output [pUfiDqBusWidth-1:0] oSUfiRd,
-	output [pUfiAdrsBusWidth-1:0] oSUfiAdrs,
+	output [pUfiDqBusWidth-1:0] 	oSUfiRd,
+	output [pUfiAdrsBusWidth-1:0] 	oSUfiAdrs,
 	// RAM IF Write Port
-	output [pUfiDqBusWidth-1:0] oRamIfPortUnitWd,
-	output [pUfiAdrsBusWidth-1:0] oRamIfPortUnitAdrs,
+	output [pUfiDqBusWidth-1:0] 	oRamIfPortUnitWd,
+	output [pUfiAdrsBusWidth-1:0] 	oRamIfPortUnitAdrs,
 	// RAM IF Read Port
-	input  [pUfiDqBusWidth-1:0] iRamIfPortUnitDq,
-	input  iRamIfPortUnitWe,
+	input  [pUfiDqBusWidth-1:0] 	iRamIfPortUnitDq,
+	input  							iRamIfPortUnitWe,
     // CLK Reset
     input  iRST,
 	input  inARST,

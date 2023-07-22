@@ -64,8 +64,7 @@ wire [pBlockAdrsWidth-1:0]	wBlockId[pBlockConnectNum-1:0];
 wire [pBlockConnectNum-1:0]	wEnableBit;
 reg  [pBlockAdrsWidth-1:0]	rBlockSelect;
 reg 						qBlockSelectRst,	qBlockSelectCke;
-reg  [1:0]					rLatencyCnt;
-reg 						qLatencyCntRst,		qLatencyCntCke;
+reg  [2:0]					rLatencyCnt;
 
 always @(posedge iCLK)
 begin
@@ -78,9 +77,8 @@ begin
 	else if (qBlockSelectCke)	rBlockSelect <=  rBlockSelect + 1'b1;
 	else						rBlockSelect <=  rBlockSelect;
 
-	if (qLatencyCntCkeRst)		rLatencyCnt <= 2'd0;
-	else if (qLatencyCntCke)	rLatencyCnt <= rLatencyCnt + 1'b1;
-	else						rLatencyCnt <= rLatencyCnt;
+	if (iRST) 	rLatencyCnt <= 3'd0;
+	else		rLatencyCnt <= rLatencyCnt + 1'b1;
 end
 
 // アドレスのインデックス参照で取得しやすいように
@@ -105,10 +103,8 @@ localparam [pBlockAdrsWidth-1:0] lpBlockConnectNum = pBlockConnectNum - 1;
 generate
 	always @*
 	begin
-		qBlockSelectRst 	<= |{iRST,(rBlockSelect == lpBlockConnectNum)};
-		qBlockSelectCke 	<=  (rLatencyCnt == 2'd3);
-		qLatencyCntCkeRst 	<= |{iRST,wEnableBit[rBlockSelect]};
-		qLatencyCntCke		<= ~wEnableBit[rBlockSelect];
+		qBlockSelectRst 	<= |{iRST,(rBlockSelect == pBlockConnectNum)};
+		qBlockSelectCke 	<= &{~wEnableBit[rBlockSelect],rLatencyCnt==3'd4};
 	end
 
 	for (x = 0; x < pBlockConnectNum; x = x + 1)

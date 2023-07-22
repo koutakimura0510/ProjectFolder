@@ -83,6 +83,12 @@ module K5Stack10MidiTop(
 
 
 //-----------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------
+`include "/src/common/function/shared_function.vh"
+
+
+//-----------------------------------------------------------------------------
 // System Reset Gen
 //-----------------------------------------------------------------------------
 genvar x;  // Top内で共通変数として使用する
@@ -131,7 +137,7 @@ assign PLL_TL0_RSTN = 1'b1;
 //------------------------------------------------------------------------------
 localparam lpUsiBusWidth      = 32;		// USIB Width
 localparam lpBlockConnectNum  = 6;		// 現在接続しているブロックの個数
-localparam lpBlockAdrsWidth   = func_getwidth(lpBlockConnectNum);
+localparam lpBlockAdrsWidth   = f_detect_bitwidth(lpBlockConnectNum);
 localparam lpCsrAdrsWidth     = 16;		// 各ブロック共通の基本CSR幅
 localparam lpSUsiBusWidth     = (lpUsiBusWidth * lpBlockConnectNum);
 localparam [lpBlockAdrsWidth-1:0]		// ブロックアドレスマッピング ※プロジェクトの Readme.md 参照
@@ -211,7 +217,7 @@ localparam  lpRamDqWidth      		= 16;
 localparam  lpUfiDqBusWidth   		= lpRamDqWidth;
 localparam  lpUfiAdrsBusWidth 		= 32;
 localparam  lpUfiBlockConnectNum 	= 1;
-localparam 	lpUfiBlockAdrsWidth		= func_getwidth(lpUfiBlockConnectNum);
+localparam 	lpUfiBlockAdrsWidth		= f_detect_bitwidth(lpUfiBlockConnectNum);
 localparam	lpMUfiDqWidth 			= lpUfiDqBusWidth   * lpUfiBlockConnectNum;
 localparam	lpMUfiAdrsWidth			= lpUfiAdrsBusWidth * lpUfiBlockConnectNum;
 
@@ -585,21 +591,5 @@ begin
   qGpioAltMode[1] <= wTestErr;
   qGpioAltMode[2] <= rLed;
 end
-
-//---------------------------------------------------------------------------
-// msb側の1を検出しbit幅を取得する
-//---------------------------------------------------------------------------
-function[  7:0]  func_getwidth;
-    input [31:0] iVAL;
-    integer      i;
-
-    begin
-    func_getwidth = 1;
-    for (i = 0; i < 32; i = i+1 )
-        if (iVAL[i]) begin
-            func_getwidth = i+1;
-        end
-    end
-endfunction
 
 endmodule
