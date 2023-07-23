@@ -1,10 +1,11 @@
 `timescale 1ns / 1ps
-//----------------------------------------------------------
-// Create  2022/08/12
-// Author  KoutaKimura
-// SPI の Master Slave を切り替えながらデータの送受信を行う。
-// 
-//----------------------------------------------------------
+/*-----------------------------------------------------------------------------
+ * Create  2023/07/22
+ * Author  kouta kimura
+ * -
+ * FIFO Lib Simlation
+ * 
+ *-----------------------------------------------------------------------------*/
 module SyncFifoController_tb;
 
 //----------------------------------------------------------
@@ -41,8 +42,8 @@ endtask
 //-----------------------------------------------------------------------------
 // Fifo Read Write Tester
 //-----------------------------------------------------------------------------
-localparam lpFifoDepth		= 16;
-localparam lpFifoBitWidth 	= 4;
+localparam lpFifoDepth		= 256;
+localparam lpFifoBitWidth 	= 32;
 
 reg  [lpFifoBitWidth-1:0] rWd, rRd;
 wire [lpFifoBitWidth-1:0] wRd;
@@ -89,7 +90,7 @@ PulseGenerator #(
 
 always @(posedge rSCLK)
 begin
-	if (rSRST) 		rWd <= 0;
+	if (rSRST) 		rWd <= 65536*2;
 	else if (qWe)	rWd <= rWd + 1'b1;
 	else 			rWd <= rWd;
 end
@@ -105,10 +106,14 @@ end
 //----------------------------------------------------------
 initial
 begin
+	$display("--- SIMLATION START !! ---\n");
+
 	$dumpfile("SyncFifoController_tb.vcd");
 	$dumpvars(0, SyncFifoController_tb);	// 引数0:下位モジュール表示, 1:Topのみ
 	reset_init();
 	#(lpSimlationTime);
+	$display("\n");
+	$display("--- SIMLATION END !! ---\n");
     $finish;
 end
 

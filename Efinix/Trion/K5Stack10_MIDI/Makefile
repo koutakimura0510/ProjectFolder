@@ -7,7 +7,8 @@
 FILE = efx_run.py
 PROJECT = ./K5Stack10_MIDI.xml
 JTAG_PROJECT = ../JTAG_Flash_Loader
-SIM_PROJECT = ./src/UltraFastInterfaceBus/sim
+SIM_PROJECT = ./src/common/fifo/sim
+# SIM_PROJECT = ./src/UltraFastInterfaceBus/sim
 
 all: synthesis interface place pgm jtag
 

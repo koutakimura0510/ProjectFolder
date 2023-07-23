@@ -14,9 +14,10 @@ TBTOP 	 = SyncFifoController_tb
 TBTOPRTL = SyncFifoController_tb.v
 
 # Tb Instance.v
-TBRTL 	 = ../SyncFifoController.v ../DualPortBramTrion.v
-COMMON   = ../../pulse/*.v
+TBRTL 	= ../SyncFifoController.v ../TrionSDPBRAM.v
+COMMON  = ../../pulse/*.v
+LIB		= /tools/efinity/2023.1/sim_models/verilog/*.v
 
 sim:
-	iverilog -o $(TBOUT) -s $(TBTOP) $(TBRTL) $(COMMON) $(TBTOPRTL)
+	iverilog -o $(TBOUT) -s $(TBTOP) $(TBRTL) $(COMMON) $(LIB) $(TBTOPRTL)
 	vvp -n $(TBOUT)

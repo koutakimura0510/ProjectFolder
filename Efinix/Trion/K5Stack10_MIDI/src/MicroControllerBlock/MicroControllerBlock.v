@@ -60,7 +60,7 @@ module MicroControllerBlock #(
 wire [15:0] wRamWdCsr;
 wire [31:0] wRamAdrsCsr;
 wire 		wRamEnCsr;
-reg 		qRamRdyCsr;
+reg 		qRamFullCsr, qRamEmpCsr;
 
 MicroControllerCsr #(
 	.pBlockAdrsWidth(pBlockAdrsWidth),
@@ -74,10 +74,9 @@ MicroControllerCsr #(
 	// Bus Master Write
 	.iSUsiWd(iSUsiWd),		.iSUsiAdrs(iSUsiAdrs),
 	// CSR
-	.oRamWd(wRamWdCsr),
-	.oRamAdrs(wRamAdrsCsr),
+	.oRamWd(wRamWdCsr),		.oRamAdrs(wRamAdrsCsr),
 	.oRamEn(wRamEnCsr),
-	.iRamRdy(qRamRdyCsr),
+	.iRamFull(qRamFullCsr),	.iRamEmp(qRamEmpCsr),
 	// CLK RST
 	.iSRST(iSRST),			.iSCLK(iSCLK)
 );
@@ -179,21 +178,23 @@ SyncFifoController #(
     .oFull(wMfcFull),
     .oRd(wMfcRd),
     .iRe(qMfcRe),
-    .oRvd(),
+    .oRvd(wMfcRvd),
     .oEmp(wMfcEmp),
     .inARST(inSRST),
 	.iCLK(iSCLK)
 );
 
-assign oMUfiWd		= wMfcRd[15:0];
-assign oMUfiAdrs	= wMfcRd[47:16];
+assign oMUfiWd			= wMfcRd[15:0];
+assign oMUfiAdrs[30:0]	= wMfcRd[46:16];
+assign oMUfiAdrs[31]	= wMfcRvd;
 
 always @*
 begin
 	qMfcWd		<= {wRamAdrsCsr,wRamWdCsr};
-	qMfcWe		<= wRamEnCsr;
-	qRamRdyCsr 	<= wMfcFull;
+	qMfcWe		<= &{wRamEnCsr,~wMfcFull};
 	qMfcRe		<= &{iMUfiRdy,~wMfcEmp};
+	qRamFullCsr	<= wMfcFull;
+	qRamEmpCsr	<= wMfcEmp;
 end
 
 endmodule
