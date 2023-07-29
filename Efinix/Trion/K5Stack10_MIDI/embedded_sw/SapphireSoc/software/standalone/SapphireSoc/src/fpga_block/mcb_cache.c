@@ -33,12 +33,21 @@ void cache_flush(void)
 }
 
 /**-----------------------------------------------------------------------------
+ * return
+ * true : burst transfer、転送は行われている
+ * false: burst transfer、転送は行われていない
+ *-----------------------------------------------------------------------------*/
+bool cache_burst_bool(void)
+{
+	return usi_read_cmd(MCB_REG_RAM_BURST_RUN) ? false : true;
+}
+
+/**-----------------------------------------------------------------------------
  * Cache Read
  *-----------------------------------------------------------------------------*/
 uint16_t cache_read(uint32_t ram_adrs)
 {
 	while(usi_read_cmd(MCB_REG_RAM_BURST_RUN));
-	// usi_write_cmd(MCB_CACHE_READ, MCB_REG_RAM_WD);
 	usi_write_cmd(ram_adrs | MCB_CACHE_READ, MCB_REG_RAM_ADRS);
 	usi_write_cmd(1, MCB_REG_RAM_ENABLE);
 	usi_write_cmd(0, MCB_REG_RAM_ENABLE);

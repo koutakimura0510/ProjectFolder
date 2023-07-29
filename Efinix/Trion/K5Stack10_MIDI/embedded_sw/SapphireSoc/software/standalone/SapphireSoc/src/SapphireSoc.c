@@ -4,15 +4,15 @@
  * -
  * Soc Project
  * 
+ * v1.00 new release
+ * v1.01
  *-----------------------------------------------------------------------------*/
 #include "./include/system_wrapper.h"
-
+#include <math.h>
 
 /**-----------------------------------------------------------------------------
  * プロトタイプ宣言
  *-----------------------------------------------------------------------------*/
-static void led_auto_flash(uint32_t time);
-static void led_flash(uint8_t flash);
 static void system_initialize(void);
 
 
@@ -39,30 +39,6 @@ static void system_initialize(void)
 	flash_protection_reg_write();
 }
 
-/**-----------------------------------------------------------------------------
- * LED Auto FLASH
- *-----------------------------------------------------------------------------*/
-static void led_auto_flash(uint32_t time)
-{
-	static uint32_t t = 0;
-	static uint8_t flash = 0x01;
-	uint32_t now_t = usi_read_cmd(TIMER_REG_COUNT1);
-
-	if (t + time < now_t) {
-		t = now_t;
-		flash++;
-		flash &= 0x07;
-		usi_write_cmd(flash, GPIO_REG_OUT_CTRL);
-	}
-}
-
-/**-----------------------------------------------------------------------------
- * LED FLASH
- *-----------------------------------------------------------------------------*/
-static void led_flash(uint8_t flash)
-{
-	usi_write_cmd(flash, GPIO_REG_OUT_CTRL);
-}
 
 /**-----------------------------------------------------------------------------
  * main 関数
@@ -71,18 +47,30 @@ void main()
 {
 	system_initialize();
 
-	uint16_t wd = 0;
 	uint32_t adrs = 0;
 	uint16_t rd;
 	
+	double angle = 2764.601535;
+	double offset = 32768.0;
+	double wave = 440.0;
+	double sampling_rate = 48000.0;
+
+	for (uint32_t i = 0; i < 65535; i++) {
+		double d = (angle * (double)i) / sampling_rate;
+		double sin_wave = sin(d) * offset + offset;
+		cache_write((uint16_t)sin_wave, i);
+
+		if ((i & 0xff) == 255) {
+			cache_flush();
+			while(!(true == cache_burst_bool()));
+		}
+	}
+	
 	while (1) {
 		// led_auto_flash();
-		cache_write(wd, adrs);
-		cache_flush();
 		rd = cache_read(adrs);
-		bsp_uDelay(500000);
-		led_flash(rd);
-		wd++;
+		bsp_uDelay(100000);
+		led_user_flash(rd);
 		adrs++;
 		// flash_id_read();
 		// flash_write();

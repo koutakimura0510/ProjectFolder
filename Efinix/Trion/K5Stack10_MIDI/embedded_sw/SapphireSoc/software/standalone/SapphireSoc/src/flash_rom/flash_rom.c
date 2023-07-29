@@ -40,6 +40,38 @@ static void flash_page_read(uint16_t page_adrs);
 static void flash_read_data(uint8_t *rbuff, uint16_t col_adrs, uint16_t len);
 
 
+
+
+/**-----------------------------------------------------------------------------
+ * user Flash Write
+ * 
+ * page_adrs = 消去ブロック、64page単位で指定
+ *-----------------------------------------------------------------------------*/
+void flash_user_block_elase(uint16_t page_adrs)
+{
+	flash_write_enable_cmd();
+	flash_block_elase(page_adrs);
+	flash_busy_wait();
+}
+
+
+/**-----------------------------------------------------------------------------
+ * user Flash Write
+ * 
+ * *wbuff = 書き込みバッファアドレス
+ * col_adrs = col adrs
+ * page_adrs = 書き込みページアドレス、64page単位で指定
+ * len = バッファサイズ
+ *-----------------------------------------------------------------------------*/
+void flash_user_page_write(uint8_t *wbuff, uint16_t col_adrs, uint16_t page_adrs, uint16_t len)
+{
+	flash_write_enable_cmd();
+	flash_program_data_load(wbuff, col_adrs, len);
+	flash_program_data_execute(page_adrs);
+	flash_busy_wait();
+}
+
+
 /**-----------------------------------------------------------------------------
  * Flash Write
  * 
