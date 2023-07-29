@@ -12,10 +12,10 @@
  * [24: 0] RAM Adrs
  *-----------------------------------------------------------------------------*/
 module RamReadWriteArbiter #(
-	parameter pUfiDqBusWidth = 16,
-	parameter pUfiAdrsBusWidth = 32,
-	parameter pFifoDepth = 256,
-	parameter pUfiEnableBit = 32
+	parameter pUfiDqBusWidth 	= 16,
+	parameter pUfiAdrsBusWidth 	= 32,
+	parameter pFifoDepth 		= 256,
+	parameter pUfiEnableBit 	= 32
 )(
 	// Bus Slave Write
 	input  [pUfiDqBusWidth-1:0] 	iSUfiWd,

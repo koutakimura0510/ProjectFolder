@@ -282,7 +282,8 @@ MicroControllerBlock #(
   .pCsrActiveWidth(lpMCBCsrActiveWidth),
   .pUsiBusWidth(lpUsiBusWidth),
   .pUfiDqBusWidth(lpUfiDqBusWidth),
-  .pUfiAdrsBusWidth(lpUfiAdrsBusWidth)
+  .pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
+  .pUfiAdrsMap(lpUfiMcbAdrsMap)
 ) MicroControllerBlock (
   // Usi Bus Master Read
 	.iMUsiRd(wMUsiRd),

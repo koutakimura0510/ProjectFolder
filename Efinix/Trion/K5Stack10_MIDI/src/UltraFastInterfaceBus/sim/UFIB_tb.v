@@ -12,8 +12,8 @@ module UFIB_tb;
 //-----------------------------------------------------------------------------
 // System Simlation Parameter
 //-----------------------------------------------------------------------------
-localparam lpUfibMasterBlockNum = 3;
-localparam lpRamDepth			= 32;
+localparam lpUfibMasterBlockNum = 1;
+localparam lpRamDepth			= 256;
 
 //-----------------------------------------------------------------------------
 // System 共通変数
@@ -48,7 +48,7 @@ endtask
 // USI/F BUS
 //------------------------------------------------------------------------------
 localparam lpUsiBusWidth      = 32;		// USIB Width
-localparam lpBlockConnectNum  = 1;		// 現在接続しているブロックの個数
+localparam lpBlockConnectNum  = 2;		// 現在接続しているブロックの個数
 localparam lpBlockAdrsWidth   = f_detect_bitwidth(lpBlockConnectNum);
 localparam lpCsrAdrsWidth     = 16;		// 各ブロック共通の基本CSR幅
 localparam lpSUsiBusWidth     = (lpUsiBusWidth * lpBlockConnectNum);
@@ -58,7 +58,7 @@ localparam [lpBlockAdrsWidth-1:0]		// ブロックアドレスマッピング �
 //   lpSynthesizerAdrsMap  = 'h2,
   lpRAMAdrsMap          = 'h3,
 //   lpSysTimerAdrsMap     = 'h4,
-//   lpMCBAdrsMap		    = 'h5,
+  lpMCBAdrsMap		    = 'h5,
   lpNullAdrsMap         = 0;
 
 // ブロック内 Csr のアドレス幅
@@ -71,7 +71,7 @@ localparam
 //   lpSynCsrActiveWidth   = 8,
   lpRAMCsrActiveWidth   = 8,
 //   lpTimerCsrActiveWidth = 8,
-//   lpMCBCsrActiveWidth	= 8,
+  lpMCBCsrActiveWidth	= 8,
   lpNullActiveWidth     = 8;  // 使用しない、ソースの追加がやりやすいように
   // lpI2CCsrActiveWidth  = 8,
   // lpVTBCsrActiveWidth  = 16,
@@ -80,8 +80,8 @@ localparam
 //-----------------------------------------------------------------------------
 // USIB 経由の CSR 設定
 wire [31:0]	wSUsiRd;
-reg  [31:0] rSUsiWd 	= 0;
-reg  [31:0] rSUsiAdrs 	= 0;
+reg  [31:0] rSUsiWd 	= 0;	wire [31:0] wSUsiWd		= rSUsiWd;
+reg  [31:0] rSUsiAdrs 	= 0;	wire [31:0] wSUsiAdrs 	= rSUsiAdrs;
 
 task usi_csr_setting (
 	input [31:0] wd,
@@ -96,13 +96,43 @@ endtask //usi_csr_setting
 // ----------------------------------------------------------------------------
 // Wait 関数 
 task wait_flag(
-	input [31:0] flag
+	input [31:0] flag,
+	input [31:0] adrs
 );
 begin
+	usi_csr_setting(0, adrs);
 	while (wSUsiRd == flag)	// iverilog の場合、等しい場合ループする
 	begin
 		#(lpSCLKCycle);
 	end
+end
+endtask
+// ----------------------------------------------------------------------------
+// MCB UFI Burst
+task mcb_flash_run(
+	input rw
+);
+integer i;
+begin
+	for (i = 0; i < 256; i = i + 1)
+	begin
+		if (rw == 0)
+		begin
+			usi_csr_setting(i, 'h4005_0000);
+			usi_csr_setting(i, 'h4005_0004);
+		end
+		else
+		begin
+			// usi_csr_setting('h40000000, 'h4005_0000);
+			usi_csr_setting('h40000000 + i, 'h4005_0004);
+		end
+		usi_csr_setting(1, 'h4005_0008);
+		usi_csr_setting(0, 'h4005_0008);
+	end
+
+	usi_csr_setting(1, 'h4005_000C);
+	usi_csr_setting(0, 'h0000_0000);
+	$display("mcb_flash_run %d", rw);
 end
 endtask
 
@@ -125,9 +155,10 @@ begin
 end
 //
 localparam [lpUfiBlockAdrsWidth-1:0]	// UFI ブロックアドレスマッピング
-	lpUfiRWT1stAdrsMap	= 'h0,
-	lpUfiRWT2ndAdrsMap	= 'h1,
+	// lpUfiRWT1stAdrsMap	= 'h0,
+	// lpUfiRWT2ndAdrsMap	= 'h1,
 	// lpUfiRWT3rdAdrsMap	= 'h2,
+	lpUfiMcbAdrsMap		= 'h0,
 	lpUfiNullAdrsMap	= 	0;
 //
 wire [lpUfiDqBusWidth-1:0] 		wSUfiRd;
@@ -177,28 +208,68 @@ endgenerate
 //---------------------------------------------------------------------------
 // UFIB ReadWriteTester
 //---------------------------------------------------------------------------
-generate
-	for (x = 0; x < lpUfibMasterBlockNum; x = x + 1)
-	begin
-		UfibReadWriteTester #(
-			.pRamAdrsWidth(lpRamAdrsWidth),
-			.pUfiAdrsMap(lpUfiRWT1stAdrsMap),
-			.pUfiDqBusWidth(lpUfiDqBusWidth),
-			.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
-			.pReadWrite(x+1)
-		) UfibReadWriteTester (
-			// Ufi Bus Master Read
-			.iMUfiRd(wMUfiRd),		.iMUfiAdrs(wMUfiAdrs),
-			// Ufi Bus Master Write
-			.oMUfiWd(wMUfiWd[x]),	// 本来は lpUfiRWT1stAdrsMap を指定する。あくまでsim
-			.oMUfiAdrs(wMUfiWAdrs[x]),
-			.iMUfiRdy(wMUfiRdy[x]),
-			// CLK Reset
-			.iRST(wSRST),			.inRST(wnSRST),
-			.iCLK(wSCLK)
-		);
-	end
-endgenerate
+// generate
+// 	for (x = 0; x < lpUfibMasterBlockNum; x = x + 1)
+// 	begin
+// 		UfibReadWriteTester #(
+// 			.pRamAdrsWidth(lpRamAdrsWidth),
+// 			.pUfiAdrsMap(lpUfiRWT1stAdrsMap),
+// 			.pUfiDqBusWidth(lpUfiDqBusWidth),
+// 			.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
+// 			.pReadWrite(x+1)
+// 		) UfibReadWriteTester (
+// 			// Ufi Bus Master Read
+// 			.iMUfiRd(wMUfiRd),		.iMUfiAdrs(wMUfiAdrs),
+// 			// Ufi Bus Master Write
+// 			.oMUfiWd(wMUfiWd[x]),	// 本来は lpUfiRWT1stAdrsMap を指定する。あくまでsim
+// 			.oMUfiAdrs(wMUfiWAdrs[x]),
+// 			.iMUfiRdy(wMUfiRdy[x]),
+// 			// CLK Reset
+// 			.iRST(wSRST),			.inRST(wnSRST),
+// 			.iCLK(wSCLK)
+// 		);
+// 	end
+// endgenerate
+
+MicroControllerBlock #(
+	// Usi
+	.pBlockAdrsWidth(lpBlockAdrsWidth),		.pAdrsMap(lpRAMAdrsMap),
+	.pUsiBusWidth(lpUsiBusWidth),
+	.pCsrAdrsWidth(lpCsrAdrsWidth),			.pCsrActiveWidth(lpMCBCsrActiveWidth),
+	// Ufi
+	.pUfiDqBusWidth(lpUfiDqBusWidth),		.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
+	.pUfiAdrsMap(lpUfiMcbAdrsMap),
+	// Commnad
+	.pSimlation("yes")
+) MicroControllerBlock (
+  // Usi Bus Master Read
+	.iMUsiRd(wMUsiRd),
+	.oSUsiRd(wSUsiRd[lpMCBAdrsMap]),
+	// Usi Bus Master Write
+	.oMUsiWd(wMUsiWdMcb),	.oMUsiAdrs(wMUsiAdrsMcb),
+	.iSUsiWd(wSUsiWd),		.iSUsiAdrs(wSUsiAdrs),
+	// Ufi Bus Master Read
+	.iMUfiRd(wMUfiRd),		.iMUfiAdrs(wMUfiAdrs),
+	// Ufi Bus Master Write
+	.oMUfiWd(wMUfiWd[lpUfiMcbAdrsMap]),
+	.oMUfiAdrs(wMUfiWAdrs[lpUfiMcbAdrsMap]),
+	.iMUfiRdy(wMUfiRdy[lpUfiMcbAdrsMap]),
+	// GPIO
+	.oTxd(),       .iRxd(),
+	// JTAG
+	.jtag_inst1_TCK(),
+	.jtag_inst1_TDI(),
+	.jtag_inst1_TDO(),
+	.jtag_inst1_SEL(),
+	.jtag_inst1_CAPTURE(),
+	.jtag_inst1_SHIFT(),
+	.jtag_inst1_UPDATE(),
+	.jtag_inst1_RESET(),
+	// common
+	.iSRST(wSRST),      .inSRST(wnSRST),
+	.iSCLK(wSCLK)
+);
+
 
 //-----------------------------------------------------------------------------
 // RAMBloock part
@@ -224,8 +295,9 @@ RAMBlock #(
 	.oSRAM_OE(),
 	.oSRAM_WE(wCmd),	.oSRAM_CE(wCe),
 	// Usi
-	.oSUsiRd(),			.iSUsiWd(rSUsiWd),
-	.iSUsiAdrs(rSUsiAdrs),
+	.oSUsiRd(wSUsiRd[lpRAMAdrsMap]),
+	.iSUsiWd(wSUsiWd),
+	.iSUsiAdrs(wSUsiAdrs),
 	// Ufi Bus Master Read
 	.oSUfiRd(wSUfiRd),	.oSUfiAdrs(wSUfiAdrs),
 	// Ufi Bus Master Write
@@ -263,10 +335,15 @@ initial
 begin
 	$dumpfile("UFIB_tb.vcd");
 	$dumpvars(0, UFIB_tb);	// 引数0:下位モジュール表示, 1:Topのみ
+	$display(" ----- SIM_END !!");
 	reset_init();
 	usi_csr_setting('h0, 'h40030000);
-	// wait_flag(0);
+	mcb_flash_run(0);
+	wait_flag(1, 'h0005_000C);
 	#(lpSCLKCycle*1000);
+	mcb_flash_run(1);
+	#(lpSCLKCycle*1000);
+	$display(" ----- SIM_END !!");
     $finish;
 end
 

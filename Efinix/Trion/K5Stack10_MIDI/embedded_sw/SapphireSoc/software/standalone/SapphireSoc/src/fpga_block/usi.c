@@ -19,8 +19,8 @@ uint32_t usi_read_cmd(uint32_t adrs)
 	write_u32(adrs, ADRS_GPIO_0_IO_CTRL_OUT);
 	write_u32(adrs >> 16, ADRS_GPIO_1_IO_CTRL_OUT);
 	write_u32(1, ADRS_GPIO_1_IO_CTRL_EN);
-	write_u32(BASE_BLOCK_ADRS_NULL,0);		// Port に Read値が入力されるまで数クロックサイクル必要なため
-	write_u32(BASE_BLOCK_ADRS_NULL,0);		// 空の write 動作を行い数クロック待つ
+	write_u32(BASE_BLOCK_USI_ADRS_NULL,0);		// Port に Read値が入力されるまで数クロックサイクル必要なため
+	write_u32(BASE_BLOCK_USI_ADRS_NULL,0);		// 空の write 動作を行い数クロック待つ
 	lsbrd = read_u32(ADRS_GPIO_0_IO_CTRL);
 	msbrd = read_u32(ADRS_GPIO_1_IO_CTRL) << 16;
 	write_u32(0, ADRS_GPIO_1_IO_CTRL_EN);
@@ -72,7 +72,7 @@ void bus_enable_select(uint8_t bus_sel)
 	write_u32(1, ADRS_GPIO_0_IO_CTRL_EN);
 	write_u32(1, ADRS_GPIO_1_IO_CTRL_EN);
 	write_u32(bus_sel, ADRS_GPIO_1_IO_CTRL_OUT);
-	write_u32(BASE_BLOCK_ADRS_NULL,0);
+	write_u32(BASE_BLOCK_USI_ADRS_NULL,0);
 	write_u32(0, ADRS_GPIO_0_IO_CTRL_EN);
 	write_u32(0, ADRS_GPIO_1_IO_CTRL_EN);
 }

@@ -14,9 +14,10 @@ TBTOP 	 = UFIB_tb
 TBTOPRTL = UFIB_tb.v
 
 # Tb Instance.v
-TBRTL 	= ../*.v ../../RAMBlock/*.v
+TBRTL 	= ../*.v ../../RAMBlock/*.v ../../MicroControllerBlock/*.v
 COMMON	= ../../common/pulse/*.v ../../common/fifo/*.v
+LIB		= /tools/efinity/2023.1/sim_models/verilog/*.v
 
 sim:
-	iverilog -o $(TBOUT) -s $(TBTOP) $(TBRTL) $(COMMON) $(TBTOPRTL)
+	iverilog -o $(TBOUT) -s $(TBTOP) $(TBRTL) $(COMMON) $(LIB) $(TBTOPRTL)
 	vvp -n $(TBOUT)

@@ -1,15 +1,16 @@
 /**-----------------------------------------------------------------------------
- * Create  2023/07/15
+ * Create  2023/07/23
  * Author  kouta kimura
  * -
  * グローバル関数プロトタイプ宣言
  * 
  *-----------------------------------------------------------------------------*/
 
-#ifndef ram_func_h
-#define ram_func_h
+#ifndef mcb_cache_func_h
+#define mcb_cache_func_h
 
-void spi_write(uint8_t mosi);
-uint8_t spi_read(uint8_t mosi);
+void cache_write(uint16_t wd, uint32_t ram_adrs);
+void cache_flush(void);
+uint16_t cache_read(uint32_t ram_adrs);
 
 #endif

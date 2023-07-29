@@ -9,7 +9,9 @@
     "clint.h": "c",
     "uart.h": "c",
     "flash_rom_func.h": "c",
-    "spi_func.h": "c"
+    "spi_func.h": "c",
+    "system_wrapper.h": "c",
+    "periheral_macro.h": "c"
   },
 
   "[verilog]": {

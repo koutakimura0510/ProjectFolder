@@ -8,12 +8,13 @@ module MicroControllerBlock #(
 	parameter pBlockAdrsWidth 	= 8,
 	parameter [pBlockAdrsWidth-1:0] pAdrsMap = 'h01,
 	parameter pUsiBusWidth 		= 32,
+	parameter pCsrAdrsWidth 	= 8,
+	parameter pCsrActiveWidth 	= 8,
 	parameter pUfiDqBusWidth 	= 16,
 	parameter pUfiAdrsBusWidth	= 32,
-	parameter pUfiAdrsMap		= 'h01,
+	parameter [3:0] pUfiAdrsMap	= 'h0,
 	parameter pUfiEnableBit 	= 32,
-	parameter pCsrAdrsWidth 	= 8,
-	parameter pCsrActiveWidth 	= 8
+	parameter pSimlation 		= "no"
 )(
 	// Usi Bus Master Read
 	input	[pUsiBusWidth-1:0] iMUsiRd,
@@ -57,10 +58,14 @@ module MicroControllerBlock #(
 //-----------------------------------------------------------------------------
 // CSR
 //-----------------------------------------------------------------------------
-wire [15:0] wRamWdCsr;
-wire [31:0] wRamAdrsCsr;
-wire 		wRamEnCsr;
-reg 		qRamFullCsr, qRamEmpCsr;
+wire [pUfiDqBusWidth-1:0] 	wRamWdCsr;
+wire [pUfiAdrsBusWidth-1:0] wRamAdrsCsr;
+wire 						wRamEnCsr;
+wire 						wRamBurstRunCsr;
+reg 						qRamFullCsr, qRamEmpCsr;
+reg  [pUfiDqBusWidth-1:0] 	qUfiRdCsr;
+reg 						qRamBurstStop;
+reg 						qRamRdVdCsr;
 
 MicroControllerCsr #(
 	.pBlockAdrsWidth(pBlockAdrsWidth),
@@ -75,8 +80,11 @@ MicroControllerCsr #(
 	.iSUsiWd(iSUsiWd),		.iSUsiAdrs(iSUsiAdrs),
 	// CSR
 	.oRamWd(wRamWdCsr),		.oRamAdrs(wRamAdrsCsr),
-	.oRamEn(wRamEnCsr),
+	.oRamEn(wRamEnCsr),		.oRamBurstRun(wRamBurstRunCsr),
 	.iRamFull(qRamFullCsr),	.iRamEmp(qRamEmpCsr),
+	.iRamRd(qUfiRdCsr),
+	.iRamBurstStop(qRamBurstStop),
+	.iRamRdVd(qRamRdVdCsr),
 	// CLK RST
 	.iSRST(iSRST),			.iSCLK(iSCLK)
 );
@@ -90,111 +98,170 @@ wire [15:0] wGpioReadMsb, wGpioReadLsb;
 wire [15:0] wGpioDataEn;
 wire [15:0] wGpioAdrsEn;
 
-SapphireSoc soc_inst (
-  // SPI 0
-  .system_spi_0_io_sclk_write(),
-  .system_spi_0_io_data_0_writeEnable(),
-  .system_spi_0_io_data_0_read(),
-  .system_spi_0_io_data_0_write(),
-  .system_spi_0_io_ss(),
-  // SPI 1,2
-  .system_spi_0_io_data_1_writeEnable(),
-  .system_spi_0_io_data_1_read(),
-  .system_spi_0_io_data_1_write(),
-  .system_spi_0_io_data_2_writeEnable(),
-  .system_spi_0_io_data_2_read(),
-  .system_spi_0_io_data_2_write(),
-  .system_spi_0_io_data_3_writeEnable(),
-  .system_spi_0_io_data_3_read(),
-  .system_spi_0_io_data_3_write(),
-  // GPIO
-  .system_gpio_0_io_writeEnable(wGpioDataEn),
-  .system_gpio_1_io_writeEnable(wGpioAdrsEn),
-  .system_gpio_0_io_write(wGpioWriteLsb),
-  .system_gpio_1_io_write(wGpioWriteMsb),
-  .system_gpio_0_io_read(wGpioReadLsb),
-  .system_gpio_1_io_read(wGpioReadMsb),
-  // UART
-  .system_uart_0_io_txd(oTxd),
-  .system_uart_0_io_rxd(iRxd),
-  // common
-  .io_systemClk(iSCLK),
-  .io_asyncReset(iSRST),
-  .io_systemReset(oSocRST),
-  // Jtag
-  .jtagCtrl_tck(jtag_inst1_TCK),
-  .jtagCtrl_tdi(jtag_inst1_TDI),
-  .jtagCtrl_tdo(jtag_inst1_TDO),
-  .jtagCtrl_enable(jtag_inst1_SEL),
-  .jtagCtrl_capture(jtag_inst1_CAPTURE),
-  .jtagCtrl_shift(jtag_inst1_SHIFT),
-  .jtagCtrl_update(jtag_inst1_UPDATE),
-  .jtagCtrl_reset(jtag_inst1_RESET)
-);
+generate
+	if (pSimlation == "yes")
+	begin
+		assign oMUsiWd			= 0;
+		assign oMUsiAdrs		= 0;
+	end
+	else
+	begin
+		SapphireSoc soc_inst (
+		// SPI 0
+		.system_spi_0_io_sclk_write(),
+		.system_spi_0_io_data_0_writeEnable(),
+		.system_spi_0_io_data_0_read(),
+		.system_spi_0_io_data_0_write(),
+		.system_spi_0_io_ss(),
+		// SPI 1,2
+		.system_spi_0_io_data_1_writeEnable(),
+		.system_spi_0_io_data_1_read(),
+		.system_spi_0_io_data_1_write(),
+		.system_spi_0_io_data_2_writeEnable(),
+		.system_spi_0_io_data_2_read(),
+		.system_spi_0_io_data_2_write(),
+		.system_spi_0_io_data_3_writeEnable(),
+		.system_spi_0_io_data_3_read(),
+		.system_spi_0_io_data_3_write(),
+		// GPIO
+		.system_gpio_0_io_writeEnable(wGpioDataEn),
+		.system_gpio_1_io_writeEnable(wGpioAdrsEn),
+		.system_gpio_0_io_write(wGpioWriteLsb),
+		.system_gpio_1_io_write(wGpioWriteMsb),
+		.system_gpio_0_io_read(wGpioReadLsb),
+		.system_gpio_1_io_read(wGpioReadMsb),
+		// UART
+		.system_uart_0_io_txd(oTxd),
+		.system_uart_0_io_rxd(iRxd),
+		// common
+		.io_systemClk(iSCLK),
+		.io_asyncReset(iSRST),
+		.io_systemReset(oSocRST),
+		// Jtag
+		.jtagCtrl_tck(jtag_inst1_TCK),
+		.jtagCtrl_tdi(jtag_inst1_TDI),
+		.jtagCtrl_tdo(jtag_inst1_TDO),
+		.jtagCtrl_enable(jtag_inst1_SEL),
+		.jtagCtrl_capture(jtag_inst1_CAPTURE),
+		.jtagCtrl_shift(jtag_inst1_SHIFT),
+		.jtagCtrl_update(jtag_inst1_UPDATE),
+		.jtagCtrl_reset(jtag_inst1_RESET)
+		);
+	end
+
+	//-----------------------------------------------------------------------------
+	// USI Bus
+	//-----------------------------------------------------------------------------
+	reg  [31:0] rMBusWd, rMBusAdrs;
+
+	always @(posedge iSCLK)
+	begin
+		if (iSRST)                rMBusWd <= 32'd0;
+		else if (wGpioDataEn[0])  rMBusWd <= {wGpioWriteMsb,wGpioWriteLsb};
+		else                      rMBusWd <= rMBusWd;
+
+		if (iSRST)                rMBusAdrs <= 32'd0;
+		else if (wGpioAdrsEn[0])  rMBusAdrs <= {wGpioWriteMsb,wGpioWriteLsb};
+		else                      rMBusAdrs <= 32'd0;
+	end
+
+	assign wGpioReadLsb 	= iMUsiRd[15:0];
+	assign wGpioReadMsb 	= iMUsiRd[31:16];
+	//
+	assign oMUsiWd			= rMBusWd;
+	assign oMUsiAdrs		= rMBusAdrs;
+endgenerate
+
+
 
 //-----------------------------------------------------------------------------
-// USI Bus
-//-----------------------------------------------------------------------------
-reg  [31:0] rMBusWd, rMBusAdrs;
-
-always @(posedge iSCLK)
-begin
-	if (iSRST)                rMBusWd <= 32'd0;
-	else if (wGpioDataEn[0])  rMBusWd <= {wGpioWriteMsb,wGpioWriteLsb};
-	else                      rMBusWd <= rMBusWd;
-
-	if (iSRST)                rMBusAdrs <= 32'd0;
-	else if (wGpioAdrsEn[0])  rMBusAdrs <= {wGpioWriteMsb,wGpioWriteLsb};
-	else                      rMBusAdrs <= 32'd0;
-end
-
-assign wGpioReadLsb 	= iMUsiRd[15:0];
-assign wGpioReadMsb 	= iMUsiRd[31:16];
-//
-assign oMUsiWd			= rMBusWd;
-assign oMUsiAdrs		= rMBusAdrs;
-
-
-//-----------------------------------------------------------------------------
-// UFI Bus
+// Mcb Cache Memory
 // SPI Rom から読み込んだデータを RAM に格納する目的で使用する。
+// Write Enable は Csr で制御しているため、Enable Assert -> Dissert にしなければ、
+// 次の書き込みが行われないようにした。
 //-----------------------------------------------------------------------------
-localparam lpMfcDepth 		= 512;
-localparam lpMfcBitWidth 	= 48;
+localparam lpMcmDepth 		= 512;
+localparam lpMcmBitWidth 	= 48;
 
-reg  [lpMfcBitWidth-1:0] 	qMfcWd;
-reg 						qMfcWe;
-wire [lpMfcBitWidth-1:0] 	wMfcRd;
-reg  qMfcRe;
-wire wMfcFull, wMfcEmp;
-wire wMfcRvd;
+reg  [lpMcmBitWidth-1:0] 	qMcmWd;
+reg 						qMcmWe;
+wire [lpMcmBitWidth-1:0] 	wMcmRd;
+reg  qMcmRe;
+wire wMcmFull, wMcmEmp;
+wire wMcmRvd;
+//
+reg  rMcmWeOneShot;
+reg  [1:0] rMUfiRdyEdge;
+reg  qMUfiRdyPos;
+reg  rTarRun;
 
 SyncFifoController #(
-    .pFifoDepth(lpMfcDepth),
-    .pFifoBitWidth(lpMfcBitWidth)
-) McbFifoController (
-    .iWd(qMfcWd),
-    .iWe(qMfcWe),
-    .oFull(wMfcFull),
-    .oRd(wMfcRd),
-    .iRe(qMfcRe),
-    .oRvd(wMfcRvd),
-    .oEmp(wMfcEmp),
+    .pFifoDepth(lpMcmDepth),
+    .pFifoBitWidth(lpMcmBitWidth)
+) McbCacheMemory (
+    .iWd(qMcmWd),
+    .iWe(qMcmWe),
+    .oFull(wMcmFull),
+    .oRd(wMcmRd),
+    .iRe(qMcmRe),
+    .oRvd(wMcmRvd),
+    .oEmp(wMcmEmp),
     .inARST(inSRST),
 	.iCLK(iSCLK)
 );
 
-assign oMUfiWd			= wMfcRd[15:0];
-assign oMUfiAdrs[30:0]	= wMfcRd[46:16];
-assign oMUfiAdrs[31]	= wMfcRvd;
+always @(posedge iSCLK)
+begin
+	if (iSRST) 			rMcmWeOneShot <= 1'b0;
+	else if (wRamEnCsr)	rMcmWeOneShot <= 1'b0;
+	else 				rMcmWeOneShot <= 1'b1;
+
+	if (!wRamBurstRunCsr)	rTarRun <= 1'b0;
+	else if (qMUfiRdyPos) 	rTarRun <= 1'b1;
+	else 					rTarRun <= rTarRun;
+
+	rMUfiRdyEdge <= {rMUfiRdyEdge[0], iMUfiRdy};
+end
 
 always @*
 begin
-	qMfcWd		<= {wRamAdrsCsr,wRamWdCsr};
-	qMfcWe		<= &{wRamEnCsr,~wMfcFull};
-	qMfcRe		<= &{iMUfiRdy,~wMfcEmp};
-	qRamFullCsr	<= wMfcFull;
-	qRamEmpCsr	<= wMfcEmp;
+	qMcmWd		<=  {wRamAdrsCsr,wRamWdCsr};
+	qMcmWe		<= &{~wMcmFull,wRamEnCsr,rMcmWeOneShot};
+	qMcmRe		<= &{iMUfiRdy,~wMcmEmp,rTarRun,wRamBurstRunCsr};
+	qRamFullCsr	<=   wMcmFull;
+	qRamEmpCsr	<=   wMcmEmp;
+	//
+	qMUfiRdyPos		<= (rMUfiRdyEdge == 2'b01);
+	qRamBurstStop 	<= &{wMcmEmp,wRamBurstRunCsr};
+end
+
+assign oMUfiWd			= wMcmRd[15:0];
+assign oMUfiAdrs[30:0]	= wMcmRd[46:16];
+assign oMUfiAdrs[31]	= wMcmRvd;
+
+
+//-----------------------------------------------------------------------------
+// UFI Read
+//-----------------------------------------------------------------------------
+reg [pUfiDqBusWidth-1:0] 	rUfiRd;
+reg 						qUfiRdCke;
+
+initial
+begin
+	rUfiRd <= {pUfiDqBusWidth{1'b0}};
+end
+
+always @(posedge iSCLK)
+begin
+	if (qUfiRdCke)	rUfiRd <= iMUfiRd;
+	else			rUfiRd <= rUfiRd;
+end
+
+always @*
+begin
+	qUfiRdCke 	<= &{iMUfiAdrs[31], (iMUfiAdrs[28:25] == pUfiAdrsMap)};
+	qRamRdVdCsr <= qUfiRdCke;
+	qUfiRdCsr 	<= rUfiRd;
 end
 
 endmodule
