@@ -12,8 +12,8 @@ module UFIB_tb;
 //-----------------------------------------------------------------------------
 // System Simlation Parameter
 //-----------------------------------------------------------------------------
-localparam lpUfibMasterBlockNum = 1;
-localparam lpRamDepth			= 256;
+localparam lpUfibMasterBlockNum = 2;
+localparam lpRamDepth			= 512;
 
 //-----------------------------------------------------------------------------
 // System 共通変数
@@ -23,24 +23,32 @@ genvar x;
 //-----------------------------------------------------------------------------
 // Clk,Rst Generator
 //-----------------------------------------------------------------------------
-localparam	lpSCLKCycle = 2;	// CLK サイクル
+localparam	lpSCLKCycle = 4;	// CLK サイクル
+localparam	lpMCLKCycle = 7;	// CLK サイクル
 
-reg	wSCLK = 0;
-reg	wSRST = 1;
-reg	wnSRST = 0;
+reg	wSCLK = 0;		reg	wMCLK = 0;
+reg	wSRST = 1;		reg	wMRST = 1;
+reg	wnSRST = 0;		reg	wnMRST = 0;
 
 always begin
     #(lpSCLKCycle/2);
     wSCLK = ~wSCLK;
 end
+
+always begin
+    #(lpMCLKCycle/2);
+    wMCLK = ~wMCLK;
+end
 //
 // Reset 処理
 task reset_init;
 begin
-	#(lpSCLKCycle * 5);
+	#(lpSCLKCycle * 10);
 	wSRST  = 0;
 	wnSRST = ~wSRST;
-	#(lpSCLKCycle * 5);
+	wMRST  = 0;
+	wnMRST = ~wMRST;
+	#(lpSCLKCycle * 10);
 end
 endtask
 
@@ -48,14 +56,14 @@ endtask
 // USI/F BUS
 //------------------------------------------------------------------------------
 localparam lpUsiBusWidth      = 32;		// USIB Width
-localparam lpBlockConnectNum  = 2;		// 現在接続しているブロックの個数
+localparam lpBlockConnectNum  = 3;		// 現在接続しているブロックの個数
 localparam lpBlockAdrsWidth   = f_detect_bitwidth(lpBlockConnectNum);
 localparam lpCsrAdrsWidth     = 16;		// 各ブロック共通の基本CSR幅
 localparam lpSUsiBusWidth     = (lpUsiBusWidth * lpBlockConnectNum);
 localparam [lpBlockAdrsWidth-1:0]		// ブロックアドレスマッピング ※プロジェクトの Readme.md 参照
 //   lpGpioAdrsMap         = 'h0,
 //   lpSPIAdrsMap          = 'h1,
-//   lpSynthesizerAdrsMap  = 'h2,
+  lpSynthesizerAdrsMap  = 'h2,
   lpRAMAdrsMap          = 'h3,
 //   lpSysTimerAdrsMap     = 'h4,
   lpMCBAdrsMap		    = 'h5,
@@ -68,7 +76,7 @@ localparam [lpBlockAdrsWidth-1:0]		// ブロックアドレスマッピング �
 localparam 
 //   lpGpioCsrActiveWidth  = 8,
 //   lpSPICsrActiveWidth   = 8,
-//   lpSynCsrActiveWidth   = 8,
+  lpSynCsrActiveWidth   = 8,
   lpRAMCsrActiveWidth   = 8,
 //   lpTimerCsrActiveWidth = 8,
   lpMCBCsrActiveWidth	= 8,
@@ -159,6 +167,7 @@ localparam [lpUfiBlockAdrsWidth-1:0]	// UFI ブロックアドレスマッピン
 	// lpUfiRWT2ndAdrsMap	= 'h1,
 	// lpUfiRWT3rdAdrsMap	= 'h2,
 	lpUfiMcbAdrsMap		= 'h0,
+	lpUfiSynAdrsMap		= 'h1,
 	lpUfiNullAdrsMap	= 	0;
 //
 wire [lpUfiDqBusWidth-1:0] 		wSUfiRd;
@@ -272,6 +281,49 @@ MicroControllerBlock #(
 
 
 //-----------------------------------------------------------------------------
+// Sound Generate
+//-----------------------------------------------------------------------------
+wire wMIDI_In;  // Input Only
+wire wI2S_MCLK, wI2S_BCLK, wI2S_LRCLK, wI2S_SDATA;
+wire [7:0] wMidiRd;
+wire wMidiVd;
+
+SynthesizerBlock #(
+	.pBlockAdrsWidth(lpBlockAdrsWidth),		.pAdrsMap(lpSynthesizerAdrsMap),
+	.pUsiBusWidth(lpUsiBusWidth),			.pCsrAdrsWidth(lpCsrAdrsWidth),
+	.pCsrActiveWidth(lpSynCsrActiveWidth),
+	.pUfiDqBusWidth(lpUfiDqBusWidth),
+	.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
+	.pUfiAdrsMap(lpUfiSynAdrsMap),
+	.pDmaAdrsWidth(lpRamAdrsWidth),
+	.pDmaBurstLength(256)
+) SynthesizerBlock (
+	// External Port
+	// Connected External PCM5102A and MIPI Host
+	.iMIDI(wMIDI_In),
+	.oI2S_MCLK(wI2S_MCLK),    .oI2S_BCLK(wI2S_BCLK),
+	.oI2S_LRCLK(wI2S_LRCLK),  .oI2S_SDATA(wI2S_SDATA),
+	// Control Status data
+	.oMidiRd(wMidiRd),		.oMidiVd(wMidiVd),
+	// Bus Master Read
+	.oSUsiRd(wSUsiRd[lpSynthesizerAdrsMap]),
+	// Bus Master Write
+	.iSUsiWd(wSUsiWd),		.iSUsiAdrs(wSUsiAdrs),
+	// Ufi Bus Master Read
+	.iMUfiRd(wMUfiRd),		.iMUfiAdrs(wMUfiAdrs),
+	// Ufi Bus Master Write
+	.oMUfiWd(wMUfiWd[lpUfiSynAdrsMap]),
+	.oMUfiAdrs(wMUfiWAdrs[lpUfiSynAdrsMap]),
+	.iMUfiRdy(wMUfiRdy[lpUfiSynAdrsMap]),
+	// CLK, RST
+	.iMRST(wMRST),			.iMCLK(wMCLK),
+	.iSRST(wSRST),			.inSRST(wnSRST),
+	.iSCLK(wSCLK)
+);
+
+
+
+//-----------------------------------------------------------------------------
 // RAMBloock part
 //-----------------------------------------------------------------------------
 wire [lpRamAdrsWidth-1:0] 	wAdrs;
@@ -337,11 +389,15 @@ begin
 	$dumpvars(0, UFIB_tb);	// 引数0:下位モジュール表示, 1:Topのみ
 	$display(" ----- SIM_END !!");
 	reset_init();
-	usi_csr_setting('h0, 'h40030000);
+	usi_csr_setting('h0, 'h40030000);	// RAM RST
+	usi_csr_setting(255, 'h40020008);
+	usi_csr_setting(1, 'h4002000C);
 	mcb_flash_run(0);
 	wait_flag(1, 'h0005_000C);
-	#(lpSCLKCycle*1000);
+	// #(lpSCLKCycle*1000);
 	mcb_flash_run(1);
+	wait_flag(0, 'h4002000C);
+
 	#(lpSCLKCycle*1000);
 	$display(" ----- SIM_END !!");
     $finish;

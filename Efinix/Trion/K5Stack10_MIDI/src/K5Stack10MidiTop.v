@@ -222,7 +222,7 @@ localparam	lpMUfiAdrsWidth			= lpUfiAdrsBusWidth * lpUfiBlockConnectNum;
 localparam [lpUfiBlockAdrsWidth-1:0]	// UFI ブロックアドレスマッピング
 	lpUfiMcbAdrsMap		= 'h0,
 	lpUfiVtbAdrsMap		= 'h1,
-	lpUfiSBAdrsMap		= 'h2,
+	lpUfiSynAdrsMap		= 'h2,
 	lpUfiNullAdrsMap	= 	0;
 //
 wire [lpUfiDqBusWidth-1:0] 		wSUfiRd;
@@ -386,7 +386,7 @@ SPIBlock #(
 );
 
 //-----------------------------------------------------------------------------
-// External CPU Master SPI Block or Slave SPI Block
+// Sound Generate
 //-----------------------------------------------------------------------------
 wire wMIDI_In;  // Input Only
 wire wI2S_MCLK, wI2S_BCLK, wI2S_LRCLK, wI2S_SDATA;
@@ -394,24 +394,36 @@ wire [7:0] wMidiRd;
 wire wMidiVd;
 
 SynthesizerBlock #(
-  .pBlockAdrsWidth(lpBlockAdrsWidth),	.pAdrsMap(lpSynthesizerAdrsMap),
-  .pUsiBusWidth(lpUsiBusWidth),			.pCsrAdrsWidth(lpCsrAdrsWidth),
-  .pCsrActiveWidth(lpSynCsrActiveWidth)
+	.pBlockAdrsWidth(lpBlockAdrsWidth),		.pAdrsMap(lpSynthesizerAdrsMap),
+	.pUsiBusWidth(lpUsiBusWidth),			.pCsrAdrsWidth(lpCsrAdrsWidth),
+	.pCsrActiveWidth(lpSynCsrActiveWidth),
+	.pUfiDqBusWidth(lpUfiDqBusWidth),
+	.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
+	.pUfiAdrsMap(lpUfiSynAdrsMap),
+	.pDmaAdrsWidth(lpRamAdrsWidth),
+	.pDmaBurstLength(256)
 ) SynthesizerBlock (
-  // External Port
-  // Connected External PCM5102A and MIPI Host
-  .iMIDI(wMIDI_In),
-  .oI2S_MCLK(wI2S_MCLK),    .oI2S_BCLK(wI2S_BCLK),
-  .oI2S_LRCLK(wI2S_LRCLK),  .oI2S_SDATA(wI2S_SDATA),
-  // Control Status data
-  .oMidiRd(wMidiRd),    .oMidiVd(wMidiVd),
-  // Bus Master Read
-  .oSUsiRd(wSUsiRd[lpSynthesizerAdrsMap]),
-  // Bus Master Write
-  .iSUsiWd(wSUsiWd),    .iSUsiAdrs(wSUsiAdrs),
-  // CLK, RST
-  .iMRST(wMRST),      .iMCLK(iMCLK),
-  .iSRST(wSRST),      .iSCLK(iSCLK)
+	// External Port
+	// Connected External PCM5102A and MIPI Host
+	.iMIDI(wMIDI_In),
+	.oI2S_MCLK(wI2S_MCLK),    .oI2S_BCLK(wI2S_BCLK),
+	.oI2S_LRCLK(wI2S_LRCLK),  .oI2S_SDATA(wI2S_SDATA),
+	// Control Status data
+	.oMidiRd(wMidiRd),    .oMidiVd(wMidiVd),
+	// Bus Master Read
+	.oSUsiRd(wSUsiRd[lpSynthesizerAdrsMap]),
+	// Bus Master Write
+	.iSUsiWd(wSUsiWd),    .iSUsiAdrs(wSUsiAdrs),
+	// Ufi Bus Master Read
+	.iMUfiRd(wMUfiRd),    .iMUfiAdrs(wMUfiAdrs),
+	// Ufi Bus Master Write
+	.oMUfiWd(wMUfiWd[lpUfiSynAdrsMap]),
+	.oMUfiAdrs(wMUfiWAdrs[lpUfiSynAdrsMap]),
+	.iMUfiRdy(wMUfiRdy[lpUfiSynAdrsMap]),
+	// CLK, RST
+	.iMRST(wMRST),      .iMCLK(iMCLK),
+	.iSRST(wSRST),      .inSRST(wnSRST),
+	.iSCLK(iSCLK)
 );
 
 
