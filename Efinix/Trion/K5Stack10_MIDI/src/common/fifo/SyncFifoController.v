@@ -99,7 +99,7 @@ wire [(lpDataWidth*lpBramGenNum)-1:0] wRd;
 
 generate
 for (x = 0; x < lpBramGenNum; x = x + 1)
-begin
+begin : TrionSDPBRAM
 	TrionSDPBRAM #(
 		.pDataWidth(lpDataWidth),
 		.pAddrWidth(pAddrWidth)
@@ -113,7 +113,8 @@ begin
 		.iRa(rRa),
 		.iRe(qRe),
 		// common
-		.iCLK(iCLK)
+		.iRCLK(iCLK),
+		.iWCLK(iCLK)
 	);
 
 	always @*

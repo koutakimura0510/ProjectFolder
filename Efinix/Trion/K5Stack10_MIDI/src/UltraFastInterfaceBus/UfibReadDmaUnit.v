@@ -14,12 +14,14 @@ module UfibReadDmaUnit #(
 	parameter pUfiDqBusWidth		= 16,	// バスのデータ幅は、使用する外部RAMのデータ幅と合わせている
 	parameter pUfiAdrsBusWidth		= 32,
 	parameter pDmaBurstLength 		= 256,
+	parameter pDmaReadDataSyncMode	= "sync",	// async or sync
 	//
 	parameter pAdrsNullWidth 		= pUfiActiveAdrsWidth - pDmaAdrsWidth
 )(
 	// Ufi Bus Master Read
 	input	[pUfiDqBusWidth-1:0] 	iMUfiRd,
 	input	[pUfiAdrsBusWidth-1:0] 	iMUfiAdrs,
+	// output 						oMUfiVd,
 	// Ufi Bus Master Write
 	output	[pUfiDqBusWidth-1:0] 	oMUfiWd,
 	output	[pUfiAdrsBusWidth-1:0] 	oMUfiAdrs,
@@ -37,7 +39,8 @@ module UfibReadDmaUnit #(
 	// CLK Reset
 	input	iRST,
 	input	inRST,
-	input	iCLK
+	input	iCLK,
+	input	iACLK
 );
 
 
@@ -46,6 +49,7 @@ module UfibReadDmaUnit #(
 //-----------------------------------------------------------------------------
 localparam lpDdrDepth 		= 256;
 localparam lpDdrBitWidth 	= pUfiDqBusWidth;
+localparam lpRaBitWidth 	= fBitWidth(lpDdrDepth);
 
 reg  [lpDdrBitWidth-1:0] 	qDdrWd;
 reg 						qDdrWe;
@@ -53,20 +57,46 @@ wire [lpDdrBitWidth-1:0] 	wDdrRd;
 reg  						qDdrRe;
 wire 						wDdrFull, wDdrEmp;
 wire 						wDdrRvd;
+wire [lpRaBitWidth-1:0]		wDdrRa;
 
-SyncFifoController #(
-    .pFifoDepth(lpDdrDepth),
-    .pFifoBitWidth(lpDdrBitWidth)
-) DmaDataReceiver (
-	// write
-    .iWd(qDdrWd),		.iWe(qDdrWe),
-    .oFull(wDdrFull),
-	// read
-    .oRd(wDdrRd),		.iRe(qDdrRe),
-    .oRvd(wDdrRvd),		.oEmp(wDdrEmp),
-	// common
-    .inARST(inRST),		.iCLK(iCLK)
-);
+generate
+if (pDmaReadDataSyncMode == "sync")
+begin : SyncDmaDataReceiver
+	SyncFifoController #(
+		.pFifoDepth(lpDdrDepth),
+		.pFifoBitWidth(lpDdrBitWidth)
+	) DmaDataReceiver (
+		// write
+		.iWd(qDdrWd),		.iWe(qDdrWe),
+		.oFull(wDdrFull),
+		// read
+		.oRd(wDdrRd),		.iRe(qDdrRe),
+		.oRvd(wDdrRvd),		.oEmp(wDdrEmp),
+		// common
+		.inARST(inRST),		.iCLK(iCLK)
+	);
+end
+else
+begin : ASyncDmaDataReceiver
+	ASyncFifoController #(
+		.pFifoDepth(lpDdrDepth),
+		.pFifoBitWidth(lpDdrBitWidth),
+		.pRaBitWidth(lpRaBitWidth)
+	) DmaDataReceiver (
+		// write
+		.iWd(qDdrWd),		.iWe(qDdrWe),
+		.oFull(wDdrFull),
+		// read
+		.oRd(wDdrRd),		.iRe(qDdrRe),
+		.oRvd(wDdrRvd),		.oEmp(wDdrEmp),
+		.oRa(wDdrRa),
+		// common
+		.inARST(inRST),
+		.iRCLK(iACLK),
+		.iWCLK(iCLK)
+	);
+end
+endgenerate
 
 always @*
 begin
@@ -74,7 +104,7 @@ begin
 	qDdrWe <= &{iMUfiAdrs[31],(pUfiAdrsMap == iMUfiAdrs[28:25]),~wDdrFull};
 	qDdrRe <= &{iDmaRe,~wDdrEmp};
 end
-
+// ここで受信回数をカウントしておく
 assign oDmaRd	= wDdrRd;
 assign oDmaRvd	= wDdrRvd;
 
@@ -114,6 +144,8 @@ assign oMUfiAdrs[31]	= wDdtRvd;
 // Burst Transfer Counter part, for Fifo Read Adrs Side
 // ※バースト転送は UFIB 経由でデータを転送した回数をカウントするので、
 // FIFO Read Side のみにカウンターが必要になる。
+// UFIB に Read Cmd 発行後、RAMからの読み込みデータが、この module に入力されるため、
+// 読み込みデータ蓄積用の FIFO が FULL の時は、Read Cmd を発行しないようにする。
 //-----------------------------------------------------------------------------
 wire 	wBurstRun;
 reg 	qBurstCntCke;
@@ -131,8 +163,8 @@ always @*
 begin
 	qBurstCntCke <= &{iMUfiRdy,~wDdtEmp};
 
-	case ({iMUfiRdy,wDdtEmp,wBurstRun})
-		'b101: 		qDdtRe <= 1'b1;
+	case ({iMUfiRdy,wDdtEmp,wBurstRun,wDdrFull})
+		'b1010: 	qDdtRe <= 1'b1;
 		default: 	qDdtRe <= 1'b0;
 	endcase
 end
@@ -172,7 +204,7 @@ end
 always @*
 begin
 	qDmaAdrsRst 	<= ~rDmaRun;
-	rDmaLatencyRst 	<=  rDmaRun;
+	rDmaLatencyRst 	<= |{iRST,rDmaRun};
 	qDmaDoneCke 	<= (iDmaAdrsEnd == rDmaAdrs);
 	qDmaAdrsCke		<= &{~wDdtFull,rDmaRun};
 
@@ -208,4 +240,26 @@ end
 // 	.iCLK()
 // );
 
+//-----------------------------------------------------------------------------
+// msb側の1を検出しbit幅を取得する
+function[  7:0]	fBitWidth;
+    input [31:0] iVAL;
+    integer			i;
+
+    begin
+    // fBitWidth = 1;
+        for (i = 0; i < 32; i = i+1 )
+        begin
+            if (iVAL[i]) 
+            begin
+                fBitWidth = i+1;
+            end
+        end
+
+        if (fBitWidth != 1)
+        begin
+            fBitWidth = fBitWidth - 1;
+        end
+    end
+endfunction
 endmodule

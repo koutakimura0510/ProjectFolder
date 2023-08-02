@@ -109,6 +109,7 @@ task wait_flag(
 );
 begin
 	usi_csr_setting(0, adrs);
+
 	while (wSUsiRd == flag)	// iverilog の場合、等しい場合ループする
 	begin
 		#(lpSCLKCycle);
@@ -242,11 +243,14 @@ endgenerate
 
 MicroControllerBlock #(
 	// Usi
-	.pBlockAdrsWidth(lpBlockAdrsWidth),		.pAdrsMap(lpRAMAdrsMap),
+	.pBlockAdrsWidth(lpBlockAdrsWidth),
+	.pAdrsMap(lpMCBAdrsMap),
 	.pUsiBusWidth(lpUsiBusWidth),
-	.pCsrAdrsWidth(lpCsrAdrsWidth),			.pCsrActiveWidth(lpMCBCsrActiveWidth),
+	.pCsrAdrsWidth(lpCsrAdrsWidth),
+	.pCsrActiveWidth(lpMCBCsrActiveWidth),
 	// Ufi
-	.pUfiDqBusWidth(lpUfiDqBusWidth),		.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
+	.pUfiDqBusWidth(lpUfiDqBusWidth),
+	.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
 	.pUfiAdrsMap(lpUfiMcbAdrsMap),
 	// Commnad
 	.pSimlation("yes")
@@ -296,7 +300,7 @@ SynthesizerBlock #(
 	.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
 	.pUfiAdrsMap(lpUfiSynAdrsMap),
 	.pDmaAdrsWidth(lpRamAdrsWidth),
-	.pDmaBurstLength(256)
+	.pDmaBurstLength(128)
 ) SynthesizerBlock (
 	// External Port
 	// Connected External PCM5102A and MIPI Host
@@ -366,6 +370,15 @@ RAMBlock #(
 
 reg [lpRamDqWidth-1:0] rMem [lpRamDepth-1:0];
 reg qMemWEd;
+integer init_for;
+
+initial
+begin
+	for (init_for = 0; init_for < lpRamDepth; init_for = init_for + 1)
+	begin
+		rMem[init_for] <= init_for;
+	end
+end
 
 always @(posedge wSCLK)
 begin
@@ -387,19 +400,20 @@ initial
 begin
 	$dumpfile("UFIB_tb.vcd");
 	$dumpvars(0, UFIB_tb);	// 引数0:下位モジュール表示, 1:Topのみ
-	$display(" ----- SIM_END !!");
+	$display(" ----- SIM START !!");
 	reset_init();
 	usi_csr_setting('h0, 'h40030000);	// RAM RST
 	usi_csr_setting(255, 'h40020008);
+	usi_csr_setting(1, 'h40020010);
 	usi_csr_setting(1, 'h4002000C);
+
+	// wait_flag(1, 'h0002_000C);
 	mcb_flash_run(0);
 	wait_flag(1, 'h0005_000C);
-	// #(lpSCLKCycle*1000);
 	mcb_flash_run(1);
-	wait_flag(0, 'h4002000C);
 
 	#(lpSCLKCycle*1000);
-	$display(" ----- SIM_END !!");
+	$display(" ----- SIM END !!");
     $finish;
 end
 

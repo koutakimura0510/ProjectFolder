@@ -8,18 +8,19 @@
 module ASyncFifoController #(
     parameter 	pFifoDepth        	= 16,		// FIFO BRAMのサイズ指定
     parameter 	pFifoBitWidth     	= 8,		// bitサイズ
-	parameter	pFifoBlockRam		= "yes"		// yes BRAM, no reg
+	parameter	pRaBitWidth			= 8
 )(
-    input   [pFifoBitWidth-1:0] iWd,        // write data
-    input                       iWe,        // write enable 有効データ書き込み
-    output                      oFull,      // 最大書き込み時High
-    output  [pFifoBitWidth-1:0] oRd,        // read data
-    input                       iRe,        // read enable
-    output                      oRvd,       // 有効データ出力
-    output                      oEmp,       // バッファ空時High
-    input                       inARST,
-    input                       iWCLK,
-    input                       iRCLK
+	input   [pFifoBitWidth-1:0] iWd,        // write data
+	input                       iWe,        // write enable 有効データ書き込み
+	output                      oFull,      // 最大書き込み時High
+	output  [pFifoBitWidth-1:0] oRd,        // read data
+	input                       iRe,        // read enable
+	output                      oRvd,       // 有効データ出力
+	output                      oEmp,       // バッファ空時High
+	output	[pRaBitWidth-1:0]	oRa,		// 現在の Read Point
+	input                       inARST,
+	input                       iWCLK,
+	input                       iRCLK
 );
 
 
@@ -34,7 +35,7 @@ localparam pAddrWidth  = fBitWidth(pFifoDepth);
 // WAdrs の更新、Write Side グレイコード生成
 //-----------------------------------------------------------------------------
 reg  [pAddrWidth-1:0] rWa, rRa;
-reg  [pAddrWidth-1:0] rWGa[2:0], rRGa[2:0];
+reg  [pAddrWidth-1:0] rWGa[2:0], rRGa[2:0];		assign oRa = rRGa[2];
 reg  [pAddrWidth-1:0] qWbin, qRbin;
 wire [pAddrWidth-1:0] wWa = rWa + 1'b1;
 reg  qWe,qRe;
@@ -116,25 +117,109 @@ end
 //-----------------------------------------------------------------------------
 // BRAM
 //-----------------------------------------------------------------------------
-ASyncDualPortBramTrion #(
-    .pBuffDepth(pFifoDepth),
-    .pBitWidth(pFifoBitWidth),
-    .pAddrWidth(pAddrWidth),
-	.pFifoBlockRam(pFifoBlockRam)
-) ASyncDualPortBramTrion (
-	.iWd(iWd),
-	.iWa(rWa),
-	.iWe(qWe),
-	.oRd(oRd),
-	.iRa(rRa),
-	.iWCLK(iWCLK),
-	.iRCLK(iRCLK)
-);
+// ASyncDualPortBramTrion #(
+//     .pBuffDepth(pFifoDepth),
+//     .pBitWidth(pFifoBitWidth),
+//     .pAddrWidth(pAddrWidth),
+// 	.pFifoBlockRam(pFifoBlockRam)
+// ) ASyncDualPortBramTrion (
+// 	.iWd(iWd),
+// 	.iWa(rWa),
+// 	.iWe(qWe),
+// 	.oRd(oRd),
+// 	.iRa(rRa),
+// 	.iWCLK(iWCLK),
+// 	.iRCLK(iRCLK)
+// );
+
+localparam lpDataWidth	= f_get_datawidth(pFifoDepth);
+localparam lpBramGenNum = f_barm_gennum(pFifoBitWidth,lpDataWidth);
+
+reg  [lpDataWidth-1:0] qWd[lpBramGenNum-1:0];
+wire [(lpDataWidth*lpBramGenNum)-1:0] wRd;
+
+generate
+for (x = 0; x < lpBramGenNum; x = x + 1)
+begin : TrionSDPBRAM
+	TrionSDPBRAM #(
+		.pDataWidth(lpDataWidth),
+		.pAddrWidth(pAddrWidth)
+	) TrionSDPBRAM (
+		// Write Side
+		.iWd(qWd[x]),
+		.iWa(rWa),
+		.iWe(qWe),
+		// Read Side
+		.oRd(wRd[((x+1)*lpDataWidth)-1:x*lpDataWidth]),
+		.iRa(rRa),
+		.iRe(qRe),
+		// common
+		.iRCLK(iRCLK),
+		.iWCLK(iWCLK)
+	);
+
+	always @*
+	begin
+		qWd[x] <= iWd[((x+1)*lpDataWidth)-1:x*lpDataWidth];
+	end
+
+end
+endgenerate
+
+assign oRd = wRd;
+
+initial
+begin
+	$display("--- Async Fifo lpDataWidth %d bit", lpDataWidth);
+	$display("--- Async Fifo lpBramGenNum %d Block", lpBramGenNum);
+end
+
+
+//-----------------------------------------------------------------------------
+// function
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// Depth から Block Ram の Bit幅を求める
+function[ 7:0] f_get_datawidth;
+input [31:0] pFifoDepth;
+begin
+	case (pFifoDepth)
+	'd256:		f_get_datawidth = 16;
+	'd512:		f_get_datawidth = 8;
+	'd1024:		f_get_datawidth = 4;
+	'd2048:		f_get_datawidth = 2;
+	'd4096:		f_get_datawidth = 1;
+	default:	f_get_datawidth = 0;
+	endcase
+end
+endfunction
+
+//-----------------------------------------------------------------------------
+// 指定された データ幅と Depth から求めたデータ幅から BRAM 使用個数を求める
+function[ 7:0] f_barm_gennum;
+input [31:0] pFifoBitWidth;
+input [31:0] lpDataWidth;
+integer i;
+
+begin
+	if (pFifoBitWidth <= lpDataWidth)
+	begin
+		f_barm_gennum = 1;
+	end
+	else
+	begin
+		f_barm_gennum = 1;
+		for (i = pFifoBitWidth; lpDataWidth < i; i = i - lpDataWidth)
+		begin
+			f_barm_gennum++;
+		end
+	end
+end
+endfunction
 
 
 //-----------------------------------------------------------------------------
 // msb側の1を検出しbit幅を取得する
-//-----------------------------------------------------------------------------
 function[  7:0]	fBitWidth;
     input [31:0] iVAL;
     integer			i;
@@ -156,6 +241,7 @@ function[  7:0]	fBitWidth;
     end
 endfunction
 endmodule
+
 
 
 //-----------------------------------------------------------------------------

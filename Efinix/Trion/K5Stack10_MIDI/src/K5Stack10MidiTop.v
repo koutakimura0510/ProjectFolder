@@ -214,6 +214,8 @@ localparam  lpUfiBlockConnectNum 	= 1;
 localparam 	lpUfiBlockAdrsWidth		= f_detect_bitwidth(lpUfiBlockConnectNum);
 localparam	lpMUfiDqWidth 			= lpUfiDqBusWidth   * lpUfiBlockConnectNum;
 localparam	lpMUfiAdrsWidth			= lpUfiAdrsBusWidth * lpUfiBlockConnectNum;
+//
+localparam lpSynDmaBurstLength		= 32;
 
 // initial begin
 // 	$display("%d", lpUfiBlockAdrsWidth);
@@ -401,7 +403,7 @@ SynthesizerBlock #(
 	.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
 	.pUfiAdrsMap(lpUfiSynAdrsMap),
 	.pDmaAdrsWidth(lpRamAdrsWidth),
-	.pDmaBurstLength(256)
+	.pDmaBurstLength(lpSynDmaBurstLength)
 ) SynthesizerBlock (
 	// External Port
 	// Connected External PCM5102A and MIPI Host

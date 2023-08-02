@@ -19,7 +19,8 @@ input					iWe,	// Write Enable
 output[pDataWidth-1:0]	oRd,	// Read Data
 input [pAddrWidth-1:0]	iRa,	// Read Adrs
 input 					iRe,	// Read Enable
-input					iCLK
+input					iRCLK,
+input					iWCLK
 );
 
 EFX_RAM_5K #(
@@ -57,11 +58,11 @@ EFX_RAM_5K #(
 ) EFX_RAM_5K (
 	.RDATA(oRd), 	// read data output
 	.RADDR(iRa), 	// read address input
-	.RCLK(iCLK), 	// read clk
+	.RCLK(iRCLK), 	// read clk
 	.RE(iRe),		// read enable
 	.WDATA(iWd), 	// write data input
 	.WADDR(iWa), 	// write address input
-	.WCLK(iCLK), 	// write clk
+	.WCLK(iWCLK), 	// write clk
 	.WE(iWe),		// 1-bit write enable
 	.WCLKE(iWe) 	// write clk enable
 );

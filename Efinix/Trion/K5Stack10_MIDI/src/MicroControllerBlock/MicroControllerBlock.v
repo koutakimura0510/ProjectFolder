@@ -27,6 +27,7 @@ module MicroControllerBlock #(
 	// Ufi Bus Master Read
 	input	[pUfiDqBusWidth-1:0] iMUfiRd,
 	input	[pUfiAdrsBusWidth-1:0] iMUfiAdrs,
+	
 	// Ufi Bus Master Write
 	output	[pUfiDqBusWidth-1:0] oMUfiWd,
 	output	[pUfiAdrsBusWidth-1:0] oMUfiAdrs,

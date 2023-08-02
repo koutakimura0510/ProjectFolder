@@ -95,7 +95,8 @@ UfibReadDmaUnit #(
 	.pUfiDqBusWidth(pUfiDqBusWidth),
 	.pUfiAdrsBusWidth(pUfiAdrsBusWidth),
 	.pUfiAdrsMap(pUfiAdrsMap),
-	.pDmaBurstLength(pDmaBurstLength)
+	.pDmaBurstLength(pDmaBurstLength),
+	.pDmaReadDataSyncMode("async")
 ) UfibReadDmaUnit (
 	// Ufi Bus Master Read
 	.iMUfiRd(iMUfiRd),
@@ -116,7 +117,8 @@ UfibReadDmaUnit #(
 	// CLK Reset
 	.iRST(iSRST),
 	.inRST(inSRST),
-	.iCLK(iSCLK)
+	.iCLK(iSCLK),
+	.iACLK(iMCLK)
 );
 
 //-----------------------------------------------------------------------------
