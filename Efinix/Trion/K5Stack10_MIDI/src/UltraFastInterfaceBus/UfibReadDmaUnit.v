@@ -47,17 +47,17 @@ module UfibReadDmaUnit #(
 //-----------------------------------------------------------------------------
 // UFI Bus Read Data
 //-----------------------------------------------------------------------------
-localparam lpDdrDepth 		= 256;
-localparam lpDdrBitWidth 	= pUfiDqBusWidth;
-localparam lpRaBitWidth 	= fBitWidth(lpDdrDepth);
+localparam lpDdrDepth 			= 256;
+localparam lpDdrBitWidth 		= pUfiDqBusWidth;
+localparam lpDdrRemaingCntBorder= (lpDdrDepth / 2) - 1;
 
-reg  [lpDdrBitWidth-1:0] 	qDdrWd;
-reg 						qDdrWe;
-wire [lpDdrBitWidth-1:0] 	wDdrRd;
-reg  						qDdrRe;
-wire 						wDdrFull, wDdrEmp;
-wire 						wDdrRvd;
-wire [lpRaBitWidth-1:0]		wDdrRa;
+reg  [lpDdrBitWidth-1:0] 		qDdrWd;
+reg 							qDdrWe;
+wire [lpDdrBitWidth-1:0] 		wDdrRd;
+reg  							qDdrRe;
+wire 							wDdrFull, wDdrEmp;
+wire 							wDdrRvd;
+wire 							wDdrRemaingCntAlert;
 
 generate
 if (pDmaReadDataSyncMode == "sync")
@@ -69,6 +69,7 @@ begin : SyncDmaDataReceiver
 		// write
 		.iWd(qDdrWd),		.iWe(qDdrWe),
 		.oFull(wDdrFull),
+		.oRemaingCntAlert(wDdrRemaingCntAlert),
 		// read
 		.oRd(wDdrRd),		.iRe(qDdrRe),
 		.oRvd(wDdrRvd),		.oEmp(wDdrEmp),
@@ -81,15 +82,15 @@ begin : ASyncDmaDataReceiver
 	ASyncFifoController #(
 		.pFifoDepth(lpDdrDepth),
 		.pFifoBitWidth(lpDdrBitWidth),
-		.pRaBitWidth(lpRaBitWidth)
+		.pFifoRemaingCntBorder(lpDdrRemaingCntBorder)
 	) DmaDataReceiver (
 		// write
 		.iWd(qDdrWd),		.iWe(qDdrWe),
 		.oFull(wDdrFull),
+		.oRemaingCntAlert(wDdrRemaingCntAlert),
 		// read
 		.oRd(wDdrRd),		.iRe(qDdrRe),
 		.oRvd(wDdrRvd),		.oEmp(wDdrEmp),
-		.oRa(wDdrRa),
 		// common
 		.inARST(inRST),
 		.iRCLK(iACLK),
@@ -128,6 +129,7 @@ SyncFifoController #(
 	// write
     .iWd(qDdtWd),		.iWe(qDdtWe),
     .oFull(wDdtFull),
+	.oRemaingCntAlert(),
 	// read
     .oRd(wDdtRd),		.iRe(qDdtRe),
     .oRvd(wDdtRvd),		.oEmp(wDdtEmp),
@@ -163,7 +165,7 @@ always @*
 begin
 	qBurstCntCke <= &{iMUfiRdy,~wDdtEmp};
 
-	case ({iMUfiRdy,wDdtEmp,wBurstRun,wDdrFull})
+	case ({iMUfiRdy,wDdtEmp,wBurstRun,wDdrRemaingCntAlert})
 		'b1010: 	qDdtRe <= 1'b1;
 		default: 	qDdtRe <= 1'b0;
 	endcase

@@ -6,21 +6,21 @@
  * アドレス -> グレイコード変換 -> バイナリコード(２進数)変換を使用
  *-----------------------------------------------------------------------------*/
 module ASyncFifoController #(
-    parameter 	pFifoDepth        	= 16,		// FIFO BRAMのサイズ指定
-    parameter 	pFifoBitWidth     	= 8,		// bitサイズ
-	parameter	pRaBitWidth			= 8
+    parameter 	pFifoDepth		= 16,		// FIFO BRAMのサイズ指定
+    parameter 	pFifoBitWidth	= 8,		// bitサイズ
+	parameter	pFifoRemaingCntBorder	= 127
 )(
-	input   [pFifoBitWidth-1:0] iWd,        // write data
-	input                       iWe,        // write enable 有効データ書き込み
-	output                      oFull,      // 最大書き込み時High
-	output  [pFifoBitWidth-1:0] oRd,        // read data
-	input                       iRe,        // read enable
-	output                      oRvd,       // 有効データ出力
-	output                      oEmp,       // バッファ空時High
-	output	[pRaBitWidth-1:0]	oRa,		// 現在の Read Point
-	input                       inARST,
-	input                       iWCLK,
-	input                       iRCLK
+	input   [pFifoBitWidth-1:0] iWd,	// write data
+	input	iWe,						// write enable 有効データ書き込み
+	output	oFull,						// 最大書き込み時High
+	output	oRemaingCntAlert,			// FIFO 残りデータ数がパラメータを超えた場合 Assert
+	output  [pFifoBitWidth-1:0] oRd,	// read data
+	input	iRe,						// read enable
+	output	oRvd,						// 有効データ出力
+	output	oEmp,						// バッファ空時High
+	input	inARST,
+	input	iWCLK,
+	input	iRCLK
 );
 
 
@@ -29,19 +29,21 @@ module ASyncFifoController #(
 //----------------------------------------------------------
 integer x;
 localparam pAddrWidth  = fBitWidth(pFifoDepth);
+localparam [pAddrWidth-1:0] lpFifoRemaingCntBorder = pFifoRemaingCntBorder;
 
 
 //-----------------------------------------------------------------------------
 // WAdrs の更新、Write Side グレイコード生成
 //-----------------------------------------------------------------------------
 reg  [pAddrWidth-1:0] rWa, rRa;
-reg  [pAddrWidth-1:0] rWGa[2:0], rRGa[2:0];		assign oRa = rRGa[2];
+reg  [pAddrWidth-1:0] rWGa[2:0], rRGa[2:0];
 reg  [pAddrWidth-1:0] qWbin, qRbin;
 wire [pAddrWidth-1:0] wWa = rWa + 1'b1;
 reg  qWe,qRe;
-reg  qFull;							assign oFull = qFull;
-reg  qEmp;							assign oEmp = qEmp;
-reg  rRe;							assign oRvd = rRe;
+reg  qRemaingCntAlert;							assign oRemaingCntAlert = qRemaingCntAlert;
+reg  qFull;										assign oFull = qFull;
+reg  qEmp;										assign oEmp = qEmp;
+reg  rRe;										assign oRvd = rRe;
 
 always @(posedge iWCLK, negedge inARST)
 begin
@@ -107,6 +109,7 @@ endgenerate
 
 always @*
 begin
+	qRemaingCntAlert <= (rWa - qRbin) < lpFifoRemaingCntBorder ? 1'b0 : 1'b1;
 	qFull <= (wWa == qRbin);
 	qEmp <= (qWbin == rRa); 
 	qWe <= iWe & (~qFull);

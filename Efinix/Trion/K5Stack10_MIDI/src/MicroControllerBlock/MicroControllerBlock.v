@@ -203,6 +203,7 @@ SyncFifoController #(
     .iWd(qMcmWd),
     .iWe(qMcmWe),
     .oFull(wMcmFull),
+	.oRemaingCntAlert(),
     .oRd(wMcmRd),
     .iRe(qMcmRe),
     .oRvd(wMcmRvd),

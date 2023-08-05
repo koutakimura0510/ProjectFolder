@@ -5,6 +5,7 @@
  * 非同期リセット付き単相同期クロックFIFOコントローラ module
  * 
  * 2023-07-22 : Trion プリミティブを使用する仕様に更新
+ * 2023-08-05 : 複雑なレイテンシに対応できるように oRemaingCntAlert 追加
  *-----------------------------------------------------------------------------*/
 //////////////////////////////////////////////////////////////////////////////////
 //  READ_WIDTH | BRAM_SIZE | READ Depth  | RDADDR Width |            |          //
@@ -18,17 +19,19 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module SyncFifoController #(
-    parameter 	pFifoDepth        	= 16,		// FIFO BRAMのサイズ指定
-    parameter 	pFifoBitWidth     	= 8,		// bitサイズ
-	parameter	pFifoBlockRam		= "yes"		// yes BRAM, no reg
+	parameter 	pFifoDepth        	= 16,		// FIFO BRAMのサイズ指定
+	parameter 	pFifoBitWidth     	= 8,		// bitサイズ
+	parameter	pFifoRemaingCntBorder	= 127,
+	parameter	pFifoRemaingCntUsed		= "no"
 )(
-    input   [pFifoBitWidth-1:0] iWd,        // write data
-    input                       iWe,        // write enable 有効データ書き込み
-    output                      oFull,      // 最大書き込み時High
-    output  [pFifoBitWidth-1:0] oRd,        // read data
-    input                       iRe,        // read enable
-    output                      oRvd,       // 有効データ出力
-    output                      oEmp,       // バッファ空時High
+    input   [pFifoBitWidth-1:0] iWd,        		// write data
+    input                       iWe,        		// write enable 有効データ書き込み
+    output                      oFull,      		// 最大書き込み時High
+	output						oRemaingCntAlert,	// FIFO 残りデータ数がパラメータを超えた場合 Assert
+    output  [pFifoBitWidth-1:0] oRd,        		// read data
+    input                       iRe,        		// read enable
+    output                      oRvd,       		// 有効データ出力
+    output                      oEmp,       		// バッファ空時High
     input                       inARST,
     input                       iCLK
 );
@@ -37,8 +40,9 @@ module SyncFifoController #(
 //----------------------------------------------------------
 // FIFO の深さの bit幅取得
 //----------------------------------------------------------
-localparam pAddrWidth  = fBitWidth(pFifoDepth);
 genvar x;
+localparam pAddrWidth  = fBitWidth(pFifoDepth);
+localparam [pAddrWidth-1:0] lpFifoRemaingCntBorder = pFifoRemaingCntBorder;
 
 //-----------------------------------------------------------------------------
 // アドレスの更新
@@ -46,6 +50,7 @@ genvar x;
 reg  [pAddrWidth-1:0] rWa, rRa;
 wire [pAddrWidth-1:0] wWa = rWa + 1'b1;
 reg  qWe,qRe;
+reg  qRemaingCntAlert;				assign oRemaingCntAlert = qRemaingCntAlert;
 reg  qFull;							assign oFull = qFull;
 reg  qEmp;							assign oEmp = qEmp;
 reg  rRe;							assign oRvd = rRe;
@@ -72,6 +77,23 @@ begin
 	qWe		<=  iWe & (~qFull);
 	qRe		<=  iRe & (~qEmp);
 end
+
+generate
+if (pFifoRemaingCntUsed == "yes")
+begin
+	always @*
+	begin
+		qRemaingCntAlert <= (rWa - rRa) < lpFifoRemaingCntBorder ? 1'b0 : 1'b1;
+	end
+end
+else
+begin
+	always @*
+	begin
+		qRemaingCntAlert <= 1'b0;
+	end
+end
+endgenerate
 
 
 //-----------------------------------------------------------------------------

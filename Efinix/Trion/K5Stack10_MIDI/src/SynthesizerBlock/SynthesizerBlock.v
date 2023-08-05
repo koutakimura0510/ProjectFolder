@@ -152,7 +152,7 @@ I2SSignalGen I2SSignalGen(
 	.oI2S_LRCLK(oI2S_LRCLK),
 	.oI2S_SDATA(oI2S_SDATA),
 	// Control and Data
-	.iAudioData('h8000_0002),
+	.iAudioData(qAudioData),
 	.oAudioDataRdy(wI2SRdy),
 	// CLK RST
 	.iMRST(iMRST),	.iMCLK(iMCLK)

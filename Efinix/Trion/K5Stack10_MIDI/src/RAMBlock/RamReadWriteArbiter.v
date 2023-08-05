@@ -51,6 +51,7 @@ SyncFifoController #(
 	.iWd(iSUfiWd),
 	.iWe(iSUfiAdrs[pUfiEnableBit-1]),
 	.oFull(wFifoWriteFull[0]),
+	.oRemaingCntAlert(),
 	.oRd(oRamIfPortUnitWd),
 	.iRe(qFifoWriteRe),
 	.oRvd(),
@@ -67,6 +68,7 @@ SyncFifoController #(
 	.iWd(iSUfiAdrs),
 	.iWe(iSUfiAdrs[pUfiEnableBit-1]),
 	.oFull(wFifoWriteFull[1]),
+	.oRemaingCntAlert(),
 	.oRd(oRamIfPortUnitAdrs[30:0]),
 	.iRe(qFifoWriteRe),
 	.oRvd(oRamIfPortUnitAdrs[31]),
@@ -97,6 +99,7 @@ SyncFifoController #(
 	.iWd(iRamIfPortUnitDq),
 	.iWe(iRamIfPortUnitWe),
 	.oFull(wFifoReadFull[0]),
+	.oRemaingCntAlert(),
 	.oRd(oSUfiRd),
 	.iRe(qAdrsReadFifoRe),
 	.oRvd(wDqReadFifoRvd),
@@ -113,6 +116,7 @@ SyncFifoController #(
 	.iWd(iSUfiAdrs),
 	.iWe(qAdrsReadFifoWe),
 	.oFull(wFifoReadFull[1]),
+	.oRemaingCntAlert(),
 	.oRd(wAdrsReadFifoRd),
 	.iRe(qAdrsReadFifoRe),
 	.oRvd(),
@@ -128,8 +132,8 @@ begin
 	qAdrsReadFifoRe <= ~wFifoReadEmp;
 end
 
-assign oSUfiAdrs[30:0] = wAdrsReadFifoRd[30:0];
-assign oSUfiAdrs[31] = wDqReadFifoRvd;
-assign oSUfiRdy = &{~wFifoReadFull[0],~wFifoReadFull[1],~wFifoWriteFull[1],~wFifoWriteFull[1]};
+assign oSUfiAdrs[30:0] 	= wAdrsReadFifoRd[30:0];
+assign oSUfiAdrs[31] 	= wDqReadFifoRvd;
+assign oSUfiRdy 		= &{~wFifoReadFull[0],~wFifoReadFull[1],~wFifoWriteFull[1],~wFifoWriteFull[1]};
 
 endmodule

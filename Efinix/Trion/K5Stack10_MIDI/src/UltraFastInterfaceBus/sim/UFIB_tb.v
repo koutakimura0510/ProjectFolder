@@ -13,7 +13,7 @@ module UFIB_tb;
 // System Simlation Parameter
 //-----------------------------------------------------------------------------
 localparam lpUfibMasterBlockNum = 2;
-localparam lpRamDepth			= 512;
+localparam lpRamDepth			= 256;
 
 //-----------------------------------------------------------------------------
 // System 共通変数
@@ -412,7 +412,7 @@ begin
 	wait_flag(1, 'h0005_000C);
 	mcb_flash_run(1);
 
-	#(lpSCLKCycle*1000);
+	#(lpSCLKCycle*120000);
 	$display(" ----- SIM END !!");
     $finish;
 end
