@@ -210,12 +210,12 @@ localparam  lpRamAdrsWidth    		= 18;
 localparam  lpRamDqWidth      		= 16;
 localparam  lpUfiDqBusWidth   		= lpRamDqWidth;
 localparam  lpUfiAdrsBusWidth 		= 32;
-localparam  lpUfiBlockConnectNum 	= 1;
+localparam  lpUfiBlockConnectNum 	= 2;	// 接続 Block 数変更
 localparam 	lpUfiBlockAdrsWidth		= f_detect_bitwidth(lpUfiBlockConnectNum);
 localparam	lpMUfiDqWidth 			= lpUfiDqBusWidth   * lpUfiBlockConnectNum;
 localparam	lpMUfiAdrsWidth			= lpUfiAdrsBusWidth * lpUfiBlockConnectNum;
 //
-localparam lpSynDmaBurstLength		= 32;
+localparam lpSynDmaBurstLength		= 128;
 
 // initial begin
 // 	$display("%d", lpUfiBlockAdrsWidth);
@@ -223,8 +223,8 @@ localparam lpSynDmaBurstLength		= 32;
 //
 localparam [lpUfiBlockAdrsWidth-1:0]	// UFI ブロックアドレスマッピング
 	lpUfiMcbAdrsMap		= 'h0,
-	lpUfiVtbAdrsMap		= 'h1,
-	lpUfiSynAdrsMap		= 'h2,
+	lpUfiSynAdrsMap		= 'h1,
+	// lpUfiVtbAdrsMap		= 'h2,
 	lpUfiNullAdrsMap	= 	0;
 //
 wire [lpUfiDqBusWidth-1:0] 		wSUfiRd;

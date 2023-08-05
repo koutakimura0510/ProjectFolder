@@ -11,7 +11,8 @@
 
 module TrionSDPBRAM #(
 parameter pDataWidth	= 16,
-parameter pAddrWidth	= 16
+parameter pAddrWidth	= 16,
+parameter pClkDomainAsync = "no"
 )(
 input [pDataWidth-1:0]	iWd,	// Write Data
 input [pAddrWidth-1:0]	iWa,	// Write Adrs
@@ -23,6 +24,8 @@ input					iRCLK,
 input					iWCLK
 );
 
+localparam lpClkDomainAsync = pClkDomainAsync == "yes" ? "READ_UNKNOWN" : "READ_FIRST";
+
 EFX_RAM_5K #(
 	// Polarity 0:ActiveLow, 1:Active High
 	.WCLK_POLARITY(1'b1),		.WCLKE_POLARITY(1'b1),
@@ -33,7 +36,7 @@ EFX_RAM_5K #(
 	// Output register enable
 	.OUTPUT_REG(1'b0),
 	// write mode
-	.WRITE_MODE("READ_FIRST"),
+	.WRITE_MODE(lpClkDomainAsync),
 	// 256-bit INIT string
 	.INIT_0 (256'h0000000000000000000000000000000000000000000000000000000000000000),
 	.INIT_1 (256'h0000000000000000000000000000000000000000000000000000000000000000),

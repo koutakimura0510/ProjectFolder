@@ -27,7 +27,8 @@ module ASyncFifoController #(
 //----------------------------------------------------------
 // FIFO の深さの bit幅取得
 //----------------------------------------------------------
-integer x;
+integer i;
+genvar x;
 localparam pAddrWidth  = fBitWidth(pFifoDepth);
 localparam [pAddrWidth-1:0] lpFifoRemaingCntBorder = pFifoRemaingCntBorder;
 
@@ -64,10 +65,10 @@ end
 generate	// GrayCode -> Binary
 always @*
 begin
-	for (x = pAddrWidth-1; x >= 0; x = x-1)
+	for (i = pAddrWidth-1; i >= 0; i = i-1)
 	begin
-		if (x == pAddrWidth-1) 	qWbin[x] <= rWGa[2][x];
-		else					qWbin[x] <= rWGa[2][x] ^ qWbin[x+1];
+		if (i == pAddrWidth-1) 	qWbin[i] <= rWGa[2][i];
+		else					qWbin[i] <= rWGa[2][i] ^ qWbin[i+1];
 	end
 end
 endgenerate
@@ -99,10 +100,10 @@ end
 generate
 always @*
 begin
-	for (x = pAddrWidth-1; x >= 0; x = x-1)
+	for (i = pAddrWidth-1; i >= 0; i = i-1)
 	begin
-		if (x == pAddrWidth-1) 	qRbin[x] <= rRGa[2][x];
-		else					qRbin[x] <= rRGa[2][x] ^ qRbin[x+1];
+		if (i == pAddrWidth-1) 	qRbin[i] <= rRGa[2][i];
+		else					qRbin[i] <= rRGa[2][i] ^ qRbin[i+1];
 	end
 end
 endgenerate
@@ -146,7 +147,8 @@ for (x = 0; x < lpBramGenNum; x = x + 1)
 begin : TrionSDPBRAM
 	TrionSDPBRAM #(
 		.pDataWidth(lpDataWidth),
-		.pAddrWidth(pAddrWidth)
+		.pAddrWidth(pAddrWidth),
+		.pClkDomainAsync("yes")
 	) TrionSDPBRAM (
 		// Write Side
 		.iWd(qWd[x]),

@@ -35,6 +35,12 @@ static void system_initialize(void)
 	usi_write_cmd(0x8,		SPI_REG_DIV);		// 動作周波数
 	usi_write_cmd(1,		SPI_REG_GPIO_ALT);	// SPI 機能有効
 
+	// Synthesizer
+	usi_write_cmd(0,		SYNTH_REG_DMA_ADRS_START);
+	usi_write_cmd(65535,	SYNTH_REG_DMA_ADRS_END);
+	usi_write_cmd(1,		SYNTH_REG_DMA_CYCLE_ENABLE);	// Cycle Mode Enable
+	usi_write_cmd(1,		SYNTH_REG_DMA_ENABLE);			// DMA Run
+
 	// flash rom
 	flash_protection_reg_write();
 }
@@ -47,7 +53,6 @@ void main()
 {
 	system_initialize();
 
-	uint32_t adrs = 0;
 	uint16_t rd;
 	
 	double angle = 2764.601535;
@@ -67,11 +72,7 @@ void main()
 	}
 	
 	while (1) {
-		// led_auto_flash();
-		rd = cache_read(adrs);
-		bsp_uDelay(100000);
-		led_user_flash(rd);
-		adrs++;
+		led_auto_flash();
 		// flash_id_read();
 		// flash_write();
 		// flash_read();
