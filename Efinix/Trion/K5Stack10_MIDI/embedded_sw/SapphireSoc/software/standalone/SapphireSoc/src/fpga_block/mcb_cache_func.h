@@ -13,5 +13,6 @@ void cache_write(uint16_t wd, uint32_t ram_adrs);
 void cache_flush(void);
 bool cache_burst_bool(void);
 uint16_t cache_read(uint32_t ram_adrs);
+void cache_demo_write(void);
 
 #endif

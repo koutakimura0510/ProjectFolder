@@ -160,9 +160,10 @@ I2SSignalGen I2SSignalGen(
 
 always @*
 begin
-	qAudioData[15:0]  <= wDmaRd;
-	qAudioData[31:16] <= 16'd0;
-  	qDmaRe <= wI2SRdy;
+	qAudioData[14:0]	<= 15'd0;
+	qAudioData[30:15] 	<= wDmaRd;
+	qAudioData[31]		<= 1'b0;
+  	qDmaRe 				<= wI2SRdy;
 end
 
 //-----------------------------------------------------------------------------

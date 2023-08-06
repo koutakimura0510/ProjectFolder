@@ -56,3 +56,18 @@ uint16_t cache_read(uint32_t ram_adrs)
 
 	return usi_read_cmd(MCB_REG_RAM_RD);
 }
+
+/**-----------------------------------------------------------------------------
+ * Cache Demo Write
+ *-----------------------------------------------------------------------------*/
+void cache_demo_write(void)
+{
+	for (uint32_t i = 0; i < 65535; i++) {
+		cache_write(i, i);
+
+		// if ((i & 0xff) == 255) {
+			cache_flush();
+			while(!(true == cache_burst_bool()));
+		// }
+	}
+}

@@ -59,7 +59,7 @@ begin
 	else if	(qSdataSftCke)	rSdata <= {rSdata[30:0],1'b0};
 	else 					rSdata <=  rSdata;
 
-	if (iMRST) 			rRdy <= 1'b0;	//Right音源出力のときに、次の音源データを読みこみ
+	if (iMRST) 			rRdy <= 1'b0;	// Right音源出力のときに、次の音源データを読みこみ
 	else if	(qRdyCke)	rRdy <= 1'b1;	// Ready Valid のタイミング入れ違い対策として
 	else 				rRdy <= 1'b0;	// Rdy は 1ショットパルスの動作とする
 end
@@ -84,38 +84,38 @@ assign oAudioDataRdy= rRdy;
 //-----------------------------------------------------------------------------
 always @*
 begin
-	qSdata[0] <= iAudioData[30];
-	qSdata[1] <= iAudioData[29];
-	qSdata[2] <= iAudioData[28];
-	qSdata[3] <= iAudioData[27];
-	qSdata[4] <= iAudioData[26];
-	qSdata[5] <= iAudioData[25];
-	qSdata[6] <= iAudioData[24];
-	qSdata[7] <= iAudioData[23];
-	qSdata[8] <= iAudioData[22];
-	qSdata[9] <= iAudioData[21];
-	qSdata[10] <= iAudioData[20];
-	qSdata[11] <= iAudioData[19];
-	qSdata[12] <= iAudioData[18];
-	qSdata[13] <= iAudioData[17];
-	qSdata[14] <= iAudioData[16];
-	qSdata[15] <= iAudioData[15];
-	qSdata[16] <= iAudioData[14];
-	qSdata[17] <= iAudioData[13];
-	qSdata[18] <= iAudioData[12];
-	qSdata[19] <= iAudioData[11];
-	qSdata[20] <= iAudioData[10];
-	qSdata[21] <= iAudioData[9];
-	qSdata[22] <= iAudioData[8];
-	qSdata[23] <= iAudioData[7];
-	qSdata[24] <= iAudioData[6];
-	qSdata[25] <= iAudioData[5];
-	qSdata[26] <= iAudioData[4];
-	qSdata[27] <= iAudioData[3];
-	qSdata[28] <= iAudioData[2];
-	qSdata[29] <= iAudioData[1];
-	qSdata[30] <= iAudioData[0];
-	qSdata[31] <= iAudioData[31];
+	qSdata[0]  <= iAudioData[1];
+	qSdata[1]  <= iAudioData[2];
+	qSdata[2]  <= iAudioData[3];
+	qSdata[3]  <= iAudioData[4];
+	qSdata[4]  <= iAudioData[5];
+	qSdata[5]  <= iAudioData[6];
+	qSdata[6]  <= iAudioData[7];
+	qSdata[7]  <= iAudioData[8];
+	qSdata[8]  <= iAudioData[9];
+	qSdata[9]  <= iAudioData[10];
+	qSdata[10] <= iAudioData[11];
+	qSdata[11] <= iAudioData[12];
+	qSdata[12] <= iAudioData[13];
+	qSdata[13] <= iAudioData[14];
+	qSdata[14] <= iAudioData[15];
+	qSdata[15] <= iAudioData[16];
+	qSdata[16] <= iAudioData[17];
+	qSdata[17] <= iAudioData[18];
+	qSdata[18] <= iAudioData[19];
+	qSdata[19] <= iAudioData[20];
+	qSdata[20] <= iAudioData[21];
+	qSdata[21] <= iAudioData[22];
+	qSdata[22] <= iAudioData[23];
+	qSdata[23] <= iAudioData[24];
+	qSdata[24] <= iAudioData[25];
+	qSdata[25] <= iAudioData[26];
+	qSdata[26] <= iAudioData[27];
+	qSdata[27] <= iAudioData[28];
+	qSdata[28] <= iAudioData[29];
+	qSdata[29] <= iAudioData[30];
+	qSdata[30] <= iAudioData[31];
+	qSdata[31] <= iAudioData[0];
 end
 
 endmodule

@@ -14,6 +14,7 @@ module UFIB_tb;
 //-----------------------------------------------------------------------------
 localparam lpUfibMasterBlockNum = 2;
 localparam lpRamDepth			= 256;
+localparam lpWaitCycle			= 100;
 
 //-----------------------------------------------------------------------------
 // System 共通変数
@@ -403,7 +404,7 @@ begin
 	$display(" ----- SIM START !!");
 	reset_init();
 	usi_csr_setting('h0, 'h40030000);	// RAM RST
-	usi_csr_setting(255, 'h40020008);
+	usi_csr_setting(127, 'h40020008);
 	usi_csr_setting(1, 'h40020010);
 	usi_csr_setting(1, 'h4002000C);
 
@@ -412,7 +413,7 @@ begin
 	wait_flag(1, 'h0005_000C);
 	mcb_flash_run(1);
 
-	#(lpSCLKCycle*120000);
+	#(lpSCLKCycle*lpWaitCycle);
 	$display(" ----- SIM END !!");
     $finish;
 end

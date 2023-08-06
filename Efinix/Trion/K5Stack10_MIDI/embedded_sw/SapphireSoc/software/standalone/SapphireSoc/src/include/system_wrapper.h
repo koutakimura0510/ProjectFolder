@@ -31,6 +31,7 @@
 #include "../fpga_block/gpio_func.h"
 #include "../fpga_block/spi_func.h"
 #include "../fpga_block/mcb_cache_func.h"
+#include "../fpga_block/synth_func.h"
 #include "../flash_rom/flash_rom_func.h"
 
 #endif

@@ -36,8 +36,9 @@ static void system_initialize(void)
 	usi_write_cmd(1,		SPI_REG_GPIO_ALT);	// SPI 機能有効
 
 	// Synthesizer
+	synth_sinwave_write();
 	usi_write_cmd(0,		SYNTH_REG_DMA_ADRS_START);
-	usi_write_cmd(65535,	SYNTH_REG_DMA_ADRS_END);
+	usi_write_cmd(48000-1,	SYNTH_REG_DMA_ADRS_END);
 	usi_write_cmd(1,		SYNTH_REG_DMA_CYCLE_ENABLE);	// Cycle Mode Enable
 	usi_write_cmd(1,		SYNTH_REG_DMA_ENABLE);			// DMA Run
 
@@ -52,27 +53,9 @@ static void system_initialize(void)
 void main()
 {
 	system_initialize();
-
-	uint16_t rd;
-	
-	double angle = 2764.601535;
-	double offset = 32768.0;
-	double wave = 440.0;
-	double sampling_rate = 48000.0;
-
-	for (uint32_t i = 0; i < 65535; i++) {
-		double d = (angle * (double)i) / sampling_rate;
-		double sin_wave = sin(d) * offset + offset;
-		cache_write((uint16_t)sin_wave, i);
-
-		if ((i & 0xff) == 255) {
-			cache_flush();
-			while(!(true == cache_burst_bool()));
-		}
-	}
 	
 	while (1) {
-		led_auto_flash();
+		led_auto_flash(100, TIMER_REG_COUNT1);
 		// flash_id_read();
 		// flash_write();
 		// flash_read();

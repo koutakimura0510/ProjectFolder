@@ -21,7 +21,6 @@ module UfibReadDmaUnit #(
 	// Ufi Bus Master Read
 	input	[pUfiDqBusWidth-1:0] 	iMUfiRd,
 	input	[pUfiAdrsBusWidth-1:0] 	iMUfiAdrs,
-	// output 						oMUfiVd,
 	// Ufi Bus Master Write
 	output	[pUfiDqBusWidth-1:0] 	oMUfiWd,
 	output	[pUfiAdrsBusWidth-1:0] 	oMUfiAdrs,
@@ -105,7 +104,7 @@ begin
 	qDdrWe <= &{iMUfiAdrs[31],(pUfiAdrsMap == iMUfiAdrs[28:25]),~wDdrFull};
 	qDdrRe <= &{iDmaRe,~wDdrEmp};
 end
-// ここで受信回数をカウントしておく
+
 assign oDmaRd	= wDdrRd;
 assign oDmaRvd	= wDdrRvd;
 
@@ -144,10 +143,7 @@ assign oMUfiAdrs[31]	= wDdtRvd;
 
 //-----------------------------------------------------------------------------
 // Burst Transfer Counter part, for Fifo Read Adrs Side
-// ※バースト転送は UFIB 経由でデータを転送した回数をカウントするので、
-// FIFO Read Side のみにカウンターが必要になる。
-// UFIB に Read Cmd 発行後、RAMからの読み込みデータが、この module に入力されるため、
-// 読み込みデータ蓄積用の FIFO が FULL の時は、Read Cmd を発行しないようにする。
+// ※UFIB 経由でバースト転送した回数をカウント
 //-----------------------------------------------------------------------------
 wire 	wBurstRun;
 reg 	qBurstCntCke;

@@ -9,11 +9,11 @@
 /**-----------------------------------------------------------------------------
  * LED Auto FLASH
  *-----------------------------------------------------------------------------*/
-void led_auto_flash(uint32_t time)
+void led_auto_flash(uint32_t time, uint32_t timer_csr_adrs)
 {
 	static uint32_t t = 0;
 	static uint8_t flash = 0x01;
-	uint32_t now_t = usi_read_cmd(TIMER_REG_COUNT1);
+	uint32_t now_t = usi_read_cmd(timer_csr_adrs);
 
 	if (t + time < now_t) {
 		t = now_t;
