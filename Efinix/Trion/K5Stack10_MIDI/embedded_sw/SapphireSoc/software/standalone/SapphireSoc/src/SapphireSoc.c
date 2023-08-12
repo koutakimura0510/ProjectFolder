@@ -59,7 +59,7 @@ void main()
 	
 	while (1) {
 		led_auto_flash(100, TIMER_REG_COUNT1);
-		usi_write_cmd(sin_buff[rp],	SYNTH_REG_DMA_ADRS_ADD);
+//		usi_write_cmd(sin_buff[rp],	SYNTH_REG_DMA_ADRS_ADD);
 		rp++;
 		rp &= 0x07;
 		bsp_uDelay(100000);

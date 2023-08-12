@@ -65,7 +65,7 @@ wire [pBlockConnectNum-1:0]	wEnableBit;
 reg  [pBlockAdrsWidth-1:0]	rBlockSelect;
 reg 						qBlockSelectRst,	qBlockSelectCke;
 reg  [2:0]					rLatencyCnt;
-reg 						qLatencyRst;
+reg 						qLatencyCntCke,		qLatencyCntRst;
 
 always @(posedge iCLK)
 begin
@@ -78,7 +78,8 @@ begin
 	else if (qBlockSelectCke)	rBlockSelect <=  rBlockSelect + 1'b1;
 	else						rBlockSelect <=  rBlockSelect;
 
-	if (qLatencyRst) 			rLatencyCnt <= 3'd0;
+	if (qLatencyCntRst)			rLatencyCnt <= 3'd0;
+	else if (qLatencyCntCke)	rLatencyCnt <= rLatencyCnt;
 	else						rLatencyCnt <= rLatencyCnt + 1'b1;
 end
 
@@ -95,10 +96,12 @@ generate
 endgenerate
 
 // .現在アクセスしている Master 以外の Master はバス使用不可
-// .Slave Rdy Dissert の場合、バス使用不可
 // .Master は最大 Burst 転送量が決まっており、一度のトランザクションが完了した場合、他のMaster にバスの所有権を譲らなければならない。
 // .クロックサイクルを合わせるため、Rdyはレジスタを経由しない
 // .Rdy発行後、ある程度待機して Master からバス使用通知がなければ、次の Master への通知待ちに移行する。
+//  Master が FIFO 経由でデータ送信する場合、Rdy が丁度次の Master に切り替わるタイミングと、現在の Master の有効通知と交差してしまうことがあるため、
+//  特定カウント以上になった場合 Rdy を Dissert し、FIFO の有効通知の最大レイテンシ以上待機してから Master を切り替えることにする。
+//  特定カウント以上時に 有効通知があった場合は、現在の Master のデータを有効とする。
 localparam [pBlockAdrsWidth-1:0] lpBlockConnectNum = pBlockConnectNum - 1;
 
 generate
@@ -106,7 +109,8 @@ generate
 	begin
 		qBlockSelectRst 	<= |{iRST,(rBlockSelect == pBlockConnectNum)};
 		qBlockSelectCke 	<= &{~wEnableBit[rBlockSelect],rLatencyCnt==3'd6};
-		qLatencyRst			<= |{wEnableBit[rBlockSelect],iRST};
+		qLatencyCntRst		<= iRST;
+		qLatencyCntCke		<= wEnableBit[rBlockSelect];
 	end
 
 	for (x = 0; x < pBlockConnectNum; x = x + 1)
