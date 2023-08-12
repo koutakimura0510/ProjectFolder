@@ -62,10 +62,8 @@ module MicroControllerBlock #(
 wire [pUfiDqBusWidth-1:0] 	wRamWdCsr;
 wire [pUfiAdrsBusWidth-1:0] wRamAdrsCsr;
 wire 						wRamEnCsr;
-wire 						wRamBurstRunCsr;
 reg 						qRamFullCsr, qRamEmpCsr;
 reg  [pUfiDqBusWidth-1:0] 	qUfiRdCsr;
-reg 						qRamBurstStop;
 reg 						qRamRdVdCsr;
 
 MicroControllerCsr #(
@@ -81,10 +79,9 @@ MicroControllerCsr #(
 	.iSUsiWd(iSUsiWd),		.iSUsiAdrs(iSUsiAdrs),
 	// CSR
 	.oRamWd(wRamWdCsr),		.oRamAdrs(wRamAdrsCsr),
-	.oRamEn(wRamEnCsr),		.oRamBurstRun(wRamBurstRunCsr),
+	.oRamEn(wRamEnCsr),
 	.iRamFull(qRamFullCsr),	.iRamEmp(qRamEmpCsr),
 	.iRamRd(qUfiRdCsr),
-	.iRamBurstStop(qRamBurstStop),
 	.iRamRdVd(qRamRdVdCsr),
 	// CLK RST
 	.iSRST(iSRST),			.iSCLK(iSCLK)
@@ -218,9 +215,9 @@ begin
 	else if (wRamEnCsr)	rMcmWeOneShot <= 1'b0;
 	else 				rMcmWeOneShot <= 1'b1;
 
-	if (!wRamBurstRunCsr)	rTarRun <= 1'b0;
+	if (iSRST)				rTarRun <= 1'b0;
 	else if (qMUfiRdyPos) 	rTarRun <= 1'b1;
-	else 					rTarRun <= rTarRun;
+	else 					rTarRun <= 1'b0;
 
 	rMUfiRdyEdge <= {rMUfiRdyEdge[0], iMUfiRdy};
 end
@@ -229,12 +226,11 @@ always @*
 begin
 	qMcmWd		<=  {wRamAdrsCsr,wRamWdCsr};
 	qMcmWe		<= &{~wMcmFull,wRamEnCsr,rMcmWeOneShot};
-	qMcmRe		<= &{iMUfiRdy,~wMcmEmp,rTarRun,wRamBurstRunCsr};
+	qMcmRe		<= &{iMUfiRdy,~wMcmEmp,rTarRun};
 	qRamFullCsr	<=   wMcmFull;
 	qRamEmpCsr	<=   wMcmEmp;
 	//
 	qMUfiRdyPos		<= (rMUfiRdyEdge == 2'b01);
-	qRamBurstStop 	<= &{wMcmEmp,wRamBurstRunCsr};
 end
 
 assign oMUfiWd			= wMcmRd[15:0];

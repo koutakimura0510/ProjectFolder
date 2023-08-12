@@ -13,8 +13,8 @@ module UFIB_tb;
 // System Simlation Parameter
 //-----------------------------------------------------------------------------
 localparam lpUfibMasterBlockNum = 2;
-localparam lpRamDepth			= 256;
-localparam lpWaitCycle			= 100;
+localparam lpRamDepth			= 1024;
+localparam lpWaitCycle			= 30000;
 
 //-----------------------------------------------------------------------------
 // System 共通変数
@@ -111,7 +111,7 @@ task wait_flag(
 begin
 	usi_csr_setting(0, adrs);
 
-	while (wSUsiRd == flag)	// iverilog の場合、等しい場合ループする
+	while (wSUsiRd & flag)	// iverilog の場合、等しい場合ループする
 	begin
 		#(lpSCLKCycle);
 	end
@@ -119,30 +119,21 @@ end
 endtask
 // ----------------------------------------------------------------------------
 // MCB UFI Burst
-task mcb_flash_run(
-	input rw
-);
+task mcb_flash_run;
 integer i;
 begin
-	for (i = 0; i < 256; i = i + 1)
+	for (i = 0; i < 1000; i = i + 1)
 	begin
-		if (rw == 0)
-		begin
-			usi_csr_setting(i, 'h4005_0000);
-			usi_csr_setting(i, 'h4005_0004);
-		end
-		else
-		begin
-			// usi_csr_setting('h40000000, 'h4005_0000);
-			usi_csr_setting('h40000000 + i, 'h4005_0004);
-		end
-		usi_csr_setting(1, 'h4005_0008);
+		usi_csr_setting(i, 'h4005_0000);	// wd
+		usi_csr_setting(i, 'h4005_0004);		// adrs
+		usi_csr_setting(1, 'h4005_0008);		// en
 		usi_csr_setting(0, 'h4005_0008);
+		usi_csr_setting(0, 'h0005_0040);
+		wait_flag('h10, 'h0005_0040);
 	end
 
-	usi_csr_setting(1, 'h4005_000C);
 	usi_csr_setting(0, 'h0000_0000);
-	$display("mcb_flash_run %d", rw);
+	$display("mcb_flash_run ok");
 end
 endtask
 
@@ -300,7 +291,7 @@ SynthesizerBlock #(
 	.pUfiDqBusWidth(lpUfiDqBusWidth),
 	.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
 	.pUfiAdrsMap(lpUfiSynAdrsMap),
-	.pDmaAdrsWidth(lpRamAdrsWidth),
+	.pDmaAdrsWidth(lpRamAdrsWidth+1),
 	.pDmaBurstLength(128)
 ) SynthesizerBlock (
 	// External Port
@@ -403,15 +394,21 @@ begin
 	$dumpvars(0, UFIB_tb);	// 引数0:下位モジュール表示, 1:Topのみ
 	$display(" ----- SIM START !!");
 	reset_init();
-	usi_csr_setting('h0, 'h40030000);	// RAM RST
-	usi_csr_setting(127, 'h40020008);
-	usi_csr_setting(1, 'h40020010);
-	usi_csr_setting(1, 'h4002000C);
+	mcb_flash_run();
 
-	// wait_flag(1, 'h0002_000C);
-	mcb_flash_run(0);
-	wait_flag(1, 'h0005_000C);
-	mcb_flash_run(1);
+	// ram csr set
+	usi_csr_setting('h0, 'h40030000);	// RAM RST
+
+	// synth csr set
+	usi_csr_setting(0, 'h4002000C);		// start
+	usi_csr_setting(255, 'h40020010);	// end
+	usi_csr_setting(1, 'h40020014);		// add
+	usi_csr_setting(1, 'h40020008);		// cycle enable
+	usi_csr_setting(1, 'h40020004);		// dma enable
+
+	// mcb flash
+	// wait_flag(1, 'h0005_000C);
+	// mcb_flash_run(1);
 
 	#(lpSCLKCycle*lpWaitCycle);
 	$display(" ----- SIM END !!");

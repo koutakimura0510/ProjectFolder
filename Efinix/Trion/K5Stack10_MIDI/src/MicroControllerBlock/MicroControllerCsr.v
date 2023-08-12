@@ -29,13 +29,11 @@ module MicroControllerCsr #(
 	output [pUfiDqBusWidth-1:0] 	oRamWd,
 	output [pUfiAdrsBusWidth-1:0] 	oRamAdrs,
 	output 							oRamEn,
-	output 							oRamBurstRun,
 	// Csr Input
 	input 							iRamFull,
 	input 							iRamEmp,
 	input  [pUfiDqBusWidth-1:0]		iRamRd,
 	input 							iRamRdVd,
-	input 							iRamBurstStop,
 	// CLK RST
 	input iSRST,
 	input iSCLK
@@ -47,7 +45,6 @@ module MicroControllerCsr #(
 reg [pUfiDqBusWidth-1:0]	rRamWd;			assign 	oRamWd		= rRamWd;
 reg [pUfiAdrsBusWidth-1:0]	rRamAdrs;		assign 	oRamAdrs  	= rRamAdrs;
 reg 						rRamEn;			assign 	oRamEn		= rRamEn;
-reg 						rRamBurstRun;	assign 	oRamBurstRun= rRamBurstRun;
 //
 reg 						rRamFull;
 reg 						rRamEmp;
@@ -67,7 +64,6 @@ begin
 		rRamWd		<= {pUfiDqBusWidth{1'b0}};
 		rRamAdrs	<= {pUfiAdrsBusWidth{1'b0}};
 		rRamEn 		<= 1'b0;
-		rRamBurstRun<= 1'b0;
 		//
 		rRamFull	<= 1'b0;
 		rRamEmp		<= 1'b0;
@@ -78,7 +74,6 @@ begin
 		rRamWd		<= qCsrWCke00 ? iSUsiWd[15:0] : rRamWd;
 		rRamAdrs	<= qCsrWCke04 ? iSUsiWd[31:0] : rRamAdrs;
 		rRamEn		<= qCsrWCke08 ? iSUsiWd[ 0:0] : rRamEn;
-		rRamBurstRun<= iRamBurstStop ? 1'b0 : qCsrWCke0C ? iSUsiWd[ 0:0] : rRamBurstRun;
 		//
 		rRamFull	<= iRamFull;
 		rRamEmp		<= iRamEmp;
@@ -108,7 +103,7 @@ begin
 		'h00:	 rSUsiRd <= {{(32 - pUfiDqBusWidth	){1'b0}}, rRamWd};
 		'h04:	 rSUsiRd <= {rRamAdrs};
 		'h08:	 rSUsiRd <= {{(32 - 1	){1'b0}}, rRamEn};
-		'h0C:	 rSUsiRd <= {{(32 - 1	){1'b0}}, rRamBurstRun};
+		// 'h0C:	 rSUsiRd <= {{(32 - 1	){1'b0}}, rRamBurstRun};
 		'h40:	 rSUsiRd <= {{(32 - 8	){1'b0}}, 3'b000, rRamEmp, 3'b000, rRamFull};
 		'h44:	 rSUsiRd <= {{(32 - pUfiDqBusWidth	){1'b0}}, rRamRd};
 		'h48:	 rSUsiRd <= {{(32 - 1	){1'b0}}, rRamRdVd};

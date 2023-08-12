@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efxpt:design_db name="K5Stack10_MIDI" device_def="T20Q144" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI" version="2022.2.322" db_version="20222999" last_change_date="Sun Jun 25 15:14:33 2023" xmlns:efxpt="http://www.efinixinc.com/peri_design_db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/peri_design_db peri_design_db.xsd ">
+<efxpt:design_db name="K5Stack10_MIDI" device_def="T20Q144" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI" version="2023.1.150" db_version="20231999" last_change_date="Sat Aug 12 16:13:30 2023" xmlns:efxpt="http://www.efinixinc.com/peri_design_db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/peri_design_db peri_design_db.xsd ">
     <efxpt:device_info>
         <efxpt:iobank_info>
             <efxpt:iobank name="1A" iostd="3.3 V LVTTL / LVCMOS"/>
@@ -452,13 +452,13 @@
         <efxpt:bus name="ioGPIOR" mode="inout" msb="17" lsb="0"/>
     </efxpt:gpio_info>
     <efxpt:pll_info>
-        <efxpt:pll name="PLL_BR0" pll_def="PLL_BR0" ref_clock_name="" ref_clock_freq="25.0000" multiplier="64" pre_divider="1" post_divider="8" reset_name="PLL_BR0_RSTN" locked_name="PLL_BR0_LOCKED" is_ipfrz="false" is_bypass_lock="true">
-            <efxpt:output_clock name="iSCLK" number="0" out_divider="4" adv_out_phase_shift="0"/>
-            <efxpt:adv_prop ref_clock_mode="external" ref_clock1_name="" ext_ref_clock_id="3" clksel_name="" feedback_clock_name="" feedback_mode="internal"/>
+        <efxpt:pll name="PLL_BR0" pll_def="PLL_BR0" ref_clock_name="" ref_clock_freq="25.0000" multiplier="2" pre_divider="1" post_divider="8" reset_name="PLL_BR0_RSTN" locked_name="PLL_BR0_LOCKED" is_ipfrz="false" is_bypass_lock="true">
+            <efxpt:output_clock name="iSCLK" number="0" out_divider="9" adv_out_phase_shift="0"/>
+            <efxpt:adv_prop ref_clock_mode="external" ref_clock1_name="" ext_ref_clock_id="3" clksel_name="" feedback_clock_name="iSCLK" feedback_mode="core"/>
         </efxpt:pll>
-        <efxpt:pll name="PLL_TL0" pll_def="PLL_TL0" ref_clock_name="iSCLK" ref_clock_freq="50.0000" multiplier="29" pre_divider="1" post_divider="1" reset_name="PLL_TL0_RSTN" locked_name="PLL_TL0_LOCKED" is_ipfrz="false" is_bypass_lock="true">
-            <efxpt:output_clock name="iMCLK" number="0" out_divider="59" adv_out_phase_shift="0"/>
-            <efxpt:adv_prop ref_clock_mode="core" ref_clock1_name="" ext_ref_clock_id="2" clksel_name="" feedback_clock_name="" feedback_mode="internal"/>
+        <efxpt:pll name="PLL_TL0" pll_def="PLL_TL0" ref_clock_name="iSCLK" ref_clock_freq="50.0000" multiplier="113" pre_divider="5" post_divider="2" reset_name="PLL_TL0_RSTN" locked_name="PLL_TL0_LOCKED" is_ipfrz="false" is_bypass_lock="true">
+            <efxpt:output_clock name="iMCLK" number="0" out_divider="25" adv_out_phase_shift="0"/>
+            <efxpt:adv_prop ref_clock_mode="core" ref_clock1_name="" ext_ref_clock_id="2" clksel_name="" feedback_clock_name="iMCLK" feedback_mode="internal"/>
         </efxpt:pll>
     </efxpt:pll_info>
     <efxpt:lvds_info/>

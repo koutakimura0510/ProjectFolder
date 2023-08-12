@@ -3,8 +3,12 @@
  * Author  kouta kimura
  * -
  * UFIB DMA の処理を行う
+ * 読み込みアドレスの開始と終了を指定して Enable にする。
+ * アドレスを +1 ずつインクリメントしながら RAM に命令を発行する。
+ * Auto 機能が Enable であれば、アドレスの範囲でサイクル動作を行う。
  *
  * v1.00 new release
+ * v1.01 iDmaAdrsAdd 追加
  *-----------------------------------------------------------------------------*/
 module UfibReadDmaUnit #(
 	// variable parameter
@@ -27,9 +31,11 @@ module UfibReadDmaUnit #(
 	input							iMUfiRdy,
 	//
 	// Control / Status
+	input							iDmaEnable,
+	input							iDmaCycleEnable,
 	input	[pDmaAdrsWidth-1:0]		iDmaAdrsStart,
 	input	[pDmaAdrsWidth-1:0]		iDmaAdrsEnd,
-	input							iDmaEnable,
+	input   [pDmaAdrsWidth-1:0]		iDmaAdrsAdd,
 	output 							oDmaDone,
 	// read data
 	output	[pUfiDqBusWidth-1:0]	oDmaRd,
@@ -172,39 +178,46 @@ end
 //-----------------------------------------------------------------------------
 // DMA Adrs
 reg [pDmaAdrsWidth-1:0] rDmaAdrs;
+reg [pDmaAdrsWidth-1:0] rDmaAdrsCycleOver;
 reg	qDmaAdrsRst, qDmaAdrsCke;
 // DMA RUN
 reg 		rDmaRun, 		qDmaRunCke;
 reg [1:0] 	rDmaLatency;
-reg 		rDmaLatencyRst;
+reg 		qDmaLatencyRst;
 reg 		rDmaDone;						assign oDmaDone = rDmaDone;
 reg 		qDmaDoneCke;
+reg 		qDmaAdrsOverCke;
 
 always @(posedge iCLK)
 begin
 	if (iRST)				rDmaRun <=  1'b0;
-	else if (qDmaRunCke)	rDmaRun <= ~rDmaRun;
+	else if (qDmaRunCke)	rDmaRun <= ~rDmaRun;	// 1サイクルの DMA 動作通知
 	else 					rDmaRun <=  rDmaRun;
 
-	if (qDmaAdrsRst)		rDmaAdrs <= iDmaAdrsStart;
-	else if (qDmaAdrsCke)	rDmaAdrs <= rDmaAdrs + 1'b1;
+	if (qDmaAdrsRst)		rDmaAdrs <= iDmaAdrsStart + rDmaAdrsCycleOver;
+	else if (qDmaAdrsCke)	rDmaAdrs <= rDmaAdrs + iDmaAdrsAdd;
 	else 					rDmaAdrs <= rDmaAdrs;
 
-	if (rDmaLatencyRst)		rDmaLatency <= 2'b00;
+	if (qDmaLatencyRst)		rDmaLatency <= 2'b00;
 	else if (iDmaEnable)	rDmaLatency <= rDmaLatency + 1'b1;
 	else 					rDmaLatency <= rDmaLatency;
 
 	if (iRST)				rDmaDone <= 1'b0;
-	else if (qDmaDoneCke)	rDmaDone <= 1'b1;
+	else if (qDmaDoneCke)	rDmaDone <= 1'b1;	// 1サイクルの DMA 終了通知
 	else 					rDmaDone <= 1'b0;
+
+	if (iRST) 					rDmaAdrsCycleOver <= {pDmaAdrsWidth{1'b0}};		// サイクル動作 かつ アドレス増加がオーバーラップするとき
+	else if (qDmaAdrsOverCke)	rDmaAdrsCycleOver <= rDmaAdrs - iDmaAdrsEnd;	// End の数値をオーバーした分だけ、次サイクルの Start アドレスとする。
+	else 						rDmaAdrsCycleOver <= rDmaAdrsCycleOver;			// 例：アドレスEnd 255, Add = 6 のときなど 258 - 255 = 3 から開始する
 end
 
 always @*
 begin
 	qDmaAdrsRst 	<= ~rDmaRun;
-	rDmaLatencyRst 	<= |{iRST,rDmaRun};
-	qDmaDoneCke 	<= (iDmaAdrsEnd == rDmaAdrs);
-	qDmaAdrsCke		<= &{~wDdtFull,rDmaRun};
+	qDmaLatencyRst 	<= |{iRST,rDmaRun};
+	qDmaDoneCke 	<=  (iDmaAdrsEnd <= rDmaAdrs);
+	qDmaAdrsCke		<= &{~wDdtFull,rDmaRun,~qDmaDoneCke};
+	qDmaAdrsOverCke	<= &{qDmaDoneCke,iDmaCycleEnable};
 
 	casex ({rDmaLatency[1:0],rDmaRun,wDdtFull,qDmaDoneCke})
 		'b110xx:	qDmaRunCke <= 1'b1;
@@ -216,7 +229,7 @@ begin
 	qDdtWd[28:25] 	<= pUfiAdrsMap;	// Block Id
 	qDdtWd[29] 		<= 1'b0;		// Null
 	qDdtWd[30] 		<= 1'b1;		// RW Cmd
-	qDdtWe			<= &{~wDdtFull,rDmaRun};
+	qDdtWe			<= &{~wDdtFull,rDmaRun,~qDmaDoneCke};
 end
 
 // module UfibDmaUnit(

@@ -54,9 +54,11 @@ module SynthesizerBlock #(
 // Csr Space
 //-----------------------------------------------------------------------------
 wire wI2SModuleRstCsr;
+wire wDmaEnableCsr;
+wire wDmaCycleEnableCsr;
 wire [pDmaAdrsWidth-1:0] wDmaAdrsStartCsr;
 wire [pDmaAdrsWidth-1:0] wDmaAdrsEndCsr;
-wire wDmaEnableCsr;
+wire [pDmaAdrsWidth-1:0] wDmaAdrsAddCsr;
 wire wDmaDoneCsr;
 
 SynthesizerCsr #(
@@ -73,9 +75,11 @@ SynthesizerCsr #(
 	.iSUsiWd(iSUsiWd),	.iSUsiAdrs(iSUsiAdrs),
 	// CSR
 	.oI2SModuleRst(wI2SModuleRstCsr),
+	.oDmaEnable(wDmaEnableCsr),
+	.oDmaCycleEnable(wDmaCycleEnableCsr),
 	.oDmaAdrsStart(wDmaAdrsStartCsr),
 	.oDmaAdrsEnd(wDmaAdrsEndCsr),
-	.oDmaEnable(wDmaEnableCsr),
+	.oDmaAdrsAdd(wDmaAdrsAddCsr),
 	.iDmaDone(wDmaDoneCsr),
     // CLK RST
 	.iSRST(iSRST),		.iSCLK(iSCLK)
@@ -106,9 +110,11 @@ UfibReadDmaUnit #(
 	.oMUfiAdrs(oMUfiAdrs),
 	.iMUfiRdy(iMUfiRdy),
 	// Control / Status
+	.iDmaEnable(wDmaEnableCsr),
+	.iDmaCycleEnable(wDmaCycleEnableCsr),
 	.iDmaAdrsStart(wDmaAdrsStartCsr),
 	.iDmaAdrsEnd(wDmaAdrsEndCsr),
-	.iDmaEnable(wDmaEnableCsr),
+	.iDmaAdrsAdd(wDmaAdrsAddCsr),
 	.oDmaDone(wDmaDoneCsr),
 	// read data
 	.oDmaRd(wDmaRd),

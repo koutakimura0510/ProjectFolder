@@ -1,10 +1,10 @@
-S     = srcfile
+S     = saw.c
 CC    = gcc
 CFLAG = -std=c11 -Wall
 CMD   = -lm
 
 all:
-	$(CC) $(CFLAG) -o program ${S} -lm
+	$(CC) $(CFLAG) -o program ${S} -lsndfile -lm
 	
 
 #build:

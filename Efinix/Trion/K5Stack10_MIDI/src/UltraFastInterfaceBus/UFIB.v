@@ -105,13 +105,13 @@ generate
 	always @*
 	begin
 		qBlockSelectRst 	<= |{iRST,(rBlockSelect == pBlockConnectNum)};
-		qBlockSelectCke 	<= &{~wEnableBit[rBlockSelect],rLatencyCnt==3'd4};
+		qBlockSelectCke 	<= &{~wEnableBit[rBlockSelect],rLatencyCnt==3'd6};
 		qLatencyRst			<= |{wEnableBit[rBlockSelect],iRST};
 	end
 
 	for (x = 0; x < pBlockConnectNum; x = x + 1)
 	begin
-		always @*	qMUfiRdy[x] <= &{iSUfiRdy,(rBlockSelect == x)};
+		always @*	qMUfiRdy[x] <= &{iSUfiRdy,(rBlockSelect == x),(rLatencyCnt < 3'd3)};
 	end
 endgenerate
 

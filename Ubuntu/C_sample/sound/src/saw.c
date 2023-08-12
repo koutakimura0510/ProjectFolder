@@ -1,57 +1,42 @@
-/**-------------------------------------------------
- * ノコギリ波生成プログラム
- * Ubuntu LTS 20.04
- * -------------------------------------------------*/
-
 #include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+#include <sndfile.h>
 
+#define SAMPLE_RATE 44100
+#define DURATION 5.0
+#define AMPLITUDE 0.5
+#define FREQUENCY 440.0
 
-#define RATE 4096
+int main() {
+    SNDFILE *outfile;
+    SF_INFO sfinfo;
+    double t, sample;
 
-static float buff[RATE];
+    // Initialize SF_INFO structure
+    memset(&sfinfo, 0, sizeof(sfinfo));
+    sfinfo.samplerate = SAMPLE_RATE;
+    sfinfo.frames = (int)(DURATION * SAMPLE_RATE);
+    sfinfo.channels = 1;
+    sfinfo.format = SF_FORMAT_WAV | SF_FORMAT_PCM_16;
 
-/**-------------------------------------------------
- * メイン関数
- * -------------------------------------------------*/
-int main(int argc, char **argv)
-{
-	FILE *fp;
-	int32_t t0 = RATE / 440;
-	float gain = RATE;
-	uint8_t line = 0;
-	int32_t m = 0;
+    // Open the output file
+    outfile = sf_open("sawtooth_wave_output.wav", SFM_WRITE, &sfinfo);
+    if (!outfile) {
+        printf("Error opening output file\n");
+        return 1;
+    }
 
-	fp = fopen("../wave_txt/saw.txt", "w");
+    // Generate and write sawtooth wave samples
+    for (t = 0.0; t < DURATION; t += 1.0 / SAMPLE_RATE) {
+        sample = (2.0 * t * FREQUENCY - floor(2.0 * t * FREQUENCY + 0.5)) * AMPLITUDE;
+        sf_writef_double(outfile, &sample, 1);
+    }
 
-	if (fp == NULL) {
-		printf("\r\n");
-		printf("ファイル名かディレクトリのパスが間違っています\r\n");
-		return 0;
-	}
+    // Close the output file
+    sf_close(outfile);
 
-	for (int32_t i = 0; i < RATE; i++) {
-		buff[i] = (1.0 - 2.0 * m / t0);
-		buff[i] = (buff[i] * gain) + gain;
+    printf("WAV file generated successfully.\n");
 
-		if (m++ >= t0) {
-			m = 0;
-		}
-	}
-
-	fprintf(fp, "static const uint16_t saw[4096] = {\n    ");
-
-	for (int32_t i = 0; i < RATE; i++) {
-		fprintf(fp, "%4d, ", (uint16_t)buff[i]);
-		if (line++ > 20) {
-			line = 0;
-			fprintf(fp, "\n    ");
-		}
-	}
-	fprintf(fp, "\n};");
-	printf("wave_txtディレクトリ内にsaw.txtを作成しました\r\n");
-	fclose(fp);
-
-	return 0;
+    return 0;
 }

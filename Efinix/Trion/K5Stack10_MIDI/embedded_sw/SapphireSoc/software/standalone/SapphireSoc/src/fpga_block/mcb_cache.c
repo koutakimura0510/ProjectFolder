@@ -39,7 +39,7 @@ void cache_flush(void)
  *-----------------------------------------------------------------------------*/
 bool cache_burst_bool(void)
 {
-	return usi_read_cmd(MCB_REG_RAM_BURST_RUN) ? false : true;
+	return usi_read_cmd(MCB_REG_RAM_RAM_STATUS) & 0x10 ? true : false;
 }
 
 /**-----------------------------------------------------------------------------
