@@ -2,8 +2,10 @@
  * Create  2023/4/9
  * Author  kouta kimura
  * -
- * V1.0 : new Relaese
- * 
+ * FM音源参考記事 : https://synth-voice.sakura.ne.jp/synth-voice/html5/voice-lab00.html
+ *
+ * v1.00 : new Relaese
+ *  
  *-----------------------------------------------------------------------------*/
 module SynthesizerBlock #(
 	// USI
@@ -27,9 +29,6 @@ module SynthesizerBlock #(
 	output oI2S_BCLK,
 	output oI2S_LRCLK,
 	output oI2S_SDATA,
-	// Control Status data
-	output [7:0] oMidiRd,	// デバッグ用途に外部出力しておく
-	output oMidiVd,			//
 	// Usi Bus Master Read
 	output [pUsiBusWidth-1:0] oSUsiRd,
 	// Usi Bus Master Write
@@ -87,6 +86,25 @@ SynthesizerCsr #(
 
 
 //-----------------------------------------------------------------------------
+// MIDI Decorder
+//-----------------------------------------------------------------------------
+wire [15:0] wAudioFreq;
+wire 		wAudioPlay;
+
+MIDIDecoder MIDIDecoder (
+	// External Port
+	.iMIDI(iMIDI),
+	// Sound
+	.oAudioFreq(wAudioFreq),
+	.oAudioPlay(wAudioPlay),
+	// common
+	.iSRST(iSRST),
+	.inSRST(inSRST),
+	.iSCLK(iSCLK)
+);
+
+
+//-----------------------------------------------------------------------------
 // UFI Audio Data Read
 //-----------------------------------------------------------------------------
 wire [pUfiDqBusWidth-1:0] wDmaRd;
@@ -103,45 +121,25 @@ UfibReadDmaUnit #(
 	.pDmaReadDataSyncMode("async")
 ) UfibReadDmaUnit (
 	// Ufi Bus Master Read
-	.iMUfiRd(iMUfiRd),
-	.iMUfiAdrs(iMUfiAdrs),
+	.iMUfiRd(iMUfiRd),		.iMUfiAdrs(iMUfiAdrs),
 	// Ufi Bus Master Write
-	.oMUfiWd(oMUfiWd),
-	.oMUfiAdrs(oMUfiAdrs),
+	.oMUfiWd(oMUfiWd),		.oMUfiAdrs(oMUfiAdrs),
 	.iMUfiRdy(iMUfiRdy),
 	// Control / Status
-	.iDmaEnable(wDmaEnableCsr),
-	.iDmaCycleEnable(wDmaCycleEnableCsr),
-	.iDmaAdrsStart(wDmaAdrsStartCsr),
-	.iDmaAdrsEnd(wDmaAdrsEndCsr),
-	.iDmaAdrsAdd(wDmaAdrsAddCsr),
+	// .iDmaEnable(wDmaEnableCsr),			.iDmaCycleEnable(wDmaCycleEnableCsr),
+	// .iDmaAdrsStart(wDmaAdrsStartCsr),	.iDmaAdrsEnd(wDmaAdrsEndCsr),
+	// .iDmaAdrsAdd(wDmaAdrsAddCsr),
+	// .oDmaDone(wDmaDoneCsr),
+	.iDmaEnable(wAudioPlay),			.iDmaCycleEnable(wDmaCycleEnableCsr),
+	.iDmaAdrsStart(wDmaAdrsStartCsr),	.iDmaAdrsEnd(wDmaAdrsEndCsr),
+	.iDmaAdrsAdd(wAudioFreq),
 	.oDmaDone(wDmaDoneCsr),
 	// read data
-	.oDmaRd(wDmaRd),
-	.oDmaRvd(wDmaRvd),
+	.oDmaRd(wDmaRd),	.oDmaRvd(wDmaRvd),
 	.iDmaRe(qDmaRe),
 	// CLK Reset
-	.iRST(iSRST),
-	.inRST(inSRST),
-	.iCLK(iSCLK),
-	.iACLK(iMCLK)
-);
-
-//-----------------------------------------------------------------------------
-// MIDI Decorder
-//-----------------------------------------------------------------------------
-wire [7:0] wMidiRd;   assign oMidiRd = wMidiRd;
-wire wMidiVd;         assign oMidiVd = wMidiVd;
-
-UartRX #(
-	.pBaudRateGenDiv(3200)
-) UartRX (
-	// External Port
-	.iUartRX(iMIDI),
-	// Decord Data
-	.oRd(wMidiRd),	.oVd(wMidiVd),
-	// CLK RST
-	.iRST(iSRST),	.iCLK(iSCLK)
+	.iRST(iSRST),		.inRST(inSRST),
+	.iCLK(iSCLK),		.iACLK(iMCLK)
 );
 
 

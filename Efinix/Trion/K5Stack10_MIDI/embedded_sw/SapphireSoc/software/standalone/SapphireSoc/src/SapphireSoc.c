@@ -32,7 +32,7 @@ static void system_initialize(void)
 	usi_write_cmd(0x7, 		TIMER_REG_ENABLE);	// Timer Enable
 
 	// SPI
-	usi_write_cmd(0x8,		SPI_REG_DIV);		// 動作周波数
+	usi_write_cmd(0x1,		SPI_REG_DIV);		// 動作周波数
 	usi_write_cmd(1,		SPI_REG_GPIO_ALT);	// SPI 機能有効
 
 	// Synthesizer
@@ -62,9 +62,9 @@ void main()
 //		usi_write_cmd(sin_buff[rp],	SYNTH_REG_DMA_ADRS_ADD);
 		rp++;
 		rp &= 0x07;
-		bsp_uDelay(100000);
+//		bsp_uDelay(100000);
 //		cache_write(2, 60000);
-		// flash_id_read();
+		flash_id_read();
 		// flash_write();
 		// flash_read();
 	}
