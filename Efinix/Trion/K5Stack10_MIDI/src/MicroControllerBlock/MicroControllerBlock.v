@@ -175,7 +175,7 @@ endgenerate
 //-----------------------------------------------------------------------------
 // Mcb Cache Memory
 // SPI Rom から読み込んだデータを RAM に格納する目的で使用する。
-// Write Enable は Csr で制御しているため、Enable Assert -> Dissert にしなければ、
+// Write Enable は Csr で制御しており Enable Assert -> Dissert にしなければ、
 // 次の書き込みが行われないようにした。
 //-----------------------------------------------------------------------------
 localparam lpMcmDepth 		= 512;
@@ -189,9 +189,6 @@ wire wMcmFull, wMcmEmp;
 wire wMcmRvd;
 //
 reg  rMcmWeOneShot;
-reg  [1:0] rMUfiRdyEdge;
-reg  qMUfiRdyPos;
-reg  rTarRun;
 
 SyncFifoController #(
     .pFifoDepth(lpMcmDepth),
@@ -214,23 +211,15 @@ begin
 	if (iSRST) 			rMcmWeOneShot <= 1'b0;
 	else if (wRamEnCsr)	rMcmWeOneShot <= 1'b0;
 	else 				rMcmWeOneShot <= 1'b1;
-
-	if (iSRST)				rTarRun <= 1'b0;
-	else if (qMUfiRdyPos) 	rTarRun <= 1'b1;
-	else 					rTarRun <= 1'b0;
-
-	rMUfiRdyEdge <= {rMUfiRdyEdge[0], iMUfiRdy};
 end
 
 always @*
 begin
 	qMcmWd		<=  {wRamAdrsCsr,wRamWdCsr};
 	qMcmWe		<= &{~wMcmFull,wRamEnCsr,rMcmWeOneShot};
-	qMcmRe		<= &{iMUfiRdy,~wMcmEmp,rTarRun};
+	qMcmRe		<= &{iMUfiRdy,~wMcmEmp};
 	qRamFullCsr	<=   wMcmFull;
 	qRamEmpCsr	<=   wMcmEmp;
-	//
-	qMUfiRdyPos		<= (rMUfiRdyEdge == 2'b01);
 end
 
 assign oMUfiWd			= wMcmRd[15:0];
