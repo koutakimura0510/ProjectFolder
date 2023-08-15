@@ -61,13 +61,17 @@ GpioCsr #(
 //-----------------------------------------------------------------------------
 // IO Part
 //-----------------------------------------------------------------------------
+genvar gpioX;
 reg [pGpioWidth-1:0] rGpioR; 		assign oGpioR = rGpioR;
 
-always @(posedge iSCLK)
-begin
-	rGpioR[0] <= wGpioAltModeCsr[0] ? iGpioAltMode[0] : wGpioOutCtrl[0];
-	rGpioR[1] <= wGpioAltModeCsr[1] ? iGpioAltMode[1] : wGpioOutCtrl[1];
-	rGpioR[2] <= wGpioAltModeCsr[2] ? iGpioAltMode[2] : wGpioOutCtrl[2];
-end
+generate
+	for (gpioX = 0; gpioX < pGpioWidth; gpioX = gpioX + 1)
+	begin
+		always @(posedge iSCLK)
+		begin
+			rGpioR[gpioX] <= wGpioAltModeCsr[gpioX] ? iGpioAltMode[gpioX] : wGpioOutCtrl[gpioX];
+		end
+	end
+endgenerate
 
 endmodule
