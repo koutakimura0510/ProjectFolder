@@ -3,14 +3,15 @@
  * Author  koutakimura
  * -
  * UartRX のテストベンチ
- * 
+ * tb module が UART TX の役割を持つ
  *-----------------------------------------------------------------------------*/
 module UartRX_tb;
 
 //----------------------------------------------------------
 // System Clk Generator
 //----------------------------------------------------------
-localparam	lpCLKCycle = 2;	// CLK サイクル
+localparam lpCLKCycle = 2;	// CLK サイクル
+localparam lpUartSendData = 'b1001110101;	// LSB Farst
 
 reg	rCLK = 0;
 reg	rRST = 1;
@@ -30,18 +31,19 @@ endtask //
 
 
 //-----------------------------------------------------------------------------
-// I2S Gen
+// UART RX
 //-----------------------------------------------------------------------------
 reg  [9:0] rUartRX;
 wire [7:0] wRd;
 wire wVd;
-reg  [1:0] rCnt;
+reg  [7:0] rCnt;
 
 UartRX #(
-	.pBaudRate(2)
+	.pBaudRateGenDiv(8)
 ) UartRX (
 	.iUartRX(rUartRX[9]),
 	//
+	.oUartRxThru(),
 	.oRd(wRd),
 	.oVd(wVd),
 	//
@@ -52,11 +54,11 @@ UartRX #(
 always @(negedge rCLK)
 begin
 	if (rRST) 				rCnt <= 0;
-	else if (rCnt==2'd2)	rCnt <= 0;
+	else if (rCnt==8)		rCnt <= 0;
 	else 					rCnt <= rCnt + 1'b1;;
 
 	if (rRST) 				rUartRX <= 'b1001110101;
-	else if (rCnt==2'd2)	rUartRX <= {rUartRX[8:0], 1'b1};
+	else if (rCnt==8)		rUartRX <= {rUartRX[8:0], 1'b1};
 	else 					rUartRX <= rUartRX;
 end
 

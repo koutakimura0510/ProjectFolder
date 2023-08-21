@@ -14,7 +14,7 @@ TBTOP 	 = UartRX_tb
 TBTOPRTL = UartRX_tb.v
 
 # Tb Instance.v
-TBRTL 	 = UartRX.v
+TBRTL 	 = ../UartRX.v
 
 sim:
 	iverilog -o $(TBOUT) -s $(TBTOP) $(TBRTL) $(TBTOPRTL)
