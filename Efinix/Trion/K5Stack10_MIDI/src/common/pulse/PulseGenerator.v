@@ -1,12 +1,12 @@
 //----------------------------------------------------------
 // Pulse信号生成モジュール
+// 指定タイミングで Pulse 信号を出力
 // 
 // 2022/7/21
-// 指定タイミングで Pulse 信号を出力
+// 23-08-19 v1.01: パルス生成ロジックの修正、ロジック規模縮小
 //----------------------------------------------------------
 module PulseGenerator #(
-    parameter 		pSysClk  	= 25000000, // 分周クロックの値を指定
-    parameter [7:0]	pTimeCke 	= 8'd1,     // Enable 出力の時間指定
+    parameter 		pDivClk  	= 25000000, // 分周クロックの値を指定
 	parameter [0:0] pStartPulse = 1'b1		// 起動時の Pulse の High/Low 指定
 )(
     output  oPulse,
@@ -18,46 +18,27 @@ module PulseGenerator #(
 //----------------------------------------------------------
 // reg Bit Length
 //----------------------------------------------------------
-localparam 						lpCtuCNTBits= f_detect_bitwidth(pSysClk);
-localparam [lpCtuCNTBits-1:0] 	lpSysCnt 	= pSysClk-1'b1;
-localparam [lpCtuCNTBits-1:0] 	lpRstCnt 	= 0;
+localparam 						lpCtuCNTBits	= f_detect_bitwidth(pDivClk);
+localparam [lpCtuCNTBits-1:0] 	lpTmpCountMax	= pDivClk - 1'b1;
+localparam [lpCtuCNTBits-1:0] 	lpTmpCountRst	= 0;
 
 
 //----------------------------------------------------------
 // Cke Counter
 //----------------------------------------------------------
 reg [lpCtuCNTBits-1:0] rTmpCount;
-reg qCke;
+reg qRst, qCke;
 
 always @( posedge iCLK )
 begin
-    if (iRST)    rTmpCount <= lpRstCnt;
-    else if (qCke)  rTmpCount <= lpRstCnt;
-    else            rTmpCount <= rTmpCount + 1'b1;
+    if (qRst)	rTmpCount <= lpTmpCountRst;
+    else 		rTmpCount <= rTmpCount + 1'b1;
 end
 
 always @*
 begin
-    qCke = rTmpCount == lpSysCnt;
-end
-
-//----------------------------------------------------------
-// 指定時間カウント時 Cke 出力
-//----------------------------------------------------------
-reg [7:0] rTimeCkeCnt;
-reg qTimeCke;
-
-always @( posedge iCLK )
-begin
-    if (iRST)        rTimeCkeCnt <= 8'd0;
-    else if (qTimeCke)  rTimeCkeCnt <= 8'd0;
-    else if (qCke)      rTimeCkeCnt <= rTimeCkeCnt + 1'b1;
-    else                rTimeCkeCnt <= rTimeCkeCnt;
-end
-
-always @*
-begin
-    qTimeCke <= pTimeCke == rTimeCkeCnt;
+	qCke <= (rTmpCount == lpTmpCountMax);
+	qRst <= |{iRST,qCke};
 end
 
 //----------------------------------------------------------
@@ -68,8 +49,8 @@ reg  rPulse;			assign oPulse = rPulse;
 always @(posedge iCLK)
 begin
 	if (iRST) 		rPulse <= pStartPulse;
-	else if (qTimeCke)	rPulse <= ~rPulse;
-	else 				rPulse <= rPulse;
+	else if (qCke)	rPulse <= ~rPulse;
+	else 			rPulse <=  rPulse;
 end
 
 

@@ -18,6 +18,7 @@ module SynthesizerCsr #(
 	parameter pCsrAdrsWidth		= 8,
 	parameter pCsrActiveWidth 	= 8,
 	parameter pDmaAdrsWidth 	= 16,
+	parameter pMidiChannel		= 4,
 	parameter p_non_variable 	= 0
 )(
 	// Bus Master Read
@@ -33,11 +34,23 @@ module SynthesizerCsr #(
 	output	[pDmaAdrsWidth-1:0] oDmaAdrsEnd,
 	output	[pDmaAdrsWidth-1:0] oDmaAdrsAdd,
 	input	iDmaDone,
+	// Csr Input
+	input 	[15:0] 	iAudioFreq,
+	input 	iAudioPlay,
+	input	[(pMidiChannel*7)-1:0] iOnNoteNumber,
+	input 	iUartRxThru,
 	// CLK RST
 	input 	iSRST,
 	input 	iSCLK
 );
 
+
+//-----------------------------------------------------------------------------
+// localparam
+//-----------------------------------------------------------------------------
+localparam [pDmaAdrsWidth-1:0] lpDmaAdrsEndInit = 44100-1;
+localparam [pDmaAdrsWidth-1:0] lpDmaAdrsAddInit = 1;
+genvar x;
 
 //----------------------------------------------------------
 // レジスタマップ
@@ -45,10 +58,9 @@ module SynthesizerCsr #(
 reg rI2SModuleRst;							assign oI2SModuleRst	= rI2SModuleRst;	// 
 reg rDmaEnable;								assign oDmaEnable 		= rDmaEnable;		// DMA Function Enable
 reg rDmaCycleEnable;						assign oDmaCycleEnable	= rDmaCycleEnable;	// Dma Auto Cycle Mode
-reg [pDmaAdrsWidth-1:0] rDmaAdrsStart;		assign oDmaAdrsStart 	= rDmaAdrsStart;	// 
-reg [pDmaAdrsWidth-1:0] rDmaAdrsEnd;		assign oDmaAdrsEnd 		= rDmaAdrsEnd;		// 
-reg [pDmaAdrsWidth-1:0] rDmaAdrsAdd;		assign oDmaAdrsAdd 		= rDmaAdrsAdd;		// 
-//
+reg [pDmaAdrsWidth-1:0] rDmaAdrsStart;		assign oDmaAdrsStart 	= rDmaAdrsStart;	// Dma Start Adrs
+reg [pDmaAdrsWidth-1:0] rDmaAdrsEnd;		assign oDmaAdrsEnd 		= rDmaAdrsEnd;		// Dma End Adrs
+reg [pDmaAdrsWidth-1:0] rDmaAdrsAdd;		assign oDmaAdrsAdd 		= rDmaAdrsAdd;		// Dma Add Adrs
 //
 reg qCsrWCke00;
 reg qCsrWCke04;
@@ -65,8 +77,8 @@ begin
 		rDmaEnable 		<= 1'b0;
 		rDmaCycleEnable	<= 1'b0;
 		rDmaAdrsStart 	<= {pDmaAdrsWidth{1'b0}};
-		rDmaAdrsEnd 	<= {pDmaAdrsWidth{1'b1}};
-		rDmaAdrsAdd 	<= {pDmaAdrsWidth{1'b0}};
+		rDmaAdrsEnd 	<= lpDmaAdrsEndInit;
+		rDmaAdrsAdd 	<= lpDmaAdrsAddInit;
 	end
 	else
 	begin
@@ -89,6 +101,12 @@ begin
 	qCsrWCke14 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
 end
 
+generate
+begin
+	
+end
+endgenerate
+
 //----------------------------------------------------------
 // Csr Read
 //----------------------------------------------------------
@@ -104,6 +122,10 @@ begin
 		'h0C:	 rSUsiRd <= {{(32 - pDmaAdrsWidth){1'b0}}, rDmaAdrsStart};
 		'h10:	 rSUsiRd <= {{(32 - pDmaAdrsWidth){1'b0}}, rDmaAdrsEnd};
 		'h14:	 rSUsiRd <= {{(32 - pDmaAdrsWidth){1'b0}}, rDmaAdrsAdd};
+		//
+		'h80:	 rSUsiRd <= {{(32 - 16){1'b0}}, iAudioFreq};
+		'h84:	 rSUsiRd <= {{(32 - 16){1'b0}}, iAudioPlay};
+		'hfC:	 rSUsiRd <= {{(32 - 1){1'b0}}, iUartRxThru};
 		default: rSUsiRd <= iSUsiWd;
 	endcase
 end

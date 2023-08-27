@@ -8,13 +8,13 @@
 TBOUT    = tbwave.out
 
 # Tb Top Module名
-TBTOP 	 = I2SSignalGen_tb
+TBTOP 	 = MidiDecoder_tb
 
 # Tb Top Module.v
-TBTOPRTL = I2SSignalGen_tb.v
+TBTOPRTL = MidiDecoder_tb.v
 
 # Tb Instance.v
-TBRTL 	 = I2SSignalGen.v
+TBRTL 	 = ../MidiDecoder.v ../MidiChannel.v ../MidiDecodeUnit.v
 
 sim:
 	iverilog -o $(TBOUT) -s $(TBTOP) $(TBRTL) $(TBTOPRTL)

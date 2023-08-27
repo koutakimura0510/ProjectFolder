@@ -53,18 +53,14 @@ static void system_initialize(void)
  *-----------------------------------------------------------------------------*/
 void main()
 {
-	uint16_t sin_buff[8] = {262,294,329,349,391,440,493,523};
-	uint8_t rp = 0;
 	system_initialize();
 	
 	while (1) {
 		led_auto_flash(100, TIMER_REG_COUNT1);
-//		usi_write_cmd(sin_buff[rp],	SYNTH_REG_DMA_ADRS_ADD);
-		rp++;
-		rp &= 0x07;
+		usi_read_printf(SYNTH_REG_AUDIO_FREQ);
 //		bsp_uDelay(100000);
 //		cache_write(2, 60000);
-		flash_id_read();
+		// flash_id_read();
 		// flash_write();
 		// flash_read();
 	}

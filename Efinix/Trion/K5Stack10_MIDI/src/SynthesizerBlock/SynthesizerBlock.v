@@ -1,11 +1,8 @@
 /*-----------------------------------------------------------------------------
- * Create  2023/4/9
- * Author  kouta kimura
- * -
  * FM音源参考記事 : https://synth-voice.sakura.ne.jp/synth-voice/html5/voice-lab00.html
- *
- * v1.00 : new Relaese
- *  
+ * 
+ * 23-04-09 v1.00 : new release
+ * 23-08-26 v1.10 : MIDI デコード回路追加
  *-----------------------------------------------------------------------------*/
 module SynthesizerBlock #(
 	// USI
@@ -19,7 +16,8 @@ module SynthesizerBlock #(
 	parameter pUfiAdrsBusWidth	= 32,
 	parameter [3:0] pUfiAdrsMap	= 'h1,
 	parameter pDmaAdrsWidth		= 18,
-	parameter pDmaBurstLength	= 256
+	parameter pDmaBurstLength	= 256,
+	parameter pMidiChannel		= 2
 	// parameter pUfiEnableBit 	= 32,
 )(
 	// MIPI Input Ctrl
@@ -38,9 +36,9 @@ module SynthesizerBlock #(
 	input	[pUfiDqBusWidth-1:0] 	iMUfiRd,
 	input	[pUfiAdrsBusWidth-1:0] 	iMUfiAdrs,
 	// Ufi Bus Master Write
-	output	[pUfiDqBusWidth-1:0] 	oMUfiWd,
-	output	[pUfiAdrsBusWidth-1:0] 	oMUfiAdrs,
-	input	iMUfiRdy,
+	output	[(pMidiChannel*pUfiDqBusWidth)-1:0] 	oMUfiWd,
+	output	[(pMidiChannel*pUfiAdrsBusWidth)-1:0] 	oMUfiAdrs,
+	input	[pMidiChannel-1:0]	iMUfiRdy,
 	// CLK Reset
 	input  iMRST,
 	input  iSRST,
@@ -48,6 +46,14 @@ module SynthesizerBlock #(
 	input  iMCLK,
 	input  iSCLK
 );
+
+
+//---------------------------------------------------------------------------
+// localparam
+//---------------------------------------------------------------------------
+localparam lpAudioBitDepth = 16;
+
+genvar x;
 
 //-----------------------------------------------------------------------------
 // Csr Space
@@ -58,7 +64,12 @@ wire wDmaCycleEnableCsr;
 wire [pDmaAdrsWidth-1:0] wDmaAdrsStartCsr;
 wire [pDmaAdrsWidth-1:0] wDmaAdrsEndCsr;
 wire [pDmaAdrsWidth-1:0] wDmaAdrsAddCsr;
-wire wDmaDoneCsr;
+wire [pMidiChannel-1:0] wDmaDoneCsr;
+//
+reg  qAudioFreqCsr;
+reg  qAudioPlayCsr;
+reg  qUartRxThruCsr;
+reg [(pMidiChannel*7)-1:0] qOnNoteNumberCsr;
 
 SynthesizerCsr #(
 	.pBlockAdrsWidth(pBlockAdrsWidth),
@@ -80,6 +91,11 @@ SynthesizerCsr #(
 	.oDmaAdrsEnd(wDmaAdrsEndCsr),
 	.oDmaAdrsAdd(wDmaAdrsAddCsr),
 	.iDmaDone(wDmaDoneCsr),
+	//
+	.iAudioFreq(qAudioFreqCsr),
+	.iAudioPlay(qAudioPlayCsr),
+	.iUartRxThru(qUartRxThruCsr),
+	.iOnNoteNumber(qOnNoteNumberCsr),
     // CLK RST
 	.iSRST(iSRST),		.iSCLK(iSCLK)
 );
@@ -88,60 +104,94 @@ SynthesizerCsr #(
 //-----------------------------------------------------------------------------
 // MIDI Decorder
 //-----------------------------------------------------------------------------
-wire [15:0] wAudioFreq;
-wire 		wAudioPlay;
+wire [(pMidiChannel*7)-1:0] wOnNoteNumber;
+wire wUartRxThru;
+wire [(pMidiChannel * lpAudioBitDepth)-1:0] wAudioFreq;
+wire [pMidiChannel-1:0] wAudioPlay;
+wire [(pMidiChannel * lpAudioBitDepth)-1:0]	wAudioAmp;
 
-MIDIDecoder MIDIDecoder (
-	// External Port
+MidiDecodWrapper #(
+	.pChannel(pMidiChannel),
+	.pAudioBitDepth(lpAudioBitDepth)
+) MidiDecodWrapper (
+	// Midi Signal
 	.iMIDI(iMIDI),
-	// Sound
+	.oUartRxThru(wUartRxThru),
+	.oOnNoteNumber(wOnNoteNumber),
+	// Audio
 	.oAudioFreq(wAudioFreq),
 	.oAudioPlay(wAudioPlay),
+	.oAudioAmp(wAudioAmp),
 	// common
 	.iSRST(iSRST),
 	.inSRST(inSRST),
 	.iSCLK(iSCLK)
 );
 
+always @*
+begin
+	qAudioFreqCsr <= wAudioFreq[15:0];
+	qAudioPlayCsr <= wAudioPlay[0];
+	qUartRxThruCsr <= wUartRxThru;
+	qUartRxThruCsr <= wOnNoteNumber;
+end
+
 
 //-----------------------------------------------------------------------------
 // UFI Audio Data Read
 //-----------------------------------------------------------------------------
-wire [pUfiDqBusWidth-1:0] wDmaRd;
-wire wDmaRvd;
+reg  [31:0] rDmaRdCh [pMidiChannel-1:0];
+wire [pUfiDqBusWidth-1:0] wDmaRdCh [pMidiChannel-1:0];
+wire [pMidiChannel-1:0] wDmaRvd;
 reg  qDmaRe;
+reg  qDmaRdChRst;
+reg  [6:0] qNotejuge;
 
-UfibReadDmaUnit #(
-	// variable parameter
-	.pDmaAdrsWidth(pDmaAdrsWidth),
-	.pUfiDqBusWidth(pUfiDqBusWidth),
-	.pUfiAdrsBusWidth(pUfiAdrsBusWidth),
-	.pUfiAdrsMap(pUfiAdrsMap),
-	.pDmaBurstLength(pDmaBurstLength),
-	.pDmaReadDataSyncMode("async")
-) UfibReadDmaUnit (
-	// Ufi Bus Master Read
-	.iMUfiRd(iMUfiRd),		.iMUfiAdrs(iMUfiAdrs),
-	// Ufi Bus Master Write
-	.oMUfiWd(oMUfiWd),		.oMUfiAdrs(oMUfiAdrs),
-	.iMUfiRdy(iMUfiRdy),
-	// Control / Status
-	// .iDmaEnable(wDmaEnableCsr),			.iDmaCycleEnable(wDmaCycleEnableCsr),
-	// .iDmaAdrsStart(wDmaAdrsStartCsr),	.iDmaAdrsEnd(wDmaAdrsEndCsr),
-	// .iDmaAdrsAdd(wDmaAdrsAddCsr),
-	// .oDmaDone(wDmaDoneCsr),
-	.iDmaEnable(wAudioPlay),			.iDmaCycleEnable(wDmaCycleEnableCsr),
-	.iDmaAdrsStart(wDmaAdrsStartCsr),	.iDmaAdrsEnd(wDmaAdrsEndCsr),
-	.iDmaAdrsAdd(wAudioFreq),
-	.oDmaDone(wDmaDoneCsr),
-	// read data
-	.oDmaRd(wDmaRd),	.oDmaRvd(wDmaRvd),
-	.iDmaRe(qDmaRe),
-	// CLK Reset
-	.iRST(iSRST),		.inRST(inSRST),
-	.iCLK(iSCLK),		.iACLK(iMCLK)
-);
+generate
+	for (x = 0; x < pMidiChannel; x = x + 1)
+	begin : SynthUfiDmaChannel
+		UfibReadDmaUnit #(
+			// variable parameter
+			.pDmaAdrsWidth(pDmaAdrsWidth),
+			.pUfiDqBusWidth(pUfiDqBusWidth),
+			.pUfiAdrsBusWidth(pUfiAdrsBusWidth),
+			.pUfiAdrsMap(pUfiAdrsMap + x),
+			.pDmaBurstLength(pDmaBurstLength),
+			.pDmaReadDataSyncMode("async")
+		) UfibReadDmaUnit (
+			// Ufi Bus Master Read
+			.iMUfiRd(iMUfiRd),		.iMUfiAdrs(iMUfiAdrs),
+			// Ufi Bus Master Write
+			.oMUfiWd(oMUfiWd[((x+1) * pUfiDqBusWidth)-1 : (x * pUfiDqBusWidth)]),
+			.oMUfiAdrs(oMUfiAdrs[((x+1) * pUfiAdrsBusWidth)-1 : (x * pUfiAdrsBusWidth)]),
+			.iMUfiRdy(iMUfiRdy[x]),
+			// Control / Status
+			.iDmaEnable(wAudioPlay[x]),
+			.iDmaCycleEnable(wDmaCycleEnableCsr),
+			.iDmaAdrsStart(wDmaAdrsStartCsr),
+			.iDmaAdrsEnd(wDmaAdrsEndCsr),
+			.iDmaAdrsAdd(wAudioFreq[((x+1) * lpAudioBitDepth)-1 : (x * lpAudioBitDepth)]),
+			.oDmaDone(wDmaDoneCsr[x]),
+			// read data
+			.oDmaRd(wDmaRdCh[x]),
+			.oDmaRvd(wDmaRvd[x]),
+			.iDmaRe(qDmaRe),
+			// CLK Reset
+			.iRST(iSRST),		.inRST(inSRST),
+			.iCLK(iSCLK),		.iACLK(iMCLK)
+		);
 
+		always @(posedge iMCLK)
+		begin
+			if (qDmaRdChRst)		rDmaRdCh[x] <= 32'd32768;
+			else if (wDmaRvd[x])	rDmaRdCh[x] <= {16'd0,wDmaRdCh[x]};
+			// else if (wDmaRvd[x])	rDmaRdCh[x] <= (wDmaRdCh[x] * wAudioAmp[((x+1)*lpAudioBitDepth)-1:x*lpAudioBitDepth]) >> 8;
+			else 					rDmaRdCh[x]	<= rDmaRdCh[x];
+		end
+	end
+endgenerate
+
+wire [31:0] wDmaRdAdd = (rDmaRdCh[0] + rDmaRdCh[1] + rDmaRdCh[2] + rDmaRdCh[3]);
 
 //-----------------------------------------------------------------------------
 // I2S Encorder
@@ -164,26 +214,19 @@ I2SSignalGen I2SSignalGen(
 
 always @*
 begin
-	qAudioData[14:0]	<= 15'd0;
-	qAudioData[30:15] 	<= wDmaRd;
-	qAudioData[31]		<= 1'b0;
-  	qDmaRe 				<= wI2SRdy;
+	// qAudioData[14:0]	<= 15'd0;
+	// qAudioData[30:15] 	<= wAafRd;
+	qAudioData[31:0] 	<= {wDmaRdAdd[23:0],8'h00};
+	// qAafRe				<= wI2SRdy;
+  	qDmaRe				<= wI2SRdy;
+	qDmaRdChRst			<= |{iMRST,wI2SRdy};
 end
 
-//-----------------------------------------------------------------------------
-// RST Gen
-// 異なるクロックドメインのクロック切り替え用途
-//-----------------------------------------------------------------------------
-// reg [1:0] rI2SModuleRst;
 
-// always @(posedge iMCLK)
-// begin
-//   if (iMRST)   rI2SModuleRst <= 2'b11;
-//   else     rI2SModuleRst <= {rI2SModuleRst[0],wI2SModuleRstCsr};
-// end
-// always @*
-// begin
-  
-// end
+//-----------------------------------------------------------------------------
+// function
+//-----------------------------------------------------------------------------
+
+
 
 endmodule

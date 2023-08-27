@@ -18,7 +18,7 @@ void led_auto_flash(uint32_t time, uint32_t timer_csr_adrs)
 	if (t + time < now_t) {
 		t = now_t;
 		flash++;
-		flash &= 0x07;
+		flash &= 0x3f;
 		usi_write_cmd(flash, GPIO_REG_OUT_CTRL);
 	}
 }

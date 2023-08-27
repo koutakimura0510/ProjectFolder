@@ -8,10 +8,11 @@
  *-----------------------------------------------------------------------------*/
 module MIDIDecoder (
 	// MIDI Signal Input
-	input iMIDI,
+	input	iMIDI,
 	// control status
 	output [15:0] 	oAudioFreq,	// note number
 	output			oAudioPlay,	// note on / off 
+	output 			oUartRxThru,
 	// common
 	input 	iSRST,
 	input	inSRST,
@@ -21,20 +22,29 @@ module MIDIDecoder (
 
 //-----------------------------------------------------------------------------
 // MIPI Decode
+// MIDI は UART 31.25kbps で受信する。電流が流れるとき論理"0"なので、
+// 反転出力のフォトカプラを使用するか、FPGA側で論理を反転して使用する。
 //-----------------------------------------------------------------------------
+reg  		qUartRx;
 wire [7:0] 	wMidiRd;
 wire 		wMidiVd;
 
 UartRX #(
-	.pBaudRateGenDiv(3200)
+	.pBaudRateGenDiv(1600)
 ) MIPI_RX (
 	// External Port
-	.iUartRX(iMIDI),
+	.iUartRX(qUartRx),
 	// Decord Data
+	.oUartRxThru(oUartRxThru),
 	.oRd(wMidiRd),	.oVd(wMidiVd),
 	// CLK RST
 	.iRST(iSRST),	.iCLK(iSCLK)
 );
+
+always @*
+begin
+	qUartRx <= ~iMIDI;
+end
 
 //-----------------------------------------------------------------------------
 // ノートオン / ノートオフ
@@ -57,9 +67,9 @@ end
 
 always @*
 begin
-	case ({wMidiVd,wMidiRd[7:4]})
-		'h1_9:		qMidiNoteChangeCke <= 1'b1;	// ノートオン
-		'h1_8:		qMidiNoteChangeCke <= 1'b1;	// ノートオフ
+	case ({wMidiVd,wMidiRd[7:0]})
+		'h1_90:		qMidiNoteChangeCke <= 1'b1;	// ノートオン
+		'h1_80:		qMidiNoteChangeCke <= 1'b1;	// ノートオフ
 		default:	qMidiNoteChangeCke <= 1'b0;
 	endcase
 end
@@ -80,7 +90,10 @@ end
 
 always @*
 begin
-	qMidiNoteFreqCke <= &{wMidiVd,(wMidiRd[7:0] < 8'd128)};
+	casex ({rMidiNoteChange[1:0],wMidiVd,(wMidiRd[7:0] < 8'd128)})
+		'b0111:		qMidiNoteFreqCke <= 1'b1;
+		default: 	qMidiNoteFreqCke <= 1'b0;
+	endcase
 end
 
 assign oAudioFreq	= rMidiNoteFreq;

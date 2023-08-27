@@ -8,30 +8,30 @@
 // 
 //----------------------------------------------------------
 module DotSquareGen #(
-    parameter                   			pHdisplayWidth  = 11,
-    parameter                   			pVdisplayWidth  = 11,
-	parameter								pColorDepth		= 16
+	parameter	pVHAW  = 11,
+	parameter	pVVAW  = 11,
+	parameter	pColorDepth = 16
 )(
 	// Internal Port
-	output 			[pColorDepth-1:0]		oPixel,
-    input  			[pColorDepth-1:0]		iColor,		// 描画色
-    input 			[pHdisplayWidth-1:0]	iHpos,		// 現在の横幅の座標
-    input 			[pVdisplayWidth-1:0]	iVpos,		// 現在の立幅の座標
-    input signed 	[pHdisplayWidth:0]		iDLeftX,	// 描画開始 X座標 Draw X Start
-    input signed 	[pHdisplayWidth:0]		iDRightX,	// 描画終了 X座標 Draw X End
-    input signed 	[pVdisplayWidth:0]		iDTopY,		// 描画開始 Y座標 Draw Y Start
-    input signed 	[pVdisplayWidth:0]		iDUnderY,	// 描画終了 Y座標 Draw Y End
+	output	[pColorDepth-1:0]	oPixel,
+	input	[pColorDepth-1:0]	iColor,		// 描画色
+	input	[pVHAW-1:0]	iHpos,				// 現在の横幅の座標
+	input	[pVVAW-1:0]	iVpos,				// 現在の立幅の座標
+	input signed	[pVHAW:0]	iDLeftX,	// 描画開始 X座標 Draw X Start
+	input signed	[pVHAW:0]	iDRightX,	// 描画終了 X座標 Draw X End
+	input signed	[pVVAW:0]	iDTopY,		// 描画開始 Y座標 Draw Y Start
+	input signed	[pVVAW:0]	iDUnderY,	// 描画終了 Y座標 Draw Y End
 	// Clk rst
-    input									iRST,
-    input									iCLK
+	input	iRST,
+	input	iCLK
 );
 
 
 //-----------------------------------------------------------------------------
 // 符号拡張
 //-----------------------------------------------------------------------------
-wire signed [pHdisplayWidth:0] wHpos = {1'b0, iHpos};
-wire signed [pVdisplayWidth:0] wVpos = {1'b0, iVpos};
+wire signed [pVHAW:0] wHpos = {1'b0, iHpos};
+wire signed [pVVAW:0] wVpos = {1'b0, iVpos};
 
 
 //-----------------------------------------------------------------------------

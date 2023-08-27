@@ -12,6 +12,7 @@
 # PLL Constraints
 #################
 create_clock -period 20.0000 iSCLK
+create_clock -period 111.1111 iVCLK
 create_clock -period 44.2478 iMCLK
 
 # 非同期信号の場合は下記
