@@ -18,28 +18,51 @@
  *-----------------------------------------------------------------------------*/
 module VideoPixelGenUnit #(
 	// Display Size
-    parameter	pVHA = 480,
-    parameter	pVVA = 272,
-	parameter	pVHAW = 11,		// 11bit だと FHD まで
+	parameter	pVHA = 480,
+	parameter	pVVA = 272,
+	parameter	pVHAW = 11,
 	parameter	pVVAW = 11,
-	// Color Depth
-	parameter	pColorDepth = 16,
+	// UFI
+	parameter 	pUfiDqBusWidth 		= 16,
+	parameter 	pUfiAdrsBusWidth 	= 32,
+	parameter 	[3:0] pUfiAdrsMap	= 'h2,
+	parameter 	pDmaAdrsWidth 		= 18,
+	parameter 	pDmaBurstLength 	= 256,
+	// Pixel
+	parameter	pColorDepth 		= 16,
+	parameter	pMapChipSize 		= 32,	// マップチップの基本サイズ
+	parameter	pMapChipSft 		= f_detect_bitwidth(pMapChipSize),
+	parameter	pMapChipIdNum		= 10,	// マップチップの個数
 	// non valiable
-	parameter	pOutColorDepth = pColorDepth - (pColorDepth / 4) // alpha値を除いたbit幅
+	parameter	pOutColorDepth 		= pColorDepth - (pColorDepth / 4) // alpha値を除いたbit幅
 )(
+	// Ufi Bus Master Read
+	input	[pUfiDqBusWidth-1:0] 	iMUfiRd,
+	input	[pUfiAdrsBusWidth-1:0] 	iMUfiAdrs,
+	// input	[pUfiDqBusWidth-1:0] 	iMUfiRd2,
+	// input	[pUfiAdrsBusWidth-1:0] 	iMUfiAdrs2,
+	// Ufi Bus Master Write
+	output	[pUfiDqBusWidth-1:0] 	oMUfiWd,
+	output	[pUfiAdrsBusWidth-1:0] 	oMUfiAdrs,
+	input							iMUfiRdy,
+	// output	[pUfiDqBusWidth-1:0] 	oMUfiWd2,
+	// output	[pUfiAdrsBusWidth-1:0] 	oMUfiAdrs2,
+	// input							iMUfiRdy2,
 	// Csr SceneChange
     input	[pColorDepth-1:0]	iSceneColor,
-	input	[6:0]	iSceneFrameTiming,
-	input 	iSceneFrameAddEn,
-	input 	iSceneFrameSubEn,
-    input 	iSceneFrameRst,
-	output	oSceneAlphaMax,
-	output 	oSceneAlphaMin,
+	input	[6:0]				iSceneFrameTiming,
+	input 						iSceneFrameAddEn,
+	input 						iSceneFrameSubEn,
+    input 						iSceneFrameRst,
+	output						oSceneAlphaMax,
+	output 						oSceneAlphaMin,
 	// Fifo I/F
 	output	[pColorDepth-1:0] oRd,
 	input	iRe,
     output	oRvd,
 	output  oEmp,
+	// Control Status
+	output	oFe,
     // CLK Reset
     input	iRST,
     input	inRST,
@@ -62,12 +85,12 @@ localparam lpPdfDepth 		= 512;
 localparam lpPdfBitWidth 	= pColorDepth;
 
 reg  [lpPdfBitWidth-1:0]	qPdfWd;
-reg		qPdfWe;
-wire	wPdfFull;
+reg							qPdfWe;
+wire						wPdfFull;
 wire [lpPdfBitWidth-1:0]	wPdfRd;
-wire 	wPdfRvd;
-reg  	qPdfRe;
-wire 	wPdfEmp;
+wire 						wPdfRvd;
+reg  						qPdfRe;
+wire 						wPdfEmp;
 
 SyncFifoController #(
 	.pFifoDepth(lpPdfDepth),
@@ -93,6 +116,12 @@ assign oRd  = wPdfRd;
 assign oRvd = wPdfRvd;
 assign oEmp = wPdfEmp;
 
+
+//-----------------------------------------------------------------------------
+// Map Id
+//-----------------------------------------------------------------------------
+
+
 //-----------------------------------------------------------------------------
 // PixelDrawPosition(Pdp)
 //-----------------------------------------------------------------------------
@@ -100,41 +129,113 @@ wire [pVHAW-1:0] 	wPdpHpos;
 wire [pVVAW-1:0] 	wPdpVpos;
 wire [pVHAW-1:4] 	wPdpHposBs;
 wire [pVVAW-1:4] 	wPdpVposBs;
-wire 	wPdpFe;
-reg		qPdpCke;
+wire 				wPdpFe;						assign oFe = wPdpFe;
+reg					qPdpCke;
 
 PixelDrawPosition #(
 	.pVHAW(pVHAW),
 	.pVVAW(pVVAW),
 	.pMapChipBasicBs(4)
 ) PixelDrawPosition (
-	// Vide Para Input
+	// Video Para Input
 	.iVha(lpVHA),			.iVva(lpVVA),
 	// Video Pos Output
 	.oHpos(wPdpHpos),		.oVpos(wPdpVpos),
 	.oHposBs(wPdpHposBs),	.oVposBs(wPdpVposBs),
 	.oFeFast(wPdpFe),
 	// Common
-	.iRST(iRST),	.iCKE(1'b1),	.iCLK(iCLK)
+	.iRST(iRST),	.iCKE(qPdpCke),	.iCLK(iCLK)
 );
+
+//-----------------------------------------------------------------------------
+// VideoDmaChipRead
+//-----------------------------------------------------------------------------
+wire [pUfiDqBusWidth-1:0]	wDcrInfoMapChipWd;
+wire [pDmaAdrsWidth-1:0] 	wDcrInfoMapChipWa;
+wire 						wDcrInfoMapChipWe;
+wire [pVHAW-1:0]			qDcrInfoLine;
+wire [9:0] 					qDcrInfoMapChipId;
+wire 	 					qDcrInfoMapChipIdRe;
+
+VideoDmaChipRead #(
+	.pUfiDqBusWidth(pUfiDqBusWidth),
+	.pUfiAdrsBusWidth(pUfiAdrsBusWidth),
+	.pUfiAdrsMap(pUfiAdrsMap),
+	.pDmaAdrsWidth(pDmaAdrsWidth),
+	.pDmaBurstLength(pDmaBurstLength),
+	.pColorDepth(pColorDepth),
+	.pMapChipSize(pMapChipSize),
+	.pMapChipIdNum(pMapChipIdNum)
+) VideoDmaChipRead (
+	// Ufi Bus Master Read
+	.iMUfiRd(iMUfiRd),		.iMUfiAdrs(iMUfiAdrs),
+	// Ufi Bus Master Write
+	.oMUfiWd(oMUfiWd),		.oMUfiAdrs(oMUfiAdrs),
+	.iMUfiRdy(iMUfiRdy),
+	// Info
+	.oInfoMapChipWd(wDcrInfoMapChipWd),
+	.oInfoMapChipWa(wDcrInfoMapChipWa),
+	.oInfoMapChipWe(wDcrInfoMapChipWe),
+	.iInfoLine(qDcrInfoLine),
+	.iInfoMapChipId(qDcrInfoMapChipId),
+	.iInfoMapChipIdRe(),
+	// Common
+	.iRST(iRST),	.inRST(inRST),
+	.iCLK(iCLK)
+);
+
+always @*
+begin
+	qPdfWd  			<= wDcrInfoMapChipWd;
+	qPdfWe  			<= ~wPdfFull & wDcrInfoMapChipWe;
+	qPdpCke 			<= wDcrInfoMapChipWe;
+	qDcrInfoLine		<= wPdpVpos[4:0];
+	qDcrInfoMapChipId	<= wPdpHposBs;
+end
+
+//-----------------------------------------------------------------------------
+// VDMA Tester
+//-----------------------------------------------------------------------------
+
+
 
 //-----------------------------------------------------------------------------
 // Demo
 //-----------------------------------------------------------------------------
-DotSquareGen #(
-	.pVHAW(pVHAW),
-	.pVVAW(pVVAW),
-	.pColorDepth(pColorDepth)
-) DotSquareGen (
-	.oPixel(oPixel),
-	.iColor(16'hffff),
-	.iHpos(wPdpHpos),
-	.iVpos(wPdpVpos),
-	.iDLeftX(1),
-	.iDRightX(33),
-	.iDTopY(272-1-32),
-	.iDUnderY(272-1)
-);
+// wire [15:0] wDsgPd;
+// wire 		wDsgPv;
+// reg  [8:0]	rDlx;
+// reg  [8:0]	rDrx;
+
+// DotSquareGen #(
+// 	.pVHAW(pVHAW),
+// 	.pVVAW(pVVAW),
+// 	.pColorDepth(pColorDepth)
+// ) DotSquareGen (
+// 	// Pixel Output
+// 	.oPd(wDsgPd),			.oPv(wDsgPv),
+// 	// Control Status
+// 	.iColor(16'hffff),
+// 	.iHpos(wPdpHpos),		.iVpos(wPdpVpos),
+// 	.iDLeftX(rDrx-32),		.iDRightX(rDrx),
+// 	.iDTopY(0),				.iDUnderY(32),
+// 	// common
+// 	.iRST(iRST),			.iCLK(iCLK)
+// );
+
+// always @(posedge iCLK)
+// begin
+// 	if (iRST) 			rDlx <= 9'd0;
+// 	else if (wPdpFe)	rDrx <= rDrx + 4'd4;
+// 	else 				rDrx <= rDrx;
+// end
+
+// always @*
+// begin
+// 	qPdfWd  <= wDsgPd;
+// 	qPdfWe  <= ~wPdfFull;
+// 	qPdpCke <= ~wPdfFull;
+// end
 
 //-----------------------------------------------------------------------------
 // キャラクター(Player,NPC)の座標データ算出
@@ -363,6 +464,60 @@ DotSquareGen #(
 // 	// 前段 にデータ受付許可発行
 // 	qVpgDemoEdd		<= (~wPixelMargeFull);
 // end
+
+//-----------------------------------------------------------------------------
+// function
+//-----------------------------------------------------------------------------
+function integer f_detect_bitwidth;
+	input integer number;
+	integer bitwidth;
+	integer bitcnt;
+	integer	i;
+	begin
+		bitcnt = 0;
+		for (i = 0; i < 32; i = i+1 )
+		begin
+			if (number[i]) 
+			begin
+				bitcnt++;
+			end
+		end
+
+		if (bitcnt == 1)
+		begin
+			for (i = 0; i < 32; i = i+1 )
+			begin
+				if (number[i]) 
+				begin
+					f_detect_bitwidth = i+1;
+				end
+			end
+
+			if (f_detect_bitwidth != 1)
+			begin
+				f_detect_bitwidth = f_detect_bitwidth - 1;
+			end
+		end
+		else
+		begin
+			bitwidth = 0;
+			if (number == 0)
+			begin
+				f_detect_bitwidth = 1;
+			end
+			else
+			begin
+				while (number != 0)
+				begin
+					bitwidth++;
+					number = number >> 1;
+			end
+			f_detect_bitwidth = bitwidth;
+			end
+		end
+	end
+endfunction
+
 
 endmodule
 

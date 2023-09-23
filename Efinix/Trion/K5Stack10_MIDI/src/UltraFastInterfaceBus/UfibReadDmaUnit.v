@@ -12,11 +12,11 @@
  *-----------------------------------------------------------------------------*/
 module UfibReadDmaUnit #(
 	// variable parameter
-	parameter pDmaAdrsWidth 		= 18,
-	parameter pUfiActiveAdrsWidth 	= 24,
-	parameter [3:0] pUfiAdrsMap		= 'h01,	// Ufi Block ID
 	parameter pUfiDqBusWidth		= 16,	// バスのデータ幅は、使用する外部RAMのデータ幅と合わせている
 	parameter pUfiAdrsBusWidth		= 32,
+	parameter pUfiActiveAdrsWidth 	= 24,
+	parameter [3:0] pUfiAdrsMap		= 'h01,	// Ufi Block ID
+	parameter pDmaAdrsWidth 		= 18,
 	parameter pDmaBurstLength 		= 256,
 	parameter pDmaReadDataSyncMode	= "sync",	// async or sync
 	//
@@ -31,7 +31,7 @@ module UfibReadDmaUnit #(
 	input							iMUfiRdy,
 	//
 	// Control / Status
-	input							iDmaEnable,
+	input							iDmaEnable,		// Enable 後は、DmaDone が Assertされるまで、"H" を維持しなければならない
 	input							iDmaCycleEnable,
 	input	[pDmaAdrsWidth-1:0]		iDmaAdrsStart,
 	input	[pDmaAdrsWidth-1:0]		iDmaAdrsEnd,
@@ -39,6 +39,7 @@ module UfibReadDmaUnit #(
 	output 							oDmaDone,
 	// read data
 	output	[pUfiDqBusWidth-1:0]	oDmaRd,
+	output	[pDmaAdrsWidth-1:0]		oDmaRa,
 	output 							oDmaRvd,
 	input 							iDmaRe,
 	// CLK Reset
@@ -53,8 +54,7 @@ module UfibReadDmaUnit #(
 // UFI Bus Read Data
 //-----------------------------------------------------------------------------
 localparam lpDdrDepth 			= 256;
-localparam lpDdrBitWidth 		= pUfiDqBusWidth;
-localparam lpDdrRemaingCntBorder= (lpDdrDepth / 2) - 1;
+localparam lpDdrBitWidth 		= pUfiDqBusWidth + pUfiAdrsBusWidth;
 
 reg  [lpDdrBitWidth-1:0] 		qDdrWd;
 reg 							qDdrWe;
@@ -86,8 +86,7 @@ else
 begin : ASyncDmaDataReceiver
 	ASyncFifoController #(
 		.pFifoDepth(lpDdrDepth),
-		.pFifoBitWidth(lpDdrBitWidth),
-		.pFifoRemaingCntBorder(lpDdrRemaingCntBorder)
+		.pFifoBitWidth(lpDdrBitWidth)
 	) DmaDataReceiver (
 		// write
 		.iWd(qDdrWd),		.iWe(qDdrWe),
@@ -106,12 +105,13 @@ endgenerate
 
 always @*
 begin
-	qDdrWd <= iMUfiRd;
+	qDdrWd <=  {iMUfiAdrs,iMUfiRd};
 	qDdrWe <= &{iMUfiAdrs[31],(pUfiAdrsMap == iMUfiAdrs[28:25]),~wDdrFull};
 	qDdrRe <= &{iDmaRe,~wDdrEmp};
 end
 
-assign oDmaRd	= wDdrRd;
+assign oDmaRd	= wDdrRd[pUfiDqBusWidth-1:0];
+assign oDmaRa	= wDdrRd[pUfiAdrsBusWidth-1:pUfiDqBusWidth];
 assign oDmaRvd	= wDdrRvd;
 
 //-----------------------------------------------------------------------------
@@ -178,6 +178,7 @@ end
 //-----------------------------------------------------------------------------
 // DMA Adrs
 reg [pDmaAdrsWidth-1:0] rDmaAdrs;
+reg [pDmaAdrsWidth-1:0] rDmaAdrsEnd;
 reg [pDmaAdrsWidth-1:0] rDmaAdrsCycleOver;
 reg	qDmaAdrsRst, qDmaAdrsCke;
 // DMA RUN
@@ -198,6 +199,9 @@ begin
 	else if (qDmaAdrsCke)	rDmaAdrs <= rDmaAdrs + iDmaAdrsAdd;
 	else 					rDmaAdrs <= rDmaAdrs;
 
+	if (qDmaAdrsRst)		rDmaAdrsEnd <= iDmaAdrsEnd;
+	else 					rDmaAdrsEnd <= rDmaAdrsEnd;
+
 	if (qDmaLatencyRst)		rDmaLatency <= 2'b00;
 	else if (iDmaEnable)	rDmaLatency <= rDmaLatency + 1'b1;
 	else 					rDmaLatency <= rDmaLatency;
@@ -207,7 +211,7 @@ begin
 	else 					rDmaDone <= 1'b0;
 
 	if (iRST) 					rDmaAdrsCycleOver <= {pDmaAdrsWidth{1'b0}};		// サイクル動作 かつ アドレス増加がオーバーラップするとき
-	else if (qDmaAdrsOverCke)	rDmaAdrsCycleOver <= rDmaAdrs - iDmaAdrsEnd;	// End の数値をオーバーした分だけ、次サイクルの Start アドレスとする。
+	else if (qDmaAdrsOverCke)	rDmaAdrsCycleOver <= rDmaAdrs - rDmaAdrsEnd;	// End の数値をオーバーした分だけ、次サイクルの Start アドレスとする。
 	else 						rDmaAdrsCycleOver <= rDmaAdrsCycleOver;			// 例：アドレスEnd 255, Add = 6 のときなど 258 - 255 = 3 から開始する
 end
 
@@ -215,7 +219,7 @@ always @*
 begin
 	qDmaAdrsRst 	<= ~rDmaRun;
 	qDmaLatencyRst 	<= |{iRST,rDmaRun};
-	qDmaDoneCke 	<=  (iDmaAdrsEnd <= rDmaAdrs);
+	qDmaDoneCke 	<=  (rDmaAdrsEnd <= rDmaAdrs);
 	qDmaAdrsCke		<= &{~wDdtFull,rDmaRun,~qDmaDoneCke};
 	qDmaAdrsOverCke	<= &{qDmaDoneCke,iDmaCycleEnable};
 

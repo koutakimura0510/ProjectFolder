@@ -8,7 +8,7 @@
 module ASyncFifoController #(
     parameter 	pFifoDepth		= 16,		// FIFO BRAMのサイズ指定
     parameter 	pFifoBitWidth	= 8,		// bitサイズ
-	parameter	pFifoRemaingCntBorder	= 127
+	parameter	pFifoRemaingCntBorder	= pFifoDepth / 2
 )(
 	input   [pFifoBitWidth-1:0] iWd,	// write data
 	input	iWe,						// write enable 有効データ書き込み

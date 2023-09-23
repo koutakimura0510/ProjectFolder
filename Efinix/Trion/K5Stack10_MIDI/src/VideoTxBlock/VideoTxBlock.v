@@ -29,13 +29,14 @@ module VideoTxBlock #(
     parameter pVVS	= 10		// Video Vertical Sync
 )(
 	// VIDEO Output Signal Ctrl
-	output [7:3]	oVIDEO_R,
-	output [7:2]	oVIDEO_G,
-	output [7:3]	oVIDEO_B,
+	output [7:0]	oVIDEO_R,
+	output [7:0]	oVIDEO_G,
+	output [7:0]	oVIDEO_B,
 	output			oVIDEO_DCK,
 	output			oVIDEO_HS,
 	output			oVIDEO_VS,
 	output			oVIDEO_DE,
+	output			oVIDEO_FE,
 	output			oVIDEO_RST,
 	// Usi Bus Master Read
 	output	[pUsiBusWidth-1:0] 	oSUsiRd,
@@ -143,6 +144,11 @@ VideoPixelGenUnit #(
 	.pVVAW(lpVVAW),
 	.pColorDepth(lpColorDepth)
 ) VideoPixelGenUnit (
+	// Ufi Bus Master Read
+	.iMUfiRd(iMUfiRd),		.iMUfiAdrs(iMUfiAdrs),
+	// Ufi Bus Master Write
+	.oMUfiWd(oMUfiWd),		.oMUfiAdrs(oMUfiWAdrs),		.iMUfiRdy(iMUfiRdy),
+	//
 	.iSceneColor(wSceneColorCsr),
 	.iSceneFrameTiming(wSceneFrameTimingCsr),
 	.iSceneFrameAddEn(wSceneFrameAddEnCsr),
@@ -166,12 +172,13 @@ localparam lpVafDepth 		= 512;
 localparam lpVafBitWidth 	= lpColorDepth;
 
 reg  [lpVafBitWidth-1:0]	qVafWd;
-reg		qVafWe;
-wire	wVafFull;
+reg							qVafWe;
+wire						wVafFull;
+wire 						wVafAlert;
 wire [lpVafBitWidth-1:0]	wVafRd;
-wire 	wVafRvd;
-reg  	qVafRe;
-wire 	wVafEmp;
+wire 						wVafRvd;
+reg  						qVafRe;
+wire 						wVafEmp;
 
 ASyncFifoController #(
 	.pFifoDepth(lpVafDepth),
@@ -180,26 +187,27 @@ ASyncFifoController #(
 	// Src Fifo Side
 	.iWd(qVafWd),		.iWe(qVafWe),
 	.oFull(wVafFull),
-	.oRemaingCntAlert(),
+	.oRemaingCntAlert(wVafAlert),
 	// Dst Fifo Side
 	.oRd(wVafRd),		.iRe(qVafRe),
 	.oRvd(),			.oEmp(),
 	// common
-	.inARST(inRST),		.iWCLK(iSCLK),	.iRCLK(iVCLK)
+	.inARST(inSRST),	.iWCLK(iSCLK),	.iRCLK(iVCLK)
 );
 
 always @*
 begin
 	qVafWd 	<= wVpgRd;
 	qVafWe 	<= wVpgRvd;
-	qVpgRe	<= ~wVafFull;
+	qVpgRe	<= (~wVafAlert);
 end
 
 //-----------------------------------------------------------------------------
 // Video Signal Generator
 //-----------------------------------------------------------------------------
-reg [2:1] rVideoHS, rVideoVS, rVideoDE;
+reg [2:1] rVideoHS, rVideoVS, rVideoDE, rVideoFE;
 wire wVideoHS, wVideoVS, wVideoDE, wVideoFE;
+reg  qVsgRst;
 
 VideoSyncGen #(
 	// Video Timing Parameter
@@ -211,7 +219,7 @@ VideoSyncGen #(
 	.oHS(wVideoHS),	.oVS(wVideoVS),
 	.oDE(wVideoDE),	.oFE(wVideoFE),
 	// common
-	.iVRST(iVRST),	.iVCLK(iVCLK)
+	.iVRST(qVsgRst),	.iVCLK(iVCLK)
 );
 
 always @(posedge iVCLK)
@@ -219,6 +227,7 @@ begin
 	rVideoHS <= {rVideoHS[1],wVideoHS};
 	rVideoVS <= {rVideoVS[1],wVideoVS};
 	rVideoDE <= {rVideoDE[1],wVideoDE};
+	rVideoFE <= {rVideoFE[1],wVideoFE};
 end
 
 always @*
@@ -226,14 +235,32 @@ begin
 	qVafRe <= wVideoDE;
 end
 
-assign oVIDEO_R		= wVafRd[15:11];
-assign oVIDEO_G		= wVafRd[10: 6];
-assign oVIDEO_B		= wVafRd[ 5: 0];
+assign oVIDEO_R		= {wVafRd[15:11],3'b000};
+assign oVIDEO_G		= {wVafRd[10: 6],2'b00};
+assign oVIDEO_B		= {wVafRd[ 5: 0],3'b000};
 assign oVIDEO_DCK 	= iVCLK;
 assign oVIDEO_HS 	= rVideoHS[2];
 assign oVIDEO_VS 	= rVideoVS[2];
 assign oVIDEO_DE 	= rVideoDE[2];
+assign oVIDEO_FE 	= rVideoFE[2];
 assign oVIDEO_RST	= 1'b1;
+
+//-----------------------------------------------------------------------------
+// Rst 
+//-----------------------------------------------------------------------------
+reg [7:0] rVRstWaitCnt;
+
+always @(posedge iVCLK)
+begin
+	if (iVRST) 			rVRstWaitCnt <= 8'd0;
+	else if (!qVsgRst)	rVRstWaitCnt <= rVRstWaitCnt;
+	else 				rVRstWaitCnt <= rVRstWaitCnt + 1'b1;
+end
+
+always @*
+begin
+	qVsgRst <= ~rVRstWaitCnt[7];
+end
 
 //-----------------------------------------------------------------------------
 // function

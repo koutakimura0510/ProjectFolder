@@ -14,7 +14,8 @@ module MicroControllerBlock #(
 	parameter pUfiAdrsBusWidth	= 32,
 	parameter [3:0] pUfiAdrsMap	= 'h0,
 	parameter pUfiEnableBit 	= 32,
-	parameter pSimlation 		= "no"
+	parameter pSimlation 		= "no",
+	parameter pOnChipMcu 		= "yes"
 )(
 	// Usi Bus Master Read
 	input	[pUsiBusWidth-1:0] iMUsiRd,
@@ -97,10 +98,12 @@ wire [15:0] wGpioDataEn;
 wire [15:0] wGpioAdrsEn;
 
 generate
-	if (pSimlation == "yes")
+	if (pSimlation == "yes" || pOnChipMcu == "no")
 	begin
-		assign oMUsiWd			= 0;
-		assign oMUsiAdrs		= 0;
+		assign wGpioWriteMsb    = 16'd0;
+		assign wGpioWriteLsb    = 16'd0;
+		assign wGpioDataEn		= 16'd0;
+		assign wGpioAdrsEn  	= 16'd0;
 	end
 	else
 	begin

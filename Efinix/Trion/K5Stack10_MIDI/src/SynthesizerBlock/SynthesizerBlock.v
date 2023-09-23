@@ -65,11 +65,13 @@ wire [pDmaAdrsWidth-1:0] wDmaAdrsStartCsr;
 wire [pDmaAdrsWidth-1:0] wDmaAdrsEndCsr;
 wire [pDmaAdrsWidth-1:0] wDmaAdrsAddCsr;
 wire [pMidiChannel-1:0] wDmaDoneCsr;
+wire [7:0] wAudioAmpCh1Csr;
+wire [7:0] wAudioAmpCh2Csr;
+wire [7:0] wAudioAmpCh3Csr;
+wire [7:0] wAudioAmpCh4Csr;
 //
-reg  qAudioFreqCsr;
-reg  qAudioPlayCsr;
-reg  qUartRxThruCsr;
-reg [(pMidiChannel*7)-1:0] qOnNoteNumberCsr;
+reg [pMidiChannel-1:0]		qAudioPlayCsr;
+reg [(pMidiChannel*7)-1:0] 	qOnNoteNumberCsr;
 
 SynthesizerCsr #(
 	.pBlockAdrsWidth(pBlockAdrsWidth),
@@ -91,10 +93,12 @@ SynthesizerCsr #(
 	.oDmaAdrsEnd(wDmaAdrsEndCsr),
 	.oDmaAdrsAdd(wDmaAdrsAddCsr),
 	.iDmaDone(wDmaDoneCsr),
+	.oAudioAmpCh1(wAudioAmpCh1Csr),
+	.oAudioAmpCh2(wAudioAmpCh2Csr),
+	.oAudioAmpCh3(wAudioAmpCh3Csr),
+	.oAudioAmpCh4(wAudioAmpCh4Csr),
 	//
-	.iAudioFreq(qAudioFreqCsr),
 	.iAudioPlay(qAudioPlayCsr),
-	.iUartRxThru(qUartRxThruCsr),
 	.iOnNoteNumber(qOnNoteNumberCsr),
     // CLK RST
 	.iSRST(iSRST),		.iSCLK(iSCLK)
@@ -102,39 +106,56 @@ SynthesizerCsr #(
 
 
 //-----------------------------------------------------------------------------
-// MIDI Decorder
+// Uart RX
+// MIDI は UART 31.25kbps で受信する。電流が流れるとき論理"0"なので、
+// 反転出力のフォトカプラを使用するか、FPGA側で論理を反転して使用する。
 //-----------------------------------------------------------------------------
-wire [(pMidiChannel*7)-1:0] wOnNoteNumber;
-wire wUartRxThru;
-wire [(pMidiChannel * lpAudioBitDepth)-1:0] wAudioFreq;
-wire [pMidiChannel-1:0] wAudioPlay;
-wire [(pMidiChannel * lpAudioBitDepth)-1:0]	wAudioAmp;
+reg  		qUartRx;
+wire [7:0] 	wMidiRd;
+wire 		wMidiVd;
 
-MidiDecodWrapper #(
-	.pChannel(pMidiChannel),
-	.pAudioBitDepth(lpAudioBitDepth)
-) MidiDecodWrapper (
-	// Midi Signal
-	.iMIDI(iMIDI),
-	.oUartRxThru(wUartRxThru),
-	.oOnNoteNumber(wOnNoteNumber),
-	// Audio
-	.oAudioFreq(wAudioFreq),
-	.oAudioPlay(wAudioPlay),
-	.oAudioAmp(wAudioAmp),
-	// common
-	.iSRST(iSRST),
-	.inSRST(inSRST),
-	.iSCLK(iSCLK)
+UartRX #(
+	.pBaudRateGenDiv(1600)
+) MidiRx (
+	// External Port
+	.iUartRX(qUartRx),
+	// Decord Data
+	.oUartRxThru(),
+	.oRd(wMidiRd),	.oVd(wMidiVd),
+	// CLK RST
+	.iRST(iSRST),	.iCLK(iSCLK)
 );
 
 always @*
 begin
-	qAudioFreqCsr <= wAudioFreq[15:0];
-	qAudioPlayCsr <= wAudioPlay[0];
-	qUartRxThruCsr <= wUartRxThru;
-	qUartRxThruCsr <= wOnNoteNumber;
+	qUartRx <= ~iMIDI;
 end
+
+
+//-----------------------------------------------------------------------------
+// MIDI Decorder
+//-----------------------------------------------------------------------------
+wire [(pMidiChannel * lpAudioBitDepth)-1:0] wMauAudioFreq;
+wire [pMidiChannel-1:0] wMauAudioPlay;
+
+MidiAudioUnit #(
+	.pChannel(pChannel),
+	.pAudioBitDepth(pAudioBitDepth),
+	.pSim(pSim)
+) MidiAudioUnit (
+	// Midi Signals
+	.iMidiRd(wMidiRd),			.iMidiRe(wMidiVd),
+	// Audio Signals
+	.oAudioFreq(wMauAudioFreq),	.oAudioPlay(wMauAudioPlay),
+	// Midi Status
+	.oNoteNumber(),
+	.oNoteOn(),
+	// Audio Control Status
+
+	// Common
+	.iRST(iSRST),	.inRST(inSRST),		.iCLK(iSCLK)
+);
+
 
 
 //-----------------------------------------------------------------------------
@@ -184,14 +205,65 @@ generate
 		always @(posedge iMCLK)
 		begin
 			if (qDmaRdChRst)		rDmaRdCh[x] <= 32'd32768;
-			else if (wDmaRvd[x])	rDmaRdCh[x] <= {16'd0,wDmaRdCh[x]};
-			// else if (wDmaRvd[x])	rDmaRdCh[x] <= (wDmaRdCh[x] * wAudioAmp[((x+1)*lpAudioBitDepth)-1:x*lpAudioBitDepth]) >> 8;
+			// else if (wDmaRvd[x])	rDmaRdCh[x] <= {16'd0,wDmaRdCh[x]};
+			else if (wDmaRvd[x])	rDmaRdCh[x] <= ((wDmaRdCh[x] - 16'd32767) * wAudioAmp[((x+1)*lpAudioBitDepth)-1:x*lpAudioBitDepth]) >> 8;
 			else 					rDmaRdCh[x]	<= rDmaRdCh[x];
+		end
+		always @*
+		begin
+			rDmaRdCh[x] <= wDmaRvd[x] ? {16'd0,wDmaRdCh[x]} : 32'd32767;
+			// else if (wDmaRvd[x])	rDmaRdCh[x] <= (wDmaRdCh[x] * wAudioAmp[((x+1)*lpAudioBitDepth)-1:x*lpAudioBitDepth]) >> 8;
 		end
 	end
 endgenerate
 
-wire [31:0] wDmaRdAdd = (rDmaRdCh[0] + rDmaRdCh[1] + rDmaRdCh[2] + rDmaRdCh[3]);
+wire [31:0] wDmaRdAddCh1   = (rDmaRdCh[0] * wAudioAmpCh1Csr);
+wire [31:0] wDmaRdAddCh2   = (rDmaRdCh[1] * wAudioAmpCh2Csr);
+wire [31:0] wDmaRdAddCh3   = (rDmaRdCh[2] * wAudioAmpCh3Csr);
+wire [31:0] wDmaRdAddCh4   = (rDmaRdCh[3] * wAudioAmpCh4Csr);
+wire [31:0] wDmaRdAddTotal = (wDmaRdAddCh1 + wDmaRdAddCh2 + wDmaRdAddCh3 + wDmaRdAddCh4) >> 8;
+// wire [31:0] wDmaRdAdd = (rDmaRdCh[0] + rDmaRdCh[1] + rDmaRdCh[2] + rDmaRdCh[3]);
+
+//-----------------------------------------------------------------------------
+// Dual Clk Fifo
+//-----------------------------------------------------------------------------
+localparam lpDdrDepth 			= 256;
+localparam lpDdrBitWidth 		= 32;
+localparam lpDdrRemaingCntBorder= (lpDdrDepth / 2) - 1;
+
+reg  [lpDdrBitWidth-1:0]	qDdrWd;
+reg 	qDdrWe;
+wire [lpDdrBitWidth-1:0]	wDdrRd;
+reg		qDdrRe;
+wire	wDdrFull, wDdrEmp;
+wire	wDdrRvd;
+wire	wDdrRemaingCntAlert;
+
+ASyncFifoController #(
+	.pFifoDepth(lpDdrDepth),
+	.pFifoBitWidth(lpDdrBitWidth),
+	.pFifoRemaingCntBorder(lpDdrRemaingCntBorder)
+) DmaDataReceiver (
+	// write
+	.iWd(qDdrWd),		.iWe(qDdrWe),
+	.oFull(wDdrFull),
+	.oRemaingCntAlert(wDdrRemaingCntAlert),
+	// read
+	.oRd(wDdrRd),		.iRe(qDdrRe),
+	.oRvd(wDdrRvd),		.oEmp(wDdrEmp),
+	// common
+	.inARST(inSRST),
+	.iRCLK(iMCLK),
+	.iWCLK(iSCLK)
+);
+
+always @*
+begin
+	qDdrWd <= wDmaRdAddTotal;
+	// qDdrWd <= wDmaRdAdd;
+	qDdrWe <= |{wDmaRvd};
+	qDmaRe <= ~wDdrFull;
+end
 
 //-----------------------------------------------------------------------------
 // I2S Encorder
@@ -214,11 +286,11 @@ I2SSignalGen I2SSignalGen(
 
 always @*
 begin
-	// qAudioData[14:0]	<= 15'd0;
-	// qAudioData[30:15] 	<= wAafRd;
-	qAudioData[31:0] 	<= {wDmaRdAdd[23:0],8'h00};
-	// qAafRe				<= wI2SRdy;
-  	qDmaRe				<= wI2SRdy;
+	// qAudioData[31:0] 	<= {wDmaRdAdd[23:0],8'h00};
+  	// qDmaRe				<= wI2SRdy;
+	// qDmaRdChRst			<= |{iMRST,wI2SRdy};
+	qAudioData[31:0] 	<= {wDdrRd[23:0],8'h00};
+  	qDdrRe				<= wI2SRdy;
 	qDmaRdChRst			<= |{iMRST,wI2SRdy};
 end
 

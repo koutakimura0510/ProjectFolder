@@ -3,7 +3,7 @@
  * 
  * 23-08-26 v1.00 : New Release
  *-----------------------------------------------------------------------------*/
-module MidiDecoder_tb;
+module MidiAudioUnit_tb;
 
 //-----------------------------------------------------------------------------
 // Clk,Rst Generator
@@ -109,52 +109,54 @@ end
 // Note Off を受信することで AudioPlay が "H"->"L"に遷移する。
 // 
 //-----------------------------------------------------------------------------
-localparam lpChannel = 4;
+localparam lpChannel = 1;
 localparam lpAudioBitDepth = 16;
 
-wire [(lpChannel*lpAudioBitDepth)-1:0] wAudioFreq;
-wire [lpAudioBitDepth-1:0] wAudioFreqCh[lpChannel-1:0];
-wire [lpChannel-1:0] wAudioPlay;
-wire [lpAudioBitDepth-1:0] wDmaRdDiv;
-wire [lpAudioBitDepth:0] wDmaRdAdd;
+wire [(lpChannel*lpAudioBitDepth)-1:0] 	wMauAudioFreq;
+wire [lpChannel-1:0] 					wMauAudioPlay;
+wire [(lpChannel*7)-1:0] 				wMauNoteNumber;
+wire [lpChannel-1:0] 					wMauNoteOn;
 
-MidiDecodeUnit #(
+MidiAudioUnit #(
 	.pChannel(lpChannel),
-	.pAudioBitDepth(lpAudioBitDepth)
-) MidiDecodeUnit (
+	.pAudioBitDepth(lpAudioBitDepth),
+	.pSim("yes")
+) MidiAudioUnit (
 	// MIDI Status
 	.iMidiRd(rMidiWd[rMidiWa]),
 	.iMidiRe(qMidiWeCke),
-	// Decord Data
-	.oAudioFreq(wAudioFreq),
-	.oAudioPlay(wAudioPlay),
+	// Audio Signals
+	.oAudioFreq(wMauAudioFreq),
+	.oAudioPlay(wMauAudioPlay),
+	// Midi Status
+	.oNoteNumber(wMauNoteNumber),
+	.oNoteOn(wMauNoteOn),
 	// Common
 	.iRST(wSRST),
 	.inRST(wnSRST),
 	.iCLK(wSCLK)
 );
 
-generate
-begin
-	assign wDmaRdDiv = wAudioPlay[0] + wAudioPlay[1];
-	// assign wDmaRdAdd = (wAudioFreqCh[0] + wAudioFreqCh[1]) / wDmaRdDiv;
-	assign wDmaRdAdd = (16'd50000 + 16'd50000) / wDmaRdDiv;
+// generate
+// begin
+// 	// assign wDmaRdDiv = wAudioPlay[0] + wAudioPlay[1];
+// 	// // assign wDmaRdAdd = (wAudioFreqCh[0] + wAudioFreqCh[1]) / wDmaRdDiv;
+// 	// assign wDmaRdAdd = (16'd50000 + 16'd50000) / wDmaRdDiv;
 
-	for (x = 0; x < lpChannel; x = x + 1)
-	begin
-		assign wAudioFreqCh[x] = wAudioPlay[x] ? wAudioFreq[((x+1) * lpAudioBitDepth)-1:x * lpAudioBitDepth] : 16'd0;
-
-	end
-end
-endgenerate
+// 	// for (x = 0; x < lpChannel; x = x + 1)
+// 	// begin
+// 	// 	assign wAudioFreqCh[x] = wAudioPlay[x] ? wAudioFreq[((x+1) * lpAudioBitDepth)-1:x * lpAudioBitDepth] : 16'd0;
+// 	// end
+// end
+// endgenerate
 
 
 //----------------------------------------------------------
 // Simlation Start
 //----------------------------------------------------------
 initial begin
-	$dumpfile("MidiDecoder_tb.vcd");
-	$dumpvars(0, MidiDecoder_tb);	// 引数0:下位モジュール表示, 1:Topのみ
+	$dumpfile("MidiAudioUnit_tb.vcd");
+	$dumpvars(0, MidiAudioUnit_tb);	// 引数0:下位モジュール表示, 1:Topのみ
 	reset_init();
 	#(lpMCLKCycle * 4800);
     $finish;

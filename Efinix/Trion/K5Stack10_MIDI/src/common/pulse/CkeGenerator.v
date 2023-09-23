@@ -37,8 +37,8 @@ generate
 
 		always @( posedge iCLK )
 		begin
-			if (iRST)    	rTmpCount <= 0;
-			else if (qCke)  rTmpCount <= 0;
+			if (iRST)    	rTmpCount <= {lpCtuCNTBits{1'b0}};
+			else if (qCke)  rTmpCount <= {lpCtuCNTBits{1'b0}};
 			else            rTmpCount <= rTmpCount + 1'b1;
 		end
 
@@ -51,18 +51,19 @@ generate
 		// 指定時間カウント時 Cke 出力
 		//----------------------------------------------------------
 		reg [7:0] rTimeCkeCnt;
-		reg qTimeCke;                               assign oCke = qTimeCke;
+		reg qTimeCke;							assign oCke = qTimeCke;
+		reg qTimeRst;
 
 		always @( posedge iCLK )
 		begin
-			if (iRST)        	rTimeCkeCnt <= 0;
-			else if (qTimeCke)  rTimeCkeCnt <= 0;
-			else if (qCke)      rTimeCkeCnt <= rTimeCkeCnt + 1'b1;
-			else                rTimeCkeCnt <= rTimeCkeCnt;
+			if (qTimeRst)		rTimeCkeCnt <= 8'd0;
+			else if (qCke)		rTimeCkeCnt <= rTimeCkeCnt + 1'b1;
+			else				rTimeCkeCnt <= rTimeCkeCnt;
 		end
 
 		always @*
 		begin
+			qTimeRst <= |{iRST,qTimeCke};
 			qTimeCke <= pTimeCke == rTimeCkeCnt;
 		end
 	end

@@ -12,8 +12,10 @@ module DotSquareGen #(
 	parameter	pVVAW  = 11,
 	parameter	pColorDepth = 16
 )(
-	// Internal Port
-	output	[pColorDepth-1:0]	oPixel,
+	// Pixel Output
+	output	[pColorDepth-1:0]	oPd,		// Pixel Data
+	output 						oPv,		// Pixel Valid
+	// Control Status
 	input	[pColorDepth-1:0]	iColor,		// 描画色
 	input	[pVHAW-1:0]	iHpos,				// 現在の横幅の座標
 	input	[pVVAW-1:0]	iVpos,				// 現在の立幅の座標
@@ -21,7 +23,7 @@ module DotSquareGen #(
 	input signed	[pVHAW:0]	iDRightX,	// 描画終了 X座標 Draw X End
 	input signed	[pVVAW:0]	iDTopY,		// 描画開始 Y座標 Draw Y Start
 	input signed	[pVVAW:0]	iDUnderY,	// 描画終了 Y座標 Draw Y End
-	// Clk rst
+	// Common
 	input	iRST,
 	input	iCLK
 );
@@ -36,20 +38,22 @@ wire signed [pVVAW:0] wVpos = {1'b0, iVpos};
 
 //-----------------------------------------------------------------------------
 // 指定色のデータ及び範囲外であれば透過値最大のデータを出力
+// 画面外に座標データがはみ出ても、範囲内のドットデータは描画するようにする
 //-----------------------------------------------------------------------------
-reg [pColorDepth-1:0] rPixel;		assign oPixel = rPixel;
+reg [pColorDepth-1:0] rPd;		assign oPd = qCke ? iColor : 0; //rPd;
+reg rPv;						assign oPv = rPv;
 reg qCke;
 reg [3:0] qPosMatch;
 
 always @(posedge iCLK)
 begin
-	if (qCke) 		rPixel <= iColor;
-    else 			rPixel <= {pColorDepth{1'b0}};
+	if (qCke) 		rPd <= iColor;
+    else 			rPd <= {pColorDepth{1'b0}};
+	
+	if (iRST) 		rPv <= 1'b0;
+	else 			rPv <= qCke;
 end
 
-//-----------------------------------------------------------------------------
-// 画面外に座標データがはみ出ても、範囲内のドットデータは描画するようにする
-//-----------------------------------------------------------------------------
 always @*
 begin
 	qPosMatch[0] <= (iDLeftX <= wHpos);

@@ -20,6 +20,8 @@ module GpioBlock #(
 	input  [pGpioWidth-1:0] iGpioAltMode,
 	// GPIO Input
 	input  [pGpioWidth-1:0] iGpioIn,
+	// Control
+	input	iSmsMode,
 	// Bus Master Read
 	output [pUsiBusWidth-1:0] oSUsiRd,
 	// Bus Master Write
@@ -69,7 +71,7 @@ generate
 	begin
 		always @(posedge iSCLK)
 		begin
-			rGpioR[gpioX] <= wGpioAltModeCsr[gpioX] ? iGpioAltMode[gpioX] : wGpioOutCtrl[gpioX];
+			rGpioR[gpioX] <= |{iSmsMode,wGpioAltModeCsr[gpioX]} ? iGpioAltMode[gpioX] : wGpioOutCtrl[gpioX];
 		end
 	end
 endgenerate

@@ -21,7 +21,7 @@
 module SyncFifoController #(
 	parameter 	pFifoDepth        	= 16,		// FIFO BRAMのサイズ指定
 	parameter 	pFifoBitWidth     	= 8,		// bitサイズ
-	parameter	pFifoRemaingCntBorder	= 127,
+	parameter	pFifoRemaingCntBorder	= pFifoDepth / 2
 	parameter	pFifoRemaingCntUsed		= "no"
 )(
     input   [pFifoBitWidth-1:0] iWd,        		// write data

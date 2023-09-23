@@ -9,8 +9,8 @@ module PixelDrawPosition #(
     parameter	pVVAW	= 11,
 	parameter	pMapChipBasicBs	= 4
 )(
-	input	[pVHAW-1:0]	iVha,		// 縦軸の有効領域幅
-	input	[pVVAW-1:0]	iVva,		// 横軸の有効領域幅
+	input	[pVHAW-1:0]	iVha,
+	input	[pVVAW-1:0]	iVva,
     output 	[pVHAW-1:0]	oHpos,
     output 	[pVVAW-1:0]	oVpos,
 	output	[pVHAW-1:pMapChipBasicBs]	oHposBs,

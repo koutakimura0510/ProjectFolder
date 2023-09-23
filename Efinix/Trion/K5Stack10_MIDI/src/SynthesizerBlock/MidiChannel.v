@@ -2,20 +2,18 @@
  * MIDI Channel
  * 
  * 23-08-26 v1.00 : new release
+ * 23-08-28 v1.01 : module 内で NoteNumber から周波数を求めていたが、Channel ごとに Note Data を振り分ける処理のみに変更
+ *					MIDI Note Data によるデータの生成は、後段以降で行うこととした。
  *-----------------------------------------------------------------------------*/
-module MidiChannel #(
-	parameter pSim = "no"
-)(
-	// Midi Status
-	input	[6:0] iNoteNumber,
-	input 	iNoteOn,
-	input 	iNoteOff,
-	output 	oNoteOnPipe,
-	output  [6:0] oNoteNumber,
-	// Audio Output
-	output	[15:0]	oAudioFreq,
-	output	oAudioPlay,			// "1" On, "0" Off
-	output	[15:0]	oAudioAmp,
+module MidiChannel (
+	// Midi Note Input
+	input	[6:0] 	iNoteNumber,
+	input 			iNoteOn,		// One Shot Pulse
+	input 			iNoteOff,
+	// Midi Note Output
+	output  [6:0] 	oNoteNumber,
+	output 			oNoteOn,		// "H" Run, "L" Not Run
+	output 			oNoteOnPipe,	// One Shot Pulse
 	// common
 	input 	iRST,
 	input 	iCLK
@@ -24,41 +22,16 @@ module MidiChannel #(
 //-----------------------------------------------------------------------------
 // Channel
 //-----------------------------------------------------------------------------
-(* syn_romstyle = "block_rom" *) reg [15:0] rBramNoteFreq [0:127];
-(* syn_romstyle = "block_rom" *) reg [15:0] rBramNoteAmp [0:127];
-
-initial
-begin
-	if (pSim == "no")
-	begin
-		$readmemh("./src/SynthesizerBlock/dat/BramNoteAmp.dat", rBramNoteAmp);
-		$readmemh("./src/SynthesizerBlock/dat/BramNoteFreq.dat", rBramNoteFreq);
-	end
-	else
-	begin
-		$readmemh("../dat/BramNoteAmp.dat", rBramNoteAmp);
-		$readmemh("../dat/BramNoteFreq.dat", rBramNoteFreq);
-	end
-end
-
-reg [15:0] 	rNoteFreq;
-reg [15:0] 	rNoteAmp;
-reg [1:0]	rRun;
-reg 		qRunCke;
 reg [6:0]	rNoteNumber;
+reg 		rRun;
+reg 		qRunCke;
 reg 		qNoteNumberCke;
 
 always @(posedge iCLK)
 begin
-	rNoteFreq	<= rBramNoteFreq[rNoteNumber];
-	rRun[1] 	<= rRun[0];
-
-	if (rRun[0])	rNoteAmp <= rBramNoteAmp[rNoteNumber];
-	else 			rNoteAmp <= 16'd256;
-
-	if (iRST) 					rRun[0] <=  1'b0;
-	else if (qRunCke)			rRun[0] <= ~rRun[0];
-	else 						rRun[0] <=  rRun[0];
+	if (iRST) 					rRun <=  1'b0;
+	else if (qRunCke)			rRun <= ~rRun;
+	else 						rRun <=  rRun;
 
 	if (iRST) 					rNoteNumber <= 7'd0;
 	else if (qNoteNumberCke)	rNoteNumber <= iNoteNumber;
@@ -67,13 +40,13 @@ end
 
 always @*
 begin
-	casex ({rRun[0],iNoteOn,iNoteOff,(rNoteNumber==iNoteNumber)})
+	casex ({rRun,iNoteOn,iNoteOff,(rNoteNumber==iNoteNumber)})
 		'b010x:		qRunCke <= 1'b1;	// Assert
 		'b1011:		qRunCke <= 1'b1;	// Dissert
 		default: 	qRunCke <= 1'b0;
 	endcase
 
-	casex ({rRun[0],iNoteOn})
+	casex ({rRun,iNoteOn})
 		'b01:		qNoteNumberCke <= 1'b1;	// Run でなければデータ取得可能
 		default: 	qNoteNumberCke <= 1'b0;
 	endcase
@@ -96,14 +69,12 @@ end
 
 always @*
 begin
-	qNoteOnPipeCke <= &{rRun[0],iNoteOn};
+	qNoteOnPipeCke <= &{rRun,iNoteOn};
 end
 
 //-----------------------------------------------------------------------------
 assign oNoteNumber  = rNoteNumber;
-assign oAudioFreq	= rNoteFreq;
-assign oAudioPlay	= rRun[1];
-assign oAudioAmp	= rNoteAmp;
+assign oNoteOn		= rRun;
 assign oNoteOnPipe  = rNoteOnPipe;
 
 endmodule
