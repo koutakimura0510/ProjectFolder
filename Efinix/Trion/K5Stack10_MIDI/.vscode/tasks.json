@@ -146,5 +146,18 @@
 				"isDefault": true
 			}
 		},
+
+		//-----------------------------------------------------------------------------
+		// Compile + JTAG
+		//-----------------------------------------------------------------------------
+		{
+			"label": "Compile + JTAG",
+			"type": "shell",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make compile;make py;make jtag",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
 	]
 }

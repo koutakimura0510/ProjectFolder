@@ -6,6 +6,7 @@
 /work_sim
 /work_dbg
 *.vcd
+*.out
 
 # Soc Srcのみ管理
 /embedded_sw/
