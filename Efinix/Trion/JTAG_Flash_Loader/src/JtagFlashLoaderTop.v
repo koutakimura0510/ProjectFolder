@@ -1,5 +1,22 @@
-
+/*-----------------------------------------------------------------------------
+ * Create  2023/09/18
+ * Author  Kouta Kimura
+ * Editor  VSCode ver1.73.1
+ * Build   Efinity 2023.1.150
+ * -
+ * 23-09-18 v1.00 : New Release
+ *-----------------------------------------------------------------------------*/
 module JtagFlashLoaderTop (
+	// User ROM
+	input  	[3:0] iUser_MISO,
+	output	[3:0] oUser_MOSI,
+	output	[3:0] oUser_SCK,
+	output	[3:0] oUser_nCS,
+	output	oMaster_MISO,
+	input	iMaster_MOSI,
+	input	iMaster_SCK,
+	input	[3:0] iMaster_nCS,
+	// Config ROM
 	input  iMISO,
 	output oSCK,
 	output onCS,
@@ -20,6 +37,8 @@ module JtagFlashLoaderTop (
 	output jtag_inst1_TDO,
 	// User I/F
 	output [2:0] oLed,
+	// Debug Pin
+	output [3:0] oUserDebug,
 	// CLK Domain
 	input  iPllLocked,
 	output oPllnRST,
@@ -46,7 +65,7 @@ assign 	oPllnRST = 1'b1;
 //-----------------------------------------------------------------------------
 // Flash Loader
 //-----------------------------------------------------------------------------
-JtagFlashLoader u_JtagFlashLoader(
+JtagFlashLoader JtagFlashLoader(
 	.miso(iMISO),
 	.sclk(oSCK),
 	.nss(onCS),
@@ -68,6 +87,32 @@ JtagFlashLoader u_JtagFlashLoader(
 	.rstn(rnSRST),
 	.clkin(iSCLK)
 );
+
+//-----------------------------------------------------------------------------
+// SPI Bridge
+//-----------------------------------------------------------------------------
+reg qMasterMiso;
+
+always @*
+begin
+	case ({iMaster_nCS[3:0]})
+		4'b1110: qMasterMiso <= iUser_MISO[0];
+		4'b1101: qMasterMiso <= iUser_MISO[1];
+		4'b1011: qMasterMiso <= iUser_MISO[2];
+		4'b0111: qMasterMiso <= iUser_MISO[3];
+		default: qMasterMiso <= 1'b0;
+	endcase
+end
+
+assign oMaster_MISO		= iUser_MISO;
+assign oUser_MOSI[3:0]	= {4{iMaster_MOSI}};
+assign oUser_SCK[3:0] 	= {4{iMaster_SCK}};
+assign oUser_nCS[3:0] 	= iMaster_nCS[3:0];
+
+assign oUserDebug[0] = qMasterMiso;
+assign oUserDebug[1] = iMaster_MOSI;
+assign oUserDebug[2] = iMaster_SCK;
+assign oUserDebug[3] = &{iMaster_nCS[3:0]};
 
 //-----------------------------------------------------------------------------
 // LED
