@@ -18,16 +18,32 @@ utime とか書き込まなくても実行できるので、対策できそう�
 .Upload project to Pico
 電源切 -> 自動起動
 
-なお、自動起動中に USB を差し込み MicroPico で認識させると、例外処理が発生し止まる。
-gtkterm などでは発生しない。
-
 """
 
-from machine import I2C, Pin
+from machine import I2C, Pin, Timer
 import PicoSw
 import L3GD20H
-
 import utime
+
+
+# ------------------------------------------------------------------------------
+# define
+# ------------------------------------------------------------------------------
+LED_BLINK_TIME = 500
+
+
+# ------------------------------------------------------------------------------
+# グローバル変数
+# ------------------------------------------------------------------------------
+interval_timer_count = 0
+
+
+# ------------------------------------------------------------------------------
+# 割り込みタイマーの設定
+# ------------------------------------------------------------------------------
+def timer_handler(timer):
+    global interval_timer_count
+    interval_timer_count += 1
 
 # ------------------------------------------------------------------------------
 # main 関数
@@ -35,27 +51,29 @@ import utime
 def main():
     led = Pin(25, Pin.OUT)
     i2c = I2C(0, scl=Pin(1), sda=Pin(0), freq=100000)
-
+    Timer(freq=1000, mode=Timer.PERIODIC, callback=timer_handler)
+    #
     L3GD20H.device_init(i2c)
+    led_blink_timer = 0
+    sw_cap_timer = 0
 
     try:
         while True:
-            led.value(1)
-            utime.sleep(1)
-            led.value(0)
-            utime.sleep(1)
-            print(PicoSw.get_sw())
 
-            x, y, z = L3GD20H.get_xyz_acceleration(i2c)
-            # print("X:{}, Y:{}, Z:{}".format(x,y,z))
+            if led_blink_timer <= interval_timer_count:
+                led_blink_timer = interval_timer_count + LED_BLINK_TIME
+                led.toggle()
 
-            try:
-                q = i2c.readfrom_mem(0xaa, 0x2D, 1)
-                print(q)
-            except:
-                pass
+            if sw_cap_timer <= interval_timer_count:
+                sw_cap_timer = interval_timer_count + 1
+                sw = PicoSw.get_sw()
+                # x, y, z = L3GD20H.get_xyz_acceleration(i2c)
+                # print("\r"+"X:{}, Y:{}, Z:{}".format(x,y,z),end="")
 
-            utime.sleep(0.1)
+                try:
+                    i2c.writeto_mem(0x10, 0x20, bytearray([sw]))
+                except:
+                    pass
 
     except KeyboardInterrupt:
         print("exception KeyboardInterrupt")
