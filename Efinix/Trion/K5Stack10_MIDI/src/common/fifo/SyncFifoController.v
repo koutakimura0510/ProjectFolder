@@ -19,21 +19,21 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module SyncFifoController #(
-	parameter 	pFifoDepth        	= 16,		// FIFO BRAMのサイズ指定
-	parameter 	pFifoBitWidth     	= 8,		// bitサイズ
+	parameter 	pFifoDepth				= 16,		// FIFO BRAMのサイズ指定
+	parameter 	pFifoBitWidth			= 8,		// bitサイズ
 	parameter	pFifoRemaingCntBorder	= pFifoDepth / 2
 	parameter	pFifoRemaingCntUsed		= "no"
 )(
-    input   [pFifoBitWidth-1:0] iWd,        		// write data
-    input                       iWe,        		// write enable 有効データ書き込み
-    output                      oFull,      		// 最大書き込み時High
+	input	[pFifoBitWidth-1:0] iWd,				// write data
+	input						iWe,				// write enable 有効データ書き込み
+	output						oFull,				// 最大書き込み時High
 	output						oRemaingCntAlert,	// FIFO 残りデータ数がパラメータを超えた場合 Assert
-    output  [pFifoBitWidth-1:0] oRd,        		// read data
-    input                       iRe,        		// read enable
-    output                      oRvd,       		// 有効データ出力
-    output                      oEmp,       		// バッファ空時High
-    input                       inARST,
-    input                       iCLK
+	output	[pFifoBitWidth-1:0] oRd,				// read data
+	input						iRe,				// read enable
+	output						oRvd,				// 有効データ出力
+	output						oEmp,				// バッファ空時High
+	input						inARST,
+	input						iCLK
 );
 
 
@@ -226,26 +226,29 @@ endmodule
 //-----------------------------------------------------------------------------
 // Sample
 //-----------------------------------------------------------------------------
-// parameter pFifoDepth = 16;
-// parameter pFifoBitWidth = 16;
-// parameter pFifoBlockRam = "yes";
+// parameter pFifoDepth				= 256;
+// parameter pFifoBitWidth 			= 16;
+// parameter pFifoRemaingCntUsed 	= "yes";
 
+// reg  [pFifoBitWidth-1:0] qWd;
+// reg  wWe;
+// wire wFull, wRemaingCntAlert;
 // wire [pFifoBitWidth-1:0] wRd;
-// wire wFull, wEmp;
+// reg  qRe;
+// wire wEmp;
 // wire wRvd;
 
 // SyncFifoController #(
-//     .pFifoDepth(pFifoDepth),
-//     .pFifoBitWidth(pFifoBitWidth),
-// 	.pFifoBlockRam(pFifoBlockRam)
+// 	.pFifoDepth(pFifoDepth),
+// 	.pFifoBitWidth(pFifoBitWidth),
+// 	.pFifoRemaingCntUsed(pFifoRemaingCntUsed)
 // ) SyncFifoController (
-//     .iWd(),
-//     .iWe(),
-//     .oFull(wFull),
-//     .oRd(wRd),
-//     .iRe(),
-//     .oRvd(wRvd),
-//     .oEmp(wEmp),
-//     .inARST(),
-// 	.iCLK()
-// );
+// 	// write side
+// 	.iWd(qWd),		.iWe(qWe),
+// 	.oFull(wFull),	.oRemaingCntAlert(wRemaingCntAlert),
+// 	// read side
+// 	.oRd(wRd),		.iRe(qRe),
+// 	.oRvd(wRvd),	.oEmp(wEmp),
+// 	// common
+// 	.inARST(),	.iCLK()
+// )
