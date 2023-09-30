@@ -22,20 +22,19 @@ module AudioTxCsr #(
 	input	[pUsiBusWidth-1:0] 	iSUsiAdrs,
 	// Csr Output
 	output 	[pSfmNum-1:0]					oSfmIoHiz,
-	output 	[pSfmNum-1:0]					oSfmEn,		// ※1
+	output 	[pSfmNum-1:0]					oSfmEn,				// ※1
 	output 	[pSfmNum-1:0]					oSfmCycleEn,
 	output 	[(pSfmNum*8)-1:0]				oSfmDiv,
 	output 	[(pSfmNum*8)-1:0]				oSfmCsHoldTime,
-	output 	[(pSfmNum*pSfmPageWidth)-1:0]	oSfmStartAdrs,
-	output 	[(pSfmNum*pSfmPageWidth)-1:0]	oSfmEndAdrs,
+	output 	[(pSfmNum*pSfmPageWidth)-1:0]	oSfmStartAdrs,		// ※2
+	output 	[(pSfmNum*pSfmPageWidth)-1:0]	oSfmEndAdrs,		// ※2
+	input	[pSfmNum-1:0]					iSfmDone,
 	output	[(pSfmNum*8)-1:0]				oSfmCpuWd,
 	output	[pSfmNum-1:0]					oSfmCpuEn,
 	output	[pSfmNum-1:0]					oSfmCpuCsCtrl,
 	output	[pSfmNum-1:0]					oSfmCpuValid,
-	// Csr Input
 	input	[(pSfmNum*8)-1:0]				iSfmCpuRd,
 	input	[pSfmNum-1:0]					iSfmCpuDone,
-	input	[pSfmNum-1:0]					iSfmDone,
 	// CLK RST
 	input 	iSRST,
 	input 	iSCLK
@@ -43,6 +42,7 @@ module AudioTxCsr #(
 
 // ※1 Sfm = Serial Flash Memory 略称
 // ※1 Sfm は音源データ読み込みなので Write は必要ない
+// ※2 現時点では 1Page の開始と終了をアドレス設定する必要あり。Col 毎の読み込みには対応していない
 
 //----------------------------------------------------------
 // レジスタマップ
@@ -50,8 +50,8 @@ module AudioTxCsr #(
 reg [pSfmNum-1:0]  					rSfmIoHiz;				assign oSfmIoHiz 		= rSfmIoHiz;
 reg [pSfmNum-1:0]  					rSfmEn;					assign oSfmEn 			= rSfmEn;
 reg [pSfmNum-1:0]  					rSfmCycleEn;			assign oSfmCycleEn 		= rSfmCycleEn;
-reg [(pSfmNum*8)-1:0]  				rSfmDiv;				assign oSfmDiv 			= rSfmDiv;
-reg [pSfmNum-1:0]  					rSfmCsHoldTime;			assign oSfmCsHoldTime 	= rSfmCsHoldTime;
+reg [(pSfmNum*8)-1:0]				rSfmDiv;				assign oSfmDiv 			= rSfmDiv;
+reg [(pSfmNum*8)-1:0]				rSfmCsHoldTime;			assign oSfmCsHoldTime 	= rSfmCsHoldTime;
 reg [(pSfmNum*pSfmPageWidth)-1:0] 	rSfmStartAdrs;			assign oSfmStartAdrs 	= rSfmStartAdrs;
 reg [(pSfmNum*pSfmPageWidth)-1:0] 	rSfmEndAdrs;			assign oSfmEndAdrs 		= rSfmEndAdrs;
 reg [(pSfmNum*8)-1:0] 				rSfmCpuWd;				assign oSfmCpuWd		= rSfmCpuWd;

@@ -15,7 +15,6 @@ module RAMBlock #(
 	parameter pUfiDqBusWidth 	= 16,
 	parameter pUfiAdrsBusWidth 	= 32,
 	parameter pUfiEnableBit 	= 32,
-	//
 	parameter pRamAdrsWidth 	= 18,	// GPIO アドレス幅
 	parameter pRamDqWidth 		= 16	// GPIO データ幅
 )(
@@ -23,24 +22,23 @@ module RAMBlock #(
 	output [pRamAdrsWidth-1:0] oSRAMA,
 	output [pRamDqWidth-1:0] oSRAMD,
 	input  [pRamDqWidth-1:0] iSRAMD,
-	output oSRAM_OE,				// "0" In, "1" Out
-	output oSRAM_RWDS,
-	output oSRAM_pCLK,
-	output oSRAM_nCLK,
-	output oSRAM_nCE,
-	output oSRAM_nRST,
+	output oSRAM_LB,	// N Lower Byte Control
+	output oSRAM_UB,	// N Upper Byte Control
+	output oSRAM_OE,	// N Output Enable
+	output oSRAM_WE,	// N Write Enable
+	output oSRAM_CE,	// N Chip Select 
 	// Bus Master Read
-	output [pUsiBusWidth-1:0] 		oSUsiRd,
+	output [pUsiBusWidth-1:0] oSUsiRd,
 	// Bus Master Write
-	input  [pUsiBusWidth-1:0] 		iSUsiWd,
-	input  [pUsiBusWidth-1:0] 		iSUsiAdrs,
+	input  [pUsiBusWidth-1:0] iSUsiWd,
+	input  [pUsiBusWidth-1:0] iSUsiAdrs,
 	// Ufi Bus Master Read
 	output [pUfiDqBusWidth-1:0] 	oSUfiRd,
 	output [pUfiAdrsBusWidth-1:0] 	oSUfiAdrs,
 	// Ufi Bus Master Write
 	input  [pUfiDqBusWidth-1:0] 	iSUfiWd,
 	input  [pUfiAdrsBusWidth-1:0] 	iSUfiAdrs,
-	output							oSUfiRdy,
+	output 							oSUfiRdy,
 	// Status
 	output oTestErr,
 	output oDone,
@@ -109,10 +107,10 @@ assign oDone = 1'b0;
 //-----------------------------------------------------------------------------
 localparam lpFifoDepth = 256;	// FIFO 最小構成
 
-wire [pUfiDqBusWidth-1:0] 	wRamIfPortUnitWd;
+wire [pUfiDqBusWidth-1:0] wRamIfPortUnitWd;
 wire [pUfiAdrsBusWidth-1:0] wRamIfPortUnitAdrs;
-wire [pUfiDqBusWidth-1:0] 	wRamIfPortUnitRd;
-wire 						wRamIfPortUnitRvd;
+wire [pUfiDqBusWidth-1:0] wRamIfPortUnitRd;
+wire wRamIfPortUnitRvd;
 
 RamReadWriteArbiter #(
 	.pUfiDqBusWidth(pUfiDqBusWidth),
@@ -142,21 +140,21 @@ RamReadWriteArbiter #(
 //-----------------------------------------------------------------------------
 // RAM I/F
 //-----------------------------------------------------------------------------
-reg [pRamDqWidth-1:0] 	qRamIfPortUnitWd;
+reg [pRamDqWidth-1:0] qRamIfPortUnitWd;
 reg [pRamAdrsWidth-1:0] qRamIfPortUnitAdrs;
-reg  					qRamIfPortUnitCmd;
-reg  					qRamIfPortUnitCke;
+reg  qRamIfPortUnitCmd;
+reg  qRamIfPortUnitCke;
 
 RAMIfPortUnit #(
 	.pRamAdrsWidth(pRamAdrsWidth),
 	.pRamDqWidth(pRamDqWidth)
 ) RAMIfPortUnit (
 	// SRAM I/F Port
-	.oSRAMD(oSRAMD),			.iSRAMD(iSRAMD),
-	.oSRAMA(oSRAMA),			.oSRAM_OE(oSRAM_OE),
-	.oSRAM_RWDS(oSRAM_RWDS),
-	.oSRAM_pCLK(oSRAM_pCLK),	.oSRAM_nCLK(oSRAM_nCLK),
-	.oSRAM_nCE(oSRAM_nCE),		.oSRAM_nRST(oSRAM_nRST),
+	.oSRAMA(oSRAMA),		.oSRAMD(oSRAMD),
+	.iSRAMD(iSRAMD),
+	.oSRAM_LB(oSRAM_LB),	.oSRAM_UB(oSRAM_UB),
+	.oSRAM_OE(oSRAM_OE),	.oSRAM_WE(oSRAM_WE),
+	.oSRAM_CE(oSRAM_CE),
 	//
 	.iAdrs(qRamIfPortUnitAdrs),
 	.iCmd(qRamIfPortUnitCmd),

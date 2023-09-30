@@ -4,11 +4,14 @@
  * 23-09-18 v1.00 : new release
  *-----------------------------------------------------------------------------*/
 module AudioRomReadSequence #(
-	parameter pSfmPageWidth = 16
+	parameter pSfmPageWidth = 16,
+	parameter pSfmPageSize	= 2048
 )(
-	// Audio Data
-	output[15:0] 				oAudioData,
-	output 						oAudioVd,
+	// Audio Data Fifo I/F
+	output[15:0] 				oRd,
+	output 						oRvd,
+	output						oEmp,
+	input 						iRe,
 	// Rom Logic Access
 	input [7:0]					iSfmRd,
 	input 						iSfmDone,
@@ -24,8 +27,45 @@ module AudioRomReadSequence #(
 	output 						oSfmDone,
 	// CLK Reset
 	input iRST,
+	input inRST,
 	input iCLK
 );
+
+//-----------------------------------------------------------------------------
+// localparam
+//-----------------------------------------------------------------------------
+localparam lpSfmPageSize = f_detect_bitwidth(pSfmPageSize);
+localparam lpSfmPageSizeRst = lpSfmPageSize + 1'b1;
+
+
+//-----------------------------------------------------------------------------
+// Fifo Sfm Stack
+//-----------------------------------------------------------------------------
+localparam lpFifoDepth				= 256;
+localparam lpFifoBitWidth 			= 16;
+localparam lpFifoRemaingCntBorder	= lpFifoDepth - 8;
+localparam lpFifoRemaingCntUsed		= "yes";
+
+reg  [lpFifoBitWidth-1:0] qSfcWd;
+reg  qSfcWe;
+wire wFscFull, wSfcAlert;
+
+SyncFifoController #(
+	.pFifoDepth(lpFifoDepth),
+	.pFifoBitWidth(lpFifoBitWidth),
+	.pFifoRemaingCntBorder(lpFifoRemaingCntBorder),
+	.pFifoRemaingCntUsed(lpFifoRemaingCntUsed)
+) SyncFifoController (
+	// read side
+	.oRd(oRd),			.iRe(iRe),
+	.oRvd(oRvd),		.oEmp(oEmp),
+	// write side
+	.iWd(qSfcWd),		.iWe(qSfcWe),
+	.oFull(wFscFull),	.oRemaingCntAlert(wSfcAlert),
+	// common
+	.inARST(inRST),		.iCLK(iCLK)
+);
+
 
 //-----------------------------------------------------------------------------
 // 容量の大きい Flash ROM は操作方法が煩雑なので、
@@ -33,28 +73,34 @@ module AudioRomReadSequence #(
 // ひとまず BUF=1 の 1Page 読み出しモードで動作行う
 //-----------------------------------------------------------------------------
 localparam
-	lpStAdrsCheck	= 4'd0,
-	lpStPageReadUpr = 4'd1,
-	lpStPageReadCmd	= 4'd2,
-	lpStBusyUpr 	= 4'd3,
-	lpStBusyCmd		= 4'd4,
-	lpStBusyCheck	= 4'd5,
-	lpStReadDataUpr	= 4'd6,
-	lpStReadDataCmd	= 4'd7,
-	lpStFlashRead	= 4'd8;
+	lpStAdrsCheck	= 4'd0,	// 指定Page読み込まれたか確認
+	lpStPageReadUpr = 4'd1,	// Page Read Cmd Setting
+	lpStPageReadCmd	= 4'd2,	// Page Read Cmd 発行
+	lpStBusyUpr 	= 4'd3,	// Busy Read Cmd Setting
+	lpStBusyCmd		= 4'd4,	// Busy Read Cmd 発行
+	lpStBusyCheck	= 4'd5,	// Busy Bit 検出
+	lpStReadDataUpr	= 4'd6,	// Read Data Cmd Setting
+	lpStReadDataCmd	= 4'd7,	// Read Data Cmd 発行
+	lpStFlashRead	= 4'd8,	// Page Read Cycle
+	lpStNull		= 4'dx;
 
-reg [7:0]	rWd;							assign oSfmWd		= rWd;
-reg rEn;									assign oSfmEn		= rEn;
-reg rCsCtrl;								assign oSfmCsCtrl	= rCsCtrl;
-//
-reg [3:0]	rSt;
-reg 		qNextStCke;
-reg [15:0]	rAdrsAdd;
-reg 		qAdrsMatch;
-reg [1:0]	rWp;
-reg [7:0]	rRd;
-reg [11:0]	rRdCnt;					// 読み込み回数 1Page Max 2048 にしている
-reg 		qRdCntRst,	qRdCntCke;
+reg [31:0]				rWd;							assign oSfmWd		= rWd[7:0];
+reg 					rEn;							assign oSfmEn		= rEn;
+reg 					rCsCtrl;						assign oSfmCsCtrl	= rCsCtrl;
+reg 					rDone;							assign oSfmDone		= rDone;
+reg 					qDoenCke;
+reg [3:0]				rSt;
+reg 					qNextStCke;
+reg [15:0]				rAdrsAdd;
+reg 					qAdrsRst;
+reg [1:0]				rWp;
+reg 					rEnRemaing;
+reg 					qEnRemaingCke;
+reg [15:0]				rRd;
+reg 					rRe,		rReCke;
+reg 					rSel,		rSelCke;
+reg [lpSfmPageSize:0]	rRdCnt;
+reg 					qRdCntRst,	qRdCntCke;
 
 always @(posedge iCLK)
 begin
@@ -71,7 +117,7 @@ begin
 		case (rSt)
 		lpStAdrsCheck:
 		begin
-			rSt			<= qNextStCke ? lpStPageReadCmd : lpStAdrsCheck;	// cycle 時の　処理追加予定
+			rSt			<= qNextStCke ? lpStPageReadUpr : lpStAdrsCheck;
 			rWd		 	<= 32'd0;
 			rEn			<= 1'b0;
 			rCsCtrl 	<= 1'b1;
@@ -80,7 +126,7 @@ begin
 
 		lpStPageReadUpr:
 		begin
-			rSt			<= lpStPageReadUpr;
+			rSt			<= lpStPageReadCmd;
 			rWd[ 0+: 8]	<= 8'h13;	// Page Read
 			rWd[ 8+: 8]	<= 8'h00;	// dummy
 			rWd[16+:16]	<= rAdrsAdd;
@@ -130,14 +176,14 @@ begin
 
 		lpStReadDataUpr:
 		begin
-			rSt		<= lpStReadDataCmd;
-			rWd 	<= 8'h03;	// Flash Read Data Cmd
-			rWd 	<= 8'h00;	// col adrs Msb
-			rWd 	<= 8'h00;	// col adrs lsb
-			rWd 	<= 8'h00;	// dummy cmd
-			rEn		<= 1'b0;
-			rCsCtrl <= 1'b1;
-			rWp 	<= 2'd0;
+			rSt			<= lpStReadDataCmd;
+			rWd[ 0+:8]	<= 8'h03;	// Flash Read Data Cmd
+			rWd[ 8+:8]	<= 8'h00;	// col adrs Msb
+			rWd[16+:8]	<= 8'h00;	// col adrs lsb
+			rWd[24+:8]	<= 8'h00;	// dummy cmd
+			rEn			<= 1'b0;
+			rCsCtrl 	<= 1'b1;
+			rWp 		<= 2'd0;
 		end
 
 		lpStReadDataCmd:
@@ -151,51 +197,147 @@ begin
 
 		lpStFlashRead:
 		begin
-			rSt			<= qNextStCke 	? lpStPageReadUpr : lpStReadData;
+			rSt			<= qNextStCke 	? lpStAdrsCheck : lpStFlashRead;
 			rWd			<= 32'd0;
-			rEn			<= 1'b1;
+			rEn			<= rEnRemaing;
 			rCsCtrl 	<= 1'b0;
 			rWp 		<= 2'd0;
 		end
 		endcase
 	end
 
-	if (iSfmDone)	rRd <= iSfmRd;
-	else 			rRd <= rRd;
+	if (iSfmDone)		rRd	<= {rRd[7:0],iSfmRd};			// Busy Bit と、MSB 8bit,LSB 8bit 結合
+	else				rRd <= rRd;
 
-	if (qRdCntRst)		rRdCnt <= 12'd0;			// 0〜2047 まで読み込みカウントして、
-	else if (qRdCntCke)	rRdCnt <= rRdCnt + 1'b1;	// 2048 = [11]bit に 1が立ったかどうかで
-	else 				rRdCnt <= rRdCnt;			// 読み込み領域の判定を行うことができる。
+	if (iRST)				rEnRemaing <=  1'b1;			// 後段の FIFO が FULL の場合、
+	else if (qEnRemaingCke)	rEnRemaing <= ~rEnRemaing;		// 次の読み込み Cycle を一時停止しておく
+	else 					rEnRemaing <=  rEnRemaing;
 
-	rAdrsAdd <= iSfmStartAdrs + rRdCnt[11];
+	if (iRST)			rRe <= 1'b0;						// Sel と組み合わせて、16bit 結合時に
+	else if (rReCke)	rRe <= 1'b1;						// 後段の FIFO へ有効データとして Assert する
+	else				rRe <= 1'b0;
+
+	if (iRST)			rSel <=  1'b0;
+	else if (rSelCke)	rSel <= ~rSel;
+	else				rSel <=  rSel;
+
+	if (qRdCntRst)		rRdCnt <= {lpSfmPageSizeRst{1'b0}};	// 0〜2047 まで読み込みカウントして、
+	else if (qRdCntCke)	rRdCnt <= rRdCnt + 1'b1;			// 2048 = [11]bit に 1が立ったかどうかで
+	else 				rRdCnt <= rRdCnt;					// 読み込み領域の判定を行うことができる。
+
+	if (qAdrsRst)		rAdrsAdd <= iSfmStartAdrs;	
+	else 				rAdrsAdd <= rAdrsAdd + rRdCnt[lpSfmPageSize];
+
+	if (qDoenCke)		rDone <= 1'b1;	
+	else 				rDone <= 1'b0;
 end
 
 always @*
 begin
-	casex ( {rSt} )
-		lpStFlashRead:			qRdCntRst <= 1'b0;		// Dissert
+	case ( {rEnRemaing,iSfmDone,wSfcAlert} )
+		'b111:					qEnRemaingCke <= 1'b1;		// Assert
+		'b000:					qEnRemaingCke <= 1'b1;		// Dissert
+		default:				qEnRemaingCke <= 1'b0;
+	endcase
+
+	case ( {rSt,iSfmDone,rSel} )
+		{lpStFlashRead, 2'b11}:	rReCke <= 1'b1;			// Assert
+		default:				rReCke <= 1'b0;
+	endcase
+
+	case ( {rSt,iSfmDone} )
+		{lpStFlashRead, 1'b1}:	rSelCke <= 1'b1;
+		default:				rSelCke <= 1'b0;
+	endcase
+
+	casex ( {iSfmEn,rRdCnt[lpSfmPageSize],(rAdrsAdd==iSfmEndAdrs)} )
+		'bx11:					qAdrsRst <= 1'b1;		// Assert
+		'b0xx:					qAdrsRst <= 1'b1;		// Assert
+		default:				qAdrsRst <= 1'b0;
+	endcase
+
+	case ( {rRdCnt[lpSfmPageSize],(rAdrsAdd==iSfmEndAdrs)} )
+		'b11:					qDoenCke <= 1'b1;		// Assert
+		default:				qDoenCke <= 1'b0;		// Dissert
+	endcase
+
+	casex ( {rSt,rRdCnt[lpSfmPageSize]} )
+		{lpStFlashRead,	1'b0}:	qRdCntRst <= 1'b0;		// Dissert
 		default: 				qRdCntRst <= 1'b1;		// Assert
 	endcase
 
-	casex ( {rSt,iSfmDone} )
+	case ( {rSt,iSfmDone} )
 		{lpStFlashRead,1'b1}:	qRdCntCke <= 1'b1;		// Flash Read
 		default: 				qRdCntCke <= 1'b0;
 	endcase
 
-	casex ( {rSt,iSfmEn,iSfmDone,rWp[1:0],(rRd[0]==1'b1),rRdCnt[11],(rAdrsAdd==iSfmEndAdrs)} )
-		{lpStAdrsCheck,		7'b1_x_xx_x_x_0}:	qNextStCke <= 1'b1;
-		{lpStPageReadCmd,	7'bx_1_11_x_x_x}:	qNextStCke <= 1'b1;
-		{lpStBusyCmd,		7'bx_1_10_x_x_x}:	qNextStCke <= 1'b1;
-		{lpStBusyCheck,		7'bx_x_xx_1_x_x}:	qNextStCke <= 1'b1;
-		{lpStReadDataCmd,	7'bx_1_11_x_x_x}:	qNextStCke <= 1'b1;
-		{lpStFlashRead,		7'bx_x_xx_x_1_x}:	qNextStCke <= 1'b1;
+	casex ( {rSt,rDone,iSfmEn,iSfmDone,rWp[1:0],(rRd[0]==1'b1),rRdCnt[lpSfmPageSize]} )
+		{lpStAdrsCheck,		7'b01_x_xx_x_x}:	qNextStCke <= 1'b1;
+		{lpStPageReadCmd,	7'bxx_1_11_x_x}:	qNextStCke <= 1'b1;
+		{lpStBusyCmd,		7'bxx_1_10_x_x}:	qNextStCke <= 1'b1;
+		{lpStBusyCheck,		7'bxx_x_xx_1_x}:	qNextStCke <= 1'b1;
+		{lpStReadDataCmd,	7'bxx_1_11_x_x}:	qNextStCke <= 1'b1;
+		{lpStFlashRead,		7'bxx_x_xx_x_1}:	qNextStCke <= 1'b1;
 		default: 								qNextStCke <= 1'b0;
 	endcase
+
+	qSfcWd <= rRd;
+	qSfcWe <= rRe;
 end
 
 //-----------------------------------------------------------------------------
 // function
 //-----------------------------------------------------------------------------
+function integer f_detect_bitwidth;
+	input integer number;
+	integer bitwidth;
+	integer bitcnt;
+	integer	i;
+	begin
+		bitcnt = 0;
+		for (i = 0; i < 32; i = i+1 )
+		begin
+			if (number[i]) 
+			begin
+				bitcnt++;
+			end
+		end
+
+		if (bitcnt == 1)
+		begin
+			for (i = 0; i < 32; i = i+1 )
+			begin
+				if (number[i]) 
+				begin
+					f_detect_bitwidth = i+1;
+				end
+			end
+
+			if (f_detect_bitwidth != 1)
+			begin
+				f_detect_bitwidth = f_detect_bitwidth - 1;
+			end
+		end
+		else
+		begin
+			bitwidth = 0;
+			if (number == 0)
+			begin
+				f_detect_bitwidth = 1;
+			end
+			else
+			begin
+				while (number != 0)
+				begin
+					bitwidth++;
+					number = number >> 1;
+			end
+			f_detect_bitwidth = bitwidth;
+			end
+		end
+	end
+endfunction
+
 
 
 endmodule

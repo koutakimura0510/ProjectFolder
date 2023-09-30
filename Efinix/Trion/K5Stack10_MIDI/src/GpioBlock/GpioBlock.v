@@ -1,10 +1,9 @@
-//----------------------------------------------------------
-// Create 2022/8/21
-// Author koutakimura
-// -
-// 汎用 GPIO の制御を司るブロック
-// 2023/04/08 V1.1 USIBの更新版に対応
-//----------------------------------------------------------
+/*-----------------------------------------------------------------------------
+ * GPIO の制御を司るブロック
+ * 
+ * 23-04-08 v1.00 : New Release
+ * 23-09-29 v1.01 : I2C Slave 機能追加
+ *-----------------------------------------------------------------------------*/
 module GpioBlock #(
 	parameter pBlockAdrsWidth = 8,
 	parameter [pBlockAdrsWidth-1:0] pAdrsMap = 'h01,
@@ -14,19 +13,21 @@ module GpioBlock #(
 	parameter pGpioWidth = 16
 )(
 	// GPIO Output Ctrl
-	output [pGpioWidth-1:0] oGpioR,
-	output [pGpioWidth-1:0] oGpioDir,
+	output [pGpioWidth-1:0] 	oGpioR,
+	output [pGpioWidth-1:0] 	oGpioDir,
 	// GPIO Alt Mode Signal
-	input  [pGpioWidth-1:0] iGpioAltMode,
+	input  [pGpioWidth-1:0] 	iGpioAltMode,
 	// GPIO Input
-	input  [pGpioWidth-1:0] iGpioIn,
-	// Control
-	input	iSmsMode,
+	input  [pGpioWidth-1:0] 	iGpioIn,
+	//
+	input 						iI2cSclSlave,
+	input 						iI2cSdaSlave,
+	output						oI2cOeSlave,
 	// Bus Master Read
-	output [pUsiBusWidth-1:0] oSUsiRd,
+	output [pUsiBusWidth-1:0] 	oSUsiRd,
 	// Bus Master Write
-	input  [pUsiBusWidth-1:0] iSUsiWd,
-	input  [pUsiBusWidth-1:0] iSUsiAdrs,
+	input  [pUsiBusWidth-1:0] 	iSUsiWd,
+	input  [pUsiBusWidth-1:0] 	iSUsiAdrs,
     // CLK Reset
     input  iSCLK,
     input  iSRST
@@ -61,6 +62,13 @@ GpioCsr #(
 
 
 //-----------------------------------------------------------------------------
+// I2C Slave
+//-----------------------------------------------------------------------------
+localparam lpI2cSlaveAdrs = 7'h20;
+
+
+
+//-----------------------------------------------------------------------------
 // IO Part
 //-----------------------------------------------------------------------------
 genvar gpioX;
@@ -71,7 +79,7 @@ generate
 	begin
 		always @(posedge iSCLK)
 		begin
-			rGpioR[gpioX] <= |{iSmsMode,wGpioAltModeCsr[gpioX]} ? iGpioAltMode[gpioX] : wGpioOutCtrl[gpioX];
+			rGpioR[gpioX] <= wGpioAltModeCsr[gpioX] ? iGpioAltMode[gpioX] : wGpioOutCtrl[gpioX];
 		end
 	end
 endgenerate

@@ -24,6 +24,7 @@ from machine import I2C, Pin, Timer
 import PicoSw
 import L3GD20H
 import utime
+import pdb
 
 
 # ------------------------------------------------------------------------------
@@ -54,6 +55,9 @@ def main():
     Timer(freq=1000, mode=Timer.PERIODIC, callback=timer_handler)
     #
     L3GD20H.device_init(i2c)
+    print("pdb start")
+    pdb.set_trace()
+    print("pdb trace")
     led_blink_timer = 0
     sw_cap_timer = 0
 
@@ -67,8 +71,8 @@ def main():
             if sw_cap_timer <= interval_timer_count:
                 sw_cap_timer = interval_timer_count + 1
                 sw = PicoSw.get_sw()
-                # x, y, z = L3GD20H.get_xyz_acceleration(i2c)
-                # print("\r"+"X:{}, Y:{}, Z:{}".format(x,y,z),end="")
+                x, y, z = L3GD20H.get_xyz_acceleration(i2c)
+                print("\r"+"X:{}, Y:{}, Z:{}".format(x,y,z),end="")
 
                 try:
                     i2c.writeto_mem(0x10, 0x20, bytearray([sw]))

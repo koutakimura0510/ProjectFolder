@@ -150,48 +150,48 @@ PixelDrawPosition #(
 //-----------------------------------------------------------------------------
 // VideoDmaChipRead
 //-----------------------------------------------------------------------------
-wire [pUfiDqBusWidth-1:0]	wDcrInfoMapChipWd;
-wire [pDmaAdrsWidth-1:0] 	wDcrInfoMapChipWa;
-wire 						wDcrInfoMapChipWe;
-wire [pVHAW-1:0]			qDcrInfoLine;
-wire [9:0] 					qDcrInfoMapChipId;
-wire 	 					qDcrInfoMapChipIdRe;
+// wire [pUfiDqBusWidth-1:0]	wDcrInfoMapChipWd;
+// wire [pDmaAdrsWidth-1:0] 	wDcrInfoMapChipWa;
+// wire 						wDcrInfoMapChipWe;
+// wire [pVHAW-1:0]			qDcrInfoLine;
+// wire [9:0] 					qDcrInfoMapChipId;
+// wire 	 					qDcrInfoMapChipIdRe;
 
-VideoDmaChipRead #(
-	.pUfiDqBusWidth(pUfiDqBusWidth),
-	.pUfiAdrsBusWidth(pUfiAdrsBusWidth),
-	.pUfiAdrsMap(pUfiAdrsMap),
-	.pDmaAdrsWidth(pDmaAdrsWidth),
-	.pDmaBurstLength(pDmaBurstLength),
-	.pColorDepth(pColorDepth),
-	.pMapChipSize(pMapChipSize),
-	.pMapChipIdNum(pMapChipIdNum)
-) VideoDmaChipRead (
-	// Ufi Bus Master Read
-	.iMUfiRd(iMUfiRd),		.iMUfiAdrs(iMUfiAdrs),
-	// Ufi Bus Master Write
-	.oMUfiWd(oMUfiWd),		.oMUfiAdrs(oMUfiAdrs),
-	.iMUfiRdy(iMUfiRdy),
-	// Info
-	.oInfoMapChipWd(wDcrInfoMapChipWd),
-	.oInfoMapChipWa(wDcrInfoMapChipWa),
-	.oInfoMapChipWe(wDcrInfoMapChipWe),
-	.iInfoLine(qDcrInfoLine),
-	.iInfoMapChipId(qDcrInfoMapChipId),
-	.iInfoMapChipIdRe(),
-	// Common
-	.iRST(iRST),	.inRST(inRST),
-	.iCLK(iCLK)
-);
+// VideoDmaChipRead #(
+// 	.pUfiDqBusWidth(pUfiDqBusWidth),
+// 	.pUfiAdrsBusWidth(pUfiAdrsBusWidth),
+// 	.pUfiAdrsMap(pUfiAdrsMap),
+// 	.pDmaAdrsWidth(pDmaAdrsWidth),
+// 	.pDmaBurstLength(pDmaBurstLength),
+// 	.pColorDepth(pColorDepth),
+// 	.pMapChipSize(pMapChipSize),
+// 	.pMapChipIdNum(pMapChipIdNum)
+// ) VideoDmaChipRead (
+// 	// Ufi Bus Master Read
+// 	.iMUfiRd(iMUfiRd),		.iMUfiAdrs(iMUfiAdrs),
+// 	// Ufi Bus Master Write
+// 	.oMUfiWd(oMUfiWd),		.oMUfiAdrs(oMUfiAdrs),
+// 	.iMUfiRdy(iMUfiRdy),
+// 	// Info
+// 	.oInfoMapChipWd(wDcrInfoMapChipWd),
+// 	.oInfoMapChipWa(wDcrInfoMapChipWa),
+// 	.oInfoMapChipWe(wDcrInfoMapChipWe),
+// 	.iInfoLine(qDcrInfoLine),
+// 	.iInfoMapChipId(qDcrInfoMapChipId),
+// 	.iInfoMapChipIdRe(),
+// 	// Common
+// 	.iRST(iRST),	.inRST(inRST),
+// 	.iCLK(iCLK)
+// );
 
-always @*
-begin
-	qPdfWd  			<= wDcrInfoMapChipWd;
-	qPdfWe  			<= ~wPdfFull & wDcrInfoMapChipWe;
-	qPdpCke 			<= wDcrInfoMapChipWe;
-	qDcrInfoLine		<= wPdpVpos[4:0];
-	qDcrInfoMapChipId	<= wPdpHposBs;
-end
+// always @*
+// begin
+// 	qPdfWd  			<= wDcrInfoMapChipWd;
+// 	qPdfWe  			<= ~wPdfFull & wDcrInfoMapChipWe;
+// 	qPdpCke 			<= wDcrInfoMapChipWe;
+// 	qDcrInfoLine		<= wPdpVpos[4:0];
+// 	qDcrInfoMapChipId	<= wPdpHposBs;
+// end
 
 //-----------------------------------------------------------------------------
 // VDMA Tester
@@ -202,40 +202,40 @@ end
 //-----------------------------------------------------------------------------
 // Demo
 //-----------------------------------------------------------------------------
-// wire [15:0] wDsgPd;
-// wire 		wDsgPv;
-// reg  [8:0]	rDlx;
-// reg  [8:0]	rDrx;
+wire [15:0] wDsgPd;
+wire 		wDsgPv;
+reg  [8:0]	rDlx;
+reg  [8:0]	rDrx;
 
-// DotSquareGen #(
-// 	.pVHAW(pVHAW),
-// 	.pVVAW(pVVAW),
-// 	.pColorDepth(pColorDepth)
-// ) DotSquareGen (
-// 	// Pixel Output
-// 	.oPd(wDsgPd),			.oPv(wDsgPv),
-// 	// Control Status
-// 	.iColor(16'hffff),
-// 	.iHpos(wPdpHpos),		.iVpos(wPdpVpos),
-// 	.iDLeftX(rDrx-32),		.iDRightX(rDrx),
-// 	.iDTopY(0),				.iDUnderY(32),
-// 	// common
-// 	.iRST(iRST),			.iCLK(iCLK)
-// );
+DotSquareGen #(
+	.pVHAW(pVHAW),
+	.pVVAW(pVVAW),
+	.pColorDepth(pColorDepth)
+) DotSquareGen (
+	// Pixel Output
+	.oPd(wDsgPd),			.oPv(wDsgPv),
+	// Control Status
+	.iColor(16'hffff),
+	.iHpos(wPdpHpos),		.iVpos(wPdpVpos),
+	.iDLeftX(rDrx-32),		.iDRightX(rDrx),
+	.iDTopY(0),				.iDUnderY(32),
+	// common
+	.iRST(iRST),			.iCLK(iCLK)
+);
 
-// always @(posedge iCLK)
-// begin
-// 	if (iRST) 			rDlx <= 9'd0;
-// 	else if (wPdpFe)	rDrx <= rDrx + 4'd4;
-// 	else 				rDrx <= rDrx;
-// end
+always @(posedge iCLK)
+begin
+	if (iRST) 			rDlx <= 9'd0;
+	else if (wPdpFe)	rDrx <= rDrx + 4'd4;
+	else 				rDrx <= rDrx;
+end
 
-// always @*
-// begin
-// 	qPdfWd  <= wDsgPd;
-// 	qPdfWe  <= ~wPdfFull;
-// 	qPdpCke <= ~wPdfFull;
-// end
+always @*
+begin
+	qPdfWd  <= wDsgPd;
+	qPdfWe  <= ~wPdfFull;
+	qPdpCke <= ~wPdfFull;
+end
 
 //-----------------------------------------------------------------------------
 // キャラクター(Player,NPC)の座標データ算出

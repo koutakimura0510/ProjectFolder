@@ -7,10 +7,10 @@
 //----------------------------------------------------------
 module AudioTxI2S (
 	// I2S Output Ctrl
-	output oI2sMclk,
-	output oI2sBclk,
-	output oI2sLrclk,	// Low "LCLK", High "RCLK"
-	output oI2sSdata,
+	output oI2S_MCLK,
+	output oI2S_BCLK,
+	output oI2S_LRCLK,	// Low "LCLK", High "RCLK"
+	output oI2S_SDATA,
 	// Control and Data
 	input  [31:0] iAudioData,
 	output oAudioDataRdy,

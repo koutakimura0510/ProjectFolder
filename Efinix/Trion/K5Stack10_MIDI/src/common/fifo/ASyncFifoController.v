@@ -6,8 +6,8 @@
  * アドレス -> グレイコード変換 -> バイナリコード(２進数)変換を使用
  *-----------------------------------------------------------------------------*/
 module ASyncFifoController #(
-    parameter 	pFifoDepth		= 16,		// FIFO BRAMのサイズ指定
-    parameter 	pFifoBitWidth	= 8,		// bitサイズ
+	parameter 	pFifoDepth		= 16,		// FIFO BRAMのサイズ指定
+	parameter 	pFifoBitWidth	= 8,		// bitサイズ
 	parameter	pFifoRemaingCntBorder	= pFifoDepth / 2
 )(
 	input   [pFifoBitWidth-1:0] iWd,	// write data
@@ -252,26 +252,29 @@ endmodule
 //-----------------------------------------------------------------------------
 // Sample
 //-----------------------------------------------------------------------------
-// parameter pFifoDepth = 16;
-// parameter pFifoBitWidth = 16;
-// parameter pFifoBlockRam = "yes";
+// localparam lpFifoDepth				= 256;
+// localparam lpFifoBitWidth 			= 16;
+// localparam lpFifoRemaingCntBorder 	= 128;
 
-// wire [pFifoBitWidth-1:0] wRd;
-// wire wFull, wEmp;
-// wire wRvd;
+// wire wFifoNameFull, wFifoNameRemaingCntAlert;
+// wire [lpFifoBitWidth-1:0] wFifoNameRd;
+// reg  qFifoNameRe;
+// wire wFifoNameEmp;
+// wire wFifoNameRvd;
+// reg  [lpFifoBitWidth-1:0] qFifoNameWd;
+// reg  qFifoNameWe;
 
 // SyncFifoController #(
-//     .pFifoDepth(pFifoDepth),
-//     .pFifoBitWidth(pFifoBitWidth),
-// 	.pFifoBlockRam(pFifoBlockRam)
+// 	.pFifoDepth(lpFifoDepth),
+// 	.pFifoBitWidth(lpFifoBitWidth),
+// 	.pFifoRemaingCntBorder(lpFifoRemaingCntBorder)
 // ) SyncFifoController (
-//     .iWd(),
-//     .iWe(),
-//     .oFull(wFull),
-//     .oRd(wRd),
-//     .iRe(),
-//     .oRvd(wRvd),
-//     .oEmp(wEmp),
-//     .inARST(),
-// 	.iCLK()
-// );
+// 	// read side
+// 	.oRd(wFifoNameRd),		.iRe(qFifoNameRe),
+// 	.oRvd(wFifoNameRvd),	.oEmp(wFifoNameEmp),
+// 	// write side
+// 	.iWd(qFifoNameWd),		.iWe(qFifoNameWe),
+// 	.oFull(wFifoNameFull),	.oRemaingCntAlert(wFifoNameRemaingCntAlert),
+// 	// common
+// 	.inARST(),	.iWCLK(), .iRCLK()
+// )

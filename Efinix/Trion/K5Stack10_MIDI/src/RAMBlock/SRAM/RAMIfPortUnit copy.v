@@ -21,12 +21,11 @@ module RAMIfPortUnit #(
 	output [pRamAdrsWidth-1:0] oSRAMA,
 	output [pRamDqWidth-1:0] oSRAMD,
 	input  [pRamDqWidth-1:0] iSRAMD,
-	output oSRAM_OE,
-	output oSRAM_RWDS,
-	output oSRAM_pCLK,
-	output oSRAM_nCLK,
-	output oSRAM_nCE,
-	output oSRAM_nRST,
+	output oSRAM_LB,	// N Lower Byte Control
+	output oSRAM_UB,	// N Upper Byte Control
+	output oSRAM_OE,	// N Output Enable
+	output oSRAM_WE,	// N Write Enable
+	output oSRAM_CE,	// N Chip Select 
 	// Common Port
 	input  [pRamAdrsWidth-1:0] iAdrs,
 	input  iCmd,  // "1" Read, "0" Write
@@ -84,17 +83,11 @@ end
 
 assign oSRAMA = rAdrs;
 assign oSRAMD = rWd;
-// assign oSRAM_LB = 1'b0; // 常に有効
-// assign oSRAM_UB = 1'b0; // 常に有効
-// assign oSRAM_OE = rOE;
-// assign oSRAM_WE = rWE;
-// assign oSRAM_CE = rCE;
-assign oSRAM_OE = 1'b1;
-assign oSRAM_RWDS = 1'b1;
-assign oSRAM_pCLK = 1'b1;
-assign oSRAM_nCLK = 1'b1;
-assign oSRAM_nCE = 1'b1;
-assign oSRAM_nRST = 1'b1;
+assign oSRAM_LB = 1'b0; // 常に有効
+assign oSRAM_UB = 1'b0; // 常に有効
+assign oSRAM_OE = rOE;
+assign oSRAM_WE = rWE;
+assign oSRAM_CE = rCE;
 assign oRd = rRd;
 assign oRvd = rRvd;
 

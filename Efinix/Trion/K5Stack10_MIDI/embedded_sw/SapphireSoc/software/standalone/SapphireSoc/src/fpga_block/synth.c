@@ -29,26 +29,26 @@ void synth_sinwave_write(void)
 /**-----------------------------------------------------------------------------
  * Audio Amp Settings
  *-----------------------------------------------------------------------------*/
-void synth_audio_amp(void)
-{
-	uint32_t note_number;
-	uint32_t audio_amp;
-
-	note_number = usi_read_cmd(SYNTH_REG_ON_NOTE_NUMBER);
-
-	for (uint8_t i = 0; i < 4; i++) {
-		switch (note_number & 0xff)
-		{
-		case /* constant-expression */:
-			/* code */
-			break;
-		
-		default:
-			break;
-		}
-
-		note_number = note_number >> 8;
-	}
-
-	usi_write_cmd(audio_amp, SYNTH_REG_AUDIO_AMP_CH4321);
-}
+//void synth_audio_amp(void)
+//{
+//	uint32_t note_number;
+//	uint32_t audio_amp;
+//
+//	note_number = usi_read_cmd(SYNTH_REG_ON_NOTE_NUMBER);
+//
+//	for (uint8_t i = 0; i < 4; i++) {
+//		switch (note_number & 0xff)
+//		{
+//		case /* constant-expression */:
+//			/* code */
+//			break;
+//
+//		default:
+//			break;
+//		}
+//
+//		note_number = note_number >> 8;
+//	}
+//
+//	usi_write_cmd(audio_amp, SYNTH_REG_AUDIO_AMP_CH4321);
+//}

@@ -36,15 +36,18 @@ static void system_initialize(void)
 	usi_write_cmd(1,		SPI_REG_GPIO_ALT);	// SPI 機能有効
 
 	// Synthesizer
-	synth_sinwave_write();
-	usi_write_cmd(0,		SYNTH_REG_DMA_ADRS_START);
-	usi_write_cmd(44100-1,	SYNTH_REG_DMA_ADRS_END);
-	usi_write_cmd(440,		SYNTH_REG_DMA_ADRS_ADD);
-	usi_write_cmd(1,		SYNTH_REG_DMA_CYCLE_ENABLE);	// Cycle Mode Enable
-	usi_write_cmd(1,		SYNTH_REG_DMA_ENABLE);			// DMA Run
+//	synth_sinwave_write();
+//	usi_write_cmd(0,		SYNTH_REG_DMA_ADRS_START);
+//	usi_write_cmd(44100-1,	SYNTH_REG_DMA_ADRS_END);
+//	usi_write_cmd(440,		SYNTH_REG_DMA_ADRS_ADD);
+//	usi_write_cmd(1,		SYNTH_REG_DMA_CYCLE_ENABLE);	// Cycle Mode Enable
+//	usi_write_cmd(1,		SYNTH_REG_DMA_ENABLE);			// DMA Run
 
 	// flash rom
-	flash_protection_reg_write();
+//	flash_protection_reg_write(0);
+//	flash_protection_reg_write(1);
+//	flash_protection_reg_write(2);
+	flash_protection_reg_write(3);
 }
 
 
@@ -60,7 +63,10 @@ void main()
 		usi_read_printf(SYNTH_REG_AUDIO_FREQ);
 //		bsp_uDelay(100000);
 //		cache_write(2, 60000);
-		// flash_id_read();
+//		flash_id_read(0);
+//		flash_id_read(1);
+//		flash_id_read(2);
+		 flash_id_read(3);
 		// flash_write();
 		// flash_read();
 	}

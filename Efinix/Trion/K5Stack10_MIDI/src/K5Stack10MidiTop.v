@@ -125,39 +125,11 @@ assign wVRST    = rVRST;			assign wnVRST   = rnVRST;
 assign PLL_BR0_RSTN = 1'b1;
 assign PLL_TL0_RSTN = 1'b1;
 
-//-----------------------------------------------------------------------------
-// Game Mode / Update Mode 
-//-----------------------------------------------------------------------------
-localparam lpSmsTime = 100000000;
-
-reg  qSmsRst;
-reg  rSmsMode = 1'b0;		// Init Game Mode
-wire wSmsCke;
-
-CkeGenerator #(
-	.pSysClk(lpSmsTime)
-) SystemModeSelect (
-	.iDiv(),	.iCke(),	.oCke(wSmsCke),
-	// coommon
-	.iRST(qSmsRst),			.iCLK(iSCLK)
-);
-
-always @(posedge iSCLK)
-begin
-	if (wSmsCke)		rSmsMode <= ~rSmsMode;
-	else 				rSmsMode <=  rSmsMode;
-end
-
-always @*
-begin
-	qSmsRst <= wnSRST;	// SW Push 時に mode 遷移を行う
-end
-
 
 //------------------------------------------------------------------------------
 // USI/F BUS
 //------------------------------------------------------------------------------
-localparam lpUsiBusWidth      = 32;		// USIB Width
+localparam lpUsiBusWidth      = 32;		// USIB データ、アドレス共通バス幅
 localparam lpBlockConnectNum  = 7;		// 現在接続しているブロックの個数
 localparam lpBlockAdrsWidth   = f_detect_bitwidth(lpBlockConnectNum);
 localparam lpCsrAdrsWidth     = 16;		// 各ブロック共通の基本CSR幅
@@ -232,10 +204,11 @@ endgenerate
 //----------------------------------------------------------
 // UFI/F BUS
 //----------------------------------------------------------
-localparam  lpRamAdrsWidth    		= 18;
-localparam  lpRamDqWidth      		= 16;
-localparam  lpUfiDqBusWidth   		= lpRamDqWidth;
-localparam  lpUfiAdrsBusWidth 		= 32;
+localparam  lpRamAdrsWidth    		= 24;		// 外部 RAM の Adrs 領域
+localparam  lpRamDqWidth      		= 8;		// 外部 RAM の Dq 端子数
+localparam  lpDmaAdrsWidth    		= lpRamAdrsWidth;
+localparam  lpUfiDqBusWidth   		= 16;		// UFIB データ幅
+localparam  lpUfiAdrsBusWidth 		= 32;		// UFIB アドレス幅
 localparam  lpUfiBlockConnectNum 	= 6;		// UFIB Connet Block Number
 localparam 	lpUfiBlockAdrsWidth		= f_detect_bitwidth(lpUfiBlockConnectNum);
 localparam	lpMUfiDqWidth 			= lpUfiDqBusWidth   * lpUfiBlockConnectNum;
@@ -305,35 +278,35 @@ endgenerate
 //-----------------------------------------------------------------------------
 // MCB 
 //-----------------------------------------------------------------------------
-localparam lpOnChipMcu = "no";
+localparam lpOnChipMcu = "yes";
 
 wire wSocTxd, wSocRxd;
 
 MicroControllerBlock #(
-  .pBlockAdrsWidth(lpBlockAdrsWidth),
-  .pAdrsMap(lpMCBAdrsMap),
-  .pCsrAdrsWidth(lpCsrAdrsWidth),
-  .pCsrActiveWidth(lpMCBCsrActiveWidth),
-  .pUsiBusWidth(lpUsiBusWidth),
-  .pUfiDqBusWidth(lpUfiDqBusWidth),
-  .pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
-  .pUfiAdrsMap(lpUfiMcbAdrsMap),
-  .pOnChipMcu(lpOnChipMcu)
+	.pBlockAdrsWidth(lpBlockAdrsWidth),
+	.pAdrsMap(lpMCBAdrsMap),
+	.pCsrAdrsWidth(lpCsrAdrsWidth),
+	.pCsrActiveWidth(lpMCBCsrActiveWidth),
+	.pUsiBusWidth(lpUsiBusWidth),
+	.pUfiDqBusWidth(lpUfiDqBusWidth),
+	.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
+	.pUfiAdrsMap(lpUfiMcbAdrsMap),
+	.pOnChipMcu(lpOnChipMcu)
 ) MicroControllerBlock (
   // Usi Bus Master Read
 	.iMUsiRd(wMUsiRd),
 	.oSUsiRd(wSUsiRd[lpMCBAdrsMap]),
 	// Usi Bus Master Write
-	.oMUsiWd(wMUsiWdMcb),  .oMUsiAdrs(wMUsiAdrsMcb),
+	.oMUsiWd(wMUsiWdMcb),	.oMUsiAdrs(wMUsiAdrsMcb),
 	.iSUsiWd(wSUsiWd),		.iSUsiAdrs(wSUsiAdrs),
 	// Ufi Bus Master Read
-	.iMUfiRd(wMUfiRd),    .iMUfiAdrs(wMUfiAdrs),
+	.iMUfiRd(wMUfiRd),		.iMUfiAdrs(wMUfiAdrs),
 	// Ufi Bus Master Write
 	.oMUfiWd(wMUfiWd[lpUfiMcbAdrsMap]),
 	.oMUfiAdrs(wMUfiWAdrs[lpUfiMcbAdrsMap]),
 	.iMUfiRdy(wMUfiRdy[lpUfiMcbAdrsMap]),
 	// GPIO
-	.oTxd(wSocTxd),       .iRxd(wSocRxd),
+	.oTxd(wSocTxd),			.iRxd(wSocRxd),
 	// JTAG
 	.jtag_inst1_TCK(jtag_inst1_TCK),
 	.jtag_inst1_TDI(jtag_inst1_TDI),
@@ -344,7 +317,7 @@ MicroControllerBlock #(
 	.jtag_inst1_UPDATE(jtag_inst1_UPDATE),
 	.jtag_inst1_RESET(jtag_inst1_RESET),
 	// common
-	.iSRST(wSRST),      .inSRST(rnSRST),
+	.iSRST(wSRST),			.inSRST(rnSRST),
 	.iSCLK(iSCLK)
 );
 
@@ -357,30 +330,36 @@ wire [lpGpioWidth-1:0] wGPIOR_O;
 wire [lpGpioWidth-1:0] wGPIOR_Dir;
 wire [lpGpioWidth-1:0] wGPIOR_In;
 reg  [lpGpioWidth-1:0] qGpioAltMode;
+//
+wire iI2cSclSlave;
+wire iI2cSdaSlave;
+wire oI2cOeSlave;
 
 GpioBlock #(
-  .pBlockAdrsWidth(lpBlockAdrsWidth),
-  .pAdrsMap(lpGpioAdrsMap),
-  .pUsiBusWidth(lpUsiBusWidth),
-  .pCsrAdrsWidth(lpCsrAdrsWidth),
-  .pCsrActiveWidth(lpGpioCsrActiveWidth),
-  .pGpioWidth(lpGpioWidth)
+	.pBlockAdrsWidth(lpBlockAdrsWidth),
+	.pAdrsMap(lpGpioAdrsMap),
+	.pUsiBusWidth(lpUsiBusWidth),
+	.pCsrAdrsWidth(lpCsrAdrsWidth),
+	.pCsrActiveWidth(lpGpioCsrActiveWidth),
+	.pGpioWidth(lpGpioWidth)
 ) GpioBlock (
-  // GPIO Output Ctrl
-  .oGpioR(wGPIOR_O),
-  .oGpioDir(wGPIOR_Dir),
-  // GPIO Alt Mode
-  .iGpioAltMode(qGpioAltMode),
-  // GPIO Input
-  .iGpioIn(wGPIOR_In),
-  // Control
-  .iSmsMode(rSmsMode),
-  // Bus Master Read
-  .oSUsiRd(wSUsiRd[lpGpioAdrsMap]),
-  // Bus Master Write
-  .iSUsiWd(wSUsiWd),  .iSUsiAdrs(wSUsiAdrs),
-  // CLK, RST
-  .iSRST(wSRST),    .iSCLK(iSCLK)
+	// GPIO Output Ctrl
+	.oGpioR(wGPIOR_O),
+	.oGpioDir(wGPIOR_Dir),
+	// GPIO Alt Mode
+	.iGpioAltMode(qGpioAltMode),
+	// GPIO Input
+	.iGpioIn(wGPIOR_In),
+	// I2C Slave
+	.iI2cSclSlave(wI2cSclSlave),
+	.iI2cSdaSlave(wI2cSdaSlave),
+	.oI2cOeSlave(wI2cOeSlave),
+	// Bus Master Read
+	.oSUsiRd(wSUsiRd[lpGpioAdrsMap]),
+	// Bus Master Write
+	.iSUsiWd(wSUsiWd),  .iSUsiAdrs(wSUsiAdrs),
+	// CLK, RST
+	.iSRST(wSRST),    .iSCLK(iSCLK)
 );
 
 //-----------------------------------------------------------------------------
@@ -424,7 +403,7 @@ SPIBlock #(
 //-----------------------------------------------------------------------------
 // Sound Generate
 //-----------------------------------------------------------------------------
-localparam lpSfcNum = 3;
+localparam lpSfcNum = 3;	// Serial Flash Memory Number
 
 wire wI2sMclk;
 wire wI2sBclk;
@@ -442,8 +421,8 @@ AudioTxBlock #(
 	.pSfmNum(lpSfcNum)
 ) AudioTxBlock (
 	// Audio dac I/F Port
-	.oI2sMclk(wI2sMclk),	.oI2sBclk(wI2sBclk),
-	.oI2sLrclk(wI2sLrclk),	.oI2sSdata(wI2sSdata),
+	.oI2S_MCLK(wI2sMclk),	.oI2S_BCLK(wI2sBclk),
+	.oI2S_LRCLK(wI2sLrclk),	.oI2S_SDATA(wI2sSdata),
 	// Serial Frash Memory I/F Port
 	.oSfmSck(wSfmSck),		.oSfmMosi(wSfmMosi),
 	.iSfmMiso(wSfmMiso),	.oSfmCs(wSfmCs),
@@ -461,43 +440,44 @@ AudioTxBlock #(
 //-----------------------------------------------------------------------------
 // Memory Block
 //-----------------------------------------------------------------------------
-wire [lpRamAdrsWidth-1:0] wSRAMA;
 wire [lpRamDqWidth-1:0]  wSRAMD_O;
 wire [lpRamDqWidth-1:0]  wSRAMD_I;
-wire wSRAM_LB;
-wire wSRAM_UB;
+wire wSRAM_RWDS;
+wire wSRAM_pCLK;
+wire wSRAM_nCLK;
+wire wSRAM_nCE;
+wire wSRAM_nRST;
 wire wSRAM_OE;
-wire wSRAM_WE;
-wire wSRAM_CE;
 wire wTestErr, wDone;
 
 RAMBlock #(
-  .pBlockAdrsWidth(lpBlockAdrsWidth),    .pAdrsMap(lpRAMAdrsMap),
-  .pUsiBusWidth(lpUsiBusWidth),
-  .pCsrAdrsWidth(lpCsrAdrsWidth),      .pCsrActiveWidth(lpRAMCsrActiveWidth),
-  .pUfiDqBusWidth(lpUfiDqBusWidth),    .pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
-  .pRamAdrsWidth(lpRamAdrsWidth),      .pRamDqWidth(lpRamDqWidth)
+	.pBlockAdrsWidth(lpBlockAdrsWidth),	.pAdrsMap(lpRAMAdrsMap),
+	.pUsiBusWidth(lpUsiBusWidth),
+	.pCsrAdrsWidth(lpCsrAdrsWidth),		.pCsrActiveWidth(lpRAMCsrActiveWidth),
+	.pUfiDqBusWidth(lpUfiDqBusWidth),		.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
+	// Ram I/F
+	.pRamAdrsWidth(lpRamAdrsWidth),		.pRamDqWidth(lpRamDqWidth)
 ) RAMBlock (
   // SRAM I/F Port
-  .oSRAMA(wSRAMA),		.oSRAMD(wSRAMD_O),
-  .iSRAMD(wSRAMD_I),
-  .oSRAM_LB(wSRAM_LB),  .oSRAM_UB(wSRAM_UB),
-  .oSRAM_OE(wSRAM_OE),  .oSRAM_WE(wSRAM_WE),
-  .oSRAM_CE(wSRAM_CE),
-  // Usi Bus Master Read
-  .oSUsiRd(wSUsiRd[lpRAMAdrsMap]),
-  // Usi Bus Master Write
-  .iSUsiWd(wSUsiWd),    .iSUsiAdrs(wSUsiAdrs),
-  // Ufi Bus Master Read
-  .oSUfiRd(wSUfiRd),    .oSUfiAdrs(wSUfiAdrs),
-  // Ufi Bus Master Write
-  .iSUfiWd(wSUfiWd),    .iSUfiAdrs(wSUfiWAdrs),
-  .oSUfiRdy(wSUfiRdy),
-  // Status
-  .oTestErr(wTestErr),  .oDone(wDone),
-  // CLK, RST
-  .iSRST(wSRST),      .inSRST(wnSRST),
-  .iSCLK(iSCLK)
+	.oSRAMD(wSRAMD_O),			.iSRAMD(wSRAMD_I),
+	.oSRAM_RWDS(wSRAM_RWDS),	.oSRAM_pCLK(wSRAM_pCLK),
+	.oSRAM_nCLK(wSRAM_nCLK),	.oSRAM_nCE(wSRAM_nCE),
+	.oSRAM_nRST(wSRAM_nRST),	.oSRAM_OE(wSRAM_OE),
+	.oSRAMA(),
+	// Usi Bus Master Read
+	.oSUsiRd(wSUsiRd[lpRAMAdrsMap]),
+	// Usi Bus Master Write
+	.iSUsiWd(wSUsiWd),    .iSUsiAdrs(wSUsiAdrs),
+	// Ufi Bus Master Read
+	.oSUfiRd(wSUfiRd),    .oSUfiAdrs(wSUfiAdrs),
+	// Ufi Bus Master Write
+	.iSUfiWd(wSUfiWd),    .iSUfiAdrs(wSUfiWAdrs),
+	.oSUfiRdy(wSUfiRdy),
+	// Status
+	.oTestErr(wTestErr),  .oDone(wDone),
+	// CLK, RST
+	.iSRST(wSRST),      .inSRST(wnSRST),
+	.iSCLK(iSCLK)
 );
 
 //---------------------------------------------------------------------------
@@ -508,12 +488,12 @@ SysTimerBlock #(
 	.pUsiBusWidth(lpUsiBusWidth),
 	.pCsrAdrsWidth(lpCsrAdrsWidth),		.pCsrActiveWidth(lpTimerCsrActiveWidth)
 ) SysTimerBlock (
-  // Usi Bus Master Read
-  .oSUsiRd(wSUsiRd[lpSysTimerAdrsMap]),
-  // Usi Bus Master Write
-  .iSUsiWd(wSUsiWd),    .iSUsiAdrs(wSUsiAdrs),
-  // CLK, RST
-  .iSRST(wSRST),		.iSCLK(iSCLK)
+	// Usi Bus Master Read
+	.oSUsiRd(wSUsiRd[lpSysTimerAdrsMap]),
+	// Usi Bus Master Write
+	.iSUsiWd(wSUsiWd),    .iSUsiAdrs(wSUsiAdrs),
+	// CLK, RST
+	.iSRST(wSRST),		.iSCLK(iSCLK)
 );
 
 //---------------------------------------------------------------------------
@@ -533,7 +513,7 @@ VideoTxBlock #(
 	// UFI
 	.pUfiDqBusWidth(lpUfiDqBusWidth),		.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
 	.pUfiAdrsMap(lpUfiVtbAdrsMap),
-	.pDmaAdrsWidth(lpRamAdrsWidth),			.pDmaBurstLength(lpVtbDmaBurstLength)
+	.pDmaAdrsWidth(lpDmaAdrsWidth),			.pDmaBurstLength(lpVtbDmaBurstLength)
 ) VideoTxBlock (
 	// VIDEO Output Signal Ctrl
 	.oVIDEO_R(wVIDEO_R),		.oVIDEO_G(wVIDEO_G),	.oVIDEO_B(wVIDEO_B),
@@ -578,22 +558,22 @@ assign ioGPIOL_O[3]		= wFlashRomCs;		assign  wIunsedL[3]		= ioGPIOL_I[3];		assig
 assign ioGPIOL_O[4]		= 1'b0;				assign  wIunsedL[4]		= ioGPIOL_I[4];		assign ioGPIOL_OE[4]  = 1'b0;				// No1.Flash Rom HOLD / IO2
 assign ioGPIOL_O[5]		= 1'b0;				assign  wIunsedL[5]		= ioGPIOL_I[5];		assign ioGPIOL_OE[5]  = 1'b0;				// No1.Flash Rom WP / IO3
 assign ioGPIOL_O[6]		= 1'b0;				assign  wIunsedL[6]		= ioGPIOL_I[6];		assign ioGPIOL_OE[6]  = 1'b0;				// No2.Flash Rom HOLD / IO2
-assign ioGPIOL_O[7]		= wSfmMosi[0];		assign  wIunsedL[7]		= ioGPIOL_I[7];		assign ioGPIOL_OE[7]  = 1'b0;				// No2.Flash Rom DO / IO0
+assign ioGPIOL_O[7]		= wSfmMosi[0];		assign  wIunsedL[7]		= ioGPIOL_I[7];		assign ioGPIOL_OE[7]  = 1'b1;				// No2.Flash Rom DO / IO0
 assign ioGPIOL_O[8]		= 1'b0;				assign  wIunsedL[8]		= ioGPIOL_I[8];		assign ioGPIOL_OE[8]  = 1'b0;				// No2.Flash Rom WP / IO3
 assign ioGPIOL_O[9]		= wSfmSck[0];		assign  wIunsedL[9]		= ioGPIOL_I[9];		assign ioGPIOL_OE[9]  = 1'b1;				// No2.Flash Rom SCK
-assign ioGPIOL_O[10]	= 1'b0;				assign  wSfmMiso[0]		= ioGPIOL_I[10];	assign ioGPIOL_OE[10] = 1'b1;				// No2.Flash Rom DI / IO1
+assign ioGPIOL_O[10]	= 1'b0;				assign  wSfmMiso[0]		= ioGPIOL_I[10];	assign ioGPIOL_OE[10] = 1'b0;				// No2.Flash Rom DI / IO1
 assign ioGPIOL_O[11]	= wSfmCs[0];		assign  wIunsedL[11]	= ioGPIOL_I[11];	assign ioGPIOL_OE[11] = 1'b1;				// No2.Flash Rom CS
-assign ioGPIOL_O[12]	= wSfmMosi[1];		assign  wIunsedL[12]	= ioGPIOL_I[12];	assign ioGPIOL_OE[12] = 1'b0;				// No3.Flash Rom DO / IO0
-assign ioGPIOL_O[13]	= wSfmSck[1];		assign  wIunsedL[13]	= ioGPIOL_I[13];	assign ioGPIOL_OE[13] = 1'b0;				// No3.Flash Rom SCK
+assign ioGPIOL_O[12]	= wSfmMosi[1];		assign  wIunsedL[12]	= ioGPIOL_I[12];	assign ioGPIOL_OE[12] = 1'b1;				// No3.Flash Rom DO / IO0
+assign ioGPIOL_O[13]	= wSfmSck[1];		assign  wIunsedL[13]	= ioGPIOL_I[13];	assign ioGPIOL_OE[13] = 1'b1;				// No3.Flash Rom SCK
 assign ioGPIOL_O[14]	= 1'b0;				assign  wSfmMiso[1]		= ioGPIOL_I[14];	assign ioGPIOL_OE[14] = 1'b0;				// No3.Flash Rom DI / IO1
-assign ioGPIOL_O[15]	= wSfmCs[1];		assign  wIunsedL[15]	= ioGPIOL_I[15];	assign ioGPIOL_OE[15] = 1'b0;				// No3.Flash Rom CS
-assign ioGPIOL_O[16]	= wSfmMosi[2];		assign  wIunsedL[16]	= ioGPIOL_I[16];	assign ioGPIOL_OE[16] = 1'b0;				// No4.Flash Rom DO / IO0
+assign ioGPIOL_O[15]	= wSfmCs[1];		assign  wIunsedL[15]	= ioGPIOL_I[15];	assign ioGPIOL_OE[15] = 1'b1;				// No3.Flash Rom CS
+assign ioGPIOL_O[16]	= wSfmMosi[2];		assign  wIunsedL[16]	= ioGPIOL_I[16];	assign ioGPIOL_OE[16] = 1'b1;				// No4.Flash Rom DO / IO0
 // GPIOR
-assign ioGPIOR_O[0]		= wGPIOR_O[2];		assign  wGPIOR_In[2]	= ioGPIOR_I[0];		assign ioGPIOR_OE[0]  = |{rSmsMode,wGPIOR_Dir[2]};	// LED3
-assign ioGPIOR_O[1]		= wGPIOR_O[1];		assign  wGPIOR_In[1]	= ioGPIOR_I[1];		assign ioGPIOR_OE[1]  = |{rSmsMode,wGPIOR_Dir[1]};	// LED2
-assign ioGPIOR_O[2]		= wGPIOR_O[0];		assign  wGPIOR_In[0]	= ioGPIOR_I[2];		assign ioGPIOR_OE[2]  = |{rSmsMode,wGPIOR_Dir[0]};	// LED1
+assign ioGPIOR_O[0]		= wGPIOR_O[2];		assign  wGPIOR_In[2]	= ioGPIOR_I[0];		assign ioGPIOR_OE[0]  = wGPIOR_Dir[2];	// LED3
+assign ioGPIOR_O[1]		= wGPIOR_O[1];		assign  wGPIOR_In[1]	= ioGPIOR_I[1];		assign ioGPIOR_OE[1]  = wGPIOR_Dir[1];	// LED2
+assign ioGPIOR_O[2]		= wGPIOR_O[0];		assign  wGPIOR_In[0]	= ioGPIOR_I[2];		assign ioGPIOR_OE[2]  = wGPIOR_Dir[0];	// LED1
 assign ioGPIOR_O[3]		= 1'b0;				assign  wnARST			= ioGPIOR_I[3];		assign ioGPIOR_OE[3]  = 1'b0;			// User SW
-assign ioGPIOR_O[4]		= wGPIOR_O[3];		assign  wGPIOR_In[3]	= ioGPIOR_I[4];		assign ioGPIOR_OE[4]  = |{rSmsMode,wGPIOR_Dir[3]};	// LED4
+assign ioGPIOR_O[4]		= wGPIOR_O[3];		assign  wGPIOR_In[3]	= ioGPIOR_I[4];		assign ioGPIOR_OE[4]  = wGPIOR_Dir[3];	// LED4
 assign ioGPIOR_O[5]		= 1'b0;				assign  wIunsedR[4]		= ioGPIOR_I[5];		assign ioGPIOR_OE[5]  = 1'b0;			// MIDI IN
 assign ioGPIOR_O[6]		= 1'b0;				assign  wIunsedR[6]		= ioGPIOR_I[6];		assign ioGPIOR_OE[6]  = 1'b0;			// Unused
 assign ioGPIOR_O[7]		= 1'b0;				assign  wIunsedR[7]		= ioGPIOR_I[7];		assign ioGPIOR_OE[7]  = 1'b0;			// Unused
@@ -604,11 +584,11 @@ assign ioGPIOR_O[11]	= wVIDEO_R[4];		assign  wIunsedR[11]	= ioGPIOR_I[11];	assig
 assign ioGPIOR_O[12]	= 1'b0;				assign  wIunsedR[12]	= ioGPIOR_I[12];	assign ioGPIOR_OE[12] = 1'b0;			// MCP2221A SDA
 assign ioGPIOR_O[13]	= wVIDEO_R[5];		assign  wIunsedR[13]	= ioGPIOR_I[13];	assign ioGPIOR_OE[13] = 1'b1;			// Video R5
 assign ioGPIOR_O[14]	= 1'b0;				assign  wIunsedR[14]	= ioGPIOR_I[14];	assign ioGPIOR_OE[14] = 1'b0;			// No4.Flash Rom HOLD / IO2
-assign ioGPIOR_O[15]	= wSfmCs[2];		assign  wIunsedR[15]	= ioGPIOR_I[15];	assign ioGPIOR_OE[15] = 1'b0;			// No4.Flash Rom CS
-assign ioGPIOR_O[16]	= wSfmSck[2];		assign  wIunsedR[16]	= ioGPIOR_I[16];	assign ioGPIOR_OE[16] = 1'b0;			// No4.Flash Rom SCK
-assign ioGPIOR_O[17]	= wGPIOR_O[4];		assign  wGPIOR_In[4]	= ioGPIOR_I[17];	assign ioGPIOR_OE[17] = |{rSmsMode,wGPIOR_Dir[4]};	// LED5
+assign ioGPIOR_O[15]	= wSfmCs[2];		assign  wIunsedR[15]	= ioGPIOR_I[15];	assign ioGPIOR_OE[15] = 1'b1;			// No4.Flash Rom CS
+assign ioGPIOR_O[16]	= wSfmSck[2];		assign  wIunsedR[16]	= ioGPIOR_I[16];	assign ioGPIOR_OE[16] = 1'b1;			// No4.Flash Rom SCK
+assign ioGPIOR_O[17]	= wGPIOR_O[4];		assign  wGPIOR_In[4]	= ioGPIOR_I[17];	assign ioGPIOR_OE[17] = wGPIOR_Dir[4];	// LED5
 assign ioGPIOR_O[18]	= 1'b0;				assign  wSfmMiso[2]		= ioGPIOR_I[18];	assign ioGPIOR_OE[18] = 1'b0;			// No4.Flash Rom DI / IO1
-assign ioGPIOR_O[19]	= wGPIOR_O[5];		assign  wGPIOR_In[5]	= ioGPIOR_I[19];	assign ioGPIOR_OE[19] = |{rSmsMode,wGPIOR_Dir[5]};	// LED6
+assign ioGPIOR_O[19]	= wGPIOR_O[5];		assign  wGPIOR_In[5]	= ioGPIOR_I[19];	assign ioGPIOR_OE[19] = wGPIOR_Dir[5];	// LED6
 assign ioGPIOR_O[20]	= 1'b0;				assign  wIunsedR[20]	= ioGPIOR_I[20];	assign ioGPIOR_OE[20] = 1'b0;			// No4.Flash Rom WP / IO3
 // GPIOB
 wire [23:0] wIunsedB;
@@ -642,12 +622,11 @@ assign ioGPIOB_O[22]	= 1'b0;				assign wIunsedB[22]	= ioGPIOB_I[22];  assign ioG
 assign ioGPIOB_O[23]	= 1'b0;				assign wIunsedB[23]	= ioGPIOB_I[23];  assign ioGPIOB_OE[23] = 1'b0;		// I2C Controller
 // SRAM
 assign ioSRAMD_O 	= wSRAMD_O;				assign wSRAMD_I = ioSRAMD_I;    assign ioSRAMD_OE = {lpRamDqWidth{wSRAM_OE}};
-assign oSRAMA		= wSRAMA;
-assign oSRAM_LB		= wSRAM_LB;
-assign oSRAM_UB		= wSRAM_UB;
-assign oSRAM_OE		= wSRAM_OE;
-assign oSRAM_WE		= wSRAM_WE;
-assign oSRAM_CE		= wSRAM_CE;
+assign oSRAM_RWDS	= wSRAM_RWDS;
+assign oSRAM_pCLK	= wSRAM_pCLK;
+assign oSRAM_nCLK	= wSRAM_nCLK;
+assign oSRAM_nCE	= wSRAM_nCE;
+assign oSRAM_nRST	= wSRAM_nRST;
 // USB UART
 // assign oUSB_TX = wMIDI_In;//iUSB_RX;
 assign oUSB_TX = wSocTxd;
@@ -667,12 +646,12 @@ PulseGenerator #(.pDivClk(lpVclkCntMax)) VclkPulseGenerator (.oPulse(wPulseVCLK)
 
 always @*
 begin
-  qGpioAltMode[0] <= rSmsMode ? wPulseSCLK 	: qlocked;
-  qGpioAltMode[1] <= &{~rSmsMode,wTestErr};
+  qGpioAltMode[0] <= qlocked;
+  qGpioAltMode[1] <= 1'b0;
   qGpioAltMode[2] <= 1'b0;
-  qGpioAltMode[3] <= &{~rSmsMode,wPulseSCLK};
-  qGpioAltMode[4] <= &{~rSmsMode,wPulseMCLK};
-  qGpioAltMode[5] <= &{~rSmsMode,wPulseVCLK};
+  qGpioAltMode[3] <= wPulseSCLK;
+  qGpioAltMode[4] <= wPulseMCLK;
+  qGpioAltMode[5] <= wPulseVCLK;
 end
 
 

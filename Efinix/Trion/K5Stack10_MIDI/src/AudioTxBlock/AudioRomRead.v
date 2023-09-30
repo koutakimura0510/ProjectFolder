@@ -12,9 +12,11 @@ module AudioRomRead #(
 	output	oSfmMosi,
 	input	iSfmMiso,
 	output	oSfmCs,
-	// Audio Data
-	output [15:0] 				oAudioData,
-	output 						oAudioVd,
+	// Read Fifo I/F
+	output[15:0] 				oRd,
+	output 						oRvd,
+	output						oEmp,
+	input 						iRe,
 	// Control Status
 	input						iSfmEn,
 	input						iSfmCycleEn,
@@ -40,9 +42,32 @@ module AudioRomRead #(
 // ※2 ハード・ソフト操作で共通使用とする
 
 //-----------------------------------------------------------------------------
-// 
+// Rrs(Rom Read Sequence) Part
 //-----------------------------------------------------------------------------
+reg  [7:0]	qRrsRd;
+reg 		qRrsDone;
+wire [7:0] 	wRrsWd;
+wire 		wRrsEn;
+wire 		wRrsCsCtrl;
 
+AudioRomReadSequence #(
+	.pSfmPageWidth(pSfmPageWidth)
+) AudioRomReadSequence (
+	// Read Fifo I/F
+	.oRd(oRd),						.oRvd(oRvd),
+	.oEmp(oEmp),					.iRe(iRe),
+	// Sfm Part
+	.iSfmRd(qRrsRd),				.iSfmDone(qRrsDone),
+	.oSfmWd(wRrsWd),				.oSfmEn(wRrsEn),
+	.oSfmCsCtrl(wRrsCsCtrl),
+	// control status
+	.iSfmEn(iSfmEn),				.iSfmCycleEn(iSfmCycleEn),
+	.iSfmCsHoldTime(iSfmCsHoldTime),
+	.iSfmStartAdrs(iSfmStartAdrs),	.iSfmEndAdrs(iSfmEndAdrs),
+	.oSfmDone(oSfmDone),
+	// common
+	.iRST(iSRST),	.inRST(inSRST),	.iCLK(iSCLK)
+);
 
 
 //-----------------------------------------------------------------------------
@@ -80,15 +105,20 @@ CkeGenerator #(
 	.iRST(iSRST),		.iCLK(iSCLK)
 );
 
+always @*
+begin
+	qRrsRd		<= wSfrRd;
+	qRrsDone	<= wSfrDone;
+end
 
 //-----------------------------------------------------------------------------
 // Flash Rom Read Sequence
 //-----------------------------------------------------------------------------
 always @*
 begin
-	qSfrWd 		<= iSfmCpuValid ? iSfmCpuWd : 8'h00;
-	qSfrSpiEn 	<= |{iSfmCpuEn,iSfmEn};
-	qSfrCsCtrl	<= iSfmCpuValid ? iSfmCpuCsCtrl : 1'b1;
+	qSfrWd 		<= iSfmCpuValid ? iSfmCpuWd : wRrsWd;
+	qSfrSpiEn 	<= |{iSfmCpuEn,wRrsEn};
+	qSfrCsCtrl	<= &{iSfmCpuCsCtrl,wRrsCsCtrl};
 end
 
 //-----------------------------------------------------------------------------
