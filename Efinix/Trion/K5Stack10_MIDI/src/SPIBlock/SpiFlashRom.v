@@ -46,26 +46,30 @@ reg [2:0] 	rSckNegCnt;
 reg [2:0] 	rHoldTime;		reg qHoldTimeCke;
 reg [0:0]	rHoldTimeState;
 reg 		qSckCntCke;		// Master CLK の立ち下がり最大カウント
+//
+reg 		qSckRst;
 
 always @(posedge iSCLK) 
 begin
 	// Sck の生成
-	if (!iSpiEn)		rSck <=  1'b0;
+	if (qSckRst)		rSck <=  1'b0;
 	else if (iDivCke)	rSck <= ~rSck;
 	else 				rSck <=  rSck;
 
 	// Sck の立ち下がり回数カウント
-	casex ({iSpiEn, iDivCke, rSck})
-		3'b0_xx:		rSckNegCnt	<= 3'd0;
-		3'b1_11:		rSckNegCnt	<= rSckNegCnt + 1'b1;
+	casex ({iSRST, iSpiEn, iDivCke, rSck})
+		4'b1x_xx:		rSckNegCnt	<= 3'd0;
+		4'bx0_xx:		rSckNegCnt	<= 3'd0;
+		4'bx1_11:		rSckNegCnt	<= rSckNegCnt + 1'b1;
 		default:		rSckNegCnt	<= rSckNegCnt;
 	endcase
 
 	// Sck negedge 後の Hold time 生成 ステートマシン
-	casex ({iSpiEn, qHoldTimeCke, rHoldTimeState[0:0], iDivCke, rSck})
-		5'b0_xx_xx:		rHoldTimeState <= lpHolTimeIdle;
-		5'b1_00_11:		rHoldTimeState <= lpHoldTimeActive;
-		5'b1_11_xx:		rHoldTimeState <= lpHolTimeIdle;
+	casex ({iSRST, iSpiEn, qHoldTimeCke, rHoldTimeState[0:0], iDivCke, rSck})
+		6'b1x_xx_xx:	rHoldTimeState <= lpHolTimeIdle;
+		6'bx0_xx_xx:	rHoldTimeState <= lpHolTimeIdle;
+		6'bx1_00_11:	rHoldTimeState <= lpHoldTimeActive;
+		6'bx1_11_xx:	rHoldTimeState <= lpHolTimeIdle;
 		default:		rHoldTimeState <= rHoldTimeState;
 	endcase
 
@@ -100,6 +104,8 @@ always @*
 begin
 	qSckCntCke		<= (rSckNegCnt == 3'd7);
 	qHoldTimeCke 	<= (rHoldTime == lpHoldTimeMax);
+	//
+	qSckRst			<= |{iSRST,~iSpiEn};
 end
 
 assign oRd				= rRd;

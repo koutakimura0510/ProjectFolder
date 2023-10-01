@@ -12,12 +12,12 @@
  *-----------------------------------------------------------------------------*/
 module AudioTxBlock #(
 	// USI
-  	parameter pBlockAdrsWidth = 8,
+  	parameter pBlockAdrsWidth 	= 8,
   	parameter [pBlockAdrsWidth-1:0] pAdrsMap = 'h03,
-  	parameter pUsiBusWidth = 32,
-  	parameter pCsrAdrsWidth = 8,
-  	parameter pCsrActiveWidth = 8,
-	parameter pSfmNum = 3
+  	parameter pUsiBusWidth 		= 32,
+  	parameter pCsrAdrsWidth 	= 8,
+  	parameter pCsrActiveWidth 	= 8,
+	parameter pSfmNum 			= 3
 )(
 	// I2S Audio Dac
 	output	oI2S_MCLK,
@@ -52,20 +52,20 @@ genvar x;
 //-----------------------------------------------------------------------------
 localparam lpSfmPageWidth = 16;	// 16bit = 65535 page
 
-wire [pSfmNum-1:0] 		wSfmIoHiz;				//assign oSfmIoHiz = wSfmIoHiz;
-wire [pSfmNum-1:0] 		wSfmEn;
-wire [pSfmNum-1:0] 		wSfmCycleEn;
-wire [pSfmNum*8-1:0] 	wSfmDiv;
-wire [pSfmNum*8-1:0] 	wSfmCsHoldTime;
-wire [pSfmNum*lpSfmPageWidth-1:0] wSfmStartAdrs;
-wire [pSfmNum*lpSfmPageWidth-1:0] wSfmEndAdrs;
-wire [pSfmNum*8-1:0] 	wSfmCpuWd;
-wire [pSfmNum-1:0] 		wSfmCpuEn;
-wire [pSfmNum-1:0] 		wSfmCpuCsCtrl;
-wire [pSfmNum-1:0] 		wSfmCpuValid;
-wire [pSfmNum*8-1:0] 	wSfmCpuRd;
-wire [pSfmNum-1:0] 		wSfmCpuDone;
-wire [pSfmNum-1:0] 		wSfmDone;
+wire [pSfmNum-1:0] 		wSfmIoHizCsr;				//assign oSfmIoHiz = wSfmIoHizCsr;
+wire [pSfmNum-1:0] 		wSfmEnCsr;
+wire [pSfmNum-1:0] 		wSfmCycleEnCsr;
+wire [pSfmNum*8-1:0] 	wSfmDivCsr;
+wire [pSfmNum*8-1:0] 	wSfmCsHoldTimeCsr;
+wire [pSfmNum*lpSfmPageWidth-1:0] wSfmStartAdrsCsr;
+wire [pSfmNum*lpSfmPageWidth-1:0] wSfmEndAdrsCsr;
+wire [pSfmNum*8-1:0] 	wSfmCpuWdCsr;
+wire [pSfmNum-1:0] 		wSfmCpuEnCsr;
+wire [pSfmNum-1:0] 		wSfmCpuCsCtrlCsr;
+wire [pSfmNum-1:0] 		wSfmCpuValidCsr;
+wire [pSfmNum*8-1:0] 	wSfmCpuRdCsr;
+wire [pSfmNum-1:0] 		wSfmCpuDoneCsr;
+wire [pSfmNum-1:0] 		wSfmDoneCsr;
 
 AudioTxCsr #(
 	.pBlockAdrsWidth(pBlockAdrsWidth),
@@ -81,21 +81,21 @@ AudioTxCsr #(
 	// Bus Master Write
 	.iSUsiWd(iSUsiWd),	.iSUsiAdrs(iSUsiAdrs),
 	// Csr Output
-	.oSfmEn(wSfmEn),
-	.oSfmCycleEn(wSfmCycleEn),
-	.oSfmDiv(wSfmDiv),
-	.oSfmCsHoldTime(wSfmCsHoldTime),
-	.oSfmStartAdrs(wSfmStartAdrs),
-	.oSfmEndAdrs(wSfmEndAdrs),
-	.oSfmIoHiz(wSfmIoHiz),
-	.oSfmCpuWd(wSfmCpuWd),
-	.oSfmCpuEn(wSfmCpuEn),
-	.oSfmCpuCsCtrl(wSfmCpuCsCtrl),
-	.oSfmCpuValid(wSfmCpuValid),
+	.oSfmEn(wSfmEnCsr),
+	.oSfmCycleEn(wSfmCycleEnCsr),
+	.oSfmDiv(wSfmDivCsr),
+	.oSfmCsHoldTime(wSfmCsHoldTimeCsr),
+	.oSfmStartAdrs(wSfmStartAdrsCsr),
+	.oSfmEndAdrs(wSfmEndAdrsCsr),
+	.oSfmIoHiz(wSfmIoHizCsr),
+	.oSfmCpuWd(wSfmCpuWdCsr),
+	.oSfmCpuEn(wSfmCpuEnCsr),
+	.oSfmCpuCsCtrl(wSfmCpuCsCtrlCsr),
+	.oSfmCpuValid(wSfmCpuValidCsr),
 	// Csr Input
-	.iSfmCpuRd(wSfmCpuRd),
-	.iSfmCpuDone(wSfmCpuDone),
-	.iSfmDone(wSfmDone),
+	.iSfmCpuRd(wSfmCpuRdCsr),
+	.iSfmCpuDone(wSfmCpuDoneCsr),
+	.iSfmDone(wSfmDoneCsr),
     // common
 	.iSRST(iSRST),		.iSCLK(iSCLK)
 );
@@ -122,20 +122,20 @@ generate
 			.oRd(wArrRd[x]),			.oRvd(wArrRvd[x]),
 			.oEmp(wArrEmp[x]),			.iRe(qArrRe[x]),
 			// Logic Sfm Control
-			.iSfmEn(wSfmEn[x]),
-			.iSfmCycleEn(wSfmCycleEn[x]),
-			.iSfmDiv(wSfmDiv[(x+1)*8-1:(x*8)]),
-			.iSfmCsHoldTime(wSfmCsHoldTime[(x+1)*8-1:(x*8)]),
-			.iSfmStartAdrs(wSfmStartAdrs[(x+1)*lpSfmPageWidth-1:(x*lpSfmPageWidth)]),
-			.iSfmEndAdrs(wSfmEndAdrs[(x+1)*lpSfmPageWidth-1:(x*lpSfmPageWidth)]),
-			.oSfmDone(wSfmDone[x]),
+			.iSfmEn(wSfmEnCsr[x]),
+			.iSfmCycleEn(wSfmCycleEnCsr[x]),
+			.iSfmDiv(wSfmDivCsr[(x+1)*8-1:(x*8)]),
+			.iSfmCsHoldTime(wSfmCsHoldTimeCsr[(x+1)*8-1:(x*8)]),
+			.iSfmStartAdrs(wSfmStartAdrsCsr[(x+1)*lpSfmPageWidth-1:(x*lpSfmPageWidth)]),
+			.iSfmEndAdrs(wSfmEndAdrsCsr[(x+1)*lpSfmPageWidth-1:(x*lpSfmPageWidth)]),
+			.oSfmDone(wSfmDoneCsr[x]),
 			// Cpu Sfm Control
-			.iSfmCpuWd(wSfmCpuWd[(x+1)*8-1:(x*8)]),
-			.iSfmCpuEn(wSfmCpuEn[x]),
-			.iSfmCpuCsCtrl(wSfmCpuCsCtrl[x]),
-			.iSfmCpuValid(wSfmCpuValid[x]),
-			.oSfmCpuRd(wSfmCpuRd[(x+1)*8-1:(x*8)]),
-			.oSfmCpuDone(wSfmCpuDone[x]),
+			.iSfmCpuWd(wSfmCpuWdCsr[(x+1)*8-1:(x*8)]),
+			.iSfmCpuEn(wSfmCpuEnCsr[x]),
+			.iSfmCpuCsCtrl(wSfmCpuCsCtrlCsr[x]),
+			.iSfmCpuValid(wSfmCpuValidCsr[x]),
+			.oSfmCpuRd(wSfmCpuRdCsr[(x+1)*8-1:(x*8)]),
+			.oSfmCpuDone(wSfmCpuDoneCsr[x]),
 			// common
 			.iSRST(iSRST),	.inSRST(inSRST),	.iSCLK(iSCLK)
 		);

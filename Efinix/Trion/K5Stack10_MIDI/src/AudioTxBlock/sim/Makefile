@@ -8,14 +8,14 @@
 TBOUT    = tbwave.out
 
 # Tb Top Module名
-TBTOP 	 = AudioRomReadSequence_tb
+TBTOP 	 = AudioTxBlock_tb
 
 # Tb Top Module.v
-TBTOPRTL = AudioRomReadSequence_tb.v
+TBTOPRTL = AudioTxBlock_tb.v
 
 # Tb Instance.v
 TBRTL 	 = ../*.v
-COMMON	= ../../common/pulse/*.v ../../common/fifo/*.v
+COMMON	= ../../common/pulse/*.v ../../common/fifo/*.v ../../SPIBlock/SpiFlashRom.v
 LIB		= /tools/efinity/2023.1/sim_models/verilog/*.v
 
 sim:

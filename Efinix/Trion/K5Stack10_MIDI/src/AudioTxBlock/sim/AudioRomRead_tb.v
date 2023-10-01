@@ -3,7 +3,7 @@
  * 
  * 23-09-24 v1.00 : New Release
  *-----------------------------------------------------------------------------*/
-module AudioRomReadSequence_tb;
+module AudioRomRead_tb;
 
 //-----------------------------------------------------------------------------
 // Clk,Rst Generator
@@ -57,32 +57,31 @@ reg [15:0]	qSfmStartAdrs;
 reg [15:0]	qSfmEndAdrs;
 wire 		wSfmDone;
 
-AudioRomReadSequence #(
+AudioRomRead #(
 	.pSfmPageWidth(lpSfmPageWidth),
 	.pSfmPageSize(lpSfmPageSize)
-) AudioRomReadSequence (
+) AudioRomRead (
+	.oSfmSck(),		.oSfmMosi(),
+	.iSfmMiso(),	.oSfmCs(),
 	// Read Fifo I/F
-	.oRd(),
-	.oRvd(),
-	.oEmp(),
-	.iRe(1'b1),
-	// Sfm Part
-	.iSfmRd(rRrsRd),
-	.iSfmDone(rRrsDone),
-	.oSfmWd(wRrsWd),
-	.oSfmEn(wRrsEn),
-	.oSfmCsCtrl(wRrsCsCtrl),
+	.oRd(),			.oRvd(),
+	.oEmp(),		.iRe(1'b1),
 	// control status
-	.iSfmEn(qSfmEn),
-	.iSfmCycleEn(qSfmCycleEn),
-	.iSfmCsHoldTime(qSfmCsHoldTime),
-	.iSfmStartAdrs(qSfmStartAdrs),
-	.iSfmEndAdrs(qSfmEndAdrs),
+	.iSfmEn(qSfmEn),					.iSfmCycleEn(qSfmCycleEn),
+	.iSfmDiv(8'd2),						.iSfmCsHoldTime(qSfmCsHoldTime),
+	.iSfmStartAdrs(qSfmStartAdrs),		.iSfmEndAdrs(qSfmEndAdrs),
 	.oSfmDone(wSfmDone),
+	// Cpu Side
+	.iSfmCpuWd(8'hA2),
+	.iSfmCpuEn(1'b1),
+	.iSfmCpuCsCtrl(1'b0),
+	.iSfmCpuValid(1'b1),
+	.oSfmCpuRd(),
+	.oSfmCpuDone(),
 	// common
-	.iRST(wSRST),
-	.inRST(wnSRST),
-	.iCLK(wSCLK)
+	.iSRST(wSRST),
+	.inSRST(wnSRST),
+	.iSCLK(wSCLK)
 );
 
 always @*
@@ -124,8 +123,8 @@ end
 // Simlation Start
 //-----------------------------------------------------------------------------
 initial begin
-	$dumpfile("AudioRomReadSequence_tb.vcd");
-	$dumpvars(0, AudioRomReadSequence_tb);	// 引数0:下位モジュール表示, 1:Topのみ
+	$dumpfile("AudioRomRead_tb.vcd");
+	$dumpvars(0, AudioRomRead_tb);	// 引数0:下位モジュール表示, 1:Topのみ
 	reset_init();
 	#(lpSCLKCycle * 4800);
     $finish;

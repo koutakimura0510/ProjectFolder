@@ -32,8 +32,12 @@ static void system_initialize(void)
 	usi_write_cmd(0x7, 		TIMER_REG_ENABLE);	// Timer Enable
 
 	// SPI
-	usi_write_cmd(0x1,		SPI_REG_DIV);		// 動作周波数
+	usi_write_cmd(0x2,		SPI_REG_DIV);		// 動作周波数
 	usi_write_cmd(1,		SPI_REG_GPIO_ALT);	// SPI 機能有効
+
+	// Audio
+	usi_write_cmd(0x020202,		AUDIO_REG_SFM_CLK_DIV);		// 動作周波数
+	usi_write_cmd(0x7,			AUDIO_REG_SFM_CPU_VALID);
 
 	// Synthesizer
 //	synth_sinwave_write();
@@ -47,7 +51,7 @@ static void system_initialize(void)
 //	flash_protection_reg_write(0);
 //	flash_protection_reg_write(1);
 //	flash_protection_reg_write(2);
-	flash_protection_reg_write(3);
+//	flash_protection_reg_write(3);
 }
 
 
@@ -63,9 +67,9 @@ void main()
 		usi_read_printf(SYNTH_REG_AUDIO_FREQ);
 //		bsp_uDelay(100000);
 //		cache_write(2, 60000);
-//		flash_id_read(0);
-//		flash_id_read(1);
-//		flash_id_read(2);
+		flash_id_read(0);
+		flash_id_read(1);
+		flash_id_read(2);
 		 flash_id_read(3);
 		// flash_write();
 		// flash_read();

@@ -43,14 +43,14 @@ typedef struct {
 	uint32_t enable;
 	uint32_t miso;
 	uint32_t cs;
-	uint32_t bit;
+	uint8_t bit;
 } SfmRegDB;
 
 static const SfmRegDB sfm_reg_db[] = {
-	{0,	AUDIO_REG_SFM_CPU_DONE, AUDIO_REG_SFM_CPU_WD, 	AUDIO_REG_SFM_CPU_ENABLE, 	AUDIO_REG_SFM_CPU_RD_1,	AUDIO_REG_SFM_CPU_CS_CTRL,	0x01	},
-	{1,	AUDIO_REG_SFM_CPU_DONE, AUDIO_REG_SFM_CPU_WD, 	AUDIO_REG_SFM_CPU_ENABLE, 	AUDIO_REG_SFM_CPU_RD_2,	AUDIO_REG_SFM_CPU_CS_CTRL,	0x02	},
-	{2,	AUDIO_REG_SFM_CPU_DONE, AUDIO_REG_SFM_CPU_WD, 	AUDIO_REG_SFM_CPU_ENABLE, 	AUDIO_REG_SFM_CPU_RD_3,	AUDIO_REG_SFM_CPU_CS_CTRL,	0x04	},
-	{3,	SPI_REG_DONE, 			SPI_REG_MOSI,			SPI_REG_ENABLE,				SPI_REG_MISO,			SPI_REG_CS,					0x01	},
+	{0,	AUDIO_REG_SFM_CPU_DONE, AUDIO_REG_SFM_CPU_WD_1, 	AUDIO_REG_SFM_CPU_ENABLE, 	AUDIO_REG_SFM_CPU_RD_1,	AUDIO_REG_SFM_CPU_CS_CTRL,	0x01	},
+	{1,	AUDIO_REG_SFM_CPU_DONE, AUDIO_REG_SFM_CPU_WD_2, 	AUDIO_REG_SFM_CPU_ENABLE, 	AUDIO_REG_SFM_CPU_RD_2,	AUDIO_REG_SFM_CPU_CS_CTRL,	0x02	},
+	{2,	AUDIO_REG_SFM_CPU_DONE, AUDIO_REG_SFM_CPU_WD_3, 	AUDIO_REG_SFM_CPU_ENABLE, 	AUDIO_REG_SFM_CPU_RD_3,	AUDIO_REG_SFM_CPU_CS_CTRL,	0x04	},
+	{3,	SPI_REG_DONE, 			SPI_REG_MOSI,				SPI_REG_ENABLE,				SPI_REG_MISO,			SPI_REG_CS,					0x01	},
 };
 
 /**-----------------------------------------------------------------------------
@@ -173,7 +173,7 @@ void flash_read(uint8_t id, uint8_t *rbuff, uint16_t col_adrs, uint16_t page_adr
  * device_id_msi 0xba
  * device_id_lsb 0x21
  * 
- * M25Q128
+ * W25N01GV
  * 0xef
  * 0xaa
  * 0x21
@@ -189,13 +189,13 @@ void flash_id_read(uint8_t id)
 		}
 	}
 
-	usi_write_cmd(0, srd->cs);
-	spi_read(FLASH_ID_READ_CMD, srd->done, srd->mosi, srd->enable, srd->miso, srd->bit);
-	spi_read(FLASH_DUMMY_CMD, srd->done, srd->mosi, srd->enable, srd->miso, srd->bit);
-	mfr_id = spi_read(FLASH_DUMMY_CMD, srd->done, srd->mosi, srd->enable, srd->miso, srd->bit);
-	device_id_msb = spi_read(FLASH_DUMMY_CMD, srd->done, srd->mosi, srd->enable, srd->miso, srd->bit);
-	device_id_lsb = spi_read(FLASH_DUMMY_CMD, srd->done, srd->mosi, srd->enable, srd->miso, srd->bit);
-	usi_write_cmd(srd->bit, srd->cs);
+	usi_write_cmd(~srd->bit, srd->cs);
+	spi_read(FLASH_ID_READ_CMD, 				srd->done, srd->mosi, srd->enable, srd->miso, srd->bit);
+	spi_read(FLASH_DUMMY_CMD, 					srd->done, srd->mosi, srd->enable, srd->miso, srd->bit);
+	mfr_id = spi_read(FLASH_DUMMY_CMD, 			srd->done, srd->mosi, srd->enable, srd->miso, srd->bit);
+	device_id_msb = spi_read(FLASH_DUMMY_CMD, 	srd->done, srd->mosi, srd->enable, srd->miso, srd->bit);
+	device_id_lsb = spi_read(FLASH_DUMMY_CMD, 	srd->done, srd->mosi, srd->enable, srd->miso, srd->bit);
+	usi_write_cmd(0xffffffff, srd->cs);
 
 	bsp_printf("%x,%x,%x \r\n", mfr_id, device_id_msb, device_id_lsb);
 }
@@ -225,11 +225,11 @@ void flash_protection_reg_write(uint8_t id)
 		}
 	}
 
-	usi_write_cmd(0, srd->cs);
-	spi_write(FLASH_PROTECTION_REG_WRITE, srd->done, srd->mosi, srd->enable, srd->bit);
-	spi_write(FLASH_STATUS_REG1_ADRS, srd->done, srd->mosi, srd->enable, srd->bit);
+	usi_write_cmd(~srd->bit, srd->cs);
+	spi_write(FLASH_PROTECTION_REG_WRITE, 	srd->done, srd->mosi, srd->enable, srd->bit);
+	spi_write(FLASH_STATUS_REG1_ADRS, 		srd->done, srd->mosi, srd->enable, srd->bit);
 	spi_write(FLASH_PROTECTION_WRITE_VALUE, srd->done, srd->mosi, srd->enable, srd->bit);
-	usi_write_cmd(srd->bit, srd->cs);
+	usi_write_cmd(0xffffffff, srd->cs);
 }
 
 
@@ -238,9 +238,9 @@ void flash_protection_reg_write(uint8_t id)
  *-----------------------------------------------------------------------------*/
 static void flash_write_enable_cmd(const SfmRegDB *srd)
 {
-	usi_write_cmd(0, srd->cs);
+	usi_write_cmd(~srd->bit, srd->cs);
 	spi_write(FLASH_WRITE_ENALE_CMD, srd->done, srd->mosi, srd->enable, srd->bit);
-	usi_write_cmd(srd->bit, srd->cs);
+	usi_write_cmd(0xffffffff, srd->cs);
 }
 
 /**-----------------------------------------------------------------------------
@@ -253,12 +253,12 @@ static void flash_write_enable_cmd(const SfmRegDB *srd)
  *-----------------------------------------------------------------------------*/
 static void flash_block_elase(const SfmRegDB *srd, uint16_t page_adrs)
 {
-	usi_write_cmd(0, srd->cs);
+	usi_write_cmd(~srd->bit, srd->cs);
 	spi_write(FLASH_BLOCK_ELASE, srd->done, srd->mosi, srd->enable, srd->bit);
 	spi_write(FLASH_DUMMY_CMD, srd->done, srd->mosi, srd->enable, srd->bit);
 	spi_write(page_adrs >> 8, srd->done, srd->mosi, srd->enable, srd->bit);	// Page adrs "H"
 	spi_write(page_adrs, srd->done, srd->mosi, srd->enable, srd->bit);		// Page adrs "L"
-	usi_write_cmd(srd->bit, srd->cs);
+	usi_write_cmd(0xffffffff, srd->cs);
 }
 
 /**-----------------------------------------------------------------------------
@@ -267,12 +267,12 @@ static void flash_block_elase(const SfmRegDB *srd, uint16_t page_adrs)
 static void flash_busy_wait(const SfmRegDB *srd)
 {
 	while (1) {
-		usi_write_cmd(0, srd->cs);
+		usi_write_cmd(~srd->bit, srd->cs);
 		spi_write(FLASH_BUSY_WAIT_CHECK, srd->done, srd->mosi, srd->enable, srd->bit);
 		spi_write(FLASH_STATUS_REG3_ADRS, srd->done, srd->mosi, srd->enable, srd->bit);
 
 		uint8_t id = spi_read(FLASH_DUMMY_CMD, srd->done, srd->mosi, srd->enable, srd->miso, srd->bit);
-		usi_write_cmd(srd->bit, srd->cs);
+		usi_write_cmd(0xffffffff, srd->cs);
 
 		if ((id & 0x01) == 0) {
 			break;
@@ -287,7 +287,7 @@ static void flash_busy_wait(const SfmRegDB *srd)
  *-----------------------------------------------------------------------------*/
 static void flash_program_data_load(const SfmRegDB *srd, uint8_t *wbuff, uint16_t col_adrs, uint16_t len)
 {
-	usi_write_cmd(0, srd->cs);
+	usi_write_cmd(~srd->bit, srd->cs);
 	spi_write(FLASH_PROGRAM_DATA_LOAD, srd->done, srd->mosi, srd->enable, srd->bit);	// Program Data Load Cmd
 	spi_write(col_adrs >> 8, srd->done, srd->mosi, srd->enable, srd->bit);				// col adrs "H"
 	spi_write(col_adrs, srd->done, srd->mosi, srd->enable, srd->bit);					// col adrs "L"
@@ -296,7 +296,7 @@ static void flash_program_data_load(const SfmRegDB *srd, uint8_t *wbuff, uint16_
 		spi_write(wbuff[i], srd->done, srd->mosi, srd->enable, srd->bit);
 	}
 
-	usi_write_cmd(srd->bit, srd->cs);
+	usi_write_cmd(0xffffffff, srd->cs);
 }
 
 /**-----------------------------------------------------------------------------
@@ -304,12 +304,12 @@ static void flash_program_data_load(const SfmRegDB *srd, uint8_t *wbuff, uint16_
  *-----------------------------------------------------------------------------*/
 static void flash_program_data_execute(const SfmRegDB *srd, uint16_t page_adrs)
 {
-	usi_write_cmd(0, srd->cs);
+	usi_write_cmd(~srd->bit, srd->cs);
 	spi_write(FLASH_PROGRAM_DATA_EXECUTE, srd->done, srd->mosi, srd->enable, srd->bit);
 	spi_write(FLASH_DUMMY_CMD, srd->done, srd->mosi, srd->enable, srd->bit);
 	spi_write(page_adrs >> 8, srd->done, srd->mosi, srd->enable, srd->bit);	// Page adrs "H"
 	spi_write(page_adrs, srd->done, srd->mosi, srd->enable, srd->bit);		// Page adrs "L"
-	usi_write_cmd(srd->bit, srd->cs);
+	usi_write_cmd(0xffffffff, srd->cs);
 }
 
 /**-----------------------------------------------------------------------------
@@ -317,12 +317,12 @@ static void flash_program_data_execute(const SfmRegDB *srd, uint16_t page_adrs)
  *-----------------------------------------------------------------------------*/
 static void flash_page_read(const SfmRegDB *srd, uint16_t page_adrs)
 {
-	usi_write_cmd(0, srd->cs);
+	usi_write_cmd(~srd->bit, srd->cs);
 	spi_write(FLASH_PROGRAM_PAGE_READ, srd->done, srd->mosi, srd->enable, srd->bit);
 	spi_write(FLASH_DUMMY_CMD, srd->done, srd->mosi, srd->enable, srd->bit);
 	spi_write(page_adrs >> 8, srd->done, srd->mosi, srd->enable, srd->bit);	// Page adrs "H"
 	spi_write(page_adrs, srd->done, srd->mosi, srd->enable, srd->bit);		// Page adrs "L"
-	usi_write_cmd(srd->bit, srd->cs);
+	usi_write_cmd(0xffffffff, srd->cs);
 }
 
 /**-----------------------------------------------------------------------------
@@ -332,7 +332,7 @@ static void flash_page_read(const SfmRegDB *srd, uint16_t page_adrs)
  *-----------------------------------------------------------------------------*/
 static void flash_read_data(const SfmRegDB *srd, uint8_t *rbuff, uint16_t col_adrs, uint16_t len)
 {
-	usi_write_cmd(0, srd->cs);
+	usi_write_cmd(~srd->bit, srd->cs);
 	spi_write(FLASH_READ_DATA_CMD, srd->done, srd->mosi, srd->enable, srd->bit);
 	spi_write(col_adrs >> 8, srd->done, srd->mosi, srd->enable, srd->bit);	// col adrs "H"
 	spi_write(col_adrs, srd->done, srd->mosi, srd->enable, srd->bit);		// col adrs "L"
@@ -342,5 +342,5 @@ static void flash_read_data(const SfmRegDB *srd, uint8_t *rbuff, uint16_t col_ad
 		rbuff[i] = spi_read(FLASH_DUMMY_CMD, srd->done, srd->mosi, srd->enable, srd->miso, srd->bit);
 	}
 
-	usi_write_cmd(srd->bit, srd->cs);
+	usi_write_cmd(0xffffffff, srd->cs);
 }

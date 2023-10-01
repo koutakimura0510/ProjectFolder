@@ -71,6 +71,8 @@ reg qCsrWCke14;
 reg qCsrWCke18;
 reg qCsrWCke1C;
 reg qCsrWCke20;
+reg qCsrWCke24;
+reg qCsrWCke28;
 reg qCsrWCke30;
 reg qCsrWCke60;
 reg qCsrWCke64;
@@ -86,14 +88,14 @@ begin
 		rSfmIoHiz		<= {pSfmNum{1'b0}};
 		rSfmEn			<= {pSfmNum{1'b0}};
 		rSfmCycleEn		<= {pSfmNum{1'b0}};
-		rSfmDiv			<= {(pSfmNum*8){1'b0}};
-		rSfmCsHoldTime	<= {(pSfmNum*8){1'b0}};
+		rSfmDiv			<= {(pSfmNum){8'd2}};
+		rSfmCsHoldTime	<= {(pSfmNum){8'd2}};
 		rSfmStartAdrs	<= {(pSfmNum*pSfmPageWidth){1'b0}};
 		rSfmEndAdrs		<= {(pSfmNum*pSfmPageWidth){1'b0}};
 		//
 		rSfmCpuWd		<= {(pSfmNum*8){1'b0}};
 		rSfmCpuEn		<= {pSfmNum{1'b0}};
-		rSfmCpuCsCtrl	<= {pSfmNum{1'b0}};
+		rSfmCpuCsCtrl	<= {pSfmNum{1'b1}};
 		rSfmCpuValid	<= {pSfmNum{1'b0}};
 	end
 	else
@@ -106,12 +108,14 @@ begin
 		rSfmDiv			<= qCsrWCke0C 	? iSUsiWd[pSfmNum*8-1:0]	: rSfmDiv;
 		rSfmCsHoldTime	<= qCsrWCke10 	? iSUsiWd[pSfmNum*8-1:0]  	: rSfmCsHoldTime;
 		//
-		rSfmCpuWd		<= qCsrWCke14 	? iSUsiWd[pSfmNum*8-1:0]  	: rSfmCpuWd;
-		rSfmCpuEn		<= iSfmCpuDone[0]	? 1'b0					: qCsrWCke18 	? iSUsiWd[0]  	: rSfmCpuEn[0];
-		rSfmCpuEn		<= iSfmCpuDone[1]	? 1'b0					: qCsrWCke18 	? iSUsiWd[1]  	: rSfmCpuEn[1];
-		rSfmCpuEn		<= iSfmCpuDone[2]	? 1'b0					: qCsrWCke18 	? iSUsiWd[2]  	: rSfmCpuEn[2];
-		rSfmCpuCsCtrl	<= qCsrWCke1C 	? iSUsiWd[pSfmNum-1:0]  	: rSfmCpuCsCtrl;
-		rSfmCpuValid	<= qCsrWCke20 	? iSUsiWd[pSfmNum-1:0]  	: rSfmCpuValid;
+		rSfmCpuWd[ 0+:8]<= qCsrWCke14 		? iSUsiWd[pSfmNum*8-1:0]  	: rSfmCpuWd[ 0+:8];
+		rSfmCpuEn[0]	<= iSfmCpuDone[0]	? 1'b0						: qCsrWCke18 	? iSUsiWd[0]  	: rSfmCpuEn[0];
+		rSfmCpuEn[1]	<= iSfmCpuDone[1]	? 1'b0						: qCsrWCke18 	? iSUsiWd[1]  	: rSfmCpuEn[1];
+		rSfmCpuEn[2]	<= iSfmCpuDone[2]	? 1'b0						: qCsrWCke18 	? iSUsiWd[2]  	: rSfmCpuEn[2];
+		rSfmCpuCsCtrl	<= qCsrWCke1C 		? iSUsiWd[pSfmNum-1:0]  	: rSfmCpuCsCtrl;
+		rSfmCpuValid	<= qCsrWCke20 		? iSUsiWd[pSfmNum-1:0]  	: rSfmCpuValid;
+		rSfmCpuWd[ 8+:8]<= qCsrWCke24 		? iSUsiWd[pSfmNum*8-1:0]  	: rSfmCpuWd[ 8+:8];
+		rSfmCpuWd[16+:8]<= qCsrWCke28 		? iSUsiWd[pSfmNum*8-1:0]  	: rSfmCpuWd[16+:8];
 		//
 		rSfmCpuRd[ 0+:8]<= iSfmCpuDone[0]	? iSfmCpuRd[ 0+:8]		: rSfmCpuRd[ 0+:8];
 		rSfmCpuRd[ 8+:8]<= iSfmCpuDone[1]	? iSfmCpuRd[ 8+:8]		: rSfmCpuRd[ 8+:8];
@@ -140,6 +144,8 @@ begin
 	qCsrWCke18 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0018});
 	qCsrWCke1C <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h001C});
 	qCsrWCke20 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0020});
+	qCsrWCke24 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0024});
+	qCsrWCke28 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0028});
 	qCsrWCke30 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0030});
 	qCsrWCke60 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0060});
 	qCsrWCke64 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0064});
@@ -164,10 +170,12 @@ begin
 		'h08:	 rSUsiRd <= {{(32 - pSfmNum			){1'b0}}, rSfmCycleEn};
 		'h0C:	 rSUsiRd <= {{(32 - pSfmNum*8		){1'b0}}, rSfmDiv};
 		'h10:	 rSUsiRd <= {{(32 - pSfmNum*8		){1'b0}}, rSfmCsHoldTime};
-		'h14:	 rSUsiRd <= {{(32 - pSfmNum*8		){1'b0}}, rSfmCpuWd};
+		'h14:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuWd[0+:8]};
 		'h18:	 rSUsiRd <= {{(32 - pSfmNum			){1'b0}}, rSfmCpuEn};
 		'h1C:	 rSUsiRd <= {{(32 - pSfmNum			){1'b0}}, rSfmCpuCsCtrl};
 		'h20:	 rSUsiRd <= {{(32 - pSfmNum			){1'b0}}, rSfmCpuValid};
+		'h24:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuWd[8+:8]};
+		'h28:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuWd[16+:8]};
 		'h30:	 rSUsiRd <= {{(32 - pSfmNum			){1'b0}}, rSfmDone};
 		'h60:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmStartAdrs[0+:pSfmPageWidth]};
 		'h64:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmEndAdrs[0+:pSfmPageWidth]};

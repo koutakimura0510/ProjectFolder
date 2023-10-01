@@ -34,10 +34,10 @@ uint8_t spi_read(uint8_t mosi, uint32_t done_adrs, uint32_t mosi_adrs, uint32_t 
 	usi_write_cmd(mosi,	mosi_adrs);		// MOSI Send
 	usi_write_cmd(bit, 	enable_adrs);	// Spi Enable
 
-	while (1) {
-		if (1 == usi_read_cmd(done_adrs)) {	// Intr Wait
-			break;
-		}
-	}
+	 while (1) {
+	 	if (bit == usi_read_cmd(done_adrs)) {	// Intr Wait
+	 		break;
+	 	}
+	 }
 	return usi_read_cmd(miso_adrs);
 }

@@ -32,9 +32,9 @@ module AudioRomRead #(
 	output 						oSfmCpuDone,
 	output 						oSfmDone,
 	// CLK Reset
-	input	iSRST,
-	input	inSRST,
-	input	iSCLK
+	input						iSRST,
+	input						inSRST,
+	input						iSCLK
 );
 
 // ※1 SfmCpu = 起動時の Flash Memory Protecition 解除などを CPU側から行うために使用する
