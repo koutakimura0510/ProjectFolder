@@ -75,16 +75,17 @@ begin
 
 	// Sck Hold Time Generate -> min 15ns lpHoldTimeActive
 	// Sck の立下り時に Hold Time Count Start
-	case ({qHoldTimeCke, rHoldTimeState})
-		2'b00:			rHoldTime <= lpHoldTimeClear;
-		2'b01:			rHoldTime <= rHoldTime + 1'b1;
+	casex ({iSpiEn, qHoldTimeCke, rHoldTimeState})
+		3'b0xx:			rHoldTime <= lpHoldTimeClear;
+		3'bx00:			rHoldTime <= lpHoldTimeClear;
+		3'bx01:			rHoldTime <= rHoldTime + 1'b1;
 		default: 		rHoldTime <= lpHoldTimeClear;
 	endcase
 
 	// MOSI 設定 Mode の Hold Time 経過後データ送信
-    if (!iSpiEn)			rMosi <=  iWd;
-    else if (qHoldTimeCke) 	rMosi <= {rMosi[6:0], 1'b1};
-    else                    rMosi <=  rMosi;
+	if (!iSpiEn)			rMosi <=  iWd;
+	else if (qHoldTimeCke)	rMosi <= {rMosi[6:0], 1'b1};
+	else					rMosi <=  rMosi;
 
 	// MISO 設定 Mode の SCK エッジで受信
 	case ({rSck,iDivCke})
