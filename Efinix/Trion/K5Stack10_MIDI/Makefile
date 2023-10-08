@@ -41,6 +41,9 @@ flash:
 	make -C $(JTAG_PROJECT) jtag
 	$(FILE) $(PROJECT) --flow program --pgm_opts mode=jtag_bridge
 
+Update:
+	make -C $(JTAG_PROJECT) jtag
+
 sim:
 	make -C $(SIM_PROJECT) sim
 
