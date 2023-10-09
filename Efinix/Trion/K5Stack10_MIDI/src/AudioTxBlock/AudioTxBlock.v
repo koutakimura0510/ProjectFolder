@@ -66,6 +66,10 @@ wire [pSfmNum-1:0] 		wSfmCpuValidCsr;
 wire [pSfmNum*8-1:0] 	wSfmCpuRdCsr;
 wire [pSfmNum-1:0] 		wSfmCpuDoneCsr;
 wire [pSfmNum-1:0] 		wSfmDoneCsr;
+//
+wire [15:0] 			wAacCpuWdCsr;
+wire 	 				wAacCpuWeCsr;
+wire 					wAacAlertCsr;
 
 AudioTxCsr #(
 	.pBlockAdrsWidth(pBlockAdrsWidth),
@@ -92,10 +96,13 @@ AudioTxCsr #(
 	.oSfmCpuEn(wSfmCpuEnCsr),
 	.oSfmCpuCsCtrl(wSfmCpuCsCtrlCsr),
 	.oSfmCpuValid(wSfmCpuValidCsr),
+	.oAacCpuWd(wAacCpuWdCsr),
+	.oAacCpuWe(wAacCpuWeCsr),
 	// Csr Input
 	.iSfmCpuRd(wSfmCpuRdCsr),
 	.iSfmCpuDone(wSfmCpuDoneCsr),
 	.iSfmDone(wSfmDoneCsr),
+	.iAacAlert(wAacAlertCsr),
     // common
 	.iSRST(iSRST),		.iSCLK(iSCLK)
 );
@@ -104,6 +111,7 @@ AudioTxCsr #(
 // Sfc Part
 //-----------------------------------------------------------------------------
 wire [lpAudioBitDepth-1:0] wArrRd [0:pSfmNum-1];
+reg  [lpAudioBitDepth-1:0] qArrRd [0:pSfmNum-1];
 wire [pSfmNum-1:0] wArrRvd;
 wire [pSfmNum-1:0] wArrEmp;
 reg  [pSfmNum-1:0] qArrRe;
@@ -174,15 +182,43 @@ ASyncFifoController #(
 	.inARST(inSRST),	.iWCLK(iSCLK),		.iRCLK(iMCLK)
 );
 
+assign wAacAlertCsr = wAacRemaingCntAlert;
+
 //-----------------------------------------------------------------------------
 // 後々に再生音源ごとの、振幅調整や終了時点のノイズ軽減 移動平均処理を入れる。
 // CPU からのレジスタ設定により動作
 //-----------------------------------------------------------------------------
+reg rGlueWe, qGluwWeCke;
+reg rGlueWeSel;
+
+always @(posedge iSCLK)
+begin
+	if (iSRST)				rGlueWe <= 1'd0;
+	else if (qGluwWeCke)	rGlueWe <= 1'b1;
+	else 					rGlueWe <= 1'd0;
+
+	if (iSRST)				rGlueWeSel <= 1'd0;
+	else if (wAacCpuWeCsr)	rGlueWeSel <= 1'b1;
+	else 					rGlueWeSel <= 1'd0;
+end
+
 always @*
 begin
-	qAacWd <=   wArrRd[0] + wArrRd[1] + wArrRd[2];
-	qAacWe <= |{wArrRvd};
-	qArrRe <=  {pSfmNum{wAacRemaingCntAlert}};
+	qArrRd[0] 	<=   wArrRvd[0] ? wArrRd[0] : 16'd0;
+	qArrRd[1] 	<=   wArrRvd[1] ? wArrRd[1] : 16'd0;
+	qArrRd[2] 	<=   wArrRvd[2] ? wArrRd[2] : 16'd0;
+	// qAacWd		<=   {16'd0,qArrRd[2]};
+	// qAacWd		<=   {16'd0,wAacCpuWdCsr};
+	qAacWd		<=   qArrRd[0]  + qArrRd[1] + qArrRd[2];
+	qAacWe		<= |{wArrRvd};
+	// qAacWe		<= 	 wArrRvd[2];
+	// qAacWe		<=  rGlueWe;
+	qArrRe		<=  {pSfmNum{~wAacRemaingCntAlert}};
+
+	casex ( {rGlueWeSel,rGlueWe,wAacCpuWeCsr} )
+		'b001:	qGluwWeCke <= 1'b1;
+		'bx1x:	qGluwWeCke <= 1'b0;
+	endcase
 end
 
 
@@ -208,7 +244,7 @@ AudioTxI2S AudioTxI2S (
 always @*
 begin
 	qAudioData[31:0] 	<= {wAacRd[23:0],8'h00};
-  	qAacRe				<= wI2SRdy;
+  	qAacRe				<= &{wI2SRdy,~wAacEmp};
 end
 
 

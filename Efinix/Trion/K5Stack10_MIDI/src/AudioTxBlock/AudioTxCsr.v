@@ -20,7 +20,7 @@ module AudioTxCsr #(
 	// Bus Master Write
 	input	[pUsiBusWidth-1:0] 	iSUsiWd,
 	input	[pUsiBusWidth-1:0] 	iSUsiAdrs,
-	// Csr Output
+	// Csr Sfm
 	output 	[pSfmNum-1:0]					oSfmIoHiz,
 	output 	[pSfmNum-1:0]					oSfmEn,				// ※1
 	output 	[pSfmNum-1:0]					oSfmCycleEn,
@@ -35,6 +35,10 @@ module AudioTxCsr #(
 	output	[pSfmNum-1:0]					oSfmCpuValid,
 	input	[(pSfmNum*8)-1:0]				iSfmCpuRd,
 	input	[pSfmNum-1:0]					iSfmCpuDone,
+	// Csr Aac
+	output	[15:0] 							oAacCpuWd,
+	output									oAacCpuWe,
+	input 									iAacAlert,
 	// CLK RST
 	input 	iSRST,
 	input 	iSCLK
@@ -47,17 +51,20 @@ module AudioTxCsr #(
 //----------------------------------------------------------
 // レジスタマップ
 //----------------------------------------------------------
-reg [pSfmNum-1:0]  					rSfmIoHiz;				assign oSfmIoHiz 		= rSfmIoHiz;
-reg [pSfmNum-1:0]  					rSfmEn;					assign oSfmEn 			= rSfmEn;
-reg [pSfmNum-1:0]  					rSfmCycleEn;			assign oSfmCycleEn 		= rSfmCycleEn;
-reg [(pSfmNum*8)-1:0]				rSfmDiv;				assign oSfmDiv 			= rSfmDiv;
-reg [(pSfmNum*8)-1:0]				rSfmCsHoldTime;			assign oSfmCsHoldTime 	= rSfmCsHoldTime;
-reg [(pSfmNum*pSfmPageWidth)-1:0] 	rSfmStartAdrs;			assign oSfmStartAdrs 	= rSfmStartAdrs;
-reg [(pSfmNum*pSfmPageWidth)-1:0] 	rSfmEndAdrs;			assign oSfmEndAdrs 		= rSfmEndAdrs;
-reg [(pSfmNum*8)-1:0] 				rSfmCpuWd;				assign oSfmCpuWd		= rSfmCpuWd;
-reg [pSfmNum-1:0] 					rSfmCpuEn;				assign oSfmCpuEn		= rSfmCpuEn;
-reg [pSfmNum-1:0] 					rSfmCpuCsCtrl;			assign oSfmCpuCsCtrl	= rSfmCpuCsCtrl;
-reg [pSfmNum-1:0] 					rSfmCpuValid;			assign oSfmCpuValid		= rSfmCpuValid;
+reg [pSfmNum-1:0]  					rSfmIoHiz;				assign oSfmIoHiz 		= rSfmIoHiz;		// 使用していない
+reg [pSfmNum-1:0]  					rSfmEn;					assign oSfmEn 			= rSfmEn;			// Sfm Access Enable
+reg [pSfmNum-1:0]  					rSfmCycleEn;			assign oSfmCycleEn 		= rSfmCycleEn;		// Sfm Access Cycle Moving
+reg [(pSfmNum*8)-1:0]				rSfmDiv;				assign oSfmDiv 			= rSfmDiv;			// SPI SCLK Division
+reg [(pSfmNum*8)-1:0]				rSfmCsHoldTime;			assign oSfmCsHoldTime 	= rSfmCsHoldTime;	// CS "H","L", Hold Time
+reg [(pSfmNum*pSfmPageWidth)-1:0] 	rSfmStartAdrs;			assign oSfmStartAdrs 	= rSfmStartAdrs;	// Sfm Load Start Adrs
+reg [(pSfmNum*pSfmPageWidth)-1:0] 	rSfmEndAdrs;			assign oSfmEndAdrs 		= rSfmEndAdrs;		// Sfm Load End Adrs
+reg [(pSfmNum*8)-1:0] 				rSfmCpuWd;				assign oSfmCpuWd		= rSfmCpuWd;		// CPU Side Write Data
+reg [pSfmNum-1:0] 					rSfmCpuEn;				assign oSfmCpuEn		= rSfmCpuEn;		// CPU Side Write Enable
+reg [pSfmNum-1:0] 					rSfmCpuCsCtrl;			assign oSfmCpuCsCtrl	= rSfmCpuCsCtrl;	// CPU Side Write CS Ctrl
+reg [pSfmNum-1:0] 					rSfmCpuValid;			assign oSfmCpuValid		= rSfmCpuValid;		// CPU Side Valid
+//
+reg [15:0] 							rAacCpuWd;				assign oAacCpuWd		= rAacCpuWd;		// CPU 操作で Sfm から読み出し、AAC に書き込むルート
+reg 								rAacCpuWe;				assign oAacCpuWe		= rAacCpuWe;		// CPU 操作で Sfm から読み出し、AAC に書き込むルート
 //
 reg [(pSfmNum*8)-1:0]				rSfmCpuRd;
 reg [pSfmNum-1:0] 					rSfmDone;
@@ -74,6 +81,8 @@ reg qCsrWCke20;
 reg qCsrWCke24;
 reg qCsrWCke28;
 reg qCsrWCke30;
+reg qCsrWCke34;
+reg qCsrWCke38;
 reg qCsrWCke60;
 reg qCsrWCke64;
 reg qCsrWCke68;
@@ -88,8 +97,8 @@ begin
 		rSfmIoHiz		<= {pSfmNum{1'b0}};
 		rSfmEn			<= {pSfmNum{1'b0}};
 		rSfmCycleEn		<= {pSfmNum{1'b0}};
-		rSfmDiv			<= {(pSfmNum){8'd2}};
-		rSfmCsHoldTime	<= {(pSfmNum){8'd2}};
+		rSfmDiv			<= {(pSfmNum){8'd4}};
+		rSfmCsHoldTime	<= {(pSfmNum){8'd20}};
 		rSfmStartAdrs	<= {(pSfmNum*pSfmPageWidth){1'b0}};
 		rSfmEndAdrs		<= {(pSfmNum*pSfmPageWidth){1'b0}};
 		//
@@ -97,13 +106,16 @@ begin
 		rSfmCpuEn		<= {pSfmNum{1'b0}};
 		rSfmCpuCsCtrl	<= {pSfmNum{1'b1}};
 		rSfmCpuValid	<= {pSfmNum{1'b0}};
+		//
+		rAacCpuWd		<= 16'd0;
+		rAacCpuWe		<= 1'd0;
 	end
 	else
 	begin
 		rSfmIoHiz		<= qCsrWCke00 	? iSUsiWd[pSfmNum-1:0] 		: rSfmIoHiz;
-		rSfmEn			<= iSfmDone[0]	? rSfmCycleEn[0]			: qCsrWCke04 ? iSUsiWd[0] 	: rSfmEn[0];
-		rSfmEn			<= iSfmDone[1]	? rSfmCycleEn[1]			: qCsrWCke04 ? iSUsiWd[1] 	: rSfmEn[1];
-		rSfmEn			<= iSfmDone[2]	? rSfmCycleEn[2]			: qCsrWCke04 ? iSUsiWd[2] 	: rSfmEn[2];
+		rSfmEn[0]		<= iSfmDone[0]	? rSfmCycleEn[0]			: qCsrWCke04 ? iSUsiWd[0] 	: rSfmEn[0];
+		rSfmEn[1]		<= iSfmDone[1]	? rSfmCycleEn[1]			: qCsrWCke04 ? iSUsiWd[1] 	: rSfmEn[1];
+		rSfmEn[2]		<= iSfmDone[2]	? rSfmCycleEn[2]			: qCsrWCke04 ? iSUsiWd[2] 	: rSfmEn[2];
 		rSfmCycleEn		<= qCsrWCke08 	? iSUsiWd[pSfmNum-1:0] 		: rSfmCycleEn;
 		rSfmDiv			<= qCsrWCke0C 	? iSUsiWd[pSfmNum*8-1:0]	: rSfmDiv;
 		rSfmCsHoldTime	<= qCsrWCke10 	? iSUsiWd[pSfmNum*8-1:0]  	: rSfmCsHoldTime;
@@ -123,6 +135,9 @@ begin
 		rSfmDone[0]		<= iSfmCpuDone[0]	? 1'b1 					: qCsrWCke30 ? 1'b0 : rSfmDone[0];
 		rSfmDone[1]		<= iSfmCpuDone[1]	? 1'b1 					: qCsrWCke30 ? 1'b0 : rSfmDone[1];
 		rSfmDone[2]		<= iSfmCpuDone[2]	? 1'b1 					: qCsrWCke30 ? 1'b0 : rSfmDone[2];
+		//
+		rAacCpuWd[15:0]	<= qCsrWCke34 ? iSUsiWd[15:0]	: rAacCpuWd[15:0];
+		rAacCpuWe		<= qCsrWCke38 ? iSUsiWd[1:0]	: rAacCpuWe;
 		//
 		rSfmStartAdrs	[ 0+:pSfmPageWidth]	<= qCsrWCke60 	? iSUsiWd[pSfmPageWidth-1:0]	: rSfmStartAdrs	[ 0+:pSfmPageWidth];
 		rSfmEndAdrs		[ 0+:pSfmPageWidth]	<= qCsrWCke64 	? iSUsiWd[pSfmPageWidth-1:0]	: rSfmEndAdrs	[ 0+:pSfmPageWidth];
@@ -147,6 +162,8 @@ begin
 	qCsrWCke24 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0024});
 	qCsrWCke28 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0028});
 	qCsrWCke30 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0030});
+	qCsrWCke34 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0034});
+	qCsrWCke38 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0038});
 	qCsrWCke60 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0060});
 	qCsrWCke64 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0064});
 	qCsrWCke68 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0068});
@@ -177,15 +194,18 @@ begin
 		'h24:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuWd[8+:8]};
 		'h28:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuWd[16+:8]};
 		'h30:	 rSUsiRd <= {{(32 - pSfmNum			){1'b0}}, rSfmDone};
+		'h34:	 rSUsiRd <= {{(32 - 16				){1'b0}}, rAacCpuWd};
+		'h38:	 rSUsiRd <= {{(32 - 1				){1'b0}}, rAacCpuWe};
 		'h60:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmStartAdrs[0+:pSfmPageWidth]};
 		'h64:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmEndAdrs[0+:pSfmPageWidth]};
 		'h68:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmStartAdrs[16+:pSfmPageWidth]};
 		'h6C:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmEndAdrs[16+:pSfmPageWidth]};
 		'h70:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmStartAdrs[32+:pSfmPageWidth]};
 		'h74:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmEndAdrs[32+:pSfmPageWidth]};
-		'h90:	 rSUsiRd <= {{(32 - 8	){1'b0}}, rSfmCpuRd[ 0+:8]};
-		'h94:	 rSUsiRd <= {{(32 - 8	){1'b0}}, rSfmCpuRd[ 8+:8]};
-		'h98:	 rSUsiRd <= {{(32 - 8	){1'b0}}, rSfmCpuRd[16+:8]};
+		'h90:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuRd[ 0+:8]};
+		'h94:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuRd[ 8+:8]};
+		'h98:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuRd[16+:8]};
+		'h9C:	 rSUsiRd <= {{(32 - 31				){1'b0}}, iAacAlert};
 		default: rSUsiRd <= iSUsiWd;
 	endcase
 end

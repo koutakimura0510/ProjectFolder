@@ -82,6 +82,9 @@ localparam
 	lpStReadDataUpr	= 4'd6,	// Read Data Cmd Setting
 	lpStReadDataCmd	= 4'd7,	// Read Data Cmd 発行
 	lpStFlashRead	= 4'd8,	// Page Read Cycle
+	lpStCsLowHold	= 4'd9,	// CS Low Hold Time
+	lpStCsIdleHold	= 4'd10,// CS Low -> High に遷移するための中間ステート
+	lpStCsHighHold	= 4'd11,// CS High Hold Time
 	lpStNull		= 4'dx;
 
 reg [31:0]				rWd;							assign oSfmWd		= rWd[7:0];
@@ -89,7 +92,7 @@ reg 					rEn;							assign oSfmEn		= rEn;
 reg 					rCsCtrl;						assign oSfmCsCtrl	= rCsCtrl;
 reg 					rDone;							assign oSfmDone		= rDone;
 reg 					qDoenCke;
-reg [3:0]				rSt;
+reg [3:0]				rSt, 		rNextSt;
 reg 					qNextStCke;
 reg [15:0]				rAdrsAdd;
 reg 					qAdrsRst;
@@ -101,12 +104,15 @@ reg 					rRe,		rReCke;
 reg 					rSel,		rSelCke;
 reg [lpSfmPageSize:0]	rRdCnt;
 reg 					qRdCntRst,	qRdCntCke;
+reg [7:0]				rCsHoldCnt;
+reg 					qCsHoldRst;
 
 always @(posedge iCLK)
 begin
 	if (iRST)
 	begin
 		rSt		<= lpStAdrsCheck;
+		rNextSt	<= lpStAdrsCheck;
 		rWd 	<= 8'h00;
 		rEn		<= 1'b0;
 		rCsCtrl <= 1'b1;
@@ -118,6 +124,7 @@ begin
 		lpStAdrsCheck:
 		begin
 			rSt			<= qNextStCke ? lpStPageReadUpr : lpStAdrsCheck;
+			rNextSt		<= rNextSt;
 			rWd		 	<= 32'd0;
 			rEn			<= 1'b0;
 			rCsCtrl 	<= 1'b1;
@@ -127,9 +134,11 @@ begin
 		lpStPageReadUpr:
 		begin
 			rSt			<= lpStPageReadCmd;
+			rNextSt		<= rNextSt;
 			rWd[ 0+: 8]	<= 8'h13;	// Page Read
 			rWd[ 8+: 8]	<= 8'h00;	// dummy
-			rWd[16+:16]	<= rAdrsAdd;
+			rWd[16+: 8]	<= rAdrsAdd[15:8];
+			rWd[24+: 8]	<= rAdrsAdd[7:0];
 			rEn			<= 1'b0;
 			rCsCtrl 	<= 1'b1;
 			rWp			<= 2'd0;
@@ -137,16 +146,18 @@ begin
 
 		lpStPageReadCmd:
 		begin
-			rSt			<= qNextStCke 	? lpStBusyUpr : lpStPageReadCmd;
-			rWd			<= iSfmDone		? {8'h00,rWd[31:8]} : rWd;
+			rSt			<= qNextStCke 	? lpStCsLowHold : lpStPageReadCmd;
+			rNextSt		<= lpStBusyUpr;
+			rWd			<= iSfmDone		? {8'h00,rWd[8+:24]} : rWd;
 			rEn			<= iSfmDone 	? 1'b0 : 1'b1;
-			rCsCtrl 	<= qNextStCke 	? 1'b1 : 1'b0;
+			rCsCtrl 	<= 1'b0;
 			rWp 		<= iSfmDone		? rWp + 1'b1 : rWp;
 		end
 
 		lpStBusyUpr:
 		begin
 			rSt			<= lpStBusyCmd;
+			rNextSt		<= rNextSt;
 			rWd[ 0+:8] 	<= 8'h0f;	// Busy Wait Check
 			rWd[ 8+:8] 	<= 8'hC3;	// Status Reg3 Adrs
 			rWd[16+:8] 	<= 8'h00;
@@ -158,16 +169,18 @@ begin
 
 		lpStBusyCmd:
 		begin
-			rSt			<= qNextStCke 	? lpStBusyCheck : lpStBusyCmd;
-			rWd			<= iSfmDone		? {8'h00,rWd[31:8]} : rWd;
+			rSt			<= qNextStCke 	? lpStCsLowHold : lpStBusyCmd;
+			rNextSt		<= lpStBusyCheck;
+			rWd			<= iSfmDone		? {8'h00,rWd[8+:24]} : rWd;
 			rEn			<= iSfmDone 	? 1'b0 : 1'b1;
-			rCsCtrl 	<= qNextStCke 	? 1'b1 : 1'b0;
+			rCsCtrl 	<= 1'b0;
 			rWp 		<= iSfmDone 	? rWp + 1'b1 : rWp;
 		end
 
 		lpStBusyCheck:
 		begin
 			rSt		<= qNextStCke 	? lpStReadDataUpr : lpStBusyUpr;
+			rNextSt	<= rNextSt;
 			rWd 	<= rWd;
 			rEn		<= 1'b0;
 			rCsCtrl <= 1'b1;
@@ -177,6 +190,7 @@ begin
 		lpStReadDataUpr:
 		begin
 			rSt			<= lpStReadDataCmd;
+			rNextSt		<= rNextSt;
 			rWd[ 0+:8]	<= 8'h03;	// Flash Read Data Cmd
 			rWd[ 8+:8]	<= 8'h00;	// col adrs Msb
 			rWd[16+:8]	<= 8'h00;	// col adrs lsb
@@ -189,18 +203,50 @@ begin
 		lpStReadDataCmd:
 		begin
 			rSt			<= qNextStCke 	? lpStFlashRead : lpStReadDataCmd;
-			rWd			<= iSfmDone		? {8'h00,rWd[31:8]} : rWd;
-			rEn			<= 1'b1;
+			rNextSt		<= rNextSt;
+			rWd			<= iSfmDone		? {8'h00,rWd[8+:24]} : rWd;
+			rEn			<= iSfmDone		? 1'b0 : 1'b1;
 			rCsCtrl 	<= 1'b0;
 			rWp 		<= iSfmDone 	? rWp + 1'b1 : rWp;
 		end
 
 		lpStFlashRead:
 		begin
-			rSt			<= qNextStCke 	? lpStAdrsCheck : lpStFlashRead;
+			rSt			<= qNextStCke 	? lpStCsLowHold : lpStFlashRead;
+			rNextSt		<= lpStAdrsCheck;
 			rWd			<= 32'd0;
 			rEn			<= rEnRemaing;
 			rCsCtrl 	<= 1'b0;
+			rWp 		<= 2'd0;
+		end
+
+		lpStCsLowHold:
+		begin
+			rSt			<= qNextStCke 	? lpStCsIdleHold : lpStCsLowHold;
+			rNextSt		<= rNextSt;
+			rWd			<= 32'd0;
+			rEn			<= 1'b0;
+			rCsCtrl 	<= 1'b0;
+			rWp 		<= 2'd0;
+		end
+
+		lpStCsIdleHold:
+		begin
+			rSt			<= lpStCsHighHold;
+			rNextSt		<= rNextSt;
+			rWd			<= 32'd0;
+			rEn			<= 1'b0;
+			rCsCtrl 	<= 1'b0;
+			rWp 		<= 2'd0;
+		end
+
+		lpStCsHighHold:
+		begin
+			rSt			<= qNextStCke 	? rNextSt : lpStCsHighHold;
+			rNextSt		<= rNextSt;
+			rWd			<= 32'd0;
+			rEn			<= 1'b0;
+			rCsCtrl 	<= 1'b1;
 			rWp 		<= 2'd0;
 		end
 		endcase
@@ -230,13 +276,16 @@ begin
 
 	if (qDoenCke)		rDone <= 1'b1;	
 	else 				rDone <= 1'b0;
+
+	if (qCsHoldRst)		rCsHoldCnt <= 8'd0;
+	else 				rCsHoldCnt <= rCsHoldCnt + 1'b1;
 end
 
 always @*
 begin
 	case ( {rEnRemaing,iSfmDone,wSfcAlert} )
-		'b111:					qEnRemaingCke <= 1'b1;		// Assert
-		'b000:					qEnRemaingCke <= 1'b1;		// Dissert
+		'b111:					qEnRemaingCke <= 1'b1;	// Assert
+		'b000:					qEnRemaingCke <= 1'b1;	// Dissert
 		default:				qEnRemaingCke <= 1'b0;
 	endcase
 
@@ -261,7 +310,7 @@ begin
 		default:				qDoenCke <= 1'b0;		// Dissert
 	endcase
 
-	casex ( {rSt,rRdCnt[lpSfmPageSize]} )
+	case ( {rSt,rRdCnt[lpSfmPageSize]} )
 		{lpStFlashRead,	1'b0}:	qRdCntRst <= 1'b0;		// Dissert
 		default: 				qRdCntRst <= 1'b1;		// Assert
 	endcase
@@ -271,17 +320,25 @@ begin
 		default: 				qRdCntCke <= 1'b0;
 	endcase
 
-	casex ( {rSt,rDone,iSfmEn,iSfmDone,rWp[1:0],(rRd[0]==1'b1),rRdCnt[lpSfmPageSize]} )
-		{lpStAdrsCheck,		7'b01_x_xx_x_x}:	qNextStCke <= 1'b1;
-		{lpStPageReadCmd,	7'bxx_1_11_x_x}:	qNextStCke <= 1'b1;
-		{lpStBusyCmd,		7'bxx_1_10_x_x}:	qNextStCke <= 1'b1;
-		{lpStBusyCheck,		7'bxx_x_xx_1_x}:	qNextStCke <= 1'b1;
-		{lpStReadDataCmd,	7'bxx_1_11_x_x}:	qNextStCke <= 1'b1;
-		{lpStFlashRead,		7'bxx_x_xx_x_1}:	qNextStCke <= 1'b1;
+	case ( {rSt} )
+		{lpStCsLowHold}:		qCsHoldRst <= 1'b0;		// Dissert
+		{lpStCsHighHold}:		qCsHoldRst <= 1'b0;		// Dissert
+		default: 				qCsHoldRst <= 1'b1;		// Assert
+	endcase
+
+	casex ( {rSt, (rCsHoldCnt==iSfmCsHoldTime),rDone,iSfmEn,iSfmDone,rWp[1:0],rRd[0],rRdCnt[lpSfmPageSize]} )
+		{lpStAdrsCheck,		8'bx_01_x_xx_x_x}:	qNextStCke <= 1'b1;
+		{lpStPageReadCmd,	8'bx_xx_1_11_x_x}:	qNextStCke <= 1'b1;
+		{lpStBusyCmd,		8'bx_xx_1_10_x_x}:	qNextStCke <= 1'b1;
+		{lpStBusyCheck,		8'bx_xx_x_xx_0_x}:	qNextStCke <= 1'b1;
+		{lpStReadDataCmd,	8'bx_xx_1_11_x_x}:	qNextStCke <= 1'b1;
+		{lpStFlashRead,		8'bx_xx_x_xx_x_1}:	qNextStCke <= 1'b1;
+		{lpStCsLowHold,		8'b1_xx_x_xx_x_x}:	qNextStCke <= 1'b1;
+		{lpStCsHighHold,	8'b1_xx_x_xx_x_x}:	qNextStCke <= 1'b1;
 		default: 								qNextStCke <= 1'b0;
 	endcase
 
-	qSfcWd <= rRd;
+	qSfcWd <= {rRd[7:0],rRd[15:8]};	// Sfm に対する MSB,LSB の書き込みに合わせてスワップする
 	qSfcWe <= rRe;
 end
 

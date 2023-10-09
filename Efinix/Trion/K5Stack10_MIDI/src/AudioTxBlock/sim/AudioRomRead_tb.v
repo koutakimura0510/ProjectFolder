@@ -73,9 +73,9 @@ AudioRomRead #(
 	.oSfmDone(wSfmDone),
 	// Cpu Side
 	.iSfmCpuWd(8'hA2),
-	.iSfmCpuEn(1'b1),
-	.iSfmCpuCsCtrl(1'b0),
-	.iSfmCpuValid(1'b1),
+	.iSfmCpuEn(1'b0),
+	.iSfmCpuCsCtrl(1'b1),
+	.iSfmCpuValid(1'b0),
 	.oSfmCpuRd(),
 	.oSfmCpuDone(),
 	// common
@@ -88,7 +88,7 @@ always @*
 begin
 	qSfmEn			<= wSfmDone ? 1'b0 : 1'b1;
 	qSfmCycleEn		<= 1'b0;
-	qSfmCsHoldTime	<= 8'd0;
+	qSfmCsHoldTime	<= 8'd10;
 	qSfmStartAdrs	<= 16'd0;
 	qSfmEndAdrs		<= 16'd2;
 end

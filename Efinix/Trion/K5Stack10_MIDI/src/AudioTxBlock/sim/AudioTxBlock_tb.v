@@ -9,8 +9,9 @@ module AudioTxBlock_tb;
 // Clk,Rst Generator
 //-----------------------------------------------------------------------------
 genvar x;
-localparam	lpSCLKCycle = 4;	// CLK サイクル
-localparam	lpMCLKCycle = 7;	// CLK サイクル
+localparam	lpSCLKCycle = 2;	// CLK サイクル
+localparam	lpMCLKCycle = 4;	// CLK サイクル
+localparam	lpSimWait	= 20000;
 
 reg	wSCLK = 0;		reg	wSRST = 1;		reg	wnSRST = 0;
 reg	wMCLK = 0;		reg	wMRST = 1;		reg	wnMRST = 0;
@@ -92,7 +93,7 @@ endtask //usi_csr_setting
 //-----------------------------------------------------------------------------
 // Rrs(Rom Read Sequence) Part
 //-----------------------------------------------------------------------------
-localparam lpSfcNum = 3;	// Serial Flash Memory Number
+localparam lpSfcNum = 1;	// Serial Flash Memory Number
 
 wire wI2sMclk;
 wire wI2sBclk;
@@ -124,10 +125,34 @@ AudioTxBlock #(
 	.iMCLK(wMCLK),		.iSCLK(wSCLK)
 );
 
+
+//-----------------------------------------------------------------------------
+// SPI Slave Sequence
+//-----------------------------------------------------------------------------
+reg [7:0] rSfmMiso, rSfmMisoData;
+reg [2:0] rSckCnt;
+reg qSfmMisoRst;
+
+always @(negedge wSfmSck, posedge qSfmMisoRst)
+begin
+	if (qSfmMisoRst) 			rSfmMiso <= 8'd0;
+	else if (rSckCnt==3'd7) 	rSfmMiso <= rSfmMisoData;
+	else 						rSfmMiso <= {rSfmMiso[6:0],1'b0};
+
+	if (qSfmMisoRst) 			rSfmMisoData <= 8'd0;
+	else if (rSckCnt==3'd7) 	rSfmMisoData <= rSfmMisoData + 1'b1;
+	else 						rSfmMisoData <= rSfmMisoData;
+
+	if (qSfmMisoRst) 	rSckCnt	 <= 3'd0;
+	else 				rSckCnt  <= rSckCnt + 1'b1;
+end
+
 always @*
 begin
-	qSfmMiso <= 24'h001122;
+	qSfmMisoRst <= wSfmCs;
+	qSfmMiso	<= rSfmMiso[7];
 end
+
 
 //-----------------------------------------------------------------------------
 // Simlation Start
@@ -136,11 +161,15 @@ initial begin
 	$dumpfile("AudioTxBlock_tb.vcd");
 	$dumpvars(0, AudioTxBlock_tb);	// 引数0:下位モジュール表示, 1:Topのみ
 	reset_init();
-	usi_csr_setting(24'h020202, 32'h4002000C);
-	usi_csr_setting(24'h000007, 32'h40020020);
-	usi_csr_setting(24'h000007, 32'h40020018);
-	usi_csr_setting(24'h000000, 32'h4002001C);
-	#(lpSCLKCycle * 4800);
+	// usi_csr_setting(24'h020202, 32'h4002000C);
+	// usi_csr_setting(24'h000007, 32'h40020020);
+	// usi_csr_setting(24'h000007, 32'h40020018);
+	// usi_csr_setting(24'h000000, 32'h4002001C);
+	usi_csr_setting(24'h000001, 32'h40020008);
+	usi_csr_setting(24'h000000, 32'h40020060);
+	usi_csr_setting(24'h000003, 32'h40020064);
+	usi_csr_setting(24'h000001, 32'h40020004);
+	#(lpSCLKCycle * lpSimWait);
     $finish;
 end
 
