@@ -3,7 +3,7 @@
         {
             "name": "la0",
             "type": "la",
-            "uuid": "e50b84f6e08a4bc89b35ba0b35e6d710",
+            "uuid": "3673b9755c6143ff93d3a10d922fd6f7",
             "trigin_en": false,
             "trigout_en": false,
             "auto_inserted": true,
@@ -12,53 +12,38 @@
             "input_pipeline": 1,
             "probes": [
                 {
-                    "name": "RAMBlock/MemoryReadWriteTester/rErr",
-                    "width": 1,
+                    "name": "AudioTxBlock/AudioRomRead[2].AudioRomRead/AudioRomReadSequence/rSt",
+                    "width": 4,
                     "probe_type": 1
                 },
                 {
-                    "name": "RAMBlock/oDone",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "RAMBlock/oTestErr",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "RAMBlock/oSRAMD",
+                    "name": "AudioTxBlock/AudioRomRead[2].AudioRomRead/AudioRomReadSequence/rAdrsAdd",
                     "width": 16,
                     "probe_type": 1
                 },
                 {
-                    "name": "RAMBlock/oSRAM_OE",
+                    "name": "AudioTxBlock/AudioRomRead[2].AudioRomRead/AudioRomReadSequence/qNextStCke",
                     "width": 1,
                     "probe_type": 1
                 },
                 {
-                    "name": "RAMBlock/oSRAM_CE",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "RAMBlock/oSRAMA",
-                    "width": 18,
-                    "probe_type": 1
-                },
-                {
-                    "name": "RAMBlock/oSRAM_WE",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "RAMBlock/RAMIfPortUnit/oRvd",
-                    "width": 1,
-                    "probe_type": 1
-                },
-                {
-                    "name": "RAMBlock/RAMIfPortUnit/oRd",
+                    "name": "AudioTxBlock/AudioRomRead[2].AudioRomRead/AudioRomReadSequence/qSfcWd",
                     "width": 16,
+                    "probe_type": 1
+                },
+                {
+                    "name": "AudioTxBlock/AudioRomRead[2].AudioRomRead/AudioRomReadSequence/qSfcWe",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "AudioTxBlock/AudioRomRead[2].AudioRomRead/AudioRomReadSequence/wSfcAlert",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "AudioTxBlock/AudioRomRead[2].AudioRomRead/AudioRomReadSequence/qEnRemaingCke",
+                    "width": 1,
                     "probe_type": 1
                 }
             ]
@@ -191,420 +176,363 @@
                         "path": []
                     },
                     {
-                        "name": "la0_probe0",
-                        "net": "rErr",
+                        "name": "la0_probe0[0]",
+                        "net": "rSt[0]",
                         "path": [
-                            "RAMBlock",
-                            "MemoryReadWriteTester"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
-                        "name": "la0_probe1",
-                        "net": "oDone",
+                        "name": "la0_probe0[1]",
+                        "net": "rSt[1]",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe0[2]",
+                        "net": "rSt[2]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe0[3]",
+                        "net": "rSt[3]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1[0]",
+                        "net": "rAdrsAdd[0]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1[1]",
+                        "net": "rAdrsAdd[1]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1[2]",
+                        "net": "rAdrsAdd[2]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1[3]",
+                        "net": "rAdrsAdd[3]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1[4]",
+                        "net": "rAdrsAdd[4]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1[5]",
+                        "net": "rAdrsAdd[5]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1[6]",
+                        "net": "rAdrsAdd[6]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1[7]",
+                        "net": "rAdrsAdd[7]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1[8]",
+                        "net": "rAdrsAdd[8]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1[9]",
+                        "net": "rAdrsAdd[9]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1[10]",
+                        "net": "rAdrsAdd[10]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1[11]",
+                        "net": "rAdrsAdd[11]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1[12]",
+                        "net": "rAdrsAdd[12]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1[13]",
+                        "net": "rAdrsAdd[13]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1[14]",
+                        "net": "rAdrsAdd[14]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1[15]",
+                        "net": "rAdrsAdd[15]",
+                        "path": [
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe2",
-                        "net": "oTestErr",
+                        "net": "qNextStCke",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe3[0]",
-                        "net": "oSRAMD[0]",
+                        "net": "qSfcWd[0]",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe3[1]",
-                        "net": "oSRAMD[1]",
+                        "net": "qSfcWd[1]",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe3[2]",
-                        "net": "oSRAMD[2]",
+                        "net": "qSfcWd[2]",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe3[3]",
-                        "net": "oSRAMD[3]",
+                        "net": "qSfcWd[3]",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe3[4]",
-                        "net": "oSRAMD[4]",
+                        "net": "qSfcWd[4]",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe3[5]",
-                        "net": "oSRAMD[5]",
+                        "net": "qSfcWd[5]",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe3[6]",
-                        "net": "oSRAMD[6]",
+                        "net": "qSfcWd[6]",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe3[7]",
-                        "net": "oSRAMD[7]",
+                        "net": "qSfcWd[7]",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe3[8]",
-                        "net": "oSRAMD[8]",
+                        "net": "qSfcWd[8]",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe3[9]",
-                        "net": "oSRAMD[9]",
+                        "net": "qSfcWd[9]",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe3[10]",
-                        "net": "oSRAMD[10]",
+                        "net": "qSfcWd[10]",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe3[11]",
-                        "net": "oSRAMD[11]",
+                        "net": "qSfcWd[11]",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe3[12]",
-                        "net": "oSRAMD[12]",
+                        "net": "qSfcWd[12]",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe3[13]",
-                        "net": "oSRAMD[13]",
+                        "net": "qSfcWd[13]",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe3[14]",
-                        "net": "oSRAMD[14]",
+                        "net": "qSfcWd[14]",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe3[15]",
-                        "net": "oSRAMD[15]",
+                        "net": "qSfcWd[15]",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe4",
-                        "net": "oSRAM_OE",
+                        "net": "qSfcWe",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
                         "name": "la0_probe5",
-                        "net": "oSRAM_CE",
+                        "net": "wSfcAlert",
                         "path": [
-                            "RAMBlock"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     },
                     {
-                        "name": "la0_probe6[0]",
-                        "net": "oSRAMA[0]",
+                        "name": "la0_probe6",
+                        "net": "qEnRemaingCke",
                         "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[1]",
-                        "net": "oSRAMA[1]",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[2]",
-                        "net": "oSRAMA[2]",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[3]",
-                        "net": "oSRAMA[3]",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[4]",
-                        "net": "oSRAMA[4]",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[5]",
-                        "net": "oSRAMA[5]",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[6]",
-                        "net": "oSRAMA[6]",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[7]",
-                        "net": "oSRAMA[7]",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[8]",
-                        "net": "oSRAMA[8]",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[9]",
-                        "net": "oSRAMA[9]",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[10]",
-                        "net": "oSRAMA[10]",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[11]",
-                        "net": "oSRAMA[11]",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[12]",
-                        "net": "oSRAMA[12]",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[13]",
-                        "net": "oSRAMA[13]",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[14]",
-                        "net": "oSRAMA[14]",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[15]",
-                        "net": "oSRAMA[15]",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[16]",
-                        "net": "oSRAMA[16]",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe6[17]",
-                        "net": "oSRAMA[17]",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe7",
-                        "net": "oSRAM_WE",
-                        "path": [
-                            "RAMBlock"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe8",
-                        "net": "oRvd",
-                        "path": [
-                            "RAMBlock",
-                            "RAMIfPortUnit"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[0]",
-                        "net": "oRd[0]",
-                        "path": [
-                            "RAMBlock",
-                            "RAMIfPortUnit"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[1]",
-                        "net": "oRd[1]",
-                        "path": [
-                            "RAMBlock",
-                            "RAMIfPortUnit"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[2]",
-                        "net": "oRd[2]",
-                        "path": [
-                            "RAMBlock",
-                            "RAMIfPortUnit"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[3]",
-                        "net": "oRd[3]",
-                        "path": [
-                            "RAMBlock",
-                            "RAMIfPortUnit"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[4]",
-                        "net": "oRd[4]",
-                        "path": [
-                            "RAMBlock",
-                            "RAMIfPortUnit"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[5]",
-                        "net": "oRd[5]",
-                        "path": [
-                            "RAMBlock",
-                            "RAMIfPortUnit"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[6]",
-                        "net": "oRd[6]",
-                        "path": [
-                            "RAMBlock",
-                            "RAMIfPortUnit"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[7]",
-                        "net": "oRd[7]",
-                        "path": [
-                            "RAMBlock",
-                            "RAMIfPortUnit"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[8]",
-                        "net": "oRd[8]",
-                        "path": [
-                            "RAMBlock",
-                            "RAMIfPortUnit"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[9]",
-                        "net": "oRd[9]",
-                        "path": [
-                            "RAMBlock",
-                            "RAMIfPortUnit"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[10]",
-                        "net": "oRd[10]",
-                        "path": [
-                            "RAMBlock",
-                            "RAMIfPortUnit"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[11]",
-                        "net": "oRd[11]",
-                        "path": [
-                            "RAMBlock",
-                            "RAMIfPortUnit"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[12]",
-                        "net": "oRd[12]",
-                        "path": [
-                            "RAMBlock",
-                            "RAMIfPortUnit"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[13]",
-                        "net": "oRd[13]",
-                        "path": [
-                            "RAMBlock",
-                            "RAMIfPortUnit"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[14]",
-                        "net": "oRd[14]",
-                        "path": [
-                            "RAMBlock",
-                            "RAMIfPortUnit"
-                        ]
-                    },
-                    {
-                        "name": "la0_probe9[15]",
-                        "net": "oRd[15]",
-                        "path": [
-                            "RAMBlock",
-                            "RAMIfPortUnit"
+                            "AudioTxBlock",
+                            "AudioRomRead[2].AudioRomRead",
+                            "AudioRomReadSequence"
                         ]
                     }
                 ]
@@ -623,113 +551,94 @@
             "capture_control": false,
             "selected_nets": [
                 {
-                    "name": "rErr",
-                    "width": 1,
+                    "name": "rSt",
+                    "width": 4,
                     "clk_domain": "iSCLK",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
                     "path": [
-                        "RAMBlock",
-                        "MemoryReadWriteTester"
-                    ]
+                        "AudioTxBlock",
+                        "AudioRomRead[2].AudioRomRead",
+                        "AudioRomReadSequence"
+                    ],
+                    "net_idx_left": 3,
+                    "net_idx_right": 0
                 },
                 {
-                    "name": "oDone",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "RAMBlock"
-                    ]
-                },
-                {
-                    "name": "oTestErr",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "RAMBlock"
-                    ]
-                },
-                {
-                    "name": "oSRAMD",
+                    "name": "rAdrsAdd",
                     "width": 16,
                     "clk_domain": "iSCLK",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
                     "path": [
-                        "RAMBlock"
+                        "AudioTxBlock",
+                        "AudioRomRead[2].AudioRomRead",
+                        "AudioRomReadSequence"
                     ],
                     "net_idx_left": 15,
                     "net_idx_right": 0
                 },
                 {
-                    "name": "oSRAM_OE",
+                    "name": "qNextStCke",
                     "width": 1,
                     "clk_domain": "iSCLK",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
                     "path": [
-                        "RAMBlock"
+                        "AudioTxBlock",
+                        "AudioRomRead[2].AudioRomRead",
+                        "AudioRomReadSequence"
                     ]
                 },
                 {
-                    "name": "oSRAM_CE",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "RAMBlock"
-                    ]
-                },
-                {
-                    "name": "oSRAMA",
-                    "width": 18,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "RAMBlock"
-                    ],
-                    "net_idx_left": 17,
-                    "net_idx_right": 0
-                },
-                {
-                    "name": "oSRAM_WE",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "RAMBlock"
-                    ]
-                },
-                {
-                    "name": "oRvd",
-                    "width": 1,
-                    "clk_domain": "iSCLK",
-                    "selected_probe_type": "DATA AND TRIGGER",
-                    "child": [],
-                    "path": [
-                        "RAMBlock",
-                        "RAMIfPortUnit"
-                    ]
-                },
-                {
-                    "name": "oRd",
+                    "name": "qSfcWd",
                     "width": 16,
                     "clk_domain": "iSCLK",
                     "selected_probe_type": "DATA AND TRIGGER",
                     "child": [],
                     "path": [
-                        "RAMBlock",
-                        "RAMIfPortUnit"
+                        "AudioTxBlock",
+                        "AudioRomRead[2].AudioRomRead",
+                        "AudioRomReadSequence"
                     ],
                     "net_idx_left": 15,
                     "net_idx_right": 0
+                },
+                {
+                    "name": "qSfcWe",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "AudioTxBlock",
+                        "AudioRomRead[2].AudioRomRead",
+                        "AudioRomReadSequence"
+                    ]
+                },
+                {
+                    "name": "wSfcAlert",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "AudioTxBlock",
+                        "AudioRomRead[2].AudioRomRead",
+                        "AudioRomReadSequence"
+                    ]
+                },
+                {
+                    "name": "qEnRemaingCke",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "AudioTxBlock",
+                        "AudioRomRead[2].AudioRomRead",
+                        "AudioRomReadSequence"
+                    ]
                 }
             ],
             "top_module": "K5Stack10MidiTop",

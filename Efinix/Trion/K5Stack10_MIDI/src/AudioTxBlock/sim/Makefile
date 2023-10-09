@@ -8,9 +8,11 @@
 TBOUT    = tbwave.out
 
 # Tb Top Module名
+# TBTOP 	 = AudioRomRead_tb
 TBTOP 	 = AudioTxBlock_tb
 
 # Tb Top Module.v
+# TBTOPRTL = AudioRomRead_tb.v
 TBTOPRTL = AudioTxBlock_tb.v
 
 # Tb Instance.v
