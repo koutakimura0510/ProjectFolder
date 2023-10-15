@@ -8,23 +8,47 @@
 // 
 //----------------------------------------------------------
 module DotSquareGen #(
-	parameter	pVHAW  = 11,
-	parameter	pVVAW  = 11,
-	parameter	pColorDepth = 16
+	parameter pVHAW  		= 11,
+	parameter pVVAW  		= 11,
+	parameter pColorDepth	= 16
 )(
-	// Pixel Output
+	// Dst Side
 	output	[pColorDepth-1:0]	oPd,		// Pixel Data
 	output 						oPv,		// Pixel Valid
+	// Src Side
+	input	[pColorDepth-1:0]	iPd,		// Pixel Data
+	input						iPv,		// Pixel Valid
 	// Control Status
-	input	[pColorDepth-1:0]	iColor,		// 描画色
-	input	[pVHAW-1:0]	iHpos,				// 現在の横幅の座標
-	input	[pVVAW-1:0]	iVpos,				// 現在の立幅の座標
-	input signed	[pVHAW:0]	iDLeftX,	// 描画開始 X座標 Draw X Start
-	input signed	[pVHAW:0]	iDRightX,	// 描画終了 X座標 Draw X End
-	input signed	[pVVAW:0]	iDTopY,		// 描画開始 Y座標 Draw Y Start
-	input signed	[pVVAW:0]	iDUnderY,	// 描画終了 Y座標 Draw Y End
+	input			[pVHAW-1:0]			iHpos,
+	input			[pVVAW-1:0]			iVpos,
+	input			[pColorDepth-1:0]	iColor1,
+	input signed	[pVHAW:0]			iLeft1,
+	input signed	[pVHAW:0]			iRight1,
+	input signed	[pVVAW:0]			iTop1,
+	input signed	[pVVAW:0]			iUnder1,
+	input			[pColorDepth-1:0]	iColor2,
+	input signed	[pVHAW:0]			iLeft2,
+	input signed	[pVHAW:0]			iRight2,
+	input signed	[pVVAW:0]			iTop2,
+	input signed	[pVVAW:0]			iUnder2,
+	input			[pColorDepth-1:0]	iColor3,
+	input signed	[pVHAW:0]			iLeft3,
+	input signed	[pVHAW:0]			iRight3,
+	input signed	[pVVAW:0]			iTop3,
+	input signed	[pVVAW:0]			iUnder3,
+	input			[pColorDepth-1:0]	iColor4,
+	input signed	[pVHAW:0]			iLeft4,
+	input signed	[pVHAW:0]			iRight4,
+	input signed	[pVVAW:0]			iTop4,
+	input signed	[pVVAW:0]			iUnder4,
+	input			[pColorDepth-1:0]	iColor5,
+	input signed	[pVHAW:0]			iLeft5,
+	input signed	[pVHAW:0]			iRight5,
+	input signed	[pVVAW:0]			iTop5,
+	input signed	[pVVAW:0]			iUnder5,
 	// Common
 	input	iRST,
+	input	iCKE,
 	input	iCLK
 );
 
@@ -40,27 +64,35 @@ wire signed [pVVAW:0] wVpos = {1'b0, iVpos};
 // 指定色のデータ及び範囲外であれば透過値最大のデータを出力
 // 画面外に座標データがはみ出ても、範囲内のドットデータは描画するようにする
 //-----------------------------------------------------------------------------
-reg [pColorDepth-1:0] rPd;		assign oPd = qCke ? iColor : 0; //rPd;
+reg [pColorDepth-1:0] rPd;		assign oPd = rPd;
 reg rPv;						assign oPv = rPv;
-reg qCke;
-reg [3:0] qPosMatch;
+reg [pColorDepth-1:0]	qColor;
+reg [4:0] 				qPosMatch;
 
 always @(posedge iCLK)
 begin
-	if (qCke) 		rPd <= iColor;
-    else 			rPd <= {pColorDepth{1'b0}};
+	rPd <= qColor;
 	
 	if (iRST) 		rPv <= 1'b0;
-	else 			rPv <= qCke;
+	else 			rPv <= |{qPosMatch};
 end
 
 always @*
 begin
-	qPosMatch[0] <= (iDLeftX <= wHpos);
-	qPosMatch[1] <= (wHpos 	 <  iDRightX);
-	qPosMatch[2] <= (iDTopY  <= wVpos);
-	qPosMatch[3] <= (wVpos   <  iDUnderY);
-	qCke 		 <= &(qPosMatch);
+	casex (qPosMatch)
+		'b1xxxx: qColor <= iColor5;
+		'b01xxx: qColor <= iColor4;
+		'b001xx: qColor <= iColor3;
+		'b0001x: qColor <= iColor2;
+		'b00001: qColor <= iColor1;
+		default: qColor <= {pColorDepth{1'b0}};
+	endcase
+
+	qPosMatch[0] <=  (iLeft1 <= wHpos) & (wHpos  < iRight1) & (iTop1 <= wVpos) & (wVpos < iUnder1);
+	qPosMatch[1] <=  (iLeft2 <= wHpos) & (wHpos  < iRight2) & (iTop2 <= wVpos) & (wVpos < iUnder2);
+	qPosMatch[2] <=  (iLeft3 <= wHpos) & (wHpos  < iRight3) & (iTop3 <= wVpos) & (wVpos < iUnder3);
+	qPosMatch[3] <=  (iLeft4 <= wHpos) & (wHpos  < iRight4) & (iTop4 <= wVpos) & (wVpos < iUnder4);
+	qPosMatch[4] <=  (iLeft5 <= wHpos) & (wHpos  < iRight5) & (iTop5 <= wVpos) & (wVpos < iUnder5);
 end
 
 endmodule

@@ -11,11 +11,20 @@
 
 # PLL Constraints
 #################
-create_clock -period 20.0000 iSCLK
+create_clock -period 10.0000 iSCLK
 create_clock -period 111.1111 iVCLK
 create_clock -period 44.2478 iMCLK
 
-# 非同期信号の場合は下記
+
+set_clock_groups -asynchronous -group {iSCLK} -group {iVCLK}
+set_clock_groups -asynchronous -group {iSCLK} -group {iMCLK}
+# set_false_path -from [get_clocks iSCLK] -to [get_clocks iVCLK]
+# set_false_path -from [get_clocks iVCLK] -to [get_clocks iSCLK]
+# set_false_path -from [get_clocks iMCLK] -to [get_clocks iSCLK]
+# set_false_path -from [get_pins {rnSRST|Q}] -to [get_pins {VideoTxBlock/VideoAsyncFifo/rRa[*]|SR}]
+# set_false_path -from [get_ports {rnSRST}] -to [get_pins VideoTxBlock/VideoAsyncFifo/rRa[0]~FF|SR]
+# set_false_path -from [get_ports {rnSRST_reg}] -to [get_ports {VideoTxBlock/VideoAsyncFifo/rRa[*]_reg}]
+
 
 ### set_max_delay -from <source> -to <destination> <delay_value>
 # 上記の構文の要素を説明します：
@@ -24,6 +33,7 @@ create_clock -period 44.2478 iMCLK
 # <delay_value>: 信号の最大遅延を指定します。単位は、タイムスケールに依存します（例：ns、ps）。
 
 # set_max_delay -from [get_pins source_reg/Q] -to [get_pins dest_reg/D] 5.0
+
 # 上記の例では、"source_reg/Q" から "dest_reg/D" への非同期信号の最大遅延を 5.0ns に設定しています。
 
 # set_output_delay -clock <CLOCK> -max <MAX CALCULATION> [get_ports {oSRAM_CE}]

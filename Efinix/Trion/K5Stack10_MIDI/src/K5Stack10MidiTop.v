@@ -8,6 +8,8 @@
  * 23-04-04 V1.00: new release
  * 23-09-02 V1.01: SynthesizerBlock から AudioTxBlock へ変更
  * 23-09-17 V2.00: K5Stack10-v2 に更新のためピンアサイン変更
+ * 23-10-15 V2.01: HyperRAMに対応するため、SCLK を 50MHz->100MHz に変更
+ *
  *-----------------------------------------------------------------------------*/  
 module K5Stack10MidiTop(
 	// GPIOL
@@ -37,14 +39,17 @@ module K5Stack10MidiTop(
 	// External OSC
 	input	iOSC_IN,
 	// PLL BR0
-	input	iMCLK,
+	input	iSCLK,
 	output	PLL_BR0_RSTN,
 	input	PLL_BR0_LOCKED,
 	// PLL TL0
-	input	iSCLK,
-	input	iVCLK,
+	input	iMCLK,
 	output	PLL_TL0_RSTN,
 	input	PLL_TL0_LOCKED,
+	// PLL TL1
+	input	iVCLK,
+	output	PLL_TL1_RSTN,
+	input	PLL_TL1_LOCKED,
 	// JTAG Debug
 	// input	jtag_inst1_TCK,
 	// output	jtag_inst1_TDO,
@@ -115,15 +120,16 @@ end
 
 always @*
 begin
-  qlocked <= &{PLL_BR0_LOCKED, PLL_TL0_LOCKED};
+  qlocked <= &{PLL_BR0_LOCKED, PLL_TL0_LOCKED, PLL_TL1_LOCKED};
   qnARST  <= wnARST & qlocked;
 end
 
-assign wSRST    = rSRST;			assign wnSRST   = rnSRST;
-assign wMRST    = rMRST;			assign wnMRST   = rnMRST;
-assign wVRST    = rVRST;			assign wnVRST   = rnVRST;
+assign wSRST		= rSRST;			assign wnSRST   = rnSRST;
+assign wMRST		= rMRST;			assign wnMRST   = rnMRST;
+assign wVRST		= rVRST;			assign wnVRST   = rnVRST;
 assign PLL_BR0_RSTN = 1'b1;
 assign PLL_TL0_RSTN = 1'b1;
+assign PLL_TL1_RSTN = 1'b1;
 
 
 //------------------------------------------------------------------------------
@@ -155,7 +161,7 @@ localparam
   lpRAMCsrActiveWidth   = 8,
   lpTimerCsrActiveWidth = 8,
   lpMCBCsrActiveWidth	= 8,
-  lpVtbCsrActiveWidth	= 16,
+  lpVtbCsrActiveWidth	= 12,
   lpNullActiveWidth     = 8;  // 使用しない、ソースの追加がやりやすいように
 
 // Bus Master Read
@@ -278,7 +284,7 @@ endgenerate
 //-----------------------------------------------------------------------------
 // MCB 
 //-----------------------------------------------------------------------------
-localparam lpOnChipMcu = "yes";
+localparam lpOnChipMcu = "yes";		// "yes"=Generate MCU, "no"=not
 
 wire wSocTxd, wSocRxd;
 
@@ -454,7 +460,7 @@ RAMBlock #(
 	.pBlockAdrsWidth(lpBlockAdrsWidth),	.pAdrsMap(lpRAMAdrsMap),
 	.pUsiBusWidth(lpUsiBusWidth),
 	.pCsrAdrsWidth(lpCsrAdrsWidth),		.pCsrActiveWidth(lpRAMCsrActiveWidth),
-	.pUfiDqBusWidth(lpUfiDqBusWidth),		.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
+	.pUfiDqBusWidth(lpUfiDqBusWidth),	.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
 	// Ram I/F
 	.pRamAdrsWidth(lpRamAdrsWidth),		.pRamDqWidth(lpRamDqWidth)
 ) RAMBlock (
@@ -467,17 +473,16 @@ RAMBlock #(
 	// Usi Bus Master Read
 	.oSUsiRd(wSUsiRd[lpRAMAdrsMap]),
 	// Usi Bus Master Write
-	.iSUsiWd(wSUsiWd),    .iSUsiAdrs(wSUsiAdrs),
+	.iSUsiWd(wSUsiWd),		.iSUsiAdrs(wSUsiAdrs),
 	// Ufi Bus Master Read
-	.oSUfiRd(wSUfiRd),    .oSUfiAdrs(wSUfiAdrs),
+	.oSUfiRd(wSUfiRd),		.oSUfiAdrs(wSUfiAdrs),
 	// Ufi Bus Master Write
-	.iSUfiWd(wSUfiWd),    .iSUfiAdrs(wSUfiWAdrs),
+	.iSUfiWd(wSUfiWd),		.iSUfiAdrs(wSUfiWAdrs),
 	.oSUfiRdy(wSUfiRdy),
 	// Status
-	.oTestErr(wTestErr),  .oDone(wDone),
+	.oTestErr(wTestErr),	.oDone(wDone),
 	// CLK, RST
-	.iSRST(wSRST),      .inSRST(wnSRST),
-	.iSCLK(iSCLK)
+	.iSRST(wSRST),			.inSRST(wnSRST),		.iSCLK(iSCLK)
 );
 
 //---------------------------------------------------------------------------
@@ -610,14 +615,14 @@ assign ioGPIOB_O[12]	= wVIDEO_G[5];		assign wIunsedB[12]	= ioGPIOB_I[12];  assig
 // assign ioGPIOB_O[15] = wMasterMosi;   assign wSlaveMosi    = ioGPIOB_I[15];  assign ioGPIOB_OE[15] = wSpiDir;
 // assign ioGPIOB_O[16] = wMasterCs;     assign wSlaveCs      = ioGPIOB_I[16];  assign ioGPIOB_OE[16] = wSpiDir;
 assign ioGPIOB_O[13]	= wVIDEO_G[4];		assign wIunsedB[13]	= ioGPIOB_I[13];  assign ioGPIOB_OE[13] = 1'b1;		// Video G4
-// assign ioGPIOB_O[14]	= wVIDEO_G[3];		assign wIunsedB[14]	= ioGPIOB_I[14];  assign ioGPIOB_OE[14] = 1'b1;		// Video G3
-// assign ioGPIOB_O[15]	= wVIDEO_G[2];		assign wIunsedB[15]	= ioGPIOB_I[15];  assign ioGPIOB_OE[15] = 1'b1;		// Video G2
-// assign ioGPIOB_O[16]	= wVIDEO_R[7];		assign wIunsedB[16]	= ioGPIOB_I[16];  assign ioGPIOB_OE[16] = 1'b1;		// Video R7
-// assign ioGPIOB_O[17]	= wVIDEO_R[6];		assign wIunsedB[17]	= ioGPIOB_I[17];  assign ioGPIOB_OE[17] = 1'b1;		// Video R6
-assign ioGPIOB_O[14]	= wSfmMosi[2];		assign wIunsedB[14]	= ioGPIOB_I[14];  assign ioGPIOB_OE[14] = 1'b1;		// Video G3
-assign ioGPIOB_O[15]	= wSfmMiso[2];		assign wIunsedB[15]	= ioGPIOB_I[15];  assign ioGPIOB_OE[15] = 1'b1;		// Video G2
-assign ioGPIOB_O[16]	= wSfmCs[2];		assign wIunsedB[16]	= ioGPIOB_I[16];  assign ioGPIOB_OE[16] = 1'b1;		// Video R7
-assign ioGPIOB_O[17]	= wSfmSck[2];		assign wIunsedB[17]	= ioGPIOB_I[17];  assign ioGPIOB_OE[17] = 1'b1;		// Video R6
+assign ioGPIOB_O[14]	= wVIDEO_G[3];		assign wIunsedB[14]	= ioGPIOB_I[14];  assign ioGPIOB_OE[14] = 1'b1;		// Video G3
+assign ioGPIOB_O[15]	= wVIDEO_G[2];		assign wIunsedB[15]	= ioGPIOB_I[15];  assign ioGPIOB_OE[15] = 1'b1;		// Video G2
+assign ioGPIOB_O[16]	= wVIDEO_R[7];		assign wIunsedB[16]	= ioGPIOB_I[16];  assign ioGPIOB_OE[16] = 1'b1;		// Video R7
+assign ioGPIOB_O[17]	= wVIDEO_R[6];		assign wIunsedB[17]	= ioGPIOB_I[17];  assign ioGPIOB_OE[17] = 1'b1;		// Video R6
+// assign ioGPIOB_O[14]	= wSfmMosi[2];		assign wIunsedB[14]	= ioGPIOB_I[14];  assign ioGPIOB_OE[14] = 1'b1;		// Video G3
+// assign ioGPIOB_O[15]	= wSfmMiso[2];		assign wIunsedB[15]	= ioGPIOB_I[15];  assign ioGPIOB_OE[15] = 1'b1;		// Video G2
+// assign ioGPIOB_O[16]	= wSfmCs[2];		assign wIunsedB[16]	= ioGPIOB_I[16];  assign ioGPIOB_OE[16] = 1'b1;		// Video R7
+// assign ioGPIOB_O[17]	= wSfmSck[2];		assign wIunsedB[17]	= ioGPIOB_I[17];  assign ioGPIOB_OE[17] = 1'b1;		// Video R6
 assign ioGPIOB_O[18]	= wI2sMclk;			assign wIunsedB[18]	= ioGPIOB_I[18];  assign ioGPIOB_OE[18] = 1'b1; 	// I2S MCLK
 assign ioGPIOB_O[19]	= wI2sBclk;			assign wIunsedB[19]	= ioGPIOB_I[19];  assign ioGPIOB_OE[19] = 1'b1; 	// I2S BCLK
 assign ioGPIOB_O[20]	= wI2sSdata;		assign wIunsedB[20]	= ioGPIOB_I[20];  assign ioGPIOB_OE[20] = 1'b1; 	// I2S SDATA
@@ -657,9 +662,9 @@ begin
   qGpioAltMode[0] <= qlocked;
   qGpioAltMode[1] <= 1'b0;
   qGpioAltMode[2] <= 1'b0;
-  qGpioAltMode[3] <= wPulseSCLK;
-  qGpioAltMode[4] <= wPulseMCLK;
-  qGpioAltMode[5] <= wPulseVCLK;
+  qGpioAltMode[3] <= wPulseMCLK;
+  qGpioAltMode[4] <= wPulseVCLK;
+  qGpioAltMode[5] <= wPulseSCLK;
 end
 
 

@@ -39,34 +39,55 @@ module VideoPixelGenUnit #(
 	// Ufi Bus Master Read
 	input	[pUfiDqBusWidth-1:0] 	iMUfiRd,
 	input	[pUfiAdrsBusWidth-1:0] 	iMUfiAdrs,
-	// input	[pUfiDqBusWidth-1:0] 	iMUfiRd2,
-	// input	[pUfiAdrsBusWidth-1:0] 	iMUfiAdrs2,
 	// Ufi Bus Master Write
 	output	[pUfiDqBusWidth-1:0] 	oMUfiWd,
 	output	[pUfiAdrsBusWidth-1:0] 	oMUfiAdrs,
 	input							iMUfiRdy,
-	// output	[pUfiDqBusWidth-1:0] 	oMUfiWd2,
-	// output	[pUfiAdrsBusWidth-1:0] 	oMUfiAdrs2,
-	// input							iMUfiRdy2,
+	// Csr Dot Square Gen
+	input		 [pColorDepth-1:0]	iDotSquareColor1,
+	input signed [pVHAW:0]			iDotSquareLeft1,
+	input signed [pVHAW:0]			iDotSquareRight1,
+	input signed [pVVAW:0]			iDotSquareTop1,
+	input signed [pVVAW:0]			iDotSquareUnder1,
+	input		 [pColorDepth-1:0]	iDotSquareColor2,
+	input signed [pVHAW:0]			iDotSquareLeft2,
+	input signed [pVHAW:0]			iDotSquareRight2,
+	input signed [pVVAW:0]			iDotSquareTop2,
+	input signed [pVVAW:0]			iDotSquareUnder2,
+	input		 [pColorDepth-1:0]	iDotSquareColor3,
+	input signed [pVHAW:0]			iDotSquareLeft3,
+	input signed [pVHAW:0]			iDotSquareRight3,
+	input signed [pVVAW:0]			iDotSquareTop3,
+	input signed [pVVAW:0]			iDotSquareUnder3,
+	input		 [pColorDepth-1:0]	iDotSquareColor4,
+	input signed [pVHAW:0]			iDotSquareLeft4,
+	input signed [pVHAW:0]			iDotSquareRight4,
+	input signed [pVVAW:0]			iDotSquareTop4,
+	input signed [pVVAW:0]			iDotSquareUnder4,
+	input		 [pColorDepth-1:0]	iDotSquareColor5,
+	input signed [pVHAW:0]			iDotSquareLeft5,
+	input signed [pVHAW:0]			iDotSquareRight5,
+	input signed [pVVAW:0]			iDotSquareTop5,
+	input signed [pVVAW:0]			iDotSquareUnder5,
 	// Csr SceneChange
-    input	[pColorDepth-1:0]	iSceneColor,
+	input	[pColorDepth-1:0]	iSceneColor,
 	input	[6:0]				iSceneFrameTiming,
 	input 						iSceneFrameAddEn,
 	input 						iSceneFrameSubEn,
-    input 						iSceneFrameRst,
+	input 						iSceneFrameRst,
 	output						oSceneAlphaMax,
 	output 						oSceneAlphaMin,
 	// Fifo I/F
-	output	[pColorDepth-1:0] oRd,
-	input	iRe,
-    output	oRvd,
-	output  oEmp,
+	output	[pColorDepth-1:0] 	oRd,
+	input						iRe,
+	output						oRvd,
+	output  					oEmp,
 	// Control Status
 	output	oFe,
-    // CLK Reset
-    input	iRST,
-    input	inRST,
-    input	iCLK
+	// CLK Reset
+	input	iRST,
+	input	inRST,
+	input	iCLK
 );
 
 
@@ -198,7 +219,6 @@ PixelDrawPosition #(
 //-----------------------------------------------------------------------------
 
 
-
 //-----------------------------------------------------------------------------
 // Demo
 //-----------------------------------------------------------------------------
@@ -208,25 +228,26 @@ reg  [8:0]	rDlx;
 reg  [8:0]	rDrx;
 
 DotSquareGen #(
-	.pVHAW(pVHAW),
-	.pVVAW(pVVAW),
+	.pVHAW(pVHAW),				.pVVAW(pVVAW),
 	.pColorDepth(pColorDepth)
 ) DotSquareGen (
 	// Pixel Output
-	.oPd(wDsgPd),			.oPv(wDsgPv),
+	.oPd(wDsgPd),				.oPv(wDsgPv),
 	// Control Status
-	.iColor(16'hffff),
-	.iHpos(wPdpHpos),		.iVpos(wPdpVpos),
-	.iDLeftX(rDrx-32),		.iDRightX(rDrx),
-	.iDTopY(0),				.iDUnderY(32),
+	.iHpos(wPdpHpos),			.iVpos(wPdpVpos),
+	.iColor1(iDotSquareColor1),	.iLeft1(iDotSquareLeft1),	.iRight1(iDotSquareRight1),	.iTop1(iDotSquareTop1),	.iUnder1(iDotSquareUnder1),
+	.iColor2(iDotSquareColor2),	.iLeft2(iDotSquareLeft2),	.iRight2(iDotSquareRight2),	.iTop2(iDotSquareTop2),	.iUnder2(iDotSquareUnder2),
+	.iColor3(iDotSquareColor3),	.iLeft3(iDotSquareLeft3),	.iRight3(iDotSquareRight3),	.iTop3(iDotSquareTop3),	.iUnder3(iDotSquareUnder3),
+	.iColor4(iDotSquareColor4),	.iLeft4(iDotSquareLeft4),	.iRight4(iDotSquareRight4),	.iTop4(iDotSquareTop4),	.iUnder4(iDotSquareUnder4),
+	.iColor5(iDotSquareColor5),	.iLeft5(iDotSquareLeft5),	.iRight5(iDotSquareRight5),	.iTop5(iDotSquareTop5),	.iUnder5(iDotSquareUnder5),
 	// common
-	.iRST(iRST),			.iCLK(iCLK)
+	.iRST(iRST),				.iCLK(iCLK)
 );
 
 always @(posedge iCLK)
 begin
-	if (iRST) 			rDlx <= 9'd0;
-	else if (wPdpFe)	rDrx <= rDrx + 4'd4;
+	if (iRST) 			rDrx <= 9'd0;
+	else if (wPdpFe)	rDrx <= rDrx + 2'd2;
 	else 				rDrx <= rDrx;
 end
 

@@ -70,7 +70,7 @@ localparam lpVVAW = f_detect_bitwidth(pVVA);	// Video Vertical Active Width
 localparam lpVVBW = f_detect_bitwidth(pVVB);	// Video Vertical Front Width
 localparam lpVVFW = f_detect_bitwidth(pVVF);	// Video Vertical Back Width
 localparam lpVVSW = f_detect_bitwidth(pVVS);	// Video Vertical Sync Width
-localparam lpColorDepth = 16;
+localparam lpColorDepth 		= 16;
 //
 wire wDmaEnableCsr;
 wire wDmaCycleEnableCsr;
@@ -81,6 +81,33 @@ wire wDmaDoneCsr;
 //
 wire wMapXSizeCsr;
 wire wMapYSizeCsr;
+//
+wire [lpColorDepth-1:0]	wDotSquareColor1Csr;
+wire signed [lpVHAW:0] 	wDotSquareLeft1Csr;
+wire signed [lpVHAW:0] 	wDotSquareRight1Csr;
+wire signed [lpVHAW:0] 	wDotSquareTop1Csr;
+wire signed [lpVHAW:0] 	wDotSquareUnder1Csr;
+wire [lpColorDepth-1:0]	wDotSquareColor2Csr;
+wire signed [lpVHAW:0] 	wDotSquareLeft2Csr;
+wire signed [lpVHAW:0] 	wDotSquareRight2Csr;
+wire signed [lpVHAW:0] 	wDotSquareTop2Csr;
+wire signed [lpVHAW:0] 	wDotSquareUnder2Csr;
+wire [lpColorDepth-1:0]	wDotSquareColor3Csr;
+wire signed [lpVHAW:0] 	wDotSquareLeft3Csr;
+wire signed [lpVHAW:0] 	wDotSquareRight3Csr;
+wire signed [lpVHAW:0] 	wDotSquareTop3Csr;
+wire signed [lpVHAW:0] 	wDotSquareUnder3Csr;
+wire [lpColorDepth-1:0]	wDotSquareColor4Csr;
+wire signed [lpVHAW:0] 	wDotSquareLeft4Csr;
+wire signed [lpVHAW:0] 	wDotSquareRight4Csr;
+wire signed [lpVHAW:0] 	wDotSquareTop4Csr;
+wire signed [lpVHAW:0] 	wDotSquareUnder4Csr;
+wire [lpColorDepth-1:0]	wDotSquareColor5Csr;
+wire signed [lpVHAW:0] 	wDotSquareLeft5Csr;
+wire signed [lpVHAW:0] 	wDotSquareRight5Csr;
+wire signed [lpVHAW:0] 	wDotSquareTop5Csr;
+wire signed [lpVHAW:0] 	wDotSquareUnder5Csr;
+//
 wire wSceneColorCsr;
 wire wSceneFrameTimingCsr;
 wire wSceneFrameAddEnCsr;
@@ -99,9 +126,8 @@ VideoTxCsr #(
     .pVVA(pVVA),	.pVVF(pVVF),	.pVVB(pVVB),	.pVVS(pVVS),
 	.pVHAW(lpVHAW),	.pVHBW(lpVHBW),	.pVHFW(lpVHFW),	.pVHSW(lpVHSW),
     .pVVAW(lpVVAW),	.pVVBW(lpVVBW),	.pVVFW(lpVVFW),	.pVVSW(lpVVSW),
-	// Video Status
+	// Video Control / Status
 	.pColorDepth(lpColorDepth)
-	//
 ) VideoTxCsr (
 	// Bus Master Read
 	.oSUsiRd(oSUsiRd),
@@ -117,6 +143,32 @@ VideoTxCsr #(
 	// Map Info
 	.oMapXSize(wMapXSizeCsr),
 	.oMapYSize(wMapYSizeCsr),
+	// Csr Dot Square Gen
+	.oDotSquareColor1(wDotSquareColor1Csr),
+	.oDotSquareLeft1(wDotSquareLeft1Csr),
+	.oDotSquareRight1(wDotSquareRight1Csr),
+	.oDotSquareTop1(wDotSquareTop1Csr),
+	.oDotSquareUnder1(wDotSquareUnder1Csr),
+	.oDotSquareColor2(wDotSquareColor2Csr),
+	.oDotSquareLeft2(wDotSquareLeft2Csr),
+	.oDotSquareRight2(wDotSquareRight2Csr),
+	.oDotSquareTop2(wDotSquareTop2Csr),
+	.oDotSquareUnder2(wDotSquareUnder2Csr),
+	.oDotSquareColor3(wDotSquareColor3Csr),
+	.oDotSquareLeft3(wDotSquareLeft3Csr),
+	.oDotSquareRight3(wDotSquareRight3Csr),
+	.oDotSquareTop3(wDotSquareTop3Csr),
+	.oDotSquareUnder3(wDotSquareUnder3Csr),
+	.oDotSquareColor4(wDotSquareColor4Csr),
+	.oDotSquareLeft4(wDotSquareLeft4Csr),
+	.oDotSquareRight4(wDotSquareRight4Csr),
+	.oDotSquareTop4(wDotSquareTop4Csr),
+	.oDotSquareUnder4(wDotSquareUnder4Csr),
+	.oDotSquareColor5(wDotSquareColor5Csr),
+	.oDotSquareLeft5(wDotSquareLeft5Csr),
+	.oDotSquareRight5(wDotSquareRight5Csr),
+	.oDotSquareTop5(wDotSquareTop5Csr),
+	.oDotSquareUnder5(wDotSquareUnder5Csr),
 	// Scene Change
 	.oSceneColor(wSceneColorCsr),
 	.oSceneFrameTiming(wSceneFrameTimingCsr),
@@ -138,16 +190,40 @@ wire wVpgRvd;
 wire wVpgEmp;
 
 VideoPixelGenUnit #(
-	.pVHA(pVHA),
-	.pVVA(pVVA),
-	.pVHAW(lpVHAW),
-	.pVVAW(lpVVAW),
+	.pVHA(pVHA),		.pVVA(pVVA),
+	.pVHAW(lpVHAW),		.pVVAW(lpVVAW),
 	.pColorDepth(lpColorDepth)
 ) VideoPixelGenUnit (
 	// Ufi Bus Master Read
 	.iMUfiRd(iMUfiRd),		.iMUfiAdrs(iMUfiAdrs),
 	// Ufi Bus Master Write
 	.oMUfiWd(oMUfiWd),		.oMUfiAdrs(oMUfiWAdrs),		.iMUfiRdy(iMUfiRdy),
+	// Csr Dot Square Gen
+	.iDotSquareColor1(wDotSquareColor1Csr),
+	.iDotSquareLeft1(wDotSquareLeft1Csr),
+	.iDotSquareRight1(wDotSquareRight1Csr),
+	.iDotSquareTop1(wDotSquareTop1Csr),
+	.iDotSquareUnder1(wDotSquareUnder1Csr),
+	.iDotSquareColor2(wDotSquareColor2Csr),
+	.iDotSquareLeft2(wDotSquareLeft2Csr),
+	.iDotSquareRight2(wDotSquareRight2Csr),
+	.iDotSquareTop2(wDotSquareTop2Csr),
+	.iDotSquareUnder2(wDotSquareUnder2Csr),
+	.iDotSquareColor3(wDotSquareColor3Csr),
+	.iDotSquareLeft3(wDotSquareLeft3Csr),
+	.iDotSquareRight3(wDotSquareRight3Csr),
+	.iDotSquareTop3(wDotSquareTop3Csr),
+	.iDotSquareUnder3(wDotSquareUnder3Csr),
+	.iDotSquareColor4(wDotSquareColor4Csr),
+	.iDotSquareLeft4(wDotSquareLeft4Csr),
+	.iDotSquareRight4(wDotSquareRight4Csr),
+	.iDotSquareTop4(wDotSquareTop4Csr),
+	.iDotSquareUnder4(wDotSquareUnder4Csr),
+	.iDotSquareColor5(wDotSquareColor5Csr),
+	.iDotSquareLeft5(wDotSquareLeft5Csr),
+	.iDotSquareRight5(wDotSquareRight5Csr),
+	.iDotSquareTop5(wDotSquareTop5Csr),
+	.iDotSquareUnder5(wDotSquareUnder5Csr),
 	//
 	.iSceneColor(wSceneColorCsr),
 	.iSceneFrameTiming(wSceneFrameTimingCsr),
@@ -186,8 +262,7 @@ ASyncFifoController #(
 ) VideoAsyncFifo (
 	// Src Fifo Side
 	.iWd(qVafWd),		.iWe(qVafWe),
-	.oFull(wVafFull),
-	.oRemaingCntAlert(wVafAlert),
+	.oFull(wVafFull),	.oRemaingCntAlert(wVafAlert),
 	// Dst Fifo Side
 	.oRd(wVafRd),		.iRe(qVafRe),
 	.oRvd(),			.oEmp(),

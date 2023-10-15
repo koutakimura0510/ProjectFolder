@@ -43,7 +43,12 @@ static void system_initialize(void)
 	flash_protection_reg_write(1);
 	flash_protection_reg_write(2);
 	flash_protection_reg_write(3);
-	flash_id_read(3);
+	// flash_id_read(3);
+	usi_write_cmd(0x0, AUDIO_REG_SFM_CPU_VALID);
+	usi_write_cmd(0, AUDIO_REG_SFM_START_ADRS_3);
+	usi_write_cmd(4100, AUDIO_REG_SFM_END_ADRS_3);
+	usi_write_cmd(0x4, AUDIO_REG_SFM_CYCLE_ENABLE);
+	usi_write_cmd(0x4, AUDIO_REG_SFM_ENABLE);
 
 //	uint8_t rbuff[2048];
 //
@@ -65,11 +70,6 @@ static void system_initialize(void)
 //		}
 //	}
 
-	 usi_write_cmd(0x0, AUDIO_REG_SFM_CPU_VALID);
-	 usi_write_cmd(0, AUDIO_REG_SFM_START_ADRS_3);
-	 usi_write_cmd(4400, AUDIO_REG_SFM_END_ADRS_3);
-	 usi_write_cmd(0x4, AUDIO_REG_SFM_CYCLE_ENABLE);
-	 usi_write_cmd(0x4, AUDIO_REG_SFM_ENABLE);
 }
 
 

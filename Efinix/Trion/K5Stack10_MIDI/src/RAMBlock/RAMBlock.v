@@ -20,15 +20,15 @@ module RAMBlock #(
 	parameter pRamDqWidth 		= 16	// GPIO データ幅
 )(
 	// SRAM I/F Port
-	output [pRamAdrsWidth-1:0] oSRAMA,
-	output [pRamDqWidth-1:0] oSRAMD,
-	input  [pRamDqWidth-1:0] iSRAMD,
-	output oSRAM_OE,				// "0" In, "1" Out
-	output oSRAM_RWDS,
-	output oSRAM_pCLK,
-	output oSRAM_nCLK,
-	output oSRAM_nCE,
-	output oSRAM_nRST,
+	output [pRamAdrsWidth-1:0] 		oSRAMA,
+	output [pRamDqWidth-1:0] 		oSRAMD,
+	input  [pRamDqWidth-1:0] 		iSRAMD,
+	output 							oSRAM_OE,				// "0" In, "1" Out
+	output 							oSRAM_RWDS,
+	output 							oSRAM_pCLK,
+	output 							oSRAM_nCLK,
+	output 							oSRAM_nCE,
+	output 							oSRAM_nRST,
 	// Bus Master Read
 	output [pUsiBusWidth-1:0] 		oSUsiRd,
 	// Bus Master Write
@@ -49,7 +49,6 @@ module RAMBlock #(
 	input  inSRST,
     input  iSCLK
 );
-
 
 
 //-----------------------------------------------------------------------------
@@ -153,10 +152,9 @@ RAMIfPortUnit #(
 ) RAMIfPortUnit (
 	// SRAM I/F Port
 	.oSRAMD(oSRAMD),			.iSRAMD(iSRAMD),
-	.oSRAMA(oSRAMA),			.oSRAM_OE(oSRAM_OE),
-	.oSRAM_RWDS(oSRAM_RWDS),
-	.oSRAM_pCLK(oSRAM_pCLK),	.oSRAM_nCLK(oSRAM_nCLK),
 	.oSRAM_nCE(oSRAM_nCE),		.oSRAM_nRST(oSRAM_nRST),
+	.oSRAM_pCLK(oSRAM_pCLK),	.oSRAM_nCLK(oSRAM_nCLK),
+	.oSRAM_RWDS(oSRAM_RWDS),
 	//
 	.iAdrs(qRamIfPortUnitAdrs),
 	.iCmd(qRamIfPortUnitCmd),

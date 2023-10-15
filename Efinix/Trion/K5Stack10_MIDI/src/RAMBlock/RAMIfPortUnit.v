@@ -1,16 +1,9 @@
 //----------------------------------------------------------
-// Create 2023/4/28
+// Create 2023/10/14
 // Author koutakimura
 // -
-// 外部 RAM Interface module
-// -
-// 制御信号による R/W 制御は下記である。
-// OE LowHigh にかかわらず、WE が優先される。
-// WE CE OE
-//  x  H  x = High-Z / Not Selected (Power Down)
-//  H  L  H = High-Z / Output Disabled
-//  H  L  L = Dout / Read
-//  L  L  x = Din  / Write
+// HyperRam Port Unit
+// 
 // 
 //----------------------------------------------------------
 module RAMIfPortUnit #(
@@ -18,25 +11,23 @@ module RAMIfPortUnit #(
 	parameter pRamDqWidth = 8
 )(
 	// SRAM I/F Port
-	output [pRamAdrsWidth-1:0] oSRAMA,
-	output [pRamDqWidth-1:0] oSRAMD,
-	input  [pRamDqWidth-1:0] iSRAMD,
-	output oSRAM_OE,
-	output oSRAM_RWDS,
-	output oSRAM_pCLK,
-	output oSRAM_nCLK,
-	output oSRAM_nCE,
-	output oSRAM_nRST,
+	output	[pRamDqWidth-1:0] oSRAMD,
+	input	[pRamDqWidth-1:0] iSRAMD,
+	output	oSRAM_nRST,
+	output	oSRAM_nCE,
+	output	oSRAM_RWDS,
+	output	oSRAM_pCLK,
+	output	oSRAM_nCLK,
 	// Common Port
-	input  [pRamAdrsWidth-1:0] iAdrs,
-	input  iCmd,  // "1" Read, "0" Write
-	input  [pRamDqWidth-1:0] iWd,
-	output [pRamDqWidth-1:0] oRd,
-	output oRvd,
+	input	[pRamAdrsWidth-1:0] iAdrs,
+	input	iCmd,  // "1" Read, "0" Write
+	input	[pRamDqWidth-1:0] iWd,
+	output	[pRamDqWidth-1:0] oRd,
+	output	oRvd,
     // Clk Reset
-    input  iRST,
-	input  iCKE,
-    input  iCLK
+	input	iRST,
+	input	iCKE,
+	input	iCLK
 );
 
 

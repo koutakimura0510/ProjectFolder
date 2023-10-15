@@ -1,4 +1,4 @@
-<efx:project xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="K5Stack10_MIDI" description="" last_change_date="Mon Oct 09 2023 15:33:33" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI/." sw_version="2023.1.150" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="sync" place_ood="sync" route_ood="sync" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
+<efx:project xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="K5Stack10_MIDI" description="" last_change_date="&#26085; 10&#26376; 15 2023 21&#26178;12&#20998;34&#31186;" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI/." sw_version="2023.1.150" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="sync" place_ood="sync" route_ood="sync" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
     <efx:device_info>
         <efx:family name="Trion" />
         <efx:device name="T20Q144" />
