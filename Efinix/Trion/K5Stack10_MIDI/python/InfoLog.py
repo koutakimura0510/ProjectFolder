@@ -36,6 +36,15 @@ def paint(color, str):
     return color + str + END
 
 #-------------------------------------------------------------------------------
+# Efinity が生成する log ファイル削除
+#-------------------------------------------------------------------------------
+def file_remove(file):
+	try:
+		os.remove(file)
+	except FileNotFoundError as err:
+		print(err)
+		
+#-------------------------------------------------------------------------------
 # Efinity が生成する log を読み込み、Info,Warning,Err に分けて出力する
 #-------------------------------------------------------------------------------
 def file_export(rf, wf, exce, color):
@@ -51,10 +60,7 @@ def file_export(rf, wf, exce, color):
 					print(err)
 		except FileNotFoundError as err:
 			print(err)
-	try:
-		os.remove(rf)
-	except FileNotFoundError as err:
-		print(err)
+	file_remove(rf)
 
 #-------------------------------------------------------------------------------
 # F5 の場合は python 実行ファイルではなく、フォルダからのパスアクセスになるため注意
@@ -71,3 +77,6 @@ w_log_inf = "./outflow/Info_Info.log"
 file_export(r_log_inf, w_log_inf, "INFO",	CYAN)
 file_export(r_log_War, w_log_war, "WARNING",GREEN)
 file_export(r_log_err, w_log_err, "ERROR",	YELLOW)
+file_remove("./outflow/EFX.err.log")
+file_remove("./outflow/EFX.info.log")
+file_remove("./outflow/EFX.warn.log")
