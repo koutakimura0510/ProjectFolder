@@ -52,20 +52,21 @@ genvar x;
 //-----------------------------------------------------------------------------
 localparam lpSfmPageWidth = 16;	// 16bit = 65535 page
 
-wire [pSfmNum-1:0] 		wSfmIoHizCsr;				//assign oSfmIoHiz = wSfmIoHizCsr;
-wire [pSfmNum-1:0] 		wSfmEnCsr;
-wire [pSfmNum-1:0] 		wSfmCycleEnCsr;
-wire [pSfmNum*8-1:0] 	wSfmDivCsr;
-wire [pSfmNum*8-1:0] 	wSfmCsHoldTimeCsr;
-wire [pSfmNum*lpSfmPageWidth-1:0] wSfmStartAdrsCsr;
-wire [pSfmNum*lpSfmPageWidth-1:0] wSfmEndAdrsCsr;
-wire [pSfmNum*8-1:0] 	wSfmCpuWdCsr;
-wire [pSfmNum-1:0] 		wSfmCpuEnCsr;
-wire [pSfmNum-1:0] 		wSfmCpuCsCtrlCsr;
-wire [pSfmNum-1:0] 		wSfmCpuValidCsr;
-wire [pSfmNum*8-1:0] 	wSfmCpuRdCsr;
-wire [pSfmNum-1:0] 		wSfmCpuDoneCsr;
-wire [pSfmNum-1:0] 		wSfmDoneCsr;
+wire [pSfmNum-1:0] 					wSfmIoHizCsr;				//assign oSfmIoHiz = wSfmIoHizCsr;
+wire [pSfmNum-1:0] 					wSfmEnCsr;
+wire [pSfmNum-1:0] 					wSfmCycleEnCsr;
+wire [pSfmNum*8-1:0] 				wSfmDivCsr;
+wire [pSfmNum*8-1:0] 				wSfmCsHoldTimeCsr;
+wire [pSfmNum*lpSfmPageWidth-1:0] 	wSfmStartAdrsCsr;
+wire [pSfmNum*lpSfmPageWidth-1:0] 	wSfmEndAdrsCsr;
+wire [pSfmNum*8-1:0] 				wSfmCpuWdCsr;
+wire [pSfmNum-1:0] 					wSfmCpuEnCsr;
+wire [pSfmNum-1:0] 					wSfmCpuCsCtrlCsr;
+wire [pSfmNum-1:0] 					wSfmCpuValidCsr;
+wire [pSfmNum*8-1:0] 				wSfmCpuRdCsr;
+wire [pSfmNum-1:0] 					wSfmCpuDoneCsr;
+wire [pSfmNum-1:0] 					wSfmDoneCsr;
+wire [pSfmNum*lpSfmPageWidth-1:0] 	wSfmAdrsAddCsr;
 //
 wire [15:0] 			wAacCpuWdCsr;
 wire 	 				wAacCpuWeCsr;
@@ -102,6 +103,7 @@ AudioTxCsr #(
 	.iSfmCpuRd(wSfmCpuRdCsr),
 	.iSfmCpuDone(wSfmCpuDoneCsr),
 	.iSfmDone(wSfmDoneCsr),
+	.iSfmAdrsAdd(wSfmAdrsAddCsr),
 	.iAacAlert(wAacAlertCsr),
     // common
 	.iSRST(iSRST),		.iSCLK(iSCLK)
@@ -137,6 +139,7 @@ generate
 			.iSfmStartAdrs(wSfmStartAdrsCsr[(x+1)*lpSfmPageWidth-1:(x*lpSfmPageWidth)]),
 			.iSfmEndAdrs(wSfmEndAdrsCsr[(x+1)*lpSfmPageWidth-1:(x*lpSfmPageWidth)]),
 			.oSfmDone(wSfmDoneCsr[x]),
+			.oSfmAdrsAdd(wSfmAdrsAddCsr[(x+1)*lpSfmPageWidth-1:(x*lpSfmPageWidth)]),
 			// Cpu Sfm Control
 			.iSfmCpuWd(wSfmCpuWdCsr[(x+1)*8-1:(x*8)]),
 			.iSfmCpuEn(wSfmCpuEnCsr[x]),
@@ -243,7 +246,7 @@ AudioTxI2S AudioTxI2S (
 
 always @*
 begin
-	qAudioData[31:0] 	<= {wAacRd[23:0],8'h00};
+	qAudioData[31:0] 	<= {wAacRd[19:0],12'd0};
   	qAacRe				<= &{wI2SRdy,~wAacEmp};
 end
 

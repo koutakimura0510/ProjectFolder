@@ -35,6 +35,7 @@ module AudioTxCsr #(
 	output	[pSfmNum-1:0]					oSfmCpuValid,
 	input	[(pSfmNum*8)-1:0]				iSfmCpuRd,
 	input	[pSfmNum-1:0]					iSfmCpuDone,
+	input	[(pSfmNum*pSfmPageWidth)-1:0]	iSfmAdrsAdd,
 	// Csr Aac
 	output	[15:0] 							oAacCpuWd,
 	output									oAacCpuWe,
@@ -187,25 +188,28 @@ begin
 		'h08:	 rSUsiRd <= {{(32 - pSfmNum			){1'b0}}, rSfmCycleEn};
 		'h0C:	 rSUsiRd <= {{(32 - pSfmNum*8		){1'b0}}, rSfmDiv};
 		'h10:	 rSUsiRd <= {{(32 - pSfmNum*8		){1'b0}}, rSfmCsHoldTime};
-		'h14:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuWd[0+:8]};
+		'h14:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuWd[ 0+:8]};
 		'h18:	 rSUsiRd <= {{(32 - pSfmNum			){1'b0}}, rSfmCpuEn};
 		'h1C:	 rSUsiRd <= {{(32 - pSfmNum			){1'b0}}, rSfmCpuCsCtrl};
 		'h20:	 rSUsiRd <= {{(32 - pSfmNum			){1'b0}}, rSfmCpuValid};
-		'h24:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuWd[8+:8]};
+		'h24:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuWd[ 8+:8]};
 		'h28:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuWd[16+:8]};
 		'h30:	 rSUsiRd <= {{(32 - pSfmNum			){1'b0}}, rSfmDone};
 		'h34:	 rSUsiRd <= {{(32 - 16				){1'b0}}, rAacCpuWd};
 		'h38:	 rSUsiRd <= {{(32 - 1				){1'b0}}, rAacCpuWe};
-		'h60:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmStartAdrs[0+:pSfmPageWidth]};
-		'h64:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmEndAdrs[0+:pSfmPageWidth]};
-		'h68:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmStartAdrs[16+:pSfmPageWidth]};
-		'h6C:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmEndAdrs[16+:pSfmPageWidth]};
-		'h70:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmStartAdrs[32+:pSfmPageWidth]};
-		'h74:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmEndAdrs[32+:pSfmPageWidth]};
-		'h90:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuRd[ 0+:8]};
-		'h94:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuRd[ 8+:8]};
-		'h98:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuRd[16+:8]};
+		'h60:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmStartAdrs	[ 0+:pSfmPageWidth]};
+		'h64:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmEndAdrs	[ 0+:pSfmPageWidth]};
+		'h68:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmStartAdrs	[16+:pSfmPageWidth]};
+		'h6C:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmEndAdrs	[16+:pSfmPageWidth]};
+		'h70:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmStartAdrs	[32+:pSfmPageWidth]};
+		'h74:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmEndAdrs	[32+:pSfmPageWidth]};
+		'h90:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuRd		[ 0+:8]};
+		'h94:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuRd		[ 8+:8]};
+		'h98:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuRd		[16+:8]};
 		'h9C:	 rSUsiRd <= {{(32 - 31				){1'b0}}, iAacAlert};
+		'hA0:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, iSfmAdrsAdd	[ 0+:pSfmPageWidth]};
+		'hA4:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, iSfmAdrsAdd	[16+:pSfmPageWidth]};
+		'hA8:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, iSfmAdrsAdd	[32+:pSfmPageWidth]};
 		default: rSUsiRd <= iSUsiWd;
 	endcase
 end

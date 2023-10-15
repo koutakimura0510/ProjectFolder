@@ -25,6 +25,7 @@ module AudioRomReadSequence #(
 	input [pSfmPageWidth-1:0] 	iSfmStartAdrs,
 	input [pSfmPageWidth-1:0] 	iSfmEndAdrs,
 	output 						oSfmDone,
+	output [pSfmPageWidth-1:0]	oSfmAdrsAdd,
 	// CLK Reset
 	input iRST,
 	input inRST,
@@ -94,7 +95,7 @@ reg 					rDone;							assign oSfmDone		= rDone;
 reg 					qDoenCke;
 reg [3:0]				rSt, 		rNextSt;
 reg 					qNextStCke;
-reg [15:0]				rAdrsAdd;
+reg [15:0]				rAdrsAdd;						assign oSfmAdrsAdd	= rAdrsAdd;
 reg 					qAdrsRst;
 reg [1:0]				rWp;
 reg 					rEnRemaing;

@@ -31,6 +31,7 @@ module AudioRomRead #(
 	output[7:0]					oSfmCpuRd,
 	output 						oSfmCpuDone,
 	output 						oSfmDone,
+	output [pSfmPageWidth-1:0]	oSfmAdrsAdd,
 	// CLK Reset
 	input						iSRST,
 	input						inSRST,
@@ -64,7 +65,7 @@ AudioRomReadSequence #(
 	.iSfmEn(iSfmEn),				.iSfmCycleEn(iSfmCycleEn),
 	.iSfmCsHoldTime(iSfmCsHoldTime),
 	.iSfmStartAdrs(iSfmStartAdrs),	.iSfmEndAdrs(iSfmEndAdrs),
-	.oSfmDone(oSfmDone),
+	.oSfmDone(oSfmDone),			.oSfmAdrsAdd(oSfmAdrsAdd),
 	// common
 	.iRST(iSRST),	.inRST(inSRST),	.iCLK(iSCLK)
 );
