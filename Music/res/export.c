@@ -179,10 +179,11 @@ int system_init(char *path)
 
     fprintf(stderr, "読み込みファイル = %s\n", out_path);
 	strcat(dir_path, filename);
-	fp = fopen(dir_path, "r+");
+	fp = fopen(dir_path, "wr");
 
 	if (fp == NULL) {
 		fprintf(stderr, "File Open error\n");
+		printf("%s\n", dir_path);
 		error_fprintf(__func__, __LINE__);
 		return 1;
 	}
