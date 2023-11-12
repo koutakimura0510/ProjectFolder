@@ -1,0 +1,24 @@
+/ip
+/work_pt
+/work_pnr
+/outflow
+/work_syn
+/work_sim
+/work_dbg
+*.vcd
+*.out
+
+/python
+/src/common
+
+# Soc Srcのみ管理
+/embedded_sw/
+!/embedded_sw/
+/embedded_sw/SapphireSoc/*
+!/embedded_sw/SapphireSoc/software
+/embedded_sw/SapphireSoc/software/*
+!/embedded_sw/SapphireSoc/software/standalone/
+/embedded_sw/SapphireSoc/software/standalone/*
+!/embedded_sw/SapphireSoc/software/standalone/SapphireSoc
+/embedded_sw/SapphireSoc/software/standalone/SapphireSoc/*
+!/embedded_sw/SapphireSoc/software/standalone/SapphireSoc/src

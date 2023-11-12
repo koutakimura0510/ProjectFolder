@@ -1,0 +1,176 @@
+/**-----------------------------------------------------------------------------
+ * Create  2023/7/8
+ * Author  koutakimura
+ * 
+ * Efinity FPGA tasks.json
+ * Ctrl + Shift + B で実行するコマンドを選択。
+ * 使用プロジェクトを変更する場合は、下記の文字列を task.json内で一括変換する。
+ * ※[] 内を一括変換 [Ti180_FMB_R1W1_k256m32_230125] < Windows
+ * 					 [C:/Efinity/2022.2/bin/efx_run.bat] <- Windows
+ * 					 [/tools/efinity/2023.1/bin/setup.sh] <- Linux
+ * 					 [/src/SysTimerBlock/sim/make] <- Simlation
+ * 
+ * tasks.json と端末は別プロセスなので、setup.sh を実行してシンボリックリンクの設定必要あり。 <- Linux
+ *
+ * https://qiita.com/ShortArrow/items/dc0c8cacd696154510f1 <- tasks.json 参考
+ *-----------------------------------------------------------------------------*/
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			//-----------------------------------------------------------------------------
+			// Simlation 2023-07-22 Add
+			//-----------------------------------------------------------------------------
+			"label": "Sim",
+			"type": "shell",
+			"command": "make sim",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		{
+			//-----------------------------------------------------------------------------
+			// bitstream 出力まで一括実行
+			//-----------------------------------------------------------------------------
+			"label": "All",
+			"type": "shell",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make compile;make py;make flash",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		{
+			//-----------------------------------------------------------------------------
+			// bitstream 出力まで一括実行
+			//-----------------------------------------------------------------------------
+			"label": "Compile",
+			"type": "shell",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make compile;make py",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		//-----------------------------------------------------------------------------
+		// map
+		//-----------------------------------------------------------------------------
+		{
+			"label": "Synthesis",
+			"type": "shell",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make synthesis",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		
+		//-----------------------------------------------------------------------------
+		// debugger 使用時は実行しないと Place 実行時に FAIL 発生
+		//-----------------------------------------------------------------------------
+		{
+			"label": "Debugger auto instantion",
+			"type": "shell",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make synthesis",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		
+		//-----------------------------------------------------------------------------
+		// コマンド実行時は、使用しない Interface Block は消さないと FAIL 発生
+		//-----------------------------------------------------------------------------
+		{
+			"label": "Interface",
+			"type": "shell",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make interface",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		//-----------------------------------------------------------------------------
+		// Place routing
+		//-----------------------------------------------------------------------------
+		{
+			"label": "Place + Routing",
+			"type": "shell",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make place",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		//-----------------------------------------------------------------------------
+		// Bitstream hex Generate
+		//-----------------------------------------------------------------------------
+		{
+			"label": "Pgm",
+			"type": "shell",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make pgm",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		//-----------------------------------------------------------------------------
+		// Jtag FPGA 書き込み
+		//-----------------------------------------------------------------------------
+		{
+			"label": "Jtag",
+			"type": "shell",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make jtag",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		
+		//-----------------------------------------------------------------------------
+		// Flash rom 書き込み
+		//-----------------------------------------------------------------------------
+		{
+			"label": "Flash",
+			"type": "shell",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make flash",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		//-----------------------------------------------------------------------------
+		// Update Mode 起動
+		//-----------------------------------------------------------------------------
+		{
+			"label": "Update",
+			"type": "shell",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make Update",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		//-----------------------------------------------------------------------------
+		// Compile + JTAG
+		//-----------------------------------------------------------------------------
+		{
+			"label": "Compile + JTAG",
+			"type": "shell",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make compile;make py;make jtag",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+	]
+}
