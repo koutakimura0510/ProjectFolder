@@ -1,14 +1,13 @@
 /*-----------------------------------------------------------------------------
- * Create  2023/4/4
  * Author  KoutaKimura
  * Editor  VSCode ver1.73.1
  * Build   Efinity 2022.2.322.1.8
  * Device  K5Stack10 Main Board
  * -
- * 23-04-04 V1.00: new release
- * 23-09-02 V1.01: SynthesizerBlock から AudioTxBlock へ変更
- * 23-09-17 V2.00: K5Stack10-v2 に更新のためピンアサイン変更
- * 23-10-15 V2.01: HyperRAMに対応するため、SCLK を 50MHz->100MHz に変更
+ * 23-04-04 v1.00: new release
+ * 23-09-02 v1.01: SynthesizerBlock から AudioTxBlock へ変更
+ * 23-09-17 v2.00: K5Stack10-v2 に更新のためピンアサイン変更
+ * 23-10-15 v2.01: HyperRAMに対応するため、SCLK を 50MHz->100MHz に変更
  *
  *-----------------------------------------------------------------------------*/  
 module K5Stack10MidiTop(
@@ -28,7 +27,9 @@ module K5Stack10MidiTop(
 	input	[7:0] ioSRAMD_I,
 	output	[7:0] ioSRAMD_O,
 	output	[7:0] ioSRAMD_OE,
-	output	oSRAM_RWDS,
+	input	ioSRAM_RWDS_I,
+	output	ioSRAM_RWDS_O,
+	output	ioSRAM_RWDS_OE,
 	output	oSRAM_pCLK,
 	output	oSRAM_nCLK,
 	output	oSRAM_nCE,
@@ -448,12 +449,14 @@ AudioTxBlock #(
 //-----------------------------------------------------------------------------
 wire [lpRamDqWidth-1:0]  wSRAMD_O;
 wire [lpRamDqWidth-1:0]  wSRAMD_I;
-wire wSRAM_RWDS;
+wire wSRAM_RWDS_O;
+wire wSRAM_RWDS_I;
+wire wSRAM_RWDS_OE;
 wire wSRAM_pCLK;
 wire wSRAM_nCLK;
 wire wSRAM_nCE;
 wire wSRAM_nRST;
-wire wSRAM_OE;
+wire wSRAMD_OE;
 wire wTestErr, wDone;
 
 RAMBlock #(
@@ -466,10 +469,11 @@ RAMBlock #(
 ) RAMBlock (
   // SRAM I/F Port
 	.oSRAMD(wSRAMD_O),			.iSRAMD(wSRAMD_I),
-	.oSRAM_RWDS(wSRAM_RWDS),	.oSRAM_pCLK(wSRAM_pCLK),
-	.oSRAM_nCLK(wSRAM_nCLK),	.oSRAM_nCE(wSRAM_nCE),
-	.oSRAM_nRST(wSRAM_nRST),	.oSRAM_OE(wSRAM_OE),
-	.oSRAMA(),
+	.oSRAMD_OE(wSRAMD_OE),
+	.oSRAM_RWDS(wSRAM_RWDS_O),	.iSRAM_RWDS(wSRAM_RWDS_I),
+	.oSRAM_RWDS_OE(wSRAM_RWDS_OE),
+	.oSRAM_pCLK(wSRAM_pCLK),	.oSRAM_nCLK(wSRAM_nCLK),
+	.oSRAM_nCE(wSRAM_nCE),		.oSRAM_nRST(wSRAM_nRST),
 	// Usi Bus Master Read
 	.oSUsiRd(wSUsiRd[lpRAMAdrsMap]),
 	// Usi Bus Master Write
@@ -634,8 +638,8 @@ assign ioGPIOB_O[21]	= wI2sLrclk;		assign wIunsedB[21]	= ioGPIOB_I[21];  assign 
 assign ioGPIOB_O[22]	= 1'b0;				assign wIunsedB[22]	= ioGPIOB_I[22];  assign ioGPIOB_OE[22] = 1'b0;		// I2C Controller
 assign ioGPIOB_O[23]	= 1'b0;				assign wIunsedB[23]	= ioGPIOB_I[23];  assign ioGPIOB_OE[23] = 1'b0;		// I2C Controller
 // SRAM
-assign ioSRAMD_O 	= wSRAMD_O;				assign wSRAMD_I = ioSRAMD_I;    assign ioSRAMD_OE = {lpRamDqWidth{wSRAM_OE}};
-assign oSRAM_RWDS	= wSRAM_RWDS;
+assign ioSRAMD_O 	= wSRAMD_O;				assign wSRAMD_I 	= ioSRAMD_I;    assign ioSRAMD_OE 		= {lpRamDqWidth{wSRAMD_OE}};
+assign ioSRAM_RWDS_O= wSRAM_RWDS_O;			assign wSRAM_RWDS_I = ioSRAMD_I;    assign ioSRAM_RWDS_OE 	= wSRAM_RWDS_OE;
 assign oSRAM_pCLK	= wSRAM_pCLK;
 assign oSRAM_nCLK	= wSRAM_nCLK;
 assign oSRAM_nCE	= wSRAM_nCE;

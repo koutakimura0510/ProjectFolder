@@ -8,13 +8,13 @@
 TBOUT    = tbwave.out
 
 # Tb Top Module名
-TBTOP 	 = SyncFifoController_tb
+TBTOP 	 = ASyncFifoController_tb
 
 # Tb Top Module.v
-TBTOPRTL = SyncFifoController_tb.v
+TBTOPRTL = ASyncFifoController_tb.v
 
 # Tb Instance.v
-TBRTL 	= ../SyncFifoController.v ../TrionSDPBRAM.v
+TBRTL 	= ../ASyncFifoController.v ../TrionSDPBRAM.v
 COMMON  = ../../pulse/*.v
 LIB		= /tools/efinity/2023.1/sim_models/verilog/*.v
 

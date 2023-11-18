@@ -69,6 +69,16 @@ module VideoPixelGenUnit #(
 	input signed [pVHAW:0]			iDotSquareRight5,
 	input signed [pVVAW:0]			iDotSquareTop5,
 	input signed [pVVAW:0]			iDotSquareUnder5,
+	input		 [pColorDepth-1:0]	iDotSquareColor6,
+	input signed [pVHAW:0]			iDotSquareLeft6,
+	input signed [pVHAW:0]			iDotSquareRight6,
+	input signed [pVVAW:0]			iDotSquareTop6,
+	input signed [pVVAW:0]			iDotSquareUnder6,
+	input		 [pColorDepth-1:0]	iDotSquareColor7,
+	input signed [pVHAW:0]			iDotSquareLeft7,
+	input signed [pVHAW:0]			iDotSquareRight7,
+	input signed [pVVAW:0]			iDotSquareTop7,
+	input signed [pVVAW:0]			iDotSquareUnder7,
 	// Csr SceneChange
 	input	[pColorDepth-1:0]	iSceneColor,
 	input	[6:0]				iSceneFrameTiming,
@@ -83,6 +93,8 @@ module VideoPixelGenUnit #(
 	output						oRvd,
 	output  					oEmp,
 	// Control Status
+	output	[pVHAW-1:0]			oPdpHpos,
+	output	[pVVAW-1:0]			oPdpVpos,
 	output	oFe,
 	// CLK Reset
 	input	iRST,
@@ -146,8 +158,8 @@ assign oEmp = wPdfEmp;
 //-----------------------------------------------------------------------------
 // PixelDrawPosition(Pdp)
 //-----------------------------------------------------------------------------
-wire [pVHAW-1:0] 	wPdpHpos;
-wire [pVVAW-1:0] 	wPdpVpos;
+wire [pVHAW-1:0] 	wPdpHpos;					assign oPdpHpos = wPdpHpos;
+wire [pVVAW-1:0] 	wPdpVpos;					assign oPdpVpos = wPdpVpos;
 wire [pVHAW-1:4] 	wPdpHposBs;
 wire [pVVAW-1:4] 	wPdpVposBs;
 wire 				wPdpFe;						assign oFe = wPdpFe;
@@ -240,6 +252,8 @@ DotSquareGen #(
 	.iColor3(iDotSquareColor3),	.iLeft3(iDotSquareLeft3),	.iRight3(iDotSquareRight3),	.iTop3(iDotSquareTop3),	.iUnder3(iDotSquareUnder3),
 	.iColor4(iDotSquareColor4),	.iLeft4(iDotSquareLeft4),	.iRight4(iDotSquareRight4),	.iTop4(iDotSquareTop4),	.iUnder4(iDotSquareUnder4),
 	.iColor5(iDotSquareColor5),	.iLeft5(iDotSquareLeft5),	.iRight5(iDotSquareRight5),	.iTop5(iDotSquareTop5),	.iUnder5(iDotSquareUnder5),
+	.iColor6(iDotSquareColor6),	.iLeft6(iDotSquareLeft6),	.iRight6(iDotSquareRight6),	.iTop6(iDotSquareTop6),	.iUnder6(iDotSquareUnder6),
+	.iColor7(iDotSquareColor7),	.iLeft7(iDotSquareLeft7),	.iRight7(iDotSquareRight7),	.iTop7(iDotSquareTop7),	.iUnder7(iDotSquareUnder7),
 	// common
 	.iRST(iRST),				.iCLK(iCLK)
 );

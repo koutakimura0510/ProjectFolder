@@ -194,7 +194,7 @@ begin
 	'd1024:		f_get_datawidth = 4;
 	'd2048:		f_get_datawidth = 2;
 	'd4096:		f_get_datawidth = 1;
-	default:	f_get_datawidth = 0;
+	default:	f_get_datawidth = 1;
 	endcase
 end
 endfunction

@@ -77,6 +77,16 @@ module VideoTxCsr #(
 	output	signed [pVHAW:0] 		oDotSquareRight5,
 	output	signed [pVVAW:0] 		oDotSquareTop5,
 	output	signed [pVVAW:0] 		oDotSquareUnder5,
+	output		   [pColorDepth-1:0]oDotSquareColor6,
+	output	signed [pVHAW:0] 		oDotSquareLeft6,
+	output	signed [pVHAW:0] 		oDotSquareRight6,
+	output	signed [pVVAW:0] 		oDotSquareTop6,
+	output	signed [pVVAW:0] 		oDotSquareUnder6,
+	output		   [pColorDepth-1:0]oDotSquareColor7,
+	output	signed [pVHAW:0] 		oDotSquareLeft7,
+	output	signed [pVHAW:0] 		oDotSquareRight7,
+	output	signed [pVVAW:0] 		oDotSquareTop7,
+	output	signed [pVVAW:0] 		oDotSquareUnder7,
 	// Csr SceneChange
     output	[pColorDepth-1:0] 	oSceneColor,
 	output 	[6:0] 				oSceneFrameTiming,
@@ -85,6 +95,9 @@ module VideoTxCsr #(
     output 						oSceneFrameRst,
 	input						iSceneAlphaMax,
 	input 						iSceneAlphaMin,
+	//
+	input	[pVHAW-1:0]			iPdpHpos,
+	input	[pVVAW-1:0]			iPdpVpos,
     // CLK Reset
     input	iSRST,
     input	iSCLK
@@ -127,6 +140,16 @@ reg signed [pVHAW:0] 			rDotSquareLeft5;		assign oDotSquareLeft5 	= rDotSquareLe
 reg signed [pVHAW:0] 			rDotSquareRight5;		assign oDotSquareRight5 = rDotSquareRight5;	// 四角形描画 右 座標
 reg signed [pVVAW:0] 			rDotSquareTop5;			assign oDotSquareTop5 	= rDotSquareTop5;	// 四角形描画 上 座標
 reg signed [pVVAW:0] 			rDotSquareUnder5;		assign oDotSquareUnder5 = rDotSquareUnder5;	// 四角形描画 下 座標
+reg 	   [pColorDepth-1:0]	rDotSquareColor6;		assign oDotSquareColor6 = rDotSquareColor6;	// 四角形描画 色
+reg signed [pVHAW:0] 			rDotSquareLeft6;		assign oDotSquareLeft6 	= rDotSquareLeft6;	// 四角形描画 左 座標
+reg signed [pVHAW:0] 			rDotSquareRight6;		assign oDotSquareRight6 = rDotSquareRight6;	// 四角形描画 右 座標
+reg signed [pVVAW:0] 			rDotSquareTop6;			assign oDotSquareTop6 	= rDotSquareTop6;	// 四角形描画 上 座標
+reg signed [pVVAW:0] 			rDotSquareUnder6;		assign oDotSquareUnder6 = rDotSquareUnder6;	// 四角形描画 下 座標
+reg 	   [pColorDepth-1:0]	rDotSquareColor7;		assign oDotSquareColor7 = rDotSquareColor7;	// 四角形描画 色
+reg signed [pVHAW:0] 			rDotSquareLeft7;		assign oDotSquareLeft7 	= rDotSquareLeft7;	// 四角形描画 左 座標
+reg signed [pVHAW:0] 			rDotSquareRight7;		assign oDotSquareRight7 = rDotSquareRight7;	// 四角形描画 右 座標
+reg signed [pVVAW:0] 			rDotSquareTop7;			assign oDotSquareTop7 	= rDotSquareTop7;	// 四角形描画 上 座標
+reg signed [pVVAW:0] 			rDotSquareUnder7;		assign oDotSquareUnder7 = rDotSquareUnder7;	// 四角形描画 下 座標
 //
 reg [pColorDepth-1:0] 	rSceneColor;					assign oSceneColor			= rSceneColor;			// 描画色
 reg [6:0] 				rSceneFrameTiming;				assign oSceneFrameTiming	= rSceneFrameTiming;	// SceneChange の更新速度,fps基準
@@ -145,7 +168,8 @@ reg qCsrWCke130, qCsrWCke134, qCsrWCke138, qCsrWCke13c;
 reg qCsrWCke200, qCsrWCke201, qCsrWCke202, qCsrWCke203, qCsrWCke204, qCsrWCke205, qCsrWCke206, qCsrWCke207;
 reg qCsrWCke208, qCsrWCke209, qCsrWCke20a, qCsrWCke20b, qCsrWCke20c, qCsrWCke20d, qCsrWCke20e, qCsrWCke20f;
 reg qCsrWCke210, qCsrWCke211, qCsrWCke212, qCsrWCke213, qCsrWCke214, qCsrWCke215, qCsrWCke216, qCsrWCke217;
-reg qCsrWCke218;
+reg qCsrWCke218, qCsrWCke219, qCsrWCke21a, qCsrWCke21b, qCsrWCke21c, qCsrWCke21d, qCsrWCke21e, qCsrWCke21f;
+reg qCsrWCke220, qCsrWCke221, qCsrWCke222;
 //
 reg qCsrWCke300, qCsrWCke301, qCsrWCke302, qCsrWCke303, qCsrWCke304;
 //
@@ -185,6 +209,16 @@ begin
 		rDotSquareRight5	<= {(pVHAW+1){1'b0}};
 		rDotSquareTop5		<= {(pVVAW+1){1'b0}};
 		rDotSquareUnder5	<= {(pVVAW+1){1'b0}};
+		rDotSquareColor6	<= {pColorDepth{1'b0}};
+		rDotSquareLeft6		<= {(pVHAW+1){1'b0}};
+		rDotSquareRight6	<= {(pVHAW+1){1'b0}};
+		rDotSquareTop6		<= {(pVVAW+1){1'b0}};
+		rDotSquareUnder6	<= {(pVVAW+1){1'b0}};
+		rDotSquareColor7	<= {pColorDepth{1'b0}};
+		rDotSquareLeft7		<= {(pVHAW+1){1'b0}};
+		rDotSquareRight7	<= {(pVHAW+1){1'b0}};
+		rDotSquareTop7		<= {(pVVAW+1){1'b0}};
+		rDotSquareUnder7	<= {(pVVAW+1){1'b0}};
 		rSceneColor			<= {pColorDepth{1'b0}};
 		rSceneFrameTiming	<= 7'd0;
 		rSceneFrameAddEn	<= 1'b0;
@@ -207,26 +241,36 @@ begin
 		rDotSquareRight1			<= qCsrWCke202 ? iSUsiWd[pVHAW:0]			: rDotSquareRight1;
 		rDotSquareTop1				<= qCsrWCke203 ? iSUsiWd[pVVAW:0]			: rDotSquareTop1;
 		rDotSquareUnder1			<= qCsrWCke204 ? iSUsiWd[pVVAW:0]			: rDotSquareUnder1;
-		rDotSquareColor2			<= qCsrWCke205 ? iSUsiWd[pVHAW:0]			: rDotSquareColor2;
+		rDotSquareColor2			<= qCsrWCke205 ? iSUsiWd[pColorDepth-1:0]	: rDotSquareColor2;
 		rDotSquareLeft2 			<= qCsrWCke206 ? iSUsiWd[pVHAW:0]			: rDotSquareLeft2;
-		rDotSquareRight2			<= qCsrWCke207 ? iSUsiWd[pVVAW:0]			: rDotSquareRight2;
+		rDotSquareRight2			<= qCsrWCke207 ? iSUsiWd[pVHAW:0]			: rDotSquareRight2;
 		rDotSquareTop2 				<= qCsrWCke208 ? iSUsiWd[pVVAW:0]			: rDotSquareTop2;
-		rDotSquareUnder2			<= qCsrWCke209 ? iSUsiWd[pVHAW:0]			: rDotSquareUnder2;
-		rDotSquareColor3			<= qCsrWCke20a ? iSUsiWd[pVHAW:0]			: rDotSquareColor3;
-		rDotSquareLeft3				<= qCsrWCke20b ? iSUsiWd[pVVAW:0]			: rDotSquareLeft3;
-		rDotSquareRight3			<= qCsrWCke20c ? iSUsiWd[pVVAW:0]			: rDotSquareRight3;
-		rDotSquareTop3				<= qCsrWCke20d ? iSUsiWd[pVHAW:0]			: rDotSquareTop3;
-		rDotSquareUnder3			<= qCsrWCke20e ? iSUsiWd[pVHAW:0]			: rDotSquareUnder3;
-		rDotSquareColor4			<= qCsrWCke20f ? iSUsiWd[pVVAW:0]			: rDotSquareColor4;
-		rDotSquareLeft4 			<= qCsrWCke210 ? iSUsiWd[pVVAW:0]			: rDotSquareLeft4;
+		rDotSquareUnder2			<= qCsrWCke209 ? iSUsiWd[pVVAW:0]			: rDotSquareUnder2;
+		rDotSquareColor3			<= qCsrWCke20a ? iSUsiWd[pColorDepth-1:0]	: rDotSquareColor3;
+		rDotSquareLeft3				<= qCsrWCke20b ? iSUsiWd[pVHAW:0]			: rDotSquareLeft3;
+		rDotSquareRight3			<= qCsrWCke20c ? iSUsiWd[pVHAW:0]			: rDotSquareRight3;
+		rDotSquareTop3				<= qCsrWCke20d ? iSUsiWd[pVVAW:0]			: rDotSquareTop3;
+		rDotSquareUnder3			<= qCsrWCke20e ? iSUsiWd[pVVAW:0]			: rDotSquareUnder3;
+		rDotSquareColor4			<= qCsrWCke20f ? iSUsiWd[pColorDepth-1:0]	: rDotSquareColor4;
+		rDotSquareLeft4 			<= qCsrWCke210 ? iSUsiWd[pVHAW:0]			: rDotSquareLeft4;
 		rDotSquareRight4			<= qCsrWCke211 ? iSUsiWd[pVHAW:0]			: rDotSquareRight4;
-		rDotSquareTop4  			<= qCsrWCke212 ? iSUsiWd[pVHAW:0]			: rDotSquareTop4;
+		rDotSquareTop4  			<= qCsrWCke212 ? iSUsiWd[pVVAW:0]			: rDotSquareTop4;
 		rDotSquareUnder4			<= qCsrWCke213 ? iSUsiWd[pVVAW:0]			: rDotSquareUnder4;
-		rDotSquareColor5			<= qCsrWCke214 ? iSUsiWd[pVVAW:0]			: rDotSquareColor5;
+		rDotSquareColor5			<= qCsrWCke214 ? iSUsiWd[pColorDepth-1:0]	: rDotSquareColor5;
 		rDotSquareLeft5				<= qCsrWCke215 ? iSUsiWd[pVHAW:0]			: rDotSquareLeft5;
 		rDotSquareRight5			<= qCsrWCke216 ? iSUsiWd[pVHAW:0]			: rDotSquareRight5;
 		rDotSquareTop5				<= qCsrWCke217 ? iSUsiWd[pVVAW:0]			: rDotSquareTop5;
 		rDotSquareUnder5			<= qCsrWCke218 ? iSUsiWd[pVVAW:0]			: rDotSquareUnder5;
+		rDotSquareColor6			<= qCsrWCke219 ? iSUsiWd[pColorDepth-1:0]	: rDotSquareColor6;
+		rDotSquareLeft6				<= qCsrWCke21a ? iSUsiWd[pVHAW:0]			: rDotSquareLeft6;
+		rDotSquareRight6			<= qCsrWCke21b ? iSUsiWd[pVHAW:0]			: rDotSquareRight6;
+		rDotSquareTop6				<= qCsrWCke21c ? iSUsiWd[pVVAW:0]			: rDotSquareTop6;
+		rDotSquareUnder6			<= qCsrWCke21d ? iSUsiWd[pVVAW:0]			: rDotSquareUnder6;
+		rDotSquareColor7			<= qCsrWCke21e ? iSUsiWd[pColorDepth-1:0]	: rDotSquareColor7;
+		rDotSquareLeft7				<= qCsrWCke21f ? iSUsiWd[pVHAW:0]			: rDotSquareLeft7;
+		rDotSquareRight7			<= qCsrWCke220 ? iSUsiWd[pVHAW:0]			: rDotSquareRight7;
+		rDotSquareTop7				<= qCsrWCke221 ? iSUsiWd[pVVAW:0]			: rDotSquareTop7;
+		rDotSquareUnder7			<= qCsrWCke222 ? iSUsiWd[pVVAW:0]			: rDotSquareUnder7;
 		// Scene Change
 		rSceneColor					<= qCsrWCke300 ? iSUsiWd[pColorDepth-1:0]	: rSceneColor;
 		rSceneFrameTiming			<= qCsrWCke301 ? iSUsiWd[6:0] 				: rSceneFrameTiming;
@@ -238,53 +282,63 @@ end
 
 always @*
 begin
-	qCsrWCke000 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h000});
-	qCsrWCke004 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h000});
-	qCsrWCke008 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h000});
-	qCsrWCke00c <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h000});
+	qCsrWCke000 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
+	qCsrWCke004 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
+	qCsrWCke008 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
+	qCsrWCke00c <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
 	//
-	qCsrWCke010 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h010});
-	qCsrWCke014 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h014});
-	qCsrWCke018 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h018});
-	qCsrWCke01c <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h01c});
-	qCsrWCke100 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h100});
-	qCsrWCke104 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h104});
-	qCsrWCke108 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h108});
-	qCsrWCke10c <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h10c});
-	qCsrWCke110 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h110});
-	qCsrWCke114 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h114});
+	qCsrWCke010 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0010});
+	qCsrWCke014 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
+	qCsrWCke018 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0018});
+	qCsrWCke01c <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h001c});
+	qCsrWCke100 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0100});
+	qCsrWCke104 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0104});
+	qCsrWCke108 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0108});
+	qCsrWCke10c <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h010c});
+	qCsrWCke110 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0110});
+	qCsrWCke114 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0114});
 	// 200h ~
-	qCsrWCke200 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h200});
-	qCsrWCke201 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h201});
-	qCsrWCke202 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h202});
-	qCsrWCke203 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h203});
-	qCsrWCke204 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h204});
-	qCsrWCke205 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h205});
-	qCsrWCke206 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h206});
-	qCsrWCke207 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h207});
-	qCsrWCke208 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h208});
-	qCsrWCke209 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h209});
-	qCsrWCke20a <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h20a});
-	qCsrWCke20b <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h20b});
-	qCsrWCke20c <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h20c});
-	qCsrWCke20d <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h20d});
-	qCsrWCke20e <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h20e});
-	qCsrWCke20f <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h20f});
-	qCsrWCke210 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h210});
-	qCsrWCke211 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h211});
-	qCsrWCke212 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h212});
-	qCsrWCke213 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h213});
-	qCsrWCke214 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h214});
-	qCsrWCke215 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h215});
-	qCsrWCke216 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h216});
-	qCsrWCke217 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h217});
-	qCsrWCke218 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h218});
+	qCsrWCke200 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0200});
+	qCsrWCke201 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0201});
+	qCsrWCke202 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0202});
+	qCsrWCke203 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0203});
+	qCsrWCke204 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0204});
+	qCsrWCke205 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0205});
+	qCsrWCke206 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0206});
+	qCsrWCke207 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0207});
+	qCsrWCke208 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0208});
+	qCsrWCke209 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0209});
+	qCsrWCke20a <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h020a});
+	qCsrWCke20b <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h020b});
+	qCsrWCke20c <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h020c});
+	qCsrWCke20d <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h020d});
+	qCsrWCke20e <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h020e});
+	qCsrWCke20f <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h020f});
+	qCsrWCke210 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0210});
+	qCsrWCke211 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0211});
+	qCsrWCke212 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0212});
+	qCsrWCke213 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0213});
+	qCsrWCke214 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0214});
+	qCsrWCke215 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0215});
+	qCsrWCke216 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0216});
+	qCsrWCke217 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0217});
+	qCsrWCke218 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0218});
+	qCsrWCke219 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0219});
+	qCsrWCke21a <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h021a});
+	qCsrWCke21b <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h021b});
+	qCsrWCke21c <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h021c});
+	qCsrWCke21d <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h021d});
+	qCsrWCke21e <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h021e});
+	qCsrWCke21f <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h021f});
+	qCsrWCke220 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0220});
+	qCsrWCke221 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0221});
+	qCsrWCke222 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0222});
 	// 300h ~
-	qCsrWCke300 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h300});
-	qCsrWCke301 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h301});
-	qCsrWCke302 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h302});
-	qCsrWCke303 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h303});
-	qCsrWCke304 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 12'h304});
+	qCsrWCke300 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0300});
+	qCsrWCke301 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0301});
+	qCsrWCke302 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0302});
+	qCsrWCke303 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0303});
+	qCsrWCke304 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0304});
 end
 
 
@@ -331,11 +385,23 @@ begin
 		'h216:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight5	};
 		'h217:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop5	};
 		'h218:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder5	};
+		'h219:		rSUsiRd	<= {{(32 - pColorDepth		){1'b0}}, rDotSquareColor6	};
+		'h21a:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft6	};
+		'h21b:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight6	};
+		'h21c:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop6	};
+		'h21d:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder6	};
+		'h21e:		rSUsiRd	<= {{(32 - pColorDepth		){1'b0}}, rDotSquareColor7	};
+		'h21f:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft7	};
+		'h220:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight7	};
+		'h221:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop7	};
+		'h222:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder7	};
 		//
 		'h300:		rSUsiRd	<= {{(32 - pColorDepth		){1'b0}}, rSceneColor										};
 		'h301:		rSUsiRd	<= {{(32 - 7				){1'b0}}, rSceneFrameTiming									};
 		'h302:		rSUsiRd	<= {{(32 - 3				){1'b0}}, rSceneFrameRst,rSceneFrameSubEn,rSceneFrameAddEn	};
 		'h303:		rSUsiRd	<= {{(32 - 2				){1'b0}}, {iSceneAlphaMax,iSceneAlphaMin}					};
+		'h400:		rSUsiRd	<= {{(32 - pVHAW			){1'b0}}, iPdpHpos											};
+		'h401:		rSUsiRd	<= {{(32 - pVVAW			){1'b0}}, iPdpVpos											};
 		default: 	rSUsiRd <= iSUsiWd;
 	endcase
 end

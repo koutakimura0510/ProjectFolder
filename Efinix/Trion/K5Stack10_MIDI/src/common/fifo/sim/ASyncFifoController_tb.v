@@ -10,8 +10,8 @@ module ASyncFifoController_tb;
 //----------------------------------------------------------
 // Top Module Connect
 //----------------------------------------------------------
-localparam	lpSCLKCycle   = 2;	// CLK サイクル
-localparam	lpBCLKCycle   = 16;	// CLK サイクル
+localparam	lpSCLKCycle   = 16;	// CLK サイクル
+localparam	lpBCLKCycle   = 2;	// CLK サイクル
 localparam	lpSimlationTime = 2000;	// シミュレーション時間を指定
 // parameter [3:0]		pBlockConnectNum		= 10; 				// Busに接続する Slave数 最大16
 // parameter [3:0]		pBlockConnectNumWidth 	= pBlockConnectNum - 1'b1;	// Busに接続する Slave数 最大16
@@ -49,7 +49,7 @@ endtask
 //-----------------------------------------------------------------------------
 // Fifo Read Write Tester
 //-----------------------------------------------------------------------------
-localparam lpFifoDepth		= 16;
+localparam lpFifoDepth		= 256;
 localparam lpFifoBitWidth 	= 8;
 
 reg  [lpFifoBitWidth-1:0] rWd, rRd;
@@ -65,6 +65,7 @@ ASyncFifoController #(
 	.iWd(rWd),
 	.iWe(qWe),
 	.oFull(wFull),
+	.oRemaingCntAlert(),
 	.oRd(wRd),
 	.iRe(qRe),
 	.oRvd(wRvd),
@@ -87,8 +88,7 @@ end
 wire wTimingGen;
 
 PulseGenerator #(
-	.pSysClk(lpSCLKCycle),
-	.pTimeCke(2),
+	.pDivClk(2),
 	.pStartPulse(0)
 ) PulseGenerator (
 	.oPulse(wTimingGen),
@@ -114,10 +114,12 @@ end
 //----------------------------------------------------------
 initial
 begin
+	$display("--- SIMLATION START !! ---\n");
 	$dumpfile("ASyncFifoController_tb.vcd");
 	$dumpvars(0, ASyncFifoController_tb);	// 引数0:下位モジュール表示, 1:Topのみ
 	reset_init();
 	#(lpSimlationTime);
+	$display("--- SIMLATION END !! ---\n");
     $finish;
 end
 

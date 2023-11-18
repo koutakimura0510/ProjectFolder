@@ -107,6 +107,16 @@ wire signed [lpVHAW:0] 	wDotSquareLeft5Csr;
 wire signed [lpVHAW:0] 	wDotSquareRight5Csr;
 wire signed [lpVHAW:0] 	wDotSquareTop5Csr;
 wire signed [lpVHAW:0] 	wDotSquareUnder5Csr;
+wire [lpColorDepth-1:0]	wDotSquareColor6Csr;
+wire signed [lpVHAW:0] 	wDotSquareLeft6Csr;
+wire signed [lpVHAW:0] 	wDotSquareRight6Csr;
+wire signed [lpVHAW:0] 	wDotSquareTop6Csr;
+wire signed [lpVHAW:0] 	wDotSquareUnder6Csr;
+wire [lpColorDepth-1:0]	wDotSquareColor7Csr;
+wire signed [lpVHAW:0] 	wDotSquareLeft7Csr;
+wire signed [lpVHAW:0] 	wDotSquareRight7Csr;
+wire signed [lpVHAW:0] 	wDotSquareTop7Csr;
+wire signed [lpVHAW:0] 	wDotSquareUnder7Csr;
 //
 wire wSceneColorCsr;
 wire wSceneFrameTimingCsr;
@@ -115,6 +125,9 @@ wire wSceneFrameSubEnCsr;
 wire wSceneFrameRstCsr;
 wire wSceneAlphaMaxCsr;
 wire wSceneAlphaMinCsr;
+//
+wire [lpVHAW-1:0] wPdpHposCsr;
+wire [lpVVAW-1:0] wPdpVposCsr;
 
 VideoTxCsr #(
 	// USIB
@@ -145,30 +158,26 @@ VideoTxCsr #(
 	.oMapYSize(wMapYSizeCsr),
 	// Csr Dot Square Gen
 	.oDotSquareColor1(wDotSquareColor1Csr),
-	.oDotSquareLeft1(wDotSquareLeft1Csr),
-	.oDotSquareRight1(wDotSquareRight1Csr),
-	.oDotSquareTop1(wDotSquareTop1Csr),
-	.oDotSquareUnder1(wDotSquareUnder1Csr),
+	.oDotSquareLeft1(wDotSquareLeft1Csr),		.oDotSquareRight1(wDotSquareRight1Csr),
+	.oDotSquareTop1(wDotSquareTop1Csr),			.oDotSquareUnder1(wDotSquareUnder1Csr),
 	.oDotSquareColor2(wDotSquareColor2Csr),
-	.oDotSquareLeft2(wDotSquareLeft2Csr),
-	.oDotSquareRight2(wDotSquareRight2Csr),
-	.oDotSquareTop2(wDotSquareTop2Csr),
-	.oDotSquareUnder2(wDotSquareUnder2Csr),
+	.oDotSquareLeft2(wDotSquareLeft2Csr),		.oDotSquareRight2(wDotSquareRight2Csr),
+	.oDotSquareTop2(wDotSquareTop2Csr),			.oDotSquareUnder2(wDotSquareUnder2Csr),
 	.oDotSquareColor3(wDotSquareColor3Csr),
-	.oDotSquareLeft3(wDotSquareLeft3Csr),
-	.oDotSquareRight3(wDotSquareRight3Csr),
-	.oDotSquareTop3(wDotSquareTop3Csr),
-	.oDotSquareUnder3(wDotSquareUnder3Csr),
+	.oDotSquareLeft3(wDotSquareLeft3Csr),		.oDotSquareRight3(wDotSquareRight3Csr),
+	.oDotSquareTop3(wDotSquareTop3Csr),			.oDotSquareUnder3(wDotSquareUnder3Csr),
 	.oDotSquareColor4(wDotSquareColor4Csr),
-	.oDotSquareLeft4(wDotSquareLeft4Csr),
-	.oDotSquareRight4(wDotSquareRight4Csr),
-	.oDotSquareTop4(wDotSquareTop4Csr),
-	.oDotSquareUnder4(wDotSquareUnder4Csr),
+	.oDotSquareLeft4(wDotSquareLeft4Csr),		.oDotSquareRight4(wDotSquareRight4Csr),
+	.oDotSquareTop4(wDotSquareTop4Csr),			.oDotSquareUnder4(wDotSquareUnder4Csr),
 	.oDotSquareColor5(wDotSquareColor5Csr),
-	.oDotSquareLeft5(wDotSquareLeft5Csr),
-	.oDotSquareRight5(wDotSquareRight5Csr),
-	.oDotSquareTop5(wDotSquareTop5Csr),
-	.oDotSquareUnder5(wDotSquareUnder5Csr),
+	.oDotSquareLeft5(wDotSquareLeft5Csr),		.oDotSquareRight5(wDotSquareRight5Csr),
+	.oDotSquareTop5(wDotSquareTop5Csr),			.oDotSquareUnder5(wDotSquareUnder5Csr),
+	.oDotSquareColor6(wDotSquareColor6Csr),
+	.oDotSquareLeft6(wDotSquareLeft6Csr),		.oDotSquareRight6(wDotSquareRight6Csr),
+	.oDotSquareTop6(wDotSquareTop6Csr),			.oDotSquareUnder6(wDotSquareUnder6Csr),
+	.oDotSquareColor7(wDotSquareColor7Csr),
+	.oDotSquareLeft7(wDotSquareLeft7Csr),		.oDotSquareRight7(wDotSquareRight7Csr),
+	.oDotSquareTop7(wDotSquareTop7Csr),			.oDotSquareUnder7(wDotSquareUnder7Csr),
 	// Scene Change
 	.oSceneColor(wSceneColorCsr),
 	.oSceneFrameTiming(wSceneFrameTimingCsr),
@@ -177,6 +186,9 @@ VideoTxCsr #(
 	.oSceneFrameRst(wSceneFrameRstCsr),
 	.iSceneAlphaMax(wSceneAlphaMaxCsr),
 	.iSceneAlphaMin(wSceneAlphaMinCsr),
+	// Status
+	.iPdpHpos(wPdpHposCsr),
+	.iPdpVpos(wPdpVposCsr),
 	//
 	.iSRST(iSRST),	.iSCLK(iSCLK)
 );
@@ -200,30 +212,26 @@ VideoPixelGenUnit #(
 	.oMUfiWd(oMUfiWd),		.oMUfiAdrs(oMUfiWAdrs),		.iMUfiRdy(iMUfiRdy),
 	// Csr Dot Square Gen
 	.iDotSquareColor1(wDotSquareColor1Csr),
-	.iDotSquareLeft1(wDotSquareLeft1Csr),
-	.iDotSquareRight1(wDotSquareRight1Csr),
-	.iDotSquareTop1(wDotSquareTop1Csr),
-	.iDotSquareUnder1(wDotSquareUnder1Csr),
+	.iDotSquareLeft1(wDotSquareLeft1Csr),		.iDotSquareRight1(wDotSquareRight1Csr),
+	.iDotSquareTop1(wDotSquareTop1Csr),			.iDotSquareUnder1(wDotSquareUnder1Csr),
 	.iDotSquareColor2(wDotSquareColor2Csr),
-	.iDotSquareLeft2(wDotSquareLeft2Csr),
-	.iDotSquareRight2(wDotSquareRight2Csr),
-	.iDotSquareTop2(wDotSquareTop2Csr),
-	.iDotSquareUnder2(wDotSquareUnder2Csr),
+	.iDotSquareLeft2(wDotSquareLeft2Csr),		.iDotSquareRight2(wDotSquareRight2Csr),
+	.iDotSquareTop2(wDotSquareTop2Csr),			.iDotSquareUnder2(wDotSquareUnder2Csr),
 	.iDotSquareColor3(wDotSquareColor3Csr),
-	.iDotSquareLeft3(wDotSquareLeft3Csr),
-	.iDotSquareRight3(wDotSquareRight3Csr),
-	.iDotSquareTop3(wDotSquareTop3Csr),
-	.iDotSquareUnder3(wDotSquareUnder3Csr),
+	.iDotSquareLeft3(wDotSquareLeft3Csr),		.iDotSquareRight3(wDotSquareRight3Csr),
+	.iDotSquareTop3(wDotSquareTop3Csr),			.iDotSquareUnder3(wDotSquareUnder3Csr),
 	.iDotSquareColor4(wDotSquareColor4Csr),
-	.iDotSquareLeft4(wDotSquareLeft4Csr),
-	.iDotSquareRight4(wDotSquareRight4Csr),
-	.iDotSquareTop4(wDotSquareTop4Csr),
-	.iDotSquareUnder4(wDotSquareUnder4Csr),
+	.iDotSquareLeft4(wDotSquareLeft4Csr),		.iDotSquareRight4(wDotSquareRight4Csr),
+	.iDotSquareTop4(wDotSquareTop4Csr),			.iDotSquareUnder4(wDotSquareUnder4Csr),
 	.iDotSquareColor5(wDotSquareColor5Csr),
-	.iDotSquareLeft5(wDotSquareLeft5Csr),
-	.iDotSquareRight5(wDotSquareRight5Csr),
-	.iDotSquareTop5(wDotSquareTop5Csr),
-	.iDotSquareUnder5(wDotSquareUnder5Csr),
+	.iDotSquareLeft5(wDotSquareLeft5Csr),		.iDotSquareRight5(wDotSquareRight5Csr),
+	.iDotSquareTop5(wDotSquareTop5Csr),			.iDotSquareUnder5(wDotSquareUnder5Csr),
+	.iDotSquareColor6(wDotSquareColor6Csr),
+	.iDotSquareLeft6(wDotSquareLeft6Csr),		.iDotSquareRight6(wDotSquareRight6Csr),
+	.iDotSquareTop6(wDotSquareTop6Csr),			.iDotSquareUnder6(wDotSquareUnder6Csr),
+	.iDotSquareColor7(wDotSquareColor7Csr),
+	.iDotSquareLeft7(wDotSquareLeft7Csr),		.iDotSquareRight7(wDotSquareRight7Csr),
+	.iDotSquareTop7(wDotSquareTop7Csr),			.iDotSquareUnder7(wDotSquareUnder7Csr),
 	//
 	.iSceneColor(wSceneColorCsr),
 	.iSceneFrameTiming(wSceneFrameTimingCsr),
@@ -232,6 +240,10 @@ VideoPixelGenUnit #(
 	.iSceneFrameRst(wSceneFrameRstCsr),
 	.oSceneAlphaMax(wSceneAlphaMaxCsr),
 	.oSceneAlphaMin(wSceneAlphaMinCsr),
+	// Control Status
+	.oPdpHpos(wPdpHposCsr),
+	.oPdpVpos(wPdpVposCsr),
+	.oFe(),
 	// Dst Fifo Side
 	.oRd(wVpgRd),		.iRe(qVpgRe),
 	.oRvd(wVpgRvd),		.oEmp(wVpgEmp),

@@ -79,8 +79,7 @@ end
 wire wTimingGen;
 
 PulseGenerator #(
-	.pSysClk(1),
-	.pTimeCke(1),
+	.pDivClk(2),
 	.pStartPulse(0)
 ) PulseGenerator (
 	.oPulse(wTimingGen),

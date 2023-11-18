@@ -7,11 +7,11 @@
 FILE = efx_run.py
 PROJECT = ./K5Stack10_MIDI.xml
 JTAG_PROJECT = ../JTAG_Flash_Loader
-# SIM_PROJECT = ./src/common/fifo/sim
+SIM_PROJECT = ./src/common/fifo/sim
 # SIM_PROJECT = ./src/UltraFastInterfaceBus/sim
 # SIM_PROJECT = ./src/SynthesizerBlock/sim
 # SIM_PROJECT = ./src/VideoTxBlock/VideoPixelGenUnit/sim
-SIM_PROJECT = ./src/AudioTxBlock/sim
+# SIM_PROJECT = ./src/AudioTxBlock/sim
 # SIM_PROJECT = ./src/VideoTxBlock/sim
 
 all: synthesis interface place pgm jtag

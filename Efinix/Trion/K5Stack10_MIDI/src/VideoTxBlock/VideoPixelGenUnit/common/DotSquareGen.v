@@ -46,6 +46,16 @@ module DotSquareGen #(
 	input signed	[pVHAW:0]			iRight5,
 	input signed	[pVVAW:0]			iTop5,
 	input signed	[pVVAW:0]			iUnder5,
+	input			[pColorDepth-1:0]	iColor6,
+	input signed	[pVHAW:0]			iLeft6,
+	input signed	[pVHAW:0]			iRight6,
+	input signed	[pVVAW:0]			iTop6,
+	input signed	[pVVAW:0]			iUnder6,
+	input			[pColorDepth-1:0]	iColor7,
+	input signed	[pVHAW:0]			iLeft7,
+	input signed	[pVHAW:0]			iRight7,
+	input signed	[pVVAW:0]			iTop7,
+	input signed	[pVVAW:0]			iUnder7,
 	// Common
 	input	iRST,
 	input	iCKE,
@@ -67,7 +77,7 @@ wire signed [pVVAW:0] wVpos = {1'b0, iVpos};
 reg [pColorDepth-1:0] rPd;		assign oPd = rPd;
 reg rPv;						assign oPv = rPv;
 reg [pColorDepth-1:0]	qColor;
-reg [4:0] 				qPosMatch;
+reg [6:0] 				qPosMatch;
 
 always @(posedge iCLK)
 begin
@@ -80,11 +90,13 @@ end
 always @*
 begin
 	casex (qPosMatch)
-		'b1xxxx: qColor <= iColor5;
-		'b01xxx: qColor <= iColor4;
-		'b001xx: qColor <= iColor3;
-		'b0001x: qColor <= iColor2;
-		'b00001: qColor <= iColor1;
+		'b1xxxxxx: qColor <= iColor7;
+		'b01xxxxx: qColor <= iColor6;
+		'b001xxxx: qColor <= iColor5;
+		'b0001xxx: qColor <= iColor4;
+		'b00001xx: qColor <= iColor3;
+		'b000001x: qColor <= iColor2;
+		'b0000001: qColor <= iColor1;
 		default: qColor <= {pColorDepth{1'b0}};
 	endcase
 
@@ -93,6 +105,8 @@ begin
 	qPosMatch[2] <=  (iLeft3 <= wHpos) & (wHpos  < iRight3) & (iTop3 <= wVpos) & (wVpos < iUnder3);
 	qPosMatch[3] <=  (iLeft4 <= wHpos) & (wHpos  < iRight4) & (iTop4 <= wVpos) & (wVpos < iUnder4);
 	qPosMatch[4] <=  (iLeft5 <= wHpos) & (wHpos  < iRight5) & (iTop5 <= wVpos) & (wVpos < iUnder5);
+	qPosMatch[5] <=  (iLeft6 <= wHpos) & (wHpos  < iRight6) & (iTop6 <= wVpos) & (wVpos < iUnder6);
+	qPosMatch[6] <=  (iLeft7 <= wHpos) & (wHpos  < iRight7) & (iTop7 <= wVpos) & (wVpos < iUnder7);
 end
 
 endmodule

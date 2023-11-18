@@ -20,11 +20,12 @@ module RAMBlock #(
 	parameter pRamDqWidth 		= 16	// GPIO データ幅
 )(
 	// SRAM I/F Port
-	output [pRamAdrsWidth-1:0] 		oSRAMA,
 	output [pRamDqWidth-1:0] 		oSRAMD,
 	input  [pRamDqWidth-1:0] 		iSRAMD,
-	output 							oSRAM_OE,				// "0" In, "1" Out
+	output 							oSRAMD_OE,				// "0" In, "1" Out
 	output 							oSRAM_RWDS,
+	input 							iSRAM_RWDS,
+	output 							oSRAM_RWDS_OE,
 	output 							oSRAM_pCLK,
 	output 							oSRAM_nCLK,
 	output 							oSRAM_nCE,
@@ -146,26 +147,28 @@ reg [pRamAdrsWidth-1:0] qRamIfPortUnitAdrs;
 reg  					qRamIfPortUnitCmd;
 reg  					qRamIfPortUnitCke;
 
-RAMIfPortUnit #(
-	.pRamAdrsWidth(pRamAdrsWidth),
-	.pRamDqWidth(pRamDqWidth)
-) RAMIfPortUnit (
-	// SRAM I/F Port
-	.oSRAMD(oSRAMD),			.iSRAMD(iSRAMD),
-	.oSRAM_nCE(oSRAM_nCE),		.oSRAM_nRST(oSRAM_nRST),
-	.oSRAM_pCLK(oSRAM_pCLK),	.oSRAM_nCLK(oSRAM_nCLK),
-	.oSRAM_RWDS(oSRAM_RWDS),
-	//
-	.iAdrs(qRamIfPortUnitAdrs),
-	.iCmd(qRamIfPortUnitCmd),
-	.iWd(qRamIfPortUnitWd),
-	.oRd(wRamIfPortUnitRd),
-	.oRvd(wRamIfPortUnitRvd),
-	// CLK Reset
-	.iRST(iSRST),
-	.iCKE(qRamIfPortUnitCke),
-	.iCLK(iSCLK)
-);
+// RAMIfPortUnit #(
+// 	.pRamAdrsWidth(pRamAdrsWidth),
+// 	.pRamDqWidth(pRamDqWidth)
+// ) RAMIfPortUnit (
+// 	// SRAM I/F Port
+// 	.oSRAMD(oSRAMD),			.iSRAMD(iSRAMD),
+// 	.oSRAMD_OE(oSRAMD_OE),
+// 	.oSRAM_RWDS(oSRAM_RWDS),	.iSRAM_RWDS(iSRAM_RWDS),
+// 	.oSRAM_RWDS_OE(oSRAM_RWDS_OE),
+// 	.oSRAM_pCLK(oSRAM_pCLK),	.oSRAM_nCLK(oSRAM_nCLK),
+// 	.oSRAM_nCE(oSRAM_nCE),		.oSRAM_nRST(oSRAM_nRST),
+// 	//
+// 	.iAdrs(qRamIfPortUnitAdrs),
+// 	.iCmd(qRamIfPortUnitCmd),
+// 	.iWd(qRamIfPortUnitWd),
+// 	.oRd(wRamIfPortUnitRd),
+// 	.oRvd(wRamIfPortUnitRvd),
+// 	// CLK Reset
+// 	.iRST(iSRST),
+// 	.iCKE(qRamIfPortUnitCke),
+// 	.iCLK(iSCLK)
+// );
 
 always @*
 begin

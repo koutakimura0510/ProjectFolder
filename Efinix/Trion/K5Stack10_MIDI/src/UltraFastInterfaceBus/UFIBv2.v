@@ -1,12 +1,20 @@
 /*-----------------------------------------------------------------------------
- * Create  2023/7/15
- * Author  koutakimura
- * -
- * UfiAdrs Bit Assign
- * [31]    1'b1 Enable,   	1'b0 Disable
- * [30]    1'b1 ReadCmd,	1'b0 WriteCmd
- * [28:25] Block ID
- * [24: 0] RAM Adrs
+ * 1st
+ * [31:31] Enable Bit				"1" Enable,   	"1" Disable
+ * [30:30] R/W Select Bit			"1" ReadCmd,	"1" WriteCmd
+ * [29:29] Burst Type Select Bit	"1" linear 		"0" wrapped
+ * [28:16] NC
+ * [15: 8] Burst Length
+ * [ 7: 0] UFIB ID
+ *
+ * 2nd
+ * [31: 0] Adrs Bit
+ *
+ * 3rd...end
+ * [31: 0] Data Bit
+ *
+ * UFIB の通信プロトコルは AXI Stream 転送を参考に自己流にアレンジした規格
+ * Master は、1st, 2nd, 3rd の順番でデータを転送する。バースト長分データを送受信Master が行う。
  *
  * [Read]
  * Master 側は自身が発行した ReadCmd の判定として、Block ID,Enable bit を使用する、
@@ -17,7 +25,7 @@
  * 例として Master1,2 が存在する場合、Master1 がバスを占有している時は、Master2 は バスを利用発行できない
  *
  * 23-07-15 v1.00: new release
- * 23-07-15 v2.00: プロトコル変更に伴い大幅アップデート
+ * 23-07-15 v2.00: 通信プロトコル変更に伴いに大幅アップデート
  *-----------------------------------------------------------------------------*/
 module UFIB #(
 	// variable parameter
