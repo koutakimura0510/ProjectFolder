@@ -137,7 +137,7 @@ assign PLL_TL1_RSTN = 1'b1;
 // USI/F BUS
 //------------------------------------------------------------------------------
 localparam lpUsiBusWidth      = 32;		// USIB データ、アドレス共通バス幅
-localparam lpBlockConnectNum  = 7;		// 現在接続しているブロックの個数
+localparam lpBlockConnectNum  = 8;		// 現在接続しているブロックの個数
 localparam lpBlockAdrsWidth   = f_detect_bitwidth(lpBlockConnectNum);
 localparam lpCsrAdrsWidth     = 16;		// 各ブロック共通の基本CSR幅
 localparam lpSUsiBusWidth     = (lpUsiBusWidth * lpBlockConnectNum);
@@ -149,6 +149,7 @@ localparam [lpBlockAdrsWidth-1:0]		// ブロックアドレスマッピング �
   lpSysTimerAdrsMap	= 'h4,
   lpMCBAdrsMap		= 'h5,
   lpVtbAdrsMap		= 'h6,
+  lpI2cAdrsMap		= 'h7,
   lpNullAdrsMap		= 0;
 
 // ブロック内 Csr のアドレス幅
@@ -163,6 +164,7 @@ localparam
   lpTimerCsrActiveWidth = 8,
   lpMCBCsrActiveWidth	= 8,
   lpVtbCsrActiveWidth	= 12,
+  lpI2cCsrActiveWidth	= 8,
   lpNullActiveWidth     = 8;  // 使用しない、ソースの追加がやりやすいように
 
 // Bus Master Read
@@ -285,7 +287,7 @@ endgenerate
 //-----------------------------------------------------------------------------
 // MCB 
 //-----------------------------------------------------------------------------
-localparam lpOnChipMcu = "yes";		// "yes"=Generate MCU, "no"=not
+localparam lpOnChipMcu = "no";		// "yes"=Generate MCU, "no"=not
 
 wire wSocTxd, wSocRxd;
 
@@ -324,8 +326,7 @@ MicroControllerBlock #(
 	.jtag_inst1_UPDATE(jtag_inst1_UPDATE),
 	.jtag_inst1_RESET(jtag_inst1_RESET),
 	// common
-	.iSRST(wSRST),			.inSRST(rnSRST),
-	.iSCLK(iSCLK)
+	.iSRST(wSRST),			.inSRST(rnSRST),		.iSCLK(iSCLK)
 );
 
 
@@ -438,9 +439,8 @@ AudioTxBlock #(
 	// Bus Master Write
 	.iSUsiWd(wSUsiWd),		.iSUsiAdrs(wSUsiAdrs),
 	// CLK, RST
-	.iMRST(wMRST),			.iMCLK(iMCLK),
-	.iSRST(wSRST),			.inSRST(wnSRST),
-	.iSCLK(iSCLK)
+	.iMRST(wMRST),								.iMCLK(iMCLK),
+	.iSRST(wSRST),			.inSRST(wnSRST),	.iSCLK(iSCLK)
 );
 
 
@@ -449,6 +449,7 @@ AudioTxBlock #(
 //-----------------------------------------------------------------------------
 wire [lpRamDqWidth-1:0]  wSRAMD_O;
 wire [lpRamDqWidth-1:0]  wSRAMD_I;
+wire wSRAMD_OE;
 wire wSRAM_RWDS_O;
 wire wSRAM_RWDS_I;
 wire wSRAM_RWDS_OE;
@@ -456,7 +457,6 @@ wire wSRAM_pCLK;
 wire wSRAM_nCLK;
 wire wSRAM_nCE;
 wire wSRAM_nRST;
-wire wSRAMD_OE;
 wire wTestErr, wDone;
 
 RAMBlock #(
@@ -540,11 +540,35 @@ VideoTxBlock #(
 	.oMUfiAdrs(wMUfiWAdrs[lpUfiVtbAdrsMap]),
 	.iMUfiRdy(wMUfiRdy[lpUfiVtbAdrsMap]),
 	// CLK, RST
-	.iVRST(wVRST),		.inVRST(wnVRST),
-	.iVCLK(iVCLK),
-	.iSRST(wSRST),		.inSRST(wnSRST),
-	.iSCLK(iSCLK)
+	.iVRST(wVRST),		.inVRST(wnVRST),	.iVCLK(iVCLK),
+	.iSRST(wSRST),		.inSRST(wnSRST),	.iSCLK(iSCLK)
 );
+
+
+/**----------------------------------------------------------------------------
+ * I2c Block
+ *---------------------------------------------------------------------------*/
+wire wiI2cScl,	woI2cScl,	woI2cSclOe;
+wire wiI2cSda,	woI2cSda,	woI2cSdaOe;
+
+I2cBlock #(
+	// USI
+	.pBlockAdrsWidth(lpBlockAdrsWidth),		.pAdrsMap(lpI2cAdrsMap),
+	.pUsiBusWidth(lpUsiBusWidth),			.pCsrAdrsWidth(lpCsrAdrsWidth),
+	.pCsrActiveWidth(lpI2cCsrActiveWidth)
+) I2cBlock (
+	// I2C Sinal Ctrl
+	.iI2cScl(wiI2cScl),		.oI2cScl(woI2cScl),	.oI2cSclOe(woI2cSclOe),
+	.iI2cSda(wiI2cSda),		.oI2cSda(woI2cSda),	.oI2cSdaOe(woI2cSdaOe),
+	// Bus Master Read
+	.oSUsiRd(wSUsiRd[lpI2cAdrsMap]),
+	// Bus Master Write
+	.iSUsiWd(wSUsiWd),		.iSUsiAdrs(wSUsiAdrs),
+	// CLK, RST
+	.iSRST(wSRST),			.inSRST(wnSRST),	.iSCLK(iSCLK)
+);
+
+
 //-----------------------------------------------------------------------------
 // Debug Core Block
 //-----------------------------------------------------------------------------
@@ -601,49 +625,37 @@ assign ioGPIOR_O[19]	= wGPIOR_O[5];		assign  wGPIOR_In[5]	= ioGPIOR_I[19];	assig
 assign ioGPIOR_O[20]	= 1'b0;				assign  wIunsedR[20]	= ioGPIOR_I[20];	assign ioGPIOR_OE[20] = 1'b0;			// No4.Flash Rom WP / IO3
 // GPIOB
 wire [23:0] wIunsedB;
-assign ioGPIOB_O[0]		= wVIDEO_VS;		assign wIunsedB[0]	= ioGPIOB_I[0];   assign ioGPIOB_OE[0]  = 1'b1;		// Video VS
-assign ioGPIOB_O[1]		= wVIDEO_DE;		assign wIunsedB[1]	= ioGPIOB_I[1];   assign ioGPIOB_OE[1]  = 1'b1;		// Video DE
-assign ioGPIOB_O[2]		= wVIDEO_RST;		assign wIunsedB[2]	= ioGPIOB_I[2];   assign ioGPIOB_OE[2]  = 1'b1;		// Video RST
-assign ioGPIOB_O[3]		= wVIDEO_HS;		assign wIunsedB[3]	= ioGPIOB_I[3];   assign ioGPIOB_OE[3]  = 1'b1;		// Video HS
-assign ioGPIOB_O[4]		= wVIDEO_B[7];		assign wIunsedB[4]	= ioGPIOB_I[4];   assign ioGPIOB_OE[4]  = 1'b1;		// Video B7
-assign ioGPIOB_O[5]		= wVIDEO_DCK;		assign wIunsedB[5]	= ioGPIOB_I[5];   assign ioGPIOB_OE[5]  = 1'b1;		// Video DCK
-assign ioGPIOB_O[6]		= wVIDEO_B[6];		assign wIunsedB[6]	= ioGPIOB_I[6];   assign ioGPIOB_OE[6]  = 1'b1;		// Video B6
-assign ioGPIOB_O[7]		= wVIDEO_B[5];		assign wIunsedB[7]	= ioGPIOB_I[7];   assign ioGPIOB_OE[7]  = 1'b1;		// Video B5
-assign ioGPIOB_O[8]		= wVIDEO_B[4];		assign wIunsedB[8]	= ioGPIOB_I[8];   assign ioGPIOB_OE[8]  = 1'b1;		// Video B4
-assign ioGPIOB_O[9]		= wVIDEO_B[3];		assign wIunsedB[9]	= ioGPIOB_I[9];   assign ioGPIOB_OE[9]  = 1'b1;		// Video B3
-assign ioGPIOB_O[10]	= wVIDEO_G[7];		assign wIunsedB[10]	= ioGPIOB_I[10];  assign ioGPIOB_OE[10] = 1'b1;		// Video G7
-assign ioGPIOB_O[11]	= wVIDEO_G[6];		assign wIunsedB[11]	= ioGPIOB_I[11];  assign ioGPIOB_OE[11] = 1'b1;		// Video G6
-assign ioGPIOB_O[12]	= wVIDEO_G[5];		assign wIunsedB[12]	= ioGPIOB_I[12];  assign ioGPIOB_OE[12] = 1'b1;		// Video G5
-// assign ioGPIOB_O[13] = wSlaveMiso;    assign wMasterMiso   = ioGPIOB_I[13];  assign ioGPIOB_OE[13] = wnSpiDir;
-// assign ioGPIOB_O[14] = wMasterSck;    assign wSlaveSck     = ioGPIOB_I[14];  assign ioGPIOB_OE[14] = wSpiDir;
-// assign ioGPIOB_O[15] = wMasterMosi;   assign wSlaveMosi    = ioGPIOB_I[15];  assign ioGPIOB_OE[15] = wSpiDir;
-// assign ioGPIOB_O[16] = wMasterCs;     assign wSlaveCs      = ioGPIOB_I[16];  assign ioGPIOB_OE[16] = wSpiDir;
-assign ioGPIOB_O[13]	= wVIDEO_G[4];		assign wIunsedB[13]	= ioGPIOB_I[13];  assign ioGPIOB_OE[13] = 1'b1;		// Video G4
-assign ioGPIOB_O[14]	= wVIDEO_G[3];		assign wIunsedB[14]	= ioGPIOB_I[14];  assign ioGPIOB_OE[14] = 1'b1;		// Video G3
-assign ioGPIOB_O[15]	= wVIDEO_G[2];		assign wIunsedB[15]	= ioGPIOB_I[15];  assign ioGPIOB_OE[15] = 1'b1;		// Video G2
-assign ioGPIOB_O[16]	= wVIDEO_R[7];		assign wIunsedB[16]	= ioGPIOB_I[16];  assign ioGPIOB_OE[16] = 1'b1;		// Video R7
-assign ioGPIOB_O[17]	= wVIDEO_R[6];		assign wIunsedB[17]	= ioGPIOB_I[17];  assign ioGPIOB_OE[17] = 1'b1;		// Video R6
-// assign ioGPIOB_O[14]	= wSfmMosi[2];		assign wIunsedB[14]	= ioGPIOB_I[14];  assign ioGPIOB_OE[14] = 1'b1;		// Video G3
-// assign ioGPIOB_O[15]	= wSfmMiso[2];		assign wIunsedB[15]	= ioGPIOB_I[15];  assign ioGPIOB_OE[15] = 1'b1;		// Video G2
-// assign ioGPIOB_O[16]	= wSfmCs[2];		assign wIunsedB[16]	= ioGPIOB_I[16];  assign ioGPIOB_OE[16] = 1'b1;		// Video R7
-// assign ioGPIOB_O[17]	= wSfmSck[2];		assign wIunsedB[17]	= ioGPIOB_I[17];  assign ioGPIOB_OE[17] = 1'b1;		// Video R6
-assign ioGPIOB_O[18]	= wI2sMclk;			assign wIunsedB[18]	= ioGPIOB_I[18];  assign ioGPIOB_OE[18] = 1'b1; 	// I2S MCLK
-assign ioGPIOB_O[19]	= wI2sBclk;			assign wIunsedB[19]	= ioGPIOB_I[19];  assign ioGPIOB_OE[19] = 1'b1; 	// I2S BCLK
-assign ioGPIOB_O[20]	= wI2sSdata;		assign wIunsedB[20]	= ioGPIOB_I[20];  assign ioGPIOB_OE[20] = 1'b1; 	// I2S SDATA
-assign ioGPIOB_O[21]	= wI2sLrclk;		assign wIunsedB[21]	= ioGPIOB_I[21];  assign ioGPIOB_OE[21] = 1'b1; 	// I2S LRCLK
-// assign ioGPIOB_O[18]	= wSfmCs[2];		assign wIunsedB[18]	= ioGPIOB_I[18];  assign ioGPIOB_OE[18] = 1'b1; 	// I2S MCLK
-// assign ioGPIOB_O[19]	= wSfmSck[2];		assign wIunsedB[19]	= ioGPIOB_I[19];  assign ioGPIOB_OE[19] = 1'b1; 	// I2S BCLK
-// assign ioGPIOB_O[20]	= wSfmMosi[2];		assign wIunsedB[20]	= ioGPIOB_I[20];  assign ioGPIOB_OE[20] = 1'b1; 	// I2S SDATA
-// assign ioGPIOB_O[21]	= wSfmMiso[2];		assign wIunsedB[21]	= ioGPIOB_I[21];  assign ioGPIOB_OE[21] = 1'b1; 	// I2S LRCLK
-assign ioGPIOB_O[22]	= 1'b0;				assign wIunsedB[22]	= ioGPIOB_I[22];  assign ioGPIOB_OE[22] = 1'b0;		// I2C Controller
-assign ioGPIOB_O[23]	= 1'b0;				assign wIunsedB[23]	= ioGPIOB_I[23];  assign ioGPIOB_OE[23] = 1'b0;		// I2C Controller
+assign ioGPIOB_O[0]		= wVIDEO_VS;		assign wIunsedB[0]	= ioGPIOB_I[0];		assign ioGPIOB_OE[0]  = 1'b1;		// Video VS
+assign ioGPIOB_O[1]		= wVIDEO_DE;		assign wIunsedB[1]	= ioGPIOB_I[1];		assign ioGPIOB_OE[1]  = 1'b1;		// Video DE
+assign ioGPIOB_O[2]		= wVIDEO_RST;		assign wIunsedB[2]	= ioGPIOB_I[2];		assign ioGPIOB_OE[2]  = 1'b1;		// Video RST
+assign ioGPIOB_O[3]		= wVIDEO_HS;		assign wIunsedB[3]	= ioGPIOB_I[3];		assign ioGPIOB_OE[3]  = 1'b1;		// Video HS
+assign ioGPIOB_O[4]		= wVIDEO_B[7];		assign wIunsedB[4]	= ioGPIOB_I[4];		assign ioGPIOB_OE[4]  = 1'b1;		// Video B7
+assign ioGPIOB_O[5]		= wVIDEO_DCK;		assign wIunsedB[5]	= ioGPIOB_I[5];		assign ioGPIOB_OE[5]  = 1'b1;		// Video DCK
+assign ioGPIOB_O[6]		= wVIDEO_B[6];		assign wIunsedB[6]	= ioGPIOB_I[6];		assign ioGPIOB_OE[6]  = 1'b1;		// Video B6
+assign ioGPIOB_O[7]		= wVIDEO_B[5];		assign wIunsedB[7]	= ioGPIOB_I[7];		assign ioGPIOB_OE[7]  = 1'b1;		// Video B5
+assign ioGPIOB_O[8]		= wVIDEO_B[4];		assign wIunsedB[8]	= ioGPIOB_I[8];		assign ioGPIOB_OE[8]  = 1'b1;		// Video B4
+assign ioGPIOB_O[9]		= wVIDEO_B[3];		assign wIunsedB[9]	= ioGPIOB_I[9];		assign ioGPIOB_OE[9]  = 1'b1;		// Video B3
+assign ioGPIOB_O[10]	= wVIDEO_G[7];		assign wIunsedB[10]	= ioGPIOB_I[10];	assign ioGPIOB_OE[10] = 1'b1;		// Video G7
+assign ioGPIOB_O[11]	= wVIDEO_G[6];		assign wIunsedB[11]	= ioGPIOB_I[11];	assign ioGPIOB_OE[11] = 1'b1;		// Video G6
+assign ioGPIOB_O[12]	= wVIDEO_G[5];		assign wIunsedB[12]	= ioGPIOB_I[12];	assign ioGPIOB_OE[12] = 1'b1;		// Video G5
+assign ioGPIOB_O[13]	= wVIDEO_G[4];		assign wIunsedB[13]	= ioGPIOB_I[13];	assign ioGPIOB_OE[13] = 1'b1;		// Video G4
+assign ioGPIOB_O[14]	= wVIDEO_G[3];		assign wIunsedB[14]	= ioGPIOB_I[14];	assign ioGPIOB_OE[14] = 1'b1;		// Video G3
+assign ioGPIOB_O[15]	= wVIDEO_G[2];		assign wIunsedB[15]	= ioGPIOB_I[15];	assign ioGPIOB_OE[15] = 1'b1;		// Video G2
+assign ioGPIOB_O[16]	= wVIDEO_R[7];		assign wIunsedB[16]	= ioGPIOB_I[16];	assign ioGPIOB_OE[16] = 1'b1;		// Video R7
+assign ioGPIOB_O[17]	= wVIDEO_R[6];		assign wIunsedB[17]	= ioGPIOB_I[17];	assign ioGPIOB_OE[17] = 1'b1;		// Video R6
+assign ioGPIOB_O[18]	= wI2sMclk;			assign wIunsedB[18]	= ioGPIOB_I[18];	assign ioGPIOB_OE[18] = 1'b1; 		// I2S MCLK
+assign ioGPIOB_O[19]	= wI2sBclk;			assign wIunsedB[19]	= ioGPIOB_I[19];	assign ioGPIOB_OE[19] = 1'b1; 		// I2S BCLK
+assign ioGPIOB_O[20]	= wI2sSdata;		assign wIunsedB[20]	= ioGPIOB_I[20];	assign ioGPIOB_OE[20] = 1'b1; 		// I2S SDATA
+assign ioGPIOB_O[21]	= wI2sLrclk;		assign wIunsedB[21]	= ioGPIOB_I[21];	assign ioGPIOB_OE[21] = 1'b1; 		// I2S LRCLK
+assign ioGPIOB_O[22]	= woI2cScl;			assign wiI2cScl		= ioGPIOB_I[22];	assign ioGPIOB_OE[22] = woI2cSclOe;	// I2C Controller
+assign ioGPIOB_O[23]	= woI2cSda;			assign wiI2cSda		= ioGPIOB_I[23];	assign ioGPIOB_OE[23] = woI2cSdaOe;	// I2C Controller
 // SRAM
-assign ioSRAMD_O 	= wSRAMD_O;				assign wSRAMD_I 	= ioSRAMD_I;    assign ioSRAMD_OE 		= {lpRamDqWidth{wSRAMD_OE}};
-assign ioSRAM_RWDS_O= wSRAM_RWDS_O;			assign wSRAM_RWDS_I = ioSRAMD_I;    assign ioSRAM_RWDS_OE 	= wSRAM_RWDS_OE;
-assign oSRAM_pCLK	= wSRAM_pCLK;
-assign oSRAM_nCLK	= wSRAM_nCLK;
-assign oSRAM_nCE	= wSRAM_nCE;
-assign oSRAM_nRST	= wSRAM_nRST;
+assign ioSRAMD_O 		= wSRAMD_O;			assign wSRAMD_I 	= ioSRAMD_I;		assign ioSRAMD_OE 		= {lpRamDqWidth{wSRAMD_OE}};
+assign ioSRAM_RWDS_O	= wSRAM_RWDS_O;		assign wSRAM_RWDS_I = ioSRAM_RWDS_I;	assign ioSRAM_RWDS_OE 	= wSRAM_RWDS_OE;
+assign oSRAM_pCLK		= wSRAM_pCLK;
+assign oSRAM_nCLK		= wSRAM_nCLK;
+assign oSRAM_nCE		= wSRAM_nCE;
+assign oSRAM_nRST		= wSRAM_nRST;
 // USB UART
 // assign oUSB_TX = wMIDI_In;//iUSB_RX;
 assign oUSB_TX = wSocTxd;

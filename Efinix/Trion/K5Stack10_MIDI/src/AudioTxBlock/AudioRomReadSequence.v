@@ -328,12 +328,12 @@ begin
 	endcase
 
 	casex ( {rSt, (rCsHoldCnt==iSfmCsHoldTime),rDone,iSfmEn,iSfmDone,rWp[1:0],rRd[0],rRdCnt[lpSfmPageSize]} )
-		{lpStAdrsCheck,		8'bx_01_x_xx_x_x}:	qNextStCke <= 1'b1;
-		{lpStPageReadCmd,	8'bx_xx_1_11_x_x}:	qNextStCke <= 1'b1;
-		{lpStBusyCmd,		8'bx_xx_1_10_x_x}:	qNextStCke <= 1'b1;
-		{lpStBusyCheck,		8'bx_xx_x_xx_0_x}:	qNextStCke <= 1'b1;
-		{lpStReadDataCmd,	8'bx_xx_1_11_x_x}:	qNextStCke <= 1'b1;
-		{lpStFlashRead,		8'bx_xx_x_xx_x_1}:	qNextStCke <= 1'b1;
+		{lpStAdrsCheck,		8'bx_01_x_xx_x_x}:	qNextStCke <= 1'b1; // Enable 発行
+		{lpStPageReadCmd,	8'bx_xx_1_11_x_x}:	qNextStCke <= 1'b1; // page read cmd 発行完了
+		{lpStBusyCmd,		8'bx_xx_1_10_x_x}:	qNextStCke <= 1'b1; // Busy Cmd 発行
+		{lpStBusyCheck,		8'bx_xx_x_xx_0_x}:	qNextStCke <= 1'b1; // Busy Check
+		{lpStReadDataCmd,	8'bx_xx_1_11_x_x}:	qNextStCke <= 1'b1; // Read Cmd 発行完了
+		{lpStFlashRead,		8'bx_xx_x_xx_x_1}:	qNextStCke <= 1'b1; // Flash Read
 		{lpStCsLowHold,		8'b1_xx_x_xx_x_x}:	qNextStCke <= 1'b1;
 		{lpStCsHighHold,	8'b1_xx_x_xx_x_x}:	qNextStCke <= 1'b1;
 		default: 								qNextStCke <= 1'b0;

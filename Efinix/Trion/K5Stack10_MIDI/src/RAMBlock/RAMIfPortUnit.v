@@ -42,6 +42,8 @@ module RAMIfPortUnit #(
   44-16 Row/Col Adrs,	A31-3
   15- 3 Reserved		nc
    2- 0 Lower ColAdrs	A2-0
+   
+   Write RWDS はマスクとして機能する。"H" だとマスク、"L" だと書き込み
  *---------------------------------------------------------------------------*/
 // localparam
 // 	lpIdol		= 3'd0,

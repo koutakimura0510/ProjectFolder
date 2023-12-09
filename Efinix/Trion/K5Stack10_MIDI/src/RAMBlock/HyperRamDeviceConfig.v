@@ -7,24 +7,24 @@
  * 23-11-14 v1.00: new release
  * 
  *-----------------------------------------------------------------------------*/
-module HyperRamDeviceConfig #(
-	parameter pRamAdrsWidth	= 19,
-	parameter pRamDqWidth = 8
-)(
-	// Gpio Connect
+module HyperRamDeviceConfig (
+	// Write Side for GPIO
 	output[ 7:0]oMemDq,
 	output		oMemDqOe,
 	output		oMemRwds,
 	output		oMemRwdsOe,
 	output		oMemClk,
 	output		oMemCs,
+	// Read Side for GPIO
+	input [ 7:0]iMemDq,
 	// Internal Data
-	input [ 7:0]iReadDq,
+	output[15:0]oCapDq,
 	input [15:0]iWDq,
 	input [47:0]iCmdAdrs,
 	// control / status
 	input		iRwCmd,		// [0] Read, [1] Write
 	input		iSeqEn,		// Sequence Start
+	output		oDone,		// Sequence Done
 	// Clk Reset
 	input		iRST,
 	input		iCKE,
@@ -53,6 +53,7 @@ localparam
 
 // Intenal Logic	
 reg [ 2:0] 	rSt;
+reg 		qNectStCke;
 // Gpio Connect
 reg 		rMemClk;					assign oMemClk		= rMemClk;
 reg 		rMemCs;						assign oMemCs		= rMemCs;
@@ -65,22 +66,10 @@ reg 		rMemRwdsOe;					assign oMemRwdsOe	= rMemRwdsOe;
 /**----------------------------------------------------------------------------
  * State Machine
  *---------------------------------------------------------------------------*/
-always @(negedge iCLK)
-begin
-	if (iRST) 	rMemClk <= 1'b0;
-	else if ()	rMemClk <= ~rMemClk;
-	else 		rMemClk <= 1'b0;
-end
-
-always @(negedge iCLK)
-begin
-	if (iRST) 	rMemClk <= 1'b0;
-	else if ()	rMemClk <= ~rMemClk;
-	else 		rMemClk <= 1'b0;
-end
- 
 always @(posedge iCLK)
 begin
+	rMemRwdsOe	<= 1'b0;
+	
 	if (iRST)
 	begin
 		rSt 		<= lpIdol;
@@ -88,7 +77,6 @@ begin
 		rMemCs		<= 1'b1;
 		rMemDqOe	<= 1'b0;
 		rMemRwds	<= 1'b0;
-		rMemRwdsOe	<= 1'b0;
 	end
 	else
 	begin
@@ -100,7 +88,6 @@ begin
 			rMemCs		<= 1'b1;
 			rMemDqOe	<= 1'b0;
 			rMemRwds	<= 1'b0;
-			rMemRwdsOe	<= 1'b0;
 		end
 		
 		lpCsAssert:
@@ -110,17 +97,16 @@ begin
 			rMemCs 		<= 1'b0;
 			rMemDqOe	<= rMemDqOe;
 			rMemRwds	<= rMemRwds;
-			rMemRwdsOe	<= rMemRwdsOe;
 		end
 		
 		lpRWDS:
 		begin
 			rSt 		<= lpCmdAdrs;
+			rDone		<= rDone;
 			rMemDq		<= rMemDq;
 			rMemCs 		<= rMemCs;
 			rMemDqOe	<= 1'b1;
 			rMemRwds	<= rMemRwds;
-			rMemRwdsOe	<= 1'b1;
 		end
 		
 		lpCmdAdrs:
@@ -130,7 +116,6 @@ begin
 			rMemCs 		<= rMemCs;
 			rMemDqOe	<= rMemDqOe;
 			rMemRwds	<= rMemRwds;
-			rMemRwdsOe	<= rMemRwdsOe;
 		end
 		
 		lpDqSeq1:
@@ -141,7 +126,6 @@ begin
 			rMemCs 		<= rMemCs;
 			rMemDqOe	<= iRwCmd;
 			rMemRwds	<= rMemRwds;
-			rMemRwdsOe	<= iRwCmd;
 		end
 		
 		lpDqSeq2:
@@ -152,7 +136,6 @@ begin
 			rMemCs 		<= rMemCs;
 			rMemDqOe	<= rMemDqOe;
 			rMemRwds	<= rMemRwds;
-			rMemRwdsOe	<= rMemRwdsOe;
 		end
 		
 		lpComplete:
@@ -162,7 +145,6 @@ begin
 			rMemCs 		<= 1'b1;
 			rMemDqOe	<= 1'b0;
 			rMemRwds	<= 1'b0;
-			rMemRwdsOe	<= 1'b0;
 		end
 		
 		default:
@@ -172,7 +154,6 @@ begin
 			rMemCs 		<= 1'b1;
 			rMemDqOe	<= 1'b0;
 			rMemRwds	<= 1'b0;
-			rMemRwdsOe	<= 1'b0;
 		end
 	endcase
 	end
@@ -180,21 +161,49 @@ end
 
 
 /**----------------------------------------------------------------------------
+ * メモリクロック生成、データ取得
+ *---------------------------------------------------------------------------*/
+reg [15:0] 	rCapDq;						assign oCapDq = rCapDq;
+reg 		qMemClkCke;
+
+always @(negedge iCLK)
+begin
+	if (iRST) 				rMemClk <= 1'b0;
+	else if (qMemClkCke)	rMemClk <= ~rMemClk;
+	else 					rMemClk <= 1'b0;
+	
+	if (rDone)	rCapDq <= rCapDq;
+	else 		rCapDq <= {rCapDq[7:0],iMemDq[7:0]};
+end
+
+always @*
+begin
+  qMemClkCke <= (lpCmdAdrs <= rSt) ? 1'b1 : 1'b0;
+end
+
+/**----------------------------------------------------------------------------
  * ステートマシン制御ロジック & ステータス管理
  *---------------------------------------------------------------------------*/
 reg [2:0] 	rCmdCnt;
 reg 		qCmdCntCke;
+reg 		rDone;						assign oDone		= rDone;
+reg 		qDoneCke;
 
 always @(posedge iCLK)
 begin
 	if (iRST) 				rCmdCnt <= 3'd0;
 	else if (qCmdCntCke)	rCmdCnt <= rCmdCnt + 1'b1;
 	else					rCmdCnt <= 3'd0;
+	
+	if (iRST) 				rDone <= 1'b0;
+	else if (qDoneCke)		rDone <= 1'b1;
+	else					rDone <= 1'b0;
 end
 
 always @*
 begin
-	qCmdCntCke <= (rSt == lpCmdAdrs) ? 1'b1 : 1'b0;
+	qCmdCntCke	<= (rSt == lpCmdAdrs) ? 1'b1 : 1'b0;
+	qDoneCke	<= (rSt == lpComplete) ? 1'b1 : 1'b0;
 	
 	casex ({rSt, (rCmdCnt==3'd4), iSeqEn})
 		{lpIdol, 	2'bx1}:	qNectStCke <= 1'b1;

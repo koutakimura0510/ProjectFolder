@@ -35,6 +35,18 @@ static void system_initialize(void)
 	usi_write_cmd(0x2, SPI_REG_DIV);		// 動作周波数
 	usi_write_cmd(1, SPI_REG_GPIO_ALT);		// SPI 機能有効
 
+	// RAM
+	// usi_write_cmd(0x7fff, RAM_REG_HDC_WDQ);
+	// usi_write_cmd(0x01000000, RAM_REG_HDC_CMD_ADRS_L);
+	// usi_write_cmd(0x6000, RAM_REG_HDC_CMD_ADRS_H);
+	// usi_write_cmd(0x11, RAM_REG_HDC_SEQ);
+	//
+	usi_read_printf(RAM_REG_HDC_SEQ);
+	usi_read_printf(RAM_REG_HDC_SEQ);
+	usi_write_cmd(0x01000000, RAM_REG_HDC_CMD_ADRS_L);
+	usi_write_cmd(0xC000, RAM_REG_HDC_CMD_ADRS_H);
+	usi_write_cmd(0x01, RAM_REG_HDC_SEQ);
+
 	// Audio
 	// usi_write_cmd(0x020202, AUDIO_REG_SFM_CLK_DIV);		// 動作周波数
 	// usi_write_cmd(0x020202, AUDIO_REG_SFM_CS_HOLD_TIME);
@@ -50,7 +62,7 @@ static void system_initialize(void)
 	// usi_write_cmd(0x4, AUDIO_REG_SFM_ENABLE);
 
 	// Video
-//	video_color_bar();
+	video_color_bar();
 
 //	uint8_t rbuff[2048];
 //

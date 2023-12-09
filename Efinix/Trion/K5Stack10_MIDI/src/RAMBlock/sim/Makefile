@@ -8,15 +8,16 @@
 TBOUT    = tbwave.out
 
 # Tb Top Module名
-TBTOP 	 = RAMBlock_tb
+TBTOP 	 = HyperRamDeviceConfig_tb
 
 # Tb Top Module.v
-TBTOPRTL = RAMBlock_tb.v
+TBTOPRTL = HyperRamDeviceConfig_tb.v
 
 # Tb Instance.v
 TBRTL 	= ../*.v
 COMMON	= ../../common/fifo/*.v
+LIB		= /tools/efinity/2023.1/sim_models/verilog/*.v
 
 sim:
-	iverilog -o $(TBOUT) -s $(TBTOP) $(TBRTL) $(COMMON) $(TBTOPRTL)
+	iverilog -o $(TBOUT) -s $(TBTOP) $(TBRTL) $(COMMON) $(LIB) $(TBTOPRTL)
 	vvp -n $(TBOUT)
