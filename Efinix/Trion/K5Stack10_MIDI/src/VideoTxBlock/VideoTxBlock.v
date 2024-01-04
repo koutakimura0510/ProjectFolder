@@ -70,7 +70,8 @@ localparam lpVVAW = f_detect_bitwidth(pVVA);	// Video Vertical Active Width
 localparam lpVVBW = f_detect_bitwidth(pVVB);	// Video Vertical Front Width
 localparam lpVVFW = f_detect_bitwidth(pVVF);	// Video Vertical Back Width
 localparam lpVVSW = f_detect_bitwidth(pVVS);	// Video Vertical Sync Width
-localparam lpColorDepth 		= 16;
+//
+localparam lpColorDepth = 32;
 //
 wire wDmaEnableCsr;
 wire wDmaCycleEnableCsr;
@@ -82,41 +83,14 @@ wire wDmaDoneCsr;
 wire wMapXSizeCsr;
 wire wMapYSizeCsr;
 //
-wire [lpColorDepth-1:0]	wDotSquareColor1Csr;
-wire signed [lpVHAW:0] 	wDotSquareLeft1Csr;
-wire signed [lpVHAW:0] 	wDotSquareRight1Csr;
-wire signed [lpVHAW:0] 	wDotSquareTop1Csr;
-wire signed [lpVHAW:0] 	wDotSquareUnder1Csr;
-wire [lpColorDepth-1:0]	wDotSquareColor2Csr;
-wire signed [lpVHAW:0] 	wDotSquareLeft2Csr;
-wire signed [lpVHAW:0] 	wDotSquareRight2Csr;
-wire signed [lpVHAW:0] 	wDotSquareTop2Csr;
-wire signed [lpVHAW:0] 	wDotSquareUnder2Csr;
-wire [lpColorDepth-1:0]	wDotSquareColor3Csr;
-wire signed [lpVHAW:0] 	wDotSquareLeft3Csr;
-wire signed [lpVHAW:0] 	wDotSquareRight3Csr;
-wire signed [lpVHAW:0] 	wDotSquareTop3Csr;
-wire signed [lpVHAW:0] 	wDotSquareUnder3Csr;
-wire [lpColorDepth-1:0]	wDotSquareColor4Csr;
-wire signed [lpVHAW:0] 	wDotSquareLeft4Csr;
-wire signed [lpVHAW:0] 	wDotSquareRight4Csr;
-wire signed [lpVHAW:0] 	wDotSquareTop4Csr;
-wire signed [lpVHAW:0] 	wDotSquareUnder4Csr;
-wire [lpColorDepth-1:0]	wDotSquareColor5Csr;
-wire signed [lpVHAW:0] 	wDotSquareLeft5Csr;
-wire signed [lpVHAW:0] 	wDotSquareRight5Csr;
-wire signed [lpVHAW:0] 	wDotSquareTop5Csr;
-wire signed [lpVHAW:0] 	wDotSquareUnder5Csr;
-wire [lpColorDepth-1:0]	wDotSquareColor6Csr;
-wire signed [lpVHAW:0] 	wDotSquareLeft6Csr;
-wire signed [lpVHAW:0] 	wDotSquareRight6Csr;
-wire signed [lpVHAW:0] 	wDotSquareTop6Csr;
-wire signed [lpVHAW:0] 	wDotSquareUnder6Csr;
-wire [lpColorDepth-1:0]	wDotSquareColor7Csr;
-wire signed [lpVHAW:0] 	wDotSquareLeft7Csr;
-wire signed [lpVHAW:0] 	wDotSquareRight7Csr;
-wire signed [lpVHAW:0] 	wDotSquareTop7Csr;
-wire signed [lpVHAW:0] 	wDotSquareUnder7Csr;
+wire [lpColorDepth-1:0]	wDotSquareColor1Csr, wDotSquareColor2Csr, wDotSquareColor3Csr, wDotSquareColor4Csr, wDotSquareColor5Csr, wDotSquareColor6Csr, wDotSquareColor7Csr;
+wire signed [lpVHAW:0] 	wDotSquareLeft1Csr,  wDotSquareRight1Csr, wDotSquareTop1Csr,   wDotSquareUnder1Csr;
+wire signed [lpVHAW:0] 	wDotSquareLeft2Csr,  wDotSquareRight2Csr, wDotSquareTop2Csr,   wDotSquareUnder2Csr;
+wire signed [lpVHAW:0] 	wDotSquareLeft3Csr,  wDotSquareRight3Csr, wDotSquareTop3Csr,   wDotSquareUnder3Csr;
+wire signed [lpVHAW:0] 	wDotSquareLeft4Csr,  wDotSquareRight4Csr, wDotSquareTop4Csr,   wDotSquareUnder4Csr;
+wire signed [lpVHAW:0] 	wDotSquareLeft5Csr,  wDotSquareRight5Csr, wDotSquareTop5Csr,   wDotSquareUnder5Csr;
+wire signed [lpVHAW:0] 	wDotSquareLeft6Csr,  wDotSquareRight6Csr, wDotSquareTop6Csr,   wDotSquareUnder6Csr;
+wire signed [lpVHAW:0] 	wDotSquareLeft7Csr,  wDotSquareRight7Csr, wDotSquareTop7Csr,   wDotSquareUnder7Csr;
 //
 wire wSceneColorCsr;
 wire wSceneFrameTimingCsr;
@@ -157,27 +131,13 @@ VideoTxCsr #(
 	.oMapXSize(wMapXSizeCsr),
 	.oMapYSize(wMapYSizeCsr),
 	// Csr Dot Square Gen
-	.oDotSquareColor1(wDotSquareColor1Csr),
-	.oDotSquareLeft1(wDotSquareLeft1Csr),		.oDotSquareRight1(wDotSquareRight1Csr),
-	.oDotSquareTop1(wDotSquareTop1Csr),			.oDotSquareUnder1(wDotSquareUnder1Csr),
-	.oDotSquareColor2(wDotSquareColor2Csr),
-	.oDotSquareLeft2(wDotSquareLeft2Csr),		.oDotSquareRight2(wDotSquareRight2Csr),
-	.oDotSquareTop2(wDotSquareTop2Csr),			.oDotSquareUnder2(wDotSquareUnder2Csr),
-	.oDotSquareColor3(wDotSquareColor3Csr),
-	.oDotSquareLeft3(wDotSquareLeft3Csr),		.oDotSquareRight3(wDotSquareRight3Csr),
-	.oDotSquareTop3(wDotSquareTop3Csr),			.oDotSquareUnder3(wDotSquareUnder3Csr),
-	.oDotSquareColor4(wDotSquareColor4Csr),
-	.oDotSquareLeft4(wDotSquareLeft4Csr),		.oDotSquareRight4(wDotSquareRight4Csr),
-	.oDotSquareTop4(wDotSquareTop4Csr),			.oDotSquareUnder4(wDotSquareUnder4Csr),
-	.oDotSquareColor5(wDotSquareColor5Csr),
-	.oDotSquareLeft5(wDotSquareLeft5Csr),		.oDotSquareRight5(wDotSquareRight5Csr),
-	.oDotSquareTop5(wDotSquareTop5Csr),			.oDotSquareUnder5(wDotSquareUnder5Csr),
-	.oDotSquareColor6(wDotSquareColor6Csr),
-	.oDotSquareLeft6(wDotSquareLeft6Csr),		.oDotSquareRight6(wDotSquareRight6Csr),
-	.oDotSquareTop6(wDotSquareTop6Csr),			.oDotSquareUnder6(wDotSquareUnder6Csr),
-	.oDotSquareColor7(wDotSquareColor7Csr),
-	.oDotSquareLeft7(wDotSquareLeft7Csr),		.oDotSquareRight7(wDotSquareRight7Csr),
-	.oDotSquareTop7(wDotSquareTop7Csr),			.oDotSquareUnder7(wDotSquareUnder7Csr),
+	.oDotSquareColor1(wDotSquareColor1Csr),	.oDotSquareLeft1(wDotSquareLeft1Csr),	.oDotSquareRight1(wDotSquareRight1Csr),	.oDotSquareTop1(wDotSquareTop1Csr),	.oDotSquareUnder1(wDotSquareUnder1Csr),
+	.oDotSquareColor2(wDotSquareColor2Csr),	.oDotSquareLeft2(wDotSquareLeft2Csr),	.oDotSquareRight2(wDotSquareRight2Csr),	.oDotSquareTop2(wDotSquareTop2Csr),	.oDotSquareUnder2(wDotSquareUnder2Csr),
+	.oDotSquareColor3(wDotSquareColor3Csr),	.oDotSquareLeft3(wDotSquareLeft3Csr),	.oDotSquareRight3(wDotSquareRight3Csr),	.oDotSquareTop3(wDotSquareTop3Csr),	.oDotSquareUnder3(wDotSquareUnder3Csr),
+	.oDotSquareColor4(wDotSquareColor4Csr),	.oDotSquareLeft4(wDotSquareLeft4Csr),	.oDotSquareRight4(wDotSquareRight4Csr),	.oDotSquareTop4(wDotSquareTop4Csr),	.oDotSquareUnder4(wDotSquareUnder4Csr),
+	.oDotSquareColor5(wDotSquareColor5Csr),	.oDotSquareLeft5(wDotSquareLeft5Csr),	.oDotSquareRight5(wDotSquareRight5Csr),	.oDotSquareTop5(wDotSquareTop5Csr),	.oDotSquareUnder5(wDotSquareUnder5Csr),
+	.oDotSquareColor6(wDotSquareColor6Csr),	.oDotSquareLeft6(wDotSquareLeft6Csr),	.oDotSquareRight6(wDotSquareRight6Csr),	.oDotSquareTop6(wDotSquareTop6Csr),	.oDotSquareUnder6(wDotSquareUnder6Csr),
+	.oDotSquareColor7(wDotSquareColor7Csr),	.oDotSquareLeft7(wDotSquareLeft7Csr),	.oDotSquareRight7(wDotSquareRight7Csr),	.oDotSquareTop7(wDotSquareTop7Csr),	.oDotSquareUnder7(wDotSquareUnder7Csr),
 	// Scene Change
 	.oSceneColor(wSceneColorCsr),
 	.oSceneFrameTiming(wSceneFrameTimingCsr),
@@ -308,9 +268,13 @@ begin
 	qVafRe <= wVideoDE;
 end
 
-assign oVIDEO_R		= {wVafRd[15:11],3'b000};
-assign oVIDEO_G		= {wVafRd[10: 6],2'b00};
-assign oVIDEO_B		= {wVafRd[ 5: 0],3'b000};
+
+/**----------------------------------------------------------------------------
+ * Video Signals Coneect
+ *---------------------------------------------------------------------------*/
+assign oVIDEO_R		= wVafRd[23:16];
+assign oVIDEO_G		= wVafRd[15: 8];
+assign oVIDEO_B		= wVafRd[ 7: 0];
 assign oVIDEO_DCK 	= iVCLK;
 assign oVIDEO_HS 	= rVideoHS[2];
 assign oVIDEO_VS 	= rVideoVS[2];

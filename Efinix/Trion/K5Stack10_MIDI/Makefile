@@ -13,7 +13,8 @@ JTAG_PROJECT = ../JTAG_Flash_Loader
 # SIM_PROJECT = ./src/VideoTxBlock/VideoPixelGenUnit/sim
 # SIM_PROJECT = ./src/AudioTxBlock/sim
 # SIM_PROJECT = ./src/VideoTxBlock/sim
-SIM_PROJECT = ./src/RAMBlock/sim
+SIM_PROJECT = ./src/RamBlock/sim
+# SIM_PROJECT = ./src/I2cBlock/I2cSlave
 
 all: synthesis interface place pgm jtag
 

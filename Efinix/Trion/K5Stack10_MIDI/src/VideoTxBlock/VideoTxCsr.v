@@ -34,7 +34,7 @@ module VideoTxCsr #(
     parameter	pVVFW = 5,
     parameter	pVVSW = 5,
 	//
-	parameter	pColorDepth			= 16
+	parameter	pColorDepth	= 32
 )(
 	// Bus Master Read
 	output	[pUsiBusWidth-1:0] oSUsiRd,	// Read Data
@@ -360,43 +360,43 @@ begin
 		//
 		'h100:		rSUsiRd	<= {{(32 - 16				){1'b0}}, rMapXSize, rMapYSize	};
 		//
-		'h200:		rSUsiRd	<= {{(32 - pColorDepth		){1'b0}}, rDotSquareColor1	};
+		'h200:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/ rDotSquareColor1	};
 		'h201:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft1	};
 		'h202:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight1	};
 		'h203:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop1	};
 		'h204:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder1	};
-		'h205:		rSUsiRd	<= {{(32 - pColorDepth		){1'b0}}, rDotSquareColor2	};
+		'h205:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor2	};
 		'h206:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft2	};
 		'h207:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight2	};
 		'h208:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop2	};
 		'h209:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder2	};
-		'h20a:		rSUsiRd	<= {{(32 - pColorDepth		){1'b0}}, rDotSquareColor3	};
+		'h20a:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor3	};
 		'h20b:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft3	};
 		'h20c:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight3	};
 		'h20d:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop3	};
 		'h20e:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder3	};
-		'h20f:		rSUsiRd	<= {{(32 - pColorDepth		){1'b0}}, rDotSquareColor4	};
+		'h20f:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor4	};
 		'h210:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft4	};
 		'h211:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight4	};
 		'h212:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop4	};
 		'h213:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder4	};
-		'h214:		rSUsiRd	<= {{(32 - pColorDepth		){1'b0}}, rDotSquareColor5	};
+		'h214:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor5	};
 		'h215:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft5	};
 		'h216:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight5	};
 		'h217:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop5	};
 		'h218:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder5	};
-		'h219:		rSUsiRd	<= {{(32 - pColorDepth		){1'b0}}, rDotSquareColor6	};
+		'h219:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor6	};
 		'h21a:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft6	};
 		'h21b:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight6	};
 		'h21c:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop6	};
 		'h21d:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder6	};
-		'h21e:		rSUsiRd	<= {{(32 - pColorDepth		){1'b0}}, rDotSquareColor7	};
+		'h21e:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor7	};
 		'h21f:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft7	};
 		'h220:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight7	};
 		'h221:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop7	};
 		'h222:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder7	};
 		//
-		'h300:		rSUsiRd	<= {{(32 - pColorDepth		){1'b0}}, rSceneColor										};
+		'h300:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rSceneColor										};
 		'h301:		rSUsiRd	<= {{(32 - 7				){1'b0}}, rSceneFrameTiming									};
 		'h302:		rSUsiRd	<= {{(32 - 3				){1'b0}}, rSceneFrameRst,rSceneFrameSubEn,rSceneFrameAddEn	};
 		'h303:		rSUsiRd	<= {{(32 - 2				){1'b0}}, {iSceneAlphaMax,iSceneAlphaMin}					};

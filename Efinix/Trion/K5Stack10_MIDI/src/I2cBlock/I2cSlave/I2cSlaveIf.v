@@ -59,8 +59,8 @@ end
 
 always @*
 begin
-	qNextStCke[0] 	<= &{rSclSft[0] & rSclSft[1],rSdaSft[0] ^ rSdaSft[1]};
-	qNextStCke[1] 	<= &{rSclSft[0] & rSclSft[1],rSdaSft[0] ^ rSdaSft[1]};
+	qNextStCke[0] 	<= &{rSclSft == 2'b11, rSdaSft == 2'b10};
+	qNextStCke[1] 	<= &{rSclSft == 2'b11, rSdaSft == 2'b01};
 	qSclPosEdge		<=  (rSclSft == 2'b01);
 	qSclNegEdge		<=  (rSclSft == 2'b10);
 end
@@ -80,17 +80,17 @@ reg			rGetAdrs;
 always @(posedge iCLK)
 begin
 	
-	if (iRST)				rSclPosCnt	<= 4'd0;
+	if (rCoreRst)			rSclPosCnt	<= 4'd0;
 	else if (qSclPosCntMax)	rSclPosCnt	<= 4'd0;
 	else if (qSclPosEdge)	rSclPosCnt	<= rSclPosCnt + 1'b1;
 	else					rSclPosCnt	<= rSclPosCnt;
 	
-	if (iRST)				rGetAdrs	<=  1'd0;
+	if (rCoreRst)			rGetAdrs	<=  1'd0;
 	else if (qSclPosCntMax)	rGetAdrs	<= ~rGetAdrs;
 	else					rGetAdrs	<=  rGetAdrs;
 	
 	if (qSclPosCntMax)		rSdaDes		<=  rSdaDes;
-	else if (qSclPosEdge)	rSdaDes		<= {rSdaDes[6:0], iI2cSda};
+	else if (qSclPosEdge)	rSdaDes		<= {rSdaDes[6:0], ~iI2cSda};	// 不論理なので反転して取得
 	else					rSdaDes		<=  rSdaDes;
 	
 	if (rCoreRst)			rSdaVd		<= 1'b0;
@@ -113,12 +113,20 @@ reg			rSclOe;
 reg			rSda;
 reg 		rSdaOe;
 reg			qSdaOeCke;
+reg [7:0]	rSdaOeDelay;
+reg			qSdaOeDelayCke,	qSdaOeDelayRst;
+reg			qSdaOeTrg;
 
 always @(posedge iCLK)
 begin
 	rScl	<= 1'b0;
 	rSclOe	<= 1'b0;
 	rSda	<= 1'b0;
+	
+	if (rCoreRst)				rSdaOeDelay <= 8'd0;
+	else if (qSdaOeDelayRst)	rSdaOeDelay <= 8'd0;
+	else if (qSdaOeDelayCke)	rSdaOeDelay <= rSdaOeDelay + 1'b1;
+	else 						rSdaOeDelay <= rSdaOeDelay;
 	
 	if (rCoreRst)		rSdaOe	<=  1'b0;
 	else if (qSdaOeCke)	rSdaOe	<= ~rSdaOe;
@@ -127,6 +135,10 @@ end
 
 always @*
 begin
+	qSdaOeTrg		<=    rSdaOeDelay[4];
+	qSdaOeDelayCke	<= &{~qSdaOeTrg,  rSdaOe};
+	qSdaOeDelayRst	<= &{ qSdaOeTrg, ~rSdaOe};
+	
 	casex ({rSdaOe,qSclNegEdge,qSclPosCntByte})
 		3'b011:		qSdaOeCke <= 1'b1;		// Assert 
 		3'b11x:		qSdaOeCke <= 1'b1;		// Dissert
@@ -153,7 +165,7 @@ end
 assign oI2cScl		= rScl;
 assign oI2cSclOe	= rSclOe;
 assign oI2cSda 		= rSda;
-assign oI2cSdaOe 	= rSdaOe;
+assign oI2cSdaOe 	= qSdaOeTrg;
 assign oDd			= rSdaDes;
 assign oVd			= rSdaVd;
 

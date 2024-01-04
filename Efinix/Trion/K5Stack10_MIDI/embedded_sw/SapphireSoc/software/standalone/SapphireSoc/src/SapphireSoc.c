@@ -36,16 +36,17 @@ static void system_initialize(void)
 	usi_write_cmd(1, SPI_REG_GPIO_ALT);		// SPI 機能有効
 
 	// RAM
-	// usi_write_cmd(0x7fff, RAM_REG_HDC_WDQ);
-	// usi_write_cmd(0x01000000, RAM_REG_HDC_CMD_ADRS_L);
-	// usi_write_cmd(0x6000, RAM_REG_HDC_CMD_ADRS_H);
-	// usi_write_cmd(0x11, RAM_REG_HDC_SEQ);
-	//
-	usi_read_printf(RAM_REG_HDC_SEQ);
-	usi_read_printf(RAM_REG_HDC_SEQ);
-	usi_write_cmd(0x01000000, RAM_REG_HDC_CMD_ADRS_L);
+	usi_write_cmd(0x7fff, RAM_REG_HDC_WDQ);
+	usi_write_cmd(0x00040000, RAM_REG_HDC_CMD_ADRS_L);
 	usi_write_cmd(0xC000, RAM_REG_HDC_CMD_ADRS_H);
+	usi_write_cmd(0x08, RAM_REG_HDC_LC_CNT);
 	usi_write_cmd(0x01, RAM_REG_HDC_SEQ);
+	
+	usi_read_printf(RAM_REG_HDC_CAP_DQ);
+	usi_read_printf(RAM_REG_HDC_CAP_DQ);
+	// usi_write_cmd(0x01000000, RAM_REG_HDC_CMD_ADRS_L);
+	// usi_write_cmd(0xC000, RAM_REG_HDC_CMD_ADRS_H);
+	// usi_write_cmd(0x01, RAM_REG_HDC_SEQ);
 
 	// Audio
 	// usi_write_cmd(0x020202, AUDIO_REG_SFM_CLK_DIV);		// 動作周波数
@@ -130,6 +131,14 @@ static void wall_point_update(SDL_Rect *sdl, int8_t speed)
 	}
 }
 
+/**----------------------------------------------------------------------------
+ * 
+ *---------------------------------------------------------------------------*/
+uint8_t get_sw(void)
+{
+	return i2c_read();
+}
+
 
 /**-----------------------------------------------------------------------------
  * main 関数
@@ -145,18 +154,24 @@ void main()
 	SDL_Rect sdl_wall1 = {.x = 480, .w = 480+16, .y = 120, .h = 272-16,};
 
 	// video_square_draw(&sdl_bg, 0x0000, 0);		// Back Ground
-	video_square_draw(&sdl_gl, 0x44C8, 0);		// Ground Line
+	// video_square_draw(&sdl_gl, 0x00, 0);		// Ground Line
 
 	while (1) {
 		led_auto_flash(50, TIMER_REG_COUNT1);
+		uint8_t sw = get_sw();
 
-		if (true == is_wall_point()) {
-			video_square_draw(&sdl_pl, 0xf000, 1);
-			video_square_draw(&sdl_tile1, 0x44C8, 2);
-			video_square_draw(&sdl_tile2, 0x44C8, 3);
-			video_square_draw(&sdl_wall1, 0x000f, 4);
-			wall_point_update(&sdl_wall1, -2);
-		}
+		// if (true == is_wall_point()) {
+		// 	video_square_draw(&sdl_pl, 0xf000, 1);
+		// 	video_square_draw(&sdl_tile1, 0x44C8, 2);
+		// 	video_square_draw(&sdl_tile2, 0x44C8, 3);
+		// 	video_square_draw(&sdl_wall1, 0x000f, 4);
+
+		// 	if (sw & 0x04) {
+		// 		wall_point_update(&sdl_wall1, 1);
+		// 	}else if (sw & 0x02){
+		// 		wall_point_update(&sdl_wall1, -1);
+		// 	}
+		// }
 
 //			playback_time = usi_read_cmd(AUDIO_REG_SFM_ADD_ADRS_3);
 //			playback_time = (playback_time * 100) / 4100;

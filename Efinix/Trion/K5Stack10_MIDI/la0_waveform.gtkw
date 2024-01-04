@@ -1,0 +1,21 @@
+[dumpfile] "/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI/la0_waveform.vcd"
+[dumpfile_mtime] "水 12月 20 12:42:52 2023"
+[dumpfile_size] 7253
+[savefile] "/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI/la0_waveform.gtkw"
+[timestart] 0
+[size] 1000 600
+[pos] -1 -1
+*0.000000 c 1024 3072 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[signals_width] 126
+[sst_expanded] 1
+@22
+top.ioSRAMD_I[7:0]
+top.ioSRAM_RWDS_O
+top.ioSRAMD_O[7:0]
+top.ioSRAM_RWDS_OE
+top.ioSRAM_RWDS_I
+top.ioSRAMD_OE[7:0]
+top.oSRAM_nCE
+top.oSRAM_nCLK
+top.oSRAM_pCLK
+top.oSRAM_nRST

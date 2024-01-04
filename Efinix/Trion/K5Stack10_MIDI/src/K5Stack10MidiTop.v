@@ -339,9 +339,9 @@ wire [lpGpioWidth-1:0] wGPIOR_Dir;
 wire [lpGpioWidth-1:0] wGPIOR_In;
 reg  [lpGpioWidth-1:0] qGpioAltMode;
 //
-wire iI2cSclSlave;
-wire iI2cSdaSlave;
-wire oI2cOeSlave;
+wire wI2cSclSlave;
+wire wI2cSdaSlave;
+wire wI2cOeSlave;
 
 GpioBlock #(
 	.pBlockAdrsWidth(lpBlockAdrsWidth),
@@ -447,6 +447,8 @@ AudioTxBlock #(
 //-----------------------------------------------------------------------------
 // Memory Block
 //-----------------------------------------------------------------------------
+localparam lpRamDevConfIntGen = "yes";
+
 wire [lpRamDqWidth-1:0]  wSRAMD_O;
 wire [lpRamDqWidth-1:0]  wSRAMD_I;
 wire wSRAMD_OE;
@@ -459,14 +461,16 @@ wire wSRAM_nCE;
 wire wSRAM_nRST;
 wire wTestErr, wDone;
 
-RAMBlock #(
+RamBlock #(
 	.pBlockAdrsWidth(lpBlockAdrsWidth),	.pAdrsMap(lpRAMAdrsMap),
 	.pUsiBusWidth(lpUsiBusWidth),
 	.pCsrAdrsWidth(lpCsrAdrsWidth),		.pCsrActiveWidth(lpRAMCsrActiveWidth),
 	.pUfiDqBusWidth(lpUfiDqBusWidth),	.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
 	// Ram I/F
-	.pRamAdrsWidth(lpRamAdrsWidth),		.pRamDqWidth(lpRamDqWidth)
-) RAMBlock (
+	.pRamAdrsWidth(lpRamAdrsWidth),		.pRamDqWidth(lpRamDqWidth),
+	// test
+	.pDevConfIntGen(lpRamDevConfIntGen)
+) RamBlock (
   // SRAM I/F Port
 	.oSRAMD(wSRAMD_O),			.iSRAMD(wSRAMD_I),
 	.oSRAMD_OE(wSRAMD_OE),
@@ -508,9 +512,9 @@ SysTimerBlock #(
 //---------------------------------------------------------------------------
 // Video Tx Block
 //---------------------------------------------------------------------------
-wire [7:3] 	wVIDEO_R;
-wire [7:2] 	wVIDEO_G;
-wire [7:3] 	wVIDEO_B;
+wire [7:0] 	wVIDEO_R;
+wire [7:0] 	wVIDEO_G;
+wire [7:0] 	wVIDEO_B;
 wire 		wVIDEO_DCK,	wVIDEO_VS, wVIDEO_HS, wVIDEO_DE;
 wire 		wVIDEO_RST;
 
@@ -676,10 +680,10 @@ PulseGenerator #(.pDivClk(lpVclkCntMax)) VclkPulseGenerator (.oPulse(wPulseVCLK)
 always @*
 begin
   qGpioAltMode[0] <= qlocked;
-  qGpioAltMode[1] <= 1'b0;
-  qGpioAltMode[2] <= 1'b0;
-  qGpioAltMode[3] <= wPulseMCLK;
-  qGpioAltMode[4] <= wPulseVCLK;
+  qGpioAltMode[1] <= woI2cSclOe;
+  qGpioAltMode[2] <= woI2cSdaOe;
+  qGpioAltMode[3] <= wiI2cScl;
+  qGpioAltMode[4] <= wiI2cSda;
   qGpioAltMode[5] <= wPulseSCLK;
 end
 

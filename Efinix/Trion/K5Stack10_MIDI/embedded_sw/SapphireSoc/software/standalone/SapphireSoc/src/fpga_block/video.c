@@ -11,31 +11,31 @@
  *-----------------------------------------------------------------------------*/
 void video_color_bar(void)
 {
-	usi_write_cmd(0x00ff, VIDEO_REG_DOT_SQUARE_COLOR1);
+	usi_write_cmd(0x000000ff, VIDEO_REG_DOT_SQUARE_COLOR1);
 	usi_write_cmd(0, VIDEO_REG_DOT_SQUARE_LEFT1);
 	usi_write_cmd(480, VIDEO_REG_DOT_SQUARE_RIGHT1);
 	usi_write_cmd(0, VIDEO_REG_DOT_SQUARE_TOP1);
 	usi_write_cmd(45, VIDEO_REG_DOT_SQUARE_UNDER1);
 
-	usi_write_cmd(0xff00, VIDEO_REG_DOT_SQUARE_COLOR2);
+	usi_write_cmd(0x0000ff00, VIDEO_REG_DOT_SQUARE_COLOR2);
 	usi_write_cmd(0, VIDEO_REG_DOT_SQUARE_LEFT2);
 	usi_write_cmd(480, VIDEO_REG_DOT_SQUARE_RIGHT2);
 	usi_write_cmd(46, VIDEO_REG_DOT_SQUARE_TOP2);
 	usi_write_cmd(91, VIDEO_REG_DOT_SQUARE_UNDER2);
 
-	usi_write_cmd(0xf00f, VIDEO_REG_DOT_SQUARE_COLOR3);
+	usi_write_cmd(0x00100000, VIDEO_REG_DOT_SQUARE_COLOR3);
 	usi_write_cmd(0, VIDEO_REG_DOT_SQUARE_LEFT3);
 	usi_write_cmd(480, VIDEO_REG_DOT_SQUARE_RIGHT3);
 	usi_write_cmd(92, VIDEO_REG_DOT_SQUARE_TOP3);
 	usi_write_cmd(137, VIDEO_REG_DOT_SQUARE_UNDER3);
 
-	usi_write_cmd(0xf000, VIDEO_REG_DOT_SQUARE_COLOR4);
+	usi_write_cmd(0x00000000, VIDEO_REG_DOT_SQUARE_COLOR4);
 	usi_write_cmd(0, VIDEO_REG_DOT_SQUARE_LEFT4);
 	usi_write_cmd(480, VIDEO_REG_DOT_SQUARE_RIGHT4);
 	usi_write_cmd(183, VIDEO_REG_DOT_SQUARE_TOP4);
 	usi_write_cmd(228, VIDEO_REG_DOT_SQUARE_UNDER4);
 
-	usi_write_cmd(0x0f00, VIDEO_REG_DOT_SQUARE_COLOR5);
+	usi_write_cmd(0x00ff00ff, VIDEO_REG_DOT_SQUARE_COLOR5);
 	usi_write_cmd(0, VIDEO_REG_DOT_SQUARE_LEFT5);
 	usi_write_cmd(480, VIDEO_REG_DOT_SQUARE_RIGHT5);
 	usi_write_cmd(229, VIDEO_REG_DOT_SQUARE_TOP5);

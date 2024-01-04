@@ -29,7 +29,7 @@ module VideoPixelGenUnit #(
 	parameter 	pDmaAdrsWidth 		= 18,
 	parameter 	pDmaBurstLength 	= 256,
 	// Pixel
-	parameter	pColorDepth 		= 16,
+	parameter	pColorDepth 		= 32,
 	parameter	pMapChipSize 		= 32,	// マップチップの基本サイズ
 	parameter	pMapChipSft 		= f_detect_bitwidth(pMapChipSize),
 	parameter	pMapChipIdNum		= 10,	// マップチップの個数
@@ -114,7 +114,7 @@ localparam [pVVAW-1:0] lpVVA = pVVA - 1;
 // Dst Side FIFO
 // module の出力部分を FIFO I/F にすることで扱いやすくする目的
 //-----------------------------------------------------------------------------
-localparam lpPdfDepth 		= 512;
+localparam lpPdfDepth 		= 256;
 localparam lpPdfBitWidth 	= pColorDepth;
 
 reg  [lpPdfBitWidth-1:0]	qPdfWd;
@@ -232,12 +232,12 @@ PixelDrawPosition #(
 
 
 //-----------------------------------------------------------------------------
-// Demo
+// Dot Square Generator
 //-----------------------------------------------------------------------------
-wire [15:0] wDsgPd;
-wire 		wDsgPv;
-reg  [8:0]	rDlx;
-reg  [8:0]	rDrx;
+wire [pColorDepth-1:0] 	wDsgPd;
+wire 					wDsgPv;
+reg  [8:0]				rDlx;
+reg  [8:0]				rDrx;
 
 DotSquareGen #(
 	.pVHAW(pVHAW),				.pVVAW(pVVAW),
@@ -267,10 +267,17 @@ end
 
 always @*
 begin
-	qPdfWd  <= wDsgPd;
+	qPdfWd  <=  wDsgPd;
 	qPdfWe  <= ~wPdfFull;
 	qPdpCke <= ~wPdfFull;
 end
+
+/**----------------------------------------------------------------------------
+ * 各レイヤのピクセルデータ合成処理
+ *---------------------------------------------------------------------------*/
+
+
+
 
 //-----------------------------------------------------------------------------
 // キャラクター(Player,NPC)の座標データ算出

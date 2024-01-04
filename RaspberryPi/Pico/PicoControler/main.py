@@ -20,17 +20,18 @@ utime とか書き込まなくても実行できるので、対策できそう�
 
 """
 
-from machine import I2C, Pin, Timer
+import _thread
+from machine import I2C, Pin, Timer, mem32
 import PicoSw
 import L3GD20H
 import utime
-import pdb
+from I2cSlave import i2c_slave
 
 
 # ------------------------------------------------------------------------------
 # define
 # ------------------------------------------------------------------------------
-LED_BLINK_TIME = 500
+LED_BLINK_TIME = 300
 
 
 # ------------------------------------------------------------------------------
@@ -42,48 +43,80 @@ interval_timer_count = 0
 # ------------------------------------------------------------------------------
 # 割り込みタイマーの設定
 # ------------------------------------------------------------------------------
-def timer_handler(timer):
-    global interval_timer_count
-    interval_timer_count += 1
+# def timer_handler(timer):
+#     global interval_timer_count
+#     interval_timer_count += 1
 
 # ------------------------------------------------------------------------------
 # main 関数
 # ------------------------------------------------------------------------------
 def main():
-    led = Pin(25, Pin.OUT)
-    i2c = I2C(0, scl=Pin(1), sda=Pin(0), freq=100000)
-    Timer(freq=1000, mode=Timer.PERIODIC, callback=timer_handler)
-    #
-    L3GD20H.device_init(i2c)
-    print("pdb start")
-    pdb.set_trace()
-    print("pdb trace")
-    led_blink_timer = 0
-    sw_cap_timer = 0
+    print("start")
+    # Timer(freq=1000, mode=Timer.PERIODIC, callback=timer_handler)
 
-    try:
-        while True:
-
-            if led_blink_timer <= interval_timer_count:
-                led_blink_timer = interval_timer_count + LED_BLINK_TIME
-                led.toggle()
-
-            if sw_cap_timer <= interval_timer_count:
-                sw_cap_timer = interval_timer_count + 1
-                sw = PicoSw.get_sw()
-                x, y, z = L3GD20H.get_xyz_acceleration(i2c)
-                print("\r"+"X:{}, Y:{}, Z:{}".format(x,y,z),end="")
-
-                try:
-                    i2c.writeto_mem(0x10, 0x20, bytearray([sw]))
-                except:
-                    pass
-
-    except KeyboardInterrupt:
-        print("exception KeyboardInterrupt")
+    _thread.start_new_thread(core1, ())
+    core0()
 
 # ------------------------------------------------------------------------------
 # main 処理
 # ------------------------------------------------------------------------------
+def core1():
+    s_i2c = i2c_slave(1,sda=14,scl=15,slaveAddress=0x41)
+    s_i2c.intr_reg_read()
+    counter = 1
+
+    try:
+        while True:
+            try:
+                ss = s_i2c.anyRead()
+                # print(ss)
+                    # s_i2c.get()
+                # if s_i2c.any():
+                if ss:
+                    counter = counter + 1
+                    s_i2c.put(counter & 0xff)
+            except:
+                pass
+    except KeyboardInterrupt:
+        pass
+        
+def core0():
+    led = Pin(25, Pin.OUT)
+    i2c = I2C(0, scl=Pin(1), sda=Pin(0), freq=400000)
+    # L3GD20H.device_init(i2c)
+    led_blink_timer = 0
+    sw_cap_timer = 0
+    old_sw = 0
+
+    try:
+        while True:
+            # if led_blink_timer <= interval_timer_count:
+            #     led_blink_timer = interval_timer_count + LED_BLINK_TIME
+            #     led.toggle()
+
+            # if sw_cap_timer <= interval_timer_count:
+            sw_cap_timer = interval_timer_count + 1
+            sw = PicoSw.get_sw()
+            # x, y, z = L3GD20H.get_xyz_acceleration(i2c)
+            # print("\r"+"X:{}, Y:{}, Z:{}".format(x,y,z),end="")
+            # if old_sw != sw:
+                # print("%h\r",sw)
+            try:
+                # if s_i2c.anyRead():
+                # print(i2c.readfrom_mem(0x41, 0x29, 1))
+                i2c.readfrom_mem(0x41, 0x29, 1)
+                # print("%d",(i2c.readfrom_mem(0x41, 0x29, 1)))
+                # i2c.writeto_mem(0x41, 0x21, bytearray([sw]))
+                # i2c.writeto_mem(0x23, bytearray([0x00]))
+                # i2c.writeto_mem(0x23, 0x12, 0x45)
+            except:
+                pass
+                
+                # old_sw = sw
+
+    except KeyboardInterrupt:
+        pass
+
+
 if __name__ == "__main__":
     main()
