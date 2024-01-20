@@ -9,12 +9,15 @@
  *-----------------------------------------------------------------------------*/
 module HyperRamDeviceConfig (
 	// Write Side for I/O
-	output[15:0]	oMemDq,
+	output[ 7:0]	oMemDq,
 	output			oMemDqOe,
+	output			oMemRwds,
+	output			oMemRwdsOe,
 	output			oMemClk,
 	output			oMemCs,
 	// Read Side for I/O
-	input [15:0]	iMemDq,
+	input [ 7:0]	iMemDq,
+	input			iMemRwds,
 	// Internal Data
 	output[15:0]	oCapDq,			// Reg Read Data
 	input [15:0]	iWDq,
@@ -65,18 +68,23 @@ reg 		rMemClk;					assign oMemClk		= rMemClk;
 reg 		rMemCs;						assign oMemCs		= rMemCs;
 reg [47:0] 	rMemDq;						assign oMemDq		= rMemDq[47:40];
 reg 		rMemDqOe;					assign oMemDqOe		= rMemDqOe;
+reg 		rMemRwds;					assign oMemRwds		= rMemRwds;
+reg 		rMemRwdsOe;					assign oMemRwdsOe	= rMemRwdsOe;
 
 /**----------------------------------------------------------------------------
  * State Machine
  *---------------------------------------------------------------------------*/
 always @(posedge iCLK)
 begin
+	rMemRwdsOe	<= 1'b0;
+	
 	if (iRST)
 	begin
 		rSt 		<= lpIdol;
 		rMemDq		<= 48'd0;
 		rMemCs		<= 1'b1;
 		rMemDqOe	<= 1'b0;
+		rMemRwds	<= 1'b0;
 	end
 	else
 	begin
@@ -87,6 +95,7 @@ begin
 			rMemDq		<= iCmdAdrs;
 			rMemCs		<= 1'b1;
 			rMemDqOe	<= 1'b0;
+			rMemRwds	<= 1'b0;
 		end
 		
 		lpCsAssert:
@@ -95,6 +104,7 @@ begin
 			rMemDq		<= rMemDq;
 			rMemCs 		<= 1'b0;
 			rMemDqOe	<= rMemDqOe;
+			rMemRwds	<= rMemRwds;
 		end
 		
 		lpRWDS:
@@ -103,6 +113,7 @@ begin
 			rMemDq		<= rMemDq;
 			rMemCs 		<= rMemCs;
 			rMemDqOe	<= 1'b1;
+			rMemRwds	<= rMemRwds;
 		end
 		
 		lpCmdAdrs:
@@ -111,6 +122,7 @@ begin
 			rMemDq		<= qNextStCke ? {iWDq[15:8],40'd0} : {rMemDq[39:0],rMemDq[47:40]};
 			rMemCs 		<= rMemCs;
 			rMemDqOe	<= qNextStCke ? iRwCmd : rMemDqOe;
+			rMemRwds	<= rMemRwds;
 		end
 		
 		lpLcCmd:
@@ -119,6 +131,7 @@ begin
 			rMemDq		<= rMemDq;
 			rMemCs 		<= rMemCs;
 			rMemDqOe	<= iRwCmd;
+			rMemRwds	<= rMemRwds;
 		end
 		
 		lpDqSeq1:
@@ -128,6 +141,7 @@ begin
 			rMemDq[39:0]	<= rMemDq[39:0];
 			rMemCs 			<= rMemCs;
 			rMemDqOe		<= rMemDqOe;
+			rMemRwds		<= rMemRwds;
 		end
 		
 		lpDqSeq2:
@@ -137,6 +151,7 @@ begin
 			rMemDq[39:0]	<= rMemDq[39:0];
 			rMemCs 			<= rMemCs;
 			rMemDqOe		<= rMemDqOe;
+			rMemRwds		<= rMemRwds;
 		end
 		
 		lpComplete:
@@ -145,6 +160,7 @@ begin
 			rMemDq		<= rMemDq;
 			rMemCs 		<= 1'b1;
 			rMemDqOe	<= 1'b0;
+			rMemRwds	<= 1'b0;
 		end
 		
 		default:
@@ -153,6 +169,7 @@ begin
 			rMemDq		<= rMemDq;
 			rMemCs 		<= 1'b1;
 			rMemDqOe	<= 1'b0;
+			rMemRwds	<= 1'b0;
 		end
 	endcase
 	end
@@ -172,16 +189,16 @@ begin
 	
 end
 
-// always @(posedge iCLK)
-// begin
-// 	if (rDone)				rCapDq[15:8] <= rCapDq[15:8];
-// 	else if (iMemRwds)		rCapDq[15:8] <= iMemDq[7:0]; 
-// 	else 					rCapDq[15:8] <= rCapDq[15:8];
+always @(posedge iCLK)
+begin
+	if (rDone)				rCapDq[15:8] <= rCapDq[15:8];
+	else if (iMemRwds)		rCapDq[15:8] <= iMemDq[7:0]; 
+	else 					rCapDq[15:8] <= rCapDq[15:8];
 	
-// 	if (rDone)				rCapDq[7:0] <= rCapDq[7:0];
-// 	else if (!iMemRwds)		rCapDq[7:0] <= iMemDq[7:0]; 
-// 	else 					rCapDq[7:0] <= rCapDq[7:0];
-// end
+	if (rDone)				rCapDq[7:0] <= rCapDq[7:0];
+	else if (!iMemRwds)		rCapDq[7:0] <= iMemDq[7:0]; 
+	else 					rCapDq[7:0] <= rCapDq[7:0];
+end
 
 always @*
 begin

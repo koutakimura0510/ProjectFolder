@@ -22,16 +22,11 @@ module RamBlock #(
 	parameter pDevConfIntGen	= "no"
 )(
 	// SRAM I/F Port
-	output [pRamDqWidth-1:0] 		oSRAMD,
-	input  [pRamDqWidth-1:0] 		iSRAMD,
-	output 							oSRAMD_OE,				// "0" In, "1" Out
-	output 							oSRAM_RWDS,
-	input 							iSRAM_RWDS,
-	output 							oSRAM_RWDS_OE,
-	output 							oSRAM_pCLK,
-	output 							oSRAM_nCLK,
-	output 							oSRAM_nCE,
-	output 							oSRAM_nRST,
+	output	[pRamDqWidth-1:0] 		oRamDq,
+	input	[pRamDqWidth-1:0] 		iRamDq,
+	output	[1:0]					oRamDq_Oe,				// "0" In, "1" Out
+	output	[1:0]					oRamClk,
+	output	[1:0]					oRamCe,
 	// Bus Master Read
 	output [pUsiBusWidth-1:0] 		oSUsiRd,
 	// Bus Master Write
@@ -178,17 +173,12 @@ endgenerate
 //-----------------------------------------------------------------------------
 // RAM I/F
 //-----------------------------------------------------------------------------
-wire [ 7:0] wMemDq;					assign oSRAMD 		= wMemDq;
-wire 		wMemDqOe;				assign oSRAMD_OE 	= wMemDqOe;
-wire 		wMemRwds;				assign oSRAM_RWDS	= wMemRwds;
-wire 		wMemRwdsOe;				assign oSRAM_RWDS_OE= wMemRwdsOe;
-wire 		wMemClk;				assign oSRAM_pCLK	= wMemClk;
-									assign oSRAM_nCLK	= 1'b0;
-wire 		wMemCs;					assign oSRAM_nCE	= wMemCs;
-									assign oSRAM_nRST	= inSRST;
+wire [15:0] wMemDq;					assign oRamDq 		= wMemDq;
+wire 		wMemDqOe;				assign oRamDq_Oe 	= wMemDqOe;
+wire 		wMemClk;				assign oRamClk		= wMemClk;
+wire 		wMemCs;					assign oRamCe		= wMemCs;
 //
 reg [pRamDqWidth-1:0]	qHdcMemDq;
-reg						qHdcMemRwds;
 reg [15:0]				wHdcCapDq;
 reg [15:0]				qHdcWDq;
 reg [47:0]				qHdcCmdAdrs;
@@ -200,10 +190,9 @@ reg [ 3:0]				qHdcLatencyCnt;
 HyperRamDeviceConfig HyperRamDeviceConfig (
 	// memory I/F for write side
 	.oMemDq(wMemDq),		.oMemDqOe(wMemDqOe),
-	.oMemRwds(wMemRwds),	.oMemRwdsOe(wMemRwdsOe),
 	.oMemClk(wMemClk),		.oMemCs(wMemCs),
 	// memory I/F for read side
-	.iMemDq(qHdcMemDq),		.iMemRwds(qHdcMemRwds),
+	.iMemDq(qHdcMemDq),
 	// internal data
 	.oCapDq(wHdcCapDq),
 	.iWDq(qHdcWDq),			.iCmdAdrs(qHdcCmdAdrs),
@@ -219,11 +208,10 @@ if (pDevConfIntGen == "no")
 begin
 	always @*
 	begin
-		qHdcMemDq 		<= iSRAMD;
+		qHdcMemDq 		<= iRamDq;
 		qHdcCapDqCsr	<= wHdcCapDq;
 		qHdcWDq			<= wHdcWDqCsr;
 		qHdcCmdAdrs		<= wHdcCmdAdrsCsr;
-		qHdcMemRwds 	<= iSRAM_RWDS;
 		qHdcRwCmd		<= wHdcRwCmdCsr;
 		qHdcSeqEn		<= wHdcSeqEnCsr;
 		qHdcDoneCsr		<= wHdcDone;
@@ -234,11 +222,10 @@ else
 begin
 	always @*
 	begin
-		qHdcMemDq 		<= iSRAMD;
+		qHdcMemDq 		<= iRamDq;
 		qHdcCapDqCsr	<= wHdcCapDq;
 		qHdcWDq			<= 16'h1234;
 		qHdcCmdAdrs		<= 48'hC00000400000;
-		qHdcMemRwds 	<= iSRAM_RWDS;
 		qHdcRwCmd		<= 1'b0;
 		qHdcSeqEn		<= rDctSeqEn[10];
 		qDctDone		<= wHdcDone;
@@ -263,7 +250,7 @@ endgenerate
 // 	.pRamDqWidth(pRamDqWidth)
 // ) RAMIfPortUnit (
 // 	// SRAM I/F Port
-// 	.oSRAMD(oSRAMD),			.iSRAMD(iSRAMD),
+// 	.oSRAMD(oSRAMD),			.iRamDq_I(iRamDq_I),
 // 	.oSRAMD_OE(oSRAMD_OE),
 // 	.oSRAM_RWDS(oSRAM_RWDS),	.iSRAM_RWDS(iSRAM_RWDS),
 // 	.oSRAM_RWDS_OE(oSRAM_RWDS_OE),

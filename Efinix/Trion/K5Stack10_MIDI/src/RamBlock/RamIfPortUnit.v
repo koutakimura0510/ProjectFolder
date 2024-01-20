@@ -6,27 +6,22 @@
  * 
  *-----------------------------------------------------------------------------*/
 module RAMIfPortUnit #(
-	parameter pRamAdrsWidth	= 19,
-	parameter pRamDqWidth = 8
+	parameter pRamDqWidth = 16,
 )(
-	// SRAM I/F Port
-	output	[pRamDqWidth-1:0] oSRAMD,
-	input	[pRamDqWidth-1:0] iSRAMD,
-	output	oSRAMD_OE,
-	output	oSRAM_RWDS,
-	input	iSRAM_RWDS,
-	output	oSRAM_RWDS_OE,
-	output	oSRAM_pCLK,
-	output	oSRAM_nCLK,
-	output	oSRAM_nCE,
-	output	oSRAM_nRST,
+	// RAM I/F Port
+	output	[pRamDqWidth-1:0] oRawDq,
+	input	[pRamDqWidth-1:0] iRamDq,
+	output	oRamDq_OE,
+	output	oRamClk,
+	output	oRamCe,
 	// Write Port
-	input	[31:0] 	iSUfiWd,
-	input			iSUfiVd,
-	output			oSUfiRdy,
+	input	[15:0] 	iWd,
+	input	[23:0]	iWa,
+	input			iWvd,
+	output			oWRdy,
 	// Read Port
-	output	[31:0] 	oSUfiRd,
-	output			oSUfiVd,
+	output	[15:0] 	oRd,
+	output			oVd,
     // Clk Reset
 	input	iRST,
 	input	iCKE,
@@ -34,161 +29,79 @@ module RAMIfPortUnit #(
 );
 
 /**----------------------------------------------------------------------------
-  Hyper RAM はステートマシンを組んで制御する
-  CA Bit
-  47 	R/W#, 			"1" R, "0" W
-  46 	AS, 			"1" Reg空間にアクセス "0" メモリアレイにアクセス
-  45 	Burst type, 	"1" linear burst, "0" wrapped burst
-  44-16 Row/Col Adrs,	A31-3
-  15- 3 Reserved		nc
-   2- 0 Lower ColAdrs	A2-0
-   
-   Write RWDS はマスクとして機能する。"H" だとマスク、"L" だと書き込み
  *---------------------------------------------------------------------------*/
-// localparam
-// 	lpIdol		= 3'd0,
-// 	lpCsAssert	= 3'd1,
-// 	lpCmdAdrs	= 3'd2,
-// 	lplatency1	= 3'd3,	// CA RWDS "L", Memory が出力するレイテンシ期間
-// 	lplatency2	= 3'd4,	// CA RWDS "H", Memory が出力するレイテンシ期間
-// 	lpReadSeq	= 3'd5,
-// 	lpWriteSeq	= 3'd6;
+
+/**----------------------------------------------------------------------------
+ * Config Dq
+ *---------------------------------------------------------------------------*/
+localparam [3:0]
+	lpCfgMode	= 0,
+	lpIdol		= 1,
+	lpQuadAdrs	= 2,
+	lpQuadRead	= 3,
+	lpQuadWrite	= 4,
+	lpDone		= 5;
 	
-// // Ufib Control Status
-// reg rRdy;
-// reg rAdrsSpace;
-// reg rBurstType;
-// reg [7:0] rBurstLen;
-// reg [7:0] rUfibId;
-// reg rRwSel;
-// //
-// reg [2:0] 	rSt;
-// reg rMemPclk, rMemNclk;
-// reg rMemCs;
+reg [3:0]	rSt;			reg qNextSt;
+reg [10:0]	rDqCnt;
+reg [15:0] 	rRamDq;
+reg			rSeqStart;
 
-// always @(negedge iCLK)
-// begin
-// 	if (iRST)	rMemPclk <= 1'b0;
-// 	else if	()	rMemPclk <= ~rMemPclk;
-// 	else		rMemPclk <= rMemPclk;
-	
-// 	if (iRST)	rMemNclk <= 1'b0;
-// 	else if	()	rMemNclk <= ~rMemNclk;
-// 	else		rMemNclk <=  rMemNclk;
-// end
+always @(posedge iCLK)
+begin
+	if (iRST)
+	begin
+		rSt <= lpCfgMode;
+	end
+	else
+	begin
+		case (rSt)
+			lpCfgMode:
+			begin
+				rSt <= qNextSt ? lpIdol : lpCfgMode;
+			end
+			
+			lpIdol:
+			begin
+				rSt <= qNextSt ? : lpCfgMode;
+			end
+			
+			lpQuadAdrs:
+			begin
+				
+			end
+			
+			lpQuadRead:
+			begin
+				
+			end
+			
+			lpQuadWrite:
+			begin
+				
+			end
+			
+			lpDone:
+			begin
+				
+			end
+			
+			default: 
+			begin
+				
+			end
+		endcase
+	end
+	if (wCfgDone) 	rRamDq <= 16'h0035;
+	else			rRamDq <= iWd;
+end
 
-// always @(posedge iCLK)
-// begin
-// 	if (iRST)	rMemCs <= 1'b1;
-// 	else if ()	rMemCs <= ~rMemCs;
-// 	else		rMemCs <=  rMemCs;
-	
-// 	if (iRST)
-// 	begin
-// 		rAdrsSpace	<= ;
-// 		rBurstType	<= ;
-// 		rBurstLen	<= ;
-// 		rUfibId		<= ;
-// 	end
-// 	else if (qUfib1stPacketGet)
-// 	begin
-// 		rAdrsSpace	<= irAdrsSpace;
-// 		rBurstType	<= rBurstType;
-// 		rBurstLen	<= rBurstLen;
-// 		rUfibId		<= rUfibId;
-// 	end
-// 	else
-// 	begin
-// 		rAdrsSpace	<= rAdrsSpace;
-// 		rBurstType	<= rBurstType;
-// 		rBurstLen	<= rBurstLen;
-// 		rUfibId		<= rUfibId;
-// 	end
-	
-// 	if (iRST)
-// 	begin
-// 		rSt 	<= lpIdol;
-// 		rRdy	<= 1'b0;
-// 		rRwSel	<= 1'b0;
-// 	end
-// 	else
-// 	begin
-// 	case (rSt)
-// 		lpIdol:
-// 		begin
-// 			rRdy	<= 1'b1;
-// 			rSt 	<= qNectStCke ? lpCsAssert : lpIdol;
-// 		end
-		
-// 		lpCsAssert:
-// 		begin
-// 			rSt <= lpCmdAdrs;
-// 		end
-		
-// 		lpCmdAdrs:
-// 		begin
-			
-// 		end
-		
-// 		lplatency1:
-// 		begin
-			
-// 		end
-		
-// 		lplatency2:
-// 		begin
-			
-// 		end
-		
-// 		lpReadSeq:
-// 		begin
-			
-// 		end
-		
-// 		lpWriteSeq:
-// 		begin
-			
-// 		end
-		
-// 		default:
-// 		begin
-			
-// 		end
-// 	endcase
-// 	end
-	
-// 	rAdrs 	<= iAdrs;
-// 	rWd 	<= iWd;
 
-// 	if (iCKE)
-// 	begin
-// 		rOE <= ~iCmd;
-// 		rWE <=  iCmd;
-// 		rCE <=  1'b0;
-// 	end
-// 	else
-// 	begin
-// 		rOE <= 1'b1;
-// 		rWE <= 1'b0;
-// 		rCE <= 1'b1;
-// 	end
+assign oRawDq	 = iRamDq;
+assign oRamDq_OE = 1'b0;
+assign oRamClk	 = 1'b0;
+assign oRamCe	 = 1'b0;
 
-// 	if (rWE) rRd <= iSRAMD;
-// 	else  	 rRd <= rRd;
-
-// 	if (iRST)		rRvd <= 1'b0;
-// 	else if (rWE) 	rRvd <= 1'b1;
-// 	else  			rRvd <= 1'b0;
-// end
-
-assign oSRAMA = 0;
-assign oSRAMD = 0;
-assign oSRAM_OE = 1'b1;
-assign oSRAM_RWDS = 1'b1;
-assign oSRAM_pCLK = 1'b1;
-assign oSRAM_nCLK = 1'b1;
-assign oSRAM_nCE = 1'b1;
-assign oSRAM_nRST = 1'b1;
 assign oRd = 0;
 assign oRvd = 0;
 

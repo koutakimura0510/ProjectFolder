@@ -116,7 +116,6 @@ begin
 		rSfmIoHiz		<= qCsrWCke00 	? iSUsiWd[pSfmNum-1:0] 		: rSfmIoHiz;
 		rSfmEn[0]		<= iSfmDone[0]	? rSfmCycleEn[0]			: qCsrWCke04 ? iSUsiWd[0] 	: rSfmEn[0];
 		rSfmEn[1]		<= iSfmDone[1]	? rSfmCycleEn[1]			: qCsrWCke04 ? iSUsiWd[1] 	: rSfmEn[1];
-		rSfmEn[2]		<= iSfmDone[2]	? rSfmCycleEn[2]			: qCsrWCke04 ? iSUsiWd[2] 	: rSfmEn[2];
 		rSfmCycleEn		<= qCsrWCke08 	? iSUsiWd[pSfmNum-1:0] 		: rSfmCycleEn;
 		rSfmDiv			<= qCsrWCke0C 	? iSUsiWd[pSfmNum*8-1:0]	: rSfmDiv;
 		rSfmCsHoldTime	<= qCsrWCke10 	? iSUsiWd[pSfmNum*8-1:0]  	: rSfmCsHoldTime;
@@ -124,18 +123,14 @@ begin
 		rSfmCpuWd[ 0+:8]<= qCsrWCke14 		? iSUsiWd[pSfmNum*8-1:0]  	: rSfmCpuWd[ 0+:8];
 		rSfmCpuEn[0]	<= iSfmCpuDone[0]	? 1'b0						: qCsrWCke18 	? iSUsiWd[0]  	: rSfmCpuEn[0];
 		rSfmCpuEn[1]	<= iSfmCpuDone[1]	? 1'b0						: qCsrWCke18 	? iSUsiWd[1]  	: rSfmCpuEn[1];
-		rSfmCpuEn[2]	<= iSfmCpuDone[2]	? 1'b0						: qCsrWCke18 	? iSUsiWd[2]  	: rSfmCpuEn[2];
 		rSfmCpuCsCtrl	<= qCsrWCke1C 		? iSUsiWd[pSfmNum-1:0]  	: rSfmCpuCsCtrl;
 		rSfmCpuValid	<= qCsrWCke20 		? iSUsiWd[pSfmNum-1:0]  	: rSfmCpuValid;
 		rSfmCpuWd[ 8+:8]<= qCsrWCke24 		? iSUsiWd[pSfmNum*8-1:0]  	: rSfmCpuWd[ 8+:8];
-		rSfmCpuWd[16+:8]<= qCsrWCke28 		? iSUsiWd[pSfmNum*8-1:0]  	: rSfmCpuWd[16+:8];
 		//
 		rSfmCpuRd[ 0+:8]<= iSfmCpuDone[0]	? iSfmCpuRd[ 0+:8]		: rSfmCpuRd[ 0+:8];
 		rSfmCpuRd[ 8+:8]<= iSfmCpuDone[1]	? iSfmCpuRd[ 8+:8]		: rSfmCpuRd[ 8+:8];
-		rSfmCpuRd[16+:8]<= iSfmCpuDone[2]	? iSfmCpuRd[16+:8]		: rSfmCpuRd[16+:8];
 		rSfmDone[0]		<= iSfmCpuDone[0]	? 1'b1 					: qCsrWCke30 ? 1'b0 : rSfmDone[0];
 		rSfmDone[1]		<= iSfmCpuDone[1]	? 1'b1 					: qCsrWCke30 ? 1'b0 : rSfmDone[1];
-		rSfmDone[2]		<= iSfmCpuDone[2]	? 1'b1 					: qCsrWCke30 ? 1'b0 : rSfmDone[2];
 		//
 		rAacCpuWd[15:0]	<= qCsrWCke34 ? iSUsiWd[15:0]	: rAacCpuWd[15:0];
 		rAacCpuWe		<= qCsrWCke38 ? iSUsiWd[1:0]	: rAacCpuWe;
@@ -144,8 +139,6 @@ begin
 		rSfmEndAdrs		[ 0+:pSfmPageWidth]	<= qCsrWCke64 	? iSUsiWd[pSfmPageWidth-1:0]	: rSfmEndAdrs	[ 0+:pSfmPageWidth];
 		rSfmStartAdrs	[16+:pSfmPageWidth]	<= qCsrWCke68 	? iSUsiWd[pSfmPageWidth-1:0]	: rSfmStartAdrs	[16+:pSfmPageWidth];
 		rSfmEndAdrs		[16+:pSfmPageWidth]	<= qCsrWCke6C 	? iSUsiWd[pSfmPageWidth-1:0]	: rSfmEndAdrs	[16+:pSfmPageWidth];
-		rSfmStartAdrs	[32+:pSfmPageWidth]	<= qCsrWCke70 	? iSUsiWd[pSfmPageWidth-1:0]	: rSfmStartAdrs	[32+:pSfmPageWidth];
-		rSfmEndAdrs		[32+:pSfmPageWidth]	<= qCsrWCke74 	? iSUsiWd[pSfmPageWidth-1:0]	: rSfmEndAdrs	[32+:pSfmPageWidth];
 	end
 end
 
@@ -169,8 +162,6 @@ begin
 	qCsrWCke64 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0064});
 	qCsrWCke68 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0068});
 	qCsrWCke6C <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h006C});
-	qCsrWCke70 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0070});
-	qCsrWCke74 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0074});
 end
 
 
@@ -193,7 +184,6 @@ begin
 		'h1C:	 rSUsiRd <= {{(32 - pSfmNum			){1'b0}}, rSfmCpuCsCtrl};
 		'h20:	 rSUsiRd <= {{(32 - pSfmNum			){1'b0}}, rSfmCpuValid};
 		'h24:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuWd[ 8+:8]};
-		'h28:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuWd[16+:8]};
 		'h30:	 rSUsiRd <= {{(32 - pSfmNum			){1'b0}}, rSfmDone};
 		'h34:	 rSUsiRd <= {{(32 - 16				){1'b0}}, rAacCpuWd};
 		'h38:	 rSUsiRd <= {{(32 - 1				){1'b0}}, rAacCpuWe};
@@ -201,15 +191,11 @@ begin
 		'h64:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmEndAdrs	[ 0+:pSfmPageWidth]};
 		'h68:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmStartAdrs	[16+:pSfmPageWidth]};
 		'h6C:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmEndAdrs	[16+:pSfmPageWidth]};
-		'h70:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmStartAdrs	[32+:pSfmPageWidth]};
-		'h74:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, rSfmEndAdrs	[32+:pSfmPageWidth]};
 		'h90:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuRd		[ 0+:8]};
 		'h94:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuRd		[ 8+:8]};
-		'h98:	 rSUsiRd <= {{(32 - 8				){1'b0}}, rSfmCpuRd		[16+:8]};
 		'h9C:	 rSUsiRd <= {{(32 - 31				){1'b0}}, iAacAlert};
 		'hA0:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, iSfmAdrsAdd	[ 0+:pSfmPageWidth]};
 		'hA4:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, iSfmAdrsAdd	[16+:pSfmPageWidth]};
-		'hA8:	 rSUsiRd <= {{(32 - pSfmPageWidth	){1'b0}}, iSfmAdrsAdd	[32+:pSfmPageWidth]};
 		default: rSUsiRd <= iSUsiWd;
 	endcase
 end

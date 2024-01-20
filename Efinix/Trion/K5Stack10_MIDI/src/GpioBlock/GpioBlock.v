@@ -13,24 +13,23 @@ module GpioBlock #(
 	parameter pGpioWidth = 16
 )(
 	// GPIO Output Ctrl
-	output [pGpioWidth-1:0] 	oGpioR,
-	output [pGpioWidth-1:0] 	oGpioDir,
+	output	[pGpioWidth-1:0] 	oGpio,
+	output	[pGpioWidth-1:0] 	oGpioDir,
 	// GPIO Alt Mode Signal
-	input  [pGpioWidth-1:0] 	iGpioAltMode,
+	input	[pGpioWidth-1:0] 	iGpioAltMode,
 	// GPIO Input
-	input  [pGpioWidth-1:0] 	iGpioIn,
-	//
-	input 						iI2cSclSlave,
-	input 						iI2cSdaSlave,
-	output						oI2cOeSlave,
+	input	[pGpioWidth-1:0] 	iGpioIn,
+	// User I/F
+	input	[6:0]				iPushSw,
+	input	[1:0]				iDipSw,
 	// Bus Master Read
-	output [pUsiBusWidth-1:0] 	oSUsiRd,
+	output	[pUsiBusWidth-1:0] 	oSUsiRd,
 	// Bus Master Write
-	input  [pUsiBusWidth-1:0] 	iSUsiWd,
-	input  [pUsiBusWidth-1:0] 	iSUsiAdrs,
+	input	[pUsiBusWidth-1:0] 	iSUsiWd,
+	input	[pUsiBusWidth-1:0] 	iSUsiAdrs,
     // CLK Reset
-    input  iSCLK,
-    input  iSRST
+    input	iSCLK,
+    input	iSRST
 );
 
 //----------------------------------------------------------
@@ -61,25 +60,19 @@ GpioCsr #(
 );
 
 
-//-----------------------------------------------------------------------------
-// I2C Slave
-//-----------------------------------------------------------------------------
-localparam lpI2cSlaveAdrs = 7'h20;
-
-
 
 //-----------------------------------------------------------------------------
 // IO Part
 //-----------------------------------------------------------------------------
 genvar gpioX;
-reg [pGpioWidth-1:0] rGpioR; 		assign oGpioR = rGpioR;
+reg [pGpioWidth-1:0] rGpio; 		assign oGpio = rGpio;
 
 generate
 	for (gpioX = 0; gpioX < pGpioWidth; gpioX = gpioX + 1)
 	begin
 		always @(posedge iSCLK)
 		begin
-			rGpioR[gpioX] <= wGpioAltModeCsr[gpioX] ? iGpioAltMode[gpioX] : wGpioOutCtrl[gpioX];
+			rGpio[gpioX] <= wGpioAltModeCsr[gpioX] ? iGpioAltMode[gpioX] : wGpioOutCtrl[gpioX];
 		end
 	end
 endgenerate

@@ -209,10 +209,9 @@ always @*
 begin
 	qArrRd[0] 	<=   wArrRvd[0] ? wArrRd[0] : 16'd0;
 	qArrRd[1] 	<=   wArrRvd[1] ? wArrRd[1] : 16'd0;
-	qArrRd[2] 	<=   wArrRvd[2] ? wArrRd[2] : 16'd0;
 	// qAacWd		<=   {16'd0,qArrRd[2]};
 	// qAacWd		<=   {16'd0,wAacCpuWdCsr};
-	qAacWd		<=   qArrRd[0]  + qArrRd[1] + qArrRd[2];
+	qAacWd		<=   qArrRd[0]  + qArrRd[1];
 	qAacWe		<= |{wArrRvd};
 	// qAacWe		<= 	 wArrRvd[2];
 	// qAacWe		<=  rGlueWe;

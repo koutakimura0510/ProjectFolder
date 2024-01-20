@@ -8,39 +8,35 @@
  * 23-09-02 v1.01: SynthesizerBlock から AudioTxBlock へ変更
  * 23-09-17 v2.00: K5Stack10-v2 に更新のためピンアサイン変更
  * 23-10-15 v2.01: HyperRAMに対応するため、SCLK を 50MHz->100MHz に変更
- * 24-01-17 v3.00: K5Stack10-v3 に更新のためピンアサイン変更,命名規則更新
  *
  *-----------------------------------------------------------------------------*/  
 module K5Stack10MidiTop(
-	// Pin Header GPIO
-	input   [37:0]	ioGpio_I,
-	output  [37:0]	ioGpio_O,
-	output  [37:0]	ioGpio_OE,
-	// Ext RAM
-	input	[15:0]	ioRamDq_I,
-	output	[15:0]	ioRamDq_O,
-	output	[15:0]	ioRamDq_OE,
-	output	[1:0]	oRamClk,
-	output	[1:0]	oRamCe,
-	// Ext ROM
-	input	[7:0]	ioSpiRomDq_I,
-	output	[7:0]	ioSpiRomDq_O,
-	output	[7:0]	ioSpiRomDq_OE,
-	output	[1:0]	oSpiRomClk,
-	output	[1:0]	oSpiRomCe,
-	// Ext User I/F
-	input	[6:0]	iPushSw,
-	input	[1:0]	iDipSw,
-	output	[3:0]	oLed,
-	// USB I/F
-	input	iUsbRx,
-	output	oUsbTx,
-	input	ioI2cScl_I,
-	output	ioI2cScl_O,
-	output	ioI2cScl_OE,
-	input	ioI2cSda_I,
-	output	ioI2cSda_O,
-	output	ioI2cSda_OE,
+	// GPIOL
+	input   [16:0] ioGPIOL_I,
+	output  [16:0] ioGPIOL_O,
+	output  [16:0] ioGPIOL_OE,
+	// GPIOR
+	input   [20:0] ioGPIOR_I,
+	output  [20:0] ioGPIOR_O,
+	output  [20:0] ioGPIOR_OE,
+	// GPIOB
+	input   [23:0] ioGPIOB_I,
+	output  [23:0] ioGPIOB_O,
+	output  [23:0] ioGPIOB_OE,
+	// SRAM
+	input	[7:0] ioSRAMD_I,
+	output	[7:0] ioSRAMD_O,
+	output	[7:0] ioSRAMD_OE,
+	input	ioSRAM_RWDS_I,
+	output	ioSRAM_RWDS_O,
+	output	ioSRAM_RWDS_OE,
+	output	oSRAM_pCLK,
+	output	oSRAM_nCLK,
+	output	oSRAM_nCE,
+	output	oSRAM_nRST,
+	// USB UART
+	input	iUSB_RX,
+	output	oUSB_TX,
 	// External OSC
 	input	iOSC_IN,
 	// PLL BR0
@@ -218,7 +214,7 @@ endgenerate
 // UFI/F BUS
 //----------------------------------------------------------
 localparam  lpRamAdrsWidth    		= 24;		// 外部 RAM の Adrs 領域
-localparam  lpRamDqWidth      		= 16;		// 外部 RAM の Dq 端子数
+localparam  lpRamDqWidth      		= 8;		// 外部 RAM の Dq 端子数
 localparam  lpDmaAdrsWidth    		= lpRamAdrsWidth;
 localparam  lpUfiDqBusWidth   		= 16;		// UFIB データ幅
 localparam  lpUfiAdrsBusWidth 		= 32;		// UFIB アドレス幅
@@ -337,14 +333,15 @@ MicroControllerBlock #(
 //-----------------------------------------------------------------------------
 // GPIO Block
 //-----------------------------------------------------------------------------
-localparam lpGpioWidth = 4;
-wire [lpGpioWidth-1:0] wGpio_O;
-wire [lpGpioWidth-1:0] wGpio_Dir;
-wire [lpGpioWidth-1:0] wGpio_In;
+localparam lpGpioWidth = 6;
+wire [lpGpioWidth-1:0] wGPIOR_O;
+wire [lpGpioWidth-1:0] wGPIOR_Dir;
+wire [lpGpioWidth-1:0] wGPIOR_In;
 reg  [lpGpioWidth-1:0] qGpioAltMode;
 //
-wire [6:0] wPushSw;
-wire [1:0] wDipSw;
+wire wI2cSclSlave;
+wire wI2cSdaSlave;
+wire wI2cOeSlave;
 
 GpioBlock #(
 	.pBlockAdrsWidth(lpBlockAdrsWidth),
@@ -355,15 +352,16 @@ GpioBlock #(
 	.pGpioWidth(lpGpioWidth)
 ) GpioBlock (
 	// GPIO Output Ctrl
-	.oGpio(wGpio_O),
-	.oGpioDir(wGpio_Dir),
+	.oGpioR(wGPIOR_O),
+	.oGpioDir(wGPIOR_Dir),
 	// GPIO Alt Mode
 	.iGpioAltMode(qGpioAltMode),
 	// GPIO Input
-	.iGpioIn(wGpio_In),
-	// User I/F
-	.iPushSw(wPushSw),
-	.iDipSw(wDipSw),
+	.iGpioIn(wGPIOR_In),
+	// I2C Slave
+	.iI2cSclSlave(wI2cSclSlave),
+	.iI2cSdaSlave(wI2cSdaSlave),
+	.oI2cOeSlave(wI2cOeSlave),
 	// Bus Master Read
 	.oSUsiRd(wSUsiRd[lpGpioAdrsMap]),
 	// Bus Master Write
@@ -382,9 +380,9 @@ wire [1:0] wFlashSpiOe;
 wire wIoSpiDir;
 
 SPIBlock #(
-	.pBlockAdrsWidth(lpBlockAdrsWidth),		.pAdrsMap(lpSPIAdrsMap),
-	.pUsiBusWidth(lpUsiBusWidth),			.pCsrAdrsWidth(lpCsrAdrsWidth),
-	.pCsrActiveWidth(lpSPICsrActiveWidth)
+  .pBlockAdrsWidth(lpBlockAdrsWidth),	.pAdrsMap(lpSPIAdrsMap),
+  .pUsiBusWidth(lpUsiBusWidth),			.pCsrAdrsWidth(lpCsrAdrsWidth),
+  .pCsrActiveWidth(lpSPICsrActiveWidth)
 ) SPIBlock (
 	// SPI Bus Connected External CPU
 	.iSpiSck(wSlaveSck),		.iSpiMosi(wSlaveMosi),
@@ -413,7 +411,7 @@ SPIBlock #(
 //-----------------------------------------------------------------------------
 // Sound Generate
 //-----------------------------------------------------------------------------
-localparam lpSfcNum = 2;		// Serial Flash Memory Number
+localparam lpSfcNum = 3;	// Serial Flash Memory Number
 
 wire wI2sMclk;
 wire wI2sBclk;
@@ -451,11 +449,15 @@ AudioTxBlock #(
 //-----------------------------------------------------------------------------
 localparam lpRamDevConfIntGen = "yes";
 
-wire [lpRamDqWidth-1:0]  wRamDq_O;
-wire [lpRamDqWidth-1:0]  wRamDq_I;
-wire [1:0] wRamDq_Oe;
-wire [1:0] wRamClk;
-wire [1:0] wRamCe;
+wire [lpRamDqWidth-1:0]  wSRAMD_O;
+wire [lpRamDqWidth-1:0]  wSRAMD_I;
+wire wSRAMD_OE;
+wire wSRAM_RWDS_O;
+wire wSRAM_RWDS_I;
+wire wSRAM_RWDS_OE;
+wire wSRAM_pCLK;
+wire wSRAM_nCLK;
+wire wSRAM_nCE;
 wire wSRAM_nRST;
 wire wTestErr, wDone;
 
@@ -470,8 +472,12 @@ RamBlock #(
 	.pDevConfIntGen(lpRamDevConfIntGen)
 ) RamBlock (
   // SRAM I/F Port
-	.oRamDq(wRamDq_O),		.iRamDq(wRamDq_I),		.oRamDq_Oe(wRamDq_Oe),
-	.oRamClk(wRamClk),		.oRamCe(wRamCe),
+	.oSRAMD(wSRAMD_O),			.iSRAMD(wSRAMD_I),
+	.oSRAMD_OE(wSRAMD_OE),
+	.oSRAM_RWDS(wSRAM_RWDS_O),	.iSRAM_RWDS(wSRAM_RWDS_I),
+	.oSRAM_RWDS_OE(wSRAM_RWDS_OE),
+	.oSRAM_pCLK(wSRAM_pCLK),	.oSRAM_nCLK(wSRAM_nCLK),
+	.oSRAM_nCE(wSRAM_nCE),		.oSRAM_nRST(wSRAM_nRST),
 	// Usi Bus Master Read
 	.oSUsiRd(wSUsiRd[lpRAMAdrsMap]),
 	// Usi Bus Master Write
@@ -579,84 +585,84 @@ I2cBlock #(
 // 階層を深くせずソースの修正が簡単にすることを目的として Top module に接続する仕様にした
 // OE "0"=Input, "1"=Output
 //-----------------------------------------------------------------------------
-// GPIO Header
-wire [37:0] wGpioIn;
-assign ioGpio_O[0]	= wVIDEO_RST;		assign  wGpioIn[0] 	= ioGpio_I[0];		assign ioGpio_OE[0]		= 1'b1;
-assign ioGpio_O[1]	= wVIDEO_DCK;		assign  wGpioIn[1] 	= ioGpio_I[1];		assign ioGpio_OE[1]		= 1'b1;
-assign ioGpio_O[2]	= wVIDEO_B[6];		assign  wGpioIn[2]	= ioGpio_I[2];		assign ioGpio_OE[2]		= 1'b1;
-assign ioGpio_O[3]	= wVIDEO_B[7];		assign  wGpioIn[3]	= ioGpio_I[3];		assign ioGpio_OE[3]		= 1'b1;
-assign ioGpio_O[4]	= wVIDEO_B[4];		assign  wGpioIn[4]	= ioGpio_I[4];		assign ioGpio_OE[4]		= 1'b1;
-assign ioGpio_O[5]	= wVIDEO_B[5];		assign  wGpioIn[5]	= ioGpio_I[5];		assign ioGpio_OE[5]		= 1'b1;
-assign ioGpio_O[6]	= wVIDEO_B[3];		assign  wGpioIn[6]	= ioGpio_I[6];		assign ioGpio_OE[6]		= 1'b1;
-assign ioGpio_O[7]	= wVIDEO_B[2];		assign  wGpioIn[7]	= ioGpio_I[7];		assign ioGpio_OE[7]		= 1'b1;
-assign ioGpio_O[8]	= wVIDEO_B[1];		assign  wGpioIn[8]	= ioGpio_I[8];		assign ioGpio_OE[8]		= 1'b1;
-assign ioGpio_O[9]	= wVIDEO_B[0];		assign  wGpioIn[9]	= ioGpio_I[9];		assign ioGpio_OE[9]		= 1'b1;
-assign ioGpio_O[10]	= wVIDEO_G[7];		assign  wGpioIn[10]	= ioGpio_I[10];		assign ioGpio_OE[10]	= 1'b1;
-assign ioGpio_O[11]	= wVIDEO_G[6];		assign  wGpioIn[11]	= ioGpio_I[11];		assign ioGpio_OE[11]	= 1'b1;
-assign ioGpio_O[12]	= wVIDEO_G[5];		assign  wGpioIn[12]	= ioGpio_I[12];		assign ioGpio_OE[12]	= 1'b1;
-assign ioGpio_O[13]	= wVIDEO_G[4];		assign  wGpioIn[13]	= ioGpio_I[13];		assign ioGpio_OE[13]	= 1'b1;
-assign ioGpio_O[14]	= wVIDEO_G[3];		assign  wGpioIn[14]	= ioGpio_I[14];		assign ioGpio_OE[14]	= 1'b1;
-assign ioGpio_O[15]	= wVIDEO_G[2];		assign  wGpioIn[15]	= ioGpio_I[15];		assign ioGpio_OE[15]	= 1'b1;
-assign ioGpio_O[16]	= wVIDEO_G[1];		assign  wGpioIn[16]	= ioGpio_I[16];		assign ioGpio_OE[16]	= 1'b1;
-assign ioGpio_O[17]	= wVIDEO_G[0];		assign  wGpioIn[17]	= ioGpio_I[17];		assign ioGpio_OE[17]	= 1'b1;
-assign ioGpio_O[18]	= wI2sMclk;			assign  wGpioIn[18]	= ioGpio_I[18];		assign ioGpio_OE[18]	= 1'b1;
-assign ioGpio_O[19]	= wI2sBclk;			assign  wGpioIn[19]	= ioGpio_I[19];		assign ioGpio_OE[19]	= 1'b1;
-assign ioGpio_O[20]	= wI2sSdata;		assign  wGpioIn[20]	= ioGpio_I[20];		assign ioGpio_OE[20]	= 1'b1;
-assign ioGpio_O[21]	= wI2sLrclk;		assign  wGpioIn[21]	= ioGpio_I[21];		assign ioGpio_OE[21]	= 1'b1;
-assign ioGpio_O[22]	= wVIDEO_R[6];		assign  wGpioIn[22]	= ioGpio_I[22];		assign ioGpio_OE[22]	= 1'b1;
-assign ioGpio_O[23]	= wVIDEO_R[7];		assign  wGpioIn[23]	= ioGpio_I[23];		assign ioGpio_OE[23]	= 1'b1;
-assign ioGpio_O[24]	= wVIDEO_DE;		assign  wGpioIn[24]	= ioGpio_I[24];		assign ioGpio_OE[24]	= 1'b1;
-assign ioGpio_O[25]	= wVIDEO_HS;		assign  wGpioIn[25]	= ioGpio_I[25];		assign ioGpio_OE[25]	= 1'b1;
-assign ioGpio_O[26]	= wVIDEO_VS;		assign  wGpioIn[26]	= ioGpio_I[26];		assign ioGpio_OE[26]	= 1'b1;
-assign ioGpio_O[27]	= 1'b0;				assign  wGpioIn[27]	= ioGpio_I[27];		assign ioGpio_OE[27]	= 1'b0;
-assign ioGpio_O[28]	= wVIDEO_R[0];		assign  wGpioIn[28]	= ioGpio_I[28];		assign ioGpio_OE[28]	= 1'b1;
-assign ioGpio_O[29]	= wVIDEO_R[2];		assign  wGpioIn[29]	= ioGpio_I[29];		assign ioGpio_OE[29]	= 1'b1;
-assign ioGpio_O[30]	= 1'b0;				assign  wGpioIn[30]	= ioGpio_I[30];		assign ioGpio_OE[30]	= 1'b0;
-assign ioGpio_O[31]	= 1'b0;				assign  wGpioIn[31]	= ioGpio_I[31];		assign ioGpio_OE[31]	= 1'b0;
-assign ioGpio_O[32]	= 1'b0;				assign  wGpioIn[32]	= ioGpio_I[32];		assign ioGpio_OE[32]	= 1'b0;
-assign ioGpio_O[33]	= 1'b0;				assign  wGpioIn[33]	= ioGpio_I[33];		assign ioGpio_OE[33]	= 1'b0;
-assign ioGpio_O[34]	= wVIDEO_R[3];		assign  wGpioIn[34]	= ioGpio_I[34];		assign ioGpio_OE[34]	= 1'b1;
-assign ioGpio_O[35]	= wVIDEO_R[4];		assign  wGpioIn[35]	= ioGpio_I[35];		assign ioGpio_OE[35]	= 1'b1;
-assign ioGpio_O[36]	= wVIDEO_R[5];		assign  wGpioIn[36]	= ioGpio_I[36];		assign ioGpio_OE[36]	= 1'b1;
-assign ioGpio_O[37]	= wVIDEO_R[1];		assign  wGpioIn[37]	= ioGpio_I[37];		assign ioGpio_OE[37]	= 1'b1;
-//
-// User I/F
-assign wPushSw		= iPushSw;
-assign wDipSw		= iDipSw;
-assign oLed[0]		= wGpio_O[0];
-assign oLed[1]		= wGpio_O[1];
-assign oLed[2]		= wGpio_O[2];
-assign oLed[3]		= wGpio_O[3];
-//
-// External ROM / QSPI は後々対応
-wire [7:0] wSpiRomDqNot;
-assign ioSpiRomDq_O[0]	= wSfmMosi[0];		assign wSpiRomDqNot[0]	= ioSpiRomDq_I[0];	assign ioSpiRomDq_OE[0]	= 1'b1;
-assign ioSpiRomDq_O[1]	= 1'b0;				assign wSfmMiso[0]		= ioSpiRomDq_I[1];	assign ioSpiRomDq_OE[1]	= 1'b0;
-assign ioSpiRomDq_O[2]	= 1'b0;				assign wSpiRomDqNot[2]	= ioSpiRomDq_I[2];	assign ioSpiRomDq_OE[2]	= 1'b0;
-assign ioSpiRomDq_O[3]	= 1'b0;				assign wSpiRomDqNot[3]	= ioSpiRomDq_I[3];	assign ioSpiRomDq_OE[3]	= 1'b0;
-assign ioSpiRomDq_O[4]	= wSfmMosi[1];		assign wSpiRomDqNot[4]	= ioSpiRomDq_I[4];	assign ioSpiRomDq_OE[4]	= 1'b1;
-assign ioSpiRomDq_O[5]	= 1'b0;				assign wSfmMiso[1]		= ioSpiRomDq_I[5];	assign ioSpiRomDq_OE[5]	= 1'b0;
-assign ioSpiRomDq_O[6]	= 1'b0;				assign wSpiRomDqNot[6]	= ioSpiRomDq_I[6];	assign ioSpiRomDq_OE[6]	= 1'b0;
-assign ioSpiRomDq_O[7]	= 1'b0;				assign wSpiRomDqNot[7]	= ioSpiRomDq_I[7];	assign ioSpiRomDq_OE[7]	= 1'b0;
-assign oSpiRomClk[0]	= wSfmSck[0];
-assign oSpiRomClk[1]	= wSfmSck[1];
-assign oSpiRomCe[0]		= wSfmCs[0];
-assign oSpiRomCe[1]		= wSfmCs[1];
-//
-// External RAM
-assign ioRamDq_O[7:0] 	= wRamDq_O[7:0];	assign wRamDq_I[7:0] 	= ioRamDq_I[7:0];		assign ioRamDq_OE[7:0] 		= {lpRamDqWidth{wRamDq_Oe[0]}};
-assign ioRamDq_O[15:8]	= wRamDq_O[15:8];	assign wRamDq_I[15:8] 	= ioRamDq_I[15:8];		assign ioRamDq_OE[15:8] 	= {lpRamDqWidth{wRamDq_Oe[1]}};
-assign oRamClk[0]		= wRamClk[0];
-assign oRamClk[1]		= wRamClk[1];
-assign oRamCe[0]		= wRamCe[0];
-assign oRamCe[1]		= wRamCe[1];
-//
-// I2C I/F
-assign ioI2cScl_O	= woI2cScl;					assign wiI2cScl	= ioI2cScl_I;		assign ioI2cScl_OE = woI2cSclOe;
-assign ioI2cSda_O	= woI2cSda;					assign wiI2cSda	= ioI2cSda_I;		assign ioI2cSda_OE = woI2cSdaOe;
-// Uart I/F
-// assign oUsbTx = wMIDI_In;//iUsbRx;
-assign oUsbTx = wSocTxd;
+// GPIOL
+wire [16:0] wIunsedL;
+wire [20:0] wIunsedR;
+assign ioGPIOL_O[0]		= wFlashRomSck;		assign  wIunsedL[0]  	= ioGPIOL_I[0];		assign ioGPIOL_OE[0]  = wFlashSpiOe[0];		// No1.Flash Rom SCK
+assign ioGPIOL_O[1]		= wFlashRomMosi;	assign  wIunsedL[1]  	= ioGPIOL_I[1];		assign ioGPIOL_OE[1]  = wFlashSpiOe[0];		// No1.Flash Rom DO / IO0
+assign ioGPIOL_O[2]		= 1'b0;				assign  wFlashRomMiso	= ioGPIOL_I[2];		assign ioGPIOL_OE[2]  = wFlashSpiOe[1];		// No1.Flash Rom DI / IO1
+assign ioGPIOL_O[3]		= wFlashRomCs;		assign  wIunsedL[3]		= ioGPIOL_I[3];		assign ioGPIOL_OE[3]  = wFlashSpiOe[0];		// No1.Flash Rom CS
+assign ioGPIOL_O[4]		= 1'b0;				assign  wIunsedL[4]		= ioGPIOL_I[4];		assign ioGPIOL_OE[4]  = 1'b0;				// No1.Flash Rom HOLD / IO2
+assign ioGPIOL_O[5]		= 1'b0;				assign  wIunsedL[5]		= ioGPIOL_I[5];		assign ioGPIOL_OE[5]  = 1'b0;				// No1.Flash Rom WP / IO3
+assign ioGPIOL_O[6]		= 1'b0;				assign  wIunsedL[6]		= ioGPIOL_I[6];		assign ioGPIOL_OE[6]  = 1'b0;				// No2.Flash Rom HOLD / IO2
+assign ioGPIOL_O[7]		= wSfmMosi[0];		assign  wIunsedL[7]		= ioGPIOL_I[7];		assign ioGPIOL_OE[7]  = 1'b1;				// No2.Flash Rom DO / IO0
+assign ioGPIOL_O[8]		= 1'b0;				assign  wIunsedL[8]		= ioGPIOL_I[8];		assign ioGPIOL_OE[8]  = 1'b0;				// No2.Flash Rom WP / IO3
+assign ioGPIOL_O[9]		= wSfmSck[0];		assign  wIunsedL[9]		= ioGPIOL_I[9];		assign ioGPIOL_OE[9]  = 1'b1;				// No2.Flash Rom SCK
+assign ioGPIOL_O[10]	= 1'b0;				assign  wSfmMiso[0]		= ioGPIOL_I[10];	assign ioGPIOL_OE[10] = 1'b0;				// No2.Flash Rom DI / IO1
+assign ioGPIOL_O[11]	= wSfmCs[0];		assign  wIunsedL[11]	= ioGPIOL_I[11];	assign ioGPIOL_OE[11] = 1'b1;				// No2.Flash Rom CS
+assign ioGPIOL_O[12]	= wSfmMosi[1];		assign  wIunsedL[12]	= ioGPIOL_I[12];	assign ioGPIOL_OE[12] = 1'b1;				// No3.Flash Rom DO / IO0
+assign ioGPIOL_O[13]	= wSfmSck[1];		assign  wIunsedL[13]	= ioGPIOL_I[13];	assign ioGPIOL_OE[13] = 1'b1;				// No3.Flash Rom SCK
+assign ioGPIOL_O[14]	= 1'b0;				assign  wSfmMiso[1]		= ioGPIOL_I[14];	assign ioGPIOL_OE[14] = 1'b0;				// No3.Flash Rom DI / IO1
+assign ioGPIOL_O[15]	= wSfmCs[1];		assign  wIunsedL[15]	= ioGPIOL_I[15];	assign ioGPIOL_OE[15] = 1'b1;				// No3.Flash Rom CS
+assign ioGPIOL_O[16]	= wSfmMosi[2];		assign  wIunsedL[16]	= ioGPIOL_I[16];	assign ioGPIOL_OE[16] = 1'b1;				// No4.Flash Rom DO / IO0
+// GPIOR
+assign ioGPIOR_O[0]		= wGPIOR_O[2];		assign  wGPIOR_In[2]	= ioGPIOR_I[0];		assign ioGPIOR_OE[0]  = wGPIOR_Dir[2];	// LED3
+assign ioGPIOR_O[1]		= wGPIOR_O[1];		assign  wGPIOR_In[1]	= ioGPIOR_I[1];		assign ioGPIOR_OE[1]  = wGPIOR_Dir[1];	// LED2
+assign ioGPIOR_O[2]		= wGPIOR_O[0];		assign  wGPIOR_In[0]	= ioGPIOR_I[2];		assign ioGPIOR_OE[2]  = wGPIOR_Dir[0];	// LED1
+assign ioGPIOR_O[3]		= 1'b0;				assign  wnARST			= ioGPIOR_I[3];		assign ioGPIOR_OE[3]  = 1'b0;			// User SW
+assign ioGPIOR_O[4]		= wGPIOR_O[3];		assign  wGPIOR_In[3]	= ioGPIOR_I[4];		assign ioGPIOR_OE[4]  = wGPIOR_Dir[3];	// LED4
+assign ioGPIOR_O[5]		= 1'b0;				assign  wIunsedR[4]		= ioGPIOR_I[5];		assign ioGPIOR_OE[5]  = 1'b0;			// MIDI IN
+assign ioGPIOR_O[6]		= 1'b0;				assign  wIunsedR[6]		= ioGPIOR_I[6];		assign ioGPIOR_OE[6]  = 1'b0;			// Unused
+assign ioGPIOR_O[7]		= 1'b0;				assign  wIunsedR[7]		= ioGPIOR_I[7];		assign ioGPIOR_OE[7]  = 1'b0;			// Unused
+assign ioGPIOR_O[8]		= 1'b0;				assign  wIunsedR[8]		= ioGPIOR_I[8];		assign ioGPIOR_OE[8]  = 1'b0;			// Unused
+assign ioGPIOR_O[9]		= wVIDEO_R[3];		assign  wIunsedR[9]		= ioGPIOR_I[9];		assign ioGPIOR_OE[9]  = 1'b1;			// Video R3
+assign ioGPIOR_O[10]	= 1'b0;				assign  wIunsedR[10]	= ioGPIOR_I[10];	assign ioGPIOR_OE[10] = 1'b0;			// MCP2221A SCL
+assign ioGPIOR_O[11]	= wVIDEO_R[4];		assign  wIunsedR[11]	= ioGPIOR_I[11];	assign ioGPIOR_OE[11] = 1'b1;			// Video R4
+assign ioGPIOR_O[12]	= 1'b0;				assign  wIunsedR[12]	= ioGPIOR_I[12];	assign ioGPIOR_OE[12] = 1'b0;			// MCP2221A SDA
+assign ioGPIOR_O[13]	= wVIDEO_R[5];		assign  wIunsedR[13]	= ioGPIOR_I[13];	assign ioGPIOR_OE[13] = 1'b1;			// Video R5
+assign ioGPIOR_O[14]	= 1'b0;				assign  wIunsedR[14]	= ioGPIOR_I[14];	assign ioGPIOR_OE[14] = 1'b0;			// No4.Flash Rom HOLD / IO2
+assign ioGPIOR_O[15]	= wSfmCs[2];		assign  wIunsedR[15]	= ioGPIOR_I[15];	assign ioGPIOR_OE[15] = 1'b1;			// No4.Flash Rom CS
+assign ioGPIOR_O[16]	= wSfmSck[2];		assign  wIunsedR[16]	= ioGPIOR_I[16];	assign ioGPIOR_OE[16] = 1'b1;			// No4.Flash Rom SCK
+assign ioGPIOR_O[17]	= wGPIOR_O[4];		assign  wGPIOR_In[4]	= ioGPIOR_I[17];	assign ioGPIOR_OE[17] = wGPIOR_Dir[4];	// LED5
+assign ioGPIOR_O[18]	= 1'b0;				assign  wSfmMiso[2]		= ioGPIOR_I[18];	assign ioGPIOR_OE[18] = 1'b0;			// No4.Flash Rom DI / IO1
+assign ioGPIOR_O[19]	= wGPIOR_O[5];		assign  wGPIOR_In[5]	= ioGPIOR_I[19];	assign ioGPIOR_OE[19] = wGPIOR_Dir[5];	// LED6
+assign ioGPIOR_O[20]	= 1'b0;				assign  wIunsedR[20]	= ioGPIOR_I[20];	assign ioGPIOR_OE[20] = 1'b0;			// No4.Flash Rom WP / IO3
+// GPIOB
+wire [23:0] wIunsedB;
+assign ioGPIOB_O[0]		= wVIDEO_VS;		assign wIunsedB[0]	= ioGPIOB_I[0];		assign ioGPIOB_OE[0]  = 1'b1;		// Video VS
+assign ioGPIOB_O[1]		= wVIDEO_DE;		assign wIunsedB[1]	= ioGPIOB_I[1];		assign ioGPIOB_OE[1]  = 1'b1;		// Video DE
+assign ioGPIOB_O[2]		= wVIDEO_RST;		assign wIunsedB[2]	= ioGPIOB_I[2];		assign ioGPIOB_OE[2]  = 1'b1;		// Video RST
+assign ioGPIOB_O[3]		= wVIDEO_HS;		assign wIunsedB[3]	= ioGPIOB_I[3];		assign ioGPIOB_OE[3]  = 1'b1;		// Video HS
+assign ioGPIOB_O[4]		= wVIDEO_B[7];		assign wIunsedB[4]	= ioGPIOB_I[4];		assign ioGPIOB_OE[4]  = 1'b1;		// Video B7
+assign ioGPIOB_O[5]		= wVIDEO_DCK;		assign wIunsedB[5]	= ioGPIOB_I[5];		assign ioGPIOB_OE[5]  = 1'b1;		// Video DCK
+assign ioGPIOB_O[6]		= wVIDEO_B[6];		assign wIunsedB[6]	= ioGPIOB_I[6];		assign ioGPIOB_OE[6]  = 1'b1;		// Video B6
+assign ioGPIOB_O[7]		= wVIDEO_B[5];		assign wIunsedB[7]	= ioGPIOB_I[7];		assign ioGPIOB_OE[7]  = 1'b1;		// Video B5
+assign ioGPIOB_O[8]		= wVIDEO_B[4];		assign wIunsedB[8]	= ioGPIOB_I[8];		assign ioGPIOB_OE[8]  = 1'b1;		// Video B4
+assign ioGPIOB_O[9]		= wVIDEO_B[3];		assign wIunsedB[9]	= ioGPIOB_I[9];		assign ioGPIOB_OE[9]  = 1'b1;		// Video B3
+assign ioGPIOB_O[10]	= wVIDEO_G[7];		assign wIunsedB[10]	= ioGPIOB_I[10];	assign ioGPIOB_OE[10] = 1'b1;		// Video G7
+assign ioGPIOB_O[11]	= wVIDEO_G[6];		assign wIunsedB[11]	= ioGPIOB_I[11];	assign ioGPIOB_OE[11] = 1'b1;		// Video G6
+assign ioGPIOB_O[12]	= wVIDEO_G[5];		assign wIunsedB[12]	= ioGPIOB_I[12];	assign ioGPIOB_OE[12] = 1'b1;		// Video G5
+assign ioGPIOB_O[13]	= wVIDEO_G[4];		assign wIunsedB[13]	= ioGPIOB_I[13];	assign ioGPIOB_OE[13] = 1'b1;		// Video G4
+assign ioGPIOB_O[14]	= wVIDEO_G[3];		assign wIunsedB[14]	= ioGPIOB_I[14];	assign ioGPIOB_OE[14] = 1'b1;		// Video G3
+assign ioGPIOB_O[15]	= wVIDEO_G[2];		assign wIunsedB[15]	= ioGPIOB_I[15];	assign ioGPIOB_OE[15] = 1'b1;		// Video G2
+assign ioGPIOB_O[16]	= wVIDEO_R[7];		assign wIunsedB[16]	= ioGPIOB_I[16];	assign ioGPIOB_OE[16] = 1'b1;		// Video R7
+assign ioGPIOB_O[17]	= wVIDEO_R[6];		assign wIunsedB[17]	= ioGPIOB_I[17];	assign ioGPIOB_OE[17] = 1'b1;		// Video R6
+assign ioGPIOB_O[18]	= wI2sMclk;			assign wIunsedB[18]	= ioGPIOB_I[18];	assign ioGPIOB_OE[18] = 1'b1; 		// I2S MCLK
+assign ioGPIOB_O[19]	= wI2sBclk;			assign wIunsedB[19]	= ioGPIOB_I[19];	assign ioGPIOB_OE[19] = 1'b1; 		// I2S BCLK
+assign ioGPIOB_O[20]	= wI2sSdata;		assign wIunsedB[20]	= ioGPIOB_I[20];	assign ioGPIOB_OE[20] = 1'b1; 		// I2S SDATA
+assign ioGPIOB_O[21]	= wI2sLrclk;		assign wIunsedB[21]	= ioGPIOB_I[21];	assign ioGPIOB_OE[21] = 1'b1; 		// I2S LRCLK
+assign ioGPIOB_O[22]	= woI2cScl;			assign wiI2cScl		= ioGPIOB_I[22];	assign ioGPIOB_OE[22] = woI2cSclOe;	// I2C Controller
+assign ioGPIOB_O[23]	= woI2cSda;			assign wiI2cSda		= ioGPIOB_I[23];	assign ioGPIOB_OE[23] = woI2cSdaOe;	// I2C Controller
+// SRAM
+assign ioSRAMD_O 		= wSRAMD_O;			assign wSRAMD_I 	= ioSRAMD_I;		assign ioSRAMD_OE 		= {lpRamDqWidth{wSRAMD_OE}};
+assign ioSRAM_RWDS_O	= wSRAM_RWDS_O;		assign wSRAM_RWDS_I = ioSRAM_RWDS_I;	assign ioSRAM_RWDS_OE 	= wSRAM_RWDS_OE;
+assign oSRAM_pCLK		= wSRAM_pCLK;
+assign oSRAM_nCLK		= wSRAM_nCLK;
+assign oSRAM_nCE		= wSRAM_nCE;
+assign oSRAM_nRST		= wSRAM_nRST;
+// USB UART
+// assign oUSB_TX = wMIDI_In;//iUSB_RX;
+assign oUSB_TX = wSocTxd;
 
 //-----------------------------------------------------------------------------
 // LED User Debug Mode (Altenate mode)
@@ -677,6 +683,8 @@ begin
   qGpioAltMode[1] <= woI2cSclOe;
   qGpioAltMode[2] <= woI2cSdaOe;
   qGpioAltMode[3] <= wiI2cScl;
+  qGpioAltMode[4] <= wiI2cSda;
+  qGpioAltMode[5] <= wPulseSCLK;
 end
 
 
