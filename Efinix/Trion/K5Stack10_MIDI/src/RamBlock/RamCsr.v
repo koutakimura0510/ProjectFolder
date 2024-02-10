@@ -19,12 +19,15 @@ module RamCsr #(
 	parameter p_non_variable	= 0
 )(
 	// Bus Master Read
-	output [pUsiBusWidth-1:0] 	oSUsiRd,	// Read Data
+	output [pUsiBusWidth-1:0] 	oSUsiRd,
 	// Bus Master Write
-	input  [pUsiBusWidth-1:0] 	iSUsiWd,	// Write Data
-	input  [pUsiBusWidth-1:0] 	iSUsiAdrs,  // R/W Adrs
-	// Csr Memory Common
-	output 						oRamRst,
+	input  [pUsiBusWidth-1:0] 	iSUsiWd,
+	input  [pUsiBusWidth-1:0] 	iSUsiAdrs,
+	// Csr Device Config
+	output [7:0]				oCfgCmd,
+	output						oCfgEn,
+	output						oCfgRst,
+	input						iCfgDone,
 	// Csr Device Config
 	input  [15:0] 				iHdcCapDq,
 	output [15:0] 				oHdcWDq,
@@ -44,17 +47,21 @@ module RamCsr #(
 //----------------------------------------------------------
 // レジスタマップ
 //----------------------------------------------------------
-reg 		rRamRst;				assign oRamRst 			= rRamRst;
 reg 		rHdcSeqEn;				assign oHdcSeqEn 		= rHdcSeqEn;
 reg 		rHdcRwCmd;				assign oHdcRwCmd 		= rHdcRwCmd;
 reg [15:0] 	rHdcWDq;				assign oHdcWDq			= rHdcWDq;
 reg [47:0] 	rHdcCmdAdrs;			assign oHdcCmdAdrs		= rHdcCmdAdrs;
 reg [ 3:0]	rHdcLatencyCnt;			assign oHdciLatencyCnt	= rHdcLatencyCnt;
 //
+reg [ 7:0]	rCfgCmd;				assign oCfgCmd			= rCfgCmd;
+reg			rCfgEn;					assign oCfgEn			= rCfgEn;
+reg			rCfgRst;				assign oCfgRst			= rCfgRst;
+//
 reg [pRamDqWidth-1:0] 	rMemRd;
 reg [15:0]				rHdcCapDq;
 //
 reg qCsrWCke00, qCsrWCke01, qCsrWCke02, qCsrWCke03, qCsrWCke04, qCsrWCke05;
+reg qCsrWCke10, qCsrWCke11;
 //
 always @(posedge iSCLK)
 begin
@@ -62,16 +69,18 @@ begin
 	begin
 		rHdcSeqEn		<= 1'b0;
 		rHdcRwCmd		<= 1'b0;
-		rRamRst			<= 1'b1;
 		rHdcWDq			<= 16'd0;
 		rHdcCmdAdrs		<= 48'd0;
-		rHdcLatencyCnt <= 4'd0;
+		rHdcLatencyCnt	<= 4'd0;
 		rMemRd			<= {pRamDqWidth{1'b0}};
 		rHdcCapDq		<= 16'd0;
+		//
+		rCfgCmd			<= 8'd35;
+		rCfgEn			<= 1'b0;
+		rCfgRst			<= 1'b1;
 	end
 	else
 	begin
-		rRamRst				<= qCsrWCke00 ? iSUsiWd[ 0:0] : rRamRst;
 		rHdcSeqEn			<= iHdcDone	  ? 1'b0 		  : qCsrWCke01 ? iSUsiWd[ 0:0] : rHdcSeqEn;
 		rHdcRwCmd			<= qCsrWCke01 ? iSUsiWd[ 4:4] : rHdcRwCmd;
 		rHdcWDq				<= qCsrWCke02 ? iSUsiWd[15:0] : rHdcWDq;
@@ -80,6 +89,10 @@ begin
 		rHdcLatencyCnt		<= qCsrWCke05 ? iSUsiWd[ 3:0] : rHdcLatencyCnt;
 		rMemRd				<= iMemRd;
 		rHdcCapDq			<= iHdcDone   ? iHdcCapDq	  : rHdcCapDq;
+		//
+		rCfgCmd				<= qCsrWCke10 ? iSUsiWd[ 7:0] : rCfgCmd;
+		rCfgEn				<= qCsrWCke11 ? iSUsiWd[ 0:0] : rCfgEn;
+		rCfgRst				<= qCsrWCke11 ? iSUsiWd[ 1:1] : rCfgRst;
 	end
 end
 
@@ -91,6 +104,9 @@ begin
 	qCsrWCke03 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0003});
 	qCsrWCke04 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
 	qCsrWCke05 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0005});
+	//
+	qCsrWCke10 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0010});
+	qCsrWCke11 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0011});
 end
 
 //----------------------------------------------------------
@@ -102,14 +118,17 @@ always @(posedge iSCLK)
 begin
 	// {{(32 - パラメータ名	){1'b0}}, レジスタ名} -> パラメータ可変に対応し 0 で埋められるように設定
 	case (iSUsiAdrs[pCsrActiveWidth-1:0])
-		'h00:	 rSUsiRd <= {{(32 - 1	){1'b0}}, rRamRst};
+		// 'h00:	 rSUsiRd <= {{(32 - 1	){1'b0}}, rRamRst};
 		'h01:	 rSUsiRd <= {{(32 - 2	){1'b0}}, rHdcRwCmd,	rHdcSeqEn};
 		'h02:	 rSUsiRd <= {{(32 - 16	){1'b0}}, rHdcWDq};
 		'h03:	 rSUsiRd <= {					  rHdcCmdAdrs[31:0]};
 		'h04:	 rSUsiRd <= {{(32 - 16	){1'b0}}, rHdcCmdAdrs[47:32]};
 		'h05:	 rSUsiRd <= {{(32 - 28	){1'b0}}, rHdcLatencyCnt};
+		'h10:	 rSUsiRd <= {{(32 - 24	){1'b0}}, rCfgCmd};
+		'h11:	 rSUsiRd <= {{(32 - 30	){1'b0}}, rCfgRst, rCfgEn};
 		'h40:	 rSUsiRd <= {{(32 - pRamDqWidth	){1'b0}}, iMemRd};
 		'h41:	 rSUsiRd <= {{(32 - 16	){1'b0}}, rHdcCapDq};
+		'h50:	 rSUsiRd <= {{(32 - 31	){1'b0}}, iCfgDone};
 		default: rSUsiRd <= iSUsiWd;
 	endcase
 end

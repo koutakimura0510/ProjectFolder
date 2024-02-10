@@ -8,10 +8,10 @@
 TBOUT    = tbwave.out
 
 # Tb Top Module名
-TBTOP 	 = HyperRamDeviceConfig_tb
+TBTOP 	 = RAMBlock_tb
 
 # Tb Top Module.v
-TBTOPRTL = HyperRamDeviceConfig_tb.v
+TBTOPRTL = RAMBlock_tb.v
 
 # Tb Instance.v
 TBRTL 	= ../*.v

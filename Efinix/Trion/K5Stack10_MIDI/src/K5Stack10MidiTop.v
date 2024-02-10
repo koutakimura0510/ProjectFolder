@@ -291,7 +291,7 @@ endgenerate
 //-----------------------------------------------------------------------------
 // MCB 
 //-----------------------------------------------------------------------------
-localparam lpOnChipMcu = "no";		// "yes"=Generate MCU, "no"=not
+localparam lpOnChipMcu = "yes";		// "yes"=Generate MCU, "no"=not
 
 wire wSocTxd, wSocRxd;
 
@@ -644,16 +644,16 @@ assign oSpiRomCe[0]		= wSfmCs[0];
 assign oSpiRomCe[1]		= wSfmCs[1];
 //
 // External RAM
-assign ioRamDq_O[7:0] 	= wRamDq_O[7:0];	assign wRamDq_I[7:0] 	= ioRamDq_I[7:0];		assign ioRamDq_OE[7:0] 		= {lpRamDqWidth{wRamDq_Oe[0]}};
-assign ioRamDq_O[15:8]	= wRamDq_O[15:8];	assign wRamDq_I[15:8] 	= ioRamDq_I[15:8];		assign ioRamDq_OE[15:8] 	= {lpRamDqWidth{wRamDq_Oe[1]}};
+assign ioRamDq_O[7:0] 	= wRamDq_O[7:0];	assign wRamDq_I[7:0] 	= ioRamDq_I[7:0];		assign ioRamDq_OE[7:0] 		= {8{wRamDq_Oe[0]}};
+assign ioRamDq_O[15:8]	= wRamDq_O[15:8];	assign wRamDq_I[15:8] 	= ioRamDq_I[15:8];		assign ioRamDq_OE[15:8] 	= {8{wRamDq_Oe[1]}};
 assign oRamClk[0]		= wRamClk[0];
 assign oRamClk[1]		= wRamClk[1];
 assign oRamCe[0]		= wRamCe[0];
 assign oRamCe[1]		= wRamCe[1];
 //
 // I2C I/F
-assign ioI2cScl_O	= woI2cScl;					assign wiI2cScl	= ioI2cScl_I;		assign ioI2cScl_OE = woI2cSclOe;
-assign ioI2cSda_O	= woI2cSda;					assign wiI2cSda	= ioI2cSda_I;		assign ioI2cSda_OE = woI2cSdaOe;
+assign ioI2cScl_O	= woI2cScl;				assign wiI2cScl	= ioI2cScl_I;		assign ioI2cScl_OE = woI2cSclOe;
+assign ioI2cSda_O	= woI2cSda;				assign wiI2cSda	= ioI2cSda_I;		assign ioI2cSda_OE = woI2cSdaOe;
 // Uart I/F
 // assign oUsbTx = wMIDI_In;//iUsbRx;
 assign oUsbTx = wSocTxd;

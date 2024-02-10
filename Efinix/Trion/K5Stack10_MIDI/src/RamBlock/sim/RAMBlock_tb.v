@@ -1,10 +1,8 @@
 `timescale 1ns / 1ps
-//----------------------------------------------------------
-// Create  2022/08/12
-// Author  KoutaKimura
-// SPI の Master Slave を切り替えながらデータの送受信を行う。
-// 
-//----------------------------------------------------------
+/**-----------------------------------------------------------------------------
+ * 24-02-10 v1.00: new release
+ * 
+ *-----------------------------------------------------------------------------*/
 module RAMBlock_tb;
 
 //----------------------------------------------------------
@@ -25,8 +23,10 @@ always begin
     #(lpSCLKCycke/2);
     rSCLK = ~rSCLK;
 end
-//
-// Reset 処理
+
+//----------------------------------------------------------
+// task Reset
+//----------------------------------------------------------
 task reset_init;
 begin
 	#(lpSCLKCycke * 5);
@@ -34,68 +34,100 @@ begin
 	rnSRST= 1;
 	#(lpSCLKCycke * 5);
 end
-endtask //
+endtask
+
+//----------------------------------------------------------
+// Wait time
+//----------------------------------------------------------
+task wait_time (
+	input integer tmr
+);
+begin
+	#(lpSCLKCycke * tmr);
+end
+endtask
+
+//----------------------------------------------------------
+// task Usi Buf 経由の CSR 設定
+//----------------------------------------------------------
+wire [31:0] 		wSUsiRd;
+wire 				wSUsiREd;
+//
+reg [31:0] 			rSUsiWd = 0;
+reg [31:0] 			rSUsiAdrs = 0;
+//
+task usi_csr_write (
+	input [31:0] wd,
+	input [15:0] adrs,
+	input [3:0] block_id
+);
+begin
+	rSUsiWd   = wd;
+	rSUsiAdrs = {2'b01,10'd0,block_id,adrs[15:0]};
+	#(lpSCLKCycke);
+end
+endtask //usi_csr_setting
 
 
 //-----------------------------------------------------------------------------
 // Read Write Tester
 //-----------------------------------------------------------------------------
+localparam [3:0] lpRAMAdrsMap = 4'h3;
 localparam lpRamAdrsWidth = 5;
 localparam lpRamDqWidth = 16;
 
-wire [lpRamAdrsWidth-1:0] wAdrs;
-wire [lpRamDqWidth-1:0] wWd;
-wire wCmd, wCe;
-reg  [lpRamDqWidth-1:0] qRd;
-wire wErr, wDone;
+wire 	[lpRamDqWidth-1:0]	wRamDq;
+reg		[lpRamDqWidth-1:0]	rRamDq;
+wire 	[1:0]				wRamDq_Oe;
+wire 	[1:0]				wRamClk;
+wire 	[1:0]				wRamCe;
+wire						wErr, wDone;
 
-RAMBlock #(
+RamBlock #(
+	.pAdrsMap(lpRAMAdrsMap),
 	.pRamAdrsWidth(lpRamAdrsWidth),
 	.pRamDqWidth(lpRamDqWidth)
-) RAMBlock (
-	.oSRAMA(wAdrs),
-	.oSRAMD(wWd),
-	.iSRAMD(qRd),
-	.oSRAM_LB(),
-	.oSRAM_UB(),
-	.oSRAM_OE(),
-	.oSRAM_WE(wCmd),
-	.oSRAM_CE(wCe),
-	//
+) RamBlock (
+	// SRAM I/F Port
+	.oRamDq(wRamDq),		.iRamDq(rRamDq),
+	.oRamDq_Oe(wRamDq_Oe),
+	.oRamClk(wRamClk),		.oRamCe(wRamCe),
+	// Bus Master Read
 	.oSUsiRd(),
-	.iSUsiWd(0),
-	.iSUsiAdrs(0),
+	// Bus Master Write
+	.iSUsiWd(rSUsiWd),		.iSUsiAdrs(rSUsiAdrs),
+	// Ufi Bus Master Read
+	.oSUfiRd(),				.oSUfiAdrs(),
+	// Ufi Bus Master Write
+	.iSUfiWd(16'd0),		.iSUfiAdrs(0),		.oSUfiRdy(),
 	// Status
-	.oTestErr(wErr),
-	.oDone(wDone),
+	.oTestErr(wErr),		.oDone(wDone),
 	// CLK Reset
-    .iSRST(rSRST),
-	.inSRST(rnSRST),
-	.iSCLK(rSCLK)
+    .iSRST(rSRST),			.inSRST(rnSRST),	.iSCLK(rSCLK)
 );
 
 
 //-----------------------------------------------------------------------------
 // Memory の確保
 //-----------------------------------------------------------------------------
-reg [lpRamDqWidth-1:0] rMem [65535:0];
-reg qMemWEd;
+// reg [lpRamDqWidth-1:0] rMem [65535:0];
+// reg qMemWEd;
 
-always @(posedge rSCLK)
-begin
-	if (qMemWEd) rMem[wAdrs] <= wWd;
-	else 		 rMem[wAdrs] <= rMem[wAdrs];
-end
+// always @(posedge rSCLK)
+// begin
+// 	if (qMemWEd) rMem[wAdrs] <= wWd;
+// 	else 		 rMem[wAdrs] <= rMem[wAdrs];
+// end
 
-always @*
-begin
-	qRd <= rMem[wAdrs];
-	qMemWEd <= (~wCmd) & (~wCe);
-end
+// always @*
+// begin
+// 	qRd <= rMem[wAdrs];
+// 	qMemWEd <= (~wCmd) & (~wCe);
+// end
 
 
 //-----------------------------------------------------------------------------
-// Donw フラグが立つまで待機する
+// Done フラグが立つまで待機する
 //-----------------------------------------------------------------------------
 task ReadWriteTesterDoneWait(
 	input integer flag
@@ -116,11 +148,16 @@ initial begin
 	$dumpfile("RAMBlock_tb.vcd");
 	$dumpvars(0, RAMBlock_tb);	// 引数0:下位モジュール表示, 1:Topのみ
 	reset_init();
-	ReadWriteTesterDoneWait(0);
-	ReadWriteTesterDoneWait(1);
-	ReadWriteTesterDoneWait(0);
-	ReadWriteTesterDoneWait(1);
-	ReadWriteTesterDoneWait(0);
+	usi_csr_write(32'h2,16'h0011,lpRAMAdrsMap);
+	usi_csr_write(32'h35,16'h0010,lpRAMAdrsMap);
+	usi_csr_write(32'h3,16'h0011,lpRAMAdrsMap);
+	usi_csr_write(32'h1,16'h0011,lpRAMAdrsMap);
+	wait_time(100);
+	// ReadWriteTesterDoneWait(0);
+	// ReadWriteTesterDoneWait(1);
+	// ReadWriteTesterDoneWait(0);
+	// ReadWriteTesterDoneWait(1);
+	// ReadWriteTesterDoneWait(0);
     $finish;
 end
 

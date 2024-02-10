@@ -52,8 +52,12 @@ module RamBlock #(
 //-----------------------------------------------------------------------------
 // Csr space
 //-----------------------------------------------------------------------------
-wire wCsrRamRst;
 reg  [pRamDqWidth-1:0] qMemRdCsr;
+
+wire [7:0]	wCfgCmdCsr;
+wire		wCfgEnCsr;
+wire		wCfgRstCsr;
+wire		wCfgDoneCsr;
 
 reg  [15:0] qHdcCapDqCsr;
 wire [15:0] wHdcWDqCsr;
@@ -73,8 +77,10 @@ RamCsr #(
 	.oSUsiRd(oSUsiRd),
 	// Ufi Bus Master Write
 	.iSUsiWd(iSUsiWd),		.iSUsiAdrs(iSUsiAdrs),
+	// Csr Device Config
+	.oCfgCmd(wCfgCmdCsr),	.oCfgEn(wCfgEnCsr),
+	.oCfgRst(wCfgRstCsr),	.iCfgDone(wCfgDoneCsr),
 	// Csr Memory Common
-	.oRamRst(wCsrRamRst),
 	.iMemRd(qMemRdCsr),
 	// Csr Device Config
 	.iHdcCapDq(qHdcCapDqCsr),
@@ -85,33 +91,6 @@ RamCsr #(
 	.iSRST(iSRST),		.iSCLK(iSCLK)
 );
 
-
-//-----------------------------------------------------------------------------
-// Read Write Tester
-//-----------------------------------------------------------------------------
-// wire [31:0] wMemTesterAdrs;
-// wire [pRamDqWidth-1:0] wMemTesterWd, wMemTesterRd;
-// wire wMemTesterWEd;
-// wire [31:0] wMemTesterREd;
-
-// MemoryReadWriteTester #(
-// 	.pRamAdrsWidth(pRamAdrsWidth),
-// 	.pRamDqWidth(pRamDqWidth)
-// ) MemoryReadWriteTester (
-// 	// R/W Signal
-// 	.oAdrs(wMemTesterAdrs),
-// 	.oWd(wMemTesterWd),
-// 	.iWEd(wMemTesterWEd),
-// 	.iRd(wMemTesterRd),
-// 	.iREd(wMemTesterREd[31]),
-// 	// Status
-// 	.oErr(oTestErr),.oDone(oDone),
-// 	// CLK Reset
-//     .iRST(iSRST),	.iCLK(iSCLK)
-// );
-
-assign oTestErr = 1'b0;
-assign oDone = 1'b0;
 
 //-----------------------------------------------------------------------------
 // Fifo Read Write Tester
@@ -145,128 +124,85 @@ RamReadWriteArbiter #(
 	.iRST(iSRST),	.inARST(inSRST),	.iCLK(iSCLK)
 );
 
+/**----------------------------------------------------------------------------
+ * Mcu Memory Access
+ *---------------------------------------------------------------------------*/
+
 
 /**----------------------------------------------------------------------------
- * Device Config Tester
+ * Device Configration
  *---------------------------------------------------------------------------*/
-reg	[10:0]	rDctSeqEn;
-reg [3:0] 	rDctLcCnt;
-reg			qDctDone;
+wire [15:0] wCfgDq;
+wire wCfgClk;
+wire wCfgCs;
+wire wCfgEn;
 
-generate
-if (pDevConfIntGen == "yes")
-begin
-always @(posedge iSCLK)
-begin
-	if (iSRST)			rDctSeqEn <=  11'd0;
-	else if (qDctDone)	rDctSeqEn <=  11'd0;
-	else 				rDctSeqEn <= {rDctSeqEn[9:0],1'b1};
-	
-	if (iSRST)			rDctLcCnt <= 4'd0;
-	else if (qDctDone)	rDctLcCnt <= rDctLcCnt + 1'b1;
-	else 				rDctLcCnt <= rDctLcCnt;
-end
-end
-endgenerate
-
-
-//-----------------------------------------------------------------------------
-// RAM I/F
-//-----------------------------------------------------------------------------
-wire [15:0] wMemDq;					assign oRamDq 		= wMemDq;
-wire 		wMemDqOe;				assign oRamDq_Oe 	= wMemDqOe;
-wire 		wMemClk;				assign oRamClk		= wMemClk;
-wire 		wMemCs;					assign oRamCe		= wMemCs;
-//
-reg [pRamDqWidth-1:0]	qHdcMemDq;
-reg [15:0]				wHdcCapDq;
-reg [15:0]				qHdcWDq;
-reg [47:0]				qHdcCmdAdrs;
-reg 					qHdcRwCmd;
-reg 					qHdcSeqEn;
-wire 					wHdcDone;
-reg [ 3:0]				qHdcLatencyCnt;
-
-HyperRamDeviceConfig HyperRamDeviceConfig (
-	// memory I/F for write side
-	.oMemDq(wMemDq),		.oMemDqOe(wMemDqOe),
-	.oMemClk(wMemClk),		.oMemCs(wMemCs),
-	// memory I/F for read side
-	.iMemDq(qHdcMemDq),
-	// internal data
-	.oCapDq(wHdcCapDq),
-	.iWDq(qHdcWDq),			.iCmdAdrs(qHdcCmdAdrs),
-	// control status
-	.iLatencyCnt(qHdcLatencyCnt),
-	.iRwCmd(qHdcRwCmd),		.iSeqEn(qHdcSeqEn),	.oDone(wHdcDone),
-	// clk common
-	.iRST(iSRST),			.iCKE(1'b0),		.iCLK(iSCLK)
+DeviceCfg DeviceCfg (
+	// Ram port
+	.oCfgDq(wCfgDq),		.oCfgClk(wCfgClk),
+	.oCfgCs(wCfgCs),		.oCfgEn(wCfgEn),
+	// control
+	.iCfgCmd(wCfgCmdCsr),	.iCfgEn(wCfgEnCsr),
+	.oCfgDone(wCfgDoneCsr),
+	// common
+	.iRST(wCfgRstCsr),		.iCKE(),	.iCLK(iSCLK)
 );
 
-generate
-if (pDevConfIntGen == "no")
-begin
-	always @*
-	begin
-		qHdcMemDq 		<= iRamDq;
-		qHdcCapDqCsr	<= wHdcCapDq;
-		qHdcWDq			<= wHdcWDqCsr;
-		qHdcCmdAdrs		<= wHdcCmdAdrsCsr;
-		qHdcRwCmd		<= wHdcRwCmdCsr;
-		qHdcSeqEn		<= wHdcSeqEnCsr;
-		qHdcDoneCsr		<= wHdcDone;
-		qHdcLatencyCnt	<= wHdcLatencyCntCsr;
-	end
-end
-else
-begin
-	always @*
-	begin
-		qHdcMemDq 		<= iRamDq;
-		qHdcCapDqCsr	<= wHdcCapDq;
-		qHdcWDq			<= 16'h1234;
-		qHdcCmdAdrs		<= 48'hC00000400000;
-		qHdcRwCmd		<= 1'b0;
-		qHdcSeqEn		<= rDctSeqEn[10];
-		qDctDone		<= wHdcDone;
-		qHdcLatencyCnt	<= rDctLcCnt;
-	end
-end
-endgenerate
 
+/**----------------------------------------------------------------------------
+ * Memory Tester
+ *---------------------------------------------------------------------------*/
+// wire [31:0] wMemTesterAdrs;
+// wire [pRamDqWidth-1:0] wMemTesterWd, wMemTesterRd;
+// wire wMemTesterWEd;
+// wire [31:0] wMemTesterREd;
 
-// qRamIfPortUnitWd	<= wRamIfPortUnitWd;
-// qRamIfPortUnitAdrs 	<= wRamIfPortUnitAdrs[pRamAdrsWidth-1:0];
-// qRamIfPortUnitCmd 	<= wRamIfPortUnitAdrs[30];
-// qRamIfPortUnitCke 	<= wRamIfPortUnitAdrs[pUfiEnableBit-1];
-
-// reg [pRamDqWidth-1:0] 	qRamIfPortUnitWd;
-// reg [pRamAdrsWidth-1:0] qRamIfPortUnitAdrs;
-// reg  					qRamIfPortUnitCmd;
-// reg  					qRamIfPortUnitCke;
-	
-// RAMIfPortUnit #(
+// MemoryReadWriteTester #(
 // 	.pRamAdrsWidth(pRamAdrsWidth),
 // 	.pRamDqWidth(pRamDqWidth)
-// ) RAMIfPortUnit (
-// 	// SRAM I/F Port
-// 	.oSRAMD(oSRAMD),			.iRamDq_I(iRamDq_I),
-// 	.oSRAMD_OE(oSRAMD_OE),
-// 	.oSRAM_RWDS(oSRAM_RWDS),	.iSRAM_RWDS(iSRAM_RWDS),
-// 	.oSRAM_RWDS_OE(oSRAM_RWDS_OE),
-// 	.oSRAM_pCLK(oSRAM_pCLK),	.oSRAM_nCLK(oSRAM_nCLK),
-// 	.oSRAM_nCE(oSRAM_nCE),		.oSRAM_nRST(oSRAM_nRST),
-// 	//
-// 	.iAdrs(qRamIfPortUnitAdrs),
-// 	.iCmd(qRamIfPortUnitCmd),
-// 	.iWd(qRamIfPortUnitWd),
-// 	.oRd(wRamIfPortUnitRd),
-// 	.oRvd(wRamIfPortUnitRvd),
+// ) MemoryReadWriteTester (
+// 	// R/W Signal
+// 	.oAdrs(wMemTesterAdrs),
+// 	.oWd(wMemTesterWd),
+// 	.iWEd(wMemTesterWEd),
+// 	.iRd(wMemTesterRd),
+// 	.iREd(wMemTesterREd[31]),
+// 	// Status
+// 	.oErr(oTestErr),.oDone(oDone),
 // 	// CLK Reset
-// 	.iRST(iSRST),
-// 	.iCKE(qRamIfPortUnitCke),
-// 	.iCLK(iSCLK)
+//     .iRST(iSRST),	.iCLK(iSCLK)
 // );
+
+assign oTestErr = 1'b0;
+assign oDone = 1'b0;
+
+/**----------------------------------------------------------------------------
+ * Ram If Port Unit
+ *---------------------------------------------------------------------------*/
+reg [pRamDqWidth-1:0] 	qRamIfPortUnitWd;
+reg [pRamAdrsWidth-1:0] qRamIfPortUnitAdrs;
+reg  					qRamIfPortUnitCmd;
+reg  					qRamIfPortUnitCke;
+	
+RAMIfPortUnit #(
+	.pRamDqWidth(pRamDqWidth)
+) RAMIfPortUnit (
+	// RAM I/F Port
+	.oRamDq(oRamDq),
+	.iRamDq(iRamDq),
+	.oRamDq_OE(oRamDq_Oe),
+	.oRamClk(oRamClk),
+	.oRamCe(oRamCe),
+	// Config Port
+	.iCfgDq(wCfgDq),
+	.iCfgClk(wCfgClk),
+	.iCfgCs(wCfgCs),
+	.iCfgEn(wCfgEn),
+	// CLK Reset
+	.iRST(iSRST),
+	.iCKE(),
+	.iCLK(iSCLK)
+);
 
 
 endmodule
