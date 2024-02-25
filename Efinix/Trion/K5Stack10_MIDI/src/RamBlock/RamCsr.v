@@ -14,7 +14,6 @@ module RamCsr #(
 	parameter pUsiBusWidth 		= 32,
 	parameter pCsrAdrsWidth		= 8,
 	parameter pCsrActiveWidth	= 8,
-	parameter pRamAdrsWidth		= 19,
 	parameter pRamDqWidth		= 16,
 	parameter p_non_variable	= 0
 )(
@@ -28,71 +27,67 @@ module RamCsr #(
 	output						oCfgEn,
 	output						oCfgRst,
 	input						iCfgDone,
-	// Csr Device Config
-	input  [15:0] 				iHdcCapDq,
-	output [15:0] 				oHdcWDq,
-	output [47:0] 				oHdcCmdAdrs,
-	output [ 3:0]				oHdciLatencyCnt,
-	output						oHdcRwCmd,
-	output						oHdcSeqEn,
-	input						iHdcDone,
-	// Csr Input
-	input  [pRamDqWidth-1:0] 	iMemRd,
+	// Csr Memory Access Tester
+	output						oMatEn,
+	output						oMatRst,
+	input						iMatDone,
+	output [pRamDqWidth-1:0]	oMatMemWd,
+	output						oMatMemWdOe,
+	output [7:0]				oMatMemWa,
+	output 						oMatMemWe,
+	input  [pRamDqWidth-1:0]	iMatMemRd,
+	output [7:0]				oMatMemRa,
     // CLK Reset
-    input  iSRST,
-    input  iSCLK
+    input  						iSRST,
+    input  						iSCLK
 );
 
 
 //----------------------------------------------------------
 // レジスタマップ
 //----------------------------------------------------------
-reg 		rHdcSeqEn;				assign oHdcSeqEn 		= rHdcSeqEn;
-reg 		rHdcRwCmd;				assign oHdcRwCmd 		= rHdcRwCmd;
-reg [15:0] 	rHdcWDq;				assign oHdcWDq			= rHdcWDq;
-reg [47:0] 	rHdcCmdAdrs;			assign oHdcCmdAdrs		= rHdcCmdAdrs;
-reg [ 3:0]	rHdcLatencyCnt;			assign oHdciLatencyCnt	= rHdcLatencyCnt;
+reg [ 7:0]				rCfgCmd;				assign oCfgCmd		= rCfgCmd;
+reg						rCfgEn;					assign oCfgEn		= rCfgEn;
+reg						rCfgRst;				assign oCfgRst		= rCfgRst;
+reg 					rMatEn;					assign oMatEn		= rMatEn;
+reg 					rMatRst;				assign oMatRst		= rMatRst;
+reg [pRamDqWidth-1:0] 	rMatMemWd;				assign oMatMemWd	= rMatMemWd;
+reg 					rMatMemWdOe;			assign oMatMemWdOe	= rMatMemWdOe;
+reg [ 7:0]				rMatMemWa;				assign oMatMemWa	= rMatMemWa;
+reg 					rMatMemWe;				assign oMatMemWe	= rMatMemWe;
+reg [ 7:0]				rMatMemRa;				assign oMatMemRa	= rMatMemRa;
 //
-reg [ 7:0]	rCfgCmd;				assign oCfgCmd			= rCfgCmd;
-reg			rCfgEn;					assign oCfgEn			= rCfgEn;
-reg			rCfgRst;				assign oCfgRst			= rCfgRst;
-//
-reg [pRamDqWidth-1:0] 	rMemRd;
-reg [15:0]				rHdcCapDq;
 //
 reg qCsrWCke00, qCsrWCke01, qCsrWCke02, qCsrWCke03, qCsrWCke04, qCsrWCke05;
-reg qCsrWCke10, qCsrWCke11;
+reg qCsrWCke10, qCsrWCke11, qCsrWCke12, qCsrWCke13, qCsrWCke14, qCsrWCke15, qCsrWCke16;
 //
 always @(posedge iSCLK)
 begin
 	if (iSRST)
 	begin
-		rHdcSeqEn		<= 1'b0;
-		rHdcRwCmd		<= 1'b0;
-		rHdcWDq			<= 16'd0;
-		rHdcCmdAdrs		<= 48'd0;
-		rHdcLatencyCnt	<= 4'd0;
-		rMemRd			<= {pRamDqWidth{1'b0}};
-		rHdcCapDq		<= 16'd0;
-		//
-		rCfgCmd			<= 8'd35;
+		rCfgCmd			<= 8'h35;
 		rCfgEn			<= 1'b0;
 		rCfgRst			<= 1'b1;
+		rMatEn			<= 1'b0;
+		rMatRst			<= 1'b1;
+		rMatMemWd		<= 16'h0000;
+		rMatMemWdOe		<= 1'b1;
+		rMatMemWa		<= 8'd0;
+		rMatMemWe		<= 1'b0;
+		rMatMemRa		<= 8'd0;
 	end
 	else
 	begin
-		rHdcSeqEn			<= iHdcDone	  ? 1'b0 		  : qCsrWCke01 ? iSUsiWd[ 0:0] : rHdcSeqEn;
-		rHdcRwCmd			<= qCsrWCke01 ? iSUsiWd[ 4:4] : rHdcRwCmd;
-		rHdcWDq				<= qCsrWCke02 ? iSUsiWd[15:0] : rHdcWDq;
-		rHdcCmdAdrs[31: 0]	<= qCsrWCke03 ? iSUsiWd[31:0] : rHdcCmdAdrs[31: 0];
-		rHdcCmdAdrs[47:32]	<= qCsrWCke04 ? iSUsiWd[15:0] : rHdcCmdAdrs[47:32];
-		rHdcLatencyCnt		<= qCsrWCke05 ? iSUsiWd[ 3:0] : rHdcLatencyCnt;
-		rMemRd				<= iMemRd;
-		rHdcCapDq			<= iHdcDone   ? iHdcCapDq	  : rHdcCapDq;
-		//
-		rCfgCmd				<= qCsrWCke10 ? iSUsiWd[ 7:0] : rCfgCmd;
-		rCfgEn				<= qCsrWCke11 ? iSUsiWd[ 0:0] : rCfgEn;
-		rCfgRst				<= qCsrWCke11 ? iSUsiWd[ 1:1] : rCfgRst;
+		rCfgCmd			<= qCsrWCke00 ? iSUsiWd[ 7:0] : rCfgCmd;
+		rCfgEn			<= qCsrWCke01 ? iSUsiWd[ 0:0] : rCfgEn;
+		rCfgRst			<= qCsrWCke02 ? iSUsiWd[ 0:0] : rCfgRst;
+		rMatEn			<= qCsrWCke10 ? iSUsiWd[ 0:0] : rMatEn;
+		rMatRst			<= qCsrWCke11 ? iSUsiWd[ 0:0] : rMatRst;
+		rMatMemWd		<= qCsrWCke12 ? iSUsiWd[15:0] : rMatMemWd;
+		rMatMemWdOe		<= qCsrWCke13 ? iSUsiWd[ 0:0] : rMatMemWdOe;
+		rMatMemWa		<= qCsrWCke14 ? iSUsiWd[ 7:0] : rMatMemWa;
+		rMatMemWe		<= qCsrWCke15 ? iSUsiWd[ 0:0] : rMatMemWe;
+		rMatMemRa		<= qCsrWCke16 ? iSUsiWd[ 7:0] : rMatMemRa;
 	end
 end
 
@@ -102,11 +97,14 @@ begin
 	qCsrWCke01 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0001});
 	qCsrWCke02 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0002});
 	qCsrWCke03 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0003});
-	qCsrWCke04 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0004});
-	qCsrWCke05 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0005});
 	//
 	qCsrWCke10 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0010});
 	qCsrWCke11 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0011});
+	qCsrWCke12 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0012});
+	qCsrWCke13 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0013});
+	qCsrWCke14 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
+	qCsrWCke15 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0015});
+	qCsrWCke16 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0016});
 end
 
 //----------------------------------------------------------
@@ -118,17 +116,19 @@ always @(posedge iSCLK)
 begin
 	// {{(32 - パラメータ名	){1'b0}}, レジスタ名} -> パラメータ可変に対応し 0 で埋められるように設定
 	case (iSUsiAdrs[pCsrActiveWidth-1:0])
-		// 'h00:	 rSUsiRd <= {{(32 - 1	){1'b0}}, rRamRst};
-		'h01:	 rSUsiRd <= {{(32 - 2	){1'b0}}, rHdcRwCmd,	rHdcSeqEn};
-		'h02:	 rSUsiRd <= {{(32 - 16	){1'b0}}, rHdcWDq};
-		'h03:	 rSUsiRd <= {					  rHdcCmdAdrs[31:0]};
-		'h04:	 rSUsiRd <= {{(32 - 16	){1'b0}}, rHdcCmdAdrs[47:32]};
-		'h05:	 rSUsiRd <= {{(32 - 28	){1'b0}}, rHdcLatencyCnt};
-		'h10:	 rSUsiRd <= {{(32 - 24	){1'b0}}, rCfgCmd};
-		'h11:	 rSUsiRd <= {{(32 - 30	){1'b0}}, rCfgRst, rCfgEn};
-		'h40:	 rSUsiRd <= {{(32 - pRamDqWidth	){1'b0}}, iMemRd};
-		'h41:	 rSUsiRd <= {{(32 - 16	){1'b0}}, rHdcCapDq};
-		'h50:	 rSUsiRd <= {{(32 - 31	){1'b0}}, iCfgDone};
+		'h00:	 rSUsiRd <= {{(32 - 24			){1'b0}}, rCfgCmd};
+		'h01:	 rSUsiRd <= {{(32 - 31			){1'b0}}, rCfgEn};
+		'h02:	 rSUsiRd <= {{(32 - 31			){1'b0}}, rCfgRst};
+		'h10:	 rSUsiRd <= {{(32 - 31			){1'b0}}, rMatEn};
+		'h11:	 rSUsiRd <= {{(32 - 31			){1'b0}}, rMatRst};
+		'h12:	 rSUsiRd <= {{(32 - pRamDqWidth	){1'b0}}, rMatMemWd};
+		'h13:	 rSUsiRd <= {{(32 - 31			){1'b0}}, rMatMemWdOe};
+		'h14:	 rSUsiRd <= {{(32 - 7			){1'b0}}, rMatMemWa};
+		'h15:	 rSUsiRd <= {{(32 - 31			){1'b0}}, rMatMemWe};
+		'h16:	 rSUsiRd <= {{(32 - 7			){1'b0}}, rMatMemRa};
+		'h40:	 rSUsiRd <= {{(32 - 31			){1'b0}}, iCfgDone};
+		'h50:	 rSUsiRd <= {{(32 - 31			){1'b0}}, iMatDone};
+		'h51:	 rSUsiRd <= {{(32 - pRamDqWidth	){1'b0}}, iMatMemRd};
 		default: rSUsiRd <= iSUsiWd;
 	endcase
 end

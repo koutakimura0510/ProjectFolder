@@ -1,10 +1,10 @@
-/*-----------------------------------------------------------------------------
- * Create  2023/4/28
- * Author  koutakimura
- * -
- * 外部 RAM の制御を行う module
- * V1.0 : new Relaese
+/**-----------------------------------------------------------------------------
+ * 23-04-28 v1.00: new release
+ * 24-02-10 v2.00: ESP PSRAM に対応
  * 
+ * ESP PSRAM
+ * default setting, 1page =  CA[9:0] 1024byte linear burst wrap / page をまたぐ際は最大周波数 84MHz
+ * 64Mbit = A[22:0]
  *-----------------------------------------------------------------------------*/
 module RamBlock #(
 	parameter pBlockAdrsWidth = 8,
@@ -52,43 +52,41 @@ module RamBlock #(
 //-----------------------------------------------------------------------------
 // Csr space
 //-----------------------------------------------------------------------------
-reg  [pRamDqWidth-1:0] qMemRdCsr;
-
 wire [7:0]	wCfgCmdCsr;
 wire		wCfgEnCsr;
 wire		wCfgRstCsr;
 wire		wCfgDoneCsr;
 
-reg  [15:0] qHdcCapDqCsr;
-wire [15:0] wHdcWDqCsr;
-wire [47:0] wHdcCmdAdrsCsr;
-wire [ 3:0] wHdcLatencyCntCsr;
-wire 		wHdcRwCmdCsr;
-wire 		wHdcSeqEnCsr;
-reg  		qHdcDoneCsr;
+wire					wMatEnCsr;
+wire					wMatRstCsr;
+wire					wMatDoneCsr;
+wire [pRamDqWidth-1:0]	wMatMemWdCsr;
+wire					wMatMemWdOeCsr;
+wire [7:0]				wMatMemWaCsr;
+wire					wMatMemWeCsr;
+wire [pRamDqWidth-1:0]	wMatMemRdCsr;
+wire [7:0]				wMatMemRaCsr;
+
 
 RamCsr #(
 	.pBlockAdrsWidth(pBlockAdrsWidth),		.pAdrsMap(pAdrsMap),	
 	.pUsiBusWidth(pUsiBusWidth),			
 	.pCsrAdrsWidth(pCsrAdrsWidth),			.pCsrActiveWidth(pCsrActiveWidth),
-	.pRamAdrsWidth(pRamAdrsWidth),			.pRamDqWidth(pRamDqWidth)
+	.pRamDqWidth(pRamDqWidth)
 ) RamCsr (
 	// Ufi Bus Master Read
 	.oSUsiRd(oSUsiRd),
 	// Ufi Bus Master Write
-	.iSUsiWd(iSUsiWd),		.iSUsiAdrs(iSUsiAdrs),
+	.iSUsiWd(iSUsiWd),			.iSUsiAdrs(iSUsiAdrs),
 	// Csr Device Config
-	.oCfgCmd(wCfgCmdCsr),	.oCfgEn(wCfgEnCsr),
-	.oCfgRst(wCfgRstCsr),	.iCfgDone(wCfgDoneCsr),
-	// Csr Memory Common
-	.iMemRd(qMemRdCsr),
-	// Csr Device Config
-	.iHdcCapDq(qHdcCapDqCsr),
-	.oHdcWDq(wHdcWDqCsr),					.oHdcCmdAdrs(wHdcCmdAdrsCsr),
-	.oHdciLatencyCnt(wHdcLatencyCntCsr),	.oHdcRwCmd(wHdcRwCmdCsr),
-	.oHdcSeqEn(wHdcSeqEnCsr),				.iHdcDone(qHdcDoneCsr),
+	.oCfgCmd(wCfgCmdCsr),		.oCfgEn(wCfgEnCsr),
+	.oCfgRst(wCfgRstCsr),		.iCfgDone(wCfgDoneCsr),
+	// Csr Memory Access Tester
+	.oMatEn(wMatEnCsr),			.oMatRst(wMatRstCsr),		.iMatDone(wMatDoneCsr),
+	.oMatMemWd(wMatMemWdCsr),	.oMatMemWdOe(wMatMemWdOeCsr),	.oMatMemWa(wMatMemWaCsr),	.oMatMemWe(wMatMemWeCsr),
+	.iMatMemRd(wMatMemRdCsr),	.oMatMemRa(wMatMemRaCsr),
 	// common
-	.iSRST(iSRST),		.iSCLK(iSCLK)
+	.iSRST(iSRST),				.iSCLK(iSCLK)
 );
 
 
@@ -152,57 +150,68 @@ DeviceCfg DeviceCfg (
 /**----------------------------------------------------------------------------
  * Memory Tester
  *---------------------------------------------------------------------------*/
-// wire [31:0] wMemTesterAdrs;
-// wire [pRamDqWidth-1:0] wMemTesterWd, wMemTesterRd;
-// wire wMemTesterWEd;
-// wire [31:0] wMemTesterREd;
+wire [pRamDqWidth-1:0] 	wMatDq;
+wire 					wMatClk;
+wire 					wMatCs;
+wire 					wMatOe;
+wire 					wMatEn;
+reg  [pRamDqWidth-1:0] 	qMatRd;
+reg  					qMatRe;
 
-// MemoryReadWriteTester #(
-// 	.pRamAdrsWidth(pRamAdrsWidth),
-// 	.pRamDqWidth(pRamDqWidth)
-// ) MemoryReadWriteTester (
-// 	// R/W Signal
-// 	.oAdrs(wMemTesterAdrs),
-// 	.oWd(wMemTesterWd),
-// 	.iWEd(wMemTesterWEd),
-// 	.iRd(wMemTesterRd),
-// 	.iREd(wMemTesterREd[31]),
-// 	// Status
-// 	.oErr(oTestErr),.oDone(oDone),
-// 	// CLK Reset
-//     .iRST(iSRST),	.iCLK(iSCLK)
-// );
 
-assign oTestErr = 1'b0;
-assign oDone = 1'b0;
+MemoryAccessTester #(
+	.pRamDqWidth(pRamDqWidth)
+) MemoryAccessTester (
+	// Test Write Port
+	.oTestDq(wMatDq),			.oTestClk(wMatClk),
+	.oTestCs(wMatCs),			.oTestOe(wMatOe),
+	// Test Read Port
+	.iTestRd(qMatRd),			.iTestRe(qMatRe),
+	// Control, Status
+	.oTestEn(wMatEn),			.oTestErr(),
+	.oTestDone(wMatDoneCsr),	.iTestEn(wMatEnCsr),
+	// Memory Access
+	.iMemWd(wMatMemWdCsr),		.iMemWdOe(wMatMemWdOeCsr),
+	.iMemWa(wMatMemWaCsr),		.iMemWe(wMatMemWeCsr),
+	.oMemRd(wMatMemRdCsr),		.iMemRa(wMatMemRaCsr),
+	// CLK Reset
+    .iRST(wMatRstCsr),			.iCLK(iSCLK)
+);
+
+assign oTestErr	= 1'b0;
+assign oDone	= 1'b0;
 
 /**----------------------------------------------------------------------------
  * Ram If Port Unit
  *---------------------------------------------------------------------------*/
-reg [pRamDqWidth-1:0] 	qRamIfPortUnitWd;
-reg [pRamAdrsWidth-1:0] qRamIfPortUnitAdrs;
-reg  					qRamIfPortUnitCmd;
-reg  					qRamIfPortUnitCke;
+wire [pRamDqWidth-1:0] 	wRamRd;
+wire 					wRamRe;
 	
 RAMIfPortUnit #(
 	.pRamDqWidth(pRamDqWidth)
 ) RAMIfPortUnit (
 	// RAM I/F Port
-	.oRamDq(oRamDq),
-	.iRamDq(iRamDq),
-	.oRamDq_OE(oRamDq_Oe),
-	.oRamClk(oRamClk),
-	.oRamCe(oRamCe),
-	// Config Port
-	.iCfgDq(wCfgDq),
-	.iCfgClk(wCfgClk),
-	.iCfgCs(wCfgCs),
-	.iCfgEn(wCfgEn),
+	.oRamDq(oRamDq),		.iRamDq(iRamDq),	.oRamDq_OE(oRamDq_Oe),
+	.oRamClk(oRamClk),		.oRamCe(oRamCe),
+	// Memory Config Port
+	.iCfgDq(wCfgDq),		.iCfgClk(wCfgClk),
+	.iCfgCs(wCfgCs),		.iCfgEn(wCfgEn),
+	// Memory Test Write Port
+	.iTestDq(wMatDq),		.iTestClk(wMatClk),
+	.iTestCs(wMatCs),		.iTestOe(wMatOe),
+	.iTestEn(wMatEn),
+	// Memory Test Read Port
+	.oRamRd(wRamRd),		.oRamRe(wRamRe),
 	// CLK Reset
 	.iRST(iSRST),
 	.iCKE(),
 	.iCLK(iSCLK)
 );
 
+always @*
+begin
+	qMatRd	<= wRamRd;
+	qMatRe	<= wRamRe;
+end
 
 endmodule

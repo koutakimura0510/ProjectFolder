@@ -12,14 +12,15 @@
 //----------------------------------------------------------
 module GpioCsr #(
 	// 各ブロック共通パラメータ
-	parameter pBlockAdrsWidth = 8,
+	parameter pBlockAdrsWidth	= 8,
 	parameter [pBlockAdrsWidth-1:0] pAdrsMap = 'h01,
-	parameter pUsiBusWidth    = 32,
-	parameter pCsrAdrsWidth	  = 8,
-	parameter pCsrActiveWidth = 8,
+	parameter pUsiBusWidth		= 32,
+	parameter pCsrAdrsWidth		= 8,
+	parameter pCsrActiveWidth	= 8,
 	// Block 固有のパラメータ
-	parameter pGpioWidth      = 5,
-	parameter p_non_variable  = 0
+	parameter pGpioWidth		= 5,
+	parameter pExtSwNum			= 7,
+	parameter p_non_variable	= 0
 )(
 	// Bus Master Read
 	output [pUsiBusWidth-1:0] oSUsiRd,	// Read Data
@@ -30,6 +31,10 @@ module GpioCsr #(
 	output [pGpioWidth-1:0]	oGpioOutCtrl,
 	output [pGpioWidth-1:0]	oGpioDir,
 	output [pGpioWidth-1:0]	oGpioAltMode,
+	input  [pExtSwNum-1:0]	iPushSw,
+	input  [pExtSwNum-1:0]	iEdgeSw,
+	input  [pExtSwNum-1:0]	iLongSw,
+	input  [1:0]			iDipSw,
 	// Csr Input
 	input  [pGpioWidth-1:0]	iGpioIn,
 	// CLK RST
@@ -85,6 +90,10 @@ begin
 		'h04:	 rSUsiRd <= {{(32 - pGpioWidth	){1'b0}}, rGpioDir};
 		'h08:	 rSUsiRd <= {{(32 - pGpioWidth	){1'b0}}, rGpioAltMode};
 		'h40:	 rSUsiRd <= {{(32 - pGpioWidth	){1'b0}}, iGpioIn};
+		'h41:	 rSUsiRd <= {{(32 - pExtSwNum	){1'b0}}, iPushSw};
+		'h42:	 rSUsiRd <= {{(32 - pExtSwNum	){1'b0}}, iEdgeSw};
+		'h43:	 rSUsiRd <= {{(32 - pExtSwNum	){1'b0}}, iLongSw};
+		'h44:	 rSUsiRd <= {{(32 - 2			){1'b0}}, iDipSw};
 		default: rSUsiRd <= iSUsiWd;
 	endcase
 end

@@ -24,9 +24,10 @@ module DeviceCfg (
   Core Rst Assert
   Cmd Set
   Cfg Enable
-  Core Rst Dissert
+  Core Rst Negate
   
-  SPI Quad Mode Enable = 0x35
+  SPI Quad Mode Enable  = 0x35
+  SPI Quad Mode Disable = 0xF5
  *---------------------------------------------------------------------------*/
 reg [7:0] 	rCfgDq;				assign oCfgDq 	= {16{rCfgDq[7]}};
 reg			rCfgClk;			assign oCfgClk 	= rCfgClk;
@@ -34,7 +35,7 @@ reg			rCfgCs;				assign oCfgCs 	= rCfgCs;
 reg			rCfgEn;				assign oCfgEn 	= rCfgEn;
 reg			rCfgDone;			assign oCfgDone	= rCfgDone;
 reg			qCfgDoneCke;
-reg [4:0]	rDoneCnt;
+reg [3:0]	rDoneCnt;
 reg			qCfgCke;
 reg			qCfgRun;
 reg			qCfgClkCke;
@@ -45,7 +46,7 @@ begin
 	else if (qCfgCke) 		rCfgDq <= {rCfgDq[6:0],1'b0};
 	else 					rCfgDq <=  rCfgDq;
 	
-	if (iRST) 				rDoneCnt <= 5'd0;
+	if (iRST) 				rDoneCnt <= 4'd0;
 	else if (qCfgCke) 		rDoneCnt <= rDoneCnt + 1'b1;
 	else 					rDoneCnt <= rDoneCnt;
 	
@@ -71,7 +72,7 @@ begin
 	qCfgCke 	<= iCfgEn & rCfgClk & (~rCfgDone);
 	qCfgRun		<= iCfgEn & (~rCfgDone);
 	qCfgClkCke	<= ~rCfgCs;
-	qCfgDoneCke	<= (rDoneCnt == 5'd9);
+	qCfgDoneCke	<= (rDoneCnt == 4'd7);
 end
 
 endmodule

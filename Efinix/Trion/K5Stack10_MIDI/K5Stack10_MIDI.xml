@@ -1,4 +1,4 @@
-<efx:project xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="K5Stack10_MIDI" description="" last_change_date="Sun Jan 21 2024 17:54:35" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI/." sw_version="2023.1.150.6.14" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="change" place_ood="change" route_ood="sync" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
+<efx:project xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="K5Stack10_MIDI" description="" last_change_date="&#26085;  2&#26376; 25 2024 20&#26178;10&#20998;02&#31186;" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI/." sw_version="2023.1.150.6.14" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="sync" place_ood="sync" route_ood="sync" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
     <efx:device_info>
         <efx:family name="Trion" />
         <efx:device name="T20Q144" />
@@ -27,6 +27,7 @@
         <efx:design_file name="src/RamBlock/RamCsr.v" version="default" library="default" />
         <efx:design_file name="src/RamBlock/RamReadWriteArbiter.v" version="default" library="default" />
         <efx:design_file name="src/RamBlock/DeviceCfg.v" version="default" library="default" />
+        <efx:design_file name="src/RamBlock/MemoryAccessTester.v" version="default" library="default" />
         <efx:design_file name="src/RamBlock/RamIfPortUnit.v" version="default" library="default" />
         <efx:design_file name="src/MicroControllerBlock/MicroControllerBlock.v" version="default" library="default" />
         <efx:design_file name="src/MicroControllerBlock/MicroControllerCsr.v" version="default" library="default" />
@@ -38,7 +39,8 @@
         <efx:design_file name="src/common/fifo/ASyncFifoController.v" version="default" library="default" />
         <efx:design_file name="src/common/fifo/TrionSDPBRAM.v" version="default" library="default" />
         <efx:design_file name="src/common/pulse/ClkCounter.v" version="default" library="default" />
-        <efx:design_file name="src/common/Serial/UartRX.v" version="default" library="default" />
+        <efx:design_file name="src/common/ExtSw/GetSw.v" version="default" library="default" />
+        <efx:design_file name="src/common/ExtSw/SwSamp.v" version="default" library="default" />
         <efx:design_file name="src/VideoTxBlock/VideoTxBlock.v" version="default" library="default" />
         <efx:design_file name="src/VideoTxBlock/VideoTxCsr.v" version="default" library="default" />
         <efx:design_file name="src/VideoTxBlock/VideoSyncGen.v" version="default" library="default" />
@@ -120,7 +122,7 @@
     </efx:bitstream_generation>
     <efx:debugger>
         <efx:param name="work_dir" value="work_dbg" value_type="e_string" />
-        <efx:param name="auto_instantiation" value="on" value_type="e_bool" />
+        <efx:param name="auto_instantiation" value="off" value_type="e_bool" />
         <efx:param name="profile" value="debug_profile.wizard.json" value_type="e_string" />
     </efx:debugger>
 </efx:project>

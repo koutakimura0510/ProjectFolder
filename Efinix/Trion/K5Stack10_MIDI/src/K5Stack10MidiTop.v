@@ -125,8 +125,10 @@ end
 
 always @*
 begin
+//   qlocked <= &{PLL_BR0_LOCKED, PLL_TL0_LOCKED, PLL_TL1_LOCKED};
   qlocked <= &{PLL_BR0_LOCKED, PLL_TL0_LOCKED, PLL_TL1_LOCKED};
-  qnARST  <= wnARST & qlocked;
+//   qnARST  <= wnARST & qlocked;
+  qnARST  <= qlocked;
 end
 
 assign wSRST		= rSRST;			assign wnSRST   = rnSRST;
@@ -292,6 +294,7 @@ endgenerate
 // MCB 
 //-----------------------------------------------------------------------------
 localparam lpOnChipMcu = "yes";		// "yes"=Generate MCU, "no"=not
+// localparam lpOnChipMcu = "no";		// "yes"=Generate MCU, "no"=not
 
 wire wSocTxd, wSocRxd;
 
@@ -337,14 +340,17 @@ MicroControllerBlock #(
 //-----------------------------------------------------------------------------
 // GPIO Block
 //-----------------------------------------------------------------------------
-localparam lpGpioWidth = 4;
-wire [lpGpioWidth-1:0] wGpio_O;
-wire [lpGpioWidth-1:0] wGpio_Dir;
-wire [lpGpioWidth-1:0] wGpio_In;
-reg  [lpGpioWidth-1:0] qGpioAltMode;
+localparam lpGpioWidth	= 4;
+localparam lpExtSwNum	= 7;
+wire [lpGpioWidth-1:0]	wGpio_O;
+wire [lpGpioWidth-1:0]	wGpio_Dir;
+wire [lpGpioWidth-1:0]	wGpio_In;
+reg  [lpGpioWidth-1:0]	qGpioAltMode;
 //
-wire [6:0] wPushSw;
-wire [1:0] wDipSw;
+wire [lpExtSwNum-1:0] 	wPushSw;
+wire [1:0] 				wDipSw;
+wire [lpExtSwNum-1:0] 	wEdgeSw;
+wire [lpExtSwNum-1:0] 	wLongSw;
 
 GpioBlock #(
 	.pBlockAdrsWidth(lpBlockAdrsWidth),
@@ -352,24 +358,24 @@ GpioBlock #(
 	.pUsiBusWidth(lpUsiBusWidth),
 	.pCsrAdrsWidth(lpCsrAdrsWidth),
 	.pCsrActiveWidth(lpGpioCsrActiveWidth),
-	.pGpioWidth(lpGpioWidth)
+	.pGpioWidth(lpGpioWidth),
+	.pExtSwNum(lpExtSwNum)
 ) GpioBlock (
 	// GPIO Output Ctrl
-	.oGpio(wGpio_O),
-	.oGpioDir(wGpio_Dir),
+	.oGpio(wGpio_O),		.oGpioDir(wGpio_Dir),
 	// GPIO Alt Mode
 	.iGpioAltMode(qGpioAltMode),
 	// GPIO Input
 	.iGpioIn(wGpio_In),
 	// User I/F
-	.iPushSw(wPushSw),
-	.iDipSw(wDipSw),
+	.iPushSw(wPushSw),		.iDipSw(wDipSw),
+	.oEdgeSw(wEdgeSw),		.oLongSw(wLongSw),
 	// Bus Master Read
 	.oSUsiRd(wSUsiRd[lpGpioAdrsMap]),
 	// Bus Master Write
-	.iSUsiWd(wSUsiWd),  .iSUsiAdrs(wSUsiAdrs),
+	.iSUsiWd(wSUsiWd),		.iSUsiAdrs(wSUsiAdrs),
 	// CLK, RST
-	.iSRST(wSRST),    .iSCLK(iSCLK)
+	.iSRST(wSRST),			.iSCLK(iSCLK)
 );
 
 //-----------------------------------------------------------------------------
@@ -542,7 +548,6 @@ VideoTxBlock #(
 	.iSRST(wSRST),		.inSRST(wnSRST),	.iSCLK(iSCLK)
 );
 
-
 /**----------------------------------------------------------------------------
  * I2c Block
  *---------------------------------------------------------------------------*/
@@ -566,11 +571,9 @@ I2cBlock #(
 	.iSRST(wSRST),			.inSRST(wnSRST),	.iSCLK(iSCLK)
 );
 
-
 //-----------------------------------------------------------------------------
 // Debug Core Block
 //-----------------------------------------------------------------------------
-
 
 
 //-----------------------------------------------------------------------------
@@ -620,14 +623,6 @@ assign ioGpio_O[35]	= wVIDEO_R[4];		assign  wGpioIn[35]	= ioGpio_I[35];		assign 
 assign ioGpio_O[36]	= wVIDEO_R[5];		assign  wGpioIn[36]	= ioGpio_I[36];		assign ioGpio_OE[36]	= 1'b1;
 assign ioGpio_O[37]	= wVIDEO_R[1];		assign  wGpioIn[37]	= ioGpio_I[37];		assign ioGpio_OE[37]	= 1'b1;
 //
-// User I/F
-assign wPushSw		= iPushSw;
-assign wDipSw		= iDipSw;
-assign oLed[0]		= wGpio_O[0];
-assign oLed[1]		= wGpio_O[1];
-assign oLed[2]		= wGpio_O[2];
-assign oLed[3]		= wGpio_O[3];
-//
 // External ROM / QSPI は後々対応
 wire [7:0] wSpiRomDqNot;
 assign ioSpiRomDq_O[0]	= wSfmMosi[0];		assign wSpiRomDqNot[0]	= ioSpiRomDq_I[0];	assign ioSpiRomDq_OE[0]	= 1'b1;
@@ -654,9 +649,25 @@ assign oRamCe[1]		= wRamCe[1];
 // I2C I/F
 assign ioI2cScl_O	= woI2cScl;				assign wiI2cScl	= ioI2cScl_I;		assign ioI2cScl_OE = woI2cSclOe;
 assign ioI2cSda_O	= woI2cSda;				assign wiI2cSda	= ioI2cSda_I;		assign ioI2cSda_OE = woI2cSdaOe;
+//
 // Uart I/F
 // assign oUsbTx = wMIDI_In;//iUsbRx;
 assign oUsbTx = wSocTxd;
+//
+// User I/F
+assign wPushSw[0]	= iPushSw[0];	// SW-L
+assign wPushSw[1]	= iPushSw[1];	// SW-U
+assign wPushSw[2]	= iPushSw[2];	// SW-D
+assign wPushSw[3]	= iPushSw[3];	// SW-R
+assign wPushSw[4]	= iPushSw[4];	// SW-B
+assign wPushSw[5]	= iPushSw[5];	// SW-A
+assign wPushSw[6]	= iPushSw[6];	// SW-User
+assign wDipSw[0]	= iDipSw[0];	// DIP-1
+assign wDipSw[1]	= iDipSw[1];	// DIP-2
+assign oLed[0]		= wGpio_O[0];
+assign oLed[1]		= wGpio_O[1];
+assign oLed[2]		= wGpio_O[2];
+assign oLed[3]		= wGpio_O[3];
 
 //-----------------------------------------------------------------------------
 // LED User Debug Mode (Altenate mode)
@@ -674,9 +685,9 @@ PulseGenerator #(.pDivClk(lpVclkCntMax)) VclkPulseGenerator (.oPulse(wPulseVCLK)
 always @*
 begin
   qGpioAltMode[0] <= qlocked;
-  qGpioAltMode[1] <= woI2cSclOe;
-  qGpioAltMode[2] <= woI2cSdaOe;
-  qGpioAltMode[3] <= wiI2cScl;
+  qGpioAltMode[1] <= wPulseSCLK;
+  qGpioAltMode[2] <= woI2cSclOe;
+  qGpioAltMode[3] <= woI2cSdaOe;
 end
 
 
