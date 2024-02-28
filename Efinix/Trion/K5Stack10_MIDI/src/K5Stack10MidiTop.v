@@ -9,6 +9,7 @@
  * 23-09-17 v2.00: K5Stack10-v2 に更新のためピンアサイン変更
  * 23-10-15 v2.01: HyperRAMに対応するため、SCLK を 50MHz->100MHz に変更
  * 24-01-17 v3.00: K5Stack10-v3 に更新のためピンアサイン変更,命名規則更新
+ * 24-02-27 v3.01: K5Stack10-v3 iPushSw[4:5] 短絡のため I/O 変更、VIDEO_CLK/AUDIO_CLK clkout 属性に変更
  *
  *-----------------------------------------------------------------------------*/  
 module K5Stack10MidiTop(
@@ -125,10 +126,8 @@ end
 
 always @*
 begin
-//   qlocked <= &{PLL_BR0_LOCKED, PLL_TL0_LOCKED, PLL_TL1_LOCKED};
   qlocked <= &{PLL_BR0_LOCKED, PLL_TL0_LOCKED, PLL_TL1_LOCKED};
-//   qnARST  <= wnARST & qlocked;
-  qnARST  <= qlocked;
+  qnARST  <= iPushSw[6] & qlocked;
 end
 
 assign wSRST		= rSRST;			assign wnSRST   = rnSRST;
@@ -584,8 +583,8 @@ I2cBlock #(
 //-----------------------------------------------------------------------------
 // GPIO Header
 wire [37:0] wGpioIn;
-assign ioGpio_O[0]	= wVIDEO_RST;		assign  wGpioIn[0] 	= ioGpio_I[0];		assign ioGpio_OE[0]		= 1'b1;
-assign ioGpio_O[1]	= wVIDEO_DCK;		assign  wGpioIn[1] 	= ioGpio_I[1];		assign ioGpio_OE[1]		= 1'b1;
+assign ioGpio_O[0]	= 1'b0;/*wVIDEO_DCK*/assign  wGpioIn[0] 	= ioGpio_I[0];		assign ioGpio_OE[0]		= 1'b0;
+assign ioGpio_O[1]	= wVIDEO_RST;		assign  wGpioIn[1] 	= ioGpio_I[1];		assign ioGpio_OE[1]		= 1'b1;
 assign ioGpio_O[2]	= wVIDEO_B[6];		assign  wGpioIn[2]	= ioGpio_I[2];		assign ioGpio_OE[2]		= 1'b1;
 assign ioGpio_O[3]	= wVIDEO_B[7];		assign  wGpioIn[3]	= ioGpio_I[3];		assign ioGpio_OE[3]		= 1'b1;
 assign ioGpio_O[4]	= wVIDEO_B[4];		assign  wGpioIn[4]	= ioGpio_I[4];		assign ioGpio_OE[4]		= 1'b1;
@@ -602,15 +601,15 @@ assign ioGpio_O[14]	= wVIDEO_G[3];		assign  wGpioIn[14]	= ioGpio_I[14];		assign 
 assign ioGpio_O[15]	= wVIDEO_G[2];		assign  wGpioIn[15]	= ioGpio_I[15];		assign ioGpio_OE[15]	= 1'b1;
 assign ioGpio_O[16]	= wVIDEO_G[1];		assign  wGpioIn[16]	= ioGpio_I[16];		assign ioGpio_OE[16]	= 1'b1;
 assign ioGpio_O[17]	= wVIDEO_G[0];		assign  wGpioIn[17]	= ioGpio_I[17];		assign ioGpio_OE[17]	= 1'b1;
-assign ioGpio_O[18]	= wI2sMclk;			assign  wGpioIn[18]	= ioGpio_I[18];		assign ioGpio_OE[18]	= 1'b1;
+assign ioGpio_O[18]	= 1'b0;/*wI2sMclk;*/assign  wGpioIn[18]	= ioGpio_I[18];		assign ioGpio_OE[18]	= 1'b0;
 assign ioGpio_O[19]	= wI2sBclk;			assign  wGpioIn[19]	= ioGpio_I[19];		assign ioGpio_OE[19]	= 1'b1;
 assign ioGpio_O[20]	= wI2sSdata;		assign  wGpioIn[20]	= ioGpio_I[20];		assign ioGpio_OE[20]	= 1'b1;
 assign ioGpio_O[21]	= wI2sLrclk;		assign  wGpioIn[21]	= ioGpio_I[21];		assign ioGpio_OE[21]	= 1'b1;
 assign ioGpio_O[22]	= wVIDEO_R[6];		assign  wGpioIn[22]	= ioGpio_I[22];		assign ioGpio_OE[22]	= 1'b1;
 assign ioGpio_O[23]	= wVIDEO_R[7];		assign  wGpioIn[23]	= ioGpio_I[23];		assign ioGpio_OE[23]	= 1'b1;
 assign ioGpio_O[24]	= wVIDEO_DE;		assign  wGpioIn[24]	= ioGpio_I[24];		assign ioGpio_OE[24]	= 1'b1;
-assign ioGpio_O[25]	= wVIDEO_HS;		assign  wGpioIn[25]	= ioGpio_I[25];		assign ioGpio_OE[25]	= 1'b1;
-assign ioGpio_O[26]	= wVIDEO_VS;		assign  wGpioIn[26]	= ioGpio_I[26];		assign ioGpio_OE[26]	= 1'b1;
+assign ioGpio_O[25]	= wVIDEO_VS;		assign  wGpioIn[25]	= ioGpio_I[25];		assign ioGpio_OE[25]	= 1'b1;
+assign ioGpio_O[26]	= wVIDEO_HS;		assign  wGpioIn[26]	= ioGpio_I[26];		assign ioGpio_OE[26]	= 1'b1;
 assign ioGpio_O[27]	= 1'b0;				assign  wGpioIn[27]	= ioGpio_I[27];		assign ioGpio_OE[27]	= 1'b0;
 assign ioGpio_O[28]	= wVIDEO_R[0];		assign  wGpioIn[28]	= ioGpio_I[28];		assign ioGpio_OE[28]	= 1'b1;
 assign ioGpio_O[29]	= wVIDEO_R[2];		assign  wGpioIn[29]	= ioGpio_I[29];		assign ioGpio_OE[29]	= 1'b1;
@@ -684,8 +683,8 @@ PulseGenerator #(.pDivClk(lpVclkCntMax)) VclkPulseGenerator (.oPulse(wPulseVCLK)
 
 always @*
 begin
-  qGpioAltMode[0] <= qlocked;
-  qGpioAltMode[1] <= wPulseSCLK;
+  qGpioAltMode[0] <= &{iPushSw[5:0]};
+  qGpioAltMode[1] <= wPulseVCLK;
   qGpioAltMode[2] <= woI2cSclOe;
   qGpioAltMode[3] <= woI2cSdaOe;
 end

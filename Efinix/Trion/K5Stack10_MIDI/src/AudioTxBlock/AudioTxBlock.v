@@ -220,6 +220,7 @@ begin
 	casex ( {rGlueWeSel,rGlueWe,wAacCpuWeCsr} )
 		'b001:	qGluwWeCke <= 1'b1;
 		'bx1x:	qGluwWeCke <= 1'b0;
+		default	qGluwWeCke <= 1'b0;
 	endcase
 end
 

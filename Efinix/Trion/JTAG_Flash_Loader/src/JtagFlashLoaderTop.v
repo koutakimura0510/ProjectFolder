@@ -6,17 +6,18 @@
  * -
  * 23-09-18 v1.00 : New Release
  * 23-09-18 v1.01 : K5Stack10-V2 対応
+ * 24-02-25 v1.02 : K5Stack10-V3 対応
  *-----------------------------------------------------------------------------*/
 module JtagFlashLoaderTop (
 	// User ROM
-	input  	[3:0] iUser_MISO,
-	output	[3:0] oUser_MOSI,
-	output	[3:0] oUser_SCK,
-	output	[3:0] oUser_nCS,	
+	input  	[1:0] iUser_MISO,
+	output	[1:0] oUser_MOSI,
+	output	[1:0] oUser_SCK,
+	output	[1:0] oUser_nCS,	
 	output	oMaster_MISO,		// GPIOB P20
 	input	iMaster_MOSI,		// GPIOB P18
 	input	iMaster_SCK,		// GPIOB P19
-	input	[3:0] iMaster_nCS,	// [3]=GPIOR P13, [2]=GPIOB P23, [1]=GPIOB P22, [0]=GPIOB P21
+	input	[1:0] iMaster_nCS,	// [3]=GPIOR P13, [2]=GPIOB P23, [1]=GPIOB P22, [0]=GPIOB P21
 	// Config ROM
 	input  iMISO,
 	output oSCK,
@@ -37,7 +38,7 @@ module JtagFlashLoaderTop (
 	input  jtag_inst1_UPDATE,
 	output jtag_inst1_TDO,
 	// User I/F
-	output [2:0] oLed,
+	output [1:0] oLed,
 	// Debug Pin
 	output [3:0] oUserDebug,	// [3]=GPIOR P9, [2]=GPIOB P8, [1]=GPIOB P7, [0]=GPIOB P6
 	// CLK Domain
@@ -97,33 +98,31 @@ reg rGpioB_P6;
 reg rGpioB_P7;
 reg rGpioB_P8;
 reg rGpioR_P9;
-reg [3:0] rCs;
+reg [1:0] rCs;
 reg qMasterMiso;
 
 always @(posedge iSCLK)
 begin
-	rGpioB_P6 <= qMasterMiso;
-	rGpioB_P7 <= iMaster_MOSI;
-	rGpioB_P8 <= iMaster_SCK;
-	rGpioR_P9 <= &{iMaster_nCS[3:0]};
-	rCs		  <= iMaster_nCS[3:0];
+	rGpioB_P6 <=   qMasterMiso;
+	rGpioB_P7 <=   iMaster_MOSI;
+	rGpioB_P8 <=   iMaster_SCK;
+	rGpioR_P9 <= &{iMaster_nCS[1:0]};
+	rCs		  <=   iMaster_nCS[1:0];
 end
 
 always @*
 begin
 	case ({rCs})
-		4'b1110: qMasterMiso <= iUser_MISO[0];
-		4'b1101: qMasterMiso <= iUser_MISO[1];
-		4'b1011: qMasterMiso <= iUser_MISO[2];
-		4'b0111: qMasterMiso <= iUser_MISO[3];
-		default: qMasterMiso <= 1'b0;
+		'b10: 		qMasterMiso <= iUser_MISO[0];
+		'b01:		qMasterMiso <= iUser_MISO[1];
+		default: 	qMasterMiso <= 1'b0;
 	endcase
 end
 
-assign oMaster_MISO		= qMasterMiso;
-assign oUser_MOSI[3:0]	= {4{iMaster_MOSI}};
-assign oUser_SCK[3:0] 	= {4{iMaster_SCK}};
-assign oUser_nCS[3:0] 	= iMaster_nCS[3:0];
+assign oMaster_MISO		=    qMasterMiso;
+assign oUser_MOSI[1:0]	= {2{iMaster_MOSI}};
+assign oUser_SCK[1:0] 	= {2{iMaster_SCK}};
+assign oUser_nCS[1:0] 	=    iMaster_nCS[1:0];
 
 assign oUserDebug[0] = rGpioB_P6;
 assign oUserDebug[1] = rGpioB_P7;

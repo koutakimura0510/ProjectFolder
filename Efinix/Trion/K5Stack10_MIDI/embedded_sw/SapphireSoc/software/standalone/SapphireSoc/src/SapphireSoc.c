@@ -36,17 +36,35 @@ static void system_initialize(void)
 	usi_write_cmd(1, SPI_REG_GPIO_ALT);		// SPI 機能有効
 
 	// RAM
-	usi_write_cmd(0x7fff, RAM_REG_HDC_WDQ);
-	usi_write_cmd(0x00040000, RAM_REG_HDC_CMD_ADRS_L);
-	usi_write_cmd(0xC000, RAM_REG_HDC_CMD_ADRS_H);
-	usi_write_cmd(0x08, RAM_REG_HDC_LC_CNT);
-	usi_write_cmd(0x01, RAM_REG_HDC_SEQ);
-	
-	usi_read_printf(RAM_REG_HDC_CAP_DQ);
-	usi_read_printf(RAM_REG_HDC_CAP_DQ);
-	// usi_write_cmd(0x01000000, RAM_REG_HDC_CMD_ADRS_L);
-	// usi_write_cmd(0xC000, RAM_REG_HDC_CMD_ADRS_H);
-	// usi_write_cmd(0x01, RAM_REG_HDC_SEQ);
+	// Config Setting
+	usi_write_cmd(1, RAM_REG_RAM_CFG_RST);
+	usi_write_cmd(0x35, RAM_REG_RAM_CFG_CMD);
+	usi_write_cmd(1, RAM_REG_RAM_CFG_ENABLE);
+	usi_write_cmd(0, RAM_REG_RAM_CFG_RST);
+	usi_read_wait(RAM_REG_RAM_CFG_DONE, 0x01);
+	usi_write_cmd(1, RAM_REG_RAM_CFG_RST);
+
+	// Sample Data Write
+	usi_write_cmd(1, RAM_REG_RAM_MAT_RST);
+	usi_write_cmd(0x01, RAM_REG_RAM_MAT_MEM_WD_OE);
+
+	for (uint8_t i = 0; i < 255; i++) {
+		// adrs もいれなければならない
+		usi_write_cmd(0xff-i, RAM_REG_RAM_MAT_MEM_WD);
+		usi_write_cmd(i, RAM_REG_RAM_MAT_MEM_WD);
+		usi_write_cmd(0x01, RAM_REG_RAM_MAT_MEM_WE);
+	}
+
+	usi_write_cmd(1, RAM_REG_RAM_MAT_ENABLE);
+	usi_write_cmd(0, RAM_REG_RAM_MAT_RST);
+	usi_read_wait(RAM_REG_RAM_MAT_DONE, 0x01);
+	usi_write_cmd(1, RAM_REG_RAM_MAT_RST);
+
+	for (uint8_t i = 0; i < 255; i++) {
+		usi_write_cmd(0xff-i, RAM_REG_RAM_MAT_MEM_WD);
+		usi_write_cmd(i, RAM_REG_RAM_MAT_MEM_WD);
+		usi_write_cmd(0x01, RAM_REG_RAM_MAT_MEM_WE);
+	}
 
 	// Audio
 	// usi_write_cmd(0x020202, AUDIO_REG_SFM_CLK_DIV);		// 動作周波数
@@ -146,19 +164,20 @@ uint8_t get_sw(void)
 void main()
 {
 	system_initialize();
-	SDL_Rect sdl_bg    = {.x = 0, .w = 480, .y = 0, .h = 272};				// back ground
-	SDL_Rect sdl_gl    = {.x = 0, .w = 480, .y = 272-16, .h = 272,};		// gound line
-	SDL_Rect sdl_pl    = {.x = 16, .w = 32, .y = 272-16-16, .h = 272-16,};	// player
-	SDL_Rect sdl_tile1 = {.x = 480/2-20, .w = 480/2+20, .y = 100, .h = 100+4,};
-	SDL_Rect sdl_tile2 = {.x = 480/2-20, .w = 480/2+20, .y = 180, .h = 180+4,};
-	SDL_Rect sdl_wall1 = {.x = 480, .w = 480+16, .y = 120, .h = 272-16,};
+	// SDL_Rect sdl_bg    = {.x = 0, .w = 480, .y = 0, .h = 272};				// back ground
+	// SDL_Rect sdl_gl    = {.x = 0, .w = 480, .y = 272-16, .h = 272,};		// gound line
+	// SDL_Rect sdl_pl    = {.x = 16, .w = 32, .y = 272-16-16, .h = 272-16,};	// player
+	// SDL_Rect sdl_tile1 = {.x = 480/2-20, .w = 480/2+20, .y = 100, .h = 100+4,};
+	// SDL_Rect sdl_tile2 = {.x = 480/2-20, .w = 480/2+20, .y = 180, .h = 180+4,};
+	// SDL_Rect sdl_wall1 = {.x = 480, .w = 480+16, .y = 120, .h = 272-16,};
 
 	// video_square_draw(&sdl_bg, 0x0000, 0);		// Back Ground
 	// video_square_draw(&sdl_gl, 0x00, 0);		// Ground Line
 
 	while (1) {
 		led_auto_flash(50, TIMER_REG_COUNT1);
-		uint8_t sw = get_sw();
+		// usi_read_printf(GPIO_REG_PUSH_SW);
+		// uint8_t sw = get_sw();
 
 		// if (true == is_wall_point()) {
 		// 	video_square_draw(&sdl_pl, 0xf000, 1);
