@@ -27,10 +27,12 @@ module RAMIfPortUnit #(
 	// Read Port
 	output	[pRamDqWidth-1:0]	oRamRd,
 	output						oRamRe,
+	// Control
+	input	[7:0]				iMemClkDiv,
 	// Clk Reset
-	input	iRST,
-	input	iCKE,
-	input	iCLK
+	input						iRST,
+	input						iCKE,
+	input						iCLK
 );
 
 /**----------------------------------------------------------------------------
@@ -46,6 +48,9 @@ reg						rRamRe;			assign oRamRe = rRamRe;
 reg						qRamReCke;
 reg	[3:0]				rWaitCnt;
 reg						qWaitCntCke;
+//
+reg [7:0]				rDivCnt;
+reg						qDivCntMaxCke, qDivCntCke;
 
 always @(posedge iCLK)
 begin
@@ -82,12 +87,18 @@ begin
 	if (rRamOe)				rWaitCnt <= 4'd0;
 	else if (qWaitCntCke)	rWaitCnt <= rWaitCnt + 1'b1;
 	else 					rWaitCnt <= rWaitCnt;
+	
+	if (qDivCntMaxCke)		rDivCnt <=  8'd0;
+	else if (qDivCntCke)	rDivCnt <=  rDivCnt + 1'b1;
+	else 					rDivCnt <=  rDivCnt;
 end
 
 always @*
 begin
-	qRamReCke	<= (~rRamOe) & (~rRamClk) & (rWaitCnt == 4'd6);
-	qWaitCntCke	<= (~rRamOe) & (~rRamClk) & (rWaitCnt != 4'd6);
+	qRamReCke		<= (~rRamOe) & (~rRamClk) & (rWaitCnt == 4'd5) & qDivCntMaxCke;
+	qWaitCntCke		<= (~rRamOe) & (~rRamClk) & (rWaitCnt != 4'd5) & qDivCntMaxCke;
+	qDivCntMaxCke	<= iRST | (rDivCnt == iMemClkDiv);
+	qDivCntCke  	<= (~rRamCs);
 end
 
 assign oRamDq	 	= rRamDq;

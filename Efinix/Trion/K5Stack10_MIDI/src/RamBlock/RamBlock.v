@@ -66,6 +66,7 @@ wire [7:0]				wMatMemWaCsr;
 wire					wMatMemWeCsr;
 wire [pRamDqWidth-1:0]	wMatMemRdCsr;
 wire [7:0]				wMatMemRaCsr;
+wire [7:0]				wMemClkDivCsr;
 
 
 RamCsr #(
@@ -85,6 +86,8 @@ RamCsr #(
 	.oMatEn(wMatEnCsr),			.oMatRst(wMatRstCsr),		.iMatDone(wMatDoneCsr),
 	.oMatMemWd(wMatMemWdCsr),	.oMatMemWdOe(wMatMemWdOeCsr),	.oMatMemWa(wMatMemWaCsr),	.oMatMemWe(wMatMemWeCsr),
 	.iMatMemRd(wMatMemRdCsr),	.oMatMemRa(wMatMemRaCsr),
+	// 
+	.oMemClkDiv(wMemClkDivCsr),
 	// common
 	.iSRST(iSRST),				.iSCLK(iSCLK)
 );
@@ -139,9 +142,9 @@ DeviceCfg DeviceCfg (
 	// Ram port
 	.oCfgDq(wCfgDq),		.oCfgClk(wCfgClk),
 	.oCfgCs(wCfgCs),		.oCfgEn(wCfgEn),
-	// control
+	// Control / Status
 	.iCfgCmd(wCfgCmdCsr),	.iCfgEn(wCfgEnCsr),
-	.oCfgDone(wCfgDoneCsr),
+	.oCfgDone(wCfgDoneCsr),	.iMemClkDiv(wMemClkDivCsr),
 	// common
 	.iRST(wCfgRstCsr),		.iCKE(),	.iCLK(iSCLK)
 );
@@ -158,7 +161,6 @@ wire 					wMatEn;
 reg  [pRamDqWidth-1:0] 	qMatRd;
 reg  					qMatRe;
 
-
 MemoryAccessTester #(
 	.pRamDqWidth(pRamDqWidth)
 ) MemoryAccessTester (
@@ -174,6 +176,8 @@ MemoryAccessTester #(
 	.iMemWd(wMatMemWdCsr),		.iMemWdOe(wMatMemWdOeCsr),
 	.iMemWa(wMatMemWaCsr),		.iMemWe(wMatMemWeCsr),
 	.oMemRd(wMatMemRdCsr),		.iMemRa(wMatMemRaCsr),
+	// Control
+	.iMemClkDiv(wMemClkDivCsr),
 	// CLK Reset
     .iRST(wMatRstCsr),			.iCLK(iSCLK)
 );
@@ -202,6 +206,8 @@ RAMIfPortUnit #(
 	.iTestEn(wMatEn),
 	// Memory Test Read Port
 	.oRamRd(wRamRd),		.oRamRe(wRamRe),
+	// Control
+	.iMemClkDiv(wMemClkDivCsr),
 	// CLK Reset
 	.iRST(iSRST),
 	.iCKE(),

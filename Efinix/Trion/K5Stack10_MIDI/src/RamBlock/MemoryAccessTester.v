@@ -24,9 +24,12 @@ module MemoryAccessTester #(
 	input						iMemWe,
 	output	[pRamDqWidth-1:0]	oMemRd,
 	input	[7:0]				iMemRa,
+	//
+	input	[7:0]				iMemClkDiv,
+	output						oDivCntMaxCke,
 	// CLK Reset
-    input  						iRST,
-    input  						iCLK
+	input						iRST,
+	input						iCLK
 );
 
 
@@ -48,6 +51,8 @@ module MemoryAccessTester #(
   ・Done Assert
   ・iRST Negate
   
+  ・write cmd = 0x38
+  ・read cmd = 0xEB
  *---------------------------------------------------------------------------*/
 reg  [pRamDqWidth-1:0]	rTestDq;					assign oTestDq	 = rTestDq;
 reg  					rTestCs;					assign oTestCs	 = rTestCs;
@@ -58,22 +63,27 @@ reg  					rTestEn;					assign oTestEn	 = rTestEn;
 reg						rTestDone;					assign oTestDone = rTestDone;
 reg						qTestDoneCke;
 reg  [pRamDqWidth-1:0]	qTestDq;
-reg						qTestOe;
+reg						qTestOeCke;
 reg						qTestCke,	qTestClkCke;
 reg						qTestRun;
+//
+reg [7:0]				rDivCnt;
+reg						qDivCntMaxCke, qDivCntCke;
 
 always @(posedge iCLK)
 begin
 	if (iRST) 				rTestDq <=  16'd0;
-	else if (qTestCke) 		rTestDq <=  qTestDq;
-	else 					rTestDq <=  rTestDq;
+	else 					rTestDq <=  qTestDq;
+	// else if (qTestCke) 		rTestDq <=  qTestDq;
+	// else 					rTestDq <=  rTestDq;
 	
 	if (iRST) 				rTestCs <= 1'b1;
 	else if (qTestRun) 		rTestCs <= 1'b0;
 	else 					rTestCs <= 1'b1;
 	
-	if (iRST) 				rTestOe <= 1'b0;		// default read
-	else 					rTestOe <= qTestOe;
+	if (iRST) 				rTestOe <= 1'b1;		// default write
+	else if (qTestOeCke)	rTestOe <= 1'b0;		// read switch
+	else					rTestOe <= rTestOe;		// 
 	
 	if (iRST) 				rTestEn <= 1'b0;
 	else if (qTestRun) 		rTestEn <= 1'b1;
@@ -86,22 +96,26 @@ begin
 	if (iRST) 				rTestDone <= 1'b0;
 	else if (qTestDoneCke)	rTestDone <= 1'b1;
 	else 					rTestDone <= rTestDone;
+	
+	if (qDivCntMaxCke)		rDivCnt <=  8'd0;
+	else if (qDivCntCke)	rDivCnt <=  rDivCnt + 1'b1;
+	else 					rDivCnt <=  rDivCnt;
 end
 
 always @*
 begin
-	qTestCke 		<= iTestEn & rTestClk;
-	qTestRun		<= iTestEn & (~rTestDone);
-	qTestClkCke		<= ~rTestCs;
+	qTestCke 		<= iTestEn    &   rTestClk  & qDivCntMaxCke;
+	qTestRun		<= iTestEn    & (~rTestDone);
+	qTestClkCke		<= (~rTestCs) &   qDivCntMaxCke;
+	qDivCntMaxCke  	<= iRST | (rDivCnt == iMemClkDiv);
+	qDivCntCke  	<= (~rTestCs);
 end
 
 /**----------------------------------------------------------------------------
  * Mem Write Side
  *---------------------------------------------------------------------------*/
 reg [pRamDqWidth-1:0]	rWMem	[0:255];
-reg 					rWMemOe [0:255];
 reg [pRamDqWidth-1:0]	rWMemRd;
-reg 					rWMemRdOe;
 reg [7:0] 				rWMemRa;
 reg						qWMemRaCke;
 
@@ -109,9 +123,6 @@ always @(posedge iCLK)
 begin
 	if (iMemWe) 	rWMem[iMemWa] 	<= iMemWd;
 	rWMemRd	<= rWMem[rWMemRa];
-	
-	if (iMemWe) 	rWMemOe[iMemWa] <= iMemWdOe;
-	rWMemRdOe	<= rWMemOe[rWMemRa];
 	
 	if (iRST)				rWMemRa <= 8'd0;
 	else if (qWMemRaCke)	rWMemRa <= rWMemRa + 1'b1;
@@ -122,8 +133,8 @@ end
 always @*
 begin
 	qTestDq			<= rWMemRd;
-	qTestOe			<= rWMemRdOe;
-	qWMemRaCke		<= (~rTestCs) & (~rTestClk);
+	qTestOeCke		<= (~iMemWdOe) & (rWMemRa[3:0] == 4'h8) & qWMemRaCke;	// CMD + 6byte adrs == 8cnt
+	qWMemRaCke		<= (~rTestCs) & (~rTestClk) & qDivCntMaxCke;
 	qTestDoneCke	<= rWMemRa == 8'hff;
 end
 

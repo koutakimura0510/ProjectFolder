@@ -37,6 +37,7 @@ static void system_initialize(void)
 
 	// RAM
 	// Config Setting
+	usi_write_cmd(2, RAM_REG_RAM_MEM_CLK_DIV);
 	usi_write_cmd(1, RAM_REG_RAM_CFG_RST);
 	usi_write_cmd(0x35, RAM_REG_RAM_CFG_CMD);
 	usi_write_cmd(1, RAM_REG_RAM_CFG_ENABLE);
@@ -44,15 +45,20 @@ static void system_initialize(void)
 	usi_read_wait(RAM_REG_RAM_CFG_DONE, 0x01);
 	usi_write_cmd(1, RAM_REG_RAM_CFG_RST);
 
-	// Sample Data Write
+	// Ram Data Write
 	usi_write_cmd(1, RAM_REG_RAM_MAT_RST);
-	usi_write_cmd(0x01, RAM_REG_RAM_MAT_MEM_WD_OE);
+	usi_write_cmd(1, RAM_REG_RAM_MAT_MEM_WD_OE);
+	ram_mcu_matset(0x3333, 0);	// cmd1
+	ram_mcu_matset(0x8888, 1);	// cmd2
+	ram_mcu_matset(0x0000, 2);	// adrs0
+	ram_mcu_matset(0x0000, 3);	// adrs1
+	ram_mcu_matset(0x0000, 4);	// adrs2
+	ram_mcu_matset(0x0000, 5);	// adrs3
+	ram_mcu_matset(0x0000, 6);	// adrs4
+	ram_mcu_matset(0x0000, 7);	// adrs5
 
-	for (uint8_t i = 0; i < 255; i++) {
-		// adrs もいれなければならない
-		usi_write_cmd(0xff-i, RAM_REG_RAM_MAT_MEM_WD);
-		usi_write_cmd(i, RAM_REG_RAM_MAT_MEM_WD);
-		usi_write_cmd(0x01, RAM_REG_RAM_MAT_MEM_WE);
+	for (uint8_t i = 8; i < 255; i++) {
+		ram_mcu_matset(0xffff-i, i);	// wd set
 	}
 
 	usi_write_cmd(1, RAM_REG_RAM_MAT_ENABLE);
@@ -60,10 +66,25 @@ static void system_initialize(void)
 	usi_read_wait(RAM_REG_RAM_MAT_DONE, 0x01);
 	usi_write_cmd(1, RAM_REG_RAM_MAT_RST);
 
+	// Ram Data Read
+	usi_write_cmd(0, RAM_REG_RAM_MAT_MEM_WD_OE);
+	ram_mcu_matset(0xEEEE, 0);	// cmd1
+	ram_mcu_matset(0xBBBB, 1);	// cmd2
+	ram_mcu_matset(0x0000, 2);	// adrs0
+	ram_mcu_matset(0x0000, 3);	// adrs1
+	ram_mcu_matset(0x0000, 4);	// adrs2
+	ram_mcu_matset(0x0000, 5);	// adrs3
+	ram_mcu_matset(0x0000, 6);	// adrs4
+	ram_mcu_matset(0x0000, 7);	// adrs5
+	usi_write_cmd(1, RAM_REG_RAM_MAT_ENABLE);
+	usi_write_cmd(0, RAM_REG_RAM_MAT_RST);
+	usi_read_wait(RAM_REG_RAM_MAT_DONE, 0x01);
+	usi_write_cmd(1, RAM_REG_RAM_MAT_RST);
+
 	for (uint8_t i = 0; i < 255; i++) {
-		usi_write_cmd(0xff-i, RAM_REG_RAM_MAT_MEM_WD);
-		usi_write_cmd(i, RAM_REG_RAM_MAT_MEM_WD);
-		usi_write_cmd(0x01, RAM_REG_RAM_MAT_MEM_WE);
+		usi_write_cmd(i, RAM_REG_RAM_MAT_MEM_RA);
+		uint32_t wd = usi_read_cmd(RAM_REG_RAM_MAT_MEM_RD);
+		ram_mcu_matset(i, wd);	// cmd1
 	}
 
 	// Audio

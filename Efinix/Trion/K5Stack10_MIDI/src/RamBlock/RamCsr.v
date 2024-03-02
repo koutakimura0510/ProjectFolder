@@ -37,6 +37,7 @@ module RamCsr #(
 	output 						oMatMemWe,
 	input  [pRamDqWidth-1:0]	iMatMemRd,
 	output [7:0]				oMatMemRa,
+	output [7:0]				oMemClkDiv,
     // CLK Reset
     input  						iSRST,
     input  						iSCLK
@@ -56,10 +57,12 @@ reg 					rMatMemWdOe;			assign oMatMemWdOe	= rMatMemWdOe;
 reg [ 7:0]				rMatMemWa;				assign oMatMemWa	= rMatMemWa;
 reg 					rMatMemWe;				assign oMatMemWe	= rMatMemWe;
 reg [ 7:0]				rMatMemRa;				assign oMatMemRa	= rMatMemRa;
+reg [ 7:0]				rMemClkDiv;				assign oMemClkDiv	= rMemClkDiv;
 //
 //
 reg qCsrWCke00, qCsrWCke01, qCsrWCke02, qCsrWCke03, qCsrWCke04, qCsrWCke05;
 reg qCsrWCke10, qCsrWCke11, qCsrWCke12, qCsrWCke13, qCsrWCke14, qCsrWCke15, qCsrWCke16;
+reg qCsrWCke30;
 //
 always @(posedge iSCLK)
 begin
@@ -75,6 +78,7 @@ begin
 		rMatMemWa		<= 8'd0;
 		rMatMemWe		<= 1'b0;
 		rMatMemRa		<= 8'd0;
+		rMemClkDiv		<= 8'd0;
 	end
 	else
 	begin
@@ -88,6 +92,7 @@ begin
 		rMatMemWa		<= qCsrWCke14 ? iSUsiWd[ 7:0] : rMatMemWa;
 		rMatMemWe		<= qCsrWCke15 ? iSUsiWd[ 0:0] : rMatMemWe;
 		rMatMemRa		<= qCsrWCke16 ? iSUsiWd[ 7:0] : rMatMemRa;
+		rMemClkDiv		<= qCsrWCke30 ? iSUsiWd[ 7:0] : rMemClkDiv;
 	end
 end
 
@@ -105,6 +110,8 @@ begin
 	qCsrWCke14 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
 	qCsrWCke15 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0015});
 	qCsrWCke16 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0016});
+	//
+	qCsrWCke30 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0030});
 end
 
 //----------------------------------------------------------
@@ -123,9 +130,10 @@ begin
 		'h11:	 rSUsiRd <= {{(32 - 31			){1'b0}}, rMatRst};
 		'h12:	 rSUsiRd <= {{(32 - pRamDqWidth	){1'b0}}, rMatMemWd};
 		'h13:	 rSUsiRd <= {{(32 - 31			){1'b0}}, rMatMemWdOe};
-		'h14:	 rSUsiRd <= {{(32 - 7			){1'b0}}, rMatMemWa};
+		'h14:	 rSUsiRd <= {{(32 - 8			){1'b0}}, rMatMemWa};
 		'h15:	 rSUsiRd <= {{(32 - 31			){1'b0}}, rMatMemWe};
-		'h16:	 rSUsiRd <= {{(32 - 7			){1'b0}}, rMatMemRa};
+		'h16:	 rSUsiRd <= {{(32 - 8			){1'b0}}, rMatMemRa};
+		'h30:	 rSUsiRd <= {{(32 - 8			){1'b0}}, rMemClkDiv};
 		'h40:	 rSUsiRd <= {{(32 - 31			){1'b0}}, iCfgDone};
 		'h50:	 rSUsiRd <= {{(32 - 31			){1'b0}}, iMatDone};
 		'h51:	 rSUsiRd <= {{(32 - pRamDqWidth	){1'b0}}, iMatMemRd};

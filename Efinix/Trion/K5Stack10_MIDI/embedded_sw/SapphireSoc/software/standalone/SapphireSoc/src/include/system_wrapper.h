@@ -35,6 +35,7 @@
 #include "../fpga_block/synth_func.h"
 #include "../fpga_block/video_func.h"
 #include "../fpga_block/i2c_func.h"
+#include "../fpga_block/ram_func.h"
 #include "../flash_rom/flash_rom_func.h"
 
 #endif

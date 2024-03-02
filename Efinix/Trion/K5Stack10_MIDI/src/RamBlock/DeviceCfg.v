@@ -12,6 +12,7 @@ module DeviceCfg (
 	input 	[7:0]	iCfgCmd,
 	input			iCfgEn,			// Config Enable
 	output			oCfgDone,		// Config Done
+	input	[7:0]	iMemClkDiv,
 	// Clk Reset
 	input			iRST,
 	input			iCKE,
@@ -39,6 +40,8 @@ reg [3:0]	rDoneCnt;
 reg			qCfgCke;
 reg			qCfgRun;
 reg			qCfgClkCke;
+reg [7:0]	rDivCnt;
+reg			qDivCntMaxCke, qDivCntCke;
 
 always @(posedge iCLK)
 begin
@@ -65,14 +68,20 @@ begin
 	if (iRST) 				rCfgClk <=  1'b0;
 	else if (qCfgClkCke)	rCfgClk <= ~rCfgClk;
 	else 					rCfgClk <=  rCfgClk;
+	
+	if (qDivCntMaxCke)		rDivCnt <=  8'd0;
+	else if (qDivCntCke)	rDivCnt <=  rDivCnt + 1'b1;
+	else 					rDivCnt <=  rDivCnt;
 end
 
 always @*
 begin
-	qCfgCke 	<= iCfgEn & rCfgClk & (~rCfgDone);
-	qCfgRun		<= iCfgEn & (~rCfgDone);
-	qCfgClkCke	<= ~rCfgCs;
-	qCfgDoneCke	<= (rDoneCnt == 4'd7);
+	qCfgCke 	<= iCfgEn    & rCfgClk & (~rCfgDone) & qDivCntMaxCke;
+	qCfgRun		<= iCfgEn    & (~rCfgDone);
+	qCfgClkCke	<= (~rCfgCs) & qDivCntMaxCke;
+	qCfgDoneCke	<= (rDoneCnt == 4'd7) & rCfgClk & qDivCntMaxCke;
+	qDivCntMaxCke  <= iRST | (rDivCnt == iMemClkDiv);
+	qDivCntCke  <= (~rCfgCs);
 end
 
 endmodule
