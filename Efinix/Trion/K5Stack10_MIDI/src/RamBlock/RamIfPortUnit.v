@@ -95,7 +95,7 @@ end
 
 always @*
 begin
-	qRamReCke		<= (~rRamOe) & (~rRamClk) & (rWaitCnt == 4'd5) & qDivCntMaxCke;
+	qRamReCke		<= (~rRamClk) & (rWaitCnt == 4'd5) & qDivCntMaxCke;
 	qWaitCntCke		<= (~rRamOe) & (~rRamClk) & (rWaitCnt != 4'd5) & qDivCntMaxCke;
 	qDivCntMaxCke	<= iRST | (rDivCnt == iMemClkDiv);
 	qDivCntCke  	<= (~rRamCs);

@@ -93,38 +93,6 @@ RamCsr #(
 );
 
 
-//-----------------------------------------------------------------------------
-// Fifo Read Write Tester
-//-----------------------------------------------------------------------------
-localparam lpFifoDepth = 256;	// FIFO 最小構成
-
-wire [pUfiDqBusWidth-1:0] 	wRamIfPortUnitWd;
-wire [pUfiAdrsBusWidth-1:0] wRamIfPortUnitAdrs;
-wire [pUfiDqBusWidth-1:0] 	wRamIfPortUnitRd;
-wire 						wRamIfPortUnitRvd;
-
-RamReadWriteArbiter #(
-	.pUfiDqBusWidth(pUfiDqBusWidth),
-	.pUfiAdrsBusWidth(pUfiAdrsBusWidth),
-	.pFifoDepth(lpFifoDepth),
-	.pUfiEnableBit(pUfiEnableBit)
-) RamReadWriteArbiter (
-	// Ufi Write
-	.iSUfiWd(iSUfiWd),
-	.iSUfiAdrs(iSUfiAdrs),
-	.oSUfiRdy(oSUfiRdy),
-	// UFI Read
-	.oSUfiRd(oSUfiRd),
-	.oSUfiAdrs(oSUfiAdrs),
-	// RamIfPort Bridge
-	.oRamIfPortUnitWd(wRamIfPortUnitWd),
-	.oRamIfPortUnitAdrs(wRamIfPortUnitAdrs),
-	.iRamIfPortUnitDq(wRamIfPortUnitRd),
-	.iRamIfPortUnitWe(wRamIfPortUnitRvd),
-	// common
-	.iRST(iSRST),	.inARST(inSRST),	.iCLK(iSCLK)
-);
-
 /**----------------------------------------------------------------------------
  * Mcu Memory Access
  *---------------------------------------------------------------------------*/
@@ -184,6 +152,40 @@ MemoryAccessTester #(
 
 assign oTestErr	= 1'b0;
 assign oDone	= 1'b0;
+
+
+//-----------------------------------------------------------------------------
+// 複数 Logic からのアクセスを管理
+//-----------------------------------------------------------------------------
+localparam lpFifoDepth = 256;	// FIFO 最小構成
+
+wire [pUfiDqBusWidth-1:0] 	wRamIfPortUnitWd;
+wire [pUfiAdrsBusWidth-1:0] wRamIfPortUnitAdrs;
+wire [pUfiDqBusWidth-1:0] 	wRamIfPortUnitRd;
+wire 						wRamIfPortUnitRvd;
+
+RamReadWriteArbiter #(
+	.pUfiDqBusWidth(pUfiDqBusWidth),
+	.pUfiAdrsBusWidth(pUfiAdrsBusWidth),
+	.pFifoDepth(lpFifoDepth),
+	.pUfiEnableBit(pUfiEnableBit)
+) RamReadWriteArbiter (
+	// Ufi Write
+	.iSUfiWd(iSUfiWd),
+	.iSUfiAdrs(iSUfiAdrs),
+	.oSUfiRdy(oSUfiRdy),
+	// UFI Read
+	.oSUfiRd(oSUfiRd),
+	.oSUfiAdrs(oSUfiAdrs),
+	// RamIfPort Bridge
+	.oRamIfPortUnitWd(wRamIfPortUnitWd),
+	.oRamIfPortUnitAdrs(wRamIfPortUnitAdrs),
+	.iRamIfPortUnitDq(wRamIfPortUnitRd),
+	.iRamIfPortUnitWe(wRamIfPortUnitRvd),
+	// common
+	.iRST(iSRST),	.inARST(inSRST),	.iCLK(iSCLK)
+);
+
 
 /**----------------------------------------------------------------------------
  * Ram If Port Unit

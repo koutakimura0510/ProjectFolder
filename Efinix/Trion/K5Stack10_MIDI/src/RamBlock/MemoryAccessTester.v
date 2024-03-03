@@ -54,7 +54,7 @@ module MemoryAccessTester #(
   ・write cmd = 0x38
   ・read cmd = 0xEB
  *---------------------------------------------------------------------------*/
-reg  [pRamDqWidth-1:0]	rTestDq;					assign oTestDq	 = rTestDq;
+reg  [pRamDqWidth-1:0]	qTestDq;					assign oTestDq	 = qTestDq;
 reg  					rTestCs;					assign oTestCs	 = rTestCs;
 reg  					rTestClk;					assign oTestClk	 = rTestClk;
 reg  					rTestOe;					assign oTestOe	 = rTestOe;
@@ -62,7 +62,6 @@ reg  					rTestEn;					assign oTestEn	 = rTestEn;
 //
 reg						rTestDone;					assign oTestDone = rTestDone;
 reg						qTestDoneCke;
-reg  [pRamDqWidth-1:0]	qTestDq;
 reg						qTestOeCke;
 reg						qTestCke,	qTestClkCke;
 reg						qTestRun;
@@ -72,11 +71,6 @@ reg						qDivCntMaxCke, qDivCntCke;
 
 always @(posedge iCLK)
 begin
-	if (iRST) 				rTestDq <=  16'd0;
-	else 					rTestDq <=  qTestDq;
-	// else if (qTestCke) 		rTestDq <=  qTestDq;
-	// else 					rTestDq <=  rTestDq;
-	
 	if (iRST) 				rTestCs <= 1'b1;
 	else if (qTestRun) 		rTestCs <= 1'b0;
 	else 					rTestCs <= 1'b1;

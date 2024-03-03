@@ -172,7 +172,7 @@ initial begin
 	$dumpvars(0, RAMBlock_tb);	// 引数0:下位モジュール表示, 1:Topのみ
 	reset_init();
 	// Config Sim
-	usi_csr_write(32'h2, 16'h0030, lpRAMAdrsMap);	// DIV
+	usi_csr_write(32'h0, 16'h0030, lpRAMAdrsMap);	// DIV
 	// usi_csr_write(32'h1, 16'h0002, lpRAMAdrsMap);	// RST
 	// usi_csr_write(32'h1, 16'h0001, lpRAMAdrsMap);	// EN
 	// usi_csr_write(32'h35,16'h0000, lpRAMAdrsMap);	// CMD

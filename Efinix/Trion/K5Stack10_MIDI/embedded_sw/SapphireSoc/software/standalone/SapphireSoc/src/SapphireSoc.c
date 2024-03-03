@@ -37,7 +37,7 @@ static void system_initialize(void)
 
 	// RAM
 	// Config Setting
-	usi_write_cmd(2, RAM_REG_RAM_MEM_CLK_DIV);
+	usi_write_cmd(0, RAM_REG_RAM_MEM_CLK_DIV);
 	usi_write_cmd(1, RAM_REG_RAM_CFG_RST);
 	usi_write_cmd(0x35, RAM_REG_RAM_CFG_CMD);
 	usi_write_cmd(1, RAM_REG_RAM_CFG_ENABLE);
@@ -57,8 +57,8 @@ static void system_initialize(void)
 	ram_mcu_matset(0x0000, 6);	// adrs4
 	ram_mcu_matset(0x0000, 7);	// adrs5
 
-	for (uint8_t i = 8; i < 255; i++) {
-		ram_mcu_matset(0xffff-i, i);	// wd set
+	for (uint8_t i = 0; i < 247; i++) {
+		ram_mcu_matset(0xaaaa+i, i+8);	// wd set
 	}
 
 	usi_write_cmd(1, RAM_REG_RAM_MAT_ENABLE);
@@ -88,18 +88,18 @@ static void system_initialize(void)
 	}
 
 	// Audio
-	// usi_write_cmd(0x020202, AUDIO_REG_SFM_CLK_DIV);		// 動作周波数
+	// usi_write_cmd(0x040404, AUDIO_REG_SFM_CLK_DIV);		// 動作周波数
 	// usi_write_cmd(0x020202, AUDIO_REG_SFM_CS_HOLD_TIME);
 	// usi_write_cmd(0x7, AUDIO_REG_SFM_CPU_VALID);
+	// // flash_id_read(0);
+	// // flash_id_read(1);
 	// flash_protection_reg_write(0);
 	// flash_protection_reg_write(1);
-	// flash_protection_reg_write(2);
-	// flash_protection_reg_write(3);
 	// usi_write_cmd(0x0, AUDIO_REG_SFM_CPU_VALID);
-	// usi_write_cmd(0, AUDIO_REG_SFM_START_ADRS_3);
-	// usi_write_cmd(4100, AUDIO_REG_SFM_END_ADRS_3);
-	// usi_write_cmd(0x4, AUDIO_REG_SFM_CYCLE_ENABLE);
-	// usi_write_cmd(0x4, AUDIO_REG_SFM_ENABLE);
+	// usi_write_cmd(0, AUDIO_REG_SFM_START_ADRS_1);
+	// usi_write_cmd(4100, AUDIO_REG_SFM_END_ADRS_1);
+	// usi_write_cmd(0x1, AUDIO_REG_SFM_CYCLE_ENABLE);
+	// usi_write_cmd(0x1, AUDIO_REG_SFM_ENABLE);
 
 	// Video
 	video_color_bar();
