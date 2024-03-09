@@ -5,36 +5,40 @@
  * RAM IF moudle の Write/Read 処理
  * V1.0 : new Relaese
  * 
- * UfiAdrs Bit Assign
+ * Ufi Cmd
  * [31]    1'b1 Enable, 1'b0 Disable
  * [30]    1'b0 WriteCmd,  1'b1 ReadCmd
  * [28:25] Block ID
  * [24: 0] RAM Adrs
  *-----------------------------------------------------------------------------*/
 module RamReadWriteArbiter #(
-	parameter pUfiDqBusWidth 	= 16,
-	parameter pUfiAdrsBusWidth 	= 32,
+	parameter pUfiBusWidth 		= 32,
 	parameter pFifoDepth 		= 256,
 	parameter pUfiEnableBit 	= 32
 )(
 	// Bus Slave Write
-	input  [pUfiDqBusWidth-1:0] 	iSUfiWd,
-	input  [pUfiAdrsBusWidth-1:0] 	iSUfiAdrs,
+	input  [pUfiBusWidth-1:0] 		iSUfiWd,
 	output 							oSUfiRdy,
 	// Bus Slave Read
-	output [pUfiDqBusWidth-1:0] 	oSUfiRd,
-	output [pUfiAdrsBusWidth-1:0] 	oSUfiAdrs,
+	output [pUfiBusWidth-1:0] 		oSUfiRd,
+	output 							oSUfiVd,
 	// RAM IF Write Port
-	output [pUfiDqBusWidth-1:0] 	oRamIfPortUnitWd,
+	output [pUfiBusWidth-1:0] 		oRamIfPortUnitWd,
 	output [pUfiAdrsBusWidth-1:0] 	oRamIfPortUnitAdrs,
 	// RAM IF Read Port
-	input  [pUfiDqBusWidth-1:0] 	iRamIfPortUnitDq,
+	input  [pUfiBusWidth-1:0] 		iRamIfPortUnitDq,
 	input  							iRamIfPortUnitWe,
     // CLK Reset
     input  iRST,
 	input  inARST,
     input  iCLK
 );
+
+
+/**----------------------------------------------------------------------------
+ * 
+ *---------------------------------------------------------------------------*/
+
 
 
 //-----------------------------------------------------------------------------
@@ -46,7 +50,7 @@ reg  qFifoWriteRe;
 
 SyncFifoController #(
 	.pFifoDepth(pFifoDepth),
-	.pFifoBitWidth(pUfiDqBusWidth)
+	.pFifoBitWidth(pUfiBusWidth)
 ) DqWriteSyncFifoController (
 	.iWd(iSUfiWd),
 	.iWe(iSUfiAdrs[pUfiEnableBit-1]),
@@ -94,7 +98,7 @@ wire wDqReadFifoRvd;
 
 SyncFifoController #(
 	.pFifoDepth(pFifoDepth),
-	.pFifoBitWidth(pUfiDqBusWidth)
+	.pFifoBitWidth(pUfiBusWidth)
 ) DqReadSyncFifoController (
 	.iWd(iRamIfPortUnitDq),
 	.iWe(iRamIfPortUnitWe),

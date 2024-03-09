@@ -221,12 +221,10 @@ endgenerate
 localparam  lpRamAdrsWidth    		= 24;		// 外部 RAM の Adrs 領域
 localparam  lpRamDqWidth      		= 16;		// 外部 RAM の Dq 端子数
 localparam  lpDmaAdrsWidth    		= lpRamAdrsWidth;
-localparam  lpUfiDqBusWidth   		= 16;		// UFIB データ幅
-localparam  lpUfiAdrsBusWidth 		= 32;		// UFIB アドレス幅
-localparam  lpUfiBlockConnectNum 	= 6;		// UFIB Connet Block Number
+localparam  lpUfiBusWidth   		= 48;		// UFIB データ幅
+localparam  lpUfiBlockConnectNum 	= 2;		// UFIB Connet Block Number
 localparam 	lpUfiBlockAdrsWidth		= f_detect_bitwidth(lpUfiBlockConnectNum);
-localparam	lpMUfiDqWidth 			= lpUfiDqBusWidth   * lpUfiBlockConnectNum;
-localparam	lpMUfiAdrsWidth			= lpUfiAdrsBusWidth * lpUfiBlockConnectNum;
+localparam	lpMUfiBusWidth 			= lpUfiBusWidth   * lpUfiBlockConnectNum;
 //
 localparam lpSynDmaBurstLength		= 16;
 localparam lpVtbDmaBurstLength		= 16;
@@ -234,45 +232,35 @@ localparam lpVtbDmaBurstLength		= 16;
 // initial begin
 // 	$display("%d", lpUfiBlockAdrsWidth);
 // end
-//
 localparam [lpUfiBlockAdrsWidth-1:0]	// UFI ブロックアドレスマッピング
 	lpUfiMcbAdrsMap		= 'h0,
-	lpUfiSynAdrsMap		= 'h1,
-	lpUfiSynAdrs2Map	= 'h2,
-	lpUfiSynAdrs3Map	= 'h3,
-	lpUfiSynAdrs4Map	= 'h4,
-	lpUfiVtbAdrsMap		= 'h5,
+	lpUfiVtbAdrsMap		= 'h1,
 	lpUfiNullAdrsMap	= 	0;
-//
-wire [lpUfiDqBusWidth-1:0] 		wSUfiRd;
-wire [lpUfiAdrsBusWidth-1:0] 	wSUfiAdrs;
-wire [lpUfiDqBusWidth-1:0] 		wMUfiRd;
-wire [lpUfiAdrsBusWidth-1:0] 	wMUfiAdrs;
-//
-wire [lpUfiDqBusWidth-1:0] 		wSUfiWd;
-wire [lpUfiAdrsBusWidth-1:0] 	wSUfiWAdrs;
+	
+// Ufi Slave to Master
+wire [lpUfiBusWidth-1:0] 		wSUfiRd;
+wire [lpUfiBusWidth-1:0] 		wMUfiRd;
+wire 							wSUfiVd;
+wire [lpUfiBlockConnectNum-1:0]	wMUfiVd;
+// Usi Master to Slave
+wire [lpUfiBusWidth-1:0] 		wSUfiWd;
+wire [lpUfiBusWidth-1:0] 		wMUfiWd[0:lpUfiBlockConnectNum-1];
 wire 							wSUfiRdy;
-wire [lpUfiDqBusWidth-1:0] 		wMUfiWd[0:lpUfiBlockConnectNum-1];
-wire [lpUfiAdrsBusWidth-1:0] 	wMUfiWAdrs[0:lpUfiBlockConnectNum-1];
 wire [lpUfiBlockConnectNum-1:0]	wMUfiRdy;
 //
-reg [lpMUfiDqWidth-1:0]			qMUfiWd;
-reg [lpMUfiAdrsWidth-1:0]		qMUfiWAdrs;
+reg [lpMUfiBusWidth-1:0]		qMUfiWd;
 
-UFIB #(
+UFIBv2 #(
 	.pBlockConnectNum(lpUfiBlockConnectNum),
 	.pBlockAdrsWidth(lpUfiBlockAdrsWidth),
-	.pUfiDqBusWidth(lpUfiDqBusWidth),
-	.pUfiAdrsBusWidth(lpUfiAdrsBusWidth)
-) UFIB (
+	.pUfiBusWidth(lpUfiBusWidth)
+) UFIBv2 (
 	// Ufi Bus Master Read
-	.iSUfiRd(wSUfiRd),  .iSUfiAdrs(wSUfiAdrs),
-	.oMUfiRd(wMUfiRd),  .oMUfiAdrs(wMUfiAdrs),
+	.iSUfiRd(wSUfiRd),	.oMUfiRd(wMUfiRd),
+	.iSUfiVd(wSUfiVd),	.oMUfiVd(wMUfiVd),
 	// Ufi Bus Master Write
-	.oSUfiWd(wSUfiWd),  .oSUfiAdrs(wSUfiWAdrs),
-	.iSUfiRdy(wSUfiRdy),
-	.iMUfiWd(qMUfiWd),  .iMUfiAdrs(qMUfiWAdrs),
-	.oMUfiRdy(wMUfiRdy),
+	.oSUfiWd(wSUfiWd),	.iSUfiRdy(wSUfiRdy),
+	.iMUfiWd(qMUfiWd),	.oMUfiRdy(wMUfiRdy),
 	// CLK Reset
 	.iRST(wSRST),    	.iCLK(iSCLK)
 );
@@ -283,8 +271,7 @@ generate
 	begin
 		always @*
 		begin
-			qMUfiWd[((x+1)*lpUfiDqBusWidth)-1:x*lpUfiDqBusWidth]		<= wMUfiWd[x];
-			qMUfiWAdrs[((x+1)*lpUfiAdrsBusWidth)-1:x*lpUfiAdrsBusWidth]	<= wMUfiWAdrs[x];
+			qMUfiWd[((x+1)*lpUfiBusWidth)-1:x*lpUfiBusWidth] <= wMUfiWd[x];
 		end
 	end
 endgenerate
@@ -303,8 +290,7 @@ MicroControllerBlock #(
 	.pCsrAdrsWidth(lpCsrAdrsWidth),
 	.pCsrActiveWidth(lpMCBCsrActiveWidth),
 	.pUsiBusWidth(lpUsiBusWidth),
-	.pUfiDqBusWidth(lpUfiDqBusWidth),
-	.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
+	.pUfiBusWidth(lpUfiBusWidth),
 	.pUfiAdrsMap(lpUfiMcbAdrsMap),
 	.pOnChipMcu(lpOnChipMcu)
 ) MicroControllerBlock (
@@ -315,10 +301,10 @@ MicroControllerBlock #(
 	.oMUsiWd(wMUsiWdMcb),	.oMUsiAdrs(wMUsiAdrsMcb),
 	.iSUsiWd(wSUsiWd),		.iSUsiAdrs(wSUsiAdrs),
 	// Ufi Bus Master Read
-	.iMUfiRd(wMUfiRd),		.iMUfiAdrs(wMUfiAdrs),
+	.iMUfiRd(wMUfiRd),
+	.iMUfiVd(wMUfiVd[lpUfiMcbAdrsMap]),
 	// Ufi Bus Master Write
 	.oMUfiWd(wMUfiWd[lpUfiMcbAdrsMap]),
-	.oMUfiAdrs(wMUfiWAdrs[lpUfiMcbAdrsMap]),
 	.iMUfiRdy(wMUfiRdy[lpUfiMcbAdrsMap]),
 	// GPIO
 	.oTxd(wSocTxd),			.iRxd(wSocRxd),
@@ -450,48 +436,6 @@ AudioTxBlock #(
 	.iSRST(wSRST),			.inSRST(wnSRST),	.iSCLK(iSCLK)
 );
 
-
-//-----------------------------------------------------------------------------
-// Memory Block
-//-----------------------------------------------------------------------------
-localparam lpRamDevConfIntGen = "yes";
-
-wire [lpRamDqWidth-1:0]  wRamDq_O;
-wire [lpRamDqWidth-1:0]  wRamDq_I;
-wire [1:0] wRamDq_Oe;
-wire [1:0] wRamClk;
-wire [1:0] wRamCe;
-wire wSRAM_nRST;
-wire wTestErr, wDone;
-
-RamBlock #(
-	.pBlockAdrsWidth(lpBlockAdrsWidth),	.pAdrsMap(lpRAMAdrsMap),
-	.pUsiBusWidth(lpUsiBusWidth),
-	.pCsrAdrsWidth(lpCsrAdrsWidth),		.pCsrActiveWidth(lpRAMCsrActiveWidth),
-	.pUfiDqBusWidth(lpUfiDqBusWidth),	.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
-	// Ram I/F
-	.pRamAdrsWidth(lpRamAdrsWidth),		.pRamDqWidth(lpRamDqWidth),
-	// test
-	.pDevConfIntGen(lpRamDevConfIntGen)
-) RamBlock (
-  // SRAM I/F Port
-	.oRamDq(wRamDq_O),		.iRamDq(wRamDq_I),		.oRamDq_Oe(wRamDq_Oe),
-	.oRamClk(wRamClk),		.oRamCe(wRamCe),
-	// Usi Bus Master Read
-	.oSUsiRd(wSUsiRd[lpRAMAdrsMap]),
-	// Usi Bus Master Write
-	.iSUsiWd(wSUsiWd),		.iSUsiAdrs(wSUsiAdrs),
-	// Ufi Bus Master Read
-	.oSUfiRd(wSUfiRd),		.oSUfiAdrs(wSUfiAdrs),
-	// Ufi Bus Master Write
-	.iSUfiWd(wSUfiWd),		.iSUfiAdrs(wSUfiWAdrs),
-	.oSUfiRdy(wSUfiRdy),
-	// Status
-	.oTestErr(wTestErr),	.oDone(wDone),
-	// CLK, RST
-	.iSRST(wSRST),			.inSRST(wnSRST),		.iSCLK(iSCLK)
-);
-
 //---------------------------------------------------------------------------
 // Systick Timer Block
 //---------------------------------------------------------------------------
@@ -523,9 +467,7 @@ VideoTxBlock #(
 	.pUsiBusWidth(lpUsiBusWidth),			.pCsrAdrsWidth(lpCsrAdrsWidth),
 	.pCsrActiveWidth(lpVtbCsrActiveWidth),
 	// UFI
-	.pUfiDqBusWidth(lpUfiDqBusWidth),		.pUfiAdrsBusWidth(lpUfiAdrsBusWidth),
-	.pUfiAdrsMap(lpUfiVtbAdrsMap),
-	.pDmaAdrsWidth(lpDmaAdrsWidth),			.pDmaBurstLength(lpVtbDmaBurstLength)
+	.pUfiBusWidth(lpUfiBusWidth),			.pUfiAdrsMap(lpUfiVtbAdrsMap)
 ) VideoTxBlock (
 	// VIDEO Output Signal Ctrl
 	.oVIDEO_R(wVIDEO_R),		.oVIDEO_G(wVIDEO_G),	.oVIDEO_B(wVIDEO_B),
@@ -535,12 +477,12 @@ VideoTxBlock #(
 	// Bus Master Read
 	.oSUsiRd(wSUsiRd[lpVtbAdrsMap]),
 	// Bus Master Write
-	.iSUsiWd(wSUsiWd),    .iSUsiAdrs(wSUsiAdrs),
+	.iSUsiWd(wSUsiWd),			.iSUsiAdrs(wSUsiAdrs),
 	// Ufi Bus Master Read
-	.iMUfiRd(wMUfiRd),    .iMUfiAdrs(wMUfiAdrs),
+	.iMUfiRd(wMUfiRd),
+	.iMUfiVd(wMUfiVd[lpUfiVtbAdrsMap]),
 	// Ufi Bus Master Write
 	.oMUfiWd(wMUfiWd[lpUfiVtbAdrsMap]),
-	.oMUfiAdrs(wMUfiWAdrs[lpUfiVtbAdrsMap]),
 	.iMUfiRdy(wMUfiRdy[lpUfiVtbAdrsMap]),
 	// CLK, RST
 	.iVRST(wVRST),		.inVRST(wnVRST),	.iVCLK(iVCLK),
@@ -569,6 +511,47 @@ I2cBlock #(
 	// CLK, RST
 	.iSRST(wSRST),			.inSRST(wnSRST),	.iSCLK(iSCLK)
 );
+
+//-----------------------------------------------------------------------------
+// Memory Block
+//-----------------------------------------------------------------------------
+localparam lpRamDevConfIntGen = "yes";
+
+wire [lpRamDqWidth-1:0]  wRamDq_O;
+wire [lpRamDqWidth-1:0]  wRamDq_I;
+wire [1:0] wRamDq_Oe;
+wire [1:0] wRamClk;
+wire [1:0] wRamCe;
+wire wSRAM_nRST;
+wire wTestErr, wDone;
+
+RamBlock #(
+	.pBlockAdrsWidth(lpBlockAdrsWidth),	.pAdrsMap(lpRAMAdrsMap),
+	.pUsiBusWidth(lpUsiBusWidth),
+	.pCsrAdrsWidth(lpCsrAdrsWidth),		.pCsrActiveWidth(lpRAMCsrActiveWidth),
+	.pUfiBusWidth(lpUfiBusWidth),
+	// Ram I/F
+	.pRamAdrsWidth(lpRamAdrsWidth),		.pRamDqWidth(lpRamDqWidth),
+	// test
+	.pDevConfIntGen(lpRamDevConfIntGen)
+) RamBlock (
+  // SRAM I/F Port
+	.oRamDq(wRamDq_O),		.iRamDq(wRamDq_I),		.oRamDq_Oe(wRamDq_Oe),
+	.oRamClk(wRamClk),		.oRamCe(wRamCe),
+	// Usi Bus Master Read
+	.oSUsiRd(wSUsiRd[lpRAMAdrsMap]),
+	// Usi Bus Master Write
+	.iSUsiWd(wSUsiWd),		.iSUsiAdrs(wSUsiAdrs),
+	// Ufi Bus Master Read
+	.oSUfiRd(wSUfiRd),		.oSUfiVd(wSUfiVd),
+	// Ufi Bus Master Write
+	.iSUfiWd(wSUfiWd),		.oSUfiRdy(wSUfiRdy),
+	// Status
+	.oTestErr(wTestErr),	.oDone(wDone),
+	// CLK, RST
+	.iSRST(wSRST),			.inSRST(wnSRST),		.iSCLK(iSCLK)
+);
+
 
 //-----------------------------------------------------------------------------
 // Debug Core Block
@@ -742,7 +725,5 @@ function integer f_detect_bitwidth;
 		end
 	end
 endfunction
-
-
 
 endmodule

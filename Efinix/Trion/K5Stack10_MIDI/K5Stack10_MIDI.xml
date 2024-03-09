@@ -1,4 +1,4 @@
-<efx:project xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="K5Stack10_MIDI" description="" last_change_date="Sun Mar 03 2024 14:54:04" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI/." sw_version="2023.1.150.6.14" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="sync" place_ood="sync" route_ood="sync" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
+<efx:project xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="K5Stack10_MIDI" description="" last_change_date="&#22303;  3&#26376; 09 2024 16&#26178;20&#20998;56&#31186;" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI/." sw_version="2023.1.150.6.14" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="sync" place_ood="sync" route_ood="sync" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
     <efx:device_info>
         <efx:family name="Trion" />
         <efx:device name="T20Q144" />
@@ -8,9 +8,8 @@
         <efx:top_module name="K5Stack10MidiTop" />
         <efx:design_file name="src/K5Stack10MidiTop.v" version="default" library="default" />
         <efx:design_file name="src/UltraSimpleInterfaceBus/USIB.v" version="default" library="default" />
-        <efx:design_file name="src/UltraFastInterfaceBus/UFIB.v" version="default" library="default" />
-        <efx:design_file name="src/UltraFastInterfaceBus/UfibReadDmaUnit.v" version="default" library="default" />
-        <efx:design_file name="src/UltraFastInterfaceBus/UfibBurstCnt.v" version="default" library="default" />
+        <efx:design_file name="src/UltraFastInterfaceBus/UFIBv2.v" version="default" library="default" />
+        <efx:design_file name="src/UltraFastInterfaceBus/UfibCoreUnit.v" version="default" library="default" />
         <efx:design_file name="src/GpioBlock/GpioCsr.v" version="default" library="default" />
         <efx:design_file name="src/GpioBlock/GpioBlock.v" version="default" library="default" />
         <efx:design_file name="src/SPIBlock/SPICsr.v" version="default" library="default" />
@@ -25,9 +24,9 @@
         <efx:design_file name="src/AudioTxBlock/AudioTxI2S.v" version="default" library="default" />
         <efx:design_file name="src/RamBlock/RamBlock.v" version="default" library="default" />
         <efx:design_file name="src/RamBlock/RamCsr.v" version="default" library="default" />
-        <efx:design_file name="src/RamBlock/RamReadWriteArbiter.v" version="default" library="default" />
         <efx:design_file name="src/RamBlock/DeviceCfg.v" version="default" library="default" />
         <efx:design_file name="src/RamBlock/MemoryAccessTester.v" version="default" library="default" />
+        <efx:design_file name="src/RamBlock/MemoryAccessVideo.v" version="default" library="default" />
         <efx:design_file name="src/RamBlock/RamIfPortUnit.v" version="default" library="default" />
         <efx:design_file name="src/MicroControllerBlock/MicroControllerBlock.v" version="default" library="default" />
         <efx:design_file name="src/MicroControllerBlock/MicroControllerCsr.v" version="default" library="default" />

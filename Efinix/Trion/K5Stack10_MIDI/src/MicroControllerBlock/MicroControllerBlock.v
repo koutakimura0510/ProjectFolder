@@ -5,54 +5,50 @@
 // RISC-V IP Soc(CPU) を搭載しシステムの管理を行う。
 //----------------------------------------------------------
 module MicroControllerBlock #(
-	parameter pBlockAdrsWidth 	= 8,
+	parameter 		pBlockAdrsWidth		= 8,
 	parameter [pBlockAdrsWidth-1:0] pAdrsMap = 'h01,
-	parameter pUsiBusWidth 		= 32,
-	parameter pCsrAdrsWidth 	= 8,
-	parameter pCsrActiveWidth 	= 8,
-	parameter pUfiDqBusWidth 	= 16,
-	parameter pUfiAdrsBusWidth	= 32,
-	parameter [3:0] pUfiAdrsMap	= 'h0,
-	parameter pUfiEnableBit 	= 32,
-	parameter pSimlation 		= "no",
-	parameter pOnChipMcu 		= "yes"
+	parameter 		pUsiBusWidth 		= 32,
+	parameter 		pCsrAdrsWidth 		= 8,
+	parameter 		pCsrActiveWidth 	= 8,
+	parameter 		pUfiBusWidth 		= 32,
+	parameter [3:0] pUfiAdrsMap			= 'h0,
+	parameter 		pSimlation 			= "no",
+	parameter 		pOnChipMcu 			= "yes"
 )(
 	// Usi Bus Master Read
-	input	[pUsiBusWidth-1:0] iMUsiRd,
-	output	[pUsiBusWidth-1:0] oSUsiRd,	// ※1
+	input	[pUsiBusWidth-1:0] 		iMUsiRd,
+	output	[pUsiBusWidth-1:0] 		oSUsiRd,	// ※1
 	// Usi Bus Master Write
-	output	[pUsiBusWidth-1:0] oMUsiWd,
-	output	[pUsiBusWidth-1:0] oMUsiAdrs,
-	input	[pUsiBusWidth-1:0] iSUsiWd,		// ※1
-	input	[pUsiBusWidth-1:0] iSUsiAdrs,	// ※1
+	output	[pUsiBusWidth-1:0]		oMUsiWd,
+	output	[pUsiBusWidth-1:0]		oMUsiAdrs,
+	input	[pUsiBusWidth-1:0]		iSUsiWd,	// ※1
+	input	[pUsiBusWidth-1:0]		iSUsiAdrs,	// ※1
 	// Ufi Bus Master Read
-	input	[pUfiDqBusWidth-1:0] iMUfiRd,
-	input	[pUfiAdrsBusWidth-1:0] iMUfiAdrs,
-	
+	input	[pUfiBusWidth-1:0] 		iMUfiRd,
+	input							iMUfiVd,
 	// Ufi Bus Master Write
-	output	[pUfiDqBusWidth-1:0] oMUfiWd,
-	output	[pUfiAdrsBusWidth-1:0] oMUfiAdrs,
-	input	iMUfiRdy,
+	output	[pUfiBusWidth-1:0] 		oMUfiWd,
+	input							iMUfiRdy,
 	// UART
-	output	oTxd,
-	input	iRxd,
+	output							oTxd,
+	input							iRxd,
 	// Soc RST
-	output 	oSocRST,
+	output							oSocRST,
 	// common
-	input	iSRST,
-	input	inSRST,
-	input	iSCLK,
+	input							iSRST,
+	input							inSRST,
+	input							iSCLK,
 	// JTAG
-	input	jtag_inst1_TCK,
-	output	jtag_inst1_TDO,
-	input	jtag_inst1_TDI,
-	input	jtag_inst1_TMS,
-	input	jtag_inst1_RUNTEST,
-	input	jtag_inst1_SEL,
-	input	jtag_inst1_CAPTURE,
-	input	jtag_inst1_SHIFT,
-	input	jtag_inst1_UPDATE,
-	input	jtag_inst1_RESET
+	input							jtag_inst1_TCK,
+	output							jtag_inst1_TDO,
+	input							jtag_inst1_TDI,
+	input							jtag_inst1_TMS,
+	input							jtag_inst1_RUNTEST,
+	input							jtag_inst1_SEL,
+	input							jtag_inst1_CAPTURE,
+	input							jtag_inst1_SHIFT,
+	input							jtag_inst1_UPDATE,
+	input							jtag_inst1_RESET
 );
 // ※1 MCB 自体が持つ CSR アクセスする
 
@@ -60,11 +56,10 @@ module MicroControllerBlock #(
 //-----------------------------------------------------------------------------
 // CSR
 //-----------------------------------------------------------------------------
-wire [pUfiDqBusWidth-1:0] 	wRamWdCsr;
-wire [pUfiAdrsBusWidth-1:0] wRamAdrsCsr;
+wire [pUfiBusWidth-1:0] 	wRamWdCsr;
 wire 						wRamEnCsr;
 reg 						qRamFullCsr, qRamEmpCsr;
-reg  [pUfiDqBusWidth-1:0] 	qUfiRdCsr;
+reg  [pUfiBusWidth-1:0] 	qUfiRdCsr;
 reg 						qRamRdVdCsr;
 
 MicroControllerCsr #(
@@ -79,7 +74,7 @@ MicroControllerCsr #(
 	// Bus Master Write
 	.iSUsiWd(iSUsiWd),		.iSUsiAdrs(iSUsiAdrs),
 	// CSR
-	.oRamWd(wRamWdCsr),		.oRamAdrs(wRamAdrsCsr),
+	.oRamWd(wRamWdCsr),
 	.oRamEn(wRamEnCsr),
 	.iRamFull(qRamFullCsr),	.iRamEmp(qRamEmpCsr),
 	.iRamRd(qUfiRdCsr),
@@ -175,83 +170,88 @@ endgenerate
 
 
 
-//-----------------------------------------------------------------------------
-// Mcb Cache Memory
-// SPI Rom から読み込んだデータを RAM に格納する目的で使用する。
-// Write Enable は Csr で制御しており Enable Assert -> Dissert にしなければ、
-// 次の書き込みが行われないようにした。
-//-----------------------------------------------------------------------------
-localparam lpMcmDepth 		= 512;
-localparam lpMcmBitWidth 	= 48;
+/**----------------------------------------------------------------------------
+ * not used
+ *---------------------------------------------------------------------------*/
+assign oMUfiWd = 32'd0;
 
-reg  [lpMcmBitWidth-1:0] 	qMcmWd;
-reg 						qMcmWe;
-wire [lpMcmBitWidth-1:0] 	wMcmRd;
-reg  qMcmRe;
-wire wMcmFull, wMcmEmp;
-wire wMcmRvd;
-//
-reg  rMcmWeOneShot;
+// //-----------------------------------------------------------------------------
+// // Mcb Cache Memory
+// // SPI Rom から読み込んだデータを RAM に格納する目的で使用する。
+// // Write Enable は Csr で制御しており Enable Assert -> Dissert にしなければ、
+// // 次の書き込みが行われないようにした。
+// //-----------------------------------------------------------------------------
+// localparam lpMcmDepth 		= 512;
+// localparam lpMcmBitWidth 	= 48;
 
-SyncFifoController #(
-    .pFifoDepth(lpMcmDepth),
-    .pFifoBitWidth(lpMcmBitWidth)
-) McbCacheMemory (
-    .iWd(qMcmWd),
-    .iWe(qMcmWe),
-    .oFull(wMcmFull),
-	.oRemaingCntAlert(),
-    .oRd(wMcmRd),
-    .iRe(qMcmRe),
-    .oRvd(wMcmRvd),
-    .oEmp(wMcmEmp),
-    .inARST(inSRST),
-	.iCLK(iSCLK)
-);
+// reg  [lpMcmBitWidth-1:0] 	qMcmWd;
+// reg 						qMcmWe;
+// wire [lpMcmBitWidth-1:0] 	wMcmRd;
+// reg  qMcmRe;
+// wire wMcmFull, wMcmEmp;
+// wire wMcmRvd;
+// //
+// reg  rMcmWeOneShot;
 
-always @(posedge iSCLK)
-begin
-	if (iSRST) 			rMcmWeOneShot <= 1'b0;
-	else if (wRamEnCsr)	rMcmWeOneShot <= 1'b0;
-	else 				rMcmWeOneShot <= 1'b1;
-end
+// SyncFifoController #(
+//     .pFifoDepth(lpMcmDepth),
+//     .pFifoBitWidth(lpMcmBitWidth)
+// ) McbCacheMemory (
+//     .iWd(qMcmWd),
+//     .iWe(qMcmWe),
+//     .oFull(wMcmFull),
+// 	.oRemaingCntAlert(),
+//     .oRd(wMcmRd),
+//     .iRe(qMcmRe),
+//     .oRvd(wMcmRvd),
+//     .oEmp(wMcmEmp),
+//     .inARST(inSRST),
+// 	.iCLK(iSCLK)
+// );
 
-always @*
-begin
-	qMcmWd		<=  {wRamAdrsCsr,wRamWdCsr};
-	qMcmWe		<= &{~wMcmFull,wRamEnCsr,rMcmWeOneShot};
-	qMcmRe		<= &{iMUfiRdy,~wMcmEmp};
-	qRamFullCsr	<=   wMcmFull;
-	qRamEmpCsr	<=   wMcmEmp;
-end
+// always @(posedge iSCLK)
+// begin
+// 	if (iSRST) 			rMcmWeOneShot <= 1'b0;
+// 	else if (wRamEnCsr)	rMcmWeOneShot <= 1'b0;
+// 	else 				rMcmWeOneShot <= 1'b1;
+// end
 
-assign oMUfiWd			= wMcmRd[15:0];
-assign oMUfiAdrs[30:0]	= wMcmRd[46:16];
-assign oMUfiAdrs[31]	= wMcmRvd;
+// always @*
+// begin
+// 	qMcmWd		<=  {wRamAdrsCsr,wRamWdCsr};
+// 	qMcmWe		<= &{~wMcmFull,wRamEnCsr,rMcmWeOneShot};
+// 	qMcmRe		<= &{iMUfiRdy,~wMcmEmp};
+// 	qRamFullCsr	<=   wMcmFull;
+// 	qRamEmpCsr	<=   wMcmEmp;
+// end
+
+// assign oMUfiWd			= wMcmRd[15:0];
+// assign oMUfiAdrs[30:0]	= wMcmRd[46:16];
+// assign oMUfiAdrs[31]	= wMcmRvd;
 
 
-//-----------------------------------------------------------------------------
-// UFI Read
-//-----------------------------------------------------------------------------
-reg [pUfiDqBusWidth-1:0] 	rUfiRd;
-reg 						qUfiRdCke;
+// //-----------------------------------------------------------------------------
+// // UFI Read
+// //-----------------------------------------------------------------------------
+// reg [pUfiBusWidth-1:0] 	rUfiRd;
+// reg 						qUfiRdCke;
 
-initial
-begin
-	rUfiRd <= {pUfiDqBusWidth{1'b0}};
-end
+// initial
+// begin
+// 	rUfiRd <= {pUfiBusWidth{1'b0}};
+// end
 
-always @(posedge iSCLK)
-begin
-	if (qUfiRdCke)	rUfiRd <= iMUfiRd;
-	else			rUfiRd <= rUfiRd;
-end
+// always @(posedge iSCLK)
+// begin
+// 	if (qUfiRdCke)	rUfiRd <= iMUfiRd;
+// 	else			rUfiRd <= rUfiRd;
+// end
 
-always @*
-begin
-	qUfiRdCke 	<= &{iMUfiAdrs[31], (iMUfiAdrs[28:25] == pUfiAdrsMap)};
-	qRamRdVdCsr <= qUfiRdCke;
-	qUfiRdCsr 	<= rUfiRd;
-end
+// always @*
+// begin
+// 	qUfiRdCke 	<= &{iMUfiAdrs[31], (iMUfiAdrs[28:25] == pUfiAdrsMap)};
+// 	qRamRdVdCsr <= qUfiRdCke;
+// 	qUfiRdCsr 	<= rUfiRd;
+// end
 
 endmodule

@@ -26,7 +26,6 @@ module MemoryAccessTester #(
 	input	[7:0]				iMemRa,
 	//
 	input	[7:0]				iMemClkDiv,
-	output						oDivCntMaxCke,
 	// CLK Reset
 	input						iRST,
 	input						iCLK
@@ -63,7 +62,7 @@ reg  					rTestEn;					assign oTestEn	 = rTestEn;
 reg						rTestDone;					assign oTestDone = rTestDone;
 reg						qTestDoneCke;
 reg						qTestOeCke;
-reg						qTestCke,	qTestClkCke;
+reg						qTestClkCke;
 reg						qTestRun;
 //
 reg [7:0]				rDivCnt;
@@ -98,7 +97,6 @@ end
 
 always @*
 begin
-	qTestCke 		<= iTestEn    &   rTestClk  & qDivCntMaxCke;
 	qTestRun		<= iTestEn    & (~rTestDone);
 	qTestClkCke		<= (~rTestCs) &   qDivCntMaxCke;
 	qDivCntMaxCke  	<= iRST | (rDivCnt == iMemClkDiv);

@@ -18,31 +18,23 @@
  *-----------------------------------------------------------------------------*/
 module VideoPixelGenUnit #(
 	// Display Size
-	parameter	pVHA = 480,
-	parameter	pVVA = 272,
-	parameter	pVHAW = 11,
-	parameter	pVVAW = 11,
+	parameter			pVHA				= 480,
+	parameter			pVVA				= 272,
+	parameter			pVHAW				= 11,
+	parameter			pVVAW				= 11,
 	// UFI
-	parameter 	pUfiDqBusWidth 		= 16,
-	parameter 	pUfiAdrsBusWidth 	= 32,
-	parameter 	[3:0] pUfiAdrsMap	= 'h2,
-	parameter 	pDmaAdrsWidth 		= 18,
-	parameter 	pDmaBurstLength 	= 256,
+	parameter 			pUfiDqBusWidth 		= 32,
+	parameter	[3:0] 	pUfiAdrsMap			= 'h2,
+	parameter 			pDmaAdrsWidth 		= 18,
+	parameter 			pDmaBurstLength 	= 256,
 	// Pixel
-	parameter	pColorDepth 		= 32,
-	parameter	pMapChipSize 		= 32,	// マップチップの基本サイズ
-	parameter	pMapChipSft 		= f_detect_bitwidth(pMapChipSize),
-	parameter	pMapChipIdNum		= 10,	// マップチップの個数
+	parameter			pColorDepth 		= 32,
+	parameter			pMapChipSize 		= 32,	// マップチップの基本サイズ
+	parameter			pMapChipSft 		= f_detect_bitwidth(pMapChipSize),
+	parameter			pMapChipIdNum		= 10,	// マップチップの個数
 	// non valiable
 	parameter	pOutColorDepth 		= pColorDepth - (pColorDepth / 4) // alpha値を除いたbit幅
 )(
-	// Ufi Bus Master Read
-	input	[pUfiDqBusWidth-1:0] 	iMUfiRd,
-	input	[pUfiAdrsBusWidth-1:0] 	iMUfiAdrs,
-	// Ufi Bus Master Write
-	output	[pUfiDqBusWidth-1:0] 	oMUfiWd,
-	output	[pUfiAdrsBusWidth-1:0] 	oMUfiAdrs,
-	input							iMUfiRdy,
 	// Csr Dot Square Gen
 	input		 [pColorDepth-1:0]	iDotSquareColor1,
 	input signed [pVHAW:0]			iDotSquareLeft1,

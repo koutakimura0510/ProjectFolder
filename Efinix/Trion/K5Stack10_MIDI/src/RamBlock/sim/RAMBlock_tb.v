@@ -93,6 +93,9 @@ wire 	[1:0]				wRamDq_Oe;
 wire 	[1:0]				wRamClk;
 wire 	[1:0]				wRamCe;
 wire						wErr, wDone;
+//
+reg		[47:0]				qUfiRamWd;
+wire						wUfiRamRdy;
 
 RamBlock #(
 	.pAdrsMap(lpRAMAdrsMap),
@@ -100,22 +103,30 @@ RamBlock #(
 	.pRamDqWidth(lpRamDqWidth)
 ) RamBlock (
 	// SRAM I/F Port
-	.oRamDq(wRamDq),		.iRamDq(rRamDq),
-	.oRamDq_Oe(wRamDq_Oe),
+	.oRamDq(wRamDq),		.iRamDq(rRamDq),	.oRamDq_Oe(wRamDq_Oe),
 	.oRamClk(wRamClk),		.oRamCe(wRamCe),
 	// Bus Master Read
 	.oSUsiRd(wSUsiRd),
 	// Bus Master Write
 	.iSUsiWd(rSUsiWd),		.iSUsiAdrs(rSUsiAdrs),
 	// Ufi Bus Master Read
-	.oSUfiRd(),				.oSUfiAdrs(),
+	.oSUfiRd(),				.oSUfiVd(),
 	// Ufi Bus Master Write
-	.iSUfiWd(16'd0),		.iSUfiAdrs(0),		.oSUfiRdy(),
+	.iSUfiWd(qUfiRamWd),	.oSUfiRdy(wUfiRamRdy),
 	// Status
 	.oTestErr(wErr),		.oDone(wDone),
 	// CLK Reset
     .iSRST(rSRST),			.inSRST(rnSRST),	.iSCLK(rSCLK)
 );
+
+always @*	// iverilog は reg 固定値だと怒られる
+begin
+	qUfiRamWd[47:32]	<= 16'd1;
+	qUfiRamWd[31]		<= wUfiRamRdy ? 1'b1 : 1'b0;
+	qUfiRamWd[30]		<= 1'b0;
+	qUfiRamWd[29]		<= 1'b0;
+	qUfiRamWd[28:0]		<= 29'd1;
+end
 
 
 //-----------------------------------------------------------------------------
@@ -123,7 +134,7 @@ RamBlock #(
 //-----------------------------------------------------------------------------
 always @(negedge wRamClk)
 begin
-	if (wRamDq_Oe)	rRamDq <= rRamDq;
+	if (wRamDq_Oe | wRamCe)	rRamDq <= rRamDq;
 	else			rRamDq <= rRamDq + 1'b1;
 end
 
@@ -199,6 +210,40 @@ initial begin
 	// ReadWriteTesterDoneWait(0);
     $finish;
 end
+
+// Test Mode Initial
+// initial begin
+// 	$dumpfile("RAMBlock_tb.vcd");
+// 	$dumpvars(0, RAMBlock_tb);	// 引数0:下位モジュール表示, 1:Topのみ
+// 	reset_init();
+// 	// Config Sim
+// 	usi_csr_write(32'h0, 16'h0030, lpRAMAdrsMap);	// DIV
+// 	// usi_csr_write(32'h1, 16'h0002, lpRAMAdrsMap);	// RST
+// 	// usi_csr_write(32'h1, 16'h0001, lpRAMAdrsMap);	// EN
+// 	// usi_csr_write(32'h35,16'h0000, lpRAMAdrsMap);	// CMD
+// 	// usi_csr_write(32'h0, 16'h0002, lpRAMAdrsMap);	// RST
+	
+// 	// Test Sim
+// 	usi_csr_write(32'h1, 16'h0011, lpRAMAdrsMap);	// RST
+// 	usi_csr_write(32'h1, 16'h0010, lpRAMAdrsMap);	// EN
+// 	usi_csr_write(32'h0, 16'h0013, lpRAMAdrsMap);	// OE
+	
+// 	for (usi_for = 0; usi_for < 256; usi_for = usi_for + 1)
+// 	begin
+// 		usi_csr_write(usi_for, 16'h0014, lpRAMAdrsMap); // WA
+// 		usi_csr_write(1,       16'h0015, lpRAMAdrsMap); // WE
+// 		usi_csr_write(usi_for+2, 16'h0012, lpRAMAdrsMap); // WD
+// 	end
+	
+// 	usi_csr_write(32'h0, 16'h0011, lpRAMAdrsMap);	// RST
+// 	// ReadWriteTesterDoneWait(1);
+// 	wait_time(2000);
+// 	// ReadWriteTesterDoneWait(1);
+// 	// ReadWriteTesterDoneWait(0);
+// 	// ReadWriteTesterDoneWait(1);
+// 	// ReadWriteTesterDoneWait(0);
+//     $finish;
+// end
 
 
 endmodule

@@ -14,7 +14,7 @@ TBTOP 	 = RAMBlock_tb
 TBTOPRTL = RAMBlock_tb.v
 
 # Tb Instance.v
-TBRTL 	= ../*.v
+TBRTL 	= ../*.v ../../UltraFastInterfaceBus/UfibCoreUnit.v
 COMMON	= ../../common/fifo/*.v
 LIB		= /tools/efinity/2023.1/sim_models/verilog/*.v
 

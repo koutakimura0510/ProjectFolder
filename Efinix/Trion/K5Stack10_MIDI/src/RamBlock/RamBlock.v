@@ -4,6 +4,7 @@
  * 
  * ESP PSRAM
  * default setting, 1page =  CA[9:0] 1024byte linear burst wrap / page をまたぐ際は最大周波数 84MHz
+ * CA[4:0] 32byte wrap burst mode
  * 64Mbit = A[22:0]
  *-----------------------------------------------------------------------------*/
 module RamBlock #(
@@ -12,9 +13,7 @@ module RamBlock #(
 	parameter pUsiBusWidth 		= 32,
 	parameter pCsrAdrsWidth 	= 16,
 	parameter pCsrActiveWidth 	= 8,
-	parameter pUfiDqBusWidth 	= 16,
-	parameter pUfiAdrsBusWidth 	= 32,
-	parameter pUfiEnableBit 	= 32,
+	parameter pUfiBusWidth		= 48,
 	//
 	parameter pRamAdrsWidth 	= 18,	// GPIO アドレス幅
 	parameter pRamDqWidth 		= 16,	// GPIO データ幅
@@ -33,19 +32,18 @@ module RamBlock #(
 	input  [pUsiBusWidth-1:0] 		iSUsiWd,
 	input  [pUsiBusWidth-1:0] 		iSUsiAdrs,
 	// Ufi Bus Master Read
-	output [pUfiDqBusWidth-1:0] 	oSUfiRd,
-	output [pUfiAdrsBusWidth-1:0] 	oSUfiAdrs,
+	output [pUfiBusWidth-1:0] 		oSUfiRd,
+	output 							oSUfiVd,
 	// Ufi Bus Master Write
-	input  [pUfiDqBusWidth-1:0] 	iSUfiWd,
-	input  [pUfiAdrsBusWidth-1:0] 	iSUfiAdrs,
+	input  [pUfiBusWidth-1:0] 		iSUfiWd,
 	output							oSUfiRdy,
 	// Status
-	output oTestErr,
-	output oDone,
+	output 							oTestErr,
+	output 							oDone,
     // CLK Reset
-    input  iSRST,
-	input  inSRST,
-    input  iSCLK
+    input  							iSRST,
+	input  							inSRST,
+    input  							iSCLK
 );
 
 
@@ -83,9 +81,10 @@ RamCsr #(
 	.oCfgCmd(wCfgCmdCsr),		.oCfgEn(wCfgEnCsr),
 	.oCfgRst(wCfgRstCsr),		.iCfgDone(wCfgDoneCsr),
 	// Csr Memory Access Tester
-	.oMatEn(wMatEnCsr),			.oMatRst(wMatRstCsr),		.iMatDone(wMatDoneCsr),
+	.oMatEn(wMatEnCsr),			.oMatRst(wMatRstCsr),			.iMatDone(wMatDoneCsr),
 	.oMatMemWd(wMatMemWdCsr),	.oMatMemWdOe(wMatMemWdOeCsr),	.oMatMemWa(wMatMemWaCsr),	.oMatMemWe(wMatMemWeCsr),
 	.iMatMemRd(wMatMemRdCsr),	.oMatMemRa(wMatMemRaCsr),
+	// Csr Memory Access Video
 	// 
 	.oMemClkDiv(wMemClkDivCsr),
 	// common
@@ -154,37 +153,81 @@ assign oTestErr	= 1'b0;
 assign oDone	= 1'b0;
 
 
-//-----------------------------------------------------------------------------
-// 複数 Logic からのアクセスを管理
-//-----------------------------------------------------------------------------
-localparam lpFifoDepth = 256;	// FIFO 最小構成
+/**----------------------------------------------------------------------------
+ * Memory Access Video
+ *---------------------------------------------------------------------------*/
+wire [pRamDqWidth-1:0] 	wMavDq;
+wire 					wMavCs;
+wire 					wMavClk;
+wire 					wMavOe;
+wire 					wMavEn;
+reg  [pRamDqWidth-1:0] 	qMavRd;
+reg  					qMavRe;
+//
+reg [15:0] 				qMavBurstLen;
+reg 					qMavRwSel;
+reg [28:0]				qMavAdrs;
+reg 					qMavVd;
+wire					wMavRdy;
 
-wire [pUfiDqBusWidth-1:0] 	wRamIfPortUnitWd;
-wire [pUfiAdrsBusWidth-1:0] wRamIfPortUnitAdrs;
-wire [pUfiDqBusWidth-1:0] 	wRamIfPortUnitRd;
-wire 						wRamIfPortUnitRvd;
+MemoryAccessVideo #(
+	.pRamDqWidth(pRamDqWidth)
+) MemoryAccessVideo (
+	// Video Write Port
+	.oVideoDq(wMavDq),				.oVideoCs(wMavCs),
+	.oVideoClk(wMavClk),			.oVideoOe(wMavOe),
+	.oVideoEn(wMavEn),
+	// Video Read Port
+	.iVideoRd(qMavRd),				.iVideoRe(qMavRe),
+	// Ufib Port to Video Port
+	.iVideoBurstLen(qMavBurstLen),	.iVideoRwSel(qMavRwSel),
+	.iVideoAdrs(qMavAdrs),			.iVideoVd(qMavVd),
+	.oVideoDone(),					.oVideoRdy(wMavRdy),
+	// Control
+	.iMemClkDiv(wMemClkDivCsr),
+	// CLK Reset
+    .iRST(iSRST),					.iCLK(iSCLK)
+);
+ 
+ 
+//-----------------------------------------------------------------------------
+// Ufib Core Unit
+//-----------------------------------------------------------------------------
+wire [15:0] wUfibMemBurstLen;
+wire 		wUfibMemRwSel;
+wire [28:0]	wUfibMemAdrs;
+wire 		wUfibMemVd;
+reg			qUfibMemRe;
+//
+reg  [pRamDqWidth-1:0]	qUfibMemRd;
+reg  					qUfibMemRvd;
 
-RamReadWriteArbiter #(
-	.pUfiDqBusWidth(pUfiDqBusWidth),
-	.pUfiAdrsBusWidth(pUfiAdrsBusWidth),
-	.pFifoDepth(lpFifoDepth),
-	.pUfiEnableBit(pUfiEnableBit)
-) RamReadWriteArbiter (
+UfibCoreUnit #(
+	.pUfiBusWidth(pUfiBusWidth),
+	.pTransWaitEnable("no")
+) UfibCoreUnit (
 	// Ufi Write
-	.iSUfiWd(iSUfiWd),
-	.iSUfiAdrs(iSUfiAdrs),
-	.oSUfiRdy(oSUfiRdy),
+	.oSUfiRd(oSUfiRd),	.oSUfiVd(oSUfiVd),
 	// UFI Read
-	.oSUfiRd(oSUfiRd),
-	.oSUfiAdrs(oSUfiAdrs),
-	// RamIfPort Bridge
-	.oRamIfPortUnitWd(wRamIfPortUnitWd),
-	.oRamIfPortUnitAdrs(wRamIfPortUnitAdrs),
-	.iRamIfPortUnitDq(wRamIfPortUnitRd),
-	.iRamIfPortUnitWe(wRamIfPortUnitRvd),
+	.iSUfiWd(iSUfiWd),	.oSUfiRdy(oSUfiRdy),
+	// Memory Control / Status
+	.oMemBurstLen(wUfibMemBurstLen),	.oMemRwSel(wUfibMemRwSel),
+	.oMemAdrs(wUfibMemAdrs),			.oMemVd(wUfibMemVd),
+	.iMemRe(qUfibMemRe),
+	// Memory Read Data
+	.iMemRd({32'd0,qUfibMemRd}),		.iMemRvd(qUfibMemRvd),
 	// common
 	.iRST(iSRST),	.inARST(inSRST),	.iCLK(iSCLK)
 );
+
+always @*
+begin
+	qMavBurstLen	<= wUfibMemBurstLen;
+	qMavRwSel		<= wUfibMemRwSel;
+	qMavAdrs		<= wUfibMemAdrs;
+	qMavVd			<= wUfibMemVd;
+	qUfibMemRe 		<= wMavRdy;
+end
 
 
 /**----------------------------------------------------------------------------
@@ -206,6 +249,10 @@ RAMIfPortUnit #(
 	.iTestDq(wMatDq),		.iTestClk(wMatClk),
 	.iTestCs(wMatCs),		.iTestOe(wMatOe),
 	.iTestEn(wMatEn),
+	// Memory Video Write Port
+	.iVideoDq(wMavDq),		.iVideoClk(wMavClk),
+	.iVideoCs(wMavCs),		.iVideoOe(wMavOe),
+	.iVideoEn(wMavEn),
 	// Memory Test Read Port
 	.oRamRd(wRamRd),		.oRamRe(wRamRe),
 	// Control
@@ -218,8 +265,14 @@ RAMIfPortUnit #(
 
 always @*
 begin
-	qMatRd	<= wRamRd;
-	qMatRe	<= wRamRe;
+	qMatRd		<= wRamRd;
+	qMatRe		<= wRamRe;
+	//
+	qUfibMemRd	<= wRamRd;
+	qUfibMemRvd	<= wRamRe;
+	//
+	qMavRd		<= wRamRd;
+	qMavRe		<= wRamRe;
 end
 
 endmodule

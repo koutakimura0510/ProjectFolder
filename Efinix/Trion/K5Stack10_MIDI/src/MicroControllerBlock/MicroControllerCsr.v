@@ -16,7 +16,6 @@ module MicroControllerCsr #(
 	parameter pCsrActiveWidth	= 8,
 	// Block 固有のパラメータ
 	parameter pUfiDqBusWidth	= 16,
-	parameter pUfiAdrsBusWidth	= 32,
 	//
 	parameter p_non_variable	= 0
 )(
@@ -27,7 +26,6 @@ module MicroControllerCsr #(
 	input  [pUsiBusWidth-1:0] iSUsiAdrs,  // R/W Adrs
 	// Csr Output
 	output [pUfiDqBusWidth-1:0] 	oRamWd,
-	output [pUfiAdrsBusWidth-1:0] 	oRamAdrs,
 	output 							oRamEn,
 	// Csr Input
 	input 							iRamFull,
@@ -43,7 +41,6 @@ module MicroControllerCsr #(
 // レジスタマップ
 //----------------------------------------------------------
 reg [pUfiDqBusWidth-1:0]	rRamWd;			assign 	oRamWd		= rRamWd;
-reg [pUfiAdrsBusWidth-1:0]	rRamAdrs;		assign 	oRamAdrs  	= rRamAdrs;
 reg 						rRamEn;			assign 	oRamEn		= rRamEn;
 //
 reg 						rRamFull;
@@ -62,7 +59,6 @@ begin
 	if (iSRST)
 	begin
 		rRamWd		<= {pUfiDqBusWidth{1'b0}};
-		rRamAdrs	<= {pUfiAdrsBusWidth{1'b0}};
 		rRamEn 		<= 1'b0;
 		//
 		rRamFull	<= 1'b0;
@@ -72,7 +68,6 @@ begin
 	else
 	begin
 		rRamWd		<= qCsrWCke00 ? iSUsiWd[15:0] : rRamWd;
-		rRamAdrs	<= qCsrWCke04 ? iSUsiWd[31:0] : rRamAdrs;
 		rRamEn		<= qCsrWCke08 ? iSUsiWd[ 0:0] : rRamEn;
 		//
 		rRamFull	<= iRamFull;
@@ -101,7 +96,6 @@ begin
 	// {{(32 - パラメータ名	){1'b0}}, レジスタ名} -> パラメータ可変に対応し 0 で埋められるように設定
 	case (iSUsiAdrs[pCsrActiveWidth-1:0])
 		'h00:	 rSUsiRd <= {{(32 - pUfiDqBusWidth	){1'b0}}, rRamWd};
-		'h04:	 rSUsiRd <= {rRamAdrs};
 		'h08:	 rSUsiRd <= {{(32 - 1	){1'b0}}, rRamEn};
 		// 'h0C:	 rSUsiRd <= {{(32 - 1	){1'b0}}, rRamBurstRun};
 		'h40:	 rSUsiRd <= {{(32 - 8	){1'b0}}, 3'b000, rRamEmp, 3'b000, rRamFull};

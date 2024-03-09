@@ -7,17 +7,17 @@
  *-----------------------------------------------------------------------------*/
 module VideoTxBlock #(
 	// USI
-	parameter pBlockAdrsWidth	= 8,
+	parameter 		pBlockAdrsWidth		= 8,
 	parameter [pBlockAdrsWidth-1:0] pAdrsMap = 'h06,
-	parameter pUsiBusWidth 		= 16,
-	parameter pCsrAdrsWidth 	= 16,
-	parameter pCsrActiveWidth 	= 16,
+	parameter 		pUsiBusWidth		= 16,
+	parameter 		pCsrAdrsWidth		= 16,
+	parameter 		pCsrActiveWidth		= 16,
 	// UFI
-	parameter pUfiDqBusWidth 	= 16,
-	parameter pUfiAdrsBusWidth 	= 32,
-	parameter [3:0] pUfiAdrsMap	= 'h2,
-	parameter pDmaAdrsWidth 	= 18,
-	parameter pDmaBurstLength 	= 256,
+	parameter 		pUfiBusWidth 		= 32,
+	//
+	parameter [3:0] pUfiAdrsMap			= 'h2,
+	parameter 		pDmaAdrsWidth		= 18,
+	parameter 		pDmaBurstLength		= 256,
 	// Display Size, Simlation も兼ねて Top から操作設定可能にしている
     parameter pVHA	= 480,		// Video Horizontal Active
     parameter pVHB	= 43,		// Video Horizontal Back
@@ -29,34 +29,33 @@ module VideoTxBlock #(
     parameter pVVS	= 10		// Video Vertical Sync
 )(
 	// VIDEO Output Signal Ctrl
-	output [7:0]	oVIDEO_R,
-	output [7:0]	oVIDEO_G,
-	output [7:0]	oVIDEO_B,
-	output			oVIDEO_DCK,
-	output			oVIDEO_HS,
-	output			oVIDEO_VS,
-	output			oVIDEO_DE,
-	output			oVIDEO_FE,
-	output			oVIDEO_RST,
+	output [7:0]					oVIDEO_R,
+	output [7:0]					oVIDEO_G,
+	output [7:0]					oVIDEO_B,
+	output							oVIDEO_DCK,
+	output							oVIDEO_HS,
+	output							oVIDEO_VS,
+	output							oVIDEO_DE,
+	output							oVIDEO_FE,
+	output							oVIDEO_RST,
 	// Usi Bus Master Read
-	output	[pUsiBusWidth-1:0] 	oSUsiRd,
+	output	[pUsiBusWidth-1:0] 		oSUsiRd,
 	// Usi Bus Master Write
-	input	[pUsiBusWidth-1:0] 	iSUsiWd,
-	input	[pUsiBusWidth-1:0] 	iSUsiAdrs,
+	input	[pUsiBusWidth-1:0] 		iSUsiWd,
+	input	[pUsiBusWidth-1:0] 		iSUsiAdrs,
 	// Ufi Bus Master Read
-	input	[pUfiDqBusWidth-1:0] 	iMUfiRd,
-	input	[pUfiAdrsBusWidth-1:0] 	iMUfiAdrs,
+	input	[pUfiBusWidth-1:0] 		iMUfiRd,
+	input							iMUfiVd,
 	// Ufi Bus Master Write
-	output	[pUfiDqBusWidth-1:0] 	oMUfiWd,
-	output	[pUfiAdrsBusWidth-1:0] 	oMUfiAdrs,
+	output	[pUfiBusWidth-1:0] 		oMUfiWd,
 	input							iMUfiRdy,
 	// CLK Rst
-	input 	iSRST,
-	input 	inSRST,
-	input 	iSCLK,
-	input 	iVRST,
-	input 	inVRST,
-	input 	iVCLK
+	input 							iSRST,
+	input 							inSRST,
+	input 							iSCLK,
+	input 							iVRST,
+	input 							inVRST,
+	input 							iVCLK
 );
 
 //-----------------------------------------------------------------------------
@@ -153,9 +152,14 @@ VideoTxCsr #(
 	.iSRST(iSRST),	.iSCLK(iSCLK)
 );
 
-//-----------------------------------------------------------------------------
-// Video Pixel Generator (Vpg)
-//-----------------------------------------------------------------------------
+/**----------------------------------------------------------------------------
+ * Pgu に対するビデオデータの管理を司る
+  *---------------------------------------------------------------------------*/
+// VideoInfoManageUnit
+
+/**----------------------------------------------------------------------------
+ * Video Pixel Generator (Vpg)
+ *---------------------------------------------------------------------------*/
 wire [lpColorDepth-1:0] wVpgRd;
 reg  qVpgRe;
 wire wVpgRvd;
@@ -166,10 +170,6 @@ VideoPixelGenUnit #(
 	.pVHAW(lpVHAW),		.pVVAW(lpVVAW),
 	.pColorDepth(lpColorDepth)
 ) VideoPixelGenUnit (
-	// Ufi Bus Master Read
-	.iMUfiRd(iMUfiRd),		.iMUfiAdrs(iMUfiAdrs),
-	// Ufi Bus Master Write
-	.oMUfiWd(oMUfiWd),		.oMUfiAdrs(oMUfiWAdrs),		.iMUfiRdy(iMUfiRdy),
 	// Csr Dot Square Gen
 	.iDotSquareColor1(wDotSquareColor1Csr),	.iDotSquareLeft1(wDotSquareLeft1Csr),	.iDotSquareRight1(wDotSquareRight1Csr),	.iDotSquareTop1(wDotSquareTop1Csr),	.iDotSquareUnder1(wDotSquareUnder1Csr),
 	.iDotSquareColor2(wDotSquareColor2Csr),	.iDotSquareLeft2(wDotSquareLeft2Csr),	.iDotSquareRight2(wDotSquareRight2Csr),	.iDotSquareTop2(wDotSquareTop2Csr),	.iDotSquareUnder2(wDotSquareUnder2Csr),
@@ -257,8 +257,8 @@ VideoSyncGen #(
 
 always @(posedge iVCLK)
 begin
-	rVideoHS <= {rVideoHS[1],wVideoHS};
-	rVideoVS <= {rVideoVS[1],wVideoVS};
+	rVideoHS <= {rVideoHS[1],wVideoHS};	// FIFO の出力レイテンシが "2" のため、
+	rVideoVS <= {rVideoVS[1],wVideoVS};	// パイプラインでタイミングを合わせる。
 	rVideoDE <= {rVideoDE[1],wVideoDE};
 	rVideoFE <= {rVideoFE[1],wVideoFE};
 end

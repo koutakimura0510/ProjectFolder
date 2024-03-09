@@ -62,7 +62,7 @@
 		{
 			"label": "Synthesis",
 			"type": "shell",
-			"command": "source /tools/efinity/2023.1/bin/setup.sh;make synthesis",
+			"command": "source /tools/efinity/2023.1/bin/setup.sh;make synthesis;make py",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -151,7 +151,7 @@
 		// Update Mode 起動
 		//-----------------------------------------------------------------------------
 		{
-			"label": "Update",
+			"label": "Update Mode",
 			"type": "shell",
 			"command": "source /tools/efinity/2023.1/bin/setup.sh;make Update",
 			"group": {
