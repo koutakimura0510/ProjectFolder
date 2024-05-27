@@ -1,9 +1,0 @@
-{
-	"version": "1.0",
-	"modules": {
-		"sound_operation": {
-			"proto_instances": {
-			}
-		}
-	}
-}

@@ -1,1 +1,0 @@
-../../constraints/Arty.xdc
