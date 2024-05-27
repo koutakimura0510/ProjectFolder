@@ -64,6 +64,7 @@
 *.tile
 *.tdf
 *.udb
+*.vdb
 *.wav
 *.wpc
 *.wcfg
@@ -79,6 +80,7 @@
 *.xlsx
 *.xdbg
 *.zip
+*.PDF
 
 # 管理しないプロジェクト ArtyZ7
 # Xilinx/workspace/IP/*
