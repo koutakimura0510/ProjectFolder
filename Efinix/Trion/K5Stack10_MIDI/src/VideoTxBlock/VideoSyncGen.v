@@ -6,14 +6,24 @@
 // 
 //----------------------------------------------------------
 module VideoSyncGen #(
-    parameter	pVHA = 480,		// Video Horizontal Active
-    parameter	pVHB = 8,		// Video Horizontal Back
-    parameter	pVHF = 43,		// Video Horizontal Front
-    parameter	pVHS = 30,		// Video Horizontal Sync
-    parameter	pVVA = 272,		// Video Vertical Active
-    parameter	pVVB = 12,		// Video Vertical Front
-    parameter	pVVF = 4,		// Video Vertical Back
-    parameter	pVVS = 10,		// Video Vertical Sync
+	// 240 x 320
+	parameter	pVHA = 480,		// Video Horizontal Active
+	parameter	pVHB = 8,		// Video Horizontal Back
+	parameter	pVHF = 43,		// Video Horizontal Front
+	parameter	pVHS = 30,		// Video Horizontal Sync
+	parameter	pVVA = 272,		// Video Vertical Active
+	parameter	pVVB = 12,		// Video Vertical Front
+	parameter	pVVF = 4,		// Video Vertical Back
+	parameter	pVVS = 10,		// Video Vertical Sync
+	// 240 x 320
+	// parameter	pVHA = 320,		// Video Horizontal Active
+	// parameter	pVHB = 24,		// Video Horizontal Back
+	// parameter	pVHF = 64,		// Video Horizontal Front
+	// parameter	pVHS = 16,		// Video Horizontal Sync
+	// parameter	pVVA = 240,		// Video Vertical Active
+	// parameter	pVVB = 11,		// Video Vertical Front
+	// parameter	pVVF = 20,		// Video Vertical Back
+	// parameter	pVVS = 10,		// Video Vertical Sync
 	//
     parameter	pVHAW = 11
 )(

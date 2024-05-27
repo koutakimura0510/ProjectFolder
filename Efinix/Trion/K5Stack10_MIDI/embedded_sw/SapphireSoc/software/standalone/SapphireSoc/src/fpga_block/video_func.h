@@ -25,6 +25,7 @@ typedef struct sdl_rect
 /**----------------------------------------------------------------------------
  * プロトタイプ宣言
  *---------------------------------------------------------------------------*/
+void video_tft_init(void);
 void video_color_bar(void);
 void video_gauge(uint32_t gauge);
 void video_square_draw(SDL_Rect *sdl, uint16_t color, uint32_t adrs_id);

@@ -12,7 +12,7 @@
 # PLL Constraints
 #################
 create_clock -period 10.0000 iSCLK
-create_clock -period 111.1111 iVCLK
+create_clock -period 160.0000 iVCLK
 create_clock -period 44.2478 iMCLK
 
 

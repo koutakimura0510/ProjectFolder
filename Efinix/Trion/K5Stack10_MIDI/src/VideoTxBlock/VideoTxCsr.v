@@ -37,20 +37,31 @@ module VideoTxCsr #(
 	parameter	pColorDepth	= 32
 )(
 	// Bus Master Read
-	output	[pUsiBusWidth-1:0] oSUsiRd,	// Read Data
+	output	[pUsiBusWidth-1:0]		oSUsiRd,	// Read Data
 	// Bus Master Write
-	input	[pUsiBusWidth-1:0] iSUsiWd,	// Write Data
-	input	[pUsiBusWidth-1:0] iSUsiAdrs,  // R/W Adrs
+	input	[pUsiBusWidth-1:0]		iSUsiWd,	// Write Data
+	input	[pUsiBusWidth-1:0]		iSUsiAdrs,  // R/W Adrs
 	// Csr DMA
-	output						oDmaEnable,
-	output						oDmaCycleEnable,
-	output	[pDmaAdrsWidth-1:0] oDmaAdrsStart,
-	output	[pDmaAdrsWidth-1:0] oDmaAdrsEnd,
-	output	[pDmaAdrsWidth-1:0] oDmaAdrsAdd,
-	input						iDmaDone,
+	output							oDmaEnable,
+	output							oDmaCycleEnable,
+	output	[pDmaAdrsWidth-1:0] 	oDmaAdrsStart,
+	output	[pDmaAdrsWidth-1:0] 	oDmaAdrsEnd,
+	output	[pDmaAdrsWidth-1:0] 	oDmaAdrsAdd,
+	input							iDmaDone,
+	// Csr Vsg
+	output							oVsgRst,
+	// Csr TFT Config
+	output	[7:0]					oTftData,
+	output							oTftRST,
+	output							oTftWR,
+	output							oTftRD,
+	output							oTftRS,
+	output							oTftCS,
+	output	[3:0]					oTftIM,
+	output							oTftGate,
 	// Csr Map Info
-	output	[7:0] oMapXSize,
-	output	[7:0] oMapYSize,
+	output	[7:0] 					oMapXSize,
+	output	[7:0] 					oMapYSize,
 	// Csr Dot Square Gen
 	output		   [pColorDepth-1:0]oDotSquareColor1,
 	output	signed [pVHAW:0] 		oDotSquareLeft1,
@@ -106,11 +117,23 @@ module VideoTxCsr #(
 //----------------------------------------------------------
 // レジスタマップ
 //----------------------------------------------------------
+//
 reg rDmaEnable;											assign oDmaEnable 		= rDmaEnable;		// DMA Function Enable
 reg rDmaCycleEnable;									assign oDmaCycleEnable	= rDmaCycleEnable;	// Dma Auto Cycle Mode
 reg [pDmaAdrsWidth-1:0] rDmaAdrsStart;					assign oDmaAdrsStart 	= rDmaAdrsStart;	// 
 reg [pDmaAdrsWidth-1:0] rDmaAdrsEnd;					assign oDmaAdrsEnd 		= rDmaAdrsEnd;		// 
-reg [pDmaAdrsWidth-1:0] rDmaAdrsAdd;					assign oDmaAdrsAdd 		= rDmaAdrsAdd;		// 
+reg [pDmaAdrsWidth-1:0] rDmaAdrsAdd;					assign oDmaAdrsAdd 		= rDmaAdrsAdd;		//
+//
+reg			rVsgRst;									assign	oVsgRst			= rVsgRst;
+//
+reg [7:0] 	rTftData;									assign  oTftData		= rTftData;
+reg 		rTftRST;									assign  oTftRST		 	= rTftRST;
+reg 		rTftWR;										assign  oTftWR		 	= rTftWR;
+reg 		rTftRD;										assign  oTftRD		 	= rTftRD;
+reg 		rTftRS;										assign  oTftRS		 	= rTftRS;
+reg 		rTftCS;										assign  oTftCS		 	= rTftCS;
+reg [3:0] 	rTftIM;										assign  oTftIM		 	= rTftIM;
+reg 		rTftGate;									assign  oTftGate		= rTftGate;
 //
 reg [ 7:0] rMapXSize;									assign oMapXSize		= rMapXSize;		// 現在のマップの最大横幅 / 最大255マス固定
 reg [ 7:0] rMapYSize;									assign oMapYSize		= rMapYSize;		// 現在のマップの最大縦幅 / 最大255マス固定
@@ -160,6 +183,11 @@ reg 					rSceneFrameRst;					assign oSceneFrameRst		= rSceneFrameRst;		// local 
 reg qCsrWCke000, qCsrWCke004, qCsrWCke008, qCsrWCke00c;
 reg qCsrWCke010, qCsrWCke014, qCsrWCke018, qCsrWCke01c;
 //
+reg qCsrWCke020;
+//
+reg qCsrWCke050, qCsrWCke051, qCsrWCke052, qCsrWCke053;
+reg qCsrWCke054, qCsrWCke055, qCsrWCke056, qCsrWCke057;
+//
 reg qCsrWCke100, qCsrWCke104, qCsrWCke108, qCsrWCke10c;
 reg qCsrWCke110, qCsrWCke114, qCsrWCke118, qCsrWCke11c;
 reg qCsrWCke120, qCsrWCke124, qCsrWCke128, qCsrWCke12c;
@@ -182,6 +210,15 @@ begin
 		rDmaAdrsStart 		<= {pDmaAdrsWidth{1'b0}};
 		rDmaAdrsEnd 		<= {pDmaAdrsWidth{1'b1}};
 		rDmaAdrsAdd 		<= {pDmaAdrsWidth{1'b0}};
+		rVsgRst				<= 1'b1;
+		rTftData			<= 8'h00;
+		rTftRST				<= 1'b0;
+		rTftWR				<= 1'b0;		// WRX
+		rTftRD				<= 1'b0;		// RCMD
+		rTftRS				<= 1'b0;		// DCX
+		rTftCS				<= 1'b1;		// CS
+		rTftIM				<= 4'b0000;
+		rTftGate			<= 1'b1;
 		rMapXSize			<= 8'd30;		// DisplayX(480) / MapChipX(16) = 30
 		rMapYSize			<= 8'd17;		// DisplayY(272) / MapChipY(16) = 17
 		rDotSquareColor1	<= {pColorDepth{1'b0}};
@@ -227,12 +264,23 @@ begin
 	end
 	else
 	begin
-		//
+		// DMA Info
 		rDmaEnable					<= iDmaDone	   ? rDmaCycleEnable : qCsrWCke004 ? iSUsiWd[0:0] : rDmaEnable;
 		rDmaCycleEnable				<= qCsrWCke008 ? iSUsiWd[0:0] : rDmaCycleEnable;
 		rDmaAdrsStart				<= qCsrWCke00c ? iSUsiWd[pDmaAdrsWidth-1:0] : rDmaAdrsStart;
 		rDmaAdrsEnd					<= qCsrWCke010 ? iSUsiWd[pDmaAdrsWidth-1:0] : rDmaAdrsEnd;
 		rDmaAdrsAdd					<= qCsrWCke014 ? iSUsiWd[pDmaAdrsWidth-1:0] : rDmaAdrsAdd;
+		// Video Sync Gen
+		rVsgRst						<= qCsrWCke020 ? iSUsiWd[0:0] : rVsgRst;
+		// TFT Config
+		rTftData					<= qCsrWCke050 ? iSUsiWd[7:0] : rTftData;
+		rTftRST						<= qCsrWCke051 ? iSUsiWd[0:0] : rTftRST;
+		rTftWR						<= qCsrWCke052 ? iSUsiWd[0:0] : rTftWR;
+		rTftRD						<= qCsrWCke053 ? iSUsiWd[0:0] : rTftRD;
+		rTftRS						<= qCsrWCke054 ? iSUsiWd[0:0] : rTftRS;
+		rTftIM						<= qCsrWCke055 ? iSUsiWd[3:0] : rTftIM;
+		rTftGate					<= qCsrWCke056 ? iSUsiWd[0:0] : rTftGate;
+		rTftCS						<= qCsrWCke057 ? iSUsiWd[0:0] : rTftCS;
 		// Map Info
 		{rMapXSize, rMapYSize}		<= qCsrWCke100 ? iSUsiWd[15:0]				: {rMapXSize, rMapYSize};
 		// Dot Square Gen
@@ -286,11 +334,24 @@ begin
 	qCsrWCke004 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
 	qCsrWCke008 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
 	qCsrWCke00c <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
-	//
+	// 010h ~
 	qCsrWCke010 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0010});
 	qCsrWCke014 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
 	qCsrWCke018 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0018});
 	qCsrWCke01c <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h001c});
+	// 020h
+	qCsrWCke020 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0020});
+	// 050h ~
+	qCsrWCke050 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0050});
+	qCsrWCke051 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0051});
+	qCsrWCke052 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0052});
+	qCsrWCke053 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0053});
+	qCsrWCke054 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0054});
+	qCsrWCke055 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0055});
+	qCsrWCke056 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0056});
+	qCsrWCke057 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0057});
+	
+	// 100h ~
 	qCsrWCke100 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0100});
 	qCsrWCke104 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0104});
 	qCsrWCke108 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0108});
@@ -352,49 +413,60 @@ begin
 	// {{(32 - パラメータ名	){1'b0}}, レジスタ名} -> パラメータ可変に対応し 0 で埋められるように設定
 	case (iSUsiAdrs[pCsrActiveWidth - 1:0])
 		// 'h0000:		rSUsiRd <= {{(32 - 1			 ){1'b0}}, rI2SModuleRst};
-		'h004:		rSUsiRd <= {{(32 - 1			 ){1'b0}}, rDmaEnable};
-		'h008:		rSUsiRd <= {{(32 - 1			 ){1'b0}}, rDmaCycleEnable};
-		'h00C:		rSUsiRd <= {{(32 - pDmaAdrsWidth){1'b0}}, rDmaAdrsStart};
-		'h010:		rSUsiRd <= {{(32 - pDmaAdrsWidth){1'b0}}, rDmaAdrsEnd};
-		'h014:		rSUsiRd <= {{(32 - pDmaAdrsWidth){1'b0}}, rDmaAdrsAdd};
+		'h004:		rSUsiRd <= {{(32 - 1			 	){1'b0}}, 	rDmaEnable			};
+		'h008:		rSUsiRd <= {{(32 - 1			 	){1'b0}}, 	rDmaCycleEnable		};
+		'h00C:		rSUsiRd <= {{(32 - pDmaAdrsWidth	){1'b0}},	rDmaAdrsStart		};
+		'h010:		rSUsiRd <= {{(32 - pDmaAdrsWidth	){1'b0}},	rDmaAdrsEnd			};
+		'h014:		rSUsiRd <= {{(32 - pDmaAdrsWidth	){1'b0}},	rDmaAdrsAdd			};
+		// 020
+		'h020:		rSUsiRd <= {{(32 - 31				){1'b0}},	rVsgRst				};
+		// 050
+		'h050:		rSUsiRd <= {{(32 - 8				){1'b0}},	rTftData			};
+		'h051:		rSUsiRd <= {{(32 - 1				){1'b0}},	rTftRST				};
+		'h052:		rSUsiRd <= {{(32 - 1				){1'b0}},	rTftWR				};
+		'h053:		rSUsiRd <= {{(32 - 1				){1'b0}},	rTftRD				};
+		'h054:		rSUsiRd <= {{(32 - 1				){1'b0}},	rTftRS				};
+		'h055:		rSUsiRd <= {{(32 - 4				){1'b0}},	rTftIM				};
+		'h056:		rSUsiRd <= {{(32 - 1				){1'b0}},	rTftGate			};
+		'h057:		rSUsiRd <= {{(32 - 1				){1'b0}},	rTftCS				};
 		//
 		'h100:		rSUsiRd	<= {{(32 - 16				){1'b0}}, rMapXSize, rMapYSize	};
 		//
 		'h200:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/ rDotSquareColor1	};
-		'h201:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft1	};
-		'h202:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight1	};
-		'h203:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop1	};
-		'h204:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder1	};
-		'h205:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor2	};
-		'h206:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft2	};
-		'h207:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight2	};
-		'h208:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop2	};
-		'h209:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder2	};
-		'h20a:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor3	};
-		'h20b:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft3	};
-		'h20c:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight3	};
-		'h20d:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop3	};
-		'h20e:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder3	};
-		'h20f:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor4	};
-		'h210:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft4	};
-		'h211:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight4	};
-		'h212:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop4	};
-		'h213:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder4	};
-		'h214:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor5	};
-		'h215:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft5	};
-		'h216:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight5	};
-		'h217:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop5	};
-		'h218:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder5	};
-		'h219:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor6	};
-		'h21a:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft6	};
-		'h21b:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight6	};
-		'h21c:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop6	};
-		'h21d:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder6	};
-		'h21e:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor7	};
-		'h21f:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft7	};
-		'h220:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight7	};
-		'h221:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop7	};
-		'h222:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder7	};
+		'h201:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft1		};
+		'h202:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight1		};
+		'h203:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop1		};
+		'h204:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder1		};
+		'h205:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor2		};
+		'h206:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft2		};
+		'h207:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight2		};
+		'h208:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop2		};
+		'h209:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder2		};
+		'h20a:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor3		};
+		'h20b:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft3		};
+		'h20c:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight3		};
+		'h20d:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop3		};
+		'h20e:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder3		};
+		'h20f:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor4		};
+		'h210:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft4		};
+		'h211:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight4		};
+		'h212:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop4		};
+		'h213:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder4		};
+		'h214:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor5		};
+		'h215:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft5		};
+		'h216:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight5		};
+		'h217:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop5		};
+		'h218:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder5		};
+		'h219:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor6		};
+		'h21a:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft6		};
+		'h21b:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight6		};
+		'h21c:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop6		};
+		'h21d:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder6		};
+		'h21e:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rDotSquareColor7		};
+		'h21f:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft7		};
+		'h220:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight7		};
+		'h221:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop7		};
+		'h222:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder7		};
 		//
 		'h300:		rSUsiRd	<= {/*{(32 - pColorDepth	){1'b0}},*/rSceneColor										};
 		'h301:		rSUsiRd	<= {{(32 - 7				){1'b0}}, rSceneFrameTiming									};

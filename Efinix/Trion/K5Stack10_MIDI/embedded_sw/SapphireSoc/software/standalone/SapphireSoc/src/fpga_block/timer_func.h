@@ -10,5 +10,6 @@
 #define timer_func_h
 
 bool timer_wait(uint32_t *tmr, uint32_t duration, uint32_t adrs);
+void wait_ms(uint32_t time);
 
 #endif

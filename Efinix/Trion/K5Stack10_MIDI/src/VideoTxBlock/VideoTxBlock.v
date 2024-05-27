@@ -7,37 +7,49 @@
  *-----------------------------------------------------------------------------*/
 module VideoTxBlock #(
 	// USI
-	parameter 		pBlockAdrsWidth		= 8,
+	parameter 						pBlockAdrsWidth		= 8,
 	parameter [pBlockAdrsWidth-1:0] pAdrsMap = 'h06,
-	parameter 		pUsiBusWidth		= 16,
-	parameter 		pCsrAdrsWidth		= 16,
-	parameter 		pCsrActiveWidth		= 16,
+	parameter 						pUsiBusWidth		= 16,
+	parameter 						pCsrAdrsWidth		= 16,
+	parameter 						pCsrActiveWidth		= 16,
 	// UFI
-	parameter 		pUfiBusWidth 		= 32,
+	parameter 						pUfiBusWidth 		= 32,
 	//
-	parameter [3:0] pUfiAdrsMap			= 'h2,
-	parameter 		pDmaAdrsWidth		= 18,
-	parameter 		pDmaBurstLength		= 256,
+	parameter [3:0] 				pUfiAdrsMap			= 'h2,
+	parameter 						pDmaAdrsWidth		= 18,
+	parameter 						pDmaBurstLength		= 256,
 	// Display Size, Simlation も兼ねて Top から操作設定可能にしている
-    parameter pVHA	= 480,		// Video Horizontal Active
-    parameter pVHB	= 43,		// Video Horizontal Back
-    parameter pVHF	= 8,		// Video Horizontal Front
-    parameter pVHS	= 10,		// Video Horizontal Sync
-    parameter pVVA	= 272,		// Video Vertical Active
-    parameter pVVF	= 12,		// Video Vertical Front
-    parameter pVVB	= 4,		// Video Vertical Back
-    parameter pVVS	= 10		// Video Vertical Sync
+	// parameter pVHA	= 480,		// Video Horizontal Active
+	// parameter pVHB	= 43,		// Video Horizontal Back
+	// parameter pVHF	= 8,		// Video Horizontal Front
+	// parameter pVHS	= 10,		// Video Horizontal Sync
+	// parameter pVVA	= 272,		// Video Vertical Active
+	// parameter pVVF	= 12,		// Video Vertical Front
+	// parameter pVVB	= 4,		// Video Vertical Back
+	// parameter pVVS	= 10		// Video Vertical Sync
+	parameter	pVVA = 320,		// Video Horizontal Active
+	parameter	pVVB = 2,		// Video Horizontal Back
+	parameter	pVVF = 2,		// Video Horizontal Front
+	parameter	pVVS = 4,		// Video Horizontal Sync
+	parameter	pVHA = 240,		// Video Vertical Active
+	parameter	pVHB = 10,		// Video Vertical Front
+	parameter	pVHF = 20,		// Video Vertical Back
+	parameter	pVHS = 10		// Video Vertical Sync
 )(
 	// VIDEO Output Signal Ctrl
-	output [7:0]					oVIDEO_R,
-	output [7:0]					oVIDEO_G,
-	output [7:0]					oVIDEO_B,
+	output [23:0]					oVIDEO_DQ,
 	output							oVIDEO_DCK,
 	output							oVIDEO_HS,
 	output							oVIDEO_VS,
 	output							oVIDEO_DE,
 	output							oVIDEO_FE,
 	output							oVIDEO_RST,
+	output							oVIDEO_WR,
+	output							oVIDEO_RD,
+	output							oVIDEO_RS,
+	output							oVIDEO_CS,
+	output [3:0]					oVIDEO_IM,
+	input  [7:0]					iVIDEO_IN,
 	// Usi Bus Master Read
 	output	[pUsiBusWidth-1:0] 		oSUsiRd,
 	// Usi Bus Master Write
@@ -72,15 +84,23 @@ localparam lpVVSW = f_detect_bitwidth(pVVS);	// Video Vertical Sync Width
 //
 localparam lpColorDepth = 32;
 //
-wire wDmaEnableCsr;
-wire wDmaCycleEnableCsr;
-wire wDmaAdrsStartCsr;
-wire wDmaAdrsEndCsr;
-wire wDmaAdrsAddCsr;
-wire wDmaDoneCsr;
+wire 		wDmaEnableCsr;
+wire 		wDmaCycleEnableCsr;
+wire 		wDmaAdrsStartCsr;
+wire 		wDmaAdrsEndCsr;
+wire 		wDmaAdrsAddCsr;
+wire 		wDmaDoneCsr;
 //
-wire wMapXSizeCsr;
-wire wMapYSizeCsr;
+wire		wVsgRst;
+//
+wire [7:0]	wTftDataCsr;
+wire 		wTftRSTCsr;
+wire 		wTftWRCsr,	wTftRDCsr,	wTftRSCsr, wTftCSCsr;
+wire [3:0]	wTftIM;
+wire 		wTftGate;
+//
+wire 		wMapXSizeCsr;
+wire 		wMapYSizeCsr;
 //
 wire [lpColorDepth-1:0]	wDotSquareColor1Csr, wDotSquareColor2Csr, wDotSquareColor3Csr, wDotSquareColor4Csr, wDotSquareColor5Csr, wDotSquareColor6Csr, wDotSquareColor7Csr;
 wire signed [lpVHAW:0] 	wDotSquareLeft1Csr,  wDotSquareRight1Csr, wDotSquareTop1Csr,   wDotSquareUnder1Csr;
@@ -120,12 +140,17 @@ VideoTxCsr #(
 	// Bus Master Write
 	.iSUsiWd(iSUsiWd),	.iSUsiAdrs(iSUsiAdrs),
 	// DMA
-	.oDmaEnable(wDmaEnableCsr),
-	.oDmaCycleEnable(wDmaCycleEnableCsr),
-	.oDmaAdrsStart(wDmaAdrsStartCsr),
-	.oDmaAdrsEnd(wDmaAdrsEndCsr),
+	.oDmaEnable(wDmaEnableCsr),			.oDmaCycleEnable(wDmaCycleEnableCsr),
+	.oDmaAdrsStart(wDmaAdrsStartCsr),	.oDmaAdrsEnd(wDmaAdrsEndCsr),
 	.oDmaAdrsAdd(wDmaAdrsAddCsr),
 	.iDmaDone(wDmaDoneCsr),
+	// Video Sync Gen
+	.oVsgRst(wVsgRst),
+	// TFT Config
+	.oTftData(wTftDataCsr),	.oTftRST(wTftRSTCsr),
+	.oTftWR(wTftWRCsr),		.oTftRD(wTftRDCsr),	.oTftRS(wTftRSCsr),	.oTftCS(wTftCSCsr),
+	.oTftIM(wTftIM),
+	.oTftGate(wTftGate),
 	// Map Info
 	.oMapXSize(wMapXSizeCsr),
 	.oMapYSize(wMapYSizeCsr),
@@ -151,6 +176,11 @@ VideoTxCsr #(
 	//
 	.iSRST(iSRST),	.iSCLK(iSCLK)
 );
+
+
+/**----------------------------------------------------------------------------
+ * キャラクターの座標移動を司る
+ *---------------------------------------------------------------------------*/
 
 /**----------------------------------------------------------------------------
  * Pgu に対するビデオデータの管理を司る
@@ -269,18 +299,59 @@ begin
 end
 
 
+// /**----------------------------------------------------------------------------
+//  * 
+//  *---------------------------------------------------------------------------*/
+// wire wWRX, wRD, wDCX;
+// wire wDrawOn;
+// wire [7:0] wByte;
+// wire wCke;
+
+// CkeGenerator #(
+// 	.pDivReg("no"),	.pDivWidth(32'd60000)
+// ) FlashSpiCkeGen (
+// 	.iCke(1'b1),	.iDiv(0),	.oCke(wCke),
+// 	.iRST(iVRST),	.iCLK(iVCLK)
+// );
+
+// TFT_INIT TFT_INIT (
+// 	.ENABLE_10ms(wCke),
+// 	.TFT_BYTE(wByte),
+// 	.WRX(wWRX),
+// 	.RD(wRD),
+// 	.DCX(wDCX),
+// 	.oDRAW_ON(wDrawOn),
+// 	.iVRST(iVRST),
+// 	.inVRST(inVRST),
+// 	.iVCLK(iVCLK)
+// );
+
 /**----------------------------------------------------------------------------
  * Video Signals Coneect
  *---------------------------------------------------------------------------*/
-assign oVIDEO_R		= wVafRd[23:16];
-assign oVIDEO_G		= wVafRd[15: 8];
-assign oVIDEO_B		= wVafRd[ 7: 0];
+assign oVIDEO_DQ	= wTftGate ? {16'd0,wTftDataCsr[7:0]}	: wVafRd[23: 0];
+// assign oVIDEO_R		= wVafRd[23:16];
+// assign oVIDEO_G		= (wDrawOn == 1'b0) ? {6'd0,wByte[7:6]}	: wVafRd[15: 8];
+// assign oVIDEO_B		= (wDrawOn == 1'b0) ? {2'd0,wByte[5:0]}	: wVafRd[ 7: 0];
 assign oVIDEO_DCK 	= iVCLK;
 assign oVIDEO_HS 	= rVideoHS[2];
 assign oVIDEO_VS 	= rVideoVS[2];
 assign oVIDEO_DE 	= rVideoDE[2];
 assign oVIDEO_FE 	= rVideoFE[2];
-assign oVIDEO_RST	= 1'b1;
+assign oVIDEO_RST	= wTftRSTCsr;
+// assign oVIDEO_RST	= 1'b1;// wTftRSTCsr;
+assign oVIDEO_WR	= wTftGate ? wTftWRCsr					: 1'b0;
+assign oVIDEO_RD	= wTftGate ? wTftRDCsr					: 1'b0;
+assign oVIDEO_RS	= wTftGate ? wTftRSCsr					: 1'b0; // DCX
+assign oVIDEO_CS	= wTftGate ? wTftCSCsr					: 1'b1;
+// assign oVIDEO_WR	= wWRX;
+// assign oVIDEO_RD	= wRD;
+// assign oVIDEO_RS	= wDCX;
+// assign oVIDEO_CS	= 1'b0;
+assign oVIDEO_IM[0]	= 1'b1;
+assign oVIDEO_IM[1]	= 1'b1;
+assign oVIDEO_IM[2]	= 1'b0;
+assign oVIDEO_IM[3]	= 1'b0;
 
 //-----------------------------------------------------------------------------
 // Rst 
@@ -296,7 +367,7 @@ end
 
 always @*
 begin
-	qVsgRst <= ~rVRstWaitCnt[7];
+	qVsgRst <= ~rVRstWaitCnt[7] | wVsgRst;
 end
 
 //-----------------------------------------------------------------------------

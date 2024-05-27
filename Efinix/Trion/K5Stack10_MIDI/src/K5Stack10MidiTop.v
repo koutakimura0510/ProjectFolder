@@ -80,6 +80,11 @@ module K5Stack10MidiTop(
 	input	jtag_inst1_RESET
 );
 
+/**----------------------------------------------------------------------------
+ * Pkg Version
+ *---------------------------------------------------------------------------*/
+localparam lpDispPkgVer	= "v5"; // "v3"
+
 
 //-----------------------------------------------------------------------------
 // System Reset Gen
@@ -406,10 +411,10 @@ SPIBlock #(
 //-----------------------------------------------------------------------------
 localparam lpSfcNum = 2;		// Serial Flash Memory Number
 
-wire wI2sMclk;
-wire wI2sBclk;
-wire wI2sLrclk;
-wire wI2sSdata;
+wire wI2S_MCLK;
+wire wI2S_BCLK;
+wire wI2S_LRCLK;
+wire wI2S_SDATA;
 wire [lpSfcNum-1:0] wSfmSck;
 wire [lpSfcNum-1:0] wSfmMosi;
 wire [lpSfcNum-1:0] wSfmMiso;
@@ -422,8 +427,8 @@ AudioTxBlock #(
 	.pSfmNum(lpSfcNum)
 ) AudioTxBlock (
 	// Audio dac I/F Port
-	.oI2S_MCLK(wI2sMclk),	.oI2S_BCLK(wI2sBclk),
-	.oI2S_LRCLK(wI2sLrclk),	.oI2S_SDATA(wI2sSdata),
+	.oI2S_MCLK(wI2S_MCLK),		.oI2S_BCLK(wI2S_BCLK),
+	.oI2S_LRCLK(wI2S_LRCLK),	.oI2S_SDATA(wI2S_SDATA),
 	// Serial Frash Memory I/F Port
 	.oSfmSck(wSfmSck),		.oSfmMosi(wSfmMosi),
 	.iSfmMiso(wSfmMiso),	.oSfmCs(wSfmCs),
@@ -455,11 +460,13 @@ SysTimerBlock #(
 //---------------------------------------------------------------------------
 // Video Tx Block
 //---------------------------------------------------------------------------
-wire [7:0] 	wVIDEO_R;
-wire [7:0] 	wVIDEO_G;
-wire [7:0] 	wVIDEO_B;
-wire 		wVIDEO_DCK,	wVIDEO_VS, wVIDEO_HS, wVIDEO_DE;
+wire [23:0]	wVIDEO_DQ;
+wire [7:0]	wVIDEO_IN;
+wire 		wVIDEO_DCK,	wVIDEO_VS, 	wVIDEO_HS, wVIDEO_DE;
 wire 		wVIDEO_RST;
+wire		wVIDEO_WR,	wVIDEO_RD,	wVIDEO_RS, wVIDEO_CS;
+wire [3:0]	wVIDEO_IM;
+wire		wVidetOe = ~wVIDEO_RD;
 
 VideoTxBlock #(
 	// USI
@@ -470,10 +477,12 @@ VideoTxBlock #(
 	.pUfiBusWidth(lpUfiBusWidth),			.pUfiAdrsMap(lpUfiVtbAdrsMap)
 ) VideoTxBlock (
 	// VIDEO Output Signal Ctrl
-	.oVIDEO_R(wVIDEO_R),		.oVIDEO_G(wVIDEO_G),	.oVIDEO_B(wVIDEO_B),
+	.oVIDEO_DQ(wVIDEO_DQ),
 	.oVIDEO_DCK(wVIDEO_DCK),
 	.oVIDEO_HS(wVIDEO_HS),		.oVIDEO_VS(wVIDEO_VS),	.oVIDEO_DE(wVIDEO_DE),
-	.oVIDEO_RST(wVIDEO_RST),
+	.oVIDEO_RST(wVIDEO_RST),	.oVIDEO_CS(wVIDEO_CS),
+	.oVIDEO_WR(wVIDEO_WR),		.oVIDEO_RD(wVIDEO_RD),	.oVIDEO_RS(wVIDEO_RS),	.oVIDEO_IM(wVIDEO_IM),
+	.iVIDEO_IN(wVIDEO_IN),
 	// Bus Master Read
 	.oSUsiRd(wSUsiRd[lpVtbAdrsMap]),
 	// Bus Master Write
@@ -488,6 +497,7 @@ VideoTxBlock #(
 	.iVRST(wVRST),		.inVRST(wnVRST),	.iVCLK(iVCLK),
 	.iSRST(wSRST),		.inSRST(wnSRST),	.iSCLK(iSCLK)
 );
+
 
 /**----------------------------------------------------------------------------
  * I2c Block
@@ -566,44 +576,135 @@ RamBlock #(
 //-----------------------------------------------------------------------------
 // GPIO Header
 wire [37:0] wGpioIn;
+
+generate
+if (lpDispPkgVer == "v3")
+begin
 assign ioGpio_O[0]	= 1'b0;/*wVIDEO_DCK*/assign  wGpioIn[0] 	= ioGpio_I[0];		assign ioGpio_OE[0]		= 1'b0;
 assign ioGpio_O[1]	= wVIDEO_RST;		assign  wGpioIn[1] 	= ioGpio_I[1];		assign ioGpio_OE[1]		= 1'b1;
-assign ioGpio_O[2]	= wVIDEO_B[6];		assign  wGpioIn[2]	= ioGpio_I[2];		assign ioGpio_OE[2]		= 1'b1;
-assign ioGpio_O[3]	= wVIDEO_B[7];		assign  wGpioIn[3]	= ioGpio_I[3];		assign ioGpio_OE[3]		= 1'b1;
-assign ioGpio_O[4]	= wVIDEO_B[4];		assign  wGpioIn[4]	= ioGpio_I[4];		assign ioGpio_OE[4]		= 1'b1;
-assign ioGpio_O[5]	= wVIDEO_B[5];		assign  wGpioIn[5]	= ioGpio_I[5];		assign ioGpio_OE[5]		= 1'b1;
-assign ioGpio_O[6]	= wVIDEO_B[3];		assign  wGpioIn[6]	= ioGpio_I[6];		assign ioGpio_OE[6]		= 1'b1;
-assign ioGpio_O[7]	= wVIDEO_B[2];		assign  wGpioIn[7]	= ioGpio_I[7];		assign ioGpio_OE[7]		= 1'b1;
-assign ioGpio_O[8]	= wVIDEO_B[1];		assign  wGpioIn[8]	= ioGpio_I[8];		assign ioGpio_OE[8]		= 1'b1;
-assign ioGpio_O[9]	= wVIDEO_B[0];		assign  wGpioIn[9]	= ioGpio_I[9];		assign ioGpio_OE[9]		= 1'b1;
-assign ioGpio_O[10]	= wVIDEO_G[7];		assign  wGpioIn[10]	= ioGpio_I[10];		assign ioGpio_OE[10]	= 1'b1;
-assign ioGpio_O[11]	= wVIDEO_G[6];		assign  wGpioIn[11]	= ioGpio_I[11];		assign ioGpio_OE[11]	= 1'b1;
-assign ioGpio_O[12]	= wVIDEO_G[5];		assign  wGpioIn[12]	= ioGpio_I[12];		assign ioGpio_OE[12]	= 1'b1;
-assign ioGpio_O[13]	= wVIDEO_G[4];		assign  wGpioIn[13]	= ioGpio_I[13];		assign ioGpio_OE[13]	= 1'b1;
-assign ioGpio_O[14]	= wVIDEO_G[3];		assign  wGpioIn[14]	= ioGpio_I[14];		assign ioGpio_OE[14]	= 1'b1;
-assign ioGpio_O[15]	= wVIDEO_G[2];		assign  wGpioIn[15]	= ioGpio_I[15];		assign ioGpio_OE[15]	= 1'b1;
-assign ioGpio_O[16]	= wVIDEO_G[1];		assign  wGpioIn[16]	= ioGpio_I[16];		assign ioGpio_OE[16]	= 1'b1;
-assign ioGpio_O[17]	= wVIDEO_G[0];		assign  wGpioIn[17]	= ioGpio_I[17];		assign ioGpio_OE[17]	= 1'b1;
-assign ioGpio_O[18]	= 1'b0;/*wI2sMclk;*/assign  wGpioIn[18]	= ioGpio_I[18];		assign ioGpio_OE[18]	= 1'b0;
-assign ioGpio_O[19]	= wI2sBclk;			assign  wGpioIn[19]	= ioGpio_I[19];		assign ioGpio_OE[19]	= 1'b1;
-assign ioGpio_O[20]	= wI2sSdata;		assign  wGpioIn[20]	= ioGpio_I[20];		assign ioGpio_OE[20]	= 1'b1;
-assign ioGpio_O[21]	= wI2sLrclk;		assign  wGpioIn[21]	= ioGpio_I[21];		assign ioGpio_OE[21]	= 1'b1;
-assign ioGpio_O[22]	= wVIDEO_R[6];		assign  wGpioIn[22]	= ioGpio_I[22];		assign ioGpio_OE[22]	= 1'b1;
-assign ioGpio_O[23]	= wVIDEO_R[7];		assign  wGpioIn[23]	= ioGpio_I[23];		assign ioGpio_OE[23]	= 1'b1;
+assign ioGpio_O[2]	= wVIDEO_DQ[6];		assign  wGpioIn[2]	= ioGpio_I[2];		assign ioGpio_OE[2]		= 1'b1;
+assign ioGpio_O[3]	= wVIDEO_DQ[7];		assign  wGpioIn[3]	= ioGpio_I[3];		assign ioGpio_OE[3]		= 1'b1;
+assign ioGpio_O[4]	= wVIDEO_DQ[4];		assign  wGpioIn[4]	= ioGpio_I[4];		assign ioGpio_OE[4]		= 1'b1;
+assign ioGpio_O[5]	= wVIDEO_DQ[5];		assign  wGpioIn[5]	= ioGpio_I[5];		assign ioGpio_OE[5]		= 1'b1;
+assign ioGpio_O[6]	= wVIDEO_DQ[3];		assign  wGpioIn[6]	= ioGpio_I[6];		assign ioGpio_OE[6]		= 1'b1;
+assign ioGpio_O[7]	= wVIDEO_DQ[2];		assign  wGpioIn[7]	= ioGpio_I[7];		assign ioGpio_OE[7]		= 1'b1;
+assign ioGpio_O[8]	= wVIDEO_DQ[1];		assign  wGpioIn[8]	= ioGpio_I[8];		assign ioGpio_OE[8]		= 1'b1;
+assign ioGpio_O[9]	= wVIDEO_DQ[0];		assign  wGpioIn[9]	= ioGpio_I[9];		assign ioGpio_OE[9]		= 1'b1;
+assign ioGpio_O[10]	= wVIDEO_DQ[15];	assign  wGpioIn[10]	= ioGpio_I[10];		assign ioGpio_OE[10]	= 1'b1;
+assign ioGpio_O[11]	= wVIDEO_DQ[14];	assign  wGpioIn[11]	= ioGpio_I[11];		assign ioGpio_OE[11]	= 1'b1;
+assign ioGpio_O[12]	= wVIDEO_DQ[13];	assign  wGpioIn[12]	= ioGpio_I[12];		assign ioGpio_OE[12]	= 1'b1;
+assign ioGpio_O[13]	= wVIDEO_DQ[12];	assign  wGpioIn[13]	= ioGpio_I[13];		assign ioGpio_OE[13]	= 1'b1;
+assign ioGpio_O[14]	= wVIDEO_DQ[11];	assign  wGpioIn[14]	= ioGpio_I[14];		assign ioGpio_OE[14]	= 1'b1;
+assign ioGpio_O[15]	= wVIDEO_DQ[10];	assign  wGpioIn[15]	= ioGpio_I[15];		assign ioGpio_OE[15]	= 1'b1;
+assign ioGpio_O[16]	= wVIDEO_DQ[9];		assign  wGpioIn[16]	= ioGpio_I[16];		assign ioGpio_OE[16]	= 1'b1;
+assign ioGpio_O[17]	= wVIDEO_DQ[8];		assign  wGpioIn[17]	= ioGpio_I[17];		assign ioGpio_OE[17]	= 1'b1;
+assign ioGpio_O[18]	= 1'b0;/*wI2S_MCLK;*/assign  wGpioIn[18]	= ioGpio_I[18];		assign ioGpio_OE[18]	= 1'b0;
+assign ioGpio_O[19]	= wI2S_LRCLK;		assign  wGpioIn[19]	= ioGpio_I[19];		assign ioGpio_OE[19]	= 1'b1;
+assign ioGpio_O[20]	= wI2S_BCLK;		assign  wGpioIn[20]	= ioGpio_I[20];		assign ioGpio_OE[20]	= 1'b1;
+assign ioGpio_O[21]	= wI2S_SDATA;		assign  wGpioIn[21]	= ioGpio_I[21];		assign ioGpio_OE[21]	= 1'b1;
+assign ioGpio_O[22]	= wVIDEO_DQ[22];	assign  wGpioIn[22]	= ioGpio_I[22];		assign ioGpio_OE[22]	= 1'b1;
+assign ioGpio_O[23]	= wVIDEO_DQ[23];	assign  wGpioIn[23]	= ioGpio_I[23];		assign ioGpio_OE[23]	= 1'b1;
 assign ioGpio_O[24]	= wVIDEO_DE;		assign  wGpioIn[24]	= ioGpio_I[24];		assign ioGpio_OE[24]	= 1'b1;
 assign ioGpio_O[25]	= wVIDEO_VS;		assign  wGpioIn[25]	= ioGpio_I[25];		assign ioGpio_OE[25]	= 1'b1;
 assign ioGpio_O[26]	= wVIDEO_HS;		assign  wGpioIn[26]	= ioGpio_I[26];		assign ioGpio_OE[26]	= 1'b1;
-assign ioGpio_O[27]	= 1'b0;				assign  wGpioIn[27]	= ioGpio_I[27];		assign ioGpio_OE[27]	= 1'b0;
-assign ioGpio_O[28]	= wVIDEO_R[0];		assign  wGpioIn[28]	= ioGpio_I[28];		assign ioGpio_OE[28]	= 1'b1;
-assign ioGpio_O[29]	= wVIDEO_R[2];		assign  wGpioIn[29]	= ioGpio_I[29];		assign ioGpio_OE[29]	= 1'b1;
+assign ioGpio_O[27]	= 1'b0;				assign  wGpioIn[27]	= ioGpio_I[27];		assign ioGpio_OE[27]	= 1'b1;
+assign ioGpio_O[28]	= wVIDEO_DQ[16];	assign  wGpioIn[28]	= ioGpio_I[28];		assign ioGpio_OE[28]	= 1'b1;
+assign ioGpio_O[29]	= wVIDEO_DQ[17];	assign  wGpioIn[29]	= ioGpio_I[29];		assign ioGpio_OE[29]	= 1'b1;
 assign ioGpio_O[30]	= 1'b0;				assign  wGpioIn[30]	= ioGpio_I[30];		assign ioGpio_OE[30]	= 1'b0;
 assign ioGpio_O[31]	= 1'b0;				assign  wGpioIn[31]	= ioGpio_I[31];		assign ioGpio_OE[31]	= 1'b0;
 assign ioGpio_O[32]	= 1'b0;				assign  wGpioIn[32]	= ioGpio_I[32];		assign ioGpio_OE[32]	= 1'b0;
 assign ioGpio_O[33]	= 1'b0;				assign  wGpioIn[33]	= ioGpio_I[33];		assign ioGpio_OE[33]	= 1'b0;
-assign ioGpio_O[34]	= wVIDEO_R[3];		assign  wGpioIn[34]	= ioGpio_I[34];		assign ioGpio_OE[34]	= 1'b1;
-assign ioGpio_O[35]	= wVIDEO_R[4];		assign  wGpioIn[35]	= ioGpio_I[35];		assign ioGpio_OE[35]	= 1'b1;
-assign ioGpio_O[36]	= wVIDEO_R[5];		assign  wGpioIn[36]	= ioGpio_I[36];		assign ioGpio_OE[36]	= 1'b1;
-assign ioGpio_O[37]	= wVIDEO_R[1];		assign  wGpioIn[37]	= ioGpio_I[37];		assign ioGpio_OE[37]	= 1'b1;
+assign ioGpio_O[34]	= wVIDEO_DQ[19];	assign  wGpioIn[34]	= ioGpio_I[34];		assign ioGpio_OE[34]	= 1'b1;
+assign ioGpio_O[35]	= wVIDEO_DQ[20];	assign  wGpioIn[35]	= ioGpio_I[35];		assign ioGpio_OE[35]	= 1'b1;
+assign ioGpio_O[36]	= wVIDEO_DQ[21];	assign  wGpioIn[36]	= ioGpio_I[36];		assign ioGpio_OE[36]	= 1'b1;
+assign ioGpio_O[37]	= wVIDEO_DQ[18];	assign  wGpioIn[37]	= ioGpio_I[37];		assign ioGpio_OE[37]	= 1'b1;
+//------------------------------------------------------------------------------
+end
+else if ((lpDispPkgVer == "v4"))
+begin
+//-------------------------------------------------------------------------------
+assign ioGpio_O[0]	= wVIDEO_DQ[8];		assign  wGpioIn[0] 	= ioGpio_I[0];		assign ioGpio_OE[0]		= 1'b1; // D8
+assign ioGpio_O[1]	= wVIDEO_DQ[7];		assign  wGpioIn[1] 	= ioGpio_I[1];		assign ioGpio_OE[1]		= 1'b1; // D7
+assign ioGpio_O[2]	= wVIDEO_DQ[10];	assign  wVIDEO_IN[7]= ioGpio_I[2];		assign ioGpio_OE[2]		= 1'b1; // D10
+assign ioGpio_O[3]	= wVIDEO_DQ[9];		assign  wGpioIn[3]	= ioGpio_I[3];		assign ioGpio_OE[3]		= 1'b1; // D9
+assign ioGpio_O[4]	= wVIDEO_DQ[12];	assign  wVIDEO_IN[5]= ioGpio_I[4];		assign ioGpio_OE[4]		= 1'b1; // D12
+assign ioGpio_O[5]	= wVIDEO_DQ[11];	assign  wVIDEO_IN[6]= ioGpio_I[5];		assign ioGpio_OE[5]		= 1'b1; // D11
+assign ioGpio_O[6]	= wVIDEO_DQ[13];	assign  wVIDEO_IN[4]= ioGpio_I[6];		assign ioGpio_OE[6]		= 1'b1; // D13
+assign ioGpio_O[7]	= wVIDEO_DQ[14];	assign  wVIDEO_IN[3]= ioGpio_I[7];		assign ioGpio_OE[7]		= 1'b1; // D14
+assign ioGpio_O[8]	= wVIDEO_DQ[15];	assign  wVIDEO_IN[2]= ioGpio_I[8];		assign ioGpio_OE[8]		= 1'b1; // D15
+assign ioGpio_O[9]	= wVIDEO_DQ[16];	assign  wVIDEO_IN[1]= ioGpio_I[9];		assign ioGpio_OE[9]		= 1'b1; // D16
+assign ioGpio_O[10]	= wVIDEO_DQ[17];	assign  wVIDEO_IN[0]= ioGpio_I[10];		assign ioGpio_OE[10]	= 1'b1;	// D17
+assign ioGpio_O[11]	= wVIDEO_DE;		assign  wGpioIn[11]	= ioGpio_I[11];		assign ioGpio_OE[11]	= 1'b1; // DE
+assign ioGpio_O[12]	= 1'b0;				assign  wGpioIn[12]	= ioGpio_I[12];		assign ioGpio_OE[12]	= 1'b0; // DCK
+assign ioGpio_O[13]	= wVIDEO_HS;		assign  wGpioIn[13]	= ioGpio_I[13];		assign ioGpio_OE[13]	= 1'b1; // HS
+assign ioGpio_O[14]	= wVIDEO_VS;		assign  wGpioIn[14]	= ioGpio_I[14];		assign ioGpio_OE[14]	= 1'b1; // VS
+assign ioGpio_O[15]	= wVIDEO_IM[3];		assign  wGpioIn[15]	= ioGpio_I[15];		assign ioGpio_OE[15]	= 1'b1; // IM3
+assign ioGpio_O[16]	= wVIDEO_IM[1];		assign  wGpioIn[16]	= ioGpio_I[16];		assign ioGpio_OE[16]	= 1'b1; // IM1
+assign ioGpio_O[17]	= wVIDEO_IM[0];		assign  wGpioIn[17]	= ioGpio_I[17];		assign ioGpio_OE[17]	= 1'b1; // IM0
+assign ioGpio_O[18]	= 1'b0;				assign  wGpioIn[18]	= ioGpio_I[18];		assign ioGpio_OE[18]	= 1'b0;
+assign ioGpio_O[19]	= wI2S_LRCLK;		assign  wGpioIn[19]	= ioGpio_I[19];		assign ioGpio_OE[19]	= 1'b1;
+assign ioGpio_O[20]	= wI2S_BCLK;		assign  wGpioIn[20]	= ioGpio_I[20];		assign ioGpio_OE[20]	= 1'b1;
+assign ioGpio_O[21]	= wI2S_SDATA;		assign  wGpioIn[21]	= ioGpio_I[21];		assign ioGpio_OE[21]	= 1'b1;
+assign ioGpio_O[22]	= wVIDEO_DQ[2];		assign  wGpioIn[22]	= ioGpio_I[22];		assign ioGpio_OE[22]	= 1'b1; // D2
+assign ioGpio_O[23]	= wVIDEO_DQ[3];		assign  wGpioIn[23]	= ioGpio_I[23];		assign ioGpio_OE[23]	= 1'b1; // D3
+assign ioGpio_O[24]	= wVIDEO_DQ[6];		assign  wGpioIn[24]	= ioGpio_I[24];		assign ioGpio_OE[24]	= 1'b1; // D6
+assign ioGpio_O[25]	= wVIDEO_DQ[5];		assign  wGpioIn[25]	= ioGpio_I[25];		assign ioGpio_OE[25]	= 1'b1; // D5
+assign ioGpio_O[26]	= wVIDEO_DQ[4];		assign  wGpioIn[26]	= ioGpio_I[26];		assign ioGpio_OE[26]	= 1'b1; // D4
+assign ioGpio_O[27]	= wVIDEO_CS;		assign  wGpioIn[27]	= ioGpio_I[27];		assign ioGpio_OE[27]	= 1'b1;
+assign ioGpio_O[28]	= wVIDEO_RST;		assign  wGpioIn[28]	= ioGpio_I[28];		assign ioGpio_OE[28]	= 1'b1; // RST
+assign ioGpio_O[29]	= wVIDEO_RS;		assign  wGpioIn[29]	= ioGpio_I[29];		assign ioGpio_OE[29]	= 1'b1; // RS Cmd / Para Select
+assign ioGpio_O[30]	= 1'b0;				assign  wGpioIn[30]	= ioGpio_I[30];		assign ioGpio_OE[30]	= 1'b0;
+assign ioGpio_O[31]	= wVIDEO_IM[2];		assign  wGpioIn[31]	= ioGpio_I[31];		assign ioGpio_OE[31]	= 1'b1;
+assign ioGpio_O[32]	= 1'b0;				assign  wGpioIn[32]	= ioGpio_I[32];		assign ioGpio_OE[32]	= 1'b0;
+assign ioGpio_O[33]	= 1'b0;				assign  wGpioIn[33]	= ioGpio_I[33];		assign ioGpio_OE[33]	= 1'b0;
+assign ioGpio_O[34]	= wVIDEO_WR;		assign  wGpioIn[34]	= ioGpio_I[34];		assign ioGpio_OE[34]	= 1'b1; // WR
+assign ioGpio_O[35]	= wVIDEO_DQ[0];		assign  wGpioIn[35]	= ioGpio_I[35];		assign ioGpio_OE[35]	= 1'b1; // D0
+assign ioGpio_O[36]	= wVIDEO_DQ[1];		assign  wGpioIn[36]	= ioGpio_I[36];		assign ioGpio_OE[36]	= 1'b1; // D1
+assign ioGpio_O[37]	= wVIDEO_RD;		assign  wGpioIn[37]	= ioGpio_I[37];		assign ioGpio_OE[37]	= 1'b1; // RD
+end
+else
+begin
+//-------------------------------------------------------------------------------
+assign ioGpio_O[0]	= wVIDEO_DQ[0];		assign  wGpioIn[0] 	= ioGpio_I[0];		assign ioGpio_OE[0]		= 1'b1;
+assign ioGpio_O[1]	= wVIDEO_RD;		assign  wGpioIn[1] 	= ioGpio_I[1];		assign ioGpio_OE[1]		= 1'b1;
+assign ioGpio_O[2]	= wVIDEO_DQ[2];		assign  wVIDEO_IN[7]= ioGpio_I[2];		assign ioGpio_OE[2]		= 1'b1;
+assign ioGpio_O[3]	= wVIDEO_DQ[1];		assign  wGpioIn[3]	= ioGpio_I[3];		assign ioGpio_OE[3]		= 1'b1;
+assign ioGpio_O[4]	= wVIDEO_DQ[3];		assign  wVIDEO_IN[5]= ioGpio_I[4];		assign ioGpio_OE[4]		= 1'b1;
+assign ioGpio_O[5]	= wVIDEO_DQ[4];		assign  wVIDEO_IN[6]= ioGpio_I[5];		assign ioGpio_OE[5]		= 1'b1;
+assign ioGpio_O[6]	= wVIDEO_DQ[6];		assign  wVIDEO_IN[4]= ioGpio_I[6];		assign ioGpio_OE[6]		= 1'b1;
+assign ioGpio_O[7]	= wVIDEO_DQ[5];		assign  wVIDEO_IN[3]= ioGpio_I[7];		assign ioGpio_OE[7]		= 1'b1;
+assign ioGpio_O[8]	= wVIDEO_DQ[8];		assign  wVIDEO_IN[2]= ioGpio_I[8];		assign ioGpio_OE[8]		= 1'b1;
+assign ioGpio_O[9]	= wVIDEO_DQ[7];		assign  wVIDEO_IN[1]= ioGpio_I[9];		assign ioGpio_OE[9]		= 1'b1;
+assign ioGpio_O[10]	= wVIDEO_DQ[10];	assign  wVIDEO_IN[0]= ioGpio_I[10];		assign ioGpio_OE[10]	= 1'b1;
+assign ioGpio_O[11]	= wVIDEO_DQ[9];		assign  wGpioIn[11]	= ioGpio_I[11];		assign ioGpio_OE[11]	= 1'b1;
+assign ioGpio_O[12]	= wVIDEO_DQ[12];	assign  wGpioIn[12]	= ioGpio_I[12];		assign ioGpio_OE[12]	= 1'b1;
+assign ioGpio_O[13]	= wVIDEO_DQ[11];	assign  wGpioIn[13]	= ioGpio_I[13];		assign ioGpio_OE[13]	= 1'b1;
+assign ioGpio_O[14]	= wVIDEO_DQ[14];	assign  wGpioIn[14]	= ioGpio_I[14];		assign ioGpio_OE[14]	= 1'b1;
+assign ioGpio_O[15]	= wVIDEO_DQ[13];	assign  wGpioIn[15]	= ioGpio_I[15];		assign ioGpio_OE[15]	= 1'b1;
+assign ioGpio_O[16]	= wVIDEO_DQ[15];	assign  wGpioIn[16]	= ioGpio_I[16];		assign ioGpio_OE[16]	= 1'b1;
+assign ioGpio_O[17]	= wVIDEO_RST;		assign  wGpioIn[17]	= ioGpio_I[17];		assign ioGpio_OE[17]	= 1'b1;
+assign ioGpio_O[18]	= 1'b0;				assign  wGpioIn[18]	= ioGpio_I[18];		assign ioGpio_OE[18]	= 1'b0;	// ram dq6
+assign ioGpio_O[19]	= 1'b0;				assign  wGpioIn[19]	= ioGpio_I[19];		assign ioGpio_OE[19]	= 1'b0;	// ram cs0
+assign ioGpio_O[20]	= 1'b0;				assign  wGpioIn[20]	= ioGpio_I[20];		assign ioGpio_OE[20]	= 1'b0;	// ram dq5
+assign ioGpio_O[21]	= 1'b0;				assign  wGpioIn[21]	= ioGpio_I[21];		assign ioGpio_OE[21]	= 1'b0;
+assign ioGpio_O[22]	= 1'b0;				assign  wGpioIn[22]	= ioGpio_I[22];		assign ioGpio_OE[22]	= 1'b0;	// ram dq7
+assign ioGpio_O[23]	= 1'b0;				assign  wGpioIn[23]	= ioGpio_I[23];		assign ioGpio_OE[23]	= 1'b0;	// ram dq4
+assign ioGpio_O[24]	= wVIDEO_WR;		assign  wGpioIn[24]	= ioGpio_I[24];		assign ioGpio_OE[24]	= 1'b1;
+assign ioGpio_O[25]	= wVIDEO_RS;		assign  wGpioIn[25]	= ioGpio_I[25];		assign ioGpio_OE[25]	= 1'b1;
+assign ioGpio_O[26]	= wVIDEO_CS;		assign  wGpioIn[26]	= ioGpio_I[26];		assign ioGpio_OE[26]	= 1'b1;
+assign ioGpio_O[27]	= wI2S_SDATA;		assign  wGpioIn[27]	= ioGpio_I[27];		assign ioGpio_OE[27]	= 1'b1;
+assign ioGpio_O[28]	= wI2S_LRCLK;		assign  wGpioIn[28]	= ioGpio_I[28];		assign ioGpio_OE[28]	= 1'b1;
+assign ioGpio_O[29]	= 1'b0;				assign  wGpioIn[29]	= ioGpio_I[29];		assign ioGpio_OE[29]	= 1'b0;	// ram dq2
+assign ioGpio_O[30]	= 1'b0;				assign  wGpioIn[30]	= ioGpio_I[30];		assign ioGpio_OE[30]	= 1'b0;	// ram cs1
+assign ioGpio_O[31]	= 1'b0;				assign  wGpioIn[31]	= ioGpio_I[31];		assign ioGpio_OE[31]	= 1'b0;	// ext sck
+assign ioGpio_O[32]	= 1'b0;				assign  wGpioIn[32]	= ioGpio_I[32];		assign ioGpio_OE[32]	= 1'b0;	// ram dq1
+assign ioGpio_O[33]	= 1'b0;				assign  wGpioIn[33]	= ioGpio_I[33];		assign ioGpio_OE[33]	= 1'b0;	// ext miso
+assign ioGpio_O[34]	= 1'b0;				assign  wGpioIn[34]	= ioGpio_I[34];		assign ioGpio_OE[34]	= 1'b0;	// ram dq0
+assign ioGpio_O[35]	= 1'b0;				assign  wGpioIn[35]	= ioGpio_I[35];		assign ioGpio_OE[35]	= 1'b0;	// ram dq3
+assign ioGpio_O[36]	= 1'b0;				assign  wGpioIn[36]	= ioGpio_I[36];		assign ioGpio_OE[36]	= 1'b0;	// ram clk
+assign ioGpio_O[37]	= wI2S_BCLK;		assign  wGpioIn[37]	= ioGpio_I[37];		assign ioGpio_OE[37]	= 1'b1;
+end
+endgenerate
 //
 // External ROM / QSPI は後々対応
 wire [7:0] wSpiRomDqNot;
@@ -629,8 +730,8 @@ assign oRamCe[0]		= wRamCe[0];
 assign oRamCe[1]		= wRamCe[1];
 //
 // I2C I/F
-assign ioI2cScl_O	= woI2cScl;				assign wiI2cScl	= ioI2cScl_I;		assign ioI2cScl_OE = woI2cSclOe;
-assign ioI2cSda_O	= woI2cSda;				assign wiI2cSda	= ioI2cSda_I;		assign ioI2cSda_OE = woI2cSdaOe;
+assign ioI2cScl_O	= woI2cScl;				assign wiI2cScl	= ioI2cScl_I;		assign ioI2cScl_OE = woI2cSclOe;	// ext mosi
+assign ioI2cSda_O	= woI2cSda;				assign wiI2cSda	= ioI2cSda_I;		assign ioI2cSda_OE = woI2cSdaOe;	// ext cs
 //
 // Uart I/F
 // assign oUsbTx = wMIDI_In;//iUsbRx;
@@ -656,7 +757,7 @@ assign oLed[3]		= wGpio_O[3];
 //-----------------------------------------------------------------------------
 localparam lpSclkCntMax = 25000000;
 localparam lpMclkCntMax = 22600000;
-localparam lpVclkCntMax = 9000000;
+localparam lpVclkCntMax = 6000000;
 
 wire wPulseSCLK,wPulseMCLK,wPulseVCLK;
 
@@ -666,7 +767,7 @@ PulseGenerator #(.pDivClk(lpVclkCntMax)) VclkPulseGenerator (.oPulse(wPulseVCLK)
 
 always @*
 begin
-  qGpioAltMode[0] <= &{iPushSw[5:0]};
+  qGpioAltMode[0] <= qlocked;
   qGpioAltMode[1] <= wPulseVCLK;
   qGpioAltMode[2] <= woI2cSclOe;
   qGpioAltMode[3] <= woI2cSdaOe;

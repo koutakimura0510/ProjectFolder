@@ -1,4 +1,4 @@
-<efx:project xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="K5Stack10_MIDI" description="" last_change_date="&#22303;  3&#26376; 09 2024 16&#26178;20&#20998;56&#31186;" location="/home/kimura/workspace/ProjectFolder/Efinix/Trion/K5Stack10_MIDI/." sw_version="2023.1.150.6.14" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="sync" place_ood="sync" route_ood="sync" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
+<efx:project xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="K5Stack10_MIDI" description="" last_change_date="Sun May 19 2024 11:36:08" location="F:\workspace\ProjectFolder\Efinix\Trion\K5Stack10_MIDI" sw_version="2023.1.150.7.4" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="sync" place_ood="sync" route_ood="sync" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
     <efx:device_info>
         <efx:family name="Trion" />
         <efx:device name="T20Q144" />
@@ -43,6 +43,7 @@
         <efx:design_file name="src/VideoTxBlock/VideoTxBlock.v" version="default" library="default" />
         <efx:design_file name="src/VideoTxBlock/VideoTxCsr.v" version="default" library="default" />
         <efx:design_file name="src/VideoTxBlock/VideoSyncGen.v" version="default" library="default" />
+        <efx:design_file name="src/VideoTxBlock/TFT_INIT.v" version="default" library="default" />
         <efx:design_file name="src/VideoTxBlock/VideoPixelGenUnit/VideoPixelGenUnit.v" version="default" library="default" />
         <efx:design_file name="src/VideoTxBlock/VideoPixelGenUnit/common/DotSquareGen.v" version="default" library="default" />
         <efx:design_file name="src/VideoTxBlock/VideoPixelGenUnit/common/PixelDrawPosition.v" version="default" library="default" />

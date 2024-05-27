@@ -55,7 +55,7 @@ def file_export(rf, wf, exce, color):
 					for line in f:
 						if exce in line:
 							fw.write(line.rstrip("\n")+"\n")
-							print(paint(color, line))
+							# print(paint(color, line))
 				except FileNotFoundError as err:
 					print(err)
 		except FileNotFoundError as err:

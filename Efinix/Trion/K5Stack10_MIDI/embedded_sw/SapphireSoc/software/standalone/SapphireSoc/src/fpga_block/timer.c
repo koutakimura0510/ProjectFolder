@@ -21,3 +21,18 @@ bool timer_wait(uint32_t *tmr, uint32_t duration, uint32_t adrs)
 
 	return false;
 }
+
+/**----------------------------------------------------------------------------
+ * 1ms wait 関数
+ * time 待機時間
+ *---------------------------------------------------------------------------*/
+void wait_ms(uint32_t time)
+{
+	uint32_t tmr = usi_read_cmd(TIMER_REG_COUNT2);
+
+	while (1) {
+		if (true == timer_wait(&tmr, time, TIMER_REG_COUNT2)) {
+			break;
+		}
+	}
+}

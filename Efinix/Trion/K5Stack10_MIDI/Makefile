@@ -4,8 +4,8 @@
 # Efinity Compile Makefile
 # ------------------------------------------------------------------------------
 
-FILE = efx_run.py
-PROJECT = ./K5Stack10_MIDI.xml
+FILE = C:\Efinity\2023.1\bin\efx_run.bat
+PROJECT = K5Stack10_MIDI.xml
 JTAG_PROJECT = ../JTAG_Flash_Loader
 # SIM_PROJECT = ./src/common/fifo/sim
 # SIM_PROJECT = ./src/UltraFastInterfaceBus/sim

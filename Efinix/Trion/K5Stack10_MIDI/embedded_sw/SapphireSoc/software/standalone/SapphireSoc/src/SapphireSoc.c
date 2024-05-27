@@ -26,9 +26,9 @@ static void system_initialize(void)
 
 	// Timer
 	usi_write_cmd(0x0, TIMER_REG_ENABLE);	// Timer Rst
-	usi_write_cmd(499999, TIMER_REG_DIV1);	// Timer Div1
-	usi_write_cmd(49999, TIMER_REG_DIV2);	// Timer Div2
-	usi_write_cmd(49, TIMER_REG_DIV3);		// Timer Div3
+	usi_write_cmd(999999, TIMER_REG_DIV1);	// Timer Div1 1s
+	usi_write_cmd(99999, TIMER_REG_DIV2);	// Timer Div2 1ms
+	usi_write_cmd(99, TIMER_REG_DIV3);		// Timer Div3 1us
 	usi_write_cmd(0x7, TIMER_REG_ENABLE);	// Timer Enable
 
 	// SPI
@@ -88,21 +88,22 @@ static void system_initialize(void)
 	}
 
 	// Audio
-	// usi_write_cmd(0x040404, AUDIO_REG_SFM_CLK_DIV);		// 動作周波数
-	// usi_write_cmd(0x020202, AUDIO_REG_SFM_CS_HOLD_TIME);
-	// usi_write_cmd(0x7, AUDIO_REG_SFM_CPU_VALID);
-	// // flash_id_read(0);
-	// // flash_id_read(1);
-	// flash_protection_reg_write(0);
-	// flash_protection_reg_write(1);
-	// usi_write_cmd(0x0, AUDIO_REG_SFM_CPU_VALID);
-	// usi_write_cmd(0, AUDIO_REG_SFM_START_ADRS_1);
-	// usi_write_cmd(4100, AUDIO_REG_SFM_END_ADRS_1);
-	// usi_write_cmd(0x1, AUDIO_REG_SFM_CYCLE_ENABLE);
-	// usi_write_cmd(0x1, AUDIO_REG_SFM_ENABLE);
+	 usi_write_cmd(0x040404, AUDIO_REG_SFM_CLK_DIV);		// 動作周波数
+	 usi_write_cmd(0x020202, AUDIO_REG_SFM_CS_HOLD_TIME);
+	 usi_write_cmd(0x7, AUDIO_REG_SFM_CPU_VALID);
+	 flash_id_read(0);
+	 flash_id_read(1);
+	 flash_protection_reg_write(0);
+	 flash_protection_reg_write(1);
+	 usi_write_cmd(0x0, AUDIO_REG_SFM_CPU_VALID);
+	 usi_write_cmd(0, AUDIO_REG_SFM_START_ADRS_1);
+	 usi_write_cmd(4100, AUDIO_REG_SFM_END_ADRS_1);
+	 usi_write_cmd(0x1, AUDIO_REG_SFM_CYCLE_ENABLE);
+	 usi_write_cmd(0x1, AUDIO_REG_SFM_ENABLE);
 
 	// Video
-	video_color_bar();
+//	video_tft_init();
+//	video_color_bar();
 
 //	uint8_t rbuff[2048];
 //
