@@ -1,2 +1,0 @@
-iverilog -s sim -o/home/kimura/workspace/ProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125/work_sim/Ti180_FMB_R1W1_k256m32_230125.vvp -f/home/kimura/workspace/ProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125/work_sim/Ti180_FMB_R1W1_k256m32_230125.f
-vvp -l/home/kimura/workspace/ProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125/outflow/Ti180_FMB_R1W1_k256m32_230125.rtl.simlog /home/kimura/workspace/ProjectFolder/Efinix/Titanium/MemoryTest/Ti180_FMB_R1W1_k256m32_230125/work_sim/Ti180_FMB_R1W1_k256m32_230125.vvp
