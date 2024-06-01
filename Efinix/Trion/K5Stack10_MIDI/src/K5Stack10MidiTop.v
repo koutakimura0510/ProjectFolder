@@ -664,7 +664,7 @@ assign ioGpio_O[37]	= wVIDEO_RD;		assign  wGpioIn[37]	= ioGpio_I[37];		assign io
 end
 else
 begin
-//-------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 assign ioGpio_O[0]	= wVIDEO_DQ[0];		assign  wGpioIn[0] 	= ioGpio_I[0];		assign ioGpio_OE[0]		= 1'b1;
 assign ioGpio_O[1]	= wVIDEO_RD;		assign  wGpioIn[1] 	= ioGpio_I[1];		assign ioGpio_OE[1]		= 1'b1;
 assign ioGpio_O[2]	= wVIDEO_DQ[2];		assign  wVIDEO_IN[7]= ioGpio_I[2];		assign ioGpio_OE[2]		= 1'b1;
