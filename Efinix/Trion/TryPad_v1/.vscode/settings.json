@@ -16,9 +16,4 @@
     "synth_func.h": "c",
     "i2c_func.h": "c"
   },
-
-  "[verilog]": {
-		"editor.insertSpaces": false,		// 2023-07-01 タブでスペース挿入
-		"editor.tabSize": 4 // 2023-07-01
-	},
 }

@@ -1,0 +1,34 @@
+{
+    "python.linting.enabled": true,
+    "python.languageServer": "Pylance",
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingModuleSource": "none"
+    },
+    "micropico.syncFolder": "",
+    "micropico.openOnStart": true,
+    "python.analysis.typeshedPaths": [
+        "~\\.micropico-stubs\\included"
+    ],
+    "python.analysis.extraPaths": [
+        "~\\.micropico-stubs\\included"
+    ],
+
+    "files.associations": {
+        "*.v": "verilog",
+        "apb3_cl.h": "c",
+        "soc.h": "c",
+        "bsp.h": "c",
+        "io.h": "c",
+        "type.h": "c",
+        "clint.h": "c",
+        "uart.h": "c",
+        "flash_rom_func.h": "c",
+        "spi_func.h": "c",
+        "system_wrapper.h": "c",
+        "periheral_macro.h": "c",
+        "gpio_func.h": "c",
+        "synth_func.h": "c",
+        "i2c_func.h": "c"
+      },
+}

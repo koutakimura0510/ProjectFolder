@@ -32,6 +32,9 @@ module MicroControllerCsr #(
 	input 							iRamEmp,
 	input  [pUfiDqBusWidth-1:0]		iRamRd,
 	input 							iRamRdVd,
+	// System Ver
+	input [15:0]					iSystemVersion,
+	input [15:0]					iCustomCode,
 	// CLK RST
 	input iSRST,
 	input iSCLK
@@ -101,6 +104,8 @@ begin
 		'h40:	 rSUsiRd <= {{(32 - 8	){1'b0}}, 3'b000, rRamEmp, 3'b000, rRamFull};
 		'h44:	 rSUsiRd <= {{(32 - pUfiDqBusWidth	){1'b0}}, rRamRd};
 		'h48:	 rSUsiRd <= {{(32 - 1	){1'b0}}, rRamRdVd};
+		'hF0:	 rSUsiRd <= {{(32 - 16	){1'b0}}, iSystemVersion};
+		'hF4:	 rSUsiRd <= {{(32 - 16	){1'b0}}, iCustomCode};
 		default: rSUsiRd <= iSUsiWd;
 	endcase
 end

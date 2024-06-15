@@ -5,15 +5,15 @@
 // RISC-V IP Soc(CPU) を搭載しシステムの管理を行う。
 //----------------------------------------------------------
 module MicroControllerBlock #(
-	parameter 		pBlockAdrsWidth		= 8,
-	parameter [pBlockAdrsWidth-1:0] pAdrsMap = 'h01,
-	parameter 		pUsiBusWidth 		= 32,
-	parameter 		pCsrAdrsWidth 		= 8,
-	parameter 		pCsrActiveWidth 	= 8,
-	parameter 		pUfiBusWidth 		= 32,
-	parameter [3:0] pUfiAdrsMap			= 'h0,
-	parameter 		pSimlation 			= "no",
-	parameter 		pOnChipMcu 			= "yes"
+	parameter						pBlockAdrsWidth		= 8,
+	parameter [pBlockAdrsWidth-1:0] pAdrsMap			= 'h01,
+	parameter 						pUsiBusWidth 		= 32,
+	parameter 						pCsrAdrsWidth 		= 8,
+	parameter 						pCsrActiveWidth 	= 8,
+	parameter 						pUfiBusWidth 		= 32,
+	parameter [3:0] 				pUfiAdrsMap			= 'h0,
+	parameter 						pSimlation 			= "no",
+	parameter 						pOnChipMcu 			= "yes"
 )(
 	// Usi Bus Master Read
 	input	[pUsiBusWidth-1:0] 		iMUsiRd,
@@ -32,12 +32,14 @@ module MicroControllerBlock #(
 	// UART
 	output							oTxd,
 	input							iRxd,
-	// Soc RST
-	output							oSocRST,
+	// Control / Status
+	input [15:0]					iSystemVersion,
+	input [15:0]					iCustomCode,
 	// common
 	input							iSRST,
 	input							inSRST,
 	input							iSCLK,
+	output							oSocRST,
 	// JTAG
 	input							jtag_inst1_TCK,
 	output							jtag_inst1_TDO,
@@ -79,6 +81,9 @@ MicroControllerCsr #(
 	.iRamFull(qRamFullCsr),	.iRamEmp(qRamEmpCsr),
 	.iRamRd(qUfiRdCsr),
 	.iRamRdVd(qRamRdVdCsr),
+	//
+	.iSystemVersion(iSystemVersion),
+	.iCustomCode(iCustomCode),
 	// CLK RST
 	.iSRST(iSRST),			.iSCLK(iSCLK)
 );

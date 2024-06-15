@@ -58,7 +58,7 @@
 *.str
 *.sdb
 *.svtype
-*.txt
+# *.txt
 *.type
 *.tree
 *.tile

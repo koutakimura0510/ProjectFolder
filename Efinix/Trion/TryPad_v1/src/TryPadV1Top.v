@@ -7,7 +7,10 @@
  * 24-06-01 v1.00: new release
  *
  *-----------------------------------------------------------------------------*/  
-module TryPadV1Top(
+module TryPadV1Top #(
+parameter [15:0] pSystemVersion	= 16'h0001,
+parameter [15:0] pCustomCode	= "TRPD"
+)(
 // Pico I/O I/F
 output 			oPicoMiso,
 input 			iPicoMosi,
@@ -302,7 +305,7 @@ MicroControllerBlock #(
 	.pUfiAdrsMap(lpUfiMcbAdrsMap),
 	.pOnChipMcu(lpOnChipMcu)
 ) MicroControllerBlock (
-  // Usi Bus Master Read
+	// Usi Bus Master Read
 	.iMUsiRd(wMUsiRd),
 	.oSUsiRd(wSUsiRd[lpMCBAdrsMap]),
 	// Usi Bus Master Write
@@ -316,6 +319,9 @@ MicroControllerBlock #(
 	.iMUfiRdy(wMUfiRdy[lpUfiMcbAdrsMap]),
 	// GPIO
 	.oTxd(wSocTxd),			.iRxd(wSocRxd),
+	// Control / Status
+	.iSystemVersion(pSystemVersion),
+	.iCustomCode(pCustomCode),
 	// JTAG
 	.jtag_inst1_TCK(jtag_inst1_TCK),
 	.jtag_inst1_TDI(jtag_inst1_TDI),

@@ -348,8 +348,8 @@ assign oVIDEO_CS	= wTftGate ? wTftCSCsr					: 1'b1;
 // assign oVIDEO_RD	= wRD;
 // assign oVIDEO_RS	= wDCX;
 // assign oVIDEO_CS	= 1'b0;
-assign oVIDEO_IM[0]	= 1'b1;
-assign oVIDEO_IM[1]	= 1'b1;
+assign oVIDEO_IM[0]	= 1'b0;
+assign oVIDEO_IM[1]	= 1'b0;
 assign oVIDEO_IM[2]	= 1'b0;
 assign oVIDEO_IM[3]	= 1'b0;
 
