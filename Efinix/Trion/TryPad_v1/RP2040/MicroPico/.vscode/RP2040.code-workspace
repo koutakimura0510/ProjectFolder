@@ -16,13 +16,11 @@
 		{
 			"path": "../../python"
 		},
+		{
+			"path": "/Linux/Ubuntu/home/koutakimura/pico"
+		}
 	],
 	"settings": {
-		"python.languageServer": "Pylance",
-		"files.associations": {
-			"*.v": "verilog",
-			"*.cfg": "tcl",
-			"stdlib.h": "c"
-		}
+		"python.languageServer": "Pylance"
 	}
 }
