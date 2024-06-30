@@ -1,0 +1,876 @@
+{
+    "debug_cores": [
+        {
+            "name": "la0",
+            "type": "la",
+            "uuid": "4499fe7af85b4f34976ae69023580c4f",
+            "trigin_en": false,
+            "trigout_en": false,
+            "auto_inserted": true,
+            "capture_control": false,
+            "data_depth": 8192,
+            "input_pipeline": 1,
+            "probes": [
+                {
+                    "name": "SPIBlock/SPISignal/iSpiDir",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "SPIBlock/SPISignal/iSRST",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "SPIBlock/SPISignal/iSlaveSck",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "SPIBlock/SPISignal/iSlaveMosi",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "SPIBlock/SPISignal/iSlaveCs",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "qlocked",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "SPIBlock/SPISignal/oSlaveMiso",
+                    "width": 1,
+                    "probe_type": 1
+                },
+                {
+                    "name": "SPIBlock/SPISignal/rSRd",
+                    "width": 32,
+                    "probe_type": 1
+                },
+                {
+                    "name": "SPIBlock/SPISignal/rSAdrs",
+                    "width": 32,
+                    "probe_type": 1
+                }
+            ]
+        }
+    ],
+    "connections": [
+        {
+            "command": "add_ports",
+            "id": 1,
+            "args": {
+                "netlist": "TryPadV1Top",
+                "ports": [
+                    {
+                        "name": "jtag_inst2_CAPTURE",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_DRCK",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_RESET",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_RUNTEST",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_SEL",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_SHIFT",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_TCK",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_TDI",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_TMS",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_UPDATE",
+                        "dir": "in",
+                        "width": 1
+                    },
+                    {
+                        "name": "jtag_inst2_TDO",
+                        "dir": "out",
+                        "width": 1
+                    }
+                ]
+            }
+        },
+        {
+            "command": "instantiate",
+            "netlist": "edb_top",
+            "id": 2,
+            "instance": "edb_top_inst"
+        },
+        {
+            "command": "connect",
+            "id": 3,
+            "args": {
+                "instance": "edb_top_inst",
+                "ports": [
+                    {
+                        "name": "bscan_CAPTURE",
+                        "net": "jtag_inst2_CAPTURE"
+                    },
+                    {
+                        "name": "bscan_DRCK",
+                        "net": "jtag_inst2_DRCK"
+                    },
+                    {
+                        "name": "bscan_RESET",
+                        "net": "jtag_inst2_RESET"
+                    },
+                    {
+                        "name": "bscan_RUNTEST",
+                        "net": "jtag_inst2_RUNTEST"
+                    },
+                    {
+                        "name": "bscan_SEL",
+                        "net": "jtag_inst2_SEL"
+                    },
+                    {
+                        "name": "bscan_SHIFT",
+                        "net": "jtag_inst2_SHIFT"
+                    },
+                    {
+                        "name": "bscan_TCK",
+                        "net": "jtag_inst2_TCK"
+                    },
+                    {
+                        "name": "bscan_TDI",
+                        "net": "jtag_inst2_TDI"
+                    },
+                    {
+                        "name": "bscan_TMS",
+                        "net": "jtag_inst2_TMS"
+                    },
+                    {
+                        "name": "bscan_UPDATE",
+                        "net": "jtag_inst2_UPDATE"
+                    },
+                    {
+                        "name": "bscan_TDO",
+                        "net": "jtag_inst2_TDO"
+                    },
+                    {
+                        "name": "la0_clk",
+                        "net": "iSCLK",
+                        "path": []
+                    },
+                    {
+                        "name": "la0_probe0",
+                        "net": "iSpiDir",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe1",
+                        "net": "iSRST",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe2",
+                        "net": "iSlaveSck",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe3",
+                        "net": "iSlaveMosi",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe4",
+                        "net": "iSlaveCs",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe5",
+                        "net": "qlocked",
+                        "path": []
+                    },
+                    {
+                        "name": "la0_probe6",
+                        "net": "oSlaveMiso",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[0]",
+                        "net": "rSRd[0]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[1]",
+                        "net": "rSRd[1]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[2]",
+                        "net": "rSRd[2]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[3]",
+                        "net": "rSRd[3]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[4]",
+                        "net": "rSRd[4]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[5]",
+                        "net": "rSRd[5]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[6]",
+                        "net": "rSRd[6]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[7]",
+                        "net": "rSRd[7]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[8]",
+                        "net": "rSRd[8]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[9]",
+                        "net": "rSRd[9]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[10]",
+                        "net": "rSRd[10]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[11]",
+                        "net": "rSRd[11]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[12]",
+                        "net": "rSRd[12]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[13]",
+                        "net": "rSRd[13]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[14]",
+                        "net": "rSRd[14]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[15]",
+                        "net": "rSRd[15]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[16]",
+                        "net": "rSRd[16]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[17]",
+                        "net": "rSRd[17]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[18]",
+                        "net": "rSRd[18]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[19]",
+                        "net": "rSRd[19]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[20]",
+                        "net": "rSRd[20]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[21]",
+                        "net": "rSRd[21]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[22]",
+                        "net": "rSRd[22]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[23]",
+                        "net": "rSRd[23]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[24]",
+                        "net": "rSRd[24]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[25]",
+                        "net": "rSRd[25]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[26]",
+                        "net": "rSRd[26]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[27]",
+                        "net": "rSRd[27]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[28]",
+                        "net": "rSRd[28]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[29]",
+                        "net": "rSRd[29]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[30]",
+                        "net": "rSRd[30]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe7[31]",
+                        "net": "rSRd[31]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[0]",
+                        "net": "rSAdrs[0]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[1]",
+                        "net": "rSAdrs[1]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[2]",
+                        "net": "rSAdrs[2]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[3]",
+                        "net": "rSAdrs[3]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[4]",
+                        "net": "rSAdrs[4]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[5]",
+                        "net": "rSAdrs[5]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[6]",
+                        "net": "rSAdrs[6]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[7]",
+                        "net": "rSAdrs[7]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[8]",
+                        "net": "rSAdrs[8]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[9]",
+                        "net": "rSAdrs[9]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[10]",
+                        "net": "rSAdrs[10]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[11]",
+                        "net": "rSAdrs[11]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[12]",
+                        "net": "rSAdrs[12]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[13]",
+                        "net": "rSAdrs[13]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[14]",
+                        "net": "rSAdrs[14]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[15]",
+                        "net": "rSAdrs[15]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[16]",
+                        "net": "rSAdrs[16]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[17]",
+                        "net": "rSAdrs[17]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[18]",
+                        "net": "rSAdrs[18]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[19]",
+                        "net": "rSAdrs[19]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[20]",
+                        "net": "rSAdrs[20]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[21]",
+                        "net": "rSAdrs[21]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[22]",
+                        "net": "rSAdrs[22]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[23]",
+                        "net": "rSAdrs[23]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[24]",
+                        "net": "rSAdrs[24]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[25]",
+                        "net": "rSAdrs[25]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[26]",
+                        "net": "rSAdrs[26]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[27]",
+                        "net": "rSAdrs[27]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[28]",
+                        "net": "rSAdrs[28]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[29]",
+                        "net": "rSAdrs[29]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[30]",
+                        "net": "rSAdrs[30]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    },
+                    {
+                        "name": "la0_probe8[31]",
+                        "net": "rSAdrs[31]",
+                        "path": [
+                            "SPIBlock",
+                            "SPISignal"
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "vdbs": [
+        {
+            "file": "debug_top.post.vdb",
+            "instance": "edb_top_inst"
+        }
+    ],
+    "session": {
+        "wizard": {
+            "data_depth": 8192,
+            "capture_control": false,
+            "selected_nets": [
+                {
+                    "name": "iSpiDir",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "SPIBlock",
+                        "SPISignal"
+                    ]
+                },
+                {
+                    "name": "iSRST",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "SPIBlock",
+                        "SPISignal"
+                    ]
+                },
+                {
+                    "name": "iSlaveSck",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "SPIBlock",
+                        "SPISignal"
+                    ]
+                },
+                {
+                    "name": "iSlaveMosi",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "SPIBlock",
+                        "SPISignal"
+                    ]
+                },
+                {
+                    "name": "iSlaveCs",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "SPIBlock",
+                        "SPISignal"
+                    ]
+                },
+                {
+                    "name": "qlocked",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": []
+                },
+                {
+                    "name": "oSlaveMiso",
+                    "width": 1,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "SPIBlock",
+                        "SPISignal"
+                    ]
+                },
+                {
+                    "name": "rSRd",
+                    "width": 32,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "SPIBlock",
+                        "SPISignal"
+                    ],
+                    "net_idx_left": 31,
+                    "net_idx_right": 0
+                },
+                {
+                    "name": "rSAdrs",
+                    "width": 32,
+                    "clk_domain": "iSCLK",
+                    "selected_probe_type": "DATA AND TRIGGER",
+                    "child": [],
+                    "path": [
+                        "SPIBlock",
+                        "SPISignal"
+                    ],
+                    "net_idx_left": 31,
+                    "net_idx_right": 0
+                }
+            ],
+            "top_module": "TryPadV1Top",
+            "db_checksum": "ba5fce12098a2c03e7bae2e9a172d1842464edfca8e284870b3519e987537970",
+            "src": "elaborate",
+            "jtag_user": "USER2",
+            "input_pipeline": 1
+        }
+    }
+}

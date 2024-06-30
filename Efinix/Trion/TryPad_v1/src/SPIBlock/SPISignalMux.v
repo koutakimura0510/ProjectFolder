@@ -41,19 +41,17 @@ module SPISignalMux #(
 // Adrs 32bit内にデータ有効bitを含むため、32bit データ受信時にアドレスは更新するようにする。
 // 
 //----------------------------------------------------------
-reg  [pUsiBusWidth-1:0] rMUsiWd, rMUsiAdrs;
+// reg  [pUsiBusWidth-1:0] rMUsiWd, rMUsiAdrs;
 
-always @(posedge iSCLK)
-begin
-	rMUsiWd	<= iSpiRd;
-
-	if (iSpiREd)	rMUsiAdrs <= iSpiAdrs;
-	else 			rMUsiAdrs <= {pUsiBusWidth{1'b0}};
-end
+// always @(posedge iSCLK)
+// begin
+// 	rMUsiWd		<= iSpiRd;
+// 	rMUsiAdrs	<= iSpiAdrs;
+// end
 
 assign oMUsiRd	 	= iMUsiRd; 	// Csr RData はそのまま経由させる
-assign oMUsiWd   	= rMUsiWd;
-assign oMUsiAdrs 	= rMUsiAdrs;
+assign oMUsiWd   	= iSpiRd;
+assign oMUsiAdrs 	= iSpiAdrs;
 
 //----------------------------------------------------------
 // UFI Bus

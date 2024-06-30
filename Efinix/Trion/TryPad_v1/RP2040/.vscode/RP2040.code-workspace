@@ -16,13 +16,18 @@
 		{
 			"path": "../../python"
 		},
+		{
+			"path": "C:/Users/Kouta/Documents/Pico-v1.5.1/pico-examples"
+		}
 	],
 	"settings": {
 		"python.languageServer": "Pylance",
 		"files.associations": {
 			"*.v": "verilog",
 			"*.cfg": "tcl",
-			"stdlib.h": "c"
+			"stdlib.h": "c",
+			"timer.h": "c",
+			"clocks.h": "c"
 		}
 	}
 }

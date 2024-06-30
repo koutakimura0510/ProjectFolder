@@ -1,3 +1,9 @@
+/**-----------------------------------------------------------------------------
+ * Create  2024/6/29
+ * Author  koutakimura
+ * 
+ * Build Cmd
+ *-----------------------------------------------------------------------------*/
 {
   "version": "2.0.0",
   "tasks": [
@@ -15,6 +21,8 @@
       ],
       "problemMatcher": []
     },
+
+    // Build
     {
       "label": "Build Pico",
       "type": "cmake",
@@ -24,6 +32,17 @@
         "kind": "build",
         "isDefault": true
       }
-    }
+    },
+
+    // RP2040 CP
+    {
+      "label": "Pico uf2 write",
+      "type": "shell",
+      "command": "cp ./build/RP2040.uf2 D:/",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
   ]
 }

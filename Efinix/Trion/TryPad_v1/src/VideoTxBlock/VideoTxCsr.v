@@ -51,7 +51,7 @@ module VideoTxCsr #(
 	// Csr Vsg
 	output							oVsgRst,
 	// Csr TFT Config
-	output	[7:0]					oTftData,
+	output	[15:0]					oTftData,
 	output							oTftRST,
 	output							oTftWR,
 	output							oTftRD,
@@ -126,7 +126,7 @@ reg [pDmaAdrsWidth-1:0] rDmaAdrsAdd;					assign oDmaAdrsAdd 		= rDmaAdrsAdd;		//
 //
 reg			rVsgRst;									assign	oVsgRst			= rVsgRst;
 //
-reg [7:0] 	rTftData;									assign  oTftData		= rTftData;
+reg [15:0] 	rTftData;									assign  oTftData		= rTftData;
 reg 		rTftRST;									assign  oTftRST		 	= rTftRST;
 reg 		rTftWR;										assign  oTftWR		 	= rTftWR;
 reg 		rTftRD;										assign  oTftRD		 	= rTftRD;
@@ -211,7 +211,7 @@ begin
 		rDmaAdrsEnd 		<= {pDmaAdrsWidth{1'b1}};
 		rDmaAdrsAdd 		<= {pDmaAdrsWidth{1'b0}};
 		rVsgRst				<= 1'b1;
-		rTftData			<= 8'h00;
+		rTftData			<= 16'h0000;
 		rTftRST				<= 1'b0;
 		rTftWR				<= 1'b0;		// WRX
 		rTftRD				<= 1'b0;		// RCMD
@@ -273,7 +273,7 @@ begin
 		// Video Sync Gen
 		rVsgRst						<= qCsrWCke020 ? iSUsiWd[0:0] : rVsgRst;
 		// TFT Config
-		rTftData					<= qCsrWCke050 ? iSUsiWd[7:0] : rTftData;
+		rTftData					<= qCsrWCke050 ? iSUsiWd[15:0] : rTftData;
 		rTftRST						<= qCsrWCke051 ? iSUsiWd[0:0] : rTftRST;
 		rTftWR						<= qCsrWCke052 ? iSUsiWd[0:0] : rTftWR;
 		rTftRD						<= qCsrWCke053 ? iSUsiWd[0:0] : rTftRD;
@@ -421,7 +421,7 @@ begin
 		// 020
 		'h020:		rSUsiRd <= {{(32 - 31				){1'b0}},	rVsgRst				};
 		// 050
-		'h050:		rSUsiRd <= {{(32 - 8				){1'b0}},	rTftData			};
+		'h050:		rSUsiRd <= {{(32 - 16				){1'b0}},	rTftData			};
 		'h051:		rSUsiRd <= {{(32 - 1				){1'b0}},	rTftRST				};
 		'h052:		rSUsiRd <= {{(32 - 1				){1'b0}},	rTftWR				};
 		'h053:		rSUsiRd <= {{(32 - 1				){1'b0}},	rTftRD				};

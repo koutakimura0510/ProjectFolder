@@ -3,7 +3,7 @@
 // Author koutakimura
 // -
 // SPI 通信の Master / Slave の信号生成 モジュール
-// Mode0 固定
+// CPOL/CPHA 0 固定
 // -
 // 2022-08-27 : ILA を入れて RaspberryPi の SPI 信号をデバッグした
 // 				Write のみだったら 10MHz 動作可能だが、Read の場合は 4MHz 程度の動作となった
@@ -11,6 +11,7 @@
 // 				速度改善が必要になったら修正することにする。
 // 
 // V1.1 USIB 更新版に対応
+// V1.2 Slave mode の動作切り替えを rSpiDir から rnSpiDir に変更
 //----------------------------------------------------------
 module SPISignal (
 	// External Port
@@ -49,8 +50,8 @@ module SPISignal (
 // Master / Slave TriState 設定
 // Low FPGA Master / High FPGA Slave
 //----------------------------------------------------------
-reg [2:0] rSpiDir;	assign oSpiDir  = rSpiDir[2];
-reg rnSpiDir;		assign onSpiDir = rnSpiDir;
+reg [2:0] 	rSpiDir;		assign oSpiDir  = rSpiDir[2];
+reg 		rnSpiDir;		assign onSpiDir = rnSpiDir;
 
 always @(posedge iSCLK)
 begin
@@ -62,53 +63,58 @@ end
 
 //----------------------------------------------------------
 // FPGA Slave
-// Adrs -> Data の順番で受信する
+// Adrs -> Data の順番で 4byte 受信する
 //----------------------------------------------------------
 reg [31:0]	rSlaveMiso;				assign oSlaveMiso = rSlaveMiso[31];
-reg [2:0] 	rSlaveSck, rSlaveCs;
+reg [2:0] 	rSlaveSck, 		rSlaveCs;
 reg [1:0]	rSlaveMosi;
 reg [31:0]	rSRd;					assign oSpiRd  	= rSRd;
-reg [31:0]	rSAdrs;					assign oSpiAdrs	= rSAdrs;
-reg 		rSpiREd;				assign oSpiREd 	= rSpiREd;
+reg [31:0]	rSAdrs;					assign oSpiAdrs	= {rSAdrs[31],rRwCmd,rSAdrs[29:0]};
+reg			rRwCmd;
+									assign oSpiREd 	= 1'b0;
 reg [4:0]	rSSckCntNeg;
-reg rGetDataSel, qGetDataSelCke;
-reg qPedgeSck, qNedgeSck;
-reg qSSckCntNegCke;
+reg [7:0]	rGetDataSel;
+reg 		qGetDataSelCke;
+reg 		qPedgeSck, 		qNedgeSck;
+reg 		qSSckCntNegCke;
 
 always @(posedge iSCLK)
 begin
-	// Master からの Signal をシフトレジスタで受信
-	if (rSpiDir[2]) rSlaveMosi <= {rSlaveMosi[0:0], iSlaveMosi};
-	else 			rSlaveMosi <= 3'b000;
+	if (rnSpiDir)		rSlaveMosi	<= {rSlaveMosi[0:0], iSlaveMosi};
+	else 				rSlaveMosi	<= 2'b00;
 
-	if (rSpiDir[2]) rSlaveSck <= {rSlaveSck[1:0], iSlaveSck};
-	else			rSlaveSck <= 3'b000;
+	if (rnSpiDir)		rSlaveSck	<= {rSlaveSck[1:0], iSlaveSck};
+	else				rSlaveSck	<= 3'b000;
 
-	if (rSpiDir[2]) rSlaveCs <= {rSlaveCs[1:0],iSlaveCs};
-	else 			rSlaveCs <= 3'b111;
+	if (rnSpiDir)		rSlaveCs	<= {rSlaveCs[1:0],iSlaveCs};
+	else 				rSlaveCs	<= 3'b111;
 
-	if (rSlaveCs[2])		 rGetDataSel <= 1'b0;	// Adrs -> Data Byte 切り替え
-	else if (qGetDataSelCke) rGetDataSel <= 1'b1;
-	else 					 rGetDataSel <= rGetDataSel;
+	if (rSlaveCs[2])		 	rGetDataSel[0] <= 1'd0;
+	else if (qGetDataSelCke) 	rGetDataSel[0] <= 1'b1;
+	else 					 	rGetDataSel[0] <= rGetDataSel[0];
+	
+	if (rSlaveCs[2])		 	rGetDataSel[7:1] <= 7'd0;
+	else 					 	rGetDataSel[7:1] <= {rGetDataSel[6:1],rGetDataSel[0]};
 
-	if (rSlaveCs[2])	rSSckCntNeg <= 5'd0;	// 4byte 受信カウント
-	else if (qNedgeSck)	rSSckCntNeg <= rSSckCntNeg + 1'b1;
-	else 				rSSckCntNeg <= rSSckCntNeg;
+	if (rSlaveCs[2])			rSSckCntNeg <= 5'd0;
+	else if (qNedgeSck)			rSSckCntNeg <= rSSckCntNeg + 1'b1;
+	else 						rSSckCntNeg <= rSSckCntNeg;
 
-	if (qPedgeSck) 	rSRd <= {rSRd[30:0], rSlaveMosi[1]};	// Posedge を検出し Master からの送信データを受信
-	else 		 	rSRd <= rSRd;
+	if (qPedgeSck) 				rSRd <= {rSRd[30:0], rSlaveMosi[1]};
+	else 		 				rSRd <= rSRd;
 
-	case ({qSSckCntNegCke, qNedgeSck, rGetDataSel})	// アドレスの取得
-		'b110:	 rSAdrs	<= rSRd;
+	casex ({rSlaveCs[2], qSSckCntNegCke, qNedgeSck, rGetDataSel[0]})
+		'b0110:	 rSAdrs	<= rSRd;
+		'b1xxx:	 rSAdrs	<= 32'd0;
 		default: rSAdrs	<= rSAdrs;
 	endcase
-
-	case ({qSSckCntNegCke, qPedgeSck, rGetDataSel})	// Data Byte 受信時 Assert 信号生成
-		'b111:	 rSpiREd	<= 1'b1;
-		default: rSpiREd	<= 1'b0;
+	
+	case ({rSAdrs[30], qSSckCntNegCke, qNedgeSck, rGetDataSel[0]})
+		'b1111:	 rRwCmd	<= 1'b1;	// write cmd enable
+		default: rRwCmd	<= 1'b0;
 	endcase
 
-	case ({qNedgeSck, rGetDataSel})	// CLK の立ち下がりで MISO データ更新 
+	case ({qNedgeSck, rGetDataSel[7]})
 		'b01:	 rSlaveMiso	<= rSlaveMiso;
 		'b11:	 rSlaveMiso	<= {rSlaveMiso[30:0], 1'b1};
 		default: rSlaveMiso	<= iMUsiRd;
@@ -117,18 +123,18 @@ end
 
 always @*
 begin
-	case ({rSlaveCs[2], rSlaveSck[2:0]})	// posedge 検出
+	case ({rSlaveCs[2], rSlaveSck[2:0]})
 		4'b0011: qPedgeSck	<= 1'b1;
 		default: qPedgeSck	<= 1'b0;
 	endcase
 
-	case ({rSlaveCs[2], rSlaveSck[2:0]})	// negedge 検出
+	case ({rSlaveCs[2], rSlaveSck[2:0]})
 		4'b0100: qNedgeSck	<= 1'b1;
 		default: qNedgeSck	<= 1'b0;
 	endcase
 
-	qSSckCntNegCke <= (rSSckCntNeg == 5'd31);	// 4byte cnt
-	qGetDataSelCke <=  &{qSSckCntNegCke,qNedgeSck};
+	qSSckCntNegCke <=  (rSSckCntNeg == 5'd31);
+	qGetDataSelCke <= &{qSSckCntNegCke,qNedgeSck};
 end
 
 //----------------------------------------------------------

@@ -124,9 +124,9 @@ void video_tft_init(void)
 
 	for (uint8_t i = 0; i < ROWS(tft_init_buff); i++) {
 		if (TFT_CMD_BYTE == tft_init_buff[i][0]) {
-			usi_write_cmd(0x00, VIDEO_REG_TFT_RS);
+			usi_write_cmd(0x00, VIDEO_REG_TFT_DCX);
 		}else{
-			usi_write_cmd(0x01, VIDEO_REG_TFT_RS);
+			usi_write_cmd(0x01, VIDEO_REG_TFT_DCX);
 		}
 
 		if (TFT_CMD_BYTE == tft_init_buff[i][0]) {
@@ -442,9 +442,9 @@ void video_square_draw(SDL_Rect *sdl, uint16_t color, uint32_t adrs_id)
 
 // 	for (uint8_t i = 0; i < ROWS(tft_init_buff); i++) {
 // 		if (TFT_CMD_BYTE == tft_init_buff[i][0]) {
-// 			usi_write_cmd(0x00, VIDEO_REG_TFT_RS);
+// 			usi_write_cmd(0x00, VIDEO_REG_TFT_DCX);
 // 		}else{
-// 			usi_write_cmd(0x01, VIDEO_REG_TFT_RS);
+// 			usi_write_cmd(0x01, VIDEO_REG_TFT_DCX);
 // 		}
 
 // 		if (TFT_CMD_BYTE == tft_init_buff[i][0]) {

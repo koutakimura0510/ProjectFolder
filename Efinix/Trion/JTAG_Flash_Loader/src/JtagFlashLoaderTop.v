@@ -23,6 +23,8 @@ module JtagFlashLoaderTop (
 	output oSCK,
 	output onCS,
 	output oMOSI,
+	output oWp,
+	output oHold,
 	// output wp_n,
 	// output hold_n,
 	output osc_inst1_ENA,
@@ -72,8 +74,8 @@ JtagFlashLoader JtagFlashLoader(
 	.sclk(oSCK),
 	.nss(onCS),
 	.mosi(oMOSI),
-	.wp_n(),
-	.hold_n(),
+	.wp_n(oWp),
+	.hold_n(oHold),
 	.jtag_inst1_CAPTURE(jtag_inst1_CAPTURE),
 	.jtag_inst1_DRCK(jtag_inst1_DRCK),
 	.jtag_inst1_RESET(jtag_inst1_RESET),
@@ -89,6 +91,9 @@ JtagFlashLoader JtagFlashLoader(
 	.rstn(rnSRST),
 	.clkin(iSCLK)
 );
+
+// assign oWp = 1'b1;
+// assign oHold = 1'b1;
 
 //-----------------------------------------------------------------------------
 // SPI Bridge

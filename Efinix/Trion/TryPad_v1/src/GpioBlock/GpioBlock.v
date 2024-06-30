@@ -16,6 +16,10 @@ module GpioBlock #(
 	// GPIO Output Ctrl
 	output	[pGpioWidth-1:0] 	oGpio,
 	output	[pGpioWidth-1:0] 	oGpioDir,
+	output	[23:0]				oVideoGpioOe,
+	output	[2:0]				oAudioGpioOe,
+	output	[7:0]				oRomGpioOe,
+	output	[6:0]				oCfgRomGpioOe,
 	// GPIO Alt Mode Signal
 	input	[pGpioWidth-1:0] 	iGpioAltMode,
 	// GPIO Input
@@ -56,11 +60,13 @@ GpioCsr #(
 	// Bus Master Read
 	.oSUsiRd(oSUsiRd),
 	// Bus Master Write
-	.iSUsiWd(iSUsiWd),		.iSUsiAdrs(iSUsiAdrs),
+	.iSUsiWd(iSUsiWd),				.iSUsiAdrs(iSUsiAdrs),
 	// control / Status
 	.oGpioOutCtrl(wGpioOutCtrl),
-	.oGpioDir(wGpioDir),	.oGpioAltMode(wGpioAltModeCsr),		.iGpioIn(iGpioIn),
-	.iPushSw(iPushSw),		.iEdgeSw(qEdgeSwCsr),				.iLongSw(qLongSwCsr),
+	.oGpioDir(wGpioDir),			.oGpioAltMode(wGpioAltModeCsr),		.iGpioIn(iGpioIn),
+	.oVideoGpioOe(oVideoGpioOe),	.oAudioGpioOe(oAudioGpioOe),
+	.oRomGpioOe(oRomGpioOe),		.oCfgRomGpioOe(oCfgRomGpioOe),
+	.iPushSw(iPushSw),				.iEdgeSw(qEdgeSwCsr),				.iLongSw(qLongSwCsr),
 	.iPllLock(iPllLock),
     // CLK RST
 	.iSRST(iSRST),			.iSCLK(iSCLK)

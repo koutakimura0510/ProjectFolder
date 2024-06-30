@@ -42,14 +42,22 @@ endif()
 add_executable(RP2040
 # main.c プロジェクト直下の場合
 # ./src/main.c 複数階層の場合
-./src/main.c
+    ./src/main.c
+    ./src/Mtimer.c
+    ./src/Mspi.c
+    ./src/Mvideo.c
 )
 
 # Hardware-specific examples in subdirectories:
 # add_subdirectory(RP2040)
 
 # Add pico_stdlib library which aggregates commonly used features
-target_link_libraries(RP2040 pico_stdlib)
+target_link_libraries(RP2040 pico_stdlib hardware_spi hardware_timer)
+
+# enable usb output, disable uart output
+pico_enable_stdio_usb(RP2040 1)
+pico_enable_stdio_uart(RP2040 0)
 
 # create map/bin/hex/uf2 file in addition to ELF.
 pico_add_extra_outputs(RP2040)
+# example_auto_set_url(RP2040)

@@ -93,7 +93,7 @@ wire 		wDmaDoneCsr;
 //
 wire		wVsgRst;
 //
-wire [7:0]	wTftDataCsr;
+wire [15:0]	wTftDataCsr;
 wire 		wTftRSTCsr;
 wire 		wTftWRCsr,	wTftRDCsr,	wTftRSCsr, wTftCSCsr;
 wire [3:0]	wTftIM;
@@ -279,8 +279,8 @@ VideoSyncGen #(
 	.pVHAW(lpVHAW)
 ) VideoSyncGen (
 	// Video Signals
-	.oHS(wVideoHS),	.oVS(wVideoVS),
-	.oDE(wVideoDE),	.oFE(wVideoFE),
+	.oHS(wVideoHS),		.oVS(wVideoVS),
+	.oDE(wVideoDE),		.oFE(wVideoFE),
 	// common
 	.iVRST(qVsgRst),	.iVCLK(iVCLK)
 );
@@ -298,57 +298,37 @@ begin
 	qVafRe <= wVideoDE;
 end
 
+/**-----------------------------------------------------------------------------
+ * pipeline
+ *-----------------------------------------------------------------------------*/
+reg [23:0] 	rTftDq;
+reg			rTftWr;
 
-// /**----------------------------------------------------------------------------
-//  * 
-//  *---------------------------------------------------------------------------*/
-// wire wWRX, wRD, wDCX;
-// wire wDrawOn;
-// wire [7:0] wByte;
-// wire wCke;
-
-// CkeGenerator #(
-// 	.pDivReg("no"),	.pDivWidth(32'd60000)
-// ) FlashSpiCkeGen (
-// 	.iCke(1'b1),	.iDiv(0),	.oCke(wCke),
-// 	.iRST(iVRST),	.iCLK(iVCLK)
-// );
-
-// TFT_INIT TFT_INIT (
-// 	.ENABLE_10ms(wCke),
-// 	.TFT_BYTE(wByte),
-// 	.WRX(wWRX),
-// 	.RD(wRD),
-// 	.DCX(wDCX),
-// 	.oDRAW_ON(wDrawOn),
-// 	.iVRST(iVRST),
-// 	.inVRST(inVRST),
-// 	.iVCLK(iVCLK)
-// );
+always @(posedge iVCLK)
+begin
+	if (wTftGate)		rTftDq <= {8'h00,wTftDataCsr[15:0]};
+	else				rTftDq <= wVafRd[23: 0];
+	
+	if (iVRST) 			rTftWr <= 1'b0;
+	else if (wTftGate) 	rTftWr <= wTftWRCsr;
+	else				rTftWr <= ~rTftWr;
+end
 
 /**----------------------------------------------------------------------------
  * Video Signals Coneect
  *---------------------------------------------------------------------------*/
-assign oVIDEO_DQ	= wTftGate ? {16'd0,wTftDataCsr[7:0]}	: wVafRd[23: 0];
-// assign oVIDEO_R		= wVafRd[23:16];
-// assign oVIDEO_G		= (wDrawOn == 1'b0) ? {6'd0,wByte[7:6]}	: wVafRd[15: 8];
-// assign oVIDEO_B		= (wDrawOn == 1'b0) ? {2'd0,wByte[5:0]}	: wVafRd[ 7: 0];
+assign oVIDEO_DQ	= rTftDq;
 assign oVIDEO_DCK 	= iVCLK;
 assign oVIDEO_HS 	= rVideoHS[2];
 assign oVIDEO_VS 	= rVideoVS[2];
 assign oVIDEO_DE 	= rVideoDE[2];
 assign oVIDEO_FE 	= rVideoFE[2];
 assign oVIDEO_RST	= wTftRSTCsr;
-// assign oVIDEO_RST	= 1'b1;// wTftRSTCsr;
-assign oVIDEO_WR	= wTftGate ? wTftWRCsr					: 1'b0;
-assign oVIDEO_RD	= wTftGate ? wTftRDCsr					: 1'b0;
-assign oVIDEO_RS	= wTftGate ? wTftRSCsr					: 1'b0; // DCX
-assign oVIDEO_CS	= wTftGate ? wTftCSCsr					: 1'b1;
-// assign oVIDEO_WR	= wWRX;
-// assign oVIDEO_RD	= wRD;
-// assign oVIDEO_RS	= wDCX;
-// assign oVIDEO_CS	= 1'b0;
-assign oVIDEO_IM[0]	= 1'b0;
+assign oVIDEO_WR	= rTftWr;
+assign oVIDEO_RD	= wTftRDCsr;
+assign oVIDEO_RS	= wTftRSCsr; // DCX
+assign oVIDEO_CS	= wTftCSCsr;
+assign oVIDEO_IM[0]	= wTftIM[0];
 assign oVIDEO_IM[1]	= 1'b0;
 assign oVIDEO_IM[2]	= 1'b0;
 assign oVIDEO_IM[3]	= 1'b0;
