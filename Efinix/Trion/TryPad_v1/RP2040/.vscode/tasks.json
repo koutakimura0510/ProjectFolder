@@ -5,44 +5,58 @@
  * Build Cmd
  *-----------------------------------------------------------------------------*/
 {
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "Flash",
-      "type": "shell",
-      "command": "openocd",
-      "args": [
-        "-f",
-        "interface/cmsis-dap.cfg",
-        "-f",
-        "target/rp2040.cfg",
-        "-c",
-        "adapter speed 5000; program {${command:cmake.launchTargetPath}} verify reset exit"
-      ],
-      "problemMatcher": []
-    },
+	"version": "2.0.0",
+	"tasks": [
+		{
+		"label": "Pico Debug",
+		"type": "shell",
+		"command": "openocd",
+		"args": [
+			"-f",
+			"interface/cmsis-dap.cfg",
+			"-f",
+			"target/rp2040.cfg",
+			"-c",
+			"adapter speed 5000; program {${command:cmake.launchTargetPath}} verify reset exit"
+		],
+		"problemMatcher": []
+		},
 
-    // Build
-    {
-      "label": "Build Pico",
-      "type": "cmake",
-      "command": "build",
-      "problemMatcher": "$gcc",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
+		// Build
+		{
+		"label": "Pico Build",
+		"type": "cmake",
+		"command": "build",
+		"problemMatcher": "$gcc",
+		"group": {
+			"kind": "build",
+			"isDefault": true
+		}
+		},
+		
+		// Flash Write
+		{
+		"label": "Pico uf2 Write",
+		"type": "shell",
+		"command": "cp ./build/RP2040.uf2 D:/",
+		"group": {
+			"kind": "build",
+			"isDefault": true
+		}
+		},
 
-    // RP2040 CP
-    {
-      "label": "Pico uf2 write",
-      "type": "shell",
-      "command": "cp ./build/RP2040.uf2 D:/",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-  ]
-}
+		// Build and Write
+		{
+		"label": "Pico Build and Write",
+		"dependsOrder": "sequence",
+		"dependsOn": [
+			"Pico Build",
+			"Pico uf2 Write"
+		],
+		"group": {
+			"kind": "build",
+			"isDefault": true
+		}
+		}
+	]
+	}

@@ -8,15 +8,15 @@
 TBOUT    = tbwave.out
 
 # Tb Top Module名
-TBTOP 	 = VideoTxBlock_tb
+TBTOP 	 = TbTopVideoTftUnit
 
 # Tb Top Module.v
-TBTOPRTL = VideoTxBlock_tb.v
+TBTOPRTL = TbTopVideoTftUnit.v
 
 # Tb Instance.v
-TBRTL 	= ../*.v ./BmpFileSaver.v ../VideoPixelGenUnit/*.v ../VideoPixelGenUnit/common/*.v
+TBRTL 	= ../*.v ./BmpFileSaver.v
 COMMON	= ../../common/pulse/*.v ../../common/fifo/*.v
-LIB		= /tools/efinity/2023.1/sim_models/verilog/*.v
+LIB		= C:/Efinity/2023.1/sim_models/verilog/*.v
 
 sim:
 	iverilog -o $(TBOUT) -s $(TBTOP) $(TBRTL) $(COMMON) $(LIB) $(TBTOPRTL)

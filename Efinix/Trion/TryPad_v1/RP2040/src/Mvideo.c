@@ -23,7 +23,7 @@
 #define TFT_DISPLAY_HEIGHT			(320)		// 最大縦幅
 #define TFT_DISPLAY_WIDTH_DATA		(240-1)
 #define TFT_DISPLAY_HEIGHT_DATA		(320-1)
-#define TFT_DISPLAY_HTOTAL_SIZE		(TFT_DISPLAY_WIDTH * TFT_DISPLAY_HEIGHT)
+#define TFT_DISPLAY_HTOTAL_SIZE		((TFT_DISPLAY_WIDTH * TFT_DISPLAY_HEIGHT) - 1)
 
 // Mode Setting
 #define MODE_8BIT					(0x01)
@@ -156,7 +156,7 @@ void st7789_init(void)
 
 	usi_write(VIDEO_REG_TFT_DCX, 0x01);
 	usi_write(VIDEO_REG_TFT_CS, 0x00);
-	usi_write(VIDEO_REG_TFT_GATE, 0x01);
+	usi_write(VIDEO_REG_TFT_GATE, 0x00);
 	usi_write(VIDEO_REG_VSG_RST, 0x00);
 }
 
@@ -194,6 +194,7 @@ void software_draw(uint32_t color)
 		usi_write(VIDEO_REG_TFT_WR, 0x00);
 		usi_write(VIDEO_REG_TFT_WR, 0x01);
 	}
+	usi_write(VIDEO_REG_TFT_GATE, 0x00);
 }
 
 
@@ -205,9 +206,9 @@ void software_draw(uint32_t color)
  *-----------------------------------------------------------------------------*/
 void rect_draw(SdlRect *rect, uint16_t color)
 {
-	usi_write(rect->top, VIDEO_REG_DOT_SQUARE_TOP1);
-	usi_write(rect->under, VIDEO_REG_DOT_SQUARE_UNDER1);
-	usi_write(rect->right, VIDEO_REG_DOT_SQUARE_RIGHT1);
-	usi_write(rect->left, VIDEO_REG_DOT_SQUARE_LEFT1);
-	usi_write(color, VIDEO_REG_DOT_SQUARE_COLOR1);
+	usi_write(VIDEO_REG_DOT_SQUARE_TOP1, rect->top);
+	usi_write(VIDEO_REG_DOT_SQUARE_UNDER1, rect->under);
+	usi_write(VIDEO_REG_DOT_SQUARE_RIGHT1, rect->right);
+	usi_write(VIDEO_REG_DOT_SQUARE_LEFT1, rect->left);
+	usi_write(VIDEO_REG_DOT_SQUARE_COLOR1, color);
 }

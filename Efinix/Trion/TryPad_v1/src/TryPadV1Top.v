@@ -512,11 +512,11 @@ SysTimerBlock #(
 // Video Tx Block
 //---------------------------------------------------------------------------
 wire [23:0]	wVIDEO_DQ;
-wire [7:0]	wVIDEO_IN;
-wire 		wVIDEO_DCK,	wVIDEO_VS, 	wVIDEO_HS, wVIDEO_DE;
+wire [23:0]	wVIDEO_IN;
+wire		wVIDEO_WRX,	wVIDEO_DCX, wVIDEO_RDX,	wVIDEO_CSX;
 wire 		wVIDEO_RST;
-wire		wVIDEO_WR,	wVIDEO_RD,	wVIDEO_RS, wVIDEO_CS;
 wire [3:0]	wVIDEO_IM;
+wire 		wVIDEO_DCK,	wVIDEO_VS, 	wVIDEO_HS, wVIDEO_DE;
 
 VideoTxBlock #(
 	// USI
@@ -527,12 +527,13 @@ VideoTxBlock #(
 	.pUfiBusWidth(lpUfiBusWidth),			.pUfiAdrsMap(lpUfiVtbAdrsMap)
 ) VideoTxBlock (
 	// VIDEO Output Signal Ctrl
-	.oVIDEO_DQ(wVIDEO_DQ),
-	.oVIDEO_DCK(wVIDEO_DCK),
-	.oVIDEO_HS(wVIDEO_HS),		.oVIDEO_VS(wVIDEO_VS),	.oVIDEO_DE(wVIDEO_DE),
-	.oVIDEO_RST(wVIDEO_RST),	.oVIDEO_CS(wVIDEO_CS),
-	.oVIDEO_WR(wVIDEO_WR),		.oVIDEO_RD(wVIDEO_RD),	.oVIDEO_RS(wVIDEO_RS),	.oVIDEO_IM(wVIDEO_IM),
+	.oVIDEO_DQ(wVIDEO_DQ),		.oVIDEO_WRX(wVIDEO_WRX),
+	.oVIDEO_DCX(wVIDEO_DCX),	.oVIDEO_RDX(wVIDEO_RDX),
+	.oVIDEO_CSX(wVIDEO_CSX),	.oVIDEO_RST(wVIDEO_RST),
+	.oVIDEO_IM(wVIDEO_IM),
 	.iVIDEO_IN(wVIDEO_IN),
+	.oVIDEO_HS(wVIDEO_HS),		.oVIDEO_VS(wVIDEO_VS),	.oVIDEO_DE(wVIDEO_DE),
+	.oVIDEO_DCK(wVIDEO_DCK),
 	// Bus Master Read
 	.oSUsiRd(wSUsiRd[lpVtbAdrsMap]),
 	// Bus Master Write
@@ -623,12 +624,12 @@ assign wnARST			= ioPicoIo_I[2];		assign ioPicoIo_OE[2]		= 1'b0;	// Ext Pull Dow
 //
 // Video I/F
 assign 	ioVideoDq_O		= wVIDEO_DQ[15:0];		assign ioVideoDq_OE[15:0]	= wVideoGpioOe[15:0];
-assign	ioVideoIm0_O	= wVIDEO_IM[0];			assign ioVideoIm0_OE		= wVideoGpioOe[18];
-assign	ioVideoDc_O		= wVIDEO_RS;			assign ioVideoDc_OE			= wVideoGpioOe[19];
-assign	ioVideoRd_O		= wVIDEO_RD;			assign ioVideoRd_OE			= wVideoGpioOe[20];
-assign	ioVideoWr_O		= wVIDEO_WR;			assign ioVideoWr_OE			= wVideoGpioOe[21];
-assign	ioVideoCs_O		= wVIDEO_CS;			assign ioVideoCs_OE			= wVideoGpioOe[22];
+assign	ioVideoDc_O		= wVIDEO_DCX;			assign ioVideoDc_OE			= wVideoGpioOe[19];
+assign	ioVideoRd_O		= wVIDEO_RDX;			assign ioVideoRd_OE			= wVideoGpioOe[20];
+assign	ioVideoWr_O		= wVIDEO_WRX;			assign ioVideoWr_OE			= wVideoGpioOe[21];
+assign	ioVideoCs_O		= wVIDEO_CSX;			assign ioVideoCs_OE			= wVideoGpioOe[22];
 assign	ioVideoRst_O	= wVIDEO_RST;			assign ioVideoRst_OE		= wVideoGpioOe[23];
+assign	ioVideoIm0_O	= wVIDEO_IM[0];			assign ioVideoIm0_OE		= wVideoGpioOe[18];
 //
 // I2S I/F
 assign	ioI2cSdo_O		= wI2S_SDATA;			assign	ioI2cSdo_OE			= wAudioGpioOe[0];

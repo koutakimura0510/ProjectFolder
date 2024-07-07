@@ -27,29 +27,29 @@ module VideoTxBlock #(
 	// parameter pVVF	= 12,		// Video Vertical Front
 	// parameter pVVB	= 4,		// Video Vertical Back
 	// parameter pVVS	= 10		// Video Vertical Sync
-	parameter	pVVA = 320,		// Video Horizontal Active
+	parameter	pVVA = 240,		// Video Horizontal Active
 	parameter	pVVB = 2,		// Video Horizontal Back
 	parameter	pVVF = 2,		// Video Horizontal Front
 	parameter	pVVS = 4,		// Video Horizontal Sync
-	parameter	pVHA = 240,		// Video Vertical Active
+	parameter	pVHA = 320,		// Video Vertical Active
 	parameter	pVHB = 10,		// Video Vertical Front
 	parameter	pVHF = 20,		// Video Vertical Back
 	parameter	pVHS = 10		// Video Vertical Sync
 )(
 	// VIDEO Output Signal Ctrl
 	output [23:0]					oVIDEO_DQ,
+	output							oVIDEO_WRX,
+	output							oVIDEO_RDX,
+	output							oVIDEO_DCX,
+	output							oVIDEO_CSX,
+	output							oVIDEO_RST,
+	output [ 3:0]					oVIDEO_IM,
+	input  [23:0]					iVIDEO_IN,
 	output							oVIDEO_DCK,
 	output							oVIDEO_HS,
 	output							oVIDEO_VS,
 	output							oVIDEO_DE,
 	output							oVIDEO_FE,
-	output							oVIDEO_RST,
-	output							oVIDEO_WR,
-	output							oVIDEO_RD,
-	output							oVIDEO_RS,
-	output							oVIDEO_CS,
-	output [3:0]					oVIDEO_IM,
-	input  [7:0]					iVIDEO_IN,
 	// Usi Bus Master Read
 	output	[pUsiBusWidth-1:0] 		oSUsiRd,
 	// Usi Bus Master Write
@@ -90,18 +90,19 @@ wire 		wDmaAdrsStartCsr;
 wire 		wDmaAdrsEndCsr;
 wire 		wDmaAdrsAddCsr;
 wire 		wDmaDoneCsr;
-//
+// Video Sync Gen
 wire		wVsgRst;
-//
-wire [15:0]	wTftDataCsr;
-wire 		wTftRSTCsr;
-wire 		wTftWRCsr,	wTftRDCsr,	wTftRSCsr, wTftCSCsr;
-wire [3:0]	wTftIM;
-wire 		wTftGate;
-//
+// Video tft Unit
+wire [23:0]	wVtuMcuDqCsr;
+wire 		wVtuMcuWRXCsr,	wVtuMcuDCXCsr,	wVtuMcuRDXCsr,	wVtuMcuCSXCsr;
+wire 		wVtuMcuRSTCsr;
+wire [3:0]	wVtuMcuIMCsr;
+wire 		wVtuMcuGateCsr;
+wire		wVtuConverterRstCsr;
+// 
 wire 		wMapXSizeCsr;
 wire 		wMapYSizeCsr;
-//
+// Video Pixel Gen
 wire [lpColorDepth-1:0]	wDotSquareColor1Csr, wDotSquareColor2Csr, wDotSquareColor3Csr, wDotSquareColor4Csr, wDotSquareColor5Csr, wDotSquareColor6Csr, wDotSquareColor7Csr;
 wire signed [lpVHAW:0] 	wDotSquareLeft1Csr,  wDotSquareRight1Csr, wDotSquareTop1Csr,   wDotSquareUnder1Csr;
 wire signed [lpVHAW:0] 	wDotSquareLeft2Csr,  wDotSquareRight2Csr, wDotSquareTop2Csr,   wDotSquareUnder2Csr;
@@ -147,10 +148,11 @@ VideoTxCsr #(
 	// Video Sync Gen
 	.oVsgRst(wVsgRst),
 	// TFT Config
-	.oTftData(wTftDataCsr),	.oTftRST(wTftRSTCsr),
-	.oTftWR(wTftWRCsr),		.oTftRD(wTftRDCsr),	.oTftRS(wTftRSCsr),	.oTftCS(wTftCSCsr),
-	.oTftIM(wTftIM),
-	.oTftGate(wTftGate),
+	.oVtuMcuDq(wVtuMcuDqCsr),		.oVtuMcuWRX(wVtuMcuWRXCsr),
+	.oVtuMcuRDX(wVtuMcuRDXCsr),		.oVtuMcuDCX(wVtuMcuDCXCsr),
+	.oVtuMcuCSX(wVtuMcuCSXCsr),		.oVtuMcuRST(wVtuMcuRSTCsr),
+	.oVtuMcuIM(wVtuMcuIMCsr),		.oVtuMcuGate(wVtuMcuGateCsr),
+	.oVtuConverterRst(wVtuConverterRstCsr),
 	// Map Info
 	.oMapXSize(wMapXSizeCsr),
 	.oMapYSize(wMapYSizeCsr),
@@ -217,138 +219,76 @@ VideoPixelGenUnit #(
 	.oSceneAlphaMax(wSceneAlphaMaxCsr),
 	.oSceneAlphaMin(wSceneAlphaMinCsr),
 	// Control Status
-	.oPdpHpos(wPdpHposCsr),
-	.oPdpVpos(wPdpVposCsr),
+	.oPdpHpos(wPdpHposCsr),	.oPdpVpos(wPdpVposCsr),
 	.oFe(),
 	// Dst Fifo Side
 	.oRd(wVpgRd),		.iRe(qVpgRe),
 	.oRvd(wVpgRvd),		.oEmp(wVpgEmp),
 	// Common
-	.iRST(iSRST),	.inRST(inSRST),		.iCLK(iSCLK)
+	.iRST(iSRST),		.inRST(inSRST),		.iCLK(iSCLK)
 );
 
 
 //-----------------------------------------------------------------------------
-// Dual CLK Fifo Side SCLK to VCLK
-// 外部 RAM のフレームバッファは使用せずに、内部ラインバッファのみで描画を行う
+// Video Tft Unit
 //-----------------------------------------------------------------------------
-localparam lpVafDepth 		= 512;
-localparam lpVafBitWidth 	= lpColorDepth;
+wire[23:0]	wTftDQ;
+wire		wTftWRX;
+wire		wTftDCX;
+wire		wTftRDX;
+wire		wTftCSX;
+wire		wTftRST;
+wire[ 3:0]	wTftIM;
+reg [23:0] 	qVtuDS;
+reg			qVtuWE;
+wire		wVtuFLL;
 
-reg  [lpVafBitWidth-1:0]	qVafWd;
-reg							qVafWe;
-wire						wVafFull;
-wire 						wVafAlert;
-wire [lpVafBitWidth-1:0]	wVafRd;
-wire 						wVafRvd;
-reg  						qVafRe;
-wire 						wVafEmp;
-
-ASyncFifoController #(
-	.pFifoDepth(lpVafDepth),
-	.pFifoBitWidth(lpVafBitWidth)
-) VideoAsyncFifo (
-	// Src Fifo Side
-	.iWd(qVafWd),		.iWe(qVafWe),
-	.oFull(wVafFull),	.oRemaingCntAlert(wVafAlert),
-	// Dst Fifo Side
-	.oRd(wVafRd),		.iRe(qVafRe),
-	.oRvd(),			.oEmp(),
-	// common
-	.inARST(inSRST),	.iWCLK(iSCLK),	.iRCLK(iVCLK)
+VideoTftUnit VideoTftUnit(
+	// Video Output Part
+	.oTftDQ(wTftDQ),			.oTftWRX(wTftWRX),	.oTftDCX(wTftDCX),
+	.oTftRDX(wTftRDX),			.oTftCSX(wTftCSX),	.oTftRST(wTftRST),
+	.oTftIM(wTftIM),
+	// Data Stream Input Part
+	.iDS(qVtuDS),				.iWE(qVtuWE),		.oFLL(wVtuFLL),
+	// MCU Data Stream Input Part
+	.iMcuDS(wVtuMcuDqCsr),		.iMcuWRX(wVtuMcuWRXCsr),	.iMcuDCX(wVtuMcuDCXCsr),
+	.iMcuRDX(wVtuMcuRDXCsr),	.iMcuCSX(wVtuMcuCSXCsr),	.iMcuRST(wVtuMcuRSTCsr),
+	.iMcuIM(wVtuMcuIMCsr),		.iMcuGate(wVtuMcuGateCsr),
+	// MCU Data Stream Input Part
+	.iConverterRst(wVtuConverterRstCsr),
+	// Common
+	.iSRST(iSRST),		.inSRST(inSRST),	.iSCLK(iSCLK),
+	.iVRST(iVRST),		.inVRST(inVRST),	.iVCLK(iVCLK)
 );
 
 always @*
 begin
-	qVafWd 	<= wVpgRd;
-	qVafWe 	<= wVpgRvd;
-	qVpgRe	<= (~wVafAlert);
-end
-
-//-----------------------------------------------------------------------------
-// Video Signal Generator
-//-----------------------------------------------------------------------------
-reg [2:1] rVideoHS, rVideoVS, rVideoDE, rVideoFE;
-wire wVideoHS, wVideoVS, wVideoDE, wVideoFE;
-reg  qVsgRst;
-
-VideoSyncGen #(
-	// Video Timing Parameter
-    .pVHA(pVHA),	.pVHB(pVHB),	.pVHF(pVHF),	.pVHS(pVHS),
-    .pVVA(pVVA),	.pVVF(pVVF),	.pVVB(pVVB),	.pVVS(pVVS),
-	.pVHAW(lpVHAW)
-) VideoSyncGen (
-	// Video Signals
-	.oHS(wVideoHS),		.oVS(wVideoVS),
-	.oDE(wVideoDE),		.oFE(wVideoFE),
-	// common
-	.iVRST(qVsgRst),	.iVCLK(iVCLK)
-);
-
-always @(posedge iVCLK)
-begin
-	rVideoHS <= {rVideoHS[1],wVideoHS};	// FIFO の出力レイテンシが "2" のため、
-	rVideoVS <= {rVideoVS[1],wVideoVS};	// パイプラインでタイミングを合わせる。
-	rVideoDE <= {rVideoDE[1],wVideoDE};
-	rVideoFE <= {rVideoFE[1],wVideoFE};
-end
-
-always @*
-begin
-	qVafRe <= wVideoDE;
-end
-
-/**-----------------------------------------------------------------------------
- * pipeline
- *-----------------------------------------------------------------------------*/
-reg [23:0] 	rTftDq;
-reg			rTftWr;
-
-always @(posedge iVCLK)
-begin
-	if (wTftGate)		rTftDq <= {8'h00,wTftDataCsr[15:0]};
-	else				rTftDq <= wVafRd[23: 0];
-	
-	if (iVRST) 			rTftWr <= 1'b0;
-	else if (wTftGate) 	rTftWr <= wTftWRCsr;
-	else				rTftWr <= ~rTftWr;
+	qVtuDS	<= wVpgRd;
+	qVtuWE	<= wVpgRvd;
+	qVpgRe 	<= ~wVtuFLL;
 end
 
 /**----------------------------------------------------------------------------
  * Video Signals Coneect
  *---------------------------------------------------------------------------*/
-assign oVIDEO_DQ	= rTftDq;
-assign oVIDEO_DCK 	= iVCLK;
-assign oVIDEO_HS 	= rVideoHS[2];
-assign oVIDEO_VS 	= rVideoVS[2];
-assign oVIDEO_DE 	= rVideoDE[2];
-assign oVIDEO_FE 	= rVideoFE[2];
-assign oVIDEO_RST	= wTftRSTCsr;
-assign oVIDEO_WR	= rTftWr;
-assign oVIDEO_RD	= wTftRDCsr;
-assign oVIDEO_RS	= wTftRSCsr; // DCX
-assign oVIDEO_CS	= wTftCSCsr;
+// Video TFT Signals
+assign oVIDEO_DQ	= wTftDQ;
+assign oVIDEO_WRX	= wTftWRX;
+assign oVIDEO_DCX	= wTftDCX;
+assign oVIDEO_RDX	= wTftRDX;
+assign oVIDEO_CSX	= wTftCSX;
+assign oVIDEO_RST	= wTftRST;
 assign oVIDEO_IM[0]	= wTftIM[0];
-assign oVIDEO_IM[1]	= 1'b0;
-assign oVIDEO_IM[2]	= 1'b0;
-assign oVIDEO_IM[3]	= 1'b0;
+assign oVIDEO_IM[1]	= wTftIM[1];
+assign oVIDEO_IM[2]	= wTftIM[2];
+assign oVIDEO_IM[3]	= wTftIM[3];
+// Video Sync Signals
+assign oVIDEO_DCK 	= 1'b0;		// unused
+assign oVIDEO_HS 	= 1'b0;		//
+assign oVIDEO_VS 	= 1'b0;		//
+assign oVIDEO_DE 	= 1'b0;		//
+assign oVIDEO_FE 	= 1'b0;		//
 
-//-----------------------------------------------------------------------------
-// Rst 
-//-----------------------------------------------------------------------------
-reg [7:0] rVRstWaitCnt;
-
-always @(posedge iVCLK)
-begin
-	if (iVRST) 			rVRstWaitCnt <= 8'd0;
-	else if (!qVsgRst)	rVRstWaitCnt <= rVRstWaitCnt;
-	else 				rVRstWaitCnt <= rVRstWaitCnt + 1'b1;
-end
-
-always @*
-begin
-	qVsgRst <= ~rVRstWaitCnt[7] | wVsgRst;
-end
 
 //-----------------------------------------------------------------------------
 // function

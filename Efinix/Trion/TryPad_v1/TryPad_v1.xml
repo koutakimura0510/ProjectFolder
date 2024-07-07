@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efx:project name="TryPad_v1" description="" last_change_date="土 6月 29 2024 20:23:28" location="F:/workspace/ProjectFolder/Efinix/Trion/TryPad_v1" sw_version="2023.1.150.7.4" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="change" place_ood="change" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
+<efx:project name="TryPad_v1" description="" last_change_date="日 7月 7 2024 14:17:40" location="F:/workspace/ProjectFolder/Efinix/Trion/TryPad_v1" sw_version="2023.1.150.7.4" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="change" place_ood="sync" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
     <efx:device_info>
         <efx:family name="Trion"/>
         <efx:device name="T20Q144"/>
@@ -42,9 +42,8 @@
         <efx:design_file name="src/common/ExtSw/GetSw.v" version="default" library="default"/>
         <efx:design_file name="src/common/ExtSw/SwSamp.v" version="default" library="default"/>
         <efx:design_file name="src/VideoTxBlock/VideoTxBlock.v" version="default" library="default"/>
+        <efx:design_file name="src/VideoTxBlock/VideoTftUnit.v" version="default" library="default"/>
         <efx:design_file name="src/VideoTxBlock/VideoTxCsr.v" version="default" library="default"/>
-        <efx:design_file name="src/VideoTxBlock/VideoSyncGen.v" version="default" library="default"/>
-        <efx:design_file name="src/VideoTxBlock/TFT_INIT.v" version="default" library="default"/>
         <efx:design_file name="src/VideoTxBlock/VideoPixelGenUnit/VideoPixelGenUnit.v" version="default" library="default"/>
         <efx:design_file name="src/VideoTxBlock/VideoPixelGenUnit/common/DotSquareGen.v" version="default" library="default"/>
         <efx:design_file name="src/VideoTxBlock/VideoPixelGenUnit/common/PixelDrawPosition.v" version="default" library="default"/>

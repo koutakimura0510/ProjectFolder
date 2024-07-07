@@ -123,8 +123,7 @@ SyncFifoController #(
 ) PixelDstFifo (
 	// write
 	.iWd(qPdfWd),		.iWe(qPdfWe),
-	.oFull(wPdfFull),
-	.oRemaingCntAlert(),
+	.oFull(wPdfFull),	.oRemaingCntAlert(),
 	// read
 	.oRd(wPdfRd),		.iRe(qPdfRe),
 	.oRvd(wPdfRvd),		.oEmp(wPdfEmp),

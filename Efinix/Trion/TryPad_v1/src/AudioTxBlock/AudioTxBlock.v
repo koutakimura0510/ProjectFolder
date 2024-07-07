@@ -246,7 +246,7 @@ AudioTxI2S AudioTxI2S (
 
 always @*
 begin
-	qAudioData[31:0] 	<= {wAacRd[19:0],12'd0};
+	qAudioData[31:0] 	<= 32'd0;//{wAacRd[19:0],12'd0};
   	qAacRe				<= &{wI2SRdy,~wAacEmp};
 end
 

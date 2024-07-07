@@ -50,15 +50,16 @@ module VideoTxCsr #(
 	input							iDmaDone,
 	// Csr Vsg
 	output							oVsgRst,
-	// Csr TFT Config
-	output	[15:0]					oTftData,
-	output							oTftRST,
-	output							oTftWR,
-	output							oTftRD,
-	output							oTftRS,
-	output							oTftCS,
-	output	[3:0]					oTftIM,
-	output							oTftGate,
+	// Csr Vtu
+	output	[23:0]					oVtuMcuDq,
+	output							oVtuMcuWRX,
+	output							oVtuMcuDCX,
+	output							oVtuMcuRDX,
+	output							oVtuMcuCSX,
+	output							oVtuMcuRST,
+	output	[3:0]					oVtuMcuIM,
+	output							oVtuMcuGate,
+	output							oVtuConverterRst,
 	// Csr Map Info
 	output	[7:0] 					oMapXSize,
 	output	[7:0] 					oMapYSize,
@@ -126,14 +127,15 @@ reg [pDmaAdrsWidth-1:0] rDmaAdrsAdd;					assign oDmaAdrsAdd 		= rDmaAdrsAdd;		//
 //
 reg			rVsgRst;									assign	oVsgRst			= rVsgRst;
 //
-reg [15:0] 	rTftData;									assign  oTftData		= rTftData;
-reg 		rTftRST;									assign  oTftRST		 	= rTftRST;
-reg 		rTftWR;										assign  oTftWR		 	= rTftWR;
-reg 		rTftRD;										assign  oTftRD		 	= rTftRD;
-reg 		rTftRS;										assign  oTftRS		 	= rTftRS;
-reg 		rTftCS;										assign  oTftCS		 	= rTftCS;
-reg [3:0] 	rTftIM;										assign  oTftIM		 	= rTftIM;
-reg 		rTftGate;									assign  oTftGate		= rTftGate;
+reg [23:0] 	rVtuMcuDq;									assign  oVtuMcuDq		= rVtuMcuDq;
+reg 		rVtuMcuWRX;									assign  oVtuMcuWRX	 	= rVtuMcuWRX;
+reg 		rVtuMcuDCX;									assign  oVtuMcuDCX	 	= rVtuMcuDCX;
+reg 		rVtuMcuRDX;									assign  oVtuMcuRDX	 	= rVtuMcuRDX;
+reg 		rVtuMcuCSX;									assign  oVtuMcuCSX	 	= rVtuMcuCSX;
+reg 		rVtuMcuRST;									assign  oVtuMcuRST	 	= rVtuMcuRST;
+reg [3:0] 	rVtuMcuIM;									assign  oVtuMcuIM	 	= rVtuMcuIM;
+reg 		rVtuMcuGate;								assign  oVtuMcuGate		= rVtuMcuGate;
+reg 		rVtuConverterRst;							assign  oVtuConverterRst= rVtuConverterRst;
 //
 reg [ 7:0] rMapXSize;									assign oMapXSize		= rMapXSize;		// 現在のマップの最大横幅 / 最大255マス固定
 reg [ 7:0] rMapYSize;									assign oMapYSize		= rMapYSize;		// 現在のマップの最大縦幅 / 最大255マス固定
@@ -187,6 +189,7 @@ reg qCsrWCke020;
 //
 reg qCsrWCke050, qCsrWCke051, qCsrWCke052, qCsrWCke053;
 reg qCsrWCke054, qCsrWCke055, qCsrWCke056, qCsrWCke057;
+reg qCsrWCke058;
 //
 reg qCsrWCke100, qCsrWCke104, qCsrWCke108, qCsrWCke10c;
 reg qCsrWCke110, qCsrWCke114, qCsrWCke118, qCsrWCke11c;
@@ -211,14 +214,15 @@ begin
 		rDmaAdrsEnd 		<= {pDmaAdrsWidth{1'b1}};
 		rDmaAdrsAdd 		<= {pDmaAdrsWidth{1'b0}};
 		rVsgRst				<= 1'b1;
-		rTftData			<= 16'h0000;
-		rTftRST				<= 1'b0;
-		rTftWR				<= 1'b0;		// WRX
-		rTftRD				<= 1'b0;		// RCMD
-		rTftRS				<= 1'b0;		// DCX
-		rTftCS				<= 1'b1;		// CS
-		rTftIM				<= 4'b0000;
-		rTftGate			<= 1'b1;
+		rVtuMcuDq			<= 24'd0;
+		rVtuMcuWRX			<= 1'b0;
+		rVtuMcuDCX			<= 1'b0;
+		rVtuMcuRDX			<= 1'b0;
+		rVtuMcuCSX			<= 1'b1;
+		rVtuMcuRST			<= 1'b0;
+		rVtuMcuIM			<= 4'b0000;
+		rVtuMcuGate			<= 1'b1;		// Default Mcu Stream
+		rVtuConverterRst	<= 1'b1;		// Default Assert
 		rMapXSize			<= 8'd30;		// DisplayX(480) / MapChipX(16) = 30
 		rMapYSize			<= 8'd17;		// DisplayY(272) / MapChipY(16) = 17
 		rDotSquareColor1	<= {pColorDepth{1'b0}};
@@ -272,15 +276,16 @@ begin
 		rDmaAdrsAdd					<= qCsrWCke014 ? iSUsiWd[pDmaAdrsWidth-1:0] : rDmaAdrsAdd;
 		// Video Sync Gen
 		rVsgRst						<= qCsrWCke020 ? iSUsiWd[0:0] : rVsgRst;
-		// TFT Config
-		rTftData					<= qCsrWCke050 ? iSUsiWd[15:0] : rTftData;
-		rTftRST						<= qCsrWCke051 ? iSUsiWd[0:0] : rTftRST;
-		rTftWR						<= qCsrWCke052 ? iSUsiWd[0:0] : rTftWR;
-		rTftRD						<= qCsrWCke053 ? iSUsiWd[0:0] : rTftRD;
-		rTftRS						<= qCsrWCke054 ? iSUsiWd[0:0] : rTftRS;
-		rTftIM						<= qCsrWCke055 ? iSUsiWd[3:0] : rTftIM;
-		rTftGate					<= qCsrWCke056 ? iSUsiWd[0:0] : rTftGate;
-		rTftCS						<= qCsrWCke057 ? iSUsiWd[0:0] : rTftCS;
+		// Video Tft Unit
+		rVtuMcuDq					<= qCsrWCke050 ? iSUsiWd[23:0] : rVtuMcuDq;
+		rVtuMcuWRX					<= qCsrWCke051 ? iSUsiWd[0:0] : rVtuMcuWRX;
+		rVtuMcuDCX					<= qCsrWCke052 ? iSUsiWd[0:0] : rVtuMcuDCX;
+		rVtuMcuRDX					<= qCsrWCke053 ? iSUsiWd[0:0] : rVtuMcuRDX;
+		rVtuMcuCSX					<= qCsrWCke054 ? iSUsiWd[0:0] : rVtuMcuCSX;
+		rVtuMcuRST					<= qCsrWCke055 ? iSUsiWd[0:0] : rVtuMcuRST;
+		rVtuMcuIM					<= qCsrWCke056 ? iSUsiWd[3:0] : rVtuMcuIM;
+		rVtuMcuGate					<= qCsrWCke057 ? iSUsiWd[0:0] : rVtuMcuGate;
+		rVtuConverterRst			<= qCsrWCke058 ? iSUsiWd[0:0] : rVtuConverterRst;
 		// Map Info
 		{rMapXSize, rMapYSize}		<= qCsrWCke100 ? iSUsiWd[15:0]				: {rMapXSize, rMapYSize};
 		// Dot Square Gen
@@ -350,6 +355,7 @@ begin
 	qCsrWCke055 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0055});
 	qCsrWCke056 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0056});
 	qCsrWCke057 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0057});
+	qCsrWCke058 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0058});
 	
 	// 100h ~
 	qCsrWCke100 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0100});
@@ -421,14 +427,15 @@ begin
 		// 020
 		'h020:		rSUsiRd <= {{(32 - 31				){1'b0}},	rVsgRst				};
 		// 050
-		'h050:		rSUsiRd <= {{(32 - 16				){1'b0}},	rTftData			};
-		'h051:		rSUsiRd <= {{(32 - 1				){1'b0}},	rTftRST				};
-		'h052:		rSUsiRd <= {{(32 - 1				){1'b0}},	rTftWR				};
-		'h053:		rSUsiRd <= {{(32 - 1				){1'b0}},	rTftRD				};
-		'h054:		rSUsiRd <= {{(32 - 1				){1'b0}},	rTftRS				};
-		'h055:		rSUsiRd <= {{(32 - 4				){1'b0}},	rTftIM				};
-		'h056:		rSUsiRd <= {{(32 - 1				){1'b0}},	rTftGate			};
-		'h057:		rSUsiRd <= {{(32 - 1				){1'b0}},	rTftCS				};
+		'h050:		rSUsiRd <= {{(32 - 8				){1'b0}},	rVtuMcuDq			};
+		'h051:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuWRX			};
+		'h052:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuDCX			};
+		'h053:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuRDX			};
+		'h054:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuCSX			};
+		'h055:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuRST			};
+		'h056:		rSUsiRd <= {{(32 - 4				){1'b0}},	rVtuMcuIM			};
+		'h057:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuGate			};
+		'h058:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuConverterRst	};
 		//
 		'h100:		rSUsiRd	<= {{(32 - 16				){1'b0}}, rMapXSize, rMapYSize	};
 		//

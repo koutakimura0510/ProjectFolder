@@ -191,7 +191,7 @@ begin
 		f_barm_gennum = 1;
 		for (i = pFifoBitWidth; lpDataWidth < i; i = i - lpDataWidth)
 		begin
-			f_barm_gennum++;
+			f_barm_gennum = f_barm_gennum + 1;
 		end
 	end
 end

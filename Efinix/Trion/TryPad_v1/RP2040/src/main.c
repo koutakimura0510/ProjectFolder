@@ -87,7 +87,7 @@ static void trypad_fpga_reg_init(void)
  *-----------------------------------------------------------------------------*/
 int main()
 {
-	SdlRect rect = {.top=0, .under=120, .right=0, .left=160};
+	SdlRect rect = {.top=0, .under=120, .left=0, .right=120};
 	stdio_init_all();
 	trypad_init();
 	trypad_fpga_reg_init();
@@ -95,24 +95,32 @@ int main()
 	usi_write(GPIO_REG_ROM_GPIO_OE, 0x11);
 	usi_write(GPIO_REG_CFG_ROM_GPIO_OE, 0xff);
 	st7789_init();
-	rect_draw(&rect, 0x140f);
+	software_draw(COLOR_BLUE);
+	rect_draw(&rect, 0xffff);
+	usi_write(VIDEO_REG_VTU_CONVERTER_RST, 0x00);
 
-	// usi_write(GPIO_REG_AUDIO_GPIO_OE, 0xff);
+	printf("TOP %d\r\n", usi_read(VIDEO_REG_DOT_SQUARE_TOP1));
+	printf("UNDER %d\r\n", usi_read(VIDEO_REG_DOT_SQUARE_UNDER1));
+	printf("LEFT %d\r\n", usi_read(VIDEO_REG_DOT_SQUARE_LEFT1));
+	printf("RIGHT %d\r\n", usi_read(VIDEO_REG_DOT_SQUARE_RIGHT1));
+	printf("%d\r\n", usi_read(VIDEO_REG_DOT_SQUARE_COLOR1));
+
+	usi_write(GPIO_REG_AUDIO_GPIO_OE, 0x05);
 	// usi_write(GPIO_REG_AUDIO_GPIO_OE, 0xff);
 
 	while (1) {
 		gpio_put(LED_B, 0);
 		gpio_put(LED_G, 1);
 		gpio_put(LED_R, 1);
-		software_draw(COLOR_BLUE);
-		gpio_put(LED_B, 1);
-		gpio_put(LED_G, 0);
-		gpio_put(LED_R, 1);
-		software_draw(COLOR_GREEN);
-		gpio_put(LED_B, 1);
-		gpio_put(LED_G, 1);
-		gpio_put(LED_R, 0);
-		software_draw(COLOR_RED);
+		// software_draw(COLOR_BLUE);
+		// gpio_put(LED_B, 1);
+		// gpio_put(LED_G, 0);
+		// gpio_put(LED_R, 1);
+		// software_draw(COLOR_GREEN);
+		// gpio_put(LED_B, 1);
+		// gpio_put(LED_G, 1);
+		// gpio_put(LED_R, 0);
+		// software_draw(COLOR_RED);
 		// read = usi_read(TIMER_REG_DIV2);
 
 		// if (add != read) {
