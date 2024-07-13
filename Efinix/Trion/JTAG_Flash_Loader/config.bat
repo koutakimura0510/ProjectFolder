@@ -4,4 +4,4 @@
 @REM Efinity Compile Batfile
 @REM ------------------------------------------------------------------------------
 
-C:\Efinity\2023.1\bin\efx_run.bat JTAG_Flash_Loader.xml --flow program --pgm_opts mode=jtag
+C:/Efinity/2023.1/bin/efx_run.bat JTAG_Flash_Loader.xml --flow program --pgm_opts mode=jtag

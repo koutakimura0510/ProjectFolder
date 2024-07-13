@@ -53,7 +53,8 @@
 #include "./trypad_fpga_macro.h"
 #include "./Mvideo.h"
 #include "./Mtimer.h"
+#include "./Mpsram.h"
+#include "./Musb.h"
 #include "./Mspi.h"
-
 
 #endif

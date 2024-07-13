@@ -127,7 +127,7 @@
 		{
 			"label": "Jtag",
 			"type": "shell",
-			"command": "source /tools/efinity/2023.1/bin/setup.sh;make jtag",
+			"command": "C:/Efinity/2023.1/bin/setup.bat;make jtag",
 			"group": {
 				"kind": "build",
 				"isDefault": true

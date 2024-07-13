@@ -15,15 +15,15 @@
 #define COLOR_RED		(0x8F00)
 
 /**-----------------------------------------------------------------------------
- * typede struct
+ * typedef struct
  *-----------------------------------------------------------------------------*/
 typedef struct {
-    uint16_t top;
-    uint16_t under;
-    uint16_t right;
-    uint16_t left;
+    int16_t top;
+    int16_t under;
+    int16_t left;
+    int16_t right;
+	int16_t color;
 } SdlRect;
-
 
 /**-----------------------------------------------------------------------------
  * プロトタイプ宣言
@@ -31,6 +31,7 @@ typedef struct {
 void st7789_init(void);
 void invert_draw(bool invert);
 void software_draw(uint32_t color);
-void rect_draw(SdlRect *rect, uint16_t color);
+void rect_draw(SdlRect *rect);
+void rect_init(SdlRect *rect, int16_t top, int16_t under, int16_t left, int16_t right, uint16_t color);
 
 #endif

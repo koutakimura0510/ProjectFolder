@@ -89,6 +89,37 @@ uint32_t usi_read(uint32_t adrs)
 }
 
 /**-----------------------------------------------------------------------------
+ * usib read wait
+ * 特定レジスタの bit が検出されるまで待機
+ * 
+ * adrs : 読み込みアドレス
+ * bit_mask : レジスタ Bit 位置
+ * 
+ * TODO 更新予定：指定時間経過しても検出できない場合の例外処理
+ *-----------------------------------------------------------------------------*/
+void usi_read_wait(uint32_t adrs, uint32_t bit_mask)
+{
+	adrs |= USI_READ_CMD;
+	uint8_t wbuff[] = {
+		(adrs >> 24) & 0xff,
+		(adrs >> 16) & 0xff,
+		(adrs >> 8) & 0xff,
+		(adrs) & 0xff,
+		0x00,0x00,0x00,0x00, // dummy
+	};
+	uint8_t rbuff[ROWS(wbuff)*2];
+	uint32_t rd;
+
+	do {
+		spi_write_read(wbuff, rbuff, ROWS(wbuff));
+		rd = (rbuff[4] << 24) | (rbuff[5] << 16) | (rbuff[6] << 8) | rbuff[7];
+		rd &= bit_mask;
+	} while (!(bit_mask == rd));
+
+	return;
+}
+
+/**-----------------------------------------------------------------------------
  * spi r/w
  * FPGA tCSH : min 400ns, typ 800ns
  *-----------------------------------------------------------------------------*/

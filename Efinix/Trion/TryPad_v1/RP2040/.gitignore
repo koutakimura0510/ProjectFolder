@@ -1,3 +1,7 @@
-# 不要なフォルダは管理しない
+# Build 直下の elf, uf2 ファイルのみ管理
 build/*
 !/build/RP2040.uf2
+!/build/RP2040.elf
+
+# Pico Only Openocd.exe
+!/openocd/openocd.exe

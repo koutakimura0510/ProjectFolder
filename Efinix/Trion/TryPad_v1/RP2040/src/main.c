@@ -16,14 +16,14 @@
 /**-----------------------------------------------------------------------------
  * プロトタイプ宣言
  *-----------------------------------------------------------------------------*/
-static void trypad_init(void);
-static void trypad_fpga_reg_init(void);
+static void trypad_pico_init(void);
+static void trypad_fpga_init(void);
 
 
 /**-----------------------------------------------------------------------------
- * trypad_init
+ * trypad_pico_init
  *-----------------------------------------------------------------------------*/
-static void trypad_init(void)
+static void trypad_pico_init(void)
 {
 	uint8_t pin[][2] = {	//[x][0]=pin no, [x][1]=dir
 		{LED_R, 1},
@@ -74,12 +74,26 @@ static void trypad_init(void)
 /**-----------------------------------------------------------------------------
  * trypad fpga reg init
  *-----------------------------------------------------------------------------*/
-static void trypad_fpga_reg_init(void)
+static void trypad_fpga_init(void)
 {
 	uint32_t fpga_ver = usi_read(MCB_REG_FPGA_VERSION);
 	uint32_t fpga_code = usi_read(MCB_REG_CUSTOM_CODE);
 	printf("fpga ver = %d\n", fpga_ver);
 	printf("fpga code = %d\n", fpga_code);
+
+	// IO OE
+	usi_write(GPIO_REG_VIDEO_GPIO_OE, 0xffffff);
+	usi_write(GPIO_REG_ROM_GPIO_OE, 0x11);
+	usi_write(GPIO_REG_CFG_ROM_GPIO_OE, 0xff);
+	usi_write(GPIO_REG_AUDIO_GPIO_OE, 0x00);
+}
+
+/**-----------------------------------------------------------------------------
+ * Debug Console
+ *-----------------------------------------------------------------------------*/
+void debug_usi_printf(uint32_t adrs, char *s)
+{
+	printf("%s %d\r\n", s, usi_read(adrs));
 }
 
 /**-----------------------------------------------------------------------------
@@ -87,46 +101,25 @@ static void trypad_fpga_reg_init(void)
  *-----------------------------------------------------------------------------*/
 int main()
 {
-	SdlRect rect = {.top=0, .under=120, .left=0, .right=120};
+	SdlRect rect = {.top=0, .under=32, .left=0, .right=160, .color=0xffff};
 	stdio_init_all();
-	trypad_init();
-	trypad_fpga_reg_init();
-	usi_write(GPIO_REG_VIDEO_GPIO_OE, 0xffffff);
-	usi_write(GPIO_REG_ROM_GPIO_OE, 0x11);
-	usi_write(GPIO_REG_CFG_ROM_GPIO_OE, 0xff);
+	trypad_pico_init();
+	trypad_fpga_init();
 	st7789_init();
-	software_draw(COLOR_BLUE);
-	rect_draw(&rect, 0xffff);
 	usi_write(VIDEO_REG_VTU_CONVERTER_RST, 0x00);
 
-	printf("TOP %d\r\n", usi_read(VIDEO_REG_DOT_SQUARE_TOP1));
-	printf("UNDER %d\r\n", usi_read(VIDEO_REG_DOT_SQUARE_UNDER1));
-	printf("LEFT %d\r\n", usi_read(VIDEO_REG_DOT_SQUARE_LEFT1));
-	printf("RIGHT %d\r\n", usi_read(VIDEO_REG_DOT_SQUARE_RIGHT1));
-	printf("%d\r\n", usi_read(VIDEO_REG_DOT_SQUARE_COLOR1));
-
-	usi_write(GPIO_REG_AUDIO_GPIO_OE, 0x05);
-	// usi_write(GPIO_REG_AUDIO_GPIO_OE, 0xff);
-
 	while (1) {
+		if (rect.right == 352) {
+			rect.right = 0;
+			rect.left = -32;
+		}
+		rect.right++;
+		rect.left++;
 		gpio_put(LED_B, 0);
 		gpio_put(LED_G, 1);
 		gpio_put(LED_R, 1);
-		// software_draw(COLOR_BLUE);
-		// gpio_put(LED_B, 1);
-		// gpio_put(LED_G, 0);
-		// gpio_put(LED_R, 1);
-		// software_draw(COLOR_GREEN);
-		// gpio_put(LED_B, 1);
-		// gpio_put(LED_G, 1);
-		// gpio_put(LED_R, 0);
-		// software_draw(COLOR_RED);
-		// read = usi_read(TIMER_REG_DIV2);
-
-		// if (add != read) {
-		// 	gpio_put(LED_G, 1);
-		// }
-		// add++;
+		rect_draw(&rect);
+		wait_ms(10);
 	}
 
 	return 0;

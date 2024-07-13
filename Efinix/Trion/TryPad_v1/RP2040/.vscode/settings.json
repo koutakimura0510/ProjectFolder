@@ -1,3 +1,8 @@
+/**-----------------------------------------------------------------------------
+ * Create  2024/7/13
+ * Author  koutakimura
+ * 
+ *-----------------------------------------------------------------------------*/
 {
     // These settings tweaks to the cmake plugin will ensure
     // that you debug using cortex-debug instead of trying to launch
@@ -21,7 +26,12 @@
     "cmake.configureSettings": {
       "CMAKE_MODULE_PATH": "${env:PICO_INSTALL_PATH}/pico-sdk-tools"
     },
+    "cmake.configureEnvironment": {
+      "PICO_SDK_PATH": "C:/Program Files/Raspberry Pi/Pico SDK v1.5.1/pico-sdk"
+    },
+
     // "cmake.generator": "Ninja",  Ninja を使用する場合は、インストールと環境変数の設定は必要
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+    "cortex-debug.openocdPath": "openocd/openocd.exe",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
   }
   

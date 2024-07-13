@@ -4,7 +4,7 @@
 # Efinity Compile Makefile
 # ------------------------------------------------------------------------------
 
-FILE = C:\Efinity\2023.1\bin\efx_run.bat
+FILE = C:/Efinity/2023.1/bin/efx_run.bat
 PROJECT = TryPad_v1.xml
 JTAG_PROJECT = ../JTAG_Flash_Loader
 # SIM_PROJECT = ./src/common/fifo/sim

@@ -17,7 +17,8 @@ TBTOPRTL = ./src/ddr_reset_sequencer_tb.v
 TBRTL 	 = ./src/ddr_reset_sequencer.v
 
 # シンボリックリンクで実行可能
-FILE = efx_run.py
+FILE = C:/Efinity/2023.1/bin/efx_run.bat
+# FILE = efx_run.py
 PROJECT = ./JTAG_Flash_Loader.xml
 # BIT = ./outflow/K5Stack10_MIDI.bit
 # HEX = ./outflow/K5Stack10_MIDI.hex

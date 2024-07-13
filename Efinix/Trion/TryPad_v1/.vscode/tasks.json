@@ -53,7 +53,7 @@
 		{
 			"label": "Flash",		// Flash ROM 書き込み
 			"type": "shell",
-			"command": "make flash",
+			"command": "./config.bat flash",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -63,7 +63,7 @@
 		{
 			"label": "Compile + JTAG",
 			"type": "shell",
-			"command": "C:/Efinity/2023.1/bin/setup.bat;make compile;make py;make jtag",
+			"command": "./config.bat compile;./config.bat jtag",
 			"group": {
 				"kind": "build",
 				"isDefault": true

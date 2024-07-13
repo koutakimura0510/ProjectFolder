@@ -1,120 +1,119 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<efx:project name="TryPad_v1" description="" last_change_date="日 7月 7 2024 14:17:40" location="F:/workspace/ProjectFolder/Efinix/Trion/TryPad_v1" sw_version="2023.1.150.7.4" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="change" place_ood="sync" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
+<efx:project xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="TryPad_v1" description="" last_change_date="Sat Jul 13 2024 12:31:35" location="F:\workspace\ProjectFolder\Efinix\Trion\TryPad_v1" sw_version="2023.1.150.7.4" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="change" place_ood="sync" route_ood="sync" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
     <efx:device_info>
-        <efx:family name="Trion"/>
-        <efx:device name="T20Q144"/>
-        <efx:timing_model name="C4"/>
+        <efx:family name="Trion" />
+        <efx:device name="T20Q144" />
+        <efx:timing_model name="C4" />
     </efx:device_info>
     <efx:design_info def_veri_version="sv_09" def_vhdl_version="vhdl_2008">
-        <efx:top_module name="TryPadV1Top"/>
-        <efx:design_file name="src/TryPadV1Top.v" version="default" library="default"/>
-        <efx:design_file name="src/UltraSimpleInterfaceBus/USIB.v" version="default" library="default"/>
-        <efx:design_file name="src/UltraFastInterfaceBus/UFIBv2.v" version="default" library="default"/>
-        <efx:design_file name="src/UltraFastInterfaceBus/UfibCoreUnit.v" version="default" library="default"/>
-        <efx:design_file name="src/GpioBlock/GpioCsr.v" version="default" library="default"/>
-        <efx:design_file name="src/GpioBlock/GpioBlock.v" version="default" library="default"/>
-        <efx:design_file name="src/SPIBlock/SPICsr.v" version="default" library="default"/>
-        <efx:design_file name="src/SPIBlock/SPIBlock.v" version="default" library="default"/>
-        <efx:design_file name="src/SPIBlock/SPISignal.v" version="default" library="default"/>
-        <efx:design_file name="src/SPIBlock/SPISignalMux.v" version="default" library="default"/>
-        <efx:design_file name="src/SPIBlock/SpiFlashRom.v" version="default" library="default"/>
-        <efx:design_file name="src/AudioTxBlock/AudioTxBlock.v" version="default" library="default"/>
-        <efx:design_file name="src/AudioTxBlock/AudioTxCsr.v" version="default" library="default"/>
-        <efx:design_file name="src/AudioTxBlock/AudioRomRead.v" version="default" library="default"/>
-        <efx:design_file name="src/AudioTxBlock/AudioRomReadSequence.v" version="default" library="default"/>
-        <efx:design_file name="src/AudioTxBlock/AudioTxI2S.v" version="default" library="default"/>
-        <efx:design_file name="src/RamBlock/RamBlock.v" version="default" library="default"/>
-        <efx:design_file name="src/RamBlock/RamCsr.v" version="default" library="default"/>
-        <efx:design_file name="src/RamBlock/DeviceCfg.v" version="default" library="default"/>
-        <efx:design_file name="src/RamBlock/MemoryAccessTester.v" version="default" library="default"/>
-        <efx:design_file name="src/RamBlock/MemoryAccessVideo.v" version="default" library="default"/>
-        <efx:design_file name="src/RamBlock/RamIfPortUnit.v" version="default" library="default"/>
-        <efx:design_file name="src/MicroControllerBlock/MicroControllerBlock.v" version="default" library="default"/>
-        <efx:design_file name="src/MicroControllerBlock/MicroControllerCsr.v" version="default" library="default"/>
-        <efx:design_file name="src/SysTimerBlock/SysTimerBlock.v" version="default" library="default"/>
-        <efx:design_file name="src/SysTimerBlock/SysTimerCsr.v" version="default" library="default"/>
-        <efx:design_file name="src/common/pulse/CkeGenerator.v" version="default" library="default"/>
-        <efx:design_file name="src/common/fifo/SyncFifoController.v" version="default" library="default"/>
-        <efx:design_file name="src/common/fifo/ASyncFifoController.v" version="default" library="default"/>
-        <efx:design_file name="src/common/fifo/TrionSDPBRAM.v" version="default" library="default"/>
-        <efx:design_file name="src/common/pulse/ClkCounter.v" version="default" library="default"/>
-        <efx:design_file name="src/common/pulse/PulseGenerator.v" version="default" library="default"/>
-        <efx:design_file name="src/common/ExtSw/GetSw.v" version="default" library="default"/>
-        <efx:design_file name="src/common/ExtSw/SwSamp.v" version="default" library="default"/>
-        <efx:design_file name="src/VideoTxBlock/VideoTxBlock.v" version="default" library="default"/>
-        <efx:design_file name="src/VideoTxBlock/VideoTftUnit.v" version="default" library="default"/>
-        <efx:design_file name="src/VideoTxBlock/VideoTxCsr.v" version="default" library="default"/>
-        <efx:design_file name="src/VideoTxBlock/VideoPixelGenUnit/VideoPixelGenUnit.v" version="default" library="default"/>
-        <efx:design_file name="src/VideoTxBlock/VideoPixelGenUnit/common/DotSquareGen.v" version="default" library="default"/>
-        <efx:design_file name="src/VideoTxBlock/VideoPixelGenUnit/common/PixelDrawPosition.v" version="default" library="default"/>
-        <efx:top_vhdl_arch name=""/>
+        <efx:top_module name="TryPadV1Top" />
+        <efx:design_file name="src/TryPadV1Top.v" version="default" library="default" />
+        <efx:design_file name="src/UltraSimpleInterfaceBus/USIB.v" version="default" library="default" />
+        <efx:design_file name="src/UltraFastInterfaceBus/UFIBv2.v" version="default" library="default" />
+        <efx:design_file name="src/UltraFastInterfaceBus/UfibCoreUnit.v" version="default" library="default" />
+        <efx:design_file name="src/GpioBlock/GpioCsr.v" version="default" library="default" />
+        <efx:design_file name="src/GpioBlock/GpioBlock.v" version="default" library="default" />
+        <efx:design_file name="src/SPIBlock/SPICsr.v" version="default" library="default" />
+        <efx:design_file name="src/SPIBlock/SPIBlock.v" version="default" library="default" />
+        <efx:design_file name="src/SPIBlock/SPISignal.v" version="default" library="default" />
+        <efx:design_file name="src/SPIBlock/SPISignalMux.v" version="default" library="default" />
+        <efx:design_file name="src/SPIBlock/SpiFlashRom.v" version="default" library="default" />
+        <efx:design_file name="src/AudioTxBlock/AudioTxBlock.v" version="default" library="default" />
+        <efx:design_file name="src/AudioTxBlock/AudioTxCsr.v" version="default" library="default" />
+        <efx:design_file name="src/AudioTxBlock/AudioRomRead.v" version="default" library="default" />
+        <efx:design_file name="src/AudioTxBlock/AudioRomReadSequence.v" version="default" library="default" />
+        <efx:design_file name="src/AudioTxBlock/AudioTxI2S.v" version="default" library="default" />
+        <efx:design_file name="src/RamBlock/RamBlock.v" version="default" library="default" />
+        <efx:design_file name="src/RamBlock/RamCsr.v" version="default" library="default" />
+        <efx:design_file name="src/RamBlock/DeviceCfg.v" version="default" library="default" />
+        <efx:design_file name="src/RamBlock/MemoryAccessTester.v" version="default" library="default" />
+        <efx:design_file name="src/RamBlock/MemoryAccessVideo.v" version="default" library="default" />
+        <efx:design_file name="src/RamBlock/RamIfPortUnit.v" version="default" library="default" />
+        <efx:design_file name="src/MicroControllerBlock/MicroControllerBlock.v" version="default" library="default" />
+        <efx:design_file name="src/MicroControllerBlock/MicroControllerCsr.v" version="default" library="default" />
+        <efx:design_file name="src/SysTimerBlock/SysTimerBlock.v" version="default" library="default" />
+        <efx:design_file name="src/SysTimerBlock/SysTimerCsr.v" version="default" library="default" />
+        <efx:design_file name="src/common/pulse/CkeGenerator.v" version="default" library="default" />
+        <efx:design_file name="src/common/fifo/SyncFifoController.v" version="default" library="default" />
+        <efx:design_file name="src/common/fifo/ASyncFifoController.v" version="default" library="default" />
+        <efx:design_file name="src/common/fifo/TrionSDPBRAM.v" version="default" library="default" />
+        <efx:design_file name="src/common/pulse/ClkCounter.v" version="default" library="default" />
+        <efx:design_file name="src/common/pulse/PulseGenerator.v" version="default" library="default" />
+        <efx:design_file name="src/common/ExtSw/GetSw.v" version="default" library="default" />
+        <efx:design_file name="src/common/ExtSw/SwSamp.v" version="default" library="default" />
+        <efx:design_file name="src/VideoTxBlock/VideoTxBlock.v" version="default" library="default" />
+        <efx:design_file name="src/VideoTxBlock/VideoTftUnit.v" version="default" library="default" />
+        <efx:design_file name="src/VideoTxBlock/VideoTxCsr.v" version="default" library="default" />
+        <efx:design_file name="src/VideoTxBlock/VideoPixelGenUnit/VideoPixelGenUnit.v" version="default" library="default" />
+        <efx:design_file name="src/VideoTxBlock/VideoPixelGenUnit/common/DotSquareGen.v" version="default" library="default" />
+        <efx:design_file name="src/VideoTxBlock/VideoPixelGenUnit/common/PixelDrawPosition.v" version="default" library="default" />
+        <efx:top_vhdl_arch name="" />
     </efx:design_info>
     <efx:constraint_info>
-        <efx:sdc_file name="src/TryPadV1Top.sdc"/>
-        <efx:inter_file name=""/>
+        <efx:sdc_file name="src/TryPadV1Top.sdc" />
+        <efx:inter_file name="" />
     </efx:constraint_info>
-    <efx:sim_info/>
-    <efx:misc_info/>
-    <efx:ip_info/>
+    <efx:sim_info />
+    <efx:misc_info />
+    <efx:ip_info />
     <efx:synthesis tool_name="efx_map">
-        <efx:param name="work_dir" value="work_syn" value_type="e_string"/>
-        <efx:param name="write_efx_verilog" value="on" value_type="e_bool"/>
-        <efx:param name="allow-const-ram-index" value="0" value_type="e_option"/>
-        <efx:param name="blackbox-error" value="1" value_type="e_option"/>
-        <efx:param name="blast_const_operand_adders" value="1" value_type="e_option"/>
-        <efx:param name="bram_output_regs_packing" value="1" value_type="e_option"/>
-        <efx:param name="create-onehot-fsms" value="0" value_type="e_option"/>
-        <efx:param name="fanout-limit" value="0" value_type="e_integer"/>
-        <efx:param name="hdl-compile-unit" value="1" value_type="e_option"/>
-        <efx:param name="infer-clk-enable" value="3" value_type="e_option"/>
-        <efx:param name="infer-sync-set-reset" value="1" value_type="e_option"/>
-        <efx:param name="max_ram" value="-1" value_type="e_integer"/>
-        <efx:param name="max_mult" value="-1" value_type="e_integer"/>
-        <efx:param name="min-sr-fanout" value="0" value_type="e_integer"/>
-        <efx:param name="min-ce-fanout" value="0" value_type="e_integer"/>
-        <efx:param name="mult-decomp-retime" value="0" value_type="e_option"/>
-        <efx:param name="mode" value="speed" value_type="e_option"/>
-        <efx:param name="operator-sharing" value="0" value_type="e_option"/>
-        <efx:param name="optimize-adder-tree" value="0" value_type="e_option"/>
-        <efx:param name="optimize-zero-init-rom" value="1" value_type="e_option"/>
-        <efx:param name="retiming" value="1" value_type="e_option"/>
-        <efx:param name="seq_opt" value="1" value_type="e_option"/>
-        <efx:param name="seq-opt-sync-only" value="0" value_type="e_option"/>
-        <efx:param name="mult_input_regs_packing" value="1" value_type="e_option"/>
-        <efx:param name="mult_output_regs_packing" value="1" value_type="e_option"/>
+        <efx:param name="work_dir" value="work_syn" value_type="e_string" />
+        <efx:param name="write_efx_verilog" value="on" value_type="e_bool" />
+        <efx:param name="allow-const-ram-index" value="0" value_type="e_option" />
+        <efx:param name="blackbox-error" value="1" value_type="e_option" />
+        <efx:param name="blast_const_operand_adders" value="1" value_type="e_option" />
+        <efx:param name="bram_output_regs_packing" value="1" value_type="e_option" />
+        <efx:param name="create-onehot-fsms" value="0" value_type="e_option" />
+        <efx:param name="fanout-limit" value="0" value_type="e_integer" />
+        <efx:param name="hdl-compile-unit" value="1" value_type="e_option" />
+        <efx:param name="infer-clk-enable" value="3" value_type="e_option" />
+        <efx:param name="infer-sync-set-reset" value="1" value_type="e_option" />
+        <efx:param name="max_ram" value="-1" value_type="e_integer" />
+        <efx:param name="max_mult" value="-1" value_type="e_integer" />
+        <efx:param name="min-sr-fanout" value="0" value_type="e_integer" />
+        <efx:param name="min-ce-fanout" value="0" value_type="e_integer" />
+        <efx:param name="mult-decomp-retime" value="0" value_type="e_option" />
+        <efx:param name="mode" value="speed" value_type="e_option" />
+        <efx:param name="operator-sharing" value="0" value_type="e_option" />
+        <efx:param name="optimize-adder-tree" value="0" value_type="e_option" />
+        <efx:param name="optimize-zero-init-rom" value="1" value_type="e_option" />
+        <efx:param name="retiming" value="1" value_type="e_option" />
+        <efx:param name="seq_opt" value="1" value_type="e_option" />
+        <efx:param name="seq-opt-sync-only" value="0" value_type="e_option" />
+        <efx:param name="mult_input_regs_packing" value="1" value_type="e_option" />
+        <efx:param name="mult_output_regs_packing" value="1" value_type="e_option" />
     </efx:synthesis>
     <efx:place_and_route tool_name="efx_pnr">
-        <efx:param name="work_dir" value="work_pnr" value_type="e_string"/>
-        <efx:param name="verbose" value="off" value_type="e_bool"/>
-        <efx:param name="load_delaym" value="on" value_type="e_bool"/>
-        <efx:param name="optimization_level" value="NULL" value_type="e_option"/>
-        <efx:param name="seed" value="1" value_type="e_integer"/>
-        <efx:param name="placer_effort_level" value="2" value_type="e_option"/>
-        <efx:param name="max_threads" value="-1" value_type="e_integer"/>
+        <efx:param name="work_dir" value="work_pnr" value_type="e_string" />
+        <efx:param name="verbose" value="off" value_type="e_bool" />
+        <efx:param name="load_delaym" value="on" value_type="e_bool" />
+        <efx:param name="optimization_level" value="NULL" value_type="e_option" />
+        <efx:param name="seed" value="1" value_type="e_integer" />
+        <efx:param name="placer_effort_level" value="2" value_type="e_option" />
+        <efx:param name="max_threads" value="-1" value_type="e_integer" />
     </efx:place_and_route>
     <efx:bitstream_generation tool_name="efx_pgm">
-        <efx:param name="mode" value="active" value_type="e_option"/>
-        <efx:param name="width" value="4" value_type="e_option"/>
-        <efx:param name="enable_roms" value="smart" value_type="e_option"/>
-        <efx:param name="spi_low_power_mode" value="on" value_type="e_bool"/>
-        <efx:param name="io_weak_pullup" value="on" value_type="e_bool"/>
-        <efx:param name="oscillator_clock_divider" value="DIV4" value_type="e_option"/>
-        <efx:param name="bitstream_compression" value="off" value_type="e_bool"/>
-        <efx:param name="enable_external_master_clock" value="off" value_type="e_bool"/>
-        <efx:param name="active_capture_clk_edge" value="posedge" value_type="e_option"/>
-        <efx:param name="jtag_usercode" value="0xFFFFFFFF" value_type="e_string"/>
-        <efx:param name="release_tri_then_reset" value="on" value_type="e_bool"/>
-        <efx:param name="cold_boot" value="off" value_type="e_bool"/>
-        <efx:param name="cascade" value="off" value_type="e_option"/>
-        <efx:param name="generate_bit" value="on" value_type="e_bool"/>
-        <efx:param name="generate_bitbin" value="off" value_type="e_bool"/>
-        <efx:param name="generate_hex" value="on" value_type="e_bool"/>
-        <efx:param name="generate_hexbin" value="off" value_type="e_bool"/>
-        <efx:param name="four_byte_addressing" value="off" value_type="e_bool"/>
+        <efx:param name="mode" value="active" value_type="e_option" />
+        <efx:param name="width" value="4" value_type="e_option" />
+        <efx:param name="enable_roms" value="smart" value_type="e_option" />
+        <efx:param name="spi_low_power_mode" value="on" value_type="e_bool" />
+        <efx:param name="io_weak_pullup" value="on" value_type="e_bool" />
+        <efx:param name="oscillator_clock_divider" value="DIV4" value_type="e_option" />
+        <efx:param name="bitstream_compression" value="off" value_type="e_bool" />
+        <efx:param name="enable_external_master_clock" value="off" value_type="e_bool" />
+        <efx:param name="active_capture_clk_edge" value="posedge" value_type="e_option" />
+        <efx:param name="jtag_usercode" value="0xFFFFFFFF" value_type="e_string" />
+        <efx:param name="release_tri_then_reset" value="on" value_type="e_bool" />
+        <efx:param name="cold_boot" value="off" value_type="e_bool" />
+        <efx:param name="cascade" value="off" value_type="e_option" />
+        <efx:param name="generate_bit" value="on" value_type="e_bool" />
+        <efx:param name="generate_bitbin" value="off" value_type="e_bool" />
+        <efx:param name="generate_hex" value="on" value_type="e_bool" />
+        <efx:param name="generate_hexbin" value="off" value_type="e_bool" />
+        <efx:param name="four_byte_addressing" value="off" value_type="e_bool" />
     </efx:bitstream_generation>
     <efx:debugger>
-        <efx:param name="work_dir" value="work_dbg" value_type="e_string"/>
-        <efx:param name="auto_instantiation" value="off" value_type="e_bool"/>
-        <efx:param name="profile" value="debug_profile.wizard.json" value_type="e_string"/>
+        <efx:param name="work_dir" value="work_dbg" value_type="e_string" />
+        <efx:param name="auto_instantiation" value="off" value_type="e_bool" />
+        <efx:param name="profile" value="debug_profile.wizard.json" value_type="e_string" />
     </efx:debugger>
 </efx:project>

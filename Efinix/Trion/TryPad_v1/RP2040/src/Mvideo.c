@@ -204,11 +204,26 @@ void software_draw(uint32_t color)
  * SdlRect *rect : 描画位置が格納されている SdlRect 構造体のアドレス
  * color : RGB565 の色を指定
  *-----------------------------------------------------------------------------*/
-void rect_draw(SdlRect *rect, uint16_t color)
+void rect_draw(SdlRect *rect)
 {
 	usi_write(VIDEO_REG_DOT_SQUARE_TOP1, rect->top);
 	usi_write(VIDEO_REG_DOT_SQUARE_UNDER1, rect->under);
-	usi_write(VIDEO_REG_DOT_SQUARE_RIGHT1, rect->right);
 	usi_write(VIDEO_REG_DOT_SQUARE_LEFT1, rect->left);
-	usi_write(VIDEO_REG_DOT_SQUARE_COLOR1, color);
+	usi_write(VIDEO_REG_DOT_SQUARE_RIGHT1, rect->right);
+	usi_write(VIDEO_REG_DOT_SQUARE_COLOR1, rect->color);
+}
+
+/**-----------------------------------------------------------------------------
+ * rect init
+ * 
+ * SdlRect *rect : 描画位置が格納されている SdlRect 構造体のアドレス
+ * color : RGB565 の色を指定
+ *-----------------------------------------------------------------------------*/
+void rect_init(SdlRect *rect, int16_t top, int16_t under, int16_t left, int16_t right, uint16_t color)
+{
+	rect->top	= top;
+	rect->under	= under;
+	rect->left	= left;
+	rect->right	= right;
+	rect->color	= color;
 }
