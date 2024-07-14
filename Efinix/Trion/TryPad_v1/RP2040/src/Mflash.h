@@ -1,36 +1,29 @@
 /*------------------------------------------------------------------------------
- * Create 2024/07/09
- * Author Kouta Kimura
+ * Create  2024/07/14
+ * Author  Kouta Kimura
  * 
  *-----------------------------------------------------------------------------*/
-#include "trypad.h"
-
+#ifndef Mflash_h
+#define Mflash_h
 
 /**-----------------------------------------------------------------------------
- * ファイル内 グローバル変数
+ * USER MACRO
+ *-----------------------------------------------------------------------------*/
+
+/**-----------------------------------------------------------------------------
+ * typedef struct
  *-----------------------------------------------------------------------------*/
 
 
 /**-----------------------------------------------------------------------------
- * ファイル内 プロトタイプ宣言
+ * プロトタイプ宣言
  *-----------------------------------------------------------------------------*/
+void flash_rom_init(void);
+void flash_user_block_elase(uint8_t id, uint16_t page_adrs);
+void flash_user_page_write(uint8_t id, uint8_t *wbuff, uint16_t col_adrs, uint16_t page_adrs, uint16_t len);
+void flash_write(uint8_t id, uint8_t *wbuff, uint16_t col_adrs, uint16_t page_adrs, uint16_t len);
+void flash_read(uint8_t id, uint8_t *rbuff, uint16_t col_adrs, uint16_t page_adrs, uint16_t len);
+uint32_t flash_id_read(uint8_t id);
+void flash_protection_reg_write(uint8_t id);
 
-
-/**-----------------------------------------------------------------------------
- * USER MACRO / 
- *-----------------------------------------------------------------------------*/
-
-
-/**-----------------------------------------------------------------------------
- * PSRAM Initialize
- *-----------------------------------------------------------------------------*/
-void psram_init(void)
-{
-	usi_write(RAM_REG_RAM_MEM_CLK_DIV, 0);
-	usi_write(RAM_REG_RAM_CFG_RST, 1);
-	usi_write(RAM_REG_RAM_CFG_CMD, 0x35);
-	usi_write(RAM_REG_RAM_CFG_ENABLE, 1);
-	usi_write(RAM_REG_RAM_CFG_RST, 0);
-	usi_read_wait(RAM_REG_RAM_CFG_DONE, 0x01);
-	usi_write(RAM_REG_RAM_CFG_RST, 1);
-}
+#endif

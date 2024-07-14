@@ -22,8 +22,8 @@ project(pico_examples C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
-if (PICO_SDK_VERSION_STRING VERSION_LESS "1.3.0")
-    message(FATAL_ERROR "Raspberry Pi Pico SDK version 1.3.0 (or later) required. Your version is ${PICO_SDK_VERSION_STRING}")
+if (PICO_SDK_VERSION_STRING VERSION_LESS "1.5.1")
+    message(FATAL_ERROR "Raspberry Pi Pico SDK version 1.5.1 (or later) required. Your version is ${PICO_SDK_VERSION_STRING}")
 endif()
 
 set(PICO_EXAMPLES_PATH ${PROJECT_SOURCE_DIR})
@@ -46,6 +46,8 @@ add_executable(RP2040
     ./src/Mtimer.c
     ./src/Mspi.c
     ./src/Mvideo.c
+    ./src/Mpsram.c
+    ./src/Mflash.c
 )
 
 # Hardware-specific examples in subdirectories:

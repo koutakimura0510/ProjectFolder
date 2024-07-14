@@ -27,7 +27,12 @@
 			"*.cfg": "tcl",
 			"stdlib.h": "c",
 			"timer.h": "c",
-			"clocks.h": "c"
-		}
+			"clocks.h": "c",
+			"trypad.h": "c",
+			"system_wrapper.h": "c",
+			"video_func.h": "c",
+			"flash_rom_func.h": "c"
+		},
+		"cortex-debug.variableUseNaturalFormat": false
 	}
 }

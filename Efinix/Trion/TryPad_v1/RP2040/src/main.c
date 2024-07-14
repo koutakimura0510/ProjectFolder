@@ -18,7 +18,7 @@
  *-----------------------------------------------------------------------------*/
 static void trypad_pico_init(void);
 static void trypad_fpga_init(void);
-
+static void trypad_peri_init(void);
 
 /**-----------------------------------------------------------------------------
  * trypad_pico_init
@@ -68,7 +68,7 @@ static void trypad_pico_init(void)
 	gpio_put(LED_R, 1);
 	gpio_put(LED_G, 1);
 	gpio_put(LED_B, 1);
-	printf("Trypad GPIO Init Complete\n");
+	printf("RP2040 GPIO Init Complete\n");
 }
 
 /**-----------------------------------------------------------------------------
@@ -78,14 +78,34 @@ static void trypad_fpga_init(void)
 {
 	uint32_t fpga_ver = usi_read(MCB_REG_FPGA_VERSION);
 	uint32_t fpga_code = usi_read(MCB_REG_CUSTOM_CODE);
-	printf("fpga ver = %d\n", fpga_ver);
-	printf("fpga code = %d\n", fpga_code);
+	printf("FPGA Ver = %x\n", fpga_ver);
+	printf("FPGA Code = %x\n", fpga_code);
 
 	// IO OE
 	usi_write(GPIO_REG_VIDEO_GPIO_OE, 0xffffff);
 	usi_write(GPIO_REG_ROM_GPIO_OE, 0x11);
-	usi_write(GPIO_REG_CFG_ROM_GPIO_OE, 0xff);
+	usi_write(GPIO_REG_CFG_ROM_GPIO_OE, 0x00);
 	usi_write(GPIO_REG_AUDIO_GPIO_OE, 0x00);
+	printf("VIDEO GPIO = %x\n", usi_read(GPIO_REG_VIDEO_GPIO_OE));
+	printf("ROM GPIO = %x\n", usi_read(GPIO_REG_ROM_GPIO_OE));
+	printf("CFG ROM GPIO = %x\n", usi_read(GPIO_REG_CFG_ROM_GPIO_OE));
+	printf("AUDIO GPIO  = %x\n", usi_read(GPIO_REG_AUDIO_GPIO_OE));
+	printf("FPGA GPIO Init Complete\n");
+}
+
+/**-----------------------------------------------------------------------------
+ * trypad Periheral init
+ *-----------------------------------------------------------------------------*/
+static void trypad_peri_init(void)
+{
+	// st7789_init();
+	psram_init();
+	psram_device_test();
+	flash_rom_init();
+	printf("FLASH 0 ID = %x\r\n", flash_id_read(0));
+	printf("FLASH 1 ID = %x\r\n", flash_id_read(1));
+	usi_write(VIDEO_REG_VTU_CONVERTER_RST, 0x00);
+	printf("TRYPAD Init Complete\n");
 }
 
 /**-----------------------------------------------------------------------------
@@ -105,8 +125,7 @@ int main()
 	stdio_init_all();
 	trypad_pico_init();
 	trypad_fpga_init();
-	st7789_init();
-	usi_write(VIDEO_REG_VTU_CONVERTER_RST, 0x00);
+	trypad_peri_init();
 
 	while (1) {
 		if (rect.right == 352) {

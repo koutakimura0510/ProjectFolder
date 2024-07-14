@@ -38,16 +38,17 @@ module MemoryAccessTester #(
  
   [write pattern]
   ・iRST Assert
-  ・iMemW Froup で Memroy にデータ書き込み
-  ・Enable Assert
-  ・Done Assert
+  ・Mem Wd OE Assert
+  ・iMemW Group で Memroy にデータ書き込み
+  ・Mat Enable
+  ・Done Assert  (Enable Auto Detect)
   ・iRST Negate
   
   [read pattern]
   ・iRST Assert
-  ・iMemW Froup で Memroy にデータ書き込み
-  ・Enable Assert
-  ・Done Assert
+  ・Enable Negate
+  ・iMemW Group で Memroy にデータ書き込み
+  ・Done Assert (Enable Auto Detect)
   ・iRST Negate
   
   ・write cmd = 0x38

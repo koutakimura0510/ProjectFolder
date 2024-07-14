@@ -46,13 +46,13 @@ input 			ioVideoCs_I,
 input 			ioVideoRst_I,
 // Spi Flash Rom I/F
 output[7:0]		ioSpiRomDq_O,
-output[1:0]		ioSpiRomCe_O,
+output[1:0]		ioSpiRomCs_O,
 output[1:0]		ioSpiRomClk_O,
 output[7:0]		ioSpiRomDq_OE,
-output[1:0]		ioSpiRomCe_OE,
+output[1:0]		ioSpiRomCs_OE,
 output[1:0]		ioSpiRomClk_OE,
 input [7:0]		ioSpiRomDq_I,
-input [1:0]		ioSpiRomCe_I,
+input [1:0]		ioSpiRomCs_I,
 input [1:0]		ioSpiRomClk_I,
 // Config Flash Rom I/F
 output[3:0] 	ioCfgRomDq_O,
@@ -66,13 +66,13 @@ input			ioCfgRomCs_I,
 input			ioCfgRomClk_I,
 // PSRAM I/F
 output[15:0]	ioRamDq_O,
-output[1:0]		ioRamCe_O,
+output[1:0]		ioRamCs_O,
 output[1:0]		ioRamClk_O,
 output[15:0]	ioRamDq_OE,
-output[1:0]		ioRamCe_OE,
+output[1:0]		ioRamCs_OE,
 output[1:0]		ioRamClk_OE,
 input [15:0]	ioRamDq_I,
-input [1:0]		ioRamCe_I,
+input [1:0]		ioRamCs_I,
 input [1:0]		ioRamClk_I,
 // I2S I/F
 output 			ioI2cSdo_O,
@@ -640,24 +640,24 @@ assign	ioI2cBck_O		= wI2S_BCLK;			assign	ioI2cBck_OE			= wAudioGpioOe[2];
 wire [7:0] wSpiRomDqNot;
 assign ioSpiRomDq_O[0]	= wSfmMosi[0];		assign wSpiRomDqNot[0]		= ioSpiRomDq_I[0];	assign ioSpiRomDq_OE[0]	= wRomGpioOe[0];
 assign ioSpiRomDq_O[1]	= 1'b0;				assign wSfmMiso[0]			= ioSpiRomDq_I[1];	assign ioSpiRomDq_OE[1]	= wRomGpioOe[1];
-assign ioSpiRomDq_O[2]	= 1'b0;				assign wSpiRomDqNot[2]		= ioSpiRomDq_I[2];	assign ioSpiRomDq_OE[2]	= wRomGpioOe[2];
-assign ioSpiRomDq_O[3]	= 1'b0;				assign wSpiRomDqNot[3]		= ioSpiRomDq_I[3];	assign ioSpiRomDq_OE[3]	= wRomGpioOe[3];
+assign ioSpiRomDq_O[2]	= 1'b1;				assign wSpiRomDqNot[2]		= ioSpiRomDq_I[2];	assign ioSpiRomDq_OE[2]	= wRomGpioOe[2];
+assign ioSpiRomDq_O[3]	= 1'b1;				assign wSpiRomDqNot[3]		= ioSpiRomDq_I[3];	assign ioSpiRomDq_OE[3]	= wRomGpioOe[3];
 assign ioSpiRomDq_O[4]	= wSfmMosi[1];		assign wSpiRomDqNot[4]		= ioSpiRomDq_I[4];	assign ioSpiRomDq_OE[4]	= wRomGpioOe[4];
 assign ioSpiRomDq_O[5]	= 1'b0;				assign wSfmMiso[1]			= ioSpiRomDq_I[5];	assign ioSpiRomDq_OE[5]	= wRomGpioOe[5];
-assign ioSpiRomDq_O[6]	= 1'b0;				assign wSpiRomDqNot[6]		= ioSpiRomDq_I[6];	assign ioSpiRomDq_OE[6]	= wRomGpioOe[6];
-assign ioSpiRomDq_O[7]	= 1'b0;				assign wSpiRomDqNot[7]		= ioSpiRomDq_I[7];	assign ioSpiRomDq_OE[7]	= wRomGpioOe[7];
+assign ioSpiRomDq_O[6]	= 1'b1;				assign wSpiRomDqNot[6]		= ioSpiRomDq_I[6];	assign ioSpiRomDq_OE[6]	= wRomGpioOe[6];
+assign ioSpiRomDq_O[7]	= 1'b1;				assign wSpiRomDqNot[7]		= ioSpiRomDq_I[7];	assign ioSpiRomDq_OE[7]	= wRomGpioOe[7];
 assign ioSpiRomClk_O[0]	= wSfmSck[0];		assign ioSpiRomClk_OE[0]	= 1'b1;
 assign ioSpiRomClk_O[1]	= wSfmSck[1];		assign ioSpiRomClk_OE[1]	= 1'b1;
-assign ioSpiRomCe_O[0]	= wSfmCs[0];		assign ioSpiRomCe_OE[0]		= 1'b1;
-assign ioSpiRomCe_O[1]	= wSfmCs[1];		assign ioSpiRomCe_OE[1]		= 1'b1;
+assign ioSpiRomCs_O[0]	= wSfmCs[0];		assign ioSpiRomCs_OE[0]		= 1'b1;
+assign ioSpiRomCs_O[1]	= wSfmCs[1];		assign ioSpiRomCs_OE[1]		= 1'b1;
 //
 // User PSRAM I/F
 assign ioRamDq_O[7:0] 	= wRamDq_O[7:0];	assign wRamDq_I[7:0] 	= ioRamDq_I[7:0];		assign ioRamDq_OE[7:0] 		= {8{wRamDq_Oe[0]}};
 assign ioRamDq_O[15:8]	= wRamDq_O[15:8];	assign wRamDq_I[15:8] 	= ioRamDq_I[15:8];		assign ioRamDq_OE[15:8] 	= {8{wRamDq_Oe[1]}};
 assign ioRamClk_O[0]	= wRamClk[0];		assign ioRamClk_OE[0]	= 1'b1;
 assign ioRamClk_O[1]	= wRamClk[1];		assign ioRamClk_OE[1]	= 1'b1;
-assign ioRamCe_O[0]		= wRamCe[0];		assign ioRamCe_OE[0]	= 1'b1;
-assign ioRamCe_O[1]		= wRamCe[1];		assign ioRamCe_OE[1]	= 1'b1;
+assign ioRamCs_O[0]		= wRamCe[0];		assign ioRamCs_OE[0]	= 1'b1;
+assign ioRamCs_O[1]		= wRamCe[1];		assign ioRamCs_OE[1]	= 1'b1;
 //
 // Config Flash ROM I/F
 wire [5:0] wCfgRomNot;
