@@ -1,0 +1,24 @@
+;=================================================== 
+; Description : COM Port Auto login 
+; Author      : Kimura
+; Created     : 2024/07/15 
+; modified    : 
+;=================================================== 
+;; COM???/???????? 
+COM_PORT = '17' 
+BAUDRATE = '921600' 
+;=================================================== 
+;; ???????? 
+COMMAND = '/C=' 
+strconcat COMMAND COM_PORT 
+strconcat COMMAND ' /BAUD=' 
+strconcat COMMAND BAUDRATE
+ 
+; connect 
+;connect '/C=17'
+ 
+send $88$40$06$00$57$00$00$00$01
+
+; masro end
+;closett 
+end

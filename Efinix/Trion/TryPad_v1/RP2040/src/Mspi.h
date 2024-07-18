@@ -14,12 +14,12 @@
 /**-----------------------------------------------------------------------------
  * USER MACRO
  *-----------------------------------------------------------------------------*/
-#define SPI_BAUDRATE	(8000 * 1000) // MAX 10[MHz]
+#define SPI_BAUDRATE	(10000 * 1000) // MAX 10[MHz]
 
 /**-----------------------------------------------------------------------------
  * プロトタイプ宣言
  *-----------------------------------------------------------------------------*/
-void trypad_spi_init(uint8_t set_sel, uint32_t baudrate);
+void pico_spi_init(uint8_t set_sel, uint32_t baudrate);
 void usi_write(uint32_t adrs, uint32_t wd);
 uint32_t usi_read(uint32_t adrs);
 void usi_read_wait(uint32_t adrs, uint32_t bit_mask);

@@ -26,7 +26,7 @@ static void nop_wait(uint8_t wait);
  * 
  * ハード動作の時、1byte ごとに CS ドライブされる点に注意
  *-----------------------------------------------------------------------------*/
-void trypad_spi_init(uint8_t set_sel, uint32_t baudrate)
+void pico_spi_init(uint8_t set_sel, uint32_t baudrate)
 {
 	spi_init(HARDWARE_SPI_PORT, baudrate);
 

@@ -40,6 +40,8 @@ void psram_init(void)
  *-----------------------------------------------------------------------------*/
 bool psram_device_test(void)
 {
+	uint16_t rbuff[256];
+
 	// test wdata set
 	usi_write(RAM_REG_RAM_MAT_RST, 1);
 	usi_write(RAM_REG_RAM_MAT_MEM_WD_OE, 1);	// "1" set read
@@ -77,12 +79,15 @@ bool psram_device_test(void)
 	usi_read_wait(RAM_REG_RAM_MAT_DONE, 0x01);
 	usi_write(RAM_REG_RAM_MAT_RST, 1);
 
-	uint32_t rbuff[256];
-
-	for (uint8_t i = 0; i < 255; i++) {
+	for (uint8_t i = 0; i < 247; i++) {
 		usi_write(RAM_REG_RAM_MAT_MEM_RA, i);
 		rbuff[i] = usi_read(RAM_REG_RAM_MAT_MEM_RD);
-		psram_data_set(i, rbuff[i]);	// コンパイル通すために記載
+	}
+
+	for (uint8_t i = 0; i < 247; i++) {
+		if (rbuff[i] != (0xaaaa+i)) {
+			return false;
+		}
 	}
 
 	return true;

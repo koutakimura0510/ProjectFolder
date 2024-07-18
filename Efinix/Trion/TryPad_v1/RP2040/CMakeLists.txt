@@ -45,16 +45,18 @@ add_executable(RP2040
     ./src/main.c
     ./src/Mtimer.c
     ./src/Mspi.c
+    ./src/Musb.c
     ./src/Mvideo.c
     ./src/Mpsram.c
     ./src/Mflash.c
+    ./src/BraveFrontier/brave_frontier.c
 )
 
 # Hardware-specific examples in subdirectories:
 # add_subdirectory(RP2040)
 
 # Add pico_stdlib library which aggregates commonly used features
-target_link_libraries(RP2040 pico_stdlib hardware_spi hardware_timer)
+target_link_libraries(RP2040 pico_stdlib hardware_spi hardware_timer hardware_watchdog hardware_resets)
 
 # enable usb output, disable uart output
 pico_enable_stdio_usb(RP2040 1)

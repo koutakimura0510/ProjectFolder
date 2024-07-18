@@ -224,7 +224,6 @@ reg  [lpUsiBusWidth-1:0] qMUsiWd,    qMUsiAdrs;
 wire [lpUsiBusWidth-1:0] wSUsiWd,    wSUsiAdrs;
 wire [lpUsiBusWidth-1:0] wMUsiWdMcb,  wMUsiAdrsMcb;
 wire [lpUsiBusWidth-1:0] wMUsiWdSpi,  wMUsiAdrsSpi;
-wire wUsiMBusSel, wnUsiMBusSel;
 
 USIB #(
   .pBlockConnectNum(lpBlockConnectNum),  .pBlockAdrsWidth(lpBlockAdrsWidth),
@@ -243,8 +242,8 @@ always @*
 begin
   // qMUsiWd    <= wMUsiWdSpi;
   // qMUsiAdrs  <= wMUsiAdrsSpi;
-  qMUsiWd    <= wnUsiMBusSel ? wMUsiWdSpi   : wMUsiWdMcb;
-  qMUsiAdrs  <= wnUsiMBusSel ? wMUsiAdrsSpi : wMUsiAdrsMcb;
+  qMUsiWd    <= wMUsiWdSpi;
+  qMUsiAdrs  <= wMUsiAdrsSpi;
 //   qMUsiWd    <= wMUsiWdMcb;
 //   qMUsiAdrs  <= wMUsiAdrsMcb;
 end
@@ -436,23 +435,17 @@ SPIBlock #(
 	// SPI Bus Connected External CPU
 	.iSpiSck(wSlaveSck),		.iSpiMosi(wSlaveMosi),
 	.oSpiMiso(wSlaveMiso),		.iSpiCs(wSlaveCs),
-	.oSpiSck(wMasterSck),		.oSpiMosi(wMasterMosi),
-	.iSpiMiso(wMasterMiso),		.oSpiCs(wMasterCs),
-	.iSpiDir(wPicoBusSel),
-	// SPI Bus Connected External Flash Rom
-	.oFlashRomSck(wFlashRomSck),
-	.oFlashRomMosi(wFlashRomMosi),
-	.iFlashRomMiso(wFlashRomMiso),
-	.oFlashRomCs(wFlashRomCs),
-	// Flash Rom Dir
-	.oFlashSpiOe(wFlashSpiOe),
+	.iSpiThru(),
+	//
+	.oSfmSck(),
+	.oSfmMosi(),
+	.iSfmMiso(),
+	.oSfmCs(),
 	// Bus Master Read
 	.iMUsiRd(wMUsiRd),		.oSUsiRd(wSUsiRd[lpSPIAdrsMap]),
 	// Bus Master Write
 	.oMUsiWd(wMUsiWdSpi),	.oMUsiAdrs(wMUsiAdrsSpi),
 	.iSUsiWd(wSUsiWd),		.iSUsiAdrs(wSUsiAdrs),
-	// Master Bus Select
-	.oSpiDir(wUsiMBusSel),	.onSpiDir(wnUsiMBusSel),
 	// CLK, RST
 	.iSRST(wSRST),			.iSCLK(iSCLK)
 );
@@ -620,7 +613,7 @@ assign wSlaveSck		= iPicoSck;
 // Pico GPIO I/F
 assign wPicoBusSel		= ioPicoIo_I[1];		assign ioPicoIo_OE[1]		= 1'b0;	// Ext Pull Down
 assign wnARST			= ioPicoIo_I[2];		assign ioPicoIo_OE[2]		= 1'b0;	// Ext Pull Down
-												assign ioPicoIo_OE[3]		= 1'b0;
+												assign ioPicoIo_OE[3]		= 1'b0;	// Spi Thru Device Accsess
 //
 // Video I/F
 assign 	ioVideoDq_O		= wVIDEO_DQ[15:0];		assign ioVideoDq_OE[15:0]	= wVideoGpioOe[15:0];

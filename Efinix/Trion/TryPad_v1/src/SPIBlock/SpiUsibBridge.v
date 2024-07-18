@@ -5,7 +5,7 @@
 // FPGA が Slave の場合の、Upper モジュールと SPI Signalモジュールとの調停を行う
 // V1.1 USIB 更新版に対応、UFIB は拡張用としてコメントアウト
 //------------------------------------------------------------------------------
-module SPISignalMux #(
+module SpiUsibBridge #(
 	parameter pUsiBusWidth = 32
 	// parameter pUfiBusWidth = 32
 )(

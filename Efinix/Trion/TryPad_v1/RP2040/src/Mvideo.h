@@ -12,7 +12,7 @@
 // #define MTIMER_1MS
 #define COLOR_GREEN		(0x07E0)
 #define COLOR_BLUE		(0x001F)
-#define COLOR_RED		(0x8F00)
+#define COLOR_RED		(0xF800)
 
 /**-----------------------------------------------------------------------------
  * typedef struct

@@ -84,8 +84,8 @@ void flash_rom_init(void)
 	usi_write(AUDIO_REG_SFM_CS_HOLD_TIME, 0x0202);
 	usi_write(AUDIO_REG_SFM_CPU_VALID, 0x3);
 
-	// flash_protection_reg_write(0);
-	// flash_protection_reg_write(1);
+	flash_protection_reg_write(0);
+	flash_protection_reg_write(1);
 }
 
 /**-----------------------------------------------------------------------------

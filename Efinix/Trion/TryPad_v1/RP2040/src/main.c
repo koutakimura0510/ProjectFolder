@@ -4,13 +4,12 @@
  * Target XIAO RP2040 for TRYPAD v1
  * 
  *-----------------------------------------------------------------------------*/
-#include "trypad.h"
-#include <stdio.h>			// printf
-#include "pico/stdlib.h"	// pico sdk
-#include "hardware/spi.h"	// pico hardware timer
-// #include "hardware/irq.h"
-// #include "hardware/clocks.h"
-// #include "pico/binary_info.h"
+#include "trypad.h"							// Borad システム、システム全体で共通して使用する
+#include "./BraveFrontier/brave_frontier.h"	// ゲームシステム
+#include <stdio.h>							// printf に使用
+#include "pico/stdlib.h"					// pico sdk Initialize
+#include "hardware/watchdog.h"				// 初期設定でバグったときに使用
+#include "hardware/resets.h"				// USB デバイス初期設定でバグったときに使用
 
 
 /**-----------------------------------------------------------------------------
@@ -19,13 +18,15 @@
 static void trypad_pico_init(void);
 static void trypad_fpga_init(void);
 static void trypad_peri_init(void);
+static void trypad_game_mode(void);
+static void trypad_update_mode(void);
 
 /**-----------------------------------------------------------------------------
  * trypad_pico_init
  *-----------------------------------------------------------------------------*/
 static void trypad_pico_init(void)
 {
-	uint8_t pin[][2] = {	//[x][0]=pin no, [x][1]=dir
+	static const uint8_t pin[][2] = {	//[x][0]=pin no, [x][1]=dir
 		{LED_R, 1},
 		{LED_G, 1},
 		{LED_B, 1},
@@ -39,6 +40,10 @@ static void trypad_pico_init(void)
 		{TRION_PICO_IO3, 1},
 	};
 
+	reset_block(RESETS_RESET_USBCTRL_BITS);			// USB 接続中にデバッグを行うと認識されなくなるため、
+	unreset_block_wait(RESETS_RESET_USBCTRL_BITS);	// 確実に USB ブロックをリセットし、ホストと切断してから、再度 接続設定を行う。
+	stdio_init_all();								// CMakefile で UART/USB 切り替え
+
 	for (uint8_t i = 0; i < ROWS(pin); i++) {
 		gpio_init(pin[i][0]);
 		gpio_set_dir(pin[i][0], pin[i][1]);
@@ -48,27 +53,14 @@ static void trypad_pico_init(void)
 	gpio_put(TRION_PICO_IO1, 0);
 	gpio_put(TRION_PICO_IO2, 0);
 	gpio_put(TRION_PICO_IO3, 0);
-	wait_ms(10);
-	gpio_set_dir(TRION_CFGRST, 0);	// ドライブすると JTAG Write できなくなるため、入力設定にする
-	wait_ms(1000);					// USB 接続完了まで、ある程度待機
-	alarm_in_us(1000000);
-
-	while (0 == gpio_get(TRION_CDONE)) {	// FPGA CDONE , QSPI min 150ms, SPI min 800ms
-		if (true == is_alarm_fired()) {
-			printf("FPGA Not Configlation\n");
-			break;
-		}
-	}
-
-	if (gpio_get(TRION_CDONE)) {
-		printf("FPGA CDONE\n");
-	}
-
-	trypad_spi_init(0, SPI_BAUDRATE);
+	wait_ms(10);						// FPGA RST Low から少なくとも 10ms 待機が必要
+	gpio_set_dir(TRION_CFGRST, 0);		// ドライブすると JTAG Write できなくなるため、入力設定にする
+	wait_ms(1);
+	while (!gpio_get(TRION_CDONE));		// FPGA CDONE , QSPI min 150ms, SPI min 800ms
+	pico_spi_init(0, SPI_BAUDRATE);
 	gpio_put(LED_R, 1);
 	gpio_put(LED_G, 1);
 	gpio_put(LED_B, 1);
-	printf("RP2040 GPIO Init Complete\n");
 }
 
 /**-----------------------------------------------------------------------------
@@ -76,21 +68,10 @@ static void trypad_pico_init(void)
  *-----------------------------------------------------------------------------*/
 static void trypad_fpga_init(void)
 {
-	uint32_t fpga_ver = usi_read(MCB_REG_FPGA_VERSION);
-	uint32_t fpga_code = usi_read(MCB_REG_CUSTOM_CODE);
-	printf("FPGA Ver = %x\n", fpga_ver);
-	printf("FPGA Code = %x\n", fpga_code);
-
-	// IO OE
 	usi_write(GPIO_REG_VIDEO_GPIO_OE, 0xffffff);
 	usi_write(GPIO_REG_ROM_GPIO_OE, 0x11);
 	usi_write(GPIO_REG_CFG_ROM_GPIO_OE, 0x00);
 	usi_write(GPIO_REG_AUDIO_GPIO_OE, 0x00);
-	printf("VIDEO GPIO = %x\n", usi_read(GPIO_REG_VIDEO_GPIO_OE));
-	printf("ROM GPIO = %x\n", usi_read(GPIO_REG_ROM_GPIO_OE));
-	printf("CFG ROM GPIO = %x\n", usi_read(GPIO_REG_CFG_ROM_GPIO_OE));
-	printf("AUDIO GPIO  = %x\n", usi_read(GPIO_REG_AUDIO_GPIO_OE));
-	printf("FPGA GPIO Init Complete\n");
 }
 
 /**-----------------------------------------------------------------------------
@@ -98,47 +79,49 @@ static void trypad_fpga_init(void)
  *-----------------------------------------------------------------------------*/
 static void trypad_peri_init(void)
 {
-	// st7789_init();
+	st7789_init();
 	psram_init();
 	psram_device_test();
 	flash_rom_init();
-	printf("FLASH 0 ID = %x\r\n", flash_id_read(0));
-	printf("FLASH 1 ID = %x\r\n", flash_id_read(1));
 	usi_write(VIDEO_REG_VTU_CONVERTER_RST, 0x00);
 	printf("TRYPAD Init Complete\n");
 }
 
 /**-----------------------------------------------------------------------------
- * Debug Console
+ * trypad game mode
  *-----------------------------------------------------------------------------*/
-void debug_usi_printf(uint32_t adrs, char *s)
+static void trypad_game_mode(void)
 {
-	printf("%s %d\r\n", s, usi_read(adrs));
+	brave_frontier();
 }
 
 /**-----------------------------------------------------------------------------
+ * trypad update mode
+ *-----------------------------------------------------------------------------*/
+static void trypad_update_mode(void)
+{
+	// アップデートモード T.B.D.
+	return;
+}
+
+
+/**-----------------------------------------------------------------------------
  * main 関数
+ * 
+ * 起動時にハードウェアの設定を行う。
+ * 正常に終了したらゲームモードに移行する。
  *-----------------------------------------------------------------------------*/
 int main()
 {
-	SdlRect rect = {.top=0, .under=32, .left=0, .right=160, .color=0xffff};
-	stdio_init_all();
+	watchdog_enable(5000, true);	// ペリフェラルの設定で、まれにフリーズするため、5秒間 init 完了しない場合リセット
 	trypad_pico_init();
 	trypad_fpga_init();
 	trypad_peri_init();
+	hw_clear_bits(&watchdog_hw->ctrl, WATCHDOG_CTRL_ENABLE_BITS);	// Init Complete でウォッチ・ドッグ解除
 
 	while (1) {
-		if (rect.right == 352) {
-			rect.right = 0;
-			rect.left = -32;
-		}
-		rect.right++;
-		rect.left++;
-		gpio_put(LED_B, 0);
-		gpio_put(LED_G, 1);
-		gpio_put(LED_R, 1);
-		rect_draw(&rect);
-		wait_ms(10);
+		trypad_game_mode();
+		trypad_update_mode();
 	}
 
 	return 0;

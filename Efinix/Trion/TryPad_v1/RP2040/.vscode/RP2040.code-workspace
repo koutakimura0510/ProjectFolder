@@ -31,7 +31,9 @@
 			"trypad.h": "c",
 			"system_wrapper.h": "c",
 			"video_func.h": "c",
-			"flash_rom_func.h": "c"
+			"flash_rom_func.h": "c",
+			"resets.h": "c",
+			"watchdog.h": "c"
 		},
 		"cortex-debug.variableUseNaturalFormat": false
 	}
