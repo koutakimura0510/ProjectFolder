@@ -1,37 +1,28 @@
 /*------------------------------------------------------------------------------
- * Create  2024/06/16
+ * Create  2024/07/14
  * Author  Kouta Kimura
  * 
  *-----------------------------------------------------------------------------*/
-#ifndef Mvideo_h
-#define Mvideo_h
+#ifndef MflashPico_h
+#define MflashPico_h
 
 /**-----------------------------------------------------------------------------
  * USER MACRO
  *-----------------------------------------------------------------------------*/
-// #define MTIMER_1MS
-#define COLOR_GREEN		(0x00ff07E0)
-#define COLOR_BLUE		(0x00ff001F)
-#define COLOR_RED		(0x00ffF800)
 
 /**-----------------------------------------------------------------------------
  * typedef struct
  *-----------------------------------------------------------------------------*/
-typedef struct {
-    int16_t top;
-    int16_t under;
-    int16_t left;
-    int16_t right;
-	int32_t color;
-} SdlRect;
+
 
 /**-----------------------------------------------------------------------------
  * プロトタイプ宣言
  *-----------------------------------------------------------------------------*/
-void st7789_init(void);
-void invert_draw(bool invert);
-void software_draw(uint32_t color);
-void rect_draw(SdlRect *rect);
-void rect_init(SdlRect *rect, int16_t top, int16_t under, int16_t left, int16_t right, uint16_t color);
+void flash_rom_init(void);
+void flash_user_block_elase(uint8_t id, uint16_t page_adrs);
+void flash_user_page_write(uint8_t id, uint8_t *wbuff, uint16_t col_adrs, uint16_t page_adrs, uint16_t len);
+void flash_write(uint8_t id, uint8_t *wbuff, uint16_t col_adrs, uint16_t page_adrs, uint16_t len);
+void flash_read(uint8_t id, uint8_t *rbuff, uint16_t col_adrs, uint16_t page_adrs, uint16_t len);
+uint32_t flash_id_read(uint8_t id);
 
 #endif

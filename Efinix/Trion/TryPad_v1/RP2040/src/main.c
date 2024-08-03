@@ -13,6 +13,12 @@
 
 
 /**-----------------------------------------------------------------------------
+ * USER MACRO
+ *-----------------------------------------------------------------------------*/
+#define FPGA_CONFIG_RST		(1)	// "0" RST OFF, "1" RST ON
+
+
+/**-----------------------------------------------------------------------------
  * プロトタイプ宣言
  *-----------------------------------------------------------------------------*/
 static void trypad_pico_init(void);
@@ -34,7 +40,7 @@ static void trypad_pico_init(void)
 		{NEO_PIX, 1},
 		{PICO_ADC, 0},
 		{TRION_CDONE, 0},
-		{TRION_CFGRST, 1},
+		{TRION_CFGRST, FPGA_CONFIG_RST},
 		{TRION_PICO_IO1, 1},
 		{TRION_PICO_IO2, 1},
 		{TRION_PICO_IO3, 1},
@@ -51,6 +57,8 @@ static void trypad_pico_init(void)
 
 	gpio_put(TRION_CFGRST, 0);
 	gpio_put(TRION_PICO_IO1, 0);
+	gpio_put(TRION_PICO_IO2, 1);
+	wait_ms(1);
 	gpio_put(TRION_PICO_IO2, 0);
 	gpio_put(TRION_PICO_IO3, 0);
 	wait_ms(10);						// FPGA RST Low から少なくとも 10ms 待機が必要
@@ -72,6 +80,8 @@ static void trypad_fpga_init(void)
 	usi_write(GPIO_REG_ROM_GPIO_OE, 0x11);
 	usi_write(GPIO_REG_CFG_ROM_GPIO_OE, 0x00);
 	usi_write(GPIO_REG_AUDIO_GPIO_OE, 0x00);
+	uint32_t fpga = usi_read(MCB_REG_FPGA_VERSION);
+	usi_write(MCB_REG_FPGA_VERSION, fpga);
 }
 
 /**-----------------------------------------------------------------------------
@@ -81,9 +91,12 @@ static void trypad_peri_init(void)
 {
 	st7789_init();
 	psram_init();
-	psram_device_test();
-	flash_rom_init();
+	// psram_device_test();
+	// flash_rom_init();
 	usi_write(VIDEO_REG_VTU_CONVERTER_RST, 0x00);
+	printf("Flash ID %x\n", flash_id_read(0));
+	printf("Flash ID %x\n", flash_id_read(1));
+	printf("Flash ID %x\n", flash_id_read(2));
 	printf("TRYPAD Init Complete\n");
 }
 

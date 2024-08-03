@@ -36,6 +36,10 @@ module SpiBlock #(
 	output [pSfmNum-1:0] 		oSfmMosi,
 	input  [pSfmNum-1:0] 		iSfmMiso,
 	output [pSfmNum-1:0] 		oSfmCs,
+	// Dual Port Audio Stream Data
+	output [31:0]				oAtbDQ,
+	output [ 1:0]				oAtbVD,
+	input  [ 1:0]				iAtbFLL,
 	// Bus Master Read
 	input  [pUsiBusWidth-1:0] 	iMUsiRd,
 	output [pUsiBusWidth-1:0] 	oSUsiRd,
@@ -44,9 +48,6 @@ module SpiBlock #(
 	output [pUsiBusWidth-1:0] 	oMUsiAdrs,
 	input  [pUsiBusWidth-1:0] 	iSUsiWd,
 	input  [pUsiBusWidth-1:0] 	iSUsiAdrs,
-	// Interrupt
-	output oSpiDir,		// 0. Slave として機能 / 1. Master バスを独占
-	output onSpiDir,	// 0. Slave として機能 / 1. Master バスを独占
     // CLK Reset
     input  iSRST,
     input  iSCLK
@@ -54,49 +55,63 @@ module SpiBlock #(
 
 
 //---------------------------------------------------------------------------
-localparam lpDqBitDepth = 16;
 genvar x;
 
 //-----------------------------------------------------------------------------
 // Csr Space
 //-----------------------------------------------------------------------------
 localparam lpSfmPageWidth = 16;	// 16bit = 65535 page
-wire 				wSPIEnCsr;
-wire [lpDivClk-1:0]	wSPIDivCsr;
-wire [7:0] 			wMWdCsr;
-wire 				wMSpiCsCsr;
-wire [7:0]			wMRdCsr;
-wire 				wMSpiIntrCsr;
-// Flash Rom
-wire 				wFlashSpiEnCsr;
-wire [lpDivClk-1:0]	wFlashSpiDivCsr;
-wire [7:0] 			wFlashWdCsr;
-wire 				wFlashCsOutCtrlCsr;
-wire 				wFlashSpiIoHiz;
-wire [7:0]			wFlashRdCsr;
-wire 				wFlashSpiIntrCsr;
 
-SPICsr #(
-	.pBlockAdrsWidth(pBlockAdrsWidth),		.pAdrsMap(pAdrsMap),
-	.pUsiBusWidth(pUsiBusWidth),			.pCsrAdrsWidth(pCsrAdrsWidth),
-	.pCsrActiveWidth(pCsrActiveWidth),		
-	.pDivClk(lpDivClk)
-) SPI_CSR (
+wire [pSfmNum-1:0] 					wSfmIoHizCsr;				//assign oSfmIoHiz = wSfmIoHizCsr;
+wire [pSfmNum-1:0] 					wSfmEnCsr;
+wire [pSfmNum-1:0] 					wSfmCycleEnCsr;
+wire [pSfmNum*8-1:0] 				wSfmDivCsr;
+wire [pSfmNum*8-1:0] 				wSfmCsHoldTimeCsr;
+wire [pSfmNum*lpSfmPageWidth-1:0] 	wSfmStartAdrsCsr;
+wire [pSfmNum*lpSfmPageWidth-1:0] 	wSfmEndAdrsCsr;
+wire [pSfmNum*8-1:0] 				wSfmCpuWdCsr;
+wire [pSfmNum-1:0] 					wSfmCpuEnCsr;
+wire [pSfmNum-1:0] 					wSfmCpuCsCtrlCsr;
+wire [pSfmNum-1:0] 					wSfmCpuValidCsr;
+wire [pSfmNum*8-1:0] 				wSfmCpuRdCsr;
+wire [pSfmNum-1:0] 					wSfmCpuDoneCsr;
+wire [pSfmNum-1:0] 					wSfmDoneCsr;
+wire [pSfmNum*lpSfmPageWidth-1:0] 	wSfmAdrsAddCsr;
+wire [ 2:0]							wSspDeviceSelCsr;
+
+SpiCsr #(
+	.pBlockAdrsWidth(pBlockAdrsWidth),
+	.pAdrsMap(pAdrsMap),
+	.pUsiBusWidth(pUsiBusWidth),
+	.pCsrAdrsWidth(pCsrAdrsWidth),
+	.pCsrActiveWidth(pCsrActiveWidth),
+	.pSfmNum(pSfmNum),
+	.pSfmPageWidth(lpSfmPageWidth)
+) SpiCsr (
 	// Bus Master Read
 	.oSUsiRd(oSUsiRd),
 	// Bus Master Write
 	.iSUsiWd(iSUsiWd),				.iSUsiAdrs(iSUsiAdrs),
 	// Csr Output
-	.oSPIEn(wSPIEnCsr),				.oSPIDiv(wSPIDivCsr),
-	.oMWd(wMWdCsr),					.oMSpiCs(wMSpiCsCsr),
-	.oFlashSpiEn(wFlashSpiEnCsr),	.oFlashSpiDiv(wFlashSpiDivCsr),
-	.oFlashWd(wFlashWdCsr),			.oFlashCsOutCtrl(wFlashCsOutCtrlCsr),
-	.oFlashSpiIoHiz(wFlashSpiIoHiz),
+	.oSfmEn(wSfmEnCsr),
+	.oSfmCycleEn(wSfmCycleEnCsr),
+	.oSfmDiv(wSfmDivCsr),
+	.oSfmCsHoldTime(wSfmCsHoldTimeCsr),
+	.oSfmStartAdrs(wSfmStartAdrsCsr),
+	.oSfmEndAdrs(wSfmEndAdrsCsr),
+	.oSfmIoHiz(wSfmIoHizCsr),
+	.oSfmCpuWd(wSfmCpuWdCsr),
+	.oSfmCpuEn(wSfmCpuEnCsr),
+	.oSfmCpuCsCtrl(wSfmCpuCsCtrlCsr),
+	.oSfmCpuValid(wSfmCpuValidCsr),
+	.oSspDeviceSel(wSspDeviceSelCsr),
 	// Csr Input
-	.iMRd(wMRdCsr),					.iMSpiIntr(wMSpiIntrCsr),
-	.iFlashRd(wFlashRdCsr),			.iFlashSpiIntr(wFlashSpiIntrCsr),
-	// CLK Reset
-	.iSRST(iSRST),					.iSCLK(iSCLK)
+	.iSfmCpuRd(wSfmCpuRdCsr),
+	.iSfmCpuDone(wSfmCpuDoneCsr),
+	.iSfmDone(wSfmDoneCsr),
+	.iSfmAdrsAdd(wSfmAdrsAddCsr),
+    // common
+	.iSRST(iSRST),		.iSCLK(iSCLK)
 );
 
 
@@ -129,16 +144,17 @@ SpiUsibBridge #(
 //-----------------------------------------------------------------------------
 // Sfc Part
 //-----------------------------------------------------------------------------
+localparam lpDqBitDepth = 16;
+
 wire [pSfmNum-1:0] wSfuSck;
 wire [pSfmNum-1:0] wSfuMosi;
 wire [pSfmNum-1:0] wSfuMiso;
 wire [pSfmNum-1:0] wSfuCs;
 //
-wire [lpDqBitDepth-1:0] wArrRd [0:pSfmNum-1];
-reg  [lpDqBitDepth-1:0] qArrRd [0:pSfmNum-1];
-wire [pSfmNum-1:0] wArrRvd;
-wire [pSfmNum-1:0] wArrEmp;
-reg  [pSfmNum-1:0] qArrRe;
+wire [lpDqBitDepth-1:0] wAtbRd [0:pSfmNum-1];
+wire [pSfmNum-1:0] wAtbRvd;
+wire [pSfmNum-1:0] wAtbEmp;
+reg  [pSfmNum-1:0] qAtbRe;
 
 generate
 	for (x = 0; x < pSfmNum; x = x + 1)
@@ -151,8 +167,8 @@ generate
 			.oSfuSck(wSfuSck[x]),		.oSfuMosi(wSfuMosi[x]),
 			.iSfuMiso(wSfuMiso[x]),		.oSfuCs(wSfuCs[x]),
 			// Audio Data
-			.oRd(wArrRd[x]),			.oRvd(wArrRvd[x]),
-			.oEmp(wArrEmp[x]),			.iRe(qArrRe[x]),
+			.oRd(wAtbRd[x]),			.oRvd(wAtbRvd[x]),
+			.oEmp(wAtbEmp[x]),			.iRe(qAtbRe[x]),
 			// Logic Sfm Control
 			.iSfmEn(wSfmEnCsr[x]),
 			.iSfmCycleEn(wSfmCycleEnCsr[x]),
@@ -175,6 +191,10 @@ generate
 	end
 endgenerate
 
+assign		oAtbDQ = {wAtbRd[1],wAtbRd[0]};
+assign		oAtbVD = {wAtbRvd[1],wAtbRvd[0]};
+always @*	qAtbRe[1:0] <= iAtbFLL;
+always @*	qAtbRe[2] 	<= 1'b0;
 
 /**-----------------------------------------------------------------------------
  * Spi Slave Port
@@ -182,7 +202,7 @@ endgenerate
 wire [pUsiBusWidth-1:0]	wSspDecDq;
 wire [pUsiBusWidth-1:0]	wSspDecAdrs;
 wire					wSspDecREd;
-wire [pUsiBusWidth-1:0]	qSspMUsiRd;
+reg  [pUsiBusWidth-1:0]	qSspMUsiRd;
 
 SpiSlavePort #(
 	.pSfmNum(pSfmNum)
@@ -194,11 +214,11 @@ SpiSlavePort #(
 	.oSfmSck(oSfmSck),			.oSfmMosi(oSfmMosi),		.iSfmMiso(iSfmMiso),	.oSfmCs(oSfmCs),
 	// Internal Port for CPU Master to FPGA Slave Side
 	.iMUsiRd(qSspMUsiRd),
-	.oDecRd(wSspDecDq),			.oDecAdrs(wSspDecAdrs),		.oDecREd(wSspDecREd),
+	.oDecDq(wSspDecDq),			.oDecAdrs(wSspDecAdrs),		.oDecREd(wSspDecREd),
 	// Internal Port for FPGA Master to Flash Rom Slave Side
 	.iSfuSck(wSfuSck),			.iSfuMosi(wSfuMosi),		.oSfuMiso(wSfuMiso),	.iSfuCs(wSfuCs),
 	// Control / Status
-	.iDeviceSel(),
+	.iDeviceSel(wSspDeviceSelCsr),
 	// common
 	.iSRST(iSRST),				.iSCLK(iSCLK)
 );

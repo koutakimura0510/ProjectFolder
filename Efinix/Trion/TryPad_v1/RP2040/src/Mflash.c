@@ -2,6 +2,8 @@
  * Create 2024/07/14
  * Author Kouta Kimura
  * 
+ * FPGA のレジスタを設定して GPIO を制御し SPI 信号の生成して Flash の制御を行う。
+ * Pico SPI 信号を Thru で使用する場合は、MflashPico 関数を使用する。
  *-----------------------------------------------------------------------------*/
 #include "trypad.h"
 
@@ -53,9 +55,9 @@ typedef struct {
 } SfmRegDB;
 
 static const SfmRegDB sfm_reg_db[] = {
-	{0,	AUDIO_REG_SFM_CPU_DONE, AUDIO_REG_SFM_CPU_WD_1, 	AUDIO_REG_SFM_CPU_ENABLE, 	AUDIO_REG_SFM_CPU_RD_1,	AUDIO_REG_SFM_CPU_CS_CTRL,	0x01	},
-	{1,	AUDIO_REG_SFM_CPU_DONE, AUDIO_REG_SFM_CPU_WD_2, 	AUDIO_REG_SFM_CPU_ENABLE, 	AUDIO_REG_SFM_CPU_RD_2,	AUDIO_REG_SFM_CPU_CS_CTRL,	0x02	},
-	{2,	SPI_REG_DONE, 			SPI_REG_MOSI,				SPI_REG_ENABLE,				SPI_REG_MISO,			SPI_REG_CS,					0x01	},
+	{0,	SPI_REG_SFM_CPU_DONE, SPI_REG_SFM_CPU_WD_1,	SPI_REG_SFM_CPU_ENABLE,	SPI_REG_SFM_CPU_RD_1, SPI_REG_SFM_CPU_CS_CTRL,	0x01	},
+	{1,	SPI_REG_SFM_CPU_DONE, SPI_REG_SFM_CPU_WD_2,	SPI_REG_SFM_CPU_ENABLE,	SPI_REG_SFM_CPU_RD_2, SPI_REG_SFM_CPU_CS_CTRL,	0x02	},
+	{2,	SPI_REG_SFM_CPU_DONE, SPI_REG_SFM_CPU_WD_3,	SPI_REG_SFM_CPU_ENABLE,	SPI_REG_SFM_CPU_RD_3, SPI_REG_SFM_CPU_CS_CTRL,	0x04	},
 };
 
 /**-----------------------------------------------------------------------------
@@ -80,12 +82,12 @@ static uint8_t flash_spi_read(uint8_t mosi, uint32_t done_adrs, uint32_t mosi_ad
  *-----------------------------------------------------------------------------*/
 void flash_rom_init(void)
 {
-	usi_write(AUDIO_REG_SFM_CLK_DIV, 0x0404);		// 動作周波数
-	usi_write(AUDIO_REG_SFM_CS_HOLD_TIME, 0x0202);
-	usi_write(AUDIO_REG_SFM_CPU_VALID, 0x3);
-
+	usi_write(SPI_REG_SFM_CLK_DIV, 0x040404);		// 動作周波数
+	usi_write(SPI_REG_SFM_CS_HOLD_TIME, 0x020202);
+	usi_write(SPI_REG_SFM_CPU_VALID, 0x3);
 	flash_protection_reg_write(0);
 	flash_protection_reg_write(1);
+	// usi_write(SPI_REG_SFM_CPU_VALID, 0x0);
 }
 
 /**-----------------------------------------------------------------------------
@@ -197,9 +199,7 @@ void flash_read(uint8_t id, uint8_t *rbuff, uint16_t col_adrs, uint16_t page_adr
  * device_id_lsb 0x21
  * 
  * W25N01GV
- * 0xef
- * 0xaa
- * 0x21
+ * 0xef, 0xaa, 0x21
  *-----------------------------------------------------------------------------*/
 uint32_t flash_id_read(uint8_t id)
 {

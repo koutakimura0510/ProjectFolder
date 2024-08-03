@@ -36,7 +36,7 @@ module SpiSlavePort #(
 	//
 	input  [pSfmNum-1:0]	iSfuSck,
 	input  [pSfmNum-1:0]	iSfuMosi,
-	input  [pSfmNum-1:0]	oSfuMiso,
+	output [pSfmNum-1:0]	oSfuMiso,
 	input  [pSfmNum-1:0]	iSfuCs,
 	// Control / Status
 	input  [pSfmNum-1:0]	iDeviceSel,
@@ -92,6 +92,8 @@ reg [pSfmNum-1:0] 	rSfmMosi;
 reg [pSfmNum-1:0]	rSfmMiso;
 reg [pSfmNum-1:0] 	rSfmCs;
 reg [pSfmNum-1:0]	qDeviceSel;
+//
+genvar gen;
 
 generate
 	for (gen = 0; gen < pSfmNum; gen = gen + 1)

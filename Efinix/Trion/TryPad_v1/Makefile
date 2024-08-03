@@ -7,13 +7,13 @@
 FILE = C:/Efinity/2023.1/bin/efx_run.bat
 PROJECT = TryPad_v1.xml
 JTAG_PROJECT = ../JTAG_Flash_Loader
-# SIM_PROJECT = ./src/common/fifo/sim
+# SIM_PROJECT = ./src/common/mult/sim
 # SIM_PROJECT = ./src/UltraFastInterfaceBus/sim
 # SIM_PROJECT = ./src/SynthesizerBlock/sim
-# SIM_PROJECT = ./src/VideoTxBlock/VideoPixelGenUnit/sim
+SIM_PROJECT = ./src/VideoTxBlock/VideoPixelGenUnit/sim
 # SIM_PROJECT = ./src/AudioTxBlock/sim
 # SIM_PROJECT = ./src/VideoTxBlock/sim
-SIM_PROJECT = ./src/VideoTxBlock/sim
+# SIM_PROJECT = ./src/VideoTxBlock/sim
 # SIM_PROJECT = ./src/I2cBlock/I2cSlave
 
 all: synthesis interface place pgm jtag

@@ -127,20 +127,13 @@ begin
 
 		lpFileWrite:
 		begin
-			if (iAFE)
+			if (iVde)
 			begin
-				rFileSt = lpFileClose;
+				$fwrite(fd, "%c", iColorB);
+				$fwrite(fd, "%c", iColorG);
+				$fwrite(fd, "%c", iColorR);
 			end
-			else
-			begin
-				if (iVde)
-				begin
-					$fwrite(fd, "%c", iColorB);
-					$fwrite(fd, "%c", iColorG);
-					$fwrite(fd, "%c", iColorR);
-				end
-				rFileSt = lpFileWrite;
-			end
+			rFileSt = iAFE ? lpFileClose : lpFileWrite;
 			rSaveEnd 	= 1'b0;
 		end
 
@@ -155,7 +148,7 @@ begin
 
 		lpFileWriteEnd:
 		begin
-			rFileSt  = lpFileOpen;
+			rFileSt  = rFileSt;
 			rSaveEnd = 1'b0;
 		end
 

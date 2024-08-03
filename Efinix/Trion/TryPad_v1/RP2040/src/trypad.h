@@ -17,6 +17,7 @@
 /**-----------------------------------------------------------------------------
  * USER MACRO
  *-----------------------------------------------------------------------------*/
+#define LEN(ary) (sizeof(ary)/sizeof(ary[0]))			// 一次元配列 行数取得 深さ
 #define ROWS(ary) (sizeof(ary)/sizeof(ary[0]))			// 一次元配列 行数取得 深さ
 #define COLS(ary) (sizeof(ary[0])/sizeof(ary[0][0]))	// 二次元配列 列数取得 長さ
 
@@ -54,7 +55,8 @@
 #include "./Mvideo.h"
 #include "./Mtimer.h"
 #include "./Mpsram.h"
-#include "./Mflash.h"
+// #include "./Mflash.h"
+#include "./MflashPico.h"
 #include "./Musb.h"
 #include "./Mspi.h"
 

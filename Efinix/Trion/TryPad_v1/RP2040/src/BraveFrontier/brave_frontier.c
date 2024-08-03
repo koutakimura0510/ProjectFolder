@@ -4,6 +4,7 @@
  * 
  *-----------------------------------------------------------------------------*/
 #include "../trypad.h"
+#include <stdio.h>
 
 /**-----------------------------------------------------------------------------
  * ゲームモード関数
@@ -47,7 +48,7 @@ void brave_frontier(void)
 		case 3:
 			if (rect.top == 1) {
 				dir = 0;
-				rect.color = 0xffff;
+				rect.color = 0x00ffff;
 			}
 			rect.top--;
 			rect.under--;
@@ -58,7 +59,10 @@ void brave_frontier(void)
 			break;
 		}
 		rect_draw(&rect);
-		usb_transaction();
+		// usb_transaction();
+		// printf("Push = %x\r\n", usi_read(GPIO_REG_PUSH_SW));
+		// printf("Edge = %x\r\n", usi_read(GPIO_REG_EDGE_SW));
+		// printf("Long = %x\r\n", usi_read(GPIO_REG_LONG_SW));
 		wait_ms(4);
 	}
 }

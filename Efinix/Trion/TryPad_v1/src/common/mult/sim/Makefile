@@ -8,14 +8,15 @@
 TBOUT    = tbwave.out
 
 # Tb Top Module名
-TBTOP 	 = VideoPixelGenUnit_tb
+TBTOP 	 = Mult_tb
 
 # Tb Top Module.v
-TBTOPRTL = VideoPixelGenUnit_tb.v
+TBTOPRTL = Mult_tb.v
 
 # Tb Instance.v
-TBRTL 	= ../VideoPixelGenUnit.v ../PlayerDraw/PlayerDraw.v ../common/*.v ./BmpFileSaver.v
-COMMON	= ../../../common/pulse/*.v ../../../common/fifo/*.v ../../../common/mult/AlphaBlend.v
+TBRTL 	= ../AlphaBlend.v
+COMMON  = ../../pulse/*.v
+# LIB		= /tools/efinity/2023.1/sim_models/verilog/*.v
 LIB		= C:/Efinity/2023.1/sim_models/verilog/*.v
 
 sim:

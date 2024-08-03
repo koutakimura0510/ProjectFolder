@@ -15,8 +15,8 @@
 /**-----------------------------------------------------------------------------
  * ファイル内関数
  *-----------------------------------------------------------------------------*/
-static void spi_write_read(uint8_t *wbuff, uint8_t *rbuff, uint8_t len);
-static void spi_write(uint8_t *wbuff, uint8_t len);
+static void spi_write_read(uint8_t *wbuff, uint8_t *rbuff, uint16_t len);
+static void spi_write(uint8_t *wbuff, uint16_t len);
 static void nop_wait(uint8_t wait);
 
 
@@ -120,10 +120,79 @@ void usi_read_wait(uint32_t adrs, uint32_t bit_mask)
 }
 
 /**-----------------------------------------------------------------------------
+ * SPI Direct Control の制御用 GPIO の出力を設定する
+ * L = Un Direct, H = Direct
+ * 
+ * gpio GPIO ID
+ * value 1=H, 0=L
+ *-----------------------------------------------------------------------------*/
+void spi_direct_control(uint8_t gpio, uint8_t value)
+{
+	gpio_put(gpio, value);
+	nop_wait(4);
+}
+
+/**-----------------------------------------------------------------------------
+ * FPGA に接続されている Slave デバイスに対して、ダイレクト・ライト・アクセスを行う。
+ * 
+ * *pwbuff バッファポインタ
+ * len pwbuff のバッファサイズ
+ *-----------------------------------------------------------------------------*/
+void spi_write_direct(uint8_t *pwbuff, uint16_t len)
+{
+	spi_write(pwbuff, len);
+}
+
+/**-----------------------------------------------------------------------------
+ * spi_write_direct の CS を制御しない動作の関数
+ * 
+ * *pwbuff バッファポインタ
+ * len pwbuff のバッファサイズ
+ *-----------------------------------------------------------------------------*/
+void spi_write_direct_notcs(uint8_t *pwbuff, uint16_t len)
+{
+	spi_write_blocking(HARDWARE_SPI_PORT, pwbuff, len);
+	nop_wait(4);
+}
+
+/**-----------------------------------------------------------------------------
+ * FPGA に接続されている Slave デバイスに対して、ダイレクト・リード・アクセスを行う。
+ * 
+ * *pwbuff バッファポインタ
+ * *prbuff バッファポインタ
+ * len pwbuff のバッファサイズ
+ *-----------------------------------------------------------------------------*/
+void spi_read_direct(uint8_t *pwbuff, uint8_t *prbuff, uint16_t len)
+{
+	spi_write_read(pwbuff, prbuff, len);
+}
+
+/**-----------------------------------------------------------------------------
+ * spi_read_direct の CS を制御しない動作の関数
+ * 
+ * *pwbuff バッファポインタ
+ * len pwbuff のバッファサイズ
+ *-----------------------------------------------------------------------------*/
+void spi_read_direct_notcs(uint8_t *pwbuff, uint8_t *prbuff, uint16_t len)
+{
+	spi_write_read_blocking(HARDWARE_SPI_PORT, pwbuff, prbuff, len);
+	nop_wait(4);
+}
+
+/**-----------------------------------------------------------------------------
+ * 
+ * cs_drive 1=H, 0=L
+ *-----------------------------------------------------------------------------*/
+void spi_cs_drive(uint8_t cs_drive)
+{
+	gpio_put(TRION_PICO_SPI_CS, cs_drive);
+}
+
+/**-----------------------------------------------------------------------------
  * spi r/w
  * FPGA tCSH : min 400ns, typ 800ns
  *-----------------------------------------------------------------------------*/
-static void spi_write_read(uint8_t *wbuff, uint8_t *rbuff, uint8_t len)
+static void spi_write_read(uint8_t *wbuff, uint8_t *rbuff, uint16_t len)
 {
 	gpio_put(TRION_PICO_SPI_CS, 0);
 	spi_write_read_blocking(HARDWARE_SPI_PORT, wbuff, rbuff, len);
@@ -135,7 +204,7 @@ static void spi_write_read(uint8_t *wbuff, uint8_t *rbuff, uint8_t len)
 /**-----------------------------------------------------------------------------
  * spi write
  *-----------------------------------------------------------------------------*/
-static void spi_write(uint8_t *wbuff, uint8_t len)
+static void spi_write(uint8_t *wbuff, uint16_t len)
 {
 	gpio_put(TRION_PICO_SPI_CS, 0);
 	spi_write_blocking(HARDWARE_SPI_PORT, wbuff, len);

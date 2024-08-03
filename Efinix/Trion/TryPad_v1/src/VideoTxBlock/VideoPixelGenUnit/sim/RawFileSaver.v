@@ -89,15 +89,15 @@ begin
 		lpFileClose:
 		begin
 			$fclose(fd);
-			$display("Raw Write End ----\n");
-			$display("Raw File Close ----\n");
+			$display("Raw Write End ----");
+			$display("Raw File Close ----");
 			rFileSt 	= lpFileWriteEnd;
 			rSaveEnd 	= 1'b1;
 		end
 
 		lpFileWriteEnd:
 		begin
-			rFileSt  = lpFileOpen;
+			rFileSt  = rFileSt;
 			rSaveEnd = 1'b0;
 		end
 

@@ -15,6 +15,8 @@
  * Menu			:ウィンドウメニュー
  * Scene		:シーンチェンジ
  * 
+ * 上記 Block ごとにパイプラインで接続する。
+ * Valid / Ready 信号による パイプライン制御参考 https://qiita.com/ikwzm/items/21c60d827c0e1744c621
  *-----------------------------------------------------------------------------*/
 module VideoPixelGenUnit #(
 	// Display Size
@@ -28,66 +30,65 @@ module VideoPixelGenUnit #(
 	parameter 			pDmaAdrsWidth 		= 18,
 	parameter 			pDmaBurstLength 	= 256,
 	// Pixel
-	parameter			pColorDepth 		= 32,
+	parameter			pDstColorDepth 		= 16,
+	parameter			pSynColorDepth 		= 24,
 	parameter			pMapChipSize 		= 32,	// マップチップの基本サイズ
 	parameter			pMapChipSft 		= f_detect_bitwidth(pMapChipSize),
-	parameter			pMapChipIdNum		= 10,	// マップチップの個数
-	// non valiable
-	parameter	pOutColorDepth 		= pColorDepth - (pColorDepth / 4) // alpha値を除いたbit幅
+	parameter			pMapChipIdNum		= 10	// マップチップの個数
 )(
 	// Csr Dot Square Gen
-	input		 [pColorDepth-1:0]	iDotSquareColor1,
-	input signed [pVHAW:0]			iDotSquareLeft1,
-	input signed [pVHAW:0]			iDotSquareRight1,
-	input signed [pVVAW:0]			iDotSquareTop1,
-	input signed [pVVAW:0]			iDotSquareUnder1,
-	input		 [pColorDepth-1:0]	iDotSquareColor2,
-	input signed [pVHAW:0]			iDotSquareLeft2,
-	input signed [pVHAW:0]			iDotSquareRight2,
-	input signed [pVVAW:0]			iDotSquareTop2,
-	input signed [pVVAW:0]			iDotSquareUnder2,
-	input		 [pColorDepth-1:0]	iDotSquareColor3,
-	input signed [pVHAW:0]			iDotSquareLeft3,
-	input signed [pVHAW:0]			iDotSquareRight3,
-	input signed [pVVAW:0]			iDotSquareTop3,
-	input signed [pVVAW:0]			iDotSquareUnder3,
-	input		 [pColorDepth-1:0]	iDotSquareColor4,
-	input signed [pVHAW:0]			iDotSquareLeft4,
-	input signed [pVHAW:0]			iDotSquareRight4,
-	input signed [pVVAW:0]			iDotSquareTop4,
-	input signed [pVVAW:0]			iDotSquareUnder4,
-	input		 [pColorDepth-1:0]	iDotSquareColor5,
-	input signed [pVHAW:0]			iDotSquareLeft5,
-	input signed [pVHAW:0]			iDotSquareRight5,
-	input signed [pVVAW:0]			iDotSquareTop5,
-	input signed [pVVAW:0]			iDotSquareUnder5,
-	input		 [pColorDepth-1:0]	iDotSquareColor6,
-	input signed [pVHAW:0]			iDotSquareLeft6,
-	input signed [pVHAW:0]			iDotSquareRight6,
-	input signed [pVVAW:0]			iDotSquareTop6,
-	input signed [pVVAW:0]			iDotSquareUnder6,
-	input		 [pColorDepth-1:0]	iDotSquareColor7,
-	input signed [pVHAW:0]			iDotSquareLeft7,
-	input signed [pVHAW:0]			iDotSquareRight7,
-	input signed [pVVAW:0]			iDotSquareTop7,
-	input signed [pVVAW:0]			iDotSquareUnder7,
+	input		 [pSynColorDepth-1:0]	iDotSquareColor1,
+	input signed [pVHAW:0]				iDotSquareLeft1,
+	input signed [pVHAW:0]				iDotSquareRight1,
+	input signed [pVVAW:0]				iDotSquareTop1,
+	input signed [pVVAW:0]				iDotSquareUnder1,
+	input		 [pSynColorDepth-1:0]	iDotSquareColor2,
+	input signed [pVHAW:0]				iDotSquareLeft2,
+	input signed [pVHAW:0]				iDotSquareRight2,
+	input signed [pVVAW:0]				iDotSquareTop2,
+	input signed [pVVAW:0]				iDotSquareUnder2,
+	input		 [pSynColorDepth-1:0]	iDotSquareColor3,
+	input signed [pVHAW:0]				iDotSquareLeft3,
+	input signed [pVHAW:0]				iDotSquareRight3,
+	input signed [pVVAW:0]				iDotSquareTop3,
+	input signed [pVVAW:0]				iDotSquareUnder3,
+	input		 [pSynColorDepth-1:0]	iDotSquareColor4,
+	input signed [pVHAW:0]				iDotSquareLeft4,
+	input signed [pVHAW:0]				iDotSquareRight4,
+	input signed [pVVAW:0]				iDotSquareTop4,
+	input signed [pVVAW:0]				iDotSquareUnder4,
+	input		 [pSynColorDepth-1:0]	iDotSquareColor5,
+	input signed [pVHAW:0]				iDotSquareLeft5,
+	input signed [pVHAW:0]				iDotSquareRight5,
+	input signed [pVVAW:0]				iDotSquareTop5,
+	input signed [pVVAW:0]				iDotSquareUnder5,
+	input		 [pSynColorDepth-1:0]	iDotSquareColor6,
+	input signed [pVHAW:0]				iDotSquareLeft6,
+	input signed [pVHAW:0]				iDotSquareRight6,
+	input signed [pVVAW:0]				iDotSquareTop6,
+	input signed [pVVAW:0]				iDotSquareUnder6,
+	input		 [pSynColorDepth-1:0]	iDotSquareColor7,
+	input signed [pVHAW:0]				iDotSquareLeft7,
+	input signed [pVHAW:0]				iDotSquareRight7,
+	input signed [pVVAW:0]				iDotSquareTop7,
+	input signed [pVVAW:0]				iDotSquareUnder7,
 	// Csr SceneChange
-	input	[pColorDepth-1:0]	iSceneColor,
-	input	[6:0]				iSceneFrameTiming,
-	input 						iSceneFrameAddEn,
-	input 						iSceneFrameSubEn,
-	input 						iSceneFrameRst,
-	output						oSceneAlphaMax,
-	output 						oSceneAlphaMin,
+	input	[pSynColorDepth-1:0]	iSceneColor,
+	input	[6:0]					iSceneFrameTiming,
+	input 							iSceneFrameAddEn,
+	input 							iSceneFrameSubEn,
+	input 							iSceneFrameRst,
+	output							oSceneAlphaMax,
+	output 							oSceneAlphaMin,
 	// Fifo I/F
-	output	[pColorDepth-1:0] 	oRd,
-	input						iRe,
-	output						oRvd,
-	output  					oEmp,
+	output	[pDstColorDepth-1:0] 	oPD,
+	input							iRS,
+	output							oVD,
+	output							oFD,
 	// Control Status
-	output	[pVHAW-1:0]			oPdpHpos,
-	output	[pVVAW-1:0]			oPdpVpos,
-	output	oFe,
+	output	[pVHAW-1:0]				oBdpHpos,
+	output	[pVVAW-1:0]				oBdpVpos,
+	output							oBdpFe,
 	// CLK Reset
 	input	iRST,
 	input	inRST,
@@ -98,47 +99,52 @@ module VideoPixelGenUnit #(
 //-----------------------------------------------------------------------------
 // 横幅 480 の場合、0 ~ 479 の範囲を使用するため、設定値から -1 する
 //-----------------------------------------------------------------------------
-localparam [pVHAW-1:0] lpVHA = pVHA - 1;
-localparam [pVVAW-1:0] lpVVA = pVVA - 1;
+localparam [pVHAW-1:0] 	lpVHA = pVHA - 1;
+localparam [pVVAW-1:0] 	lpVVA = pVVA - 1;
+localparam 				lpDstColorDepth	= pDstColorDepth;	// RGB 色深度
+localparam 				lpSynColorDepth = pSynColorDepth;	// 合成を行うピクセルデータの色深度
 
 
-//-----------------------------------------------------------------------------
-// Dst Side FIFO
-// module の出力部分を FIFO I/F にすることで扱いやすくする目的
-//-----------------------------------------------------------------------------
+/**-----------------------------------------------------------------------------
+ * Dst Side FIFO
+ * module の出力部分を FIFO I/F にすることで扱いやすくする目的
+ * almost full に出力タイミングを、全ての Draw Unit のパイプライン処理にかかるレイテンシの合計値以上に設定することで、
+ * Draw Unit に Valid 以外の制御信号が必要なくなる想定で Ready によるタイミングの調停が不要になる。
+ *-----------------------------------------------------------------------------*/
 localparam lpPdfDepth 		= 256;
-localparam lpPdfBitWidth 	= pColorDepth;
+localparam lpPdfBitWidth 	= lpDstColorDepth*2;	// 出力の時は、Alpha 値を除いた色深度のみでよい
 
-reg  [lpPdfBitWidth-1:0]	qPdfWd;
-reg							qPdfWe;
-wire						wPdfFull;
-wire [lpPdfBitWidth-1:0]	wPdfRd;
-wire 						wPdfRvd;
-reg  						qPdfRe;
-wire 						wPdfEmp;
+reg  [lpPdfBitWidth-1:0]	qPdfPS;
+reg							qPdfVS;
+wire						wPdfFLL;
+wire [lpPdfBitWidth-1:0]	wPdfPD;
+wire 						wPdfVD;
+reg  						qPdfRS;
 
 SyncFifoController #(
 	.pFifoDepth(lpPdfDepth),
-	.pFifoBitWidth(lpPdfBitWidth)
+	.pFifoBitWidth(lpPdfBitWidth),
+	.pFifoRemaingCntBorder(lpPdfDepth-32),
+	.pFifoRemaingCntUsed("yes")
 ) PixelDstFifo (
 	// write
-	.iWd(qPdfWd),		.iWe(qPdfWe),
-	.oFull(wPdfFull),	.oRemaingCntAlert(),
+	.iWd(qPdfPS),		.iWe(qPdfVS),
+	.oFull(),			.oRemaingCntAlert(wPdfFLL),
 	// read
-	.oRd(wPdfRd),		.iRe(qPdfRe),
-	.oRvd(wPdfRvd),		.oEmp(wPdfEmp),
+	.oRd(wPdfPD),		.iRe(qPdfRS),
+	.oRvd(wPdfVD),		.oEmp(),
 	// common
 	.inARST(inRST),		.iCLK(iCLK)
 );
 
 always @*
 begin
-	qPdfRe <= iRe;
+	qPdfRS <= iRS;
 end
 
-assign oRd  = wPdfRd;
-assign oRvd = wPdfRvd;
-assign oEmp = wPdfEmp;
+assign oPD = wPdfPD[15:0];
+assign oVD = wPdfVD;
+assign oFD = wPdfPD[16];
 
 
 //-----------------------------------------------------------------------------
@@ -146,30 +152,143 @@ assign oEmp = wPdfEmp;
 //-----------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
-// PixelDrawPosition(Pdp)
-//-----------------------------------------------------------------------------
-wire [pVHAW-1:0] 	wPdpHpos;					assign oPdpHpos = wPdpHpos;
-wire [pVVAW-1:0] 	wPdpVpos;					assign oPdpVpos = wPdpVpos;
-wire [pVHAW-1:4] 	wPdpHposBs;
-wire [pVVAW-1:4] 	wPdpVposBs;
-wire 				wPdpFe;						assign oFe = wPdpFe;
-reg					qPdpCke;
+/**-----------------------------------------------------------------------------
+ * Base Draw Position(Pdp)
+ *-----------------------------------------------------------------------------*/
+wire [pVHAW-1:0] 	wBdpBHPD;					assign oBdpHpos = wBdpBHPD;
+wire [pVVAW-1:0] 	wBdpBVPD;					assign oBdpVpos = wBdpBVPD;
+wire 				wBdpFD;						assign oBdpFe	= wBdpFD;
+wire [pVHAW-1:4] 	wBdpBHPDBs;
+wire [pVVAW-1:4] 	wBdpBVPDBs;
+wire				wBdpVD;
+reg					qBdpCke;
 
 PixelDrawPosition #(
 	.pVHAW(pVHAW),
 	.pVVAW(pVVAW),
 	.pMapChipBasicBs(4)
-) PixelDrawPosition (
+) BaseDrawPosition (
 	// Video Para Input
 	.iVha(lpVHA),			.iVva(lpVVA),
 	// Video Pos Output
-	.oHpos(wPdpHpos),		.oVpos(wPdpVpos),
-	.oHposBs(wPdpHposBs),	.oVposBs(wPdpVposBs),
-	.oFeFast(wPdpFe),
+	.oHpos(wBdpBHPD),		.oVpos(wBdpBVPD),
+	.oHposBs(wBdpBHPDBs),	.oVposBs(wBdpBVPDBs),
+	.oFD(wBdpFD),			.oVD(wBdpVD),
 	// Common
-	.iRST(iRST),	.iCKE(qPdpCke),	.iCLK(iCLK)
+	.iRST(iRST),			.iCKE(qBdpCke),		.iCLK(iCLK)
 );
+
+always @*
+begin
+	qBdpCke <= ~wPdfFLL;
+end
+
+/**-----------------------------------------------------------------------------
+ * Player Draw Position
+ *-----------------------------------------------------------------------------*/
+
+
+/**-----------------------------------------------------------------------------
+ * Player Draw
+ *-----------------------------------------------------------------------------*/
+reg  [lpDstColorDepth-1:0]	qPldPS;		wire [lpDstColorDepth-1:0]	wPldPD;
+reg  						qPldVS;		wire 					wPldVD;
+reg  						qPldFS;		wire 					wPldFD;
+reg  [pVHAW-1:0] 			qPldBHPS;	wire [pVHAW-1:0] 		wPldBHPD;
+reg  [pVVAW-1:0] 			qPldBVPS;	wire [pVVAW-1:0] 		wPldBVPD;
+reg  [pVHAW-1:0] 			qPldPHPS;	wire [pVHAW-1:0] 		wPldPHPD;
+reg  [pVVAW-1:0] 			qPldPVPS;	wire [pVVAW-1:0] 		wPldPVPD;
+
+PlayerDraw #(
+	.pVHAW(pVHAW),
+	.pVVAW(pVVAW),
+	.pDstColorDepth(lpDstColorDepth),
+	.pSynColorDepth(lpSynColorDepth)
+	// .pRamDepth(),
+) PlayerDraw (
+	// Dst Pixel Stream I/F
+	.oPD(wPldPD),		.oVD(wPldVD),		.oFD(wPldFD),
+	.oBHPD(wPldBHPD),	.oBVPD(wPldBVPD),
+	.oPHPD(wPldPHPD),	.oPVPD(wPldPVPD),
+	// Src Pixel Stream I/F
+	.iPS(qPldPS),		.iVS(qPldVS),		.iFS(qPldFS),
+	.iBHPS(qPldBHPS),	.iBVPS(qPldBVPS),
+	.iPHPS(qPldPHPS),	.iPVPS(qPldPVPS),
+	// Memory Mapchip Access
+	.iBramWd(0),		.iBramAdrs(0),
+	// Control / Status
+	.iPlayerdir(),
+	// common
+	.iRST(iRST),		.iCLK(iCLK)
+);
+
+always @*
+begin
+	qPldPS		<= 16'h1234;
+	qPldVS		<= wBdpVD;
+	qPldFS		<= wBdpFD;
+	qPldBHPS	<= wBdpBHPD;
+	qPldBVPS	<= wBdpBVPD;
+	qPldPHPS	<= {pVHAW{1'b0}};
+	qPldPVPS	<= {pVVAW{1'b0}};
+end
+
+
+/**-----------------------------------------------------------------------------
+ * Dot Square Generator
+ *-----------------------------------------------------------------------------*/
+reg  [lpDstColorDepth-1:0]	qDsgPS;		wire [lpDstColorDepth-1:0]	wDsgPD;
+reg  						qDsgVS;		wire 						wDsgVD;
+reg  						qDsgFS;		wire 						wDsgFD;
+reg  [pVHAW-1:0] 			qDsgBHPS;	wire [pVHAW-1:0] 			wDsgBHPD;
+reg  [pVVAW-1:0] 			qDsgBVPS;	wire [pVVAW-1:0] 			wDsgBVPD;
+reg  [pVHAW-1:0] 			qDsgPHPS;	wire [pVHAW-1:0] 			wDsgPHPD;
+reg  [pVVAW-1:0] 			qDsgPVPS;	wire [pVVAW-1:0] 			wDsgPVPD;
+
+DotSquareGen #(
+	.pVHAW(pVHAW),
+	.pVVAW(pVVAW),
+	.pDstColorDepth(lpDstColorDepth),
+	.pSynColorDepth(lpSynColorDepth)
+) DotSquareGen (
+	// Dst Pixel Stream I/F
+	.oPD(wDsgPD),		.oVD(wDsgVD),		.oFD(wDsgFD),
+	.oBHPD(wDsgBHPD),	.oBVPD(wDsgBVPD),
+	.oPHPD(wDsgPHPD),	.oPVPD(wDsgPVPD),
+	// Src Pixel Stream I/F
+	.iPS(qDsgPS),		.iVS(qDsgVS),		.iFS(qDsgFS),
+	.iBHPS(qDsgBHPS),	.iBVPS(qDsgBVPS),
+	.iPHPS(qDsgPHPS),	.iPVPS(qDsgPVPS),
+	// Control Status
+	.iColor1(iDotSquareColor1),	.iLeft1(iDotSquareLeft1),	.iRight1(iDotSquareRight1),	.iTop1(iDotSquareTop1),	.iUnder1(iDotSquareUnder1),
+	.iColor2(iDotSquareColor2),	.iLeft2(iDotSquareLeft2),	.iRight2(iDotSquareRight2),	.iTop2(iDotSquareTop2),	.iUnder2(iDotSquareUnder2),
+	.iColor3(iDotSquareColor3),	.iLeft3(iDotSquareLeft3),	.iRight3(iDotSquareRight3),	.iTop3(iDotSquareTop3),	.iUnder3(iDotSquareUnder3),
+	.iColor4(iDotSquareColor4),	.iLeft4(iDotSquareLeft4),	.iRight4(iDotSquareRight4),	.iTop4(iDotSquareTop4),	.iUnder4(iDotSquareUnder4),
+	.iColor5(iDotSquareColor5),	.iLeft5(iDotSquareLeft5),	.iRight5(iDotSquareRight5),	.iTop5(iDotSquareTop5),	.iUnder5(iDotSquareUnder5),
+	.iColor6(iDotSquareColor6),	.iLeft6(iDotSquareLeft6),	.iRight6(iDotSquareRight6),	.iTop6(iDotSquareTop6),	.iUnder6(iDotSquareUnder6),
+	.iColor7(iDotSquareColor7),	.iLeft7(iDotSquareLeft7),	.iRight7(iDotSquareRight7),	.iTop7(iDotSquareTop7),	.iUnder7(iDotSquareUnder7),
+	// common
+	.iRST(iRST),				.iCLK(iCLK)
+);
+
+always @*
+begin
+	qDsgPS		<= wPldPD;
+	qDsgVS		<= wPldVD;
+	qDsgFS		<= wPldFD;
+	qDsgBHPS	<= wPldBHPD;
+	qDsgBVPS	<= wPldBVPD;
+	qDsgPHPS	<= wPldPHPD;
+	qDsgPVPS	<= wPldPVPD;
+	//
+	qPdfPS[15:0]<= wDsgPD;
+	qPdfPS[16]  <= wDsgFD;
+	qPdfVS		<= wDsgVD;
+end
+
+/**----------------------------------------------------------------------------
+ * 各レイヤのピクセルデータ合成処理
+ *---------------------------------------------------------------------------*/
 
 //-----------------------------------------------------------------------------
 // VideoDmaChipRead
@@ -210,8 +329,8 @@ PixelDrawPosition #(
 
 // always @*
 // begin
-// 	qPdfWd  			<= wDcrInfoMapChipWd;
-// 	qPdfWe  			<= ~wPdfFull & wDcrInfoMapChipWe;
+// 	qPdfPS  			<= wDcrInfoMapChipWd;
+// 	qPdfVS  			<= ~wPdfFLL & wDcrInfoMapChipWe;
 // 	qPdpCke 			<= wDcrInfoMapChipWe;
 // 	qDcrInfoLine		<= wPdpVpos[4:0];
 // 	qDcrInfoMapChipId	<= wPdpHposBs;
@@ -220,54 +339,6 @@ PixelDrawPosition #(
 //-----------------------------------------------------------------------------
 // VDMA Tester
 //-----------------------------------------------------------------------------
-
-
-//-----------------------------------------------------------------------------
-// Dot Square Generator
-//-----------------------------------------------------------------------------
-wire [pColorDepth-1:0] 	wDsgPd;
-wire 					wDsgPv;
-reg  [8:0]				rDlx;
-reg  [8:0]				rDrx;
-
-DotSquareGen #(
-	.pVHAW(pVHAW),				.pVVAW(pVVAW),
-	.pColorDepth(pColorDepth)
-) DotSquareGen (
-	// Pixel Output
-	.oPd(wDsgPd),				.oPv(wDsgPv),
-	// Control Status
-	.iHpos(wPdpHpos),			.iVpos(wPdpVpos),
-	.iColor1(iDotSquareColor1),	.iLeft1(iDotSquareLeft1),	.iRight1(iDotSquareRight1),	.iTop1(iDotSquareTop1),	.iUnder1(iDotSquareUnder1),
-	.iColor2(iDotSquareColor2),	.iLeft2(iDotSquareLeft2),	.iRight2(iDotSquareRight2),	.iTop2(iDotSquareTop2),	.iUnder2(iDotSquareUnder2),
-	.iColor3(iDotSquareColor3),	.iLeft3(iDotSquareLeft3),	.iRight3(iDotSquareRight3),	.iTop3(iDotSquareTop3),	.iUnder3(iDotSquareUnder3),
-	.iColor4(iDotSquareColor4),	.iLeft4(iDotSquareLeft4),	.iRight4(iDotSquareRight4),	.iTop4(iDotSquareTop4),	.iUnder4(iDotSquareUnder4),
-	.iColor5(iDotSquareColor5),	.iLeft5(iDotSquareLeft5),	.iRight5(iDotSquareRight5),	.iTop5(iDotSquareTop5),	.iUnder5(iDotSquareUnder5),
-	.iColor6(iDotSquareColor6),	.iLeft6(iDotSquareLeft6),	.iRight6(iDotSquareRight6),	.iTop6(iDotSquareTop6),	.iUnder6(iDotSquareUnder6),
-	.iColor7(iDotSquareColor7),	.iLeft7(iDotSquareLeft7),	.iRight7(iDotSquareRight7),	.iTop7(iDotSquareTop7),	.iUnder7(iDotSquareUnder7),
-	// common
-	.iRST(iRST),				.iCLK(iCLK)
-);
-
-always @(posedge iCLK)
-begin
-	if (iRST) 			rDrx <= 9'd0;
-	else if (wPdpFe)	rDrx <= rDrx + 2'd2;
-	else 				rDrx <= rDrx;
-end
-
-always @*
-begin
-	qPdfWd  <=  wDsgPd;
-	qPdfWe  <= ~wPdfFull;
-	qPdpCke <= ~wPdfFull;
-end
-
-/**----------------------------------------------------------------------------
- * 各レイヤのピクセルデータ合成処理
- *---------------------------------------------------------------------------*/
-
-
 
 
 //-----------------------------------------------------------------------------

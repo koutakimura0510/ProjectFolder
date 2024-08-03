@@ -9,7 +9,7 @@ module VideoPixelGenUnit_tb;
 //-----------------------------------------------------------------------------
 // System Simlation Parameter
 //-----------------------------------------------------------------------------
-localparam lpWaitCycle			= 3000;
+localparam lpWaitCycle			= 100;
 
 //-----------------------------------------------------------------------------
 // System 共通変数
@@ -21,9 +21,9 @@ genvar x;
 //-----------------------------------------------------------------------------
 localparam	lpSCLKCycle = 4;	// CLK サイクル
 
-reg	wSCLK = 0;
-reg	wSRST = 1;
-reg	wnSRST = 0;
+reg	wSCLK	= 0;
+reg	wSRST	= 1;
+reg	wnSRST	= 0;
 
 always begin
     #(lpSCLKCycle/2);
@@ -44,43 +44,75 @@ endtask
 //-----------------------------------------------------------------------------
 // VideoPixelGenUnit
 //-----------------------------------------------------------------------------
-localparam lpVHA	= 480;
-localparam lpVVA	= 272;
+localparam lpVHA	= 64;
+localparam lpVVA	= 64;
 localparam lpVHAW	= f_detect_bitwidth(lpVHA);
 localparam lpVVAW	= f_detect_bitwidth(lpVVA);
 //
-wire [16:0] wVpgRd;
-reg  qVpgRe;
-wire wVpgRvd;
-wire wVpgEmp;
-wire wVpgFe;
+localparam lpDstColorDepth = 16;
+localparam lpSynColorDepth = 24;
+//
+wire [lpDstColorDepth-1:0] 	wVpgPD;
+reg  						qVpgRS;
+wire 						wVpgVD;
+wire 						wVpgFD;
+//
+reg [lpSynColorDepth-1:0]	qDsgColor;
+reg [lpVHAW:0]				qDsgLeft;
+reg [lpVHAW:0]				qDsgRight;
+reg [lpVVAW:0]				qDsgUp;
+reg [lpVVAW:0]				qDsgDown;
 
 VideoPixelGenUnit #(
 	.pVHA(lpVHA),
 	.pVVA(lpVVA),
 	.pVHAW(lpVHAW),
-	.pVVAW(lpVVAW)
+	.pVVAW(lpVVAW),
+	.pDstColorDepth(lpDstColorDepth),
+	.pSynColorDepth(lpSynColorDepth)
 ) VideoPixelGenUnit (
+	// Csr Dot Square Gen
+	.iDotSquareColor1(qDsgColor),	.iDotSquareLeft1(qDsgLeft),	.iDotSquareRight1(qDsgRight),	.iDotSquareTop1(qDsgUp),	.iDotSquareUnder1(qDsgDown),
+	.iDotSquareColor2(qDsgColor),	.iDotSquareLeft2(qDsgLeft),	.iDotSquareRight2(qDsgRight),	.iDotSquareTop2(qDsgUp),	.iDotSquareUnder2(qDsgDown),
+	.iDotSquareColor3(qDsgColor),	.iDotSquareLeft3(qDsgLeft),	.iDotSquareRight3(qDsgRight),	.iDotSquareTop3(qDsgUp),	.iDotSquareUnder3(qDsgDown),
+	.iDotSquareColor4(qDsgColor),	.iDotSquareLeft4(qDsgLeft),	.iDotSquareRight4(qDsgRight),	.iDotSquareTop4(qDsgUp),	.iDotSquareUnder4(qDsgDown),
+	.iDotSquareColor5(qDsgColor),	.iDotSquareLeft5(qDsgLeft),	.iDotSquareRight5(qDsgRight),	.iDotSquareTop5(qDsgUp),	.iDotSquareUnder5(qDsgDown),
+	.iDotSquareColor6(qDsgColor),	.iDotSquareLeft6(qDsgLeft),	.iDotSquareRight6(qDsgRight),	.iDotSquareTop6(qDsgUp),	.iDotSquareUnder6(qDsgDown),
+	.iDotSquareColor7(qDsgColor),	.iDotSquareLeft7(qDsgLeft),	.iDotSquareRight7(qDsgRight),	.iDotSquareTop7(qDsgUp),	.iDotSquareUnder7(qDsgDown),
 	// Csr SceneChange
-    .iSceneColor(),
+	.iSceneColor(),
 	.iSceneFrameTiming(),
 	.iSceneFrameAddEn(),
 	.iSceneFrameSubEn(),
-    .iSceneFrameRst(),
+	.iSceneFrameRst(),
 	.oSceneAlphaMax(),
 	.oSceneAlphaMin(),
 	// Fifo I/F
-	.oRd(wVpgRd),		.iRe(qVpgRe),
-    .oRvd(wVpgRvd),		.oEmp(wVpgEmp),
-	// control status
-	.oFe(wVpgFe),
-    // common
-    .iRST(wSRST),		.inRST(wnSRST),		.iCLK(wSCLK)
+	.oPD(wVpgPD),		.iRS(qVpgRS),
+	.oVD(wVpgVD),		.oFD(wVpgFD),
+	// Control Status
+	.oBdpHpos(),		.oBdpVpos(),		.oBdpFe(),
+	// common
+	.iRST(wSRST),		.inRST(wnSRST),		.iCLK(wSCLK)
 );
+
+reg rEmp;
+
+always @(posedge wSCLK)
+begin
+	if (wSRST) 	rEmp <= 1'b1;
+	else 		rEmp <= ~rEmp;
+end
 
 always @*
 begin
-	qVpgRe <= ~wVpgEmp;
+	qDsgColor	<= 24'h44ffff;
+	qDsgLeft	<= 0;
+	qDsgRight	<= 32;
+	qDsgUp		<= 0;
+	qDsgDown	<= 32;
+	// qVpgRS		<= ~wVpgEmp;
+	qVpgRS		<= rEmp;
 end
 
 //-----------------------------------------------------------------------------
@@ -112,11 +144,12 @@ BmpFileSaver #(
 
 always @*
 begin
-	qBfsColorR 	<= {wVpgRd[5:0],3'b000};
-	qBfsColorG 	<= {wVpgRd[10:6],2'b00};
-	qBfsColorB 	<= {wVpgRd[15:11],3'b000};
-	qBfsVde		<= wVpgRvd;
-	qBfsAfe		<= wVpgFe;
+	qBfsColorR 	<= {wVpgPD[15:11],3'b000};
+	qBfsColorG 	<= {wVpgPD[10:5],2'b00};
+	qBfsColorB 	<= {wVpgPD[4:0],3'b000};
+	qBfsVde		<= wVpgVD;
+	// qBfsAfe		<= wVpgFD & wVpgVD;
+	qBfsAfe		<= wVpgFD;
 end
 //-----------------------------------------------------------------------------
 task BmpFileSaveDone(
@@ -149,7 +182,7 @@ begin
 		BmpFileSaveDone(1);
 	end
 
-	// #(lpSCLKCycle*lpWaitCycle);
+	#(lpSCLKCycle*lpWaitCycle);
 	$display(" ----- SIM END !!");
     $finish;
 end

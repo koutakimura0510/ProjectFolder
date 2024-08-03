@@ -82,7 +82,8 @@ localparam lpVVBW = f_detect_bitwidth(pVVB);	// Video Vertical Front Width
 localparam lpVVFW = f_detect_bitwidth(pVVF);	// Video Vertical Back Width
 localparam lpVVSW = f_detect_bitwidth(pVVS);	// Video Vertical Sync Width
 //
-localparam lpColorDepth = 32;
+localparam lpDstColorDepth 	= 16;	// RGB565
+localparam lpSynColorDepth	= 24;	// α8bit +  RGB565
 //
 wire 		wDmaEnableCsr;
 wire 		wDmaCycleEnableCsr;
@@ -93,17 +94,17 @@ wire 		wDmaDoneCsr;
 // Video Sync Gen
 wire		wVsgRst;
 // Video tft Unit
-wire [23:0]	wVtuMcuDqCsr;
-wire 		wVtuMcuWRXCsr,	wVtuMcuDCXCsr,	wVtuMcuRDXCsr,	wVtuMcuCSXCsr;
-wire 		wVtuMcuRSTCsr;
-wire [3:0]	wVtuMcuIMCsr;
-wire 		wVtuMcuGateCsr;
-wire		wVtuConverterRstCsr;
+wire [lpDstColorDepth-1:0]	wVtuMcuDqCsr;
+wire 						wVtuMcuWRXCsr,	wVtuMcuDCXCsr,	wVtuMcuRDXCsr,	wVtuMcuCSXCsr;
+wire 						wVtuMcuRSTCsr;
+wire [3:0]					wVtuMcuIMCsr;
+wire 						wVtuMcuGateCsr;
+wire						wVtuConverterRstCsr;
 // 
-wire 		wMapXSizeCsr;
-wire 		wMapYSizeCsr;
+wire 						wMapXSizeCsr;
+wire 						wMapYSizeCsr;
 // Video Pixel Gen
-wire [lpColorDepth-1:0]	wDotSquareColor1Csr, wDotSquareColor2Csr, wDotSquareColor3Csr, wDotSquareColor4Csr, wDotSquareColor5Csr, wDotSquareColor6Csr, wDotSquareColor7Csr;
+wire [lpSynColorDepth-1:0]	wDotSquareColor1Csr, wDotSquareColor2Csr, wDotSquareColor3Csr, wDotSquareColor4Csr, wDotSquareColor5Csr, wDotSquareColor6Csr, wDotSquareColor7Csr;
 wire signed [lpVHAW:0] 	wDotSquareLeft1Csr,  wDotSquareRight1Csr, wDotSquareTop1Csr,   wDotSquareUnder1Csr;
 wire signed [lpVHAW:0] 	wDotSquareLeft2Csr,  wDotSquareRight2Csr, wDotSquareTop2Csr,   wDotSquareUnder2Csr;
 wire signed [lpVHAW:0] 	wDotSquareLeft3Csr,  wDotSquareRight3Csr, wDotSquareTop3Csr,   wDotSquareUnder3Csr;
@@ -134,7 +135,8 @@ VideoTxCsr #(
 	.pVHAW(lpVHAW),	.pVHBW(lpVHBW),	.pVHFW(lpVHFW),	.pVHSW(lpVHSW),
     .pVVAW(lpVVAW),	.pVVBW(lpVVBW),	.pVVFW(lpVVFW),	.pVVSW(lpVVSW),
 	// Video Control / Status
-	.pColorDepth(lpColorDepth)
+	.pDstColorDepth(lpDstColorDepth),
+	.pSynColorDepth(lpSynColorDepth)
 ) VideoTxCsr (
 	// Bus Master Read
 	.oSUsiRd(oSUsiRd),
@@ -192,15 +194,18 @@ VideoTxCsr #(
 /**----------------------------------------------------------------------------
  * Video Pixel Generator (Vpg)
  *---------------------------------------------------------------------------*/
-wire [lpColorDepth-1:0] wVpgRd;
-reg  qVpgRe;
-wire wVpgRvd;
-wire wVpgEmp;
+wire [lpDstColorDepth-1:0] wVpgPD;
+reg  qVpgRS;
+wire wVpgVD;
+wire wVpgFD;
 
 VideoPixelGenUnit #(
-	.pVHA(pVHA),		.pVVA(pVVA),
-	.pVHAW(lpVHAW),		.pVVAW(lpVVAW),
-	.pColorDepth(lpColorDepth)
+	.pVHA(pVHA),
+	.pVVA(pVVA),
+	.pVHAW(lpVHAW),
+	.pVVAW(lpVVAW),
+	.pDstColorDepth(lpDstColorDepth),
+	.pSynColorDepth(lpSynColorDepth)
 ) VideoPixelGenUnit (
 	// Csr Dot Square Gen
 	.iDotSquareColor1(wDotSquareColor1Csr),	.iDotSquareLeft1(wDotSquareLeft1Csr),	.iDotSquareRight1(wDotSquareRight1Csr),	.iDotSquareTop1(wDotSquareTop1Csr),	.iDotSquareUnder1(wDotSquareUnder1Csr),
@@ -219,11 +224,11 @@ VideoPixelGenUnit #(
 	.oSceneAlphaMax(wSceneAlphaMaxCsr),
 	.oSceneAlphaMin(wSceneAlphaMinCsr),
 	// Control Status
-	.oPdpHpos(wPdpHposCsr),	.oPdpVpos(wPdpVposCsr),
-	.oFe(),
+	.oBdpHpos(wPdpHposCsr),	.oBdpVpos(wPdpVposCsr),
+	.oBdpFe(),
 	// Dst Fifo Side
-	.oRd(wVpgRd),		.iRe(qVpgRe),
-	.oRvd(wVpgRvd),		.oEmp(wVpgEmp),
+	.oPD(wVpgPD),		.iRS(qVpgRS),
+	.oVD(wVpgVD),		.oFD(wVpgFD),
 	// Common
 	.iRST(iSRST),		.inRST(inSRST),		.iCLK(iSCLK)
 );
@@ -232,16 +237,16 @@ VideoPixelGenUnit #(
 //-----------------------------------------------------------------------------
 // Video Tft Unit
 //-----------------------------------------------------------------------------
-wire[23:0]	wTftDQ;
-wire		wTftWRX;
-wire		wTftDCX;
-wire		wTftRDX;
-wire		wTftCSX;
-wire		wTftRST;
-wire[ 3:0]	wTftIM;
-reg [23:0] 	qVtuDS;
-reg			qVtuWE;
-wire		wVtuFLL;
+wire[lpDstColorDepth-1:0]	wTftDQ;
+wire						wTftWRX;
+wire						wTftDCX;
+wire						wTftRDX;
+wire						wTftCSX;
+wire						wTftRST;
+wire[ 3:0]					wTftIM;
+reg [lpDstColorDepth-1:0] 	qVtuDS;
+reg							qVtuWE;
+wire						wVtuFLL;
 
 VideoTftUnit VideoTftUnit(
 	// Video Output Part
@@ -263,9 +268,9 @@ VideoTftUnit VideoTftUnit(
 
 always @*
 begin
-	qVtuDS	<= wVpgRd;
-	qVtuWE	<= wVpgRvd;
-	qVpgRe 	<= ~wVtuFLL;
+	qVtuDS	<= wVpgPD;
+	qVtuWE	<= wVpgVD;
+	qVpgRS 	<= ~wVtuFLL;
 end
 
 /**----------------------------------------------------------------------------

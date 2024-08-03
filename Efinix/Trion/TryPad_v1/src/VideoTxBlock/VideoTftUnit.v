@@ -5,37 +5,39 @@
  * Stream Data to TFT Module I/F Data Convert
  * new release : v1.00
  *-----------------------------------------------------------------------------*/
-module VideoTftUnit (
+module VideoTftUnit #(
+	parameter pDstColorDepth = 16
+)(
 	// Video Output Part
-	output [23:0]	oTftDQ,
-	output			oTftWRX,
-	output			oTftDCX,
-	output			oTftRDX,
-	output			oTftCSX,
-	output			oTftRST,
-	output [ 3:0]	oTftIM,
+	output [pDstColorDepth-1:0]	oTftDQ,
+	output						oTftWRX,
+	output						oTftDCX,
+	output						oTftRDX,
+	output						oTftCSX,
+	output						oTftRST,
+	output [ 3:0]				oTftIM,
 	// Data Stream Input Part
-	input  [23:0]	iDS,
-	input			iWE,
-	output			oFLL,
+	input  [pDstColorDepth-1:0]	iDS,
+	input						iWE,
+	output						oFLL,
 	// MCU Data Stream Input Part
-	input  [23:0]	iMcuDS,
-	input			iMcuWRX,
-	input			iMcuDCX,
-	input			iMcuRDX,
-	input			iMcuCSX,
-	input			iMcuRST,
-	input  [ 3:0]	iMcuIM,
-	input			iMcuGate,
+	input  [pDstColorDepth-1:0]	iMcuDS,
+	input						iMcuWRX,
+	input						iMcuDCX,
+	input						iMcuRDX,
+	input						iMcuCSX,
+	input						iMcuRST,
+	input  [ 3:0]				iMcuIM,
+	input						iMcuGate,
 	// Control / Status
-	input			iConverterRst,
+	input						iConverterRst,
 	// Common
-	input 			iSRST,
-	input 			inSRST,
-	input 			iSCLK,
-	input 			iVRST,
-	input 			inVRST,
-	input 			iVCLK
+	input 						iSRST,
+	input 						inSRST,
+	input 						iSCLK,
+	input 						iVRST,
+	input 						inVRST,
+	input 						iVCLK
 );
 
 
@@ -43,7 +45,7 @@ module VideoTftUnit (
 // Dual CLK Fifo Side SCLK to VCLK
 //-----------------------------------------------------------------------------
 localparam lpVafDepth 		= 512;
-localparam lpVafBitWidth 	= 16;
+localparam lpVafBitWidth 	= pDstColorDepth;
 
 reg  [lpVafBitWidth-1:0]	qVafDS;
 reg							qVafWE;
@@ -69,7 +71,7 @@ ASyncFifoController #(
 
 always @*
 begin
-	qVafDS 	<= iDS[15:0];
+	qVafDS 	<= iDS;
 	qVafWE 	<= iWE;
 end
 
@@ -79,10 +81,10 @@ assign oFLL = wVafAlert;
 /**-----------------------------------------------------------------------------
  * Tft I/F Convert Part
  *-----------------------------------------------------------------------------*/
-reg [23:0] 	rDS[1:1];
-reg [ 2:1]	rWE;
-reg			rTftRe;
-reg			qTftConverterRst;
+reg [pDstColorDepth-1:0] 	rDS[1:1];
+reg [ 2:1]					rWE;
+reg							rTftRe;
+reg							qTftConverterRst;
 
 always @(posedge iVCLK)
 begin
@@ -106,9 +108,9 @@ end
 /**-----------------------------------------------------------------------------
  * Data Stream Pipelines
  *-----------------------------------------------------------------------------*/
-reg [23:0] 	rDD,  qDD;
-reg			rWRX, rDCX, rRDX, rCSX, rRST;
-reg			qWRX, qDCX, qRDX, qCSX, qRST;
+reg [pDstColorDepth-1:0] 	rDD,  qDD;
+reg							rWRX, rDCX, rRDX, rCSX, rRST;
+reg							qWRX, qDCX, qRDX, qCSX, qRST;
 
 always @(posedge iVCLK)
 begin

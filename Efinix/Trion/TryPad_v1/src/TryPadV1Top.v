@@ -421,26 +421,33 @@ GpioBlock #(
 //-----------------------------------------------------------------------------
 // External CPU Master SPI Block or Slave SPI Block
 //-----------------------------------------------------------------------------
-wire wSlaveSck,		wSlaveMosi,		wSlaveMiso,		wSlaveCs;		// Ext  SPI Master -> FPGA SPI Slave
-wire wMasterSck, 	wMasterMosi,	wMasterMiso,	wMasterCs;		// FPGA SPI Master -> Ext  SPI Slave
-wire wFlashRomSck,	wFlashRomMosi,	wFlashRomMiso,	wFlashRomCs;
-wire [1:0] 	wFlashSpiOe;
-wire 		wPicoBusSel;
+localparam lpSfmNum = 3;		// Serial Flash Memory Number
 
-SPIBlock #(
+wire wSlaveSck,		wSlaveMosi,		wSlaveMiso,		wSlaveCs;		// Ext  SPI Master -> FPGA SPI Slave
+wire wSpiThru;
+//
+wire [lpSfmNum-1:0] wSfmSck;
+wire [lpSfmNum-1:0] wSfmMosi;
+wire [lpSfmNum-1:0] wSfmMiso;
+wire [lpSfmNum-1:0] wSfmCs;
+//
+wire [31:0]			wAtbDQ;
+wire				wAtbVD;
+wire				wAtbFLL;
+
+SpiBlock #(
 	.pBlockAdrsWidth(lpBlockAdrsWidth),		.pAdrsMap(lpSPIAdrsMap),
 	.pUsiBusWidth(lpUsiBusWidth),			.pCsrAdrsWidth(lpCsrAdrsWidth),
-	.pCsrActiveWidth(lpSPICsrActiveWidth)
-) SPIBlock (
-	// SPI Bus Connected External CPU
-	.iSpiSck(wSlaveSck),		.iSpiMosi(wSlaveMosi),
-	.oSpiMiso(wSlaveMiso),		.iSpiCs(wSlaveCs),
-	.iSpiThru(),
-	//
-	.oSfmSck(),
-	.oSfmMosi(),
-	.iSfmMiso(),
-	.oSfmCs(),
+	.pCsrActiveWidth(lpSPICsrActiveWidth),
+	.pSfmNum(lpSfmNum)
+) SpiBlock (
+	// External Port for CPU Master
+	.iSpiSck(wSlaveSck),	.iSpiMosi(wSlaveMosi),	.oSpiMiso(wSlaveMiso),	.iSpiCs(wSlaveCs),
+	.iSpiThru(wSpiThru),
+	// External Port for Flash Memory
+	.oSfmSck(wSfmSck),		.oSfmMosi(wSfmMosi),	.iSfmMiso(wSfmMiso),	.oSfmCs(wSfmCs),
+	// Dual Port Audio Stream Data
+	.oAtbDQ(wAtbDQ),		.oAtbVD(wAtbVD),		.iAtbFLL(wAtbFLL),
 	// Bus Master Read
 	.iMUsiRd(wMUsiRd),		.oSUsiRd(wSUsiRd[lpSPIAdrsMap]),
 	// Bus Master Write
@@ -453,29 +460,18 @@ SPIBlock #(
 //-----------------------------------------------------------------------------
 // Sound Generate
 //-----------------------------------------------------------------------------
-localparam lpSfcNum = 2;		// Serial Flash Memory Number
-
-wire wI2S_MCLK;
-wire wI2S_BCLK;
-wire wI2S_LRCLK;
-wire wI2S_SDATA;
-wire [lpSfcNum-1:0] wSfmSck;
-wire [lpSfcNum-1:0] wSfmMosi;
-wire [lpSfcNum-1:0] wSfmMiso;
-wire [lpSfcNum-1:0] wSfmCs;
+wire wI2S_MCLK, wI2S_BCLK, wI2S_LRCLK, wI2S_SDATA;
 
 AudioTxBlock #(
 	.pBlockAdrsWidth(lpBlockAdrsWidth),		.pAdrsMap(lpAtbAdrsMap),
 	.pUsiBusWidth(lpUsiBusWidth),			.pCsrAdrsWidth(lpCsrAdrsWidth),
-	.pCsrActiveWidth(lpAtbCsrActiveWidth),
-	.pSfmNum(lpSfcNum)
+	.pCsrActiveWidth(lpAtbCsrActiveWidth)
 ) AudioTxBlock (
 	// Audio dac I/F Port
 	.oI2S_MCLK(wI2S_MCLK),		.oI2S_BCLK(wI2S_BCLK),
 	.oI2S_LRCLK(wI2S_LRCLK),	.oI2S_SDATA(wI2S_SDATA),
-	// Serial Frash Memory I/F Port
-	.oSfmSck(wSfmSck),			.oSfmMosi(wSfmMosi),
-	.iSfmMiso(wSfmMiso),		.oSfmCs(wSfmCs),
+	// Dual Port Stream Data
+	.iDQ(wAtbDQ),				.iVD(wAtbVD),		.oFLL(wAtbFLL),
 	// Bus Master Read
 	.oSUsiRd(wSUsiRd[lpAtbAdrsMap]),
 	// Bus Master Write
@@ -611,9 +607,9 @@ assign wSlaveMosi		= iPicoMosi;
 assign wSlaveCs			= iPicoCs;
 assign wSlaveSck		= iPicoSck;
 // Pico GPIO I/F
-assign wPicoBusSel		= ioPicoIo_I[1];		assign ioPicoIo_OE[1]		= 1'b0;	// Ext Pull Down
+												assign ioPicoIo_OE[1]		= 1'b0;	// Ext Pull Down
 assign wnARST			= ioPicoIo_I[2];		assign ioPicoIo_OE[2]		= 1'b0;	// Ext Pull Down
-												assign ioPicoIo_OE[3]		= 1'b0;	// Spi Thru Device Accsess
+assign wSpiThru			= ioPicoIo_I[3];		assign ioPicoIo_OE[3]		= 1'b0;	// Spi Thru Device Accsess
 //
 // Video I/F
 assign 	ioVideoDq_O		= wVIDEO_DQ[15:0];		assign ioVideoDq_OE[15:0]	= wVideoGpioOe[15:0];
@@ -654,12 +650,12 @@ assign ioRamCs_O[1]		= wRamCe[1];		assign ioRamCs_OE[1]	= 1'b1;
 //
 // Config Flash ROM I/F
 wire [5:0] wCfgRomNot;
-assign ioCfgRomDq_O[0]	= 1'b0;				assign wCfgRomNot[0]	= ioCfgRomDq_I[0];	assign ioCfgRomDq_OE[0]	= wCfgRomGpioOe[0];
-assign ioCfgRomDq_O[1]	= 1'b0;				assign wCfgRomNot[1]	= ioCfgRomDq_I[1];	assign ioCfgRomDq_OE[1]	= wCfgRomGpioOe[1];
+assign ioCfgRomDq_O[0]	= wSfmMosi[2];		assign wCfgRomNot[0]	= ioCfgRomDq_I[0];	assign ioCfgRomDq_OE[0]	= wCfgRomGpioOe[0];
+assign ioCfgRomDq_O[1]	= 1'b0;				assign wSfmMiso[2]		= ioCfgRomDq_I[1];	assign ioCfgRomDq_OE[1]	= wCfgRomGpioOe[1];
 assign ioCfgRomDq_O[2]	= 1'b1;				assign wCfgRomNot[2]	= ioCfgRomDq_I[2];	assign ioCfgRomDq_OE[2]	= wCfgRomGpioOe[2];
 assign ioCfgRomDq_O[3]	= 1'b1;				assign wCfgRomNot[3]	= ioCfgRomDq_I[3];	assign ioCfgRomDq_OE[3]	= wCfgRomGpioOe[3];
-assign ioCfgRomCs_O		= 1'b1;				assign wCfgRomNot[4]	= ioCfgRomCs_I;		assign ioCfgRomCs_OE	= wCfgRomGpioOe[4];
-assign ioCfgRomClk_O	= 1'b1;				assign wCfgRomNot[5]	= ioCfgRomClk_I;	assign ioCfgRomClk_OE	= wCfgRomGpioOe[5];
+assign ioCfgRomCs_O		= wSfmCs[2];		assign wCfgRomNot[4]	= ioCfgRomCs_I;		assign ioCfgRomCs_OE	= wCfgRomGpioOe[4];
+assign ioCfgRomClk_O	= wSfmSck[2];		assign wCfgRomNot[5]	= ioCfgRomClk_I;	assign ioCfgRomClk_OE	= wCfgRomGpioOe[5];
 //
 // User I/F
 assign wPushSw[0]	= iPushSw[0];	// SW-B

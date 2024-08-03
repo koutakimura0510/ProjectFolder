@@ -21,7 +21,7 @@
 module SyncFifoController #(
 	parameter 	pFifoDepth				= 16,		// FIFO BRAMのサイズ指定
 	parameter 	pFifoBitWidth			= 8,		// bitサイズ
-	parameter	pFifoRemaingCntBorder	= pFifoDepth / 2,
+	parameter	pFifoRemaingCntBorder	= pFifoDepth / 2,	// AlmostFull
 	parameter	pFifoRemaingCntUsed		= "no"
 )(
 	input	[pFifoBitWidth-1:0] iWd,				// write data
@@ -50,10 +50,10 @@ localparam [pAddrWidth-1:0] lpFifoRemaingCntBorder = pFifoRemaingCntBorder;
 reg  [pAddrWidth-1:0] rWa, rRa;
 wire [pAddrWidth-1:0] wWa = rWa + 1'b1;
 reg  qWe,qRe;
-reg  qRemaingCntAlert;				assign oRemaingCntAlert = qRemaingCntAlert;
-reg  qFull;							assign oFull = qFull;
-reg  qEmp;							assign oEmp = qEmp;
-reg  rRe;							assign oRvd = rRe;
+reg  rRemaingCntAlert, qRemaingCntAlert;	assign oRemaingCntAlert = rRemaingCntAlert;
+reg  qFull;									assign oFull = qFull;
+reg  qEmp;									assign oEmp = qEmp;
+reg  rRe;									assign oRvd = rRe;
 
 always @(posedge iCLK, negedge inARST)
 begin
@@ -68,6 +68,8 @@ begin
 	if (!inARST)	rRe <= 1'b0;
 	else if	(qRe)	rRe <= 1'b1;
 	else 			rRe <= 1'b0;
+	
+	rRemaingCntAlert <= qRemaingCntAlert;
 end
 
 always @*
