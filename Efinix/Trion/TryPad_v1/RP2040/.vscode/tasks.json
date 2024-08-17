@@ -3,6 +3,7 @@
  * Author  koutakimura
  * 
  * RP2040 Build & SWD Flash Write
+ * VIsual Studio 2022 とか install すると環境変数周りがバグります
  *-----------------------------------------------------------------------------*/
 {
 	"version": "2.0.0",
@@ -11,7 +12,7 @@
 		 * Build
 		 *-----------------------------------------------------------------------------*/
 		{
-			"label": "Pico Build",
+			"label": "Pico Build CMake",
 			"type": "cmake",
 			"command": "build",
 			"problemMatcher": "$gcc",
@@ -42,7 +43,7 @@
 			"dependsOrder": "sequence",
 			"dependsOn": [
 				"Pico Build",
-				"Pico uf2 Write"
+				// "Pico uf2 Write"
 			],
 			"group": {
 				"kind": "build",

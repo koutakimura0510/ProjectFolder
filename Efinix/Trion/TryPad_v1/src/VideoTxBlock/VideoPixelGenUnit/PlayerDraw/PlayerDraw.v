@@ -45,9 +45,9 @@ module PlayerDraw #(
 //-----------------------------------------------------------------------------
 (* ram_style = "BLOCK" *) reg [pSynColorDepth-1:0] rPlayerRam [0:pRamDepth-1];	// 分散 RAM は使用しないので MAX 宣言
 
-initial begin
-	$readmemh(pInitFileName, rPlayerRam);
-end
+// initial begin
+// 	$readmemh(pInitFileName, rPlayerRam);
+// end
 
 /**-----------------------------------------------------------------------------
  * RAW

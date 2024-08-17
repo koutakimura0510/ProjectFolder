@@ -15,10 +15,30 @@ strconcat COMMAND ' /BAUD='
 strconcat COMMAND BAUDRATE
  
 ; connect 
-;connect '/C=17'
+connect '/C=17'
  
-send $88$40$06$00$57$00$00$00$01
+send $88$40$06$00$57$00$00$00$00
+
+filenamebox 'File selection' 0
+if result<>0 then
+    messagebox inputstr 'Selected File'
+endif
+
+; ファイルオープン
+fileopen fhandle inputstr 0
+while 1
+    ; 一行読み込み
+    filereadln fhandle line
+    if result=1 then 
+          break
+    endif
+    ; 読み込んだ行を表示
+    messagebox line 'test.txt'
+    ; ファイル最後まで繰り返す
+endwhile
+; ファイルクローズ
+fileclose fhandle
 
 ; masro end
-;closett 
+closett 
 end

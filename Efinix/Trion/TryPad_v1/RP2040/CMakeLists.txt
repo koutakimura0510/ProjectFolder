@@ -48,7 +48,7 @@ add_executable(RP2040
     ./src/Musb.c
     ./src/Mvideo.c
     ./src/Mpsram.c
-    # ./src/Mflash.c
+    ./src/Mgpio.c
     ./src/MflashPico.c
     ./src/BraveFrontier/brave_frontier.c
 )

@@ -1,4 +1,9 @@
 {
 	"git.ignoreLimitWarning": true,
-	"C_Cpp.errorSquiggles": "disabled"
+	"C_Cpp.errorSquiggles": "disabled",
+	"files.associations": {
+		"*.v": "verilog",
+		"*.cfg": "tcl",
+		"sdl.h": "c"
+	}
 }

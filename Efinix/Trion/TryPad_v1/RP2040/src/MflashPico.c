@@ -19,26 +19,30 @@
 /**-----------------------------------------------------------------------------
  * USER MACRO / 
  *-----------------------------------------------------------------------------*/
-#define FLASH_DUMMY_CMD				(0x00)
-#define FLASH_ID_READ_CMD			(0x9f)
-#define FLASH_PROTECTION_REG_WRITE	(0x1f)
-#define FLASH_STATUS_REG1_ADRS		(0xA0)
-#define FLASH_STATUS_REG3_ADRS		(0xC3)
-#define FLASH_WRITE_ENALE_CMD 		(0x06)
-#define FLASH_BLOCK_ELASE			(0xd8)
-#define FLASH_BUSY_WAIT_CHECK		(0x0f)
-#define FLASH_PROGRAM_DATA_LOAD		(0x02)
-#define FLASH_PROGRAM_DATA_EXECUTE	(0x10)
-#define FLASH_PROGRAM_PAGE_READ		(0x13)
-#define FLASH_READ_DATA_CMD			(0x03)
-#define FLASH_STATUS_REG1			(0x03)
-#define FLASH_READ_DATA_CMD			(0x03)
+#define FLASH_DUMMY_CMD					(0x00)
+#define FLASH_ID_READ_CMD				(0x9f)
+#define FLASH_PROTECTION_REG_WRITE		(0x1f)
+#define FLASH_STATUS_REG1_ADRS			(0xA0)
+#define FLASH_STATUS_REG3_ADRS			(0xC3)
+#define FLASH_WRITE_ENALE_CMD 			(0x06)
+#define FLASH_BLOCK_ELASE				(0xd8)
+#define FLASH_BUSY_WAIT_CHECK			(0x0f)
+#define FLASH_PROGRAM_DATA_LOAD			(0x02)
+#define FLASH_PROGRAM_DATA_EXECUTE		(0x10)
+#define FLASH_PROGRAM_PAGE_READ			(0x13)
+#define FLASH_READ_DATA_CMD				(0x03)
+#define FLASH_STATUS_REG1				(0x03)
+#define FLASH_READ_DATA_CMD				(0x03)
 //
-#define FLASH_PROTECTION_WRITE_VALUE (0x83)	// 可変可能
+#define FLASH_PROTECTION_WRITE_VALUE 	(0x83)	// 可変可能
 //
-#define SPI_REG_SSP_DEVICE_SEL_IDBIT (0x01)
-#define SPI_REG_SSP_DEVICE_SEL_CLEAR (0x00)
-#define SPI_DIRECT_IO				 (TRION_PICO_IO3)
+#define SPI_REG_SSP_DEVICE_SEL_IDBIT 	(0x01)
+#define SPI_REG_SSP_DEVICE_SEL_CLEAR 	(0x00)
+#define SPI_DIRECT_IO				 	(TRION_PICO_IO3)
+//
+#define FLASH_ROM_SECTOR_SIZE			(512)	// COL 000h - 1FFh
+#define FLASH_ROM_PAGE_SIZE				(2048)	// COL 000h - 7FFh
+#define FLASH_ROM_BLOCK_SIZE			(FLASH_ROM_PAGE_SIZE * 64)
 
 
 /**-----------------------------------------------------------------------------
@@ -55,10 +59,8 @@ static void flash_read_data(uint8_t *rbuff, uint16_t col_adrs, uint16_t len);
 
 
 /**-----------------------------------------------------------------------------
- * user Flash Write
+ * Flash Rom Init
  * 
- * id = Sfm ID
- * page_adrs = 消去ブロック、64page単位で指定
  *-----------------------------------------------------------------------------*/
 void flash_rom_init(void)
 {
@@ -75,7 +77,7 @@ void flash_rom_init(void)
  * 	Device2 = 2
  *  ...
  * 
- * page_adrs = 消去ブロック、64page単位で指定
+ * page_adrs = 消去ブロック、64page単位(128KB)で指定
  *-----------------------------------------------------------------------------*/
 void flash_user_block_elase(uint8_t id, uint16_t page_adrs)
 {
@@ -83,9 +85,7 @@ void flash_user_block_elase(uint8_t id, uint16_t page_adrs)
 
 	usi_write(SPI_REG_SSP_DEVICE_SEL, bit);
 	spi_direct_control(SPI_DIRECT_IO, 1);
-	flash_write_enable_cmd();
 	flash_block_elase(page_adrs);
-	flash_busy_wait();
 	spi_direct_control(SPI_DIRECT_IO, 0);
 	usi_write(SPI_REG_SSP_DEVICE_SEL, SPI_REG_SSP_DEVICE_SEL_CLEAR);
 }
@@ -106,40 +106,12 @@ void flash_user_page_write(uint8_t id, uint8_t *wbuff, uint16_t col_adrs, uint16
 
 	usi_write(SPI_REG_SSP_DEVICE_SEL, bit);
 	spi_direct_control(SPI_DIRECT_IO, 1);
-	flash_write_enable_cmd();
 	flash_program_data_load(wbuff, col_adrs, len);
 	flash_program_data_execute(page_adrs);
-	flash_busy_wait();
 	spi_direct_control(SPI_DIRECT_IO, 0);
 	usi_write(SPI_REG_SSP_DEVICE_SEL, SPI_REG_SSP_DEVICE_SEL_CLEAR);
 }
 
-
-/**-----------------------------------------------------------------------------
- * Flash Write
- * 
- * id = Sfm ID
- * *wbuff = 書き込みバッファアドレス
- * col_adrs = col adrs
- * page_adrs = 書き込みページアドレス、64page単位で指定
- * len = バッファサイズ
- *-----------------------------------------------------------------------------*/
-void flash_write(uint8_t id, uint8_t *wbuff, uint16_t col_adrs, uint16_t page_adrs, uint16_t len)
-{
-	uint8_t bit = SPI_REG_SSP_DEVICE_SEL_IDBIT << id;
-
-	usi_write(SPI_REG_SSP_DEVICE_SEL, bit);
-	spi_direct_control(SPI_DIRECT_IO, 1);
-	flash_write_enable_cmd();
-	flash_block_elase(page_adrs);
-	flash_busy_wait();
-	flash_write_enable_cmd();
-	flash_program_data_load(wbuff, col_adrs, len);
-	flash_program_data_execute(page_adrs);
-	flash_busy_wait();
-	spi_direct_control(SPI_DIRECT_IO, 0);
-	usi_write(SPI_REG_SSP_DEVICE_SEL, SPI_REG_SSP_DEVICE_SEL_CLEAR);
-}
 
 /**-----------------------------------------------------------------------------
  * Flash Read
@@ -157,10 +129,47 @@ void flash_read(uint8_t id, uint8_t *rbuff, uint16_t col_adrs, uint16_t page_adr
 	usi_write(SPI_REG_SSP_DEVICE_SEL, bit);
 	spi_direct_control(SPI_DIRECT_IO, 1);
 	flash_page_read(page_adrs);
-	flash_busy_wait();
 	flash_read_data(rbuff, col_adrs, len);
 	spi_direct_control(SPI_DIRECT_IO, 0);
 	usi_write(SPI_REG_SSP_DEVICE_SEL, SPI_REG_SSP_DEVICE_SEL_CLEAR);
+}
+
+
+/**-----------------------------------------------------------------------------
+ * Flash Write
+ * 
+ * id = Sfm ID
+ *-----------------------------------------------------------------------------*/
+void flash_write_demo(uint8_t id)
+{
+	uint8_t wbuff[FLASH_ROM_PAGE_SIZE];
+	uint8_t rbuff[FLASH_ROM_PAGE_SIZE];
+	uint16_t adrs = 0;
+	uint8_t verify = 0;
+	uint8_t bit = SPI_REG_SSP_DEVICE_SEL_IDBIT << id;
+
+
+	for (uint16_t i = 0; i < FLASH_ROM_PAGE_SIZE/2; i++) {
+		wbuff[(i*2)]   = i & 0xff;
+		wbuff[(i*2)+1] = ((i >> 8) & 0xff);
+	}
+
+	usi_write(SPI_REG_SSP_DEVICE_SEL, bit);
+	spi_direct_control(SPI_DIRECT_IO, 1);
+	flash_block_elase(adrs);
+	flash_program_data_load(wbuff, adrs, FLASH_ROM_PAGE_SIZE);
+	flash_program_data_execute(adrs);
+	spi_direct_control(SPI_DIRECT_IO, 0);
+	usi_write(SPI_REG_SSP_DEVICE_SEL, SPI_REG_SSP_DEVICE_SEL_CLEAR);
+	flash_read(id, rbuff, adrs, adrs, FLASH_ROM_PAGE_SIZE);
+
+	for (uint16_t i = 0; i < FLASH_ROM_PAGE_SIZE; i++) {
+		if (rbuff[i] != wbuff[i]) {
+			verify = 1;
+		}
+	}
+
+	usi_write(VIDEO_REG_VSG_RST, verify);
 }
 
 
@@ -243,9 +252,11 @@ static void flash_write_enable_cmd(void)
  *-----------------------------------------------------------------------------*/
 static void flash_block_elase(uint16_t page_adrs)
 {
-	uint8_t wbuff[4] = {FLASH_BLOCK_ELASE, FLASH_STATUS_REG3_ADRS, page_adrs >> 8, page_adrs};
+	uint8_t wbuff[4] = {FLASH_BLOCK_ELASE, 0x00, page_adrs >> 8, page_adrs};
 
+	flash_write_enable_cmd();
 	spi_write_direct(wbuff, LEN(wbuff));
+	flash_busy_wait();
 }
 
 /**-----------------------------------------------------------------------------
@@ -270,6 +281,7 @@ static void flash_program_data_load(uint8_t *wbuff, uint16_t col_adrs, uint16_t 
 {
 	uint8_t cmd[3] = { FLASH_PROGRAM_DATA_LOAD, col_adrs >> 8, col_adrs };
 
+	flash_write_enable_cmd();
 	spi_cs_drive(0);
 	spi_write_direct_notcs(cmd, LEN(cmd));
 	spi_write_direct_notcs(wbuff, len);
@@ -284,6 +296,7 @@ static void flash_program_data_execute(uint16_t page_adrs)
 	uint8_t wbuff[4] = {FLASH_PROGRAM_DATA_EXECUTE, FLASH_DUMMY_CMD, page_adrs >> 8, page_adrs};
 
 	spi_write_direct(wbuff, LEN(wbuff));
+	flash_busy_wait();
 }
 
 /**-----------------------------------------------------------------------------
@@ -294,6 +307,7 @@ static void flash_page_read(uint16_t page_adrs)
 	uint8_t wbuff[4] = {FLASH_PROGRAM_PAGE_READ, FLASH_DUMMY_CMD, page_adrs >> 8, page_adrs};
 
 	spi_write_direct(wbuff, LEN(wbuff));
+	flash_busy_wait();
 }
 
 /**-----------------------------------------------------------------------------

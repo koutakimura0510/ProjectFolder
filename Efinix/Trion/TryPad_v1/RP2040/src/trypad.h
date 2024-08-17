@@ -55,7 +55,7 @@
 #include "./Mvideo.h"
 #include "./Mtimer.h"
 #include "./Mpsram.h"
-// #include "./Mflash.h"
+#include "./Mgpio.h"
 #include "./MflashPico.h"
 #include "./Musb.h"
 #include "./Mspi.h"

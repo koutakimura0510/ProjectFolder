@@ -91,8 +91,8 @@ static void trypad_peri_init(void)
 {
 	st7789_init();
 	psram_init();
-	// psram_device_test();
-	// flash_rom_init();
+	psram_device_test();
+	flash_rom_init();
 	usi_write(VIDEO_REG_VTU_CONVERTER_RST, 0x00);
 	printf("Flash ID %x\n", flash_id_read(0));
 	printf("Flash ID %x\n", flash_id_read(1));
@@ -131,6 +131,8 @@ int main()
 	trypad_fpga_init();
 	trypad_peri_init();
 	hw_clear_bits(&watchdog_hw->ctrl, WATCHDOG_CTRL_ENABLE_BITS);	// Init Complete でウォッチ・ドッグ解除
+	// flash_write_demo(0);
+	// flash_write_demo(1);
 
 	while (1) {
 		trypad_game_mode();

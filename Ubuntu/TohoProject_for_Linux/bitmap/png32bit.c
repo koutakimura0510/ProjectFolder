@@ -26,15 +26,15 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-// #define SDL2_VERSION
+#define SDL2_VERSION
 
-// #ifdef SDL2_VERSION
+#ifdef SDL2_VERSION
 	#include <SDL2/SDL.h>
 	#include <SDL2/SDL_image.h>
-// #else
-	// #include <SDL/SDL.h>
-	// #include <SDL/SDL_image.h>
-// #endif
+#else
+	#include <SDL/SDL.h>
+	#include <SDL/SDL_image.h>
+#endif
 
 
 /**-----------------------------------------------------------------------------
@@ -49,7 +49,8 @@
  *-----------------------------------------------------------------------------*/
 typedef enum
 {
-	XILINX,
+	RGB888,
+	RGB565,
 	DEFAULT,
 } RGB_TYPE;
 
@@ -60,15 +61,26 @@ typedef enum
 typedef struct {
 	uint32_t pixel_wid;			// 1画像の X軸の切り取り領域指定
 	uint32_t pixel_hei;			// 1画像の Y軸の切り取り領域指定
-	uint32_t type;				// RGB データの並び順指定
-	uint32_t color_bit;			// 1pixel の Bit幅を指定
-	uint32_t memory_type;		// メモリのフォーマット指定
+	uint32_t rgb_type;			// RGB 形式
 	uint32_t id_cnt;			// 切り抜き領域に ID を割り振る。デバッグ用途。
 	uint32_t ypixel_cut;
 	uint32_t xpixel_cut;
 	uint32_t cut_line;
 	uint8_t cut_line_buff[CUT_LINE_MAX];
 } PixelInfo;
+
+typedef struct {
+	uint8_t alpha;
+	uint8_t red;
+	uint8_t green;
+	uint8_t blue;
+} PixelColor888;
+
+typedef struct {
+	uint8_t alpha;
+	uint8_t msbbyte;
+	uint8_t lsbbyte;
+} PixelColor565;
 
 
 /**-----------------------------------------------------------------------------
@@ -83,9 +95,9 @@ FILE *fp;
  * プロトタイプ宣言
  *-----------------------------------------------------------------------------*/
 void error_fprintf(const char *s, int line);
-int system_init(char *path, char *dir_path);
+int file_create(char *path, char *dir_path);
 bool mapchip_info_eoc(uint8_t xpos, uint8_t *id_buff);
-uint32_t mapchip_pixel_gen(uint32_t alpha, uint32_t red, uint32_t green, uint32_t blue, uint32_t type, uint32_t color_bit);
+PixelColor888 mapchip_pixel_gen(uint8_t alpha, uint8_t red, uint8_t green, uint8_t blue, uint8_t type);
 uint32_t mapchip_color_upload(PixelInfo *info, uint8_t *color, uint8_t *sdl_pixe, uint32_t byte_per_pixel);
 void mapchip_file_save(PixelInfo *info, uint8_t *color, uint32_t wmax, uint32_t byte_per_pixel);
 void mapchip_info_save(PixelInfo *info);
@@ -109,13 +121,11 @@ void error_fprintf(const char *s, int line)
  * *path
  * 画像データのパスを入力
  *-----------------------------------------------------------------------------*/
-int system_init(char *path, char *dir_path)
+int file_create(char *path, char *dir_path)
 {
-	char filename[256];
-	char raw[] = ".raw";
-	char dat[] = ".dat";
+	char filename[256] ={'\0'};	// 初期化しないバグ発生
+	char bin[] = ".bin"; // 拡張子
 	uint32_t count = 0;
-	uint32_t file_type;
 
 	/* 解析ファイルのエラーチェック */
 	if (!path) {
@@ -153,19 +163,9 @@ int system_init(char *path, char *dir_path)
 		count++;
 	}
 
-	fprintf(stderr, "\n");
-	fprintf(stderr, "作成するファイルの拡張子を選択して下さい。\n");
-	fprintf(stderr, "0 = raw, 1 = dat\n");
-	scanf("%d", &file_type);
-
 	/* ファイル名と出力先のパスを生成 */
 	strcat(dir_path, filename);
-
-	if (file_type == 0) {
-		strcat(dir_path, raw);
-	} else {
-		strcat(dir_path, dat);
-	}
+	strcat(dir_path, bin);
 
 	/* ファイルのオープンとエラーチェック */
 	fp = fopen(dir_path, "wb");
@@ -198,74 +198,62 @@ bool mapchip_info_eoc(uint8_t xpos, uint8_t *id_buff)
 }
 
 /**-----------------------------------------------------------------------------
- * 指定範囲のマップチップデータ取得
+ * RGB888 の色データを RGB565 に間引くか、RGB888 のまま出力する
+ * colocr_bit
  *-----------------------------------------------------------------------------*/
-// void mapchip_pixel_get()
-// {
-// 	uint32_t wpos   = 0;
-// 	uint32_t id_cnt = x + (y * (image->w / pixel_wid));
-// 	uint32_t xpixel = x * pixel_wid * fmt->BytesPerPixel;
-
-// 	/* 指定範囲のマップチップデータ取得 */
-// 	for (uint32_t j = 0; j < pixel_hei; j++)
-// 	{
-// 		uint32_t cuty = j * image->w * fmt->BytesPerPixel;
-// 		for (uint32_t i = 0; i < pixel_wid; i++)
-// 		{
-// 			uint32_t cutx = i * fmt->BytesPerPixel;
-// 			for (uint32_t x = 0; x < fmt->BytesPerPixel; x++)
-// 			{
-// 				uint32_t pos = x + cutx + cuty + xpixel + ypixel;
-// 				color[wpos] = p[pos];
-// 				wpos++;
-// 			}
-// 		}
-// 	}
-// }
-
-
-
-/*
- * RGBを形成
- *
- * type
- * RGBの生成パターンを選択
- */
-uint32_t mapchip_pixel_gen(uint32_t alpha, uint32_t red, uint32_t green, uint32_t blue, uint32_t type, uint32_t color_bit)
+PixelColor888 mapchip_pixel_gen(uint8_t alpha, uint8_t red, uint8_t green, uint8_t blue, uint8_t rgb_type)
 {
-	uint32_t pixel;
-	uint8_t msb;
-	uint8_t lsb;
+	PixelColor888 pixel;
 
-	switch (color_bit) {
-		case 0:
-		msb = 4;
-		lsb = 4;
-		break;
-	
-		default:
-		msb = 8;
-		lsb = 0;
-		break;
-	}
+	switch (rgb_type) {
+		case RGB888:
+			pixel.alpha = alpha;
+			pixel.red = red;
+			pixel.green = green;
+			pixel.blue = blue;
+			break;
 
-	switch (type) {
-		case XILINX:
-		pixel = alpha >> lsb;
-		pixel = (pixel << msb) | (red >> lsb);
-		pixel = (pixel << msb) | (blue >> lsb);
-		pixel = (pixel << msb) | (green >> lsb);
-		break;
+		case RGB565:
+			pixel.alpha = alpha;
+			pixel.red = (red & 0xf8);
+			pixel.green = (green & 0xfc);
+			pixel.blue = (blue & 0xf8);
+			break;
 
 		default:
-		pixel = alpha >> lsb;
-		pixel = (pixel << msb) | (red >> lsb);
-		pixel = (pixel << msb) | (green >> lsb);
-		pixel = (pixel << msb) | (blue >> lsb);
-		break;
+			break;
 	}
 
 	return pixel;
+}
+
+
+/**-----------------------------------------------------------------------------
+ * MapChip RGB データのファイル出力
+ *-----------------------------------------------------------------------------*/
+void mapchip_file_save(PixelInfo *info, uint8_t *color, uint32_t wmax, uint32_t byte_per_pixel)
+{
+	PixelColor888 pixel;
+	PixelColor565 Rgb565;
+
+	for (uint32_t x = 0; x < wmax; x = x + byte_per_pixel) {
+		if (byte_per_pixel == 3) {
+			pixel = mapchip_pixel_gen(0xff, color[x + 2], color[x + 1], color[x], info->rgb_type);
+		}else{
+			pixel = mapchip_pixel_gen(color[x + 3], color[x], color[x + 1], color[x + 2], info->rgb_type);
+		}
+
+		if (info->rgb_type == RGB888) {
+			fwrite(&pixel, sizeof(PixelColor888), 1, fp);
+		}else{
+			Rgb565.alpha   = pixel.alpha;
+			Rgb565.msbbyte = pixel.red | ((pixel.green >> 5) & 0x07);
+			Rgb565.lsbbyte = (pixel.green << 3) | (pixel.blue >> 3);
+			fwrite(&Rgb565, sizeof(PixelColor565), 1, fp);
+		}
+	}
+	
+	fprintf(stderr, "ID = %3d,  マップチップのサイズ = %4d\n", info->id_cnt, wmax / byte_per_pixel);
 }
 
 /**-----------------------------------------------------------------------------
@@ -290,54 +278,6 @@ uint32_t mapchip_color_upload(PixelInfo *info, uint8_t *color, uint8_t *sdl_pixe
 	}
 
 	return wpos;
-}
-
-/**-----------------------------------------------------------------------------
- * MapChip RGB データのファイル出力
- *-----------------------------------------------------------------------------*/
-void mapchip_file_save(PixelInfo *info, uint8_t *color, uint32_t wmax, uint32_t byte_per_pixel)
-{
-	for (uint32_t x = 0; x < wmax; x = x + byte_per_pixel)
-	{
-		uint32_t pixel;
-
-		if (byte_per_pixel == 3)
-		{
-			pixel = mapchip_pixel_gen(0xff, color[x + 2], color[x + 1], color[x], info->type, info->color_bit);
-		}
-		else
-		{
-			pixel = mapchip_pixel_gen(color[x + 3], color[x], color[x + 1], color[x + 2], info->type, info->color_bit);
-		}
-
-		switch (info->memory_type) {
-			case 0: 
-			if (info->color_bit == 0) {
-				fprintf(fp, "%04x\n", pixel);
-			}
-			else
-			{
-				fprintf(fp, "%08x\n", pixel);
-			}
-			break;
-
-			default:
-			if (info->color_bit == 0) {
-				fprintf(fp, "0x%04x\n", pixel);
-			}
-			else
-			{
-				fprintf(fp, "0x%08x\n", pixel);
-			}
-			break;
-		}
-	}
-	
-	fprintf(stderr, "ID = %3d,  マップチップのサイズ = %4d\n", info->id_cnt, wmax / byte_per_pixel);
-
-	if (info->memory_type == 0) {	//マップチップデータの切り取りが終了したら改行する
-		fprintf(fp, "\n");
-	}
 }
 
 /**-----------------------------------------------------------------------------
@@ -373,19 +313,9 @@ void mapchip_info_save(PixelInfo *info)
 	fprintf(stderr, "\n");
 	fprintf(stderr, "----------------------------------------------\n");
 	fprintf(stderr, "RGBの生成タイプを指定して下さい。\n");
-	fprintf(stderr, "0 = RBG, 1 = RGB\n");
-	scanf("%d", &info->type);
-	fprintf(stderr, "PixelType = %d\n", info->type);
-	fprintf(stderr, "\n");
-	fprintf(stderr, "----------------------------------------------\n");
-	fprintf(stderr, "ARGBのBit数を選択して下さい\n");
-	fprintf(stderr, "0 = 4Bit, 1 = 8Bit\n");
-	scanf("%d", &info->color_bit);
-	fprintf(stderr, "\n");
-	fprintf(stderr, "----------------------------------------------\n");
-	fprintf(stderr, "データの保存形式を選択して下さい。\n");
-	fprintf(stderr, "0 = Flash Memory, 1 = FPGA Block RAM\n");
-	scanf("%d", &info->memory_type);
+	fprintf(stderr, "0 = RGB888, 1 = RGB565\n");
+	scanf("%d", &info->rgb_type);
+	fprintf(stderr, "PixelType = %d\n", info->rgb_type);
 	fprintf(stderr, "\n");
 	fprintf(stderr, "----------------------------------------------\n");
 	fprintf(stderr, "使用する画像ラインの選択をします。\n");
@@ -413,7 +343,7 @@ void mapchip_info_save(PixelInfo *info)
 	}
 
 	for (uint8_t i = 0; i < image->w / info->pixel_wid ; i++) {
-		printf("0x%x\n",info->cut_line_buff[i]);
+		printf("cut_line 0x%x\n",info->cut_line_buff[i]);
 	}
 }
 
@@ -431,7 +361,7 @@ void mapchip_info_save(PixelInfo *info)
 void pixel_generate(void)
 {
 	PixelInfo info;
-	uint8_t color[BUFFER_SIZE];
+	static uint8_t color[BUFFER_SIZE];
 	uint8_t *sdl_pixel;
 	uint32_t wpos;	// Color Buffer WP
 
@@ -462,10 +392,9 @@ void pixel_generate(void)
 	SDL_Quit();
 }
 
-/*
- * ver1. 2021/07/10
- * sdlのpng設定
- */
+/**-----------------------------------------------------------------------------
+ * sdl png 有効設定
+ *-----------------------------------------------------------------------------*/
 static void sdl_init(void)
 {
 	int32_t flags = IMG_INIT_JPG | IMG_INIT_PNG;
@@ -490,9 +419,9 @@ int main(int argc, char **argv)
 {
 	char dir_path[256] = "./raw/";	// file 保存ディレクトリ
 
-	if (0 != system_init(argv[1], dir_path)) {
+	if (0 != file_create(argv[1], dir_path)) {
 		fprintf(stderr, "引数にファイルを選択してください。\n");
-		fclose(fp);
+		// fclose(fp);
 		SDL_Quit();
 		return 1;
 	}
