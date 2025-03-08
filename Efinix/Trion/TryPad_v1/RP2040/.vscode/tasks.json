@@ -52,8 +52,8 @@
 		},
 		
 		/**-----------------------------------------------------------------------------
-		 * SWD Flash Write
-		 *-----------------------------------------------------------------------------*/
+		* SWD Flash Write
+		*-----------------------------------------------------------------------------*/
 		{
 			"label": "Pico SWD Flash Write",
 			"type": "shell",
@@ -67,6 +67,19 @@
 				"adapter speed 5000; program {${command:cmake.launchTargetPath}} verify reset exit"
 			],
 			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		
+		/**-----------------------------------------------------------------------------
+		* Python 
+		*-----------------------------------------------------------------------------*/
+		{
+			"label": "Py Serial",
+			"type": "shell",
+			"command": "cd python;py serial_Trypad.py",
 			"group": {
 				"kind": "build",
 				"isDefault": true

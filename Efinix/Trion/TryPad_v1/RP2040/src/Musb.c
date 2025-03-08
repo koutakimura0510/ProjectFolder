@@ -6,6 +6,9 @@
  * Flash ROM アップデート & ベリファイ
  * FPGA レジスタ R/W
  * 
+ * Pico USB でアップデート処理を実現したかったが USB1.1 12Mbps では、あまりにも遅かったので断念。
+ * 外部から直接 ROMM アップデートすることとした。
+ * Max12Mbps, APIバッファMax 256byte, かなりボトルネック
  *-----------------------------------------------------------------------------*/
 #include <stdio.h>
 #include "class/cdc/cdc_device.h"	// Tyny USB の送受信関数を利用
@@ -14,6 +17,8 @@
 /**-----------------------------------------------------------------------------
  * USER MACRO / 
  *-----------------------------------------------------------------------------*/
+// 有効コマンド
+#define USB_UPDATE_MODE_ACTIVE		(0)		// "1" 有効、"0"無効
 // USB 受信コマンド
 #define USB_REC_CMD_USI_READ		(0xef)
 #define USB_REC_CMD_USI_WRITE		(0x88)
@@ -21,7 +26,7 @@
 #define USB_REC_CMD_ROM_WRITE		(0x55)
 // 
 #define USB_SEND_CMD_READ_ACK		(0x01)	// 受信完了通知
-//
+// used update mode
 #define USB_MAX_TRANSACTION_SIZE	(256)
 #define USB_MAX_PAGE_SIZE			(2048)
 #define USB_MAX_PAGE_SIZE_MASK		(USB_MAX_PAGE_SIZE-1)
@@ -96,9 +101,11 @@ void usb_transaction(void)
 			usb_device_rom_read();
 			break;
 
+#ifndef USB_UPDATE_MODE_ACTIVE
 		case USB_REC_CMD_ROM_WRITE:
 			usb_device_rom_write();
 			break;
+#endif
 	
 		default:
 			break;
@@ -134,8 +141,8 @@ static void usb_device_receiver(void)
 	usi_adrs = (g_usb_rbuff[0] << 24) | (g_usb_rbuff[1] << 16) | (g_usb_rbuff[2] << 8) | g_usb_rbuff[3];
 	usi_data = (g_usb_rbuff[4] << 24) | (g_usb_rbuff[5] << 16) | (g_usb_rbuff[6] << 8) | g_usb_rbuff[7];
 	usi_write(usi_adrs, usi_data);
-	usb_byte_write(usi_adrs); // ループバック debug only
-	usb_byte_write(usi_data); // ループバック debug only
+	// usb_byte_write(usi_adrs);
+	// usb_byte_write(usi_data);
 }
 
 
@@ -167,6 +174,8 @@ static void usb_device_rom_read(void)
  * USB Spi Rom Write
  * 
  *-----------------------------------------------------------------------------*/
+#ifndef USB_UPDATE_MODE_ACTIVE
+
 static void usb_device_rom_write(void)
 {
 	uint8_t mode = UPDATE_MODE_IDLE;
@@ -230,7 +239,6 @@ static void usb_device_rom_write(void)
 				data_size -= USB_MAX_TRANSACTION_SIZE;
 				mode = UPDATE_MODE_ADRS_UPDATE;
 			}
-			led_blink(LED_G, 2);
 			break;
 
 		case UPDATE_MODE_ADRS_UPDATE:
@@ -240,8 +248,8 @@ static void usb_device_rom_write(void)
 			if (col_adrs == 0) {
 				page_adrs++;
 			}
-			mode = UPDATE_MODE_IDLE;
 			timeout_time = get_time(); // IDLE に戻るときに、timeout 時間更新しておく
+			mode = UPDATE_MODE_IDLE;
 			break;
 
 		case UPDATE_MODE_DONE:
@@ -251,12 +259,15 @@ static void usb_device_rom_write(void)
 			mode = UPDATE_MODE_DONE;
 			break;
 		}
+
+		led_tmr_blink(LED_GREEN_INDEX, MTIMER_50MS);
 	} while ((mode != UPDATE_MODE_DONE) && (timeout == false));
 
+	led_light(LED_G, 1);
 	usb_byte_write(USB_SEND_CMD_READ_ACK);
 	tud_cdc_read(g_usb_rbuff, USB_MAX_TRANSACTION_SIZE); // ゴミデータ読み込み flash Crear
 }
-
+#endif
 
 /**-----------------------------------------------------------------------------
  * USB byte Write

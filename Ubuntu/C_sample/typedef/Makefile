@@ -1,6 +1,6 @@
 CC 	  = gcc
 CFLAG = -std=c11 -Wall
-SRC   = class.c
+SRC   = state_machine_sample.c
 
 all: build
 

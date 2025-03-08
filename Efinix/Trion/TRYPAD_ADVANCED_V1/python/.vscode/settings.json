@@ -1,0 +1,9 @@
+{
+    "python.linting.enabled": true,
+    "python.languageServer": "Pylance",
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingModuleSource": "none"
+    },
+    // "python.defaultInterpreterPath": "C:\\Users\\Kouta\\AppData\\Roaming\\Python\\Python39\\python.exe",
+}

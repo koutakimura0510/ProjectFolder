@@ -16,6 +16,27 @@
  *-----------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------------------
+ * led timer blink
+ * 
+ * pin: GPIO Pin No
+ * led_index: LED_INDEX_ENUM の定数
+ * blink_time: 1us order, タイマー関数の仕様による
+ *-----------------------------------------------------------------------------*/
+void led_tmr_blink(uint8_t led_index, uint32_t blink_time)
+{
+	static uint8_t flash[3] = {0};
+	static uint32_t tmr[3] = {0};
+	static const uint8_t pin[3] = {
+		LED_R,	LED_G,	LED_B,
+	};
+
+	if (true == timer_compare(&tmr[led_index], blink_time)) {
+		gpio_put(pin[led_index], flash[led_index]);
+		flash[led_index] = ~flash[led_index];
+	}
+}
+
+/**-----------------------------------------------------------------------------
  * led blink
  *-----------------------------------------------------------------------------*/
 void led_blink(uint8_t pin, uint8_t count)

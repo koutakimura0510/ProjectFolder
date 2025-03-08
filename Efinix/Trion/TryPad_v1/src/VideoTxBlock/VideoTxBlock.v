@@ -149,12 +149,14 @@ VideoTxCsr #(
 	.iDmaDone(wDmaDoneCsr),
 	// Video Sync Gen
 	.oVsgRst(wVsgRst),
-	// TFT Config
+	// Vtu TFT Config
 	.oVtuMcuDq(wVtuMcuDqCsr),		.oVtuMcuWRX(wVtuMcuWRXCsr),
 	.oVtuMcuRDX(wVtuMcuRDXCsr),		.oVtuMcuDCX(wVtuMcuDCXCsr),
 	.oVtuMcuCSX(wVtuMcuCSXCsr),		.oVtuMcuRST(wVtuMcuRSTCsr),
 	.oVtuMcuIM(wVtuMcuIMCsr),		.oVtuMcuGate(wVtuMcuGateCsr),
 	.oVtuConverterRst(wVtuConverterRstCsr),
+	// Vpg
+	.oVpgUnitRst(),
 	// Map Info
 	.oMapXSize(wMapXSizeCsr),
 	.oMapYSize(wMapYSizeCsr),
@@ -224,8 +226,7 @@ VideoPixelGenUnit #(
 	.oSceneAlphaMax(wSceneAlphaMaxCsr),
 	.oSceneAlphaMin(wSceneAlphaMinCsr),
 	// Control Status
-	.oBdpHpos(wPdpHposCsr),	.oBdpVpos(wPdpVposCsr),
-	.oBdpFe(),
+	.oBdpHpos(wPdpHposCsr),	.oBdpVpos(wPdpVposCsr),	.oBdpFe(),
 	// Dst Fifo Side
 	.oPD(wVpgPD),		.iRS(qVpgRS),
 	.oVD(wVpgVD),		.oFD(wVpgFD),

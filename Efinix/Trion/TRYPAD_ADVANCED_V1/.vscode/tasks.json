@@ -1,0 +1,73 @@
+/**-----------------------------------------------------------------------------
+ * Create  2023/7/8
+ * Author  koutakimura
+ * 
+ * Efinity FPGA tasks.json
+ * Ctrl + Shift + B で実行するコマンドを選択。
+ * 使用プロジェクトを変更する場合は、下記の文字列を task.json内で一括変換する。
+ * ※[] 内を一括変換 [Ti180_FMB_R1W1_k256m32_230125] < Windows
+ * 					 [C:\Efinity\2023.1\bin\setup.bat] <- Windows
+ * 					 [/tools/efinity/2023.1/bin/setup.sh] <- Linux
+ * 					 [/src/SysTimerBlock/sim/make] <- Simlation
+ * 
+ * tasks.json と端末は別プロセスなので、setup.sh を実行してシンボリックリンクの設定必要あり。 <- Linux
+ *
+ * https://qiita.com/ShortArrow/items/dc0c8cacd696154510f1 <- tasks.json 参考
+ *-----------------------------------------------------------------------------*/
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			//-----------------------------------------------------------------------------
+			// Simlation 2023-07-22 Add
+			//-----------------------------------------------------------------------------
+			"label": "Sim",
+			"type": "shell",
+			"command": "make sim",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		{
+			"label": "Compile",	// bitstream 出力まで一括実行
+			"type": "shell",
+			"command": "./config.bat compile;make py",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		{
+			"label": "Jtag",	// JTAG 書き込み
+			"type": "shell",
+			"command": "./config.bat jtag",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		
+		{
+			"label": "Flash",		// Flash ROM 書き込み
+			"type": "shell",
+			"command": "./config.bat flash",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		{
+			"label": "Compile + JTAG",
+			"type": "shell",
+			"command": "./config.bat compile;./config.bat jtag",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+	]
+}

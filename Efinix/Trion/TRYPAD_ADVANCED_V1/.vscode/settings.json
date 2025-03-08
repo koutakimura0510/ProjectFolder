@@ -1,0 +1,19 @@
+{
+  "files.associations": {
+    "*.v": "verilog",
+    "apb3_cl.h": "c",
+    "soc.h": "c",
+    "bsp.h": "c",
+    "io.h": "c",
+    "type.h": "c",
+    "clint.h": "c",
+    "uart.h": "c",
+    "flash_rom_func.h": "c",
+    "spi_func.h": "c",
+    "system_wrapper.h": "c",
+    "periheral_macro.h": "c",
+    "gpio_func.h": "c",
+    "synth_func.h": "c",
+    "i2c_func.h": "c"
+  },
+}

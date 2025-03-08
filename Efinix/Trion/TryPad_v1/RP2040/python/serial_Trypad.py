@@ -58,7 +58,7 @@ def serial_write():
                     print(f'数値が不正です\n')
                     pass
             elif cmd_input  == '4':
-                send_file_binary()
+                # send_file_binary()
                 pass
             elif cmd_input  == '5':
                 print("\thread 0 end")
@@ -113,40 +113,6 @@ def serial_thread_read():
             elif cmd_input  == '5':
                 print("\nthread 1 end")
                 sys.exit(0)
-
-#-------------------------------------------------------------------------------
-# シグナルハンドラー
-#-------------------------------------------------------------------------------
-def signal_handler(sig, frame):
-    global Serial_Port
-    print("\nCtrl+C detected! Closing serial port and exiting...")
-    if Serial_Port and Serial_Port.is_open:
-        Serial_Port.close()
-    sys.exit(0)
-
-#-------------------------------------------------------------------------------
-# シリアルポートをOpen
-#-------------------------------------------------------------------------------
-def serial_open():
-    global Serial_Port
-    
-    #portリストを取得
-    serial_ports={}
-    for i,port in enumerate(serial.tools.list_ports.comports()):
-        serial_ports[str(i)]=port.device
-    
-    #RaspberryPiのminiUART検出できないので、/dev/ttyAMA0があれば自動的に/dev/ttyS0を追加
-    if '/dev/ttyAMA0' in serial_ports.values():
-        serial_ports[str(len(serial_ports))]='/dev/ttyS0'
-
-    port_val = serial_ports[ input(f'ポート番号を選んでください。{serial_ports}:') ]
-    # boud_val = int(input('ボーレートbpsを数値で入力してください。:'))
-    boud_val = int(921600)
-    # prty_val = input(f'パリティーを選んでください。[N:None, O:Odd, E:Even]:')
-    prty_val = 'N'
-    
-    Serial_Port=serial.Serial(port=port_val, baudrate=boud_val, parity= prty_val)
-    print(f'open{port_val}/{boud_val}bps/parity:{prty_val}')
 
 #-------------------------------------------------------------------------------
 # ファイルから16進数データを送信
@@ -214,7 +180,7 @@ def send_file_data():
                 # 'wt' で始まる行は待機時間
                 try:
                     wait_time = int(line[2:])
-                    # print(f'Waiting for {wait_time} ms...')
+                    print(f'Waiting for {wait_time} ms...')
                     time.sleep(wait_time/1000)  # ms order
                 except ValueError:
                     print(f'Invalid wait time: {line}')
@@ -225,14 +191,14 @@ def send_file_data():
                     data = bytes.fromhex(''.join(hex_data)) # カンマ区切りのデータをバイト列に変換
                     final_data = bytes([0x88]) + data
                     Serial_Port.write(final_data)
-                    # print(f'Sent: {final_data.hex()}')
+                    print(f'Sent: {final_data.hex()}')
                 except ValueError:
                     print(f'Invalid data: {line}')
 
 #-------------------------------------------------------------------------------
 # ファイルからバイナリデータを送信
 #-------------------------------------------------------------------------------
-def send_file_binary(chunk_size=128):
+def send_file_binary():
     global Serial_Port
     last_file_path = None
 
@@ -286,31 +252,34 @@ def send_file_binary(chunk_size=128):
         print("Ack OK")
         
         with open(file_path, 'rb') as file:
-            total = 0
-            start_time = time.time()
-            try:
-                while True:
-                    chunk = file.read(chunk_size)
-                    if not chunk:
-                        print(f'not chunk')
-                        break
+            file_data = file.read()
+
+        total = 0
+        start_time = time.time()
+        chunk_size=2048
+        file_size = len(file_data)
+
+        try:
+            while total < file_size:
+                try:
+                    chunk = file_data[total:total + chunk_size]
                     
-                    if len(chunk) < 256:  # chunkが256バイトより少ない場合、0でパディングする
-                        chunk = chunk.ljust(256, b'\x00')
-                        # print(f'Chunk Padding')
+                    if len(chunk) < chunk_size:  # chunkが少ない場合、0でパディングする
+                        chunk = chunk.ljust(chunk_size, b'\x00')
+                        print(f'Chunk Padding')
                     Serial_Port.write(chunk)
-                    total = total + 256
+                    # ack_wait()
+
+                    total = total + chunk_size
                     if time.time() - start_time >= 1:
                         start_time = time.time()
-                        print(f'Sent {len(chunk)}')
                         print(f'Total Sent', total)
-                        
-                    if file_size <= total:
-                        break
-                    else:
-                        ack_wait()
-            except KeyboardInterrupt:
-                pass
+                except KeyboardInterrupt:
+                    break
+        except KeyboardInterrupt:
+            print("break")
+            Serial_Port.close()
+            return
         print("File transfer completed.")
 
         # # verify
@@ -343,18 +312,52 @@ def send_file_binary(chunk_size=128):
     except Exception as e:
         print(f"An error occurred: {e}")
     except KeyboardInterrupt:
+        Serial_Port.close()
         print(f"end: {e}")
 
 # シリアル wait
 def ack_wait():
-    try:
-        while True:
+    while True:
+        try:
             rd = serial_read()
             if rd & 0x01:
                 break
-    except:
-        pass
+        except:
+            break
 
+#-------------------------------------------------------------------------------
+# シグナルハンドラー
+#-------------------------------------------------------------------------------
+def signal_handler(sig, frame):
+    global Serial_Port
+    print("\nCtrl+C detected! Closing serial port and exiting...")
+    if Serial_Port and Serial_Port.is_open:
+        Serial_Port.close()
+    sys.exit(0)
+
+#-------------------------------------------------------------------------------
+# シリアルポートをOpen
+#-------------------------------------------------------------------------------
+def serial_open():
+    global Serial_Port
+    
+    #portリストを取得
+    serial_ports={}
+    for i,port in enumerate(serial.tools.list_ports.comports()):
+        serial_ports[str(i)]=port.device
+    
+    #RaspberryPiのminiUART検出できないので、/dev/ttyAMA0があれば自動的に/dev/ttyS0を追加
+    if '/dev/ttyAMA0' in serial_ports.values():
+        serial_ports[str(len(serial_ports))]='/dev/ttyS0'
+
+    port_val = serial_ports[ input(f'ポート番号を選んでください。{serial_ports}:') ]
+    # boud_val = int(input('ボーレートbpsを数値で入力してください。:'))
+    boud_val = int(921600)
+    # prty_val = input(f'パリティーを選んでください。[N:None, O:Odd, E:Even]:')
+    prty_val = 'N'
+    
+    Serial_Port=serial.Serial(port=port_val, baudrate=boud_val, parity= prty_val)
+    print(f'open{port_val}/{boud_val}bps/parity:{prty_val}')
 
 #-------------------------------------------------------------------------------
 # main
