@@ -43,6 +43,7 @@
  *-----------------------------------------------------------------------------*/
 #define BUFFER_SIZE 	(1920 * 1080)
 #define CUT_LINE_MAX	(32)
+#define DEBUG_PRINT_ENABLE	(0)
 
 /**-----------------------------------------------------------------------------
  * RGB生成タイプ
@@ -235,6 +236,7 @@ void mapchip_file_save(PixelInfo *info, uint8_t *color, uint32_t wmax, uint32_t 
 {
 	PixelColor888 pixel;
 	PixelColor565 Rgb565;
+	uint32_t index_debug = 0;
 
 	for (uint32_t x = 0; x < wmax; x = x + byte_per_pixel) {
 		if (byte_per_pixel == 3) {
@@ -242,13 +244,18 @@ void mapchip_file_save(PixelInfo *info, uint8_t *color, uint32_t wmax, uint32_t 
 		}else{
 			pixel = mapchip_pixel_gen(color[x + 3], color[x], color[x + 1], color[x + 2], info->rgb_type);
 		}
+		
+		if (DEBUG_PRINT_ENABLE == 1) {
+			fprintf(stderr, "%d = %x,%x,%x,%x\n", index_debug, pixel.alpha, pixel.red, pixel.green, pixel.blue);
+			index_debug++;
+		}
 
 		if (info->rgb_type == RGB888) {
 			fwrite(&pixel, sizeof(PixelColor888), 1, fp);
 		}else{
 			Rgb565.alpha   = pixel.alpha;
-			Rgb565.msbbyte = pixel.red | ((pixel.green >> 5) & 0x07);
-			Rgb565.lsbbyte = (pixel.green << 3) | (pixel.blue >> 3);
+			Rgb565.msbbyte = pixel.red | ((pixel.green >> 5) & 0x07); 	// R[7:3],G[7:5]
+			Rgb565.lsbbyte = (pixel.green << 3) | (pixel.blue >> 3);	// G[4:0],B[7:3]
 			fwrite(&Rgb565, sizeof(PixelColor565), 1, fp);
 		}
 	}
@@ -266,17 +273,32 @@ uint32_t mapchip_color_upload(PixelInfo *info, uint8_t *color, uint8_t *sdl_pixe
 	for (uint32_t y = 0; y < info->pixel_hei; y++)	{ // 指定範囲のマップチップデータ取得
 		uint32_t cuty = y * image->w * byte_per_pixel;
 
+		if (DEBUG_PRINT_ENABLE == 1) {
+			fprintf(stderr, "----- Line %d -----\r\n", y);
+		}
+		
 		for (uint32_t x = 0; x < info->pixel_wid; x++) {
 			uint32_t cutx = x * byte_per_pixel;
+			fprintf(stderr, "pixel %d = ,", x + y * image->w);
 
 			for (uint32_t rgbx = 0; rgbx < byte_per_pixel; rgbx++) {	// 1pixel の RGB 要素抜き出し
 				uint32_t pos = rgbx + cutx + cuty + info->xpixel_cut + info->ypixel_cut;
 				color[wpos] = sdl_pixel[pos];
 				wpos++;
+
+				if (DEBUG_PRINT_ENABLE == 1) {
+					fprintf(stderr, "%x,", sdl_pixel[pos]);
+				}
+			}
+			// fprintf(stderr, "%x, %d", wpos, byte_per_pixel);
+
+			if (DEBUG_PRINT_ENABLE == 1) {
+				fprintf(stderr, "\n");
 			}
 		}
 	}
 
+	fprintf(stderr, "total wpos = %x\r\n", wpos);
 	return wpos;
 }
 
@@ -324,26 +346,23 @@ void mapchip_info_save(PixelInfo *info)
 	fprintf(stderr, "以降の 4,5,6 ラインも使用する場合は、13456 と入力します。\n");
 	fprintf(stderr, "0 = AllLine, 123456 -> 135 CutLine\n");
 	scanf("%d", &info->cut_line);
+	memset(info->cut_line_buff, 0, sizeof(info->cut_line_buff));
 
 	if (info->cut_line != 0) {
-		uint32_t dec = 1;
-
-		for (uint8_t i = 0;  i < image->w / info->pixel_wid; i++) {
-			dec *= 10;
-		}
-
-		for (uint8_t i = image->w / info->pixel_wid; i > 0 ; i--) {
-			info->cut_line_buff[i] = info->cut_line / dec;
-			info->cut_line %= dec;
+		uint32_t temp = info->cut_line;
+	
+		for (uint8_t i = 0; i < image->w / info->pixel_wid; i++) {
+			info->cut_line_buff[i] = temp % 10;
+			temp /= 10;
 		}
 	} else {
 		for (uint8_t i = 0; i < CUT_LINE_MAX; i++) {
 			info->cut_line_buff[i] = i;
 		}
 	}
-
-	for (uint8_t i = 0; i < image->w / info->pixel_wid ; i++) {
-		printf("cut_line 0x%x\n",info->cut_line_buff[i]);
+	
+	for (uint8_t i = 0; i < image->w / info->pixel_wid; i++) {
+		printf("cut_line 0x%x\n", info->cut_line_buff[i]);
 	}
 }
 
@@ -354,9 +373,17 @@ void mapchip_info_save(PixelInfo *info)
  * 1. 画像データの先頭アドレス取得
  * 2. 横幅、縦幅の最大値を取得
  * 3. 画像情報をファイルに出力
- * 4. 1pixelの最大バイト数ずつデータを生成、(RGB24bit = 3bytes)
+ * 4. 1pixelのバイト数ずつデータを生成
  *
  * 色データの並び順が RGBである、使用するXilinxIPが RBGのためデータ生成を並び変えながら行う
+ * 例えば 1マス32x32 で 9マスの構成=96x96 の画像があって、32x32 で抽出するときは以下のように処理が行われる。
+ * 
+ * マス区切り
+ * 1,2,3
+ * 4,5,6
+ * 7,8,9
+ * 
+ * 1,2,3,4,5,6,7,8,9 の順番で抽出される
  */
 void pixel_generate(void)
 {
@@ -377,14 +404,14 @@ void pixel_generate(void)
 
 		for (uint32_t x = 0; x < image->w / info.pixel_wid; x++)
 		{
-			if (false == mapchip_info_eoc(x, info.cut_line_buff)) {
+			if (false == mapchip_info_eoc(x+1, info.cut_line_buff)) {
 				continue;
 			}
 
 			info.xpixel_cut = x * info.pixel_wid * fmt->BytesPerPixel;	// 画像の切り取り x座標計算
 			info.id_cnt = x + (y * (image->w / info.pixel_wid));		// 切り取り座標のID算出
-			wpos = mapchip_color_upload(&info, color, sdl_pixel, fmt->BitsPerPixel);
-			mapchip_file_save(&info, color, wpos, fmt->BitsPerPixel);
+			wpos = mapchip_color_upload(&info, color, sdl_pixel, fmt->BytesPerPixel);
+			mapchip_file_save(&info, color, wpos, fmt->BytesPerPixel);
 		}
 	}
 

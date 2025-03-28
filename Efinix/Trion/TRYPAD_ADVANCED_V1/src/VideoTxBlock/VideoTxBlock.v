@@ -85,6 +85,9 @@ localparam lpVVSW = f_detect_bitwidth(pVVS);	// Video Vertical Sync Width
 localparam lpDstColorDepth 	= 16;	// RGB565
 localparam lpSynColorDepth	= 24;	// α8bit +  RGB565
 //
+reg 		rBRST, rnBRST;
+wire		wBRST;
+//
 wire 		wDmaEnableCsr;
 wire 		wDmaCycleEnableCsr;
 wire 		wDmaAdrsStartCsr;
@@ -100,6 +103,7 @@ wire 						wVtuMcuRSTCsr;
 wire [3:0]					wVtuMcuIMCsr;
 wire 						wVtuMcuGateCsr;
 wire						wVtuConverterRstCsr;
+wire						wVtuMcuBLCsr;
 // 
 wire 						wMapXSizeCsr;
 wire 						wMapYSizeCsr;
@@ -113,6 +117,8 @@ wire signed [lpVHAW:0] 	wDotSquareLeft5Csr,  wDotSquareRight5Csr, wDotSquareTop5
 wire signed [lpVHAW:0] 	wDotSquareLeft6Csr,  wDotSquareRight6Csr, wDotSquareTop6Csr,   wDotSquareUnder6Csr;
 wire signed [lpVHAW:0] 	wDotSquareLeft7Csr,  wDotSquareRight7Csr, wDotSquareTop7Csr,   wDotSquareUnder7Csr;
 //
+wire wVpgUnitRstCsr;
+//
 wire wSceneColorCsr;
 wire wSceneFrameTimingCsr;
 wire wSceneFrameAddEnCsr;
@@ -120,6 +126,9 @@ wire wSceneFrameSubEnCsr;
 wire wSceneFrameRstCsr;
 wire wSceneAlphaMaxCsr;
 wire wSceneAlphaMinCsr;
+//
+wire [23:0] wBramWdCsr;
+wire [31:0] wBramAdrsCsr;
 //
 wire [lpVHAW-1:0] wPdpHposCsr;
 wire [lpVVAW-1:0] wPdpVposCsr;
@@ -142,6 +151,8 @@ VideoTxCsr #(
 	.oSUsiRd(oSUsiRd),
 	// Bus Master Write
 	.iSUsiWd(iSUsiWd),	.iSUsiAdrs(iSUsiAdrs),
+	// Block RST
+	.oBlockRst(wBRST),
 	// DMA
 	.oDmaEnable(wDmaEnableCsr),			.oDmaCycleEnable(wDmaCycleEnableCsr),
 	.oDmaAdrsStart(wDmaAdrsStartCsr),	.oDmaAdrsEnd(wDmaAdrsEndCsr),
@@ -154,9 +165,10 @@ VideoTxCsr #(
 	.oVtuMcuRDX(wVtuMcuRDXCsr),		.oVtuMcuDCX(wVtuMcuDCXCsr),
 	.oVtuMcuCSX(wVtuMcuCSXCsr),		.oVtuMcuRST(wVtuMcuRSTCsr),
 	.oVtuMcuIM(wVtuMcuIMCsr),		.oVtuMcuGate(wVtuMcuGateCsr),
+	.oVtuMcuBL(wVtuMcuBLCsr),
 	.oVtuConverterRst(wVtuConverterRstCsr),
 	// Vpg
-	.oVpgUnitRst(),
+	.oVpgUnitRst(wVpgUnitRstCsr),
 	// Map Info
 	.oMapXSize(wMapXSizeCsr),
 	.oMapYSize(wMapYSizeCsr),
@@ -176,12 +188,24 @@ VideoTxCsr #(
 	.oSceneFrameRst(wSceneFrameRstCsr),
 	.iSceneAlphaMax(wSceneAlphaMaxCsr),
 	.iSceneAlphaMin(wSceneAlphaMinCsr),
+	// Block Ram Cache
+	.oBramWd(wBramWdCsr),
+	.oBramAdrs(wBramAdrsCsr),
 	// Status
 	.iPdpHpos(wPdpHposCsr),
 	.iPdpVpos(wPdpVposCsr),
 	//
-	.iSRST(iSRST),	.iSCLK(iSCLK)
+	.iSRST(rBRST),	.iSCLK(iSCLK)
 );
+
+/**-----------------------------------------------------------------------------
+ * Block RST
+ *-----------------------------------------------------------------------------*/
+ always @(posedge iSCLK)
+begin
+	rBRST	<= iSRST | wBRST;
+	rnBRST	<= inSRST & (~wBRST);
+end
 
 
 /**----------------------------------------------------------------------------
@@ -225,15 +249,19 @@ VideoPixelGenUnit #(
 	.iSceneFrameRst(wSceneFrameRstCsr),
 	.oSceneAlphaMax(wSceneAlphaMaxCsr),
 	.oSceneAlphaMin(wSceneAlphaMinCsr),
+	// Block Ram (Cache)
+	.iBramWd(wBramWdCsr),
+	.iBramAdrs(wBramAdrsCsr),
 	// Control Status
 	.oBdpHpos(wPdpHposCsr),	.oBdpVpos(wPdpVposCsr),	.oBdpFe(),
 	// Dst Fifo Side
 	.oPD(wVpgPD),		.iRS(qVpgRS),
 	.oVD(wVpgVD),		.oFD(wVpgFD),
+	// rst
+	.iUnitRst(wVpgUnitRstCsr),
 	// Common
-	.iRST(iSRST),		.inRST(inSRST),		.iCLK(iSCLK)
+	.iRST(rBRST),		.inRST(rnBRST),		.iCLK(iSCLK)
 );
-
 
 //-----------------------------------------------------------------------------
 // Video Tft Unit
@@ -263,7 +291,7 @@ VideoTftUnit VideoTftUnit(
 	// MCU Data Stream Input Part
 	.iConverterRst(wVtuConverterRstCsr),
 	// Common
-	.iSRST(iSRST),		.inSRST(inSRST),	.iSCLK(iSCLK),
+	.iSRST(rBRST),		.inSRST(rnBRST),	.iSCLK(iSCLK),
 	.iVRST(iVRST),		.inVRST(inVRST),	.iVCLK(iVCLK)
 );
 
@@ -288,7 +316,7 @@ assign oVIDEO_IM[0]	= wTftIM[0];
 assign oVIDEO_IM[1]	= wTftIM[1];
 assign oVIDEO_IM[2]	= wTftIM[2];
 assign oVIDEO_IM[3]	= wTftIM[3];
-assign oVIDEO_BL	= 1'b0;
+assign oVIDEO_BL	= wVtuMcuBLCsr;
 // Video Sync Signals
 assign oVIDEO_DCK 	= 1'b0;		// unused
 assign oVIDEO_HS 	= 1'b0;		//

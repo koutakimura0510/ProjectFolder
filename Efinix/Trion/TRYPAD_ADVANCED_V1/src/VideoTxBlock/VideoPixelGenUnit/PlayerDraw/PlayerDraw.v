@@ -3,15 +3,17 @@
  * Author  kouta kimura
  * 
  * Player Draw module
- * 
+ * 2024-07-30 v1.00 : release
+ * 2025-03-22 v1.01 : 
  *-----------------------------------------------------------------------------*/
 module PlayerDraw #(
-	parameter	pVHAW  			= 11,
-	parameter	pVVAW  			= 11,
-	parameter	pDstColorDepth	= 16,
-	parameter 	pSynColorDepth	= 24,
-	parameter	pRamDepth		= 1024,					// pDstColorDepth と合わせて 32767Kbit に収まるようにする
-	parameter	pInitFileName	= "pPlayerTexture.txt"	// 本来は ROM データ書き込みだがデバッグ用に...
+	parameter		pVHAW  			= 11,
+	parameter		pVVAW  			= 11,
+	parameter		pDstColorDepth	= 16,					// 入出力ピクセルデータの深度
+	parameter 		pSynColorDepth	= 24,					// α値を含む内部生成データの深度
+	parameter [7:0]	pCacheAdrs		= 8'h01,
+	parameter		pRamDepth		= 1024,					// pDstColorDepth と合わせて 32767Kbit に収まるようにする
+	parameter		pInitFileName	= "pPlayerTexture.txt"	// 本来は ROM データ書き込みだがデバッグ用に...
 )(
 	// Dst Pixel Stream I/F
 	output	[pDstColorDepth-1:0]	oPD,		// Pixel Data
@@ -45,12 +47,14 @@ module PlayerDraw #(
 //-----------------------------------------------------------------------------
 (* ram_style = "BLOCK" *) reg [pSynColorDepth-1:0] rPlayerRam [0:pRamDepth-1];	// 分散 RAM は使用しないので MAX 宣言
 
-// initial begin
-// 	$readmemh(pInitFileName, rPlayerRam);
+// initial
+// begin
+// 	fd = $fopen("./res/minoriko.bin", "rb");
+// 	$readmemh("../sim/res/minoriko.bin", rPlayerRam);
 // end
 
 /**-----------------------------------------------------------------------------
- * RAW
+ * BRAM
  *-----------------------------------------------------------------------------*/
 localparam lpRamAdrsWidth = fBitWidth(pRamDepth);
  
@@ -62,7 +66,8 @@ reg							qRamWe;
 always @(posedge iCLK)
 begin
 	if (qRamWe)	rPlayerRam[iBramAdrs[lpRamAdrsWidth-1:0]] <= iBramWd;
-	rPSB <= rPlayerRam[rRamRadrs];
+	// rPSB 			<= qRamRadrsCke ? rPlayerRam[rRamRadrs] : 0;
+	rPSB 			<= rPlayerRam[rRamRadrs];
 	
 	if (iRST)				rRamRadrs <= {lpRamAdrsWidth{1'b0}};
 	else if (qRamRadrsCke)	rRamRadrs <= rRamRadrs + 1'b1;
@@ -71,8 +76,19 @@ end
 
 always @*
 begin
-	qRamRadrsCke	<= iVS;
-	qRamWe			<= iBramAdrs[31:23] == 8'h01;
+	qRamRadrsCke	<= iVS & (iBHPS[6:5] == iPHPS[6:5]) & (iBVPS[6:5] == iPVPS[6:5]);
+	qRamWe			<= iBramAdrs[31:24] == pCacheAdrs;
+end
+
+/**-----------------------------------------------------------------------------
+ * 
+ *-----------------------------------------------------------------------------*/
+reg qHpLeftHit;
+reg qHpRightHit;
+
+always @*
+begin
+	qHpLeftHit <= iBHPS == (iPHPS + 5'd31);
 end
 
 /**-----------------------------------------------------------------------------

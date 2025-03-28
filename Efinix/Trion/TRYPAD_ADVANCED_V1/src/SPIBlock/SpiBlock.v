@@ -31,13 +31,13 @@ module SpiBlock #(
 	output						oSpiMiso,
 	input						iSpiCs,
 	input						iSpiThru,
-	input						iSdioDetA,
-	input						iSdioDetB,
 	// External Port for Flash Memory
 	output [pSfmNum-1:0] 		oSfmSck,
 	output [pSfmNum-1:0] 		oSfmMosi,
 	input  [pSfmNum-1:0] 		iSfmMiso,
 	output [pSfmNum-1:0] 		oSfmCs,
+	input						iSdioDetA,
+	input						iSdioDetB,
 	// Dual Port Audio Stream Data
 	// output [31:0]				oAtbDQ,
 	// output [ 1:0]				oAtbVD,

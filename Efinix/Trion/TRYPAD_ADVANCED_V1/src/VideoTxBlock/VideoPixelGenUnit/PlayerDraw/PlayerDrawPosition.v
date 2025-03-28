@@ -6,9 +6,9 @@ module PlayerDrawPosition #(
 	parameter	pVVAW			= 11,
 	parameter	pMapChipBasicBs	= 4
 )(
-	//
-	output	[pVHAW-1:0]					oPHPD,
-	output	[pVVAW-1:0]					oPVPD,
+	// Dst Pixel Stream I/F
+	output	[pVHAW-1:0]					oPHP	// Player Horizontal Position
+	output	[pVVAW-1:0]					oPVPD,	// Player Vertical Position
 	// Base Draw Position
 	input	[pVHAW-1:0]					iBHPS,
 	input	[pVVAW-1:0]					iBVPS,

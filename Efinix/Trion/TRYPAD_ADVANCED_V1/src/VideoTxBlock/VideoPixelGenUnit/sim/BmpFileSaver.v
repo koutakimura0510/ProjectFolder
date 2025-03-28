@@ -1,10 +1,11 @@
-//----------------------------------------------------------
-// Create  2022/09/04
-// Author  KoutaKimura
-// -
-// BMPファイル書き出し
-// 詳しくは C言語 bitmap フォルダ参考
-//----------------------------------------------------------
+/*------------------------------------------------------------------------------
+ * Create  2022-09-04
+ * Author  kouta kimura
+ * 
+ * BMPファイル書き出し, 詳しくは C言語 bitmap フォルダ参考
+ * 2022-09-04 v1.00 : release
+ * 2025-03-22 v1.01 : BMP 保存時に上下逆で保存されるため、一度メモリ上に保存し更に反転させてBMP出力するように更新
+ *-----------------------------------------------------------------------------*/
 module BmpFileSaver #(
 	parameter 			pFileSave		= "./ImageData.bmp",
 	parameter	[31:0]	pHdisplay		= 480,
@@ -34,14 +35,21 @@ module BmpFileSaver #(
 localparam [2:0]
 	lpFileOpen 		= 0,
 	lpFileWrite 	= 1,
-	lpFileClose 	= 2,
-	lpFileWriteEnd 	= 3,
-	lpFileOpenError	= 4;
+	lpFileBmpWrite 	= 2,
+	lpFileClose 	= 3,
+	lpFileWriteEnd 	= 4,
+	lpFileOpenError	= 5;
 
 //
+integer i = 0;
 integer fd = 0;	// ファイルディスクリプタ
 reg rSaveEnd;							assign oSaveEnd = rSaveEnd;
 reg [2:0] rFileSt;
+//
+reg [23:0] rRom[0:pHdisplay*pVdisplay];
+reg [23:0] rColor;
+reg [31:0] rYpos;
+reg [31:0] rXpos;
 
 always @(posedge iCLK)
 begin
@@ -49,14 +57,19 @@ begin
 	begin
 		rSaveEnd 	= 1'b0;
 		rFileSt		= lpFileOpen;
+		rYpos		= pVdisplay - 1;
+		rXpos		= 32'd0;
 	end
 	else
 	begin
 		case (rFileSt)
 		lpFileOpen:
 		begin
+			$fclose(fd);
 			fd = $fopen(pFileSave, "wb");
 			rSaveEnd 	= 1'b0;
+			rYpos		= rYpos;
+			rXpos		= rXpos;
 
 			if (!fd)
 			begin
@@ -129,12 +142,31 @@ begin
 		begin
 			if (iVde)
 			begin
-				$fwrite(fd, "%c", iColorB);
-				$fwrite(fd, "%c", iColorG);
-				$fwrite(fd, "%c", iColorR);
+				// 配列の最後のアドレスから保存していく。
+				rRom[rXpos + (rYpos * pHdisplay)] = {iColorR,iColorG,iColorB};
+				rXpos = rXpos + 1;
+				if (rXpos == pVdisplay)
+				begin
+					rYpos = rYpos - 1;
+					rXpos = 0;
+				end
 			end
-			rFileSt = iAFE ? lpFileClose : lpFileWrite;
-			rSaveEnd 	= 1'b0;
+			rFileSt = iAFE ? lpFileBmpWrite : lpFileWrite;
+			rSaveEnd = 1'b0;
+		end
+		
+		lpFileBmpWrite:
+		begin
+			for (i = 0; i < (pHdisplay * pVdisplay); i = i + 1)
+			begin
+				rColor = rRom[i];
+				$fwrite(fd, "%c", rColor[7:0]);
+				$fwrite(fd, "%c", rColor[15:8]);
+				$fwrite(fd, "%c", rColor[23:16]);
+			end
+			
+			rFileSt = lpFileClose;
+			rSaveEnd = 1'b0;
 		end
 
 		lpFileClose:

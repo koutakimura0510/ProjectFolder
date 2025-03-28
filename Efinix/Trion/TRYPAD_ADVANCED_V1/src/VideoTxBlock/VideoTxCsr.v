@@ -42,6 +42,8 @@ module VideoTxCsr #(
 	// Bus Master Write
 	input	[pUsiBusWidth-1:0]		iSUsiWd,	// Write Data
 	input	[pUsiBusWidth-1:0]		iSUsiAdrs,  // R/W Adrs
+	// Block RST
+	output							oBlockRst,
 	// Csr DMA
 	output							oDmaEnable,
 	output							oDmaCycleEnable,
@@ -61,6 +63,7 @@ module VideoTxCsr #(
 	output	[3:0]					oVtuMcuIM,
 	output							oVtuMcuGate,
 	output							oVtuConverterRst,
+	output							oVtuMcuBL,
 	// Csr Vpg
 	output							oVpgUnitRst,
 	// Csr Map Info
@@ -103,16 +106,19 @@ module VideoTxCsr #(
 	output	signed [pVVAW:0] 		oDotSquareTop7,
 	output	signed [pVVAW:0] 		oDotSquareUnder7,
 	// Csr SceneChange
-    output	[pSynColorDepth-1:0] 	oSceneColor,
-	output 	[6:0] 				oSceneFrameTiming,
-	output 						oSceneFrameAddEn,
-	output 						oSceneFrameSubEn,
-    output 						oSceneFrameRst,
-	input						iSceneAlphaMax,
-	input 						iSceneAlphaMin,
+	output	[pSynColorDepth-1:0] 	oSceneColor,
+	output 	[6:0] 					oSceneFrameTiming,
+	output 							oSceneFrameAddEn,
+	output 							oSceneFrameSubEn,
+	output 							oSceneFrameRst,
+	input							iSceneAlphaMax,
+	input 							iSceneAlphaMin,
+	// Blocm RAM Cache
+	output	[23:0]					oBramWd,
+	output	[31:0]					oBramAdrs,
 	//
-	input	[pVHAW-1:0]			iPdpHpos,
-	input	[pVVAW-1:0]			iPdpVpos,
+	input	[pVHAW-1:0]				iPdpHpos,
+	input	[pVVAW-1:0]				iPdpVpos,
     // CLK Reset
     input	iSRST,
     input	iSCLK
@@ -122,6 +128,7 @@ module VideoTxCsr #(
 // レジスタマップ
 //----------------------------------------------------------
 //
+reg rBlockRst;											assign oBlockRst 		= rBlockRst;		// Block RST
 reg rDmaEnable;											assign oDmaEnable 		= rDmaEnable;		// DMA Function Enable
 reg rDmaCycleEnable;									assign oDmaCycleEnable	= rDmaCycleEnable;	// Dma Auto Cycle Mode
 reg [pDmaAdrsWidth-1:0] rDmaAdrsStart;					assign oDmaAdrsStart 	= rDmaAdrsStart;	// 
@@ -139,6 +146,7 @@ reg 							rVtuMcuRST;				assign  oVtuMcuRST	 	= rVtuMcuRST;
 reg [3:0] 						rVtuMcuIM;				assign  oVtuMcuIM	 	= rVtuMcuIM;
 reg 							rVtuMcuGate;			assign  oVtuMcuGate		= rVtuMcuGate;
 reg 							rVtuConverterRst;		assign  oVtuConverterRst= rVtuConverterRst;
+reg 							rVtuMcuBL;				assign  oVtuMcuBL		= rVtuMcuBL;
 //
 reg 							rVpgUnitRst;			assign oVpgUnitRst		= rVpgUnitRst;
 reg [ 7:0] 						rMapXSize;				assign oMapXSize		= rMapXSize;		// 現在のマップの最大横幅 / 最大255マス固定
@@ -186,6 +194,9 @@ reg 							rSceneFrameAddEn;		assign oSceneFrameAddEn		= rSceneFrameAddEn;		// S
 reg 							rSceneFrameSubEn;		assign oSceneFrameSubEn		= rSceneFrameSubEn;		// SceneChange Sub Start
 reg 							rSceneFrameRst;			assign oSceneFrameRst		= rSceneFrameRst;		// local module Rst 信号
 //
+reg [23:0] 						rBramWd;				assign oBramWd				= rBramWd;
+reg [31:0] 						rBramAdrs;				assign oBramAdrs			= rBramAdrs;
+//
 reg qCsrWCke000, qCsrWCke004, qCsrWCke008, qCsrWCke00c;
 reg qCsrWCke010, qCsrWCke014, qCsrWCke018, qCsrWCke01c;
 //
@@ -193,9 +204,9 @@ reg qCsrWCke020;
 //
 reg qCsrWCke050, qCsrWCke051, qCsrWCke052, qCsrWCke053;
 reg qCsrWCke054, qCsrWCke055, qCsrWCke056, qCsrWCke057;
-reg qCsrWCke058;
+reg qCsrWCke058, qCsrWCke059;
 //
-reg qCsrWCke099;
+reg qCsrWCke097, qCsrWCke098, qCsrWCke099;
 reg qCsrWCke100, qCsrWCke104, qCsrWCke108, qCsrWCke10c;
 reg qCsrWCke110, qCsrWCke114, qCsrWCke118, qCsrWCke11c;
 reg qCsrWCke120, qCsrWCke124, qCsrWCke128, qCsrWCke12c;
@@ -213,6 +224,7 @@ always @(posedge iSCLK)
 begin
 	if (iSRST)
 	begin
+		rBlockRst			<= 1'b0;
 		rDmaEnable 			<= 1'b0;
 		rDmaCycleEnable		<= 1'b0;
 		rDmaAdrsStart 		<= {pDmaAdrsWidth{1'b0}};
@@ -228,6 +240,7 @@ begin
 		rVtuMcuIM			<= 4'b0000;
 		rVtuMcuGate			<= 1'b1;		// Default Mcu Stream
 		rVtuConverterRst	<= 1'b1;		// Default Assert
+		rVtuMcuBL			<= 1'b0;
 		rVpgUnitRst			<= 1'b0;		// Default Negate
 		rMapXSize			<= 8'd30;		// DisplayX(480) / MapChipX(16) = 30
 		rMapYSize			<= 8'd17;		// DisplayY(272) / MapChipY(16) = 17
@@ -271,10 +284,13 @@ begin
 		rSceneFrameAddEn	<= 1'b0;
 		rSceneFrameSubEn	<= 1'b0;
 		rSceneFrameRst		<= 1'b1;
+		rBramWd				<= 24'd0;
+		rBramAdrs			<= 32'd0;
 	end
 	else
 	begin
 		// DMA Info
+		rBlockRst					<= qCsrWCke000 ? iSUsiWd[0:0] 				: rBlockRst;
 		rDmaEnable					<= iDmaDone	   ? rDmaCycleEnable 			: qCsrWCke004 ? iSUsiWd[0:0] : rDmaEnable;
 		rDmaCycleEnable				<= qCsrWCke008 ? iSUsiWd[0:0] 				: rDmaCycleEnable;
 		rDmaAdrsStart				<= qCsrWCke00c ? iSUsiWd[pDmaAdrsWidth-1:0] : rDmaAdrsStart;
@@ -292,8 +308,11 @@ begin
 		rVtuMcuIM					<= qCsrWCke056 ? iSUsiWd[3:0] : rVtuMcuIM;
 		rVtuMcuGate					<= qCsrWCke057 ? iSUsiWd[0:0] : rVtuMcuGate;
 		rVtuConverterRst			<= qCsrWCke058 ? iSUsiWd[0:0] : rVtuConverterRst;
+		rVtuMcuBL					<= qCsrWCke059 ? iSUsiWd[0:0] : rVtuMcuBL;
 		// Vpg
-		rVpgUnitRst					<= qCsrWCke099 ? iSUsiWd[0:0] : rVpgUnitRst;
+		rBramWd						<= qCsrWCke097 ? iSUsiWd[23:0] : rBramWd;
+		rBramAdrs					<= qCsrWCke098 ? iSUsiWd[31:0] : rBramAdrs;
+		rVpgUnitRst					<= qCsrWCke099 ? iSUsiWd[0:0]  : rVpgUnitRst;
 		// Map Info
 		{rMapXSize, rMapYSize}		<= qCsrWCke100 ? iSUsiWd[15:0]				: {rMapXSize, rMapYSize};
 		// Dot Square Gen
@@ -364,8 +383,11 @@ begin
 	qCsrWCke056 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0056});
 	qCsrWCke057 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0057});
 	qCsrWCke058 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0058});
+	qCsrWCke059 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0059});
 	
 	// 100h ~
+	qCsrWCke097 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0097});
+	qCsrWCke098 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0098});
 	qCsrWCke099 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0099});
 	qCsrWCke100 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0100});
 	qCsrWCke104 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0104});
@@ -427,7 +449,7 @@ always @(posedge iSCLK)
 begin
 	// {{(32 - パラメータ名	){1'b0}}, レジスタ名} -> パラメータ可変に対応し 0 で埋められるように設定
 	case (iSUsiAdrs[pCsrActiveWidth - 1:0])
-		// 'h0000:		rSUsiRd <= {{(32 - 1			 ){1'b0}}, rI2SModuleRst};
+		'h000:		rSUsiRd <= {{(32 - 1			 	){1'b0}}, 	rBlockRst			};
 		'h004:		rSUsiRd <= {{(32 - 1			 	){1'b0}}, 	rDmaEnable			};
 		'h008:		rSUsiRd <= {{(32 - 1			 	){1'b0}}, 	rDmaCycleEnable		};
 		'h00C:		rSUsiRd <= {{(32 - pDmaAdrsWidth	){1'b0}},	rDmaAdrsStart		};
@@ -445,9 +467,12 @@ begin
 		'h056:		rSUsiRd <= {{(32 - 4				){1'b0}},	rVtuMcuIM			};
 		'h057:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuGate			};
 		'h058:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuConverterRst	};
+		'h059:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuBL			};
 		//
-		'h099:		rSUsiRd	<= {{(32 - 1				){1'b0}}, rVpgUnitRst			};
-		'h100:		rSUsiRd	<= {{(32 - 16				){1'b0}}, rMapXSize, rMapYSize	};
+		'h098:		rSUsiRd	<= {{(32 - 24				){1'b0}},	rBramWd				};
+		'h097:		rSUsiRd	<= {									rBramAdrs			};
+		'h099:		rSUsiRd	<= {{(32 - 1				){1'b0}},	rVpgUnitRst			};
+		'h100:		rSUsiRd	<= {{(32 - 16				){1'b0}},	rMapXSize, rMapYSize};
 		//
 		'h200:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rDotSquareColor1		};
 		'h201:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft1		};

@@ -83,6 +83,8 @@ begin
 	qDecEnable	<= ~rSpiThru;
 end
 
+assign oSpiMiso	= wDecMiso;
+
 
 /**-----------------------------------------------------------------------------
  * SPI Bridge Part

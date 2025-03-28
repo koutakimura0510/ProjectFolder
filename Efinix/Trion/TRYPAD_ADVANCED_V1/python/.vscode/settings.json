@@ -5,5 +5,12 @@
     "python.analysis.diagnosticSeverityOverrides": {
         "reportMissingModuleSource": "none"
     },
+    "files.associations": {
+        "*.v": "verilog",
+        "*.cfg": "tcl",
+        "*.txt": "json",
+        "libmpsse_spi.h": "c",
+        "ftd2xx.h": "c"
+    },
     // "python.defaultInterpreterPath": "C:\\Users\\Kouta\\AppData\\Roaming\\Python\\Python39\\python.exe",
 }

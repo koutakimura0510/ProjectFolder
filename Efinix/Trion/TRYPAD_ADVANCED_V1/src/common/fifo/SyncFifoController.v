@@ -69,7 +69,8 @@ begin
 	else if	(qRe)	rRe <= 1'b1;
 	else 			rRe <= 1'b0;
 	
-	rRemaingCntAlert <= qRemaingCntAlert;
+	if (!inARST)	rRemaingCntAlert <= 1'b1;
+	else 			rRemaingCntAlert <= qRemaingCntAlert;
 end
 
 always @*

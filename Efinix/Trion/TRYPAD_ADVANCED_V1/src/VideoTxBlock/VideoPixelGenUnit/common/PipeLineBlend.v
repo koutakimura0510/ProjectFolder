@@ -9,7 +9,7 @@ module PipeLineBlend #(
 	parameter 		pVVAW  			= 11,
 	parameter		pDstColorDepth	= 16,
 	parameter 		pSynColorDepth	= 24,
-	parameter [3:0] pPipeLine 		= 1			// パイプラインの段数, 最低"1", 重複色のデータ生成のレイテンシに合わせて調整する。
+	parameter [3:0] pPipeLine 		= 1			// パイプラインの段数, 最低"1",iPSB 重複色のデータ生成(入力)のレイテンシに合わせて調整する。
 )(
 	// Dst Side
 	output	[pDstColorDepth-1:0]oPD,		// Pixel Dst

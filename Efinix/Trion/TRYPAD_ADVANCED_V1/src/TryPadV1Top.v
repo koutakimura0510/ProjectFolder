@@ -33,7 +33,7 @@ input			iSdioDetB,
 // Config Flash Rom I/F
 input			iSpiMosi,
 output			oSpiMiso,
-input			iSpiSck,
+input			iSpiClk,
 input			iSpiCs,
 // PSRAM I/F
 output[15:0]	ioRamDq_O,
@@ -547,22 +547,23 @@ localparam lpSclkCntMax = 25000000;
 localparam lpMclkCntMax = 22600000;
 localparam lpVclkCntMax = 9000000;
 
-wire wPulseSCLK,wPulseMCLK,wPulseVCLK;
+wire [7:0] wPulseGen;
 
-PulseGenerator #(.pDivClk(lpSclkCntMax)) SclkPulseGenerator (.oPulse(wPulseSCLK), .iRST(wSRST), .iCLK(iSCLK));
-PulseGenerator #(.pDivClk(lpMclkCntMax)) MclkPulseGenerator (.oPulse(wPulseMCLK), .iRST(wMRST), .iCLK(iMCLK));
-PulseGenerator #(.pDivClk(lpVclkCntMax)) VclkPulseGenerator (.oPulse(wPulseVCLK), .iRST(wVRST), .iCLK(iVCLK));
+PulseGenerator #(.pDivClk(lpSclkCntMax)) SclkPulseGenerator (.oPulse(wPulseGen[0]), .iRST(wSRST), .iCLK(iSCLK));
+PulseGenerator #(.pDivClk(lpMclkCntMax)) MclkPulseGenerator (.oPulse(wPulseGen[1]), .iRST(wMRST), .iCLK(iMCLK));
+PulseGenerator #(.pDivClk(lpVclkCntMax)) VclkPulseGenerator (.oPulse(wPulseGen[2]), .iRST(wVRST), .iCLK(iVCLK));
+PulseGenerator #(.pDivClk(30)) SckPulseGenerator (.oPulse(wPulseGen[3]), .iRST(wSRST), .iCLK(iSpiClk));
 
 always @*
 begin
 	qGpioAltMode[0] <= qlocked;	// 内部ロジックの状態を LED に結線する。
-	qGpioAltMode[1] <= wPulseSCLK;
-	qGpioAltMode[2] <= wPulseMCLK;
-	qGpioAltMode[3] <= wPulseVCLK;
+	qGpioAltMode[1] <= 1'b0;
+	qGpioAltMode[2] <= 1'b0;
+	qGpioAltMode[3] <= 1'b0;
 	qGpioAltMode[4] <= 1'b0;
 	qGpioAltMode[5] <= 1'b0;
 	qGpioAltMode[6] <= 1'b0;
-	qGpioAltMode[7] <= 1'b0;
+	qGpioAltMode[7] <= wPulseGen[3];
 end
 
 //-----------------------------------------------------------------------------
@@ -614,7 +615,7 @@ assign oRamCs[3]		= wRamCe[3];
 // CPU Master SPI I/F
 assign wSlaveMosi		= iSpiMosi;
 assign oSpiMiso			= wSlaveMiso;
-assign wSlaveSck		= iSpiSck;
+assign wSlaveSck		= iSpiClk;
 assign wSlaveCs			= iSpiCs;
 //
 // User I/F

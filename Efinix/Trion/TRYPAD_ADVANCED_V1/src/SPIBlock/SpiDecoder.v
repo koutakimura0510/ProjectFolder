@@ -61,14 +61,14 @@ begin
 	else 						rSpiCsSft		<= 3'b111;
 
 	// Decode Part
-	if (rSpiCsSft[2])		 		rGetDataSel[0] <= 1'd0;
+	if (rSpiCsSft[2])		 	rGetDataSel[0] <= 1'd0;
 	else if (qGetDataSelCke) 	rGetDataSel[0] <= 1'b1;
 	else 					 	rGetDataSel[0] <= rGetDataSel[0];
 	
-	if (rSpiCsSft[2])		 		rGetDataSel[7:1] <= 7'd0;
+	if (rSpiCsSft[2])		 	rGetDataSel[7:1] <= 7'd0;
 	else 					 	rGetDataSel[7:1] <= {rGetDataSel[6:1],rGetDataSel[0]};
 
-	if (rSpiCsSft[2])				rSSckCntNeg <= 5'd0;
+	if (rSpiCsSft[2])			rSSckCntNeg <= 5'd0;
 	else if (qNedgeSck)			rSSckCntNeg <= rSSckCntNeg + 1'b1;
 	else 						rSSckCntNeg <= rSSckCntNeg;
 

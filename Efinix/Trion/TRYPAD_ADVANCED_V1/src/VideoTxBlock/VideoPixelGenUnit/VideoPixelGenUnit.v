@@ -80,6 +80,9 @@ module VideoPixelGenUnit #(
 	input 							iSceneFrameRst,
 	output							oSceneAlphaMax,
 	output 							oSceneAlphaMin,
+	//
+	input	[23:0]					iBramWd,
+	input	[31:0]					iBramAdrs,
 	// Fifo I/F
 	output	[pDstColorDepth-1:0] 	oPD,
 	input							iRS,
@@ -89,6 +92,8 @@ module VideoPixelGenUnit #(
 	output	[pVHAW-1:0]				oBdpHpos,
 	output	[pVVAW-1:0]				oBdpVpos,
 	output							oBdpFe,
+	// Unit RST
+	input	iUnitRst,
 	// CLK Reset
 	input	iRST,
 	input	inRST,
@@ -103,6 +108,8 @@ localparam [pVHAW-1:0] 	lpVHA = pVHA - 1;
 localparam [pVVAW-1:0] 	lpVVA = pVVA - 1;
 localparam 				lpDstColorDepth	= pDstColorDepth;	// RGB 色深度
 localparam 				lpSynColorDepth = pSynColorDepth;	// 合成を行うピクセルデータの色深度
+//
+localparam [7:0] lpPlayerDrawCacheAdrs = 8'h01;
 
 
 /**-----------------------------------------------------------------------------
@@ -204,7 +211,8 @@ PlayerDraw #(
 	.pVHAW(pVHAW),
 	.pVVAW(pVVAW),
 	.pDstColorDepth(lpDstColorDepth),
-	.pSynColorDepth(lpSynColorDepth)
+	.pSynColorDepth(lpSynColorDepth),
+	.pCacheAdrs(lpPlayerDrawCacheAdrs)
 	// .pRamDepth(),
 ) PlayerDraw (
 	// Dst Pixel Stream I/F
@@ -216,7 +224,7 @@ PlayerDraw #(
 	.iBHPS(qPldBHPS),	.iBVPS(qPldBVPS),
 	.iPHPS(qPldPHPS),	.iPVPS(qPldPVPS),
 	// Memory Mapchip Access
-	.iBramWd(0),		.iBramAdrs(0),
+	.iBramWd(iBramWd),		.iBramAdrs(iBramAdrs),
 	// Control / Status
 	.iPlayerdir(),
 	// common
@@ -225,13 +233,13 @@ PlayerDraw #(
 
 always @*
 begin
-	qPldPS		<= 16'h1234;
+	qPldPS		<= 16'h0000;
 	qPldVS		<= wBdpVD;
 	qPldFS		<= wBdpFD;
 	qPldBHPS	<= wBdpBHPD;
 	qPldBVPS	<= wBdpBVPD;
-	qPldPHPS	<= {pVHAW{1'b0}};
-	qPldPVPS	<= {pVVAW{1'b0}};
+	qPldPHPS	<= 7'd11;//{pVHAW{1'b1}};
+	qPldPVPS	<= 7'd11;//{pVVAW{1'b1}};
 end
 
 

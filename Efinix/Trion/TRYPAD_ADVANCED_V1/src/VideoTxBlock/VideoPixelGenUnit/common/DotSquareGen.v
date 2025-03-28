@@ -4,7 +4,7 @@
 // -
 // 指定範囲で指定色の四角形データを出力する
 // 
-// 2022-09-29 座標が画面外の場合のドットデータ生成に対応
+// 2022-09-29 座標が画面外の場合のドットデータ生成に対応、画面サイズがが2の乗数の場合、右・下端が正常描画されない点に注意
 // 
 //----------------------------------------------------------
 module DotSquareGen #(
@@ -103,7 +103,7 @@ begin
 		'b0000001: 	qColor <= iColor1;
 		default: 	qColor <= {pSynColorDepth{1'b0}};
 	endcase
-
+	
 	qPosMatch[0] <=  (iLeft1 <= wHpos) & (wHpos  < iRight1) & (iTop1 <= wVpos) & (wVpos < iUnder1);
 	qPosMatch[1] <=  (iLeft2 <= wHpos) & (wHpos  < iRight2) & (iTop2 <= wVpos) & (wVpos < iUnder2);
 	qPosMatch[2] <=  (iLeft3 <= wHpos) & (wHpos  < iRight3) & (iTop3 <= wVpos) & (wVpos < iUnder3);
