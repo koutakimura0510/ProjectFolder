@@ -1,8 +1,11 @@
 /*------------------------------------------------------------------------------
  * Create  2024/07/28
  * Author  Kouta Kimura
- * 
- * new release: ピクセルデータのαブレンドを行いつつ、制御信号のパイプライン処理を行う。
+ *
+ * ピクセルデータのαブレンドを行いつつ、制御信号のパイプライン処理を行う。
+ *
+ * 2024-07-28 : new release: 
+ * 2025-03-27 : iLS,oLD に対応
  *-----------------------------------------------------------------------------*/
 module PipeLineBlend #(
 	parameter 		pVHAW  			= 11,
@@ -15,6 +18,7 @@ module PipeLineBlend #(
 	output	[pDstColorDepth-1:0]oPD,		// Pixel Dst
 	output 						oVD,		// Valid Dst
 	output 						oFD,		// Frame Dst
+	output 						oLD,		// Line Dst
 	output	[pVHAW-1:0]			oBHPD,		// Base Horizontal Position
 	output	[pVVAW-1:0]			oBVPD,		// Base Vertical Position
 	output	[pVHAW-1:0]			oPHPD,		// Player Horizontal Position
@@ -24,6 +28,7 @@ module PipeLineBlend #(
 	input						iVSA,		// PSA Valid Src
 	input	[pSynColorDepth-1:0]iPSB,		// αを含んだ重複色 (Overlay=Ov), 合成する側
 	input 						iFS,		// Frame Src
+	input 						iLS,		// Line Src
 	input	[pVHAW-1:0]			iBHPS,		// Base Horizontal Position
 	input	[pVVAW-1:0]			iBVPS,		// Base Vertical Position
 	input	[pVHAW-1:0]			iPHPS,		// Player Horizontal Position
@@ -61,6 +66,7 @@ genvar genPipe;
 reg  [pDstColorDepth-1:0]	rPS   [0:pPipeLine-1];
 reg  [pPipeLine-1:0] 		rVS;
 reg  [pPipeLine:0] 			rFS;
+reg  [pPipeLine:0] 			rLS;
 reg  [pVHAW-1:0] 			rBHPS [0:pPipeLine];
 reg  [pVVAW-1:0] 			rBVPS [0:pPipeLine];
 reg  [pVHAW-1:0] 			rPHPS [0:pPipeLine];
@@ -82,12 +88,12 @@ generate
 				rVS[genPipe] 	<= rVS[genPipe-1];
 			end
 		end
-		
-		always @*
-		begin
-			qAlbPS		<= rPS[pPipeLine-1];
-			qAlbVS		<= rVS[pPipeLine-1];
-		end
+	end
+	
+	always @*
+	begin
+		qAlbPS		<= rPS[pPipeLine-1];
+		qAlbVS		<= rVS[pPipeLine-1];
 	end
 	
 	for (genPipe = 0; genPipe < pPipeLine+1; genPipe = genPipe + 1)
@@ -97,6 +103,7 @@ generate
 			if (genPipe == 0)
 			begin
 				rFS[0]		<= iFS;
+				rLS[0]		<= iLS;
 				rBHPS[0]	<= iBHPS;
 				rBVPS[0]	<= iBVPS;
 				rPHPS[0]	<= iPHPS;
@@ -105,6 +112,7 @@ generate
 			else
 			begin
 				rFS[genPipe]	<= rFS[genPipe-1];
+				rLS[genPipe]	<= rLS[genPipe-1];
 				rBHPS[genPipe]	<= rBHPS[genPipe-1];
 				rBVPS[genPipe]	<= rBVPS[genPipe-1];
 				rPHPS[genPipe]	<= rPHPS[genPipe-1];
@@ -121,6 +129,7 @@ endgenerate
 assign oPD   = wAlbPD;
 assign oVD	 = wAlbVD;
 assign oFD	 = rFS[pPipeLine];
+assign oLD	 = rLS[pPipeLine];
 assign oBHPD = rBHPS[pPipeLine];
 assign oBVPD = rBVPS[pPipeLine];
 assign oPHPD = rPHPS[pPipeLine];

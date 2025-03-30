@@ -79,6 +79,20 @@ assign oFLL = wVafAlert;
 
 
 /**-----------------------------------------------------------------------------
+ * Video Timing Gen Part
+ *-----------------------------------------------------------------------------*/
+ wire 	wVsgDE;
+ reg	qVsgRst;
+ 
+ VideoSyncGen VideoSyncGen (
+	.oHS(),		.oVS(),		.oDE(wVsgDE),
+	.oFE(),
+	// common
+	.iVRST(qVsgRst),		.iVCLK(iVCLK)
+ );
+
+
+/**-----------------------------------------------------------------------------
  * Tft I/F Convert Part
  *-----------------------------------------------------------------------------*/
 reg [pDstColorDepth-1:0] 	rDS[1:1];
@@ -95,13 +109,15 @@ begin
 	rWE[2]	<= rWE[1];
 	
 	if (qTftConverterRst) 	rTftRe <= 1'b0;
-	else					rTftRe <= ~rTftRe;
+	else if (wVsgDE)		rTftRe <= ~rTftRe;
+	else					rTftRe <= 1'b0;
 end
 
 always @*
 begin
 	qVafRE				<= rTftRe;
 	qTftConverterRst	<= |{iVRST,iConverterRst};
+	qVsgRst				<= |{iVRST,iConverterRst};
 end
 
 

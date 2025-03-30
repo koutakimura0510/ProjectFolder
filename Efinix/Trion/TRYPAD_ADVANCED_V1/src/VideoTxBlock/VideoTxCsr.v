@@ -15,6 +15,7 @@ module VideoTxCsr #(
 	parameter 	pCsrAdrsWidth   = 16,
 	parameter	pCsrActiveWidth = 16,
 	parameter	pDmaAdrsWidth	= 19,
+	parameter	pRegNumver		= 400,		// 設定可能なレジスタの個数
 	//
 	parameter	pVHA = 480,
 	parameter	pVHB = 8,
@@ -35,7 +36,12 @@ module VideoTxCsr #(
 	parameter	pVVSW = 5,
 	//
 	parameter	pDstColorDepth	= 16,
-	parameter	pSynColorDepth	= 24
+	parameter	pSynColorDepth	= 24,
+	//
+	parameter	pObjectAnimeNum			= 8,	// アニメーション可能なオブジェクトの個数
+	parameter	pObjectAnimeTime		= 8,	// アニメーション指定時間の最大時間 Bit幅で指定する。1フレーム単位で処理するため、8bit幅だったら 最大255フレーム間隔で可能になる。
+	parameter	pObjectAnimeXposWidth	= 16,	// [15:11] NC Bit, [10:0] xpos
+	parameter	pObjectAnimeYposWidth	= 16	// [15:11] NC Bit, [10:0] ypos
 )(
 	// Bus Master Read
 	output	[pUsiBusWidth-1:0]		oSUsiRd,	// Read Data
@@ -64,6 +70,8 @@ module VideoTxCsr #(
 	output							oVtuMcuGate,
 	output							oVtuConverterRst,
 	output							oVtuMcuBL,
+	output	[15:0]					oVtuBlDutyRatio,
+	output	[31:0]					oVtuBlIVtimer,
 	// Csr Vpg
 	output							oVpgUnitRst,
 	// Csr Map Info
@@ -113,12 +121,19 @@ module VideoTxCsr #(
 	output 							oSceneFrameRst,
 	input							iSceneAlphaMax,
 	input 							iSceneAlphaMin,
+	// Draw Position
+	input	[pVHAW-1:0]				iBdpHpos,
+	input	[pVVAW-1:0]				iBdpVpos,
+	output	[pVHAW-1:0] 			oPdpXpos,
+	output	[pVVAW-1:0] 			oPdpYpos,
+	output							oPdpInit,
+	//
+	output	[(pObjectAnimeNum * pObjectAnimeTime)-1:0] 			oObdAnimeFrameNum,
+	output	[(pObjectAnimeNum * pObjectAnimeXposWidth)-1:0] 	oObdAnimeXpos,
+	output	[(pObjectAnimeNum * pObjectAnimeYposWidth)-1:0] 	oObdAnimeYpos,
 	// Blocm RAM Cache
 	output	[23:0]					oBramWd,
 	output	[31:0]					oBramAdrs,
-	//
-	input	[pVHAW-1:0]				iPdpHpos,
-	input	[pVVAW-1:0]				iPdpVpos,
     // CLK Reset
     input	iSRST,
     input	iSCLK
@@ -127,15 +142,16 @@ module VideoTxCsr #(
 //----------------------------------------------------------
 // レジスタマップ
 //----------------------------------------------------------
+genvar gen;
 //
-reg rBlockRst;											assign oBlockRst 		= rBlockRst;		// Block RST
-reg rDmaEnable;											assign oDmaEnable 		= rDmaEnable;		// DMA Function Enable
-reg rDmaCycleEnable;									assign oDmaCycleEnable	= rDmaCycleEnable;	// Dma Auto Cycle Mode
-reg [pDmaAdrsWidth-1:0] rDmaAdrsStart;					assign oDmaAdrsStart 	= rDmaAdrsStart;	// 
-reg [pDmaAdrsWidth-1:0] rDmaAdrsEnd;					assign oDmaAdrsEnd 		= rDmaAdrsEnd;		// 
-reg [pDmaAdrsWidth-1:0] rDmaAdrsAdd;					assign oDmaAdrsAdd 		= rDmaAdrsAdd;		//
+reg 							rBlockRst;				assign oBlockRst 		= rBlockRst;		// Block RST
+reg 							rDmaEnable;				assign oDmaEnable 		= rDmaEnable;		// DMA Function Enable
+reg 							rDmaCycleEnable;		assign oDmaCycleEnable	= rDmaCycleEnable;	// Dma Auto Cycle Mode
+reg [pDmaAdrsWidth-1:0] 		rDmaAdrsStart;			assign oDmaAdrsStart 	= rDmaAdrsStart;	// 
+reg [pDmaAdrsWidth-1:0] 		rDmaAdrsEnd;			assign oDmaAdrsEnd 		= rDmaAdrsEnd;		// 
+reg [pDmaAdrsWidth-1:0] 		rDmaAdrsAdd;			assign oDmaAdrsAdd 		= rDmaAdrsAdd;		//
 //
-reg			rVsgRst;									assign	oVsgRst			= rVsgRst;
+reg								rVsgRst;				assign	oVsgRst			= rVsgRst;
 //
 reg [pDstColorDepth-1:0] 		rVtuMcuDq;				assign  oVtuMcuDq		= rVtuMcuDq;
 reg 							rVtuMcuWRX;				assign  oVtuMcuWRX	 	= rVtuMcuWRX;
@@ -147,6 +163,8 @@ reg [3:0] 						rVtuMcuIM;				assign  oVtuMcuIM	 	= rVtuMcuIM;
 reg 							rVtuMcuGate;			assign  oVtuMcuGate		= rVtuMcuGate;
 reg 							rVtuConverterRst;		assign  oVtuConverterRst= rVtuConverterRst;
 reg 							rVtuMcuBL;				assign  oVtuMcuBL		= rVtuMcuBL;
+reg [15:0]						rVtuBlDutyRatio;		assign  oVtuBlDutyRatio	= rVtuBlDutyRatio;
+reg [31:0]						rVtuBlIVtimer;			assign  oVtuBlIVtimer	= rVtuBlIVtimer;
 //
 reg 							rVpgUnitRst;			assign oVpgUnitRst		= rVpgUnitRst;
 reg [ 7:0] 						rMapXSize;				assign oMapXSize		= rMapXSize;		// 現在のマップの最大横幅 / 最大255マス固定
@@ -194,31 +212,18 @@ reg 							rSceneFrameAddEn;		assign oSceneFrameAddEn		= rSceneFrameAddEn;		// S
 reg 							rSceneFrameSubEn;		assign oSceneFrameSubEn		= rSceneFrameSubEn;		// SceneChange Sub Start
 reg 							rSceneFrameRst;			assign oSceneFrameRst		= rSceneFrameRst;		// local module Rst 信号
 //
-reg [23:0] 						rBramWd;				assign oBramWd				= rBramWd;
-reg [31:0] 						rBramAdrs;				assign oBramAdrs			= rBramAdrs;
+reg [(pObjectAnimeNum * pObjectAnimeTime)-1:0] 			rObdAnimeFrameNum;	assign oObdAnimeFrameNum	= rObdAnimeFrameNum;
+reg [(pObjectAnimeNum * pObjectAnimeXposWidth)-1:0] 	rObdAnimeXpos;		assign oObdAnimeXpos		= rObdAnimeXpos;
+reg [(pObjectAnimeNum * pObjectAnimeYposWidth)-1:0] 	rObdAnimeYpos;		assign oObdAnimeYpos		= rObdAnimeYpos;
 //
-reg qCsrWCke000, qCsrWCke004, qCsrWCke008, qCsrWCke00c;
-reg qCsrWCke010, qCsrWCke014, qCsrWCke018, qCsrWCke01c;
+reg [pVHAW-1:0]					rPdpXpos;				assign oPdpXpos				= rPdpXpos;
+reg [pVHAW-1:0]					rPdpYpos;				assign oPdpYpos				= rPdpYpos;
+reg 							rPdpInit;				assign oPdpInit				= rPdpInit;
 //
-reg qCsrWCke020;
+reg [23:0] 						rBramWd;				assign oBramWd				= rBramWd;				// Block Ram Write Data
+reg [31:0] 						rBramAdrs;				assign oBramAdrs			= rBramAdrs;			// Block Raw Adrs [31:24]=Cahce Adrs
 //
-reg qCsrWCke050, qCsrWCke051, qCsrWCke052, qCsrWCke053;
-reg qCsrWCke054, qCsrWCke055, qCsrWCke056, qCsrWCke057;
-reg qCsrWCke058, qCsrWCke059;
-//
-reg qCsrWCke097, qCsrWCke098, qCsrWCke099;
-reg qCsrWCke100, qCsrWCke104, qCsrWCke108, qCsrWCke10c;
-reg qCsrWCke110, qCsrWCke114, qCsrWCke118, qCsrWCke11c;
-reg qCsrWCke120, qCsrWCke124, qCsrWCke128, qCsrWCke12c;
-reg qCsrWCke130, qCsrWCke134, qCsrWCke138, qCsrWCke13c;
-//
-reg qCsrWCke200, qCsrWCke201, qCsrWCke202, qCsrWCke203, qCsrWCke204, qCsrWCke205, qCsrWCke206, qCsrWCke207;
-reg qCsrWCke208, qCsrWCke209, qCsrWCke20a, qCsrWCke20b, qCsrWCke20c, qCsrWCke20d, qCsrWCke20e, qCsrWCke20f;
-reg qCsrWCke210, qCsrWCke211, qCsrWCke212, qCsrWCke213, qCsrWCke214, qCsrWCke215, qCsrWCke216, qCsrWCke217;
-reg qCsrWCke218, qCsrWCke219, qCsrWCke21a, qCsrWCke21b, qCsrWCke21c, qCsrWCke21d, qCsrWCke21e, qCsrWCke21f;
-reg qCsrWCke220, qCsrWCke221, qCsrWCke222;
-//
-reg qCsrWCke300, qCsrWCke301, qCsrWCke302, qCsrWCke303, qCsrWCke304;
+reg [pRegNumver-1:0] qCsrWCke;
 //
 always @(posedge iSCLK)
 begin
@@ -241,6 +246,8 @@ begin
 		rVtuMcuGate			<= 1'b1;		// Default Mcu Stream
 		rVtuConverterRst	<= 1'b1;		// Default Assert
 		rVtuMcuBL			<= 1'b0;
+		rVtuBlDutyRatio		<= 16'd0;
+		rVtuBlIVtimer		<= 32'd0;
 		rVpgUnitRst			<= 1'b0;		// Default Negate
 		rMapXSize			<= 8'd30;		// DisplayX(480) / MapChipX(16) = 30
 		rMapYSize			<= 8'd17;		// DisplayY(272) / MapChipY(16) = 17
@@ -284,161 +291,117 @@ begin
 		rSceneFrameAddEn	<= 1'b0;
 		rSceneFrameSubEn	<= 1'b0;
 		rSceneFrameRst		<= 1'b1;
+		rObdAnimeFrameNum	<= {(pObjectAnimeNum * pObjectAnimeTime){1'b0}};
+		rObdAnimeXpos		<= {(pObjectAnimeNum * pObjectAnimeXposWidth){1'b0}};
+		rObdAnimeYpos		<= {(pObjectAnimeNum * pObjectAnimeYposWidth){1'b0}};
+		rPdpXpos			<= {(pVHAW){1'b0}};;
+		rPdpYpos			<= {(pVVAW){1'b0}};;
+		rPdpInit			<= 1'b1;
 		rBramWd				<= 24'd0;
 		rBramAdrs			<= 32'd0;
 	end
 	else
 	begin
 		// DMA Info
-		rBlockRst					<= qCsrWCke000 ? iSUsiWd[0:0] 				: rBlockRst;
-		rDmaEnable					<= iDmaDone	   ? rDmaCycleEnable 			: qCsrWCke004 ? iSUsiWd[0:0] : rDmaEnable;
-		rDmaCycleEnable				<= qCsrWCke008 ? iSUsiWd[0:0] 				: rDmaCycleEnable;
-		rDmaAdrsStart				<= qCsrWCke00c ? iSUsiWd[pDmaAdrsWidth-1:0] : rDmaAdrsStart;
-		rDmaAdrsEnd					<= qCsrWCke010 ? iSUsiWd[pDmaAdrsWidth-1:0] : rDmaAdrsEnd;
-		rDmaAdrsAdd					<= qCsrWCke014 ? iSUsiWd[pDmaAdrsWidth-1:0] : rDmaAdrsAdd;
+		rBlockRst					<= qCsrWCke[0] ? iSUsiWd[0:0] 				: rBlockRst;
+		rDmaEnable					<= iDmaDone	   ? rDmaCycleEnable 			: qCsrWCke[4] ? iSUsiWd[0:0] : rDmaEnable;
+		rDmaCycleEnable				<= qCsrWCke[8] ? iSUsiWd[0:0] 				: rDmaCycleEnable;
+		rDmaAdrsStart				<= qCsrWCke[9] ? iSUsiWd[pDmaAdrsWidth-1:0] : rDmaAdrsStart;
+		rDmaAdrsEnd					<= qCsrWCke[10] ? iSUsiWd[pDmaAdrsWidth-1:0] : rDmaAdrsEnd;
+		rDmaAdrsAdd					<= qCsrWCke[14] ? iSUsiWd[pDmaAdrsWidth-1:0] : rDmaAdrsAdd;
 		// Video Sync Gen
-		rVsgRst						<= qCsrWCke020 ? iSUsiWd[0:0] : rVsgRst;
+		rVsgRst						<= qCsrWCke[20] ? iSUsiWd[0:0] : rVsgRst;
 		// Video Tft Unit
-		rVtuMcuDq					<= qCsrWCke050 ? iSUsiWd[pDstColorDepth-1:0] : rVtuMcuDq;
-		rVtuMcuWRX					<= qCsrWCke051 ? iSUsiWd[0:0] : rVtuMcuWRX;
-		rVtuMcuDCX					<= qCsrWCke052 ? iSUsiWd[0:0] : rVtuMcuDCX;
-		rVtuMcuRDX					<= qCsrWCke053 ? iSUsiWd[0:0] : rVtuMcuRDX;
-		rVtuMcuCSX					<= qCsrWCke054 ? iSUsiWd[0:0] : rVtuMcuCSX;
-		rVtuMcuRST					<= qCsrWCke055 ? iSUsiWd[0:0] : rVtuMcuRST;
-		rVtuMcuIM					<= qCsrWCke056 ? iSUsiWd[3:0] : rVtuMcuIM;
-		rVtuMcuGate					<= qCsrWCke057 ? iSUsiWd[0:0] : rVtuMcuGate;
-		rVtuConverterRst			<= qCsrWCke058 ? iSUsiWd[0:0] : rVtuConverterRst;
-		rVtuMcuBL					<= qCsrWCke059 ? iSUsiWd[0:0] : rVtuMcuBL;
+		rVtuMcuDq					<= qCsrWCke[50] ? iSUsiWd[pDstColorDepth-1:0] : rVtuMcuDq;
+		rVtuMcuWRX					<= qCsrWCke[51] ? iSUsiWd[0:0] : rVtuMcuWRX;
+		rVtuMcuDCX					<= qCsrWCke[52] ? iSUsiWd[0:0] : rVtuMcuDCX;
+		rVtuMcuRDX					<= qCsrWCke[53] ? iSUsiWd[0:0] : rVtuMcuRDX;
+		rVtuMcuCSX					<= qCsrWCke[54] ? iSUsiWd[0:0] : rVtuMcuCSX;
+		rVtuMcuRST					<= qCsrWCke[55] ? iSUsiWd[0:0] : rVtuMcuRST;
+		rVtuMcuIM					<= qCsrWCke[56] ? iSUsiWd[3:0] : rVtuMcuIM;
+		rVtuMcuGate					<= qCsrWCke[57] ? iSUsiWd[0:0] : rVtuMcuGate;
+		rVtuConverterRst			<= qCsrWCke[58] ? iSUsiWd[0:0] : rVtuConverterRst;
+		rVtuMcuBL					<= qCsrWCke[59] ? iSUsiWd[0:0] : rVtuMcuBL;
+		rVtuBlDutyRatio				<= qCsrWCke[60] ? iSUsiWd[15:0] : rVtuBlDutyRatio;
+		rVtuBlIVtimer				<= qCsrWCke[61] ? iSUsiWd[31:0] : rVtuBlIVtimer;
 		// Vpg
-		rBramWd						<= qCsrWCke097 ? iSUsiWd[23:0] : rBramWd;
-		rBramAdrs					<= qCsrWCke098 ? iSUsiWd[31:0] : rBramAdrs;
-		rVpgUnitRst					<= qCsrWCke099 ? iSUsiWd[0:0]  : rVpgUnitRst;
+		rBramWd						<= qCsrWCke[97] ? iSUsiWd[23:0] : rBramWd;
+		rBramAdrs					<= qCsrWCke[98] ? iSUsiWd[31:0] : rBramAdrs;
+		rVpgUnitRst					<= qCsrWCke[99] ? iSUsiWd[0:0]  : rVpgUnitRst;
 		// Map Info
-		{rMapXSize, rMapYSize}		<= qCsrWCke100 ? iSUsiWd[15:0]				: {rMapXSize, rMapYSize};
+		{rMapXSize, rMapYSize}		<= qCsrWCke[100] ? iSUsiWd[15:0]				: {rMapXSize, rMapYSize};
+		// Object
+		rObdAnimeFrameNum[  0+:32]	<= qCsrWCke[101] ? iSUsiWd[31:0]				: rObdAnimeFrameNum [  0+:32];
+		rObdAnimeFrameNum[ 32+:32]	<= qCsrWCke[102] ? iSUsiWd[31:0]				: rObdAnimeFrameNum [ 32+:32];
+		rObdAnimeXpos	 [  0+:32]	<= qCsrWCke[120] ? iSUsiWd[31:0]				: rObdAnimeXpos		[  0+:32];
+		rObdAnimeXpos	 [ 32+:32]	<= qCsrWCke[121] ? iSUsiWd[31:0]				: rObdAnimeXpos		[ 32+:32];
+		rObdAnimeXpos	 [ 64+:32]	<= qCsrWCke[122] ? iSUsiWd[31:0]				: rObdAnimeXpos		[ 64+:32];
+		rObdAnimeXpos	 [ 96+:32]	<= qCsrWCke[123] ? iSUsiWd[31:0]				: rObdAnimeXpos		[ 96+:32];
+		rObdAnimeYpos	 [  0+:32]	<= qCsrWCke[140] ? iSUsiWd[31:0]				: rObdAnimeYpos		[  0+:32];
+		rObdAnimeYpos	 [ 32+:32]	<= qCsrWCke[141] ? iSUsiWd[31:0]				: rObdAnimeYpos		[ 32+:32];
+		rObdAnimeYpos	 [ 64+:32]	<= qCsrWCke[142] ? iSUsiWd[31:0]				: rObdAnimeYpos		[ 64+:32];
+		rObdAnimeYpos	 [ 96+:32]	<= qCsrWCke[143] ? iSUsiWd[31:0]				: rObdAnimeYpos		[ 96+:32];
 		// Dot Square Gen
-		rDotSquareColor1			<= qCsrWCke200 ? iSUsiWd[pSynColorDepth-1:0]: rDotSquareColor1;
-		rDotSquareLeft1				<= qCsrWCke201 ? iSUsiWd[pVHAW:0]			: rDotSquareLeft1;
-		rDotSquareRight1			<= qCsrWCke202 ? iSUsiWd[pVHAW:0]			: rDotSquareRight1;
-		rDotSquareTop1				<= qCsrWCke203 ? iSUsiWd[pVVAW:0]			: rDotSquareTop1;
-		rDotSquareUnder1			<= qCsrWCke204 ? iSUsiWd[pVVAW:0]			: rDotSquareUnder1;
-		rDotSquareColor2			<= qCsrWCke205 ? iSUsiWd[pSynColorDepth-1:0]: rDotSquareColor2;
-		rDotSquareLeft2 			<= qCsrWCke206 ? iSUsiWd[pVHAW:0]			: rDotSquareLeft2;
-		rDotSquareRight2			<= qCsrWCke207 ? iSUsiWd[pVHAW:0]			: rDotSquareRight2;
-		rDotSquareTop2 				<= qCsrWCke208 ? iSUsiWd[pVVAW:0]			: rDotSquareTop2;
-		rDotSquareUnder2			<= qCsrWCke209 ? iSUsiWd[pVVAW:0]			: rDotSquareUnder2;
-		rDotSquareColor3			<= qCsrWCke20a ? iSUsiWd[pSynColorDepth-1:0]: rDotSquareColor3;
-		rDotSquareLeft3				<= qCsrWCke20b ? iSUsiWd[pVHAW:0]			: rDotSquareLeft3;
-		rDotSquareRight3			<= qCsrWCke20c ? iSUsiWd[pVHAW:0]			: rDotSquareRight3;
-		rDotSquareTop3				<= qCsrWCke20d ? iSUsiWd[pVVAW:0]			: rDotSquareTop3;
-		rDotSquareUnder3			<= qCsrWCke20e ? iSUsiWd[pVVAW:0]			: rDotSquareUnder3;
-		rDotSquareColor4			<= qCsrWCke20f ? iSUsiWd[pSynColorDepth-1:0]: rDotSquareColor4;
-		rDotSquareLeft4 			<= qCsrWCke210 ? iSUsiWd[pVHAW:0]			: rDotSquareLeft4;
-		rDotSquareRight4			<= qCsrWCke211 ? iSUsiWd[pVHAW:0]			: rDotSquareRight4;
-		rDotSquareTop4  			<= qCsrWCke212 ? iSUsiWd[pVVAW:0]			: rDotSquareTop4;
-		rDotSquareUnder4			<= qCsrWCke213 ? iSUsiWd[pVVAW:0]			: rDotSquareUnder4;
-		rDotSquareColor5			<= qCsrWCke214 ? iSUsiWd[pSynColorDepth-1:0]: rDotSquareColor5;
-		rDotSquareLeft5				<= qCsrWCke215 ? iSUsiWd[pVHAW:0]			: rDotSquareLeft5;
-		rDotSquareRight5			<= qCsrWCke216 ? iSUsiWd[pVHAW:0]			: rDotSquareRight5;
-		rDotSquareTop5				<= qCsrWCke217 ? iSUsiWd[pVVAW:0]			: rDotSquareTop5;
-		rDotSquareUnder5			<= qCsrWCke218 ? iSUsiWd[pVVAW:0]			: rDotSquareUnder5;
-		rDotSquareColor6			<= qCsrWCke219 ? iSUsiWd[pSynColorDepth-1:0]: rDotSquareColor6;
-		rDotSquareLeft6				<= qCsrWCke21a ? iSUsiWd[pVHAW:0]			: rDotSquareLeft6;
-		rDotSquareRight6			<= qCsrWCke21b ? iSUsiWd[pVHAW:0]			: rDotSquareRight6;
-		rDotSquareTop6				<= qCsrWCke21c ? iSUsiWd[pVVAW:0]			: rDotSquareTop6;
-		rDotSquareUnder6			<= qCsrWCke21d ? iSUsiWd[pVVAW:0]			: rDotSquareUnder6;
-		rDotSquareColor7			<= qCsrWCke21e ? iSUsiWd[pSynColorDepth-1:0]: rDotSquareColor7;
-		rDotSquareLeft7				<= qCsrWCke21f ? iSUsiWd[pVHAW:0]			: rDotSquareLeft7;
-		rDotSquareRight7			<= qCsrWCke220 ? iSUsiWd[pVHAW:0]			: rDotSquareRight7;
-		rDotSquareTop7				<= qCsrWCke221 ? iSUsiWd[pVVAW:0]			: rDotSquareTop7;
-		rDotSquareUnder7			<= qCsrWCke222 ? iSUsiWd[pVVAW:0]			: rDotSquareUnder7;
+		rDotSquareColor1			<= qCsrWCke[200] ? iSUsiWd[pSynColorDepth-1:0]	: rDotSquareColor1;
+		rDotSquareLeft1				<= qCsrWCke[201] ? iSUsiWd[pVHAW:0]				: rDotSquareLeft1;
+		rDotSquareRight1			<= qCsrWCke[202] ? iSUsiWd[pVHAW:0]				: rDotSquareRight1;
+		rDotSquareTop1				<= qCsrWCke[203] ? iSUsiWd[pVVAW:0]				: rDotSquareTop1;
+		rDotSquareUnder1			<= qCsrWCke[204] ? iSUsiWd[pVVAW:0]				: rDotSquareUnder1;
+		rDotSquareColor2			<= qCsrWCke[205] ? iSUsiWd[pSynColorDepth-1:0]	: rDotSquareColor2;
+		rDotSquareLeft2 			<= qCsrWCke[206] ? iSUsiWd[pVHAW:0]				: rDotSquareLeft2;
+		rDotSquareRight2			<= qCsrWCke[207] ? iSUsiWd[pVHAW:0]				: rDotSquareRight2;
+		rDotSquareTop2 				<= qCsrWCke[208] ? iSUsiWd[pVVAW:0]				: rDotSquareTop2;
+		rDotSquareUnder2			<= qCsrWCke[209] ? iSUsiWd[pVVAW:0]				: rDotSquareUnder2;
+		rDotSquareColor3			<= qCsrWCke[210] ? iSUsiWd[pSynColorDepth-1:0]	: rDotSquareColor3;
+		rDotSquareLeft3				<= qCsrWCke[211] ? iSUsiWd[pVHAW:0]				: rDotSquareLeft3;
+		rDotSquareRight3			<= qCsrWCke[212] ? iSUsiWd[pVHAW:0]				: rDotSquareRight3;
+		rDotSquareTop3				<= qCsrWCke[213] ? iSUsiWd[pVVAW:0]				: rDotSquareTop3;
+		rDotSquareUnder3			<= qCsrWCke[214] ? iSUsiWd[pVVAW:0]				: rDotSquareUnder3;
+		rDotSquareColor4			<= qCsrWCke[215] ? iSUsiWd[pSynColorDepth-1:0]	: rDotSquareColor4;
+		rDotSquareLeft4 			<= qCsrWCke[216] ? iSUsiWd[pVHAW:0]				: rDotSquareLeft4;
+		rDotSquareRight4			<= qCsrWCke[217] ? iSUsiWd[pVHAW:0]				: rDotSquareRight4;
+		rDotSquareTop4  			<= qCsrWCke[218] ? iSUsiWd[pVVAW:0]				: rDotSquareTop4;
+		rDotSquareUnder4			<= qCsrWCke[219] ? iSUsiWd[pVVAW:0]				: rDotSquareUnder4;
+		rDotSquareColor5			<= qCsrWCke[220] ? iSUsiWd[pSynColorDepth-1:0]	: rDotSquareColor5;
+		rDotSquareLeft5				<= qCsrWCke[221] ? iSUsiWd[pVHAW:0]				: rDotSquareLeft5;
+		rDotSquareRight5			<= qCsrWCke[222] ? iSUsiWd[pVHAW:0]				: rDotSquareRight5;
+		rDotSquareTop5				<= qCsrWCke[223] ? iSUsiWd[pVVAW:0]				: rDotSquareTop5;
+		rDotSquareUnder5			<= qCsrWCke[224] ? iSUsiWd[pVVAW:0]				: rDotSquareUnder5;
+		rDotSquareColor6			<= qCsrWCke[225] ? iSUsiWd[pSynColorDepth-1:0]	: rDotSquareColor6;
+		rDotSquareLeft6				<= qCsrWCke[226] ? iSUsiWd[pVHAW:0]				: rDotSquareLeft6;
+		rDotSquareRight6			<= qCsrWCke[227] ? iSUsiWd[pVHAW:0]				: rDotSquareRight6;
+		rDotSquareTop6				<= qCsrWCke[228] ? iSUsiWd[pVVAW:0]				: rDotSquareTop6;
+		rDotSquareUnder6			<= qCsrWCke[229] ? iSUsiWd[pVVAW:0]				: rDotSquareUnder6;
+		rDotSquareColor7			<= qCsrWCke[230] ? iSUsiWd[pSynColorDepth-1:0]	: rDotSquareColor7;
+		rDotSquareLeft7				<= qCsrWCke[231] ? iSUsiWd[pVHAW:0]				: rDotSquareLeft7;
+		rDotSquareRight7			<= qCsrWCke[232] ? iSUsiWd[pVHAW:0]				: rDotSquareRight7;
+		rDotSquareTop7				<= qCsrWCke[233] ? iSUsiWd[pVVAW:0]				: rDotSquareTop7;
+		rDotSquareUnder7			<= qCsrWCke[234] ? iSUsiWd[pVVAW:0]				: rDotSquareUnder7;
 		// Scene Change
-		rSceneColor					<= qCsrWCke300 ? iSUsiWd[pSynColorDepth-1:0]: rSceneColor;
-		rSceneFrameTiming			<= qCsrWCke301 ? iSUsiWd[6:0] 				: rSceneFrameTiming;
-		rSceneFrameAddEn			<= qCsrWCke302 ? iSUsiWd[0:0]				: rSceneFrameAddEn;
-		rSceneFrameSubEn			<= qCsrWCke303 ? iSUsiWd[1:1]				: rSceneFrameSubEn;
-		rSceneFrameRst				<= qCsrWCke304 ? iSUsiWd[2:2]				: rSceneFrameRst;
+		rSceneColor					<= qCsrWCke[300] ? iSUsiWd[pSynColorDepth-1:0]	: rSceneColor;
+		rSceneFrameTiming			<= qCsrWCke[301] ? iSUsiWd[6:0] 				: rSceneFrameTiming;
+		rSceneFrameAddEn			<= qCsrWCke[302] ? iSUsiWd[0:0]					: rSceneFrameAddEn;
+		rSceneFrameSubEn			<= qCsrWCke[303] ? iSUsiWd[1:1]					: rSceneFrameSubEn;
+		rSceneFrameRst				<= qCsrWCke[304] ? iSUsiWd[2:2]					: rSceneFrameRst;
+		// Draw Position
+		rPdpXpos					<= qCsrWCke[390] ? iSUsiWd[pVHAW-1:0]			: rPdpXpos;
+		rPdpYpos					<= qCsrWCke[391] ? iSUsiWd[pVVAW-1:0]			: rPdpYpos;
+		rPdpInit					<= qCsrWCke[392] ? iSUsiWd[0:0]					: rPdpInit;
 	end
 end
 
-always @*
-begin
-	qCsrWCke000 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
-	qCsrWCke004 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
-	qCsrWCke008 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
-	qCsrWCke00c <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000});
-	// 010h ~
-	qCsrWCke010 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0010});
-	qCsrWCke014 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0014});
-	qCsrWCke018 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0018});
-	qCsrWCke01c <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h001c});
-	// 020h
-	qCsrWCke020 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0020});
-	// 050h ~
-	qCsrWCke050 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0050});
-	qCsrWCke051 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0051});
-	qCsrWCke052 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0052});
-	qCsrWCke053 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0053});
-	qCsrWCke054 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0054});
-	qCsrWCke055 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0055});
-	qCsrWCke056 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0056});
-	qCsrWCke057 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0057});
-	qCsrWCke058 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0058});
-	qCsrWCke059 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0059});
-	
-	// 100h ~
-	qCsrWCke097 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0097});
-	qCsrWCke098 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0098});
-	qCsrWCke099 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0099});
-	qCsrWCke100 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0100});
-	qCsrWCke104 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0104});
-	qCsrWCke108 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0108});
-	qCsrWCke10c <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h010c});
-	qCsrWCke110 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0110});
-	qCsrWCke114 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0114});
-	// 200h ~
-	qCsrWCke200 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0200});
-	qCsrWCke201 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0201});
-	qCsrWCke202 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0202});
-	qCsrWCke203 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0203});
-	qCsrWCke204 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0204});
-	qCsrWCke205 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0205});
-	qCsrWCke206 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0206});
-	qCsrWCke207 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0207});
-	qCsrWCke208 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0208});
-	qCsrWCke209 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0209});
-	qCsrWCke20a <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h020a});
-	qCsrWCke20b <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h020b});
-	qCsrWCke20c <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h020c});
-	qCsrWCke20d <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h020d});
-	qCsrWCke20e <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h020e});
-	qCsrWCke20f <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h020f});
-	qCsrWCke210 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0210});
-	qCsrWCke211 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0211});
-	qCsrWCke212 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0212});
-	qCsrWCke213 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0213});
-	qCsrWCke214 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0214});
-	qCsrWCke215 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0215});
-	qCsrWCke216 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0216});
-	qCsrWCke217 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0217});
-	qCsrWCke218 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0218});
-	qCsrWCke219 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0219});
-	qCsrWCke21a <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h021a});
-	qCsrWCke21b <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h021b});
-	qCsrWCke21c <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h021c});
-	qCsrWCke21d <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h021d});
-	qCsrWCke21e <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h021e});
-	qCsrWCke21f <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h021f});
-	qCsrWCke220 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0220});
-	qCsrWCke221 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0221});
-	qCsrWCke222 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0222});
-	// 300h ~
-	qCsrWCke300 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0300});
-	qCsrWCke301 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0301});
-	qCsrWCke302 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0302});
-	qCsrWCke303 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0303});
-	qCsrWCke304 <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0304});
-end
 
+generate
+	for (gen = 0; gen < pRegNumver; gen = gen + 1)
+	begin
+		wire [15:0] gen_index = gen;
+		
+		always @*
+		begin
+			qCsrWCke[gen] <= iSUsiAdrs[30] & (iSUsiAdrs[pBlockAdrsWidth + pCsrAdrsWidth - 1:0] == {pAdrsMap, 16'h0000 + gen_index});
+		end
+	end
+endgenerate
 
 //----------------------------------------------------------
 // Csr Read
@@ -449,73 +412,89 @@ always @(posedge iSCLK)
 begin
 	// {{(32 - パラメータ名	){1'b0}}, レジスタ名} -> パラメータ可変に対応し 0 で埋められるように設定
 	case (iSUsiAdrs[pCsrActiveWidth - 1:0])
-		'h000:		rSUsiRd <= {{(32 - 1			 	){1'b0}}, 	rBlockRst			};
-		'h004:		rSUsiRd <= {{(32 - 1			 	){1'b0}}, 	rDmaEnable			};
-		'h008:		rSUsiRd <= {{(32 - 1			 	){1'b0}}, 	rDmaCycleEnable		};
-		'h00C:		rSUsiRd <= {{(32 - pDmaAdrsWidth	){1'b0}},	rDmaAdrsStart		};
-		'h010:		rSUsiRd <= {{(32 - pDmaAdrsWidth	){1'b0}},	rDmaAdrsEnd			};
-		'h014:		rSUsiRd <= {{(32 - pDmaAdrsWidth	){1'b0}},	rDmaAdrsAdd			};
+		'd0:		rSUsiRd <= {{(32 - 1			 	){1'b0}}, 	rBlockRst			};
+		'd4:		rSUsiRd <= {{(32 - 1			 	){1'b0}}, 	rDmaEnable			};
+		'd8:		rSUsiRd <= {{(32 - 1			 	){1'b0}}, 	rDmaCycleEnable		};
+		'd10:		rSUsiRd <= {{(32 - pDmaAdrsWidth	){1'b0}},	rDmaAdrsStart		};
+		'd11:		rSUsiRd <= {{(32 - pDmaAdrsWidth	){1'b0}},	rDmaAdrsEnd			};
+		'd14:		rSUsiRd <= {{(32 - pDmaAdrsWidth	){1'b0}},	rDmaAdrsAdd			};
 		// 020
-		'h020:		rSUsiRd <= {{(32 - 31				){1'b0}},	rVsgRst				};
+		'd20:		rSUsiRd <= {{(32 - 31				){1'b0}},	rVsgRst				};
 		// 050
-		'h050:		rSUsiRd <= {{(32 - pDstColorDepth	){1'b0}},	rVtuMcuDq			};
-		'h051:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuWRX			};
-		'h052:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuDCX			};
-		'h053:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuRDX			};
-		'h054:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuCSX			};
-		'h055:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuRST			};
-		'h056:		rSUsiRd <= {{(32 - 4				){1'b0}},	rVtuMcuIM			};
-		'h057:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuGate			};
-		'h058:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuConverterRst	};
-		'h059:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuBL			};
+		'd50:		rSUsiRd <= {{(32 - pDstColorDepth	){1'b0}},	rVtuMcuDq			};
+		'd51:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuWRX			};
+		'd52:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuDCX			};
+		'd53:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuRDX			};
+		'd54:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuCSX			};
+		'd55:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuRST			};
+		'd56:		rSUsiRd <= {{(32 - 4				){1'b0}},	rVtuMcuIM			};
+		'd57:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuGate			};
+		'd58:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuConverterRst	};
+		'd59:		rSUsiRd <= {{(32 - 1				){1'b0}},	rVtuMcuBL			};
+		'd60:		rSUsiRd <= {{(32 - 16				){1'b0}},	rVtuBlDutyRatio		};
+		'd61:		rSUsiRd <= {									rVtuBlIVtimer		};
 		//
-		'h098:		rSUsiRd	<= {{(32 - 24				){1'b0}},	rBramWd				};
-		'h097:		rSUsiRd	<= {									rBramAdrs			};
-		'h099:		rSUsiRd	<= {{(32 - 1				){1'b0}},	rVpgUnitRst			};
-		'h100:		rSUsiRd	<= {{(32 - 16				){1'b0}},	rMapXSize, rMapYSize};
+		'd97:		rSUsiRd	<= {{(32 - 24				){1'b0}},	rBramWd				};
+		'd98:		rSUsiRd	<= {									rBramAdrs			};
+		'd99:		rSUsiRd	<= {{(32 - 1				){1'b0}},	rVpgUnitRst			};
+		'd100:		rSUsiRd	<= {{(32 - 16				){1'b0}},	rMapXSize, rMapYSize};
 		//
-		'h200:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rDotSquareColor1		};
-		'h201:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft1		};
-		'h202:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight1		};
-		'h203:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop1		};
-		'h204:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder1		};
-		'h205:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rDotSquareColor2		};
-		'h206:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft2		};
-		'h207:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight2		};
-		'h208:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop2		};
-		'h209:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder2		};
-		'h20a:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rDotSquareColor3		};
-		'h20b:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft3		};
-		'h20c:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight3		};
-		'h20d:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop3		};
-		'h20e:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder3		};
-		'h20f:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rDotSquareColor4		};
-		'h210:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft4		};
-		'h211:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight4		};
-		'h212:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop4		};
-		'h213:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder4		};
-		'h214:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rDotSquareColor5		};
-		'h215:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft5		};
-		'h216:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight5		};
-		'h217:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop5		};
-		'h218:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder5		};
-		'h219:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rDotSquareColor6		};
-		'h21a:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft6		};
-		'h21b:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight6		};
-		'h21c:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop6		};
-		'h21d:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder6		};
-		'h21e:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rDotSquareColor7		};
-		'h21f:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft7		};
-		'h220:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight7		};
-		'h221:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop7		};
-		'h222:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder7		};
+		'd101:		rSUsiRd	<= {									rObdAnimeFrameNum[  0+:32]};
+		'd10:		rSUsiRd	<= {									rObdAnimeFrameNum[ 32+:32]};
+		'd120:		rSUsiRd	<= {									rObdAnimeXpos	 [  0+:32]};
+		'd121:		rSUsiRd	<= {									rObdAnimeXpos	 [ 32+:32]};
+		'd122:		rSUsiRd	<= {									rObdAnimeXpos	 [ 64+:32]};
+		'd123:		rSUsiRd	<= {									rObdAnimeXpos	 [ 96+:32]};
+		'd140:		rSUsiRd	<= {									rObdAnimeYpos	 [  0+:32]};
+		'd141:		rSUsiRd	<= {									rObdAnimeYpos	 [ 32+:32]};
+		'd142:		rSUsiRd	<= {									rObdAnimeYpos	 [ 64+:32]};
+		'd143:		rSUsiRd	<= {									rObdAnimeYpos	 [ 96+:32]};
 		//
-		'h300:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rSceneColor										};
-		'h301:		rSUsiRd	<= {{(32 - 7				){1'b0}}, rSceneFrameTiming									};
-		'h302:		rSUsiRd	<= {{(32 - 3				){1'b0}}, rSceneFrameRst,rSceneFrameSubEn,rSceneFrameAddEn	};
-		'h303:		rSUsiRd	<= {{(32 - 2				){1'b0}}, {iSceneAlphaMax,iSceneAlphaMin}					};
-		'h400:		rSUsiRd	<= {{(32 - pVHAW			){1'b0}}, iPdpHpos											};
-		'h401:		rSUsiRd	<= {{(32 - pVVAW			){1'b0}}, iPdpVpos											};
+		'd200:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rDotSquareColor1		};
+		'd201:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft1		};
+		'd202:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight1		};
+		'd203:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop1		};
+		'd204:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder1		};
+		'd205:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rDotSquareColor2		};
+		'd206:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft2		};
+		'd207:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight2		};
+		'd208:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop2		};
+		'd209:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder2		};
+		'd210:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rDotSquareColor3		};
+		'd211:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft3		};
+		'd212:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight3		};
+		'd213:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop3		};
+		'd214:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder3		};
+		'd215:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rDotSquareColor4		};
+		'd216:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft4		};
+		'd217:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight4		};
+		'd218:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop4		};
+		'd219:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder4		};
+		'd220:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rDotSquareColor5		};
+		'd221:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft5		};
+		'd222:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight5		};
+		'd223:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop5		};
+		'd224:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder5		};
+		'd225:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rDotSquareColor6		};
+		'd226:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft6		};
+		'd227:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight6		};
+		'd228:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop6		};
+		'd229:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder6		};
+		'd230:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rDotSquareColor7		};
+		'd231:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft7		};
+		'd232:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareRight7		};
+		'd233:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareTop7		};
+		'd234:		rSUsiRd	<= {{(32 - (pVVAW+1)		){1'b0}}, rDotSquareUnder7		};
+		//
+		'd300:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rSceneColor										};
+		'd301:		rSUsiRd	<= {{(32 - 7				){1'b0}}, rSceneFrameTiming									};
+		'd302:		rSUsiRd	<= {{(32 - 3				){1'b0}}, rSceneFrameRst,rSceneFrameSubEn,rSceneFrameAddEn	};
+		'd303:		rSUsiRd	<= {{(32 - 2				){1'b0}}, {iSceneAlphaMax,iSceneAlphaMin}					};
+		'd390:		rSUsiRd	<= {{(32 - pVHAW			){1'b0}}, rPdpXpos											};
+		'd391:		rSUsiRd	<= {{(32 - pVVAW			){1'b0}}, rPdpYpos											};
+		'd392:		rSUsiRd	<= {{(32 - 31				){1'b0}}, rPdpInit											};
+		'd400:		rSUsiRd	<= {{(32 - pVHAW			){1'b0}}, iBdpHpos											};
+		'd401:		rSUsiRd	<= {{(32 - pVVAW			){1'b0}}, iBdpVpos											};
 		default: 	rSUsiRd <= iSUsiWd;
 	endcase
 end

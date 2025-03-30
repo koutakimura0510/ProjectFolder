@@ -41,8 +41,9 @@
  * HD画質、1280 x 3 x 15画面のデータ容量を超える場合
  * N_POSの乗数を増やす
  *-----------------------------------------------------------------------------*/
-#define BUFFER_SIZE 	(1920 * 1080)
-#define CUT_LINE_MAX	(32)
+#define BUFFER_SIZE 		(1920 * 1080)
+#define CUT_ROW_MAX			(32)
+#define CUT_COL_MAX			(32)
 #define DEBUG_PRINT_ENABLE	(0)
 
 /**-----------------------------------------------------------------------------
@@ -66,8 +67,10 @@ typedef struct {
 	uint32_t id_cnt;			// 切り抜き領域に ID を割り振る。デバッグ用途。
 	uint32_t ypixel_cut;
 	uint32_t xpixel_cut;
-	uint32_t cut_line;
-	uint8_t cut_line_buff[CUT_LINE_MAX];
+	uint32_t cut_row;
+	uint8_t cut_row_buff[CUT_ROW_MAX];
+	uint32_t cut_col;
+	uint8_t cut_col_buff[CUT_COL_MAX];
 } PixelInfo;
 
 typedef struct {
@@ -97,7 +100,7 @@ FILE *fp;
  *-----------------------------------------------------------------------------*/
 void error_fprintf(const char *s, int line);
 int file_create(char *path, char *dir_path);
-bool mapchip_info_eoc(uint8_t xpos, uint8_t *id_buff);
+bool mapchip_info_eoc(uint8_t pos, uint8_t *id_buff, uint8_t buff_size);
 PixelColor888 mapchip_pixel_gen(uint8_t alpha, uint8_t red, uint8_t green, uint8_t blue, uint8_t type);
 uint32_t mapchip_color_upload(PixelInfo *info, uint8_t *color, uint8_t *sdl_pixe, uint32_t byte_per_pixel);
 void mapchip_file_save(PixelInfo *info, uint8_t *color, uint32_t wmax, uint32_t byte_per_pixel);
@@ -187,10 +190,10 @@ int file_create(char *path, char *dir_path)
 /**-----------------------------------------------------------------------------
  * 指定した画像データのくり抜き領域をチェック
  *-----------------------------------------------------------------------------*/
-bool mapchip_info_eoc(uint8_t xpos, uint8_t *id_buff)
+bool mapchip_info_eoc(uint8_t pos, uint8_t *id_buff, uint8_t buff_size)
 {
-	for (uint8_t i = 0; i < CUT_LINE_MAX; i++) {
-		if (xpos == id_buff[i]) {
+	for (uint8_t i = 0; i < buff_size; i++) {
+		if (pos == id_buff[i]) {
 			return true;
 		}
 	}
@@ -279,7 +282,7 @@ uint32_t mapchip_color_upload(PixelInfo *info, uint8_t *color, uint8_t *sdl_pixe
 		
 		for (uint32_t x = 0; x < info->pixel_wid; x++) {
 			uint32_t cutx = x * byte_per_pixel;
-			fprintf(stderr, "pixel %d = ,", x + y * image->w);
+			// fprintf(stderr, "pixel %d = ,", x + y * image->w);
 
 			for (uint32_t rgbx = 0; rgbx < byte_per_pixel; rgbx++) {	// 1pixel の RGB 要素抜き出し
 				uint32_t pos = rgbx + cutx + cuty + info->xpixel_cut + info->ypixel_cut;
@@ -298,7 +301,7 @@ uint32_t mapchip_color_upload(PixelInfo *info, uint8_t *color, uint8_t *sdl_pixe
 		}
 	}
 
-	fprintf(stderr, "total wpos = %x\r\n", wpos);
+	// fprintf(stderr, "total wpos = 0x%x\r\n", wpos);
 	return wpos;
 }
 
@@ -340,29 +343,56 @@ void mapchip_info_save(PixelInfo *info)
 	fprintf(stderr, "PixelType = %d\n", info->rgb_type);
 	fprintf(stderr, "\n");
 	fprintf(stderr, "----------------------------------------------\n");
-	fprintf(stderr, "使用する画像ラインの選択をします。\n");
-	fprintf(stderr, "0 の場合すべてのラインを読み取ります。\n");
+	fprintf(stderr, "使用する画像列の選択をします。\n");
+	fprintf(stderr, "0 の場合すべての列を読み取ります。\n");
 	fprintf(stderr, "左足、立姿、左足の歩行画像 = ID 1,2,3 としたとき、立姿を飛ばしたい場合は 13 と入力してください。 \n");
-	fprintf(stderr, "以降の 4,5,6 ラインも使用する場合は、13456 と入力します。\n");
-	fprintf(stderr, "0 = AllLine, 123456 -> 135 CutLine\n");
-	scanf("%d", &info->cut_line);
-	memset(info->cut_line_buff, 0, sizeof(info->cut_line_buff));
+	fprintf(stderr, "以降の 4,5,6 列も使用する場合は、13456 と入力します。\n");
+	fprintf(stderr, "0 = All Row, 123456 -> 135 Cut Row\n");
+	scanf("%d", &info->cut_row);
+	memset(info->cut_row_buff, 0, sizeof(info->cut_row_buff));
 
-	if (info->cut_line != 0) {
-		uint32_t temp = info->cut_line;
+	fprintf(stderr, "\n");
+	fprintf(stderr, "----------------------------------------------\n");
+	fprintf(stderr, "使用する画像行の選択をします。\n");
+	fprintf(stderr, "0 の場合すべての行を読み取ります。\n");
+	fprintf(stderr, "正面、左面、右面の歩行画像 = ID 1,2,3 としたとき、左面を飛ばしたい場合は 13 と入力してください。 \n");
+	fprintf(stderr, "以降の 4,5,6 行も使用する場合は、13456 と入力します。\n");
+	fprintf(stderr, "0 = All Col, 123456 -> 135 Cut Col\n");
+	scanf("%d", &info->cut_col);
+	memset(info->cut_col_buff, 0, sizeof(info->cut_col_buff));
+
+	if (info->cut_row != 0) {
+		uint32_t temp = info->cut_row;
 	
 		for (uint8_t i = 0; i < image->w / info->pixel_wid; i++) {
-			info->cut_line_buff[i] = temp % 10;
+			info->cut_row_buff[i] = temp % 10;
 			temp /= 10;
 		}
 	} else {
-		for (uint8_t i = 0; i < CUT_LINE_MAX; i++) {
-			info->cut_line_buff[i] = i;
+		for (uint8_t i = 0; i < CUT_ROW_MAX; i++) {
+			info->cut_row_buff[i] = i;
+		}
+	}
+
+	if (info->cut_col != 0) {
+		uint32_t temp = info->cut_col;
+	
+		for (uint8_t i = 0; i < image->h / info->pixel_hei; i++) {
+			info->cut_col_buff[i] = temp % 10;
+			temp /= 10;
+		}
+	} else {
+		for (uint8_t i = 0; i < CUT_COL_MAX; i++) {
+			info->cut_col_buff[i] = i;
 		}
 	}
 	
 	for (uint8_t i = 0; i < image->w / info->pixel_wid; i++) {
-		printf("cut_line 0x%x\n", info->cut_line_buff[i]);
+		printf("cut_row 0x%x\n", info->cut_row_buff[i]);
+	}
+
+	for (uint8_t i = 0; i < image->h / info->pixel_hei; i++) {
+		printf("cut_col 0x%x\n", info->cut_col_buff[i]);
 	}
 }
 
@@ -404,10 +434,15 @@ void pixel_generate(void)
 
 		for (uint32_t x = 0; x < image->w / info.pixel_wid; x++)
 		{
-			if (false == mapchip_info_eoc(x+1, info.cut_line_buff)) {
+			if (false == mapchip_info_eoc(x+1, info.cut_row_buff, CUT_ROW_MAX)) {
 				continue;
 			}
-
+			
+			uint32_t cut_col_pos = ((y+1) * (image->w / info.pixel_wid)) / (image->w / info.pixel_wid);
+			if (false == mapchip_info_eoc(cut_col_pos, info.cut_col_buff, CUT_COL_MAX)) {
+				continue;
+			}
+			
 			info.xpixel_cut = x * info.pixel_wid * fmt->BytesPerPixel;	// 画像の切り取り x座標計算
 			info.id_cnt = x + (y * (image->w / info.pixel_wid));		// 切り取り座標のID算出
 			wpos = mapchip_color_upload(&info, color, sdl_pixel, fmt->BytesPerPixel);

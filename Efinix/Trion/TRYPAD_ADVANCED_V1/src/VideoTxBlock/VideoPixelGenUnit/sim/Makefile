@@ -1,24 +1,4 @@
-# # Sim 出力ファイル名
-# TBOUT    = tbwave.out
-
-# # Tb Top Module名
-# TBTOP 	 = VideoPixelGenUnit_tb
-
-# # Tb Top Module.v
-# TBTOPRTL = VideoPixelGenUnit_tb.v
-
-# # Tb Instance.v
-# TBRTL 	= ../../VideoTxCsr.v ../VideoPixelGenUnit.v ../PlayerDraw/PlayerDraw.v ../common/*.v ./BmpFileSaver.v
-# COMMON	= ../../../common/pulse/*.v ../../../common/fifo/*.v ../../../common/mult/AlphaBlend.v
-# LIB		= C:/Efinity/2023.1/sim_models/verilog/*.v
-# INCLUDE = -I ./include
-
-# sim:
-# 	iverilog -o $(TBOUT) -s $(TBTOP) $(INCLUDE) $(TBRTL) $(COMMON) $(LIB) $(TBTOPRTL)
-# 	vvp -n $(TBOUT)
-
-
-#
+# Created 2025-03-22
 # Makefile: Verilog シミュレーション用
 # 
 # `make sim` を実行すると、iverilog でコンパイルし、vvp で実行する。
@@ -27,7 +7,6 @@
 #   -o オプション: 出力ファイル名 (省略時は a.out)
 #   -s オプション: トップモジュールの指定 (省略可能だが、指定推奨)
 # 
-# Created 2025-03-22
 # 2025-03-22 : v1.00
 
 # 出力ファイル名
@@ -42,7 +21,7 @@ TBTOPRTL = VideoPixelGenUnit_tb.v
 # テストベンチ内で使用するモジュール
 TBRTL    = ../../VideoTxCsr.v \
            ../VideoPixelGenUnit.v \
-           ../PlayerDraw/PlayerDraw.v \
+           ../DrawModule/*.v \
            ../common/*.v \
            ./BmpFileSaver.v
 

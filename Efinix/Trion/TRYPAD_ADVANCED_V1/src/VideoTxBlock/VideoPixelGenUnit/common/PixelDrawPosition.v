@@ -9,13 +9,14 @@ module PixelDrawPosition #(
     parameter	pVVAW	= 11,
 	parameter	pMapChipBasicBs	= 4
 )(
-	input	[pVHAW-1:0]					iVha,
-	input	[pVVAW-1:0]					iVva,
+	input	[pVHAW-1:0]					iVha,		// min 1
+	input	[pVVAW-1:0]					iVva,		// min 1
     output 	[pVHAW-1:0]					oHpos,
     output 	[pVVAW-1:0]					oVpos,
 	output	[pVHAW-1:pMapChipBasicBs]	oHposBs,
 	output	[pVVAW-1:pMapChipBasicBs]	oVposBs,
-    output								oFD,
+    output								oFD,		// Frame End
+	output								oLD,		// Line End
 	output								oVD,
     // CLK Reset
     input	iRST,
@@ -38,21 +39,22 @@ end
 //----------------------------------------------------------
 // 水平同期カウンター
 //----------------------------------------------------------
-reg [pVHAW-1:0] rHpos;				assign oHpos   = rHpos;
-									assign oHposBs = rHpos[pVHAW-1:pMapChipBasicBs];
+reg [pVHAW-1:0] rHpos;				assign oHpos	= rHpos;
+									assign oHposBs	= rHpos[pVHAW-1:pMapChipBasicBs];
 reg qHposRst;
-reg qHposMax;
+reg qHposMax, qLdMax;
+									assign oLD		= qHposMax;
 
 always @(posedge iCLK)
 begin 
-    if (qHposRst)	rHpos <= {pVHAW{1'b0}};
-    else if (rVD)	rHpos <= rHpos + 1'b1;
-    else			rHpos <= rHpos;
+	if (qHposRst)	rHpos <= {pVHAW{1'b0}};
+	else if (rVD)	rHpos <= rHpos + 1'b1;
+	else			rHpos <= rHpos;
 end
 
 always @*
 begin
-    qHposMax <= (rHpos == iVha);
+	qHposMax <= (rHpos == iVha);
 
 	casex ({iRST,rVD,qHposMax})
 		'b1xx: 		qHposRst <= 1'b1;
@@ -91,20 +93,20 @@ end
 //----------------------------------------------------------
 // Active Frame End
 //----------------------------------------------------------
-reg rFeFast;							assign oFD = rFeFast;
-reg qFeFast;
+reg rFe;							assign oFD = qFe;
+reg qFe;
 //
 wire [pVHAW-1:0]	wHFast = iVha - 1'd1;
 
 always @(posedge iCLK) 
 begin
-    if (iRST) 		rFeFast <= 1'b0;
-	else if (rVD)	rFeFast <= qFeFast;
-    else			rFeFast <= 1'b0;
+    if (iRST) 		rFe <= 1'b0;
+	else if (rVD)	rFe <= qFe;
+    else			rFe <= 1'b0;
 end
 
 always @*
 begin
-    qFeFast <= (rVpos == iVva) & (rHpos == wHFast);	// 速く frameEnd
+    qFe <= (rVpos == iVva) & qHposMax;
 end
 endmodule

@@ -1,24 +1,22 @@
 /*------------------------------------------------------------------------------
- * Create  2024/07/30
  * Author  kouta kimura
  * 
- * Player Draw module
- * 2024-07-30 v1.00 : release
- * 2025-03-22 v1.01 : 
+ * Filed Draw module
+ * 2025-03-27 v1.00 : new release
  *-----------------------------------------------------------------------------*/
-module PlayerDraw #(
+module FieldDraw #(
 	parameter		pVHAW  			= 11,
 	parameter		pVVAW  			= 11,
 	parameter		pDstColorDepth	= 16,					// 入出力ピクセルデータの深度
 	parameter 		pSynColorDepth	= 24,					// α値を含む内部生成データの深度
-	parameter [7:0]	pCacheAdrs		= 8'h01,
-	parameter		pRamDepth		= 1024,					// pDstColorDepth と合わせて 32767Kbit に収まるようにする
-	parameter		pInitFileName	= "pPlayerTexture.txt"	// 本来は ROM データ書き込みだがデバッグ用に...
+	parameter [7:0]	pCacheBaseAdrs	= 8'h08,
+	parameter		pRamDepth		= 1024					// Block Ram Size
 )(
 	// Dst Pixel Stream I/F
 	output	[pDstColorDepth-1:0]	oPD,		// Pixel Data
 	output 							oVD,		// Pixel Valid
 	output 							oFD,		// Frame Valid
+	output 							oLD,		// Line Valid
 	output	[pVHAW-1:0]				oBHPD,
 	output	[pVVAW-1:0]				oBVPD,
 	output	[pVHAW-1:0]				oPHPD,		// Player Horizontal Position
@@ -27,6 +25,7 @@ module PlayerDraw #(
 	input	[pDstColorDepth-1:0]	iPS,		// Pixel Data
 	input							iVS,		// Pixel Valid
 	input							iFS,		// Frame Valid
+	input							iLS,		// Line Valid
 	input	[pVHAW-1:0]				iBHPS,		// Base Horizontal Position
 	input	[pVVAW-1:0]				iBVPS,		// Base Vertical Position
 	input	[pVHAW-1:0]				iPHPS,		// Player Horizontal Position
@@ -34,61 +33,81 @@ module PlayerDraw #(
 	// Memory Mapchip Access
 	input 	[23:0]					iBramWd,
 	input 	[31:0]					iBramAdrs,
-	// Control / Status
-	input	[1:0]					iPlayerdir,	// "3"=Left,"2"=Right,"1"=Up,"0"=Down
 	// common
 	input							iRST,
 	input							iCLK
 );
 
 
-//-----------------------------------------------------------------------------
-// 設定データに基づき、暗転処理を行う。
-//-----------------------------------------------------------------------------
-(* ram_style = "BLOCK" *) reg [pSynColorDepth-1:0] rPlayerRam [0:pRamDepth-1];	// 分散 RAM は使用しないので MAX 宣言
-
-// initial
-// begin
-// 	fd = $fopen("./res/minoriko.bin", "rb");
-// 	$readmemh("../sim/res/minoriko.bin", rPlayerRam);
-// end
-
 /**-----------------------------------------------------------------------------
  * BRAM
  *-----------------------------------------------------------------------------*/
 localparam lpRamAdrsWidth = fBitWidth(pRamDepth);
+(* ram_style = "BLOCK" *) reg [pSynColorDepth-1:0] rMapchipRam1 [0:pRamDepth-1];
+(* ram_style = "BLOCK" *) reg [pSynColorDepth-1:0] rMapchipRam2 [0:pRamDepth-1];
+(* ram_style = "BLOCK" *) reg [7:0] rMapIdRam [0:80];
  
-reg [pSynColorDepth-1:0]	rPSB;
-reg [lpRamAdrsWidth-1:0] 	rRamRadrs;
+reg [pSynColorDepth-1:0]	rPSB, qPSB;
+reg [lpRamAdrsWidth-1:0] 	qMapchipRamRadrs;
 reg 						qRamRadrsCke;
-reg							qRamWe;
+reg	[7:0]					qRamWe;
 
 always @(posedge iCLK)
 begin
-	if (qRamWe)	rPlayerRam[iBramAdrs[lpRamAdrsWidth-1:0]] <= iBramWd;
-	// rPSB 			<= qRamRadrsCke ? rPlayerRam[rRamRadrs] : 0;
-	rPSB 			<= rPlayerRam[rRamRadrs];
+	if (qRamWe[0]) rMapchipRam1[iBramAdrs[lpRamAdrsWidth-1:0]] <= iBramWd;
+	if (qRamWe[1]) rMapIdRam[iBramAdrs[6:0]] <= iBramWd[7:0];
+	if (qRamWe[2]) rMapchipRam2[iBramAdrs[lpRamAdrsWidth-1:0]] <= iBramWd;
 	
-	if (iRST)				rRamRadrs <= {lpRamAdrsWidth{1'b0}};
-	else if (qRamRadrsCke)	rRamRadrs <= rRamRadrs + 1'b1;
-	else 					rRamRadrs <= rRamRadrs;
+	rPSB <= qPSB;
+	
 end
 
 always @*
 begin
-	qRamRadrsCke	<= iVS & (iBHPS[6:5] == iPHPS[6:5]) & (iBVPS[6:5] == iPVPS[6:5]);
-	qRamWe			<= iBramAdrs[31:24] == pCacheAdrs;
+	qRamWe[0] <= iBramAdrs[31:24] == (pCacheBaseAdrs);
+	qRamWe[1] <= iBramAdrs[31:24] == (pCacheBaseAdrs + 4'd1);
+	qRamWe[2] <= iBramAdrs[31:24] == (pCacheBaseAdrs + 4'd2);
 end
 
 /**-----------------------------------------------------------------------------
- * 
+ * position match 
  *-----------------------------------------------------------------------------*/
-reg qHpLeftHit;
-reg qHpRightHit;
+reg [7:0]	qMapIdAdrs;
+reg [4:0] 	rXpos,		rYpos;
+reg [6:0] 	rYidpos;
+reg 		qXposCke,	qYposCke, qYidposCke;
+reg 		qXposRst,	qYposRst;
+
+always @(posedge iCLK)
+begin
+	if (qXposRst)			rXpos <= 5'd0;
+	else if (qXposCke)		rXpos <= rXpos + 1'b1;
+	else					rXpos <= rXpos;
+	
+	if (qYposRst)			rYpos <= 5'd0;
+	else if (qYposCke)		rYpos <= rYpos + 1'b1;
+	else					rYpos <= rYpos;
+	
+	if (qYposRst)			rYidpos <= 7'd0;
+	else if (qYidposCke)	rYidpos <= rYidpos + 4'd10;
+	else					rYidpos <= rYidpos;
+end
 
 always @*
 begin
-	qHpLeftHit <= iBHPS == (iPHPS + 5'd31);
+	qXposRst			<= |{iRST,{iLS & iVS}};
+	qYposRst			<= |{iRST,{iFS & iVS}};
+	qXposCke			<= iVS;
+	qYposCke			<= &{iLS,iVS};
+	qYidposCke			<= &{iLS,iVS,rYpos==5'd31};
+	qMapchipRamRadrs	<= {rYpos,rXpos};
+	qMapIdAdrs			<= rYidpos + iBHPS[pVHAW-1:5];
+	
+	case ({iVS,rMapIdRam[qMapIdAdrs]})
+		'h101:	qPSB <= rMapchipRam1[qMapchipRamRadrs];
+		'h102:	qPSB <= rMapchipRam2[qMapchipRamRadrs];
+		default	qPSB <= 24'd0;
+	endcase
 end
 
 /**-----------------------------------------------------------------------------
@@ -102,12 +121,12 @@ PipeLineBlend #(
 	.pPipeLine(1)
 ) PipeLineBlend (
 	// Dst Pixel Stream I/F
-	.oPD(oPD),			.oVD(oVD),		.oFD(oFD),
+	.oPD(oPD),			.oVD(oVD),		.oFD(oFD),	.oLD(oLD),
 	.oBHPD(oBHPD),		.oBVPD(oBVPD),
 	.oPHPD(oPHPD),		.oPVPD(oPVPD),
 	// Src Pixel Stream I/F
 	.iPSA(iPS),			.iPSB(rPSB),
-	.iVSA(iVS),			.iFS(iFS),
+	.iVSA(iVS),			.iFS(iFS),		.iLS(iLS),
 	.iBHPS(iBHPS),		.iBVPS(iBVPS),
 	.iPHPS(iPHPS),		.iPVPS(iPVPS),
 	// common

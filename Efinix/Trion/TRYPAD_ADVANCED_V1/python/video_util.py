@@ -31,48 +31,59 @@ reg = FPGAREG()
 # VIDEO Class
 #-------------------------------------------------------------------------------
 class VIDEO:
-	TFT_DISPLAY_WIDTH = (240) # 最大横幅
-	TFT_DISPLAY_HEIGHT = (320) # 最大縦幅
-	TFT_DISPLAY_WIDTH_DATA = (TFT_DISPLAY_WIDTH-1)
+	TFT_DISPLAY_WIDTH		= (240) # 最大横幅
+	TFT_DISPLAY_HEIGHT		= (320) # 最大縦幅
+	TFT_DISPLAY_WIDTH_DATA	= (TFT_DISPLAY_WIDTH-1)
 	TFT_DISPLAY_HEIGHT_DATA = (TFT_DISPLAY_HEIGHT-1)
 	TFT_DISPLAY_HTOTAL_SIZE = ((TFT_DISPLAY_WIDTH * TFT_DISPLAY_HEIGHT) - 1)
 
 	# // Mode Setting
-	MODE_8BIT = (0x01)
-	MODE_16BIT = (0x00)
-	MODE_BITWIDTH = (MODE_16BIT)
+	MODE_8BIT				= (0x01)
+	MODE_16BIT				= (0x00)
+	MODE_BITWIDTH			= (MODE_16BIT)
 
 	# // インターフェース設定
-	MCU_INTERFACE = (0x00)
-	RGB_INTERFACE = (0x06)		# 0x08 = VSYNC Inteface
-	RGB_16bit_MODE = (0x55)
-	RGB_18bit_MODE = (0x66)		# DPI[6:4] / DBI[2:0]
-	RGB_SELECT = (0x40)			# RCM[1:0] "11" Ext Sync Mode / "10" DE Mode
-	DRAW_INTERFACE = (RGB_INTERFACE)
-	RGB_BIT_WIDTH = (RGB_16bit_MODE)
-	SYNC_MODE_SEL = (RGB_SELECT)
+	MCU_INTERFACE			= (0x00)
+	RGB_INTERFACE			= (0x06)		# 0x08 = VSYNC Inteface
+	RGB_16bit_MODE			= (0x55)
+	RGB_18bit_MODE			= (0x66)		# DPI[6:4] / DBI[2:0]
+	RGB_SELECT				= (0x40)		# RCM[1:0] "11" Ext Sync Mode / "10" DE Mode
+	DRAW_INTERFACE			= (RGB_INTERFACE)
+	RGB_BIT_WIDTH			= (RGB_16bit_MODE)
+	SYNC_MODE_SEL			= (RGB_SELECT)
 
 	# ST7789 レジスタマップ
-	SOFTWARE_RESET = 0x01
-	SLEEP_MODE_OFF = 0x11
-	TFT_DISPLAY_OFF = 0x28
-	TFT_DISPLAY_ON = 0x29
-	PIXEL_FORMAT_SET = 0x3A
-	MEMORY_ACCESS_CONTROL = 0x36
-	GAMMA_SET = 0x26
-	POSITIVE_GAMMA = 0xE0
-	NEGATIVE_GAMMA = 0xE1
-	DISPLAY_INVER_ON = 0x21
-	COLUMN_ADDRESS_SET = 0x2A
-	PAGE_ADDRESS_SET = 0x2B
-	MEMORY_WRITE = 0x2C
-	RGB_INTERFACE_CONTROL = 0xB1
-	TFT_CMD_BYTE = 0x00
-	TFT_DATA_BYTE = 0x01
+	SOFTWARE_RESET			= 0x01
+	SLEEP_MODE_OFF			= 0x11
+	DISPLAY_INVER_ON		= 0x21
+	GAMMA_SET				= 0x26
+	DISPLAY_OFF				= 0x28
+	DISPLAY_ON				= 0x29
+	COLUMN_ADDRESS_SET		= 0x2A
+	ROW_ADDRESS_SET			= 0x2B
+	MEMORY_WRITE			= 0x2C
+	MEMORY_ACCESS_CONTROL	= 0x36
+	PIXEL_FORMAT_SET		= 0x3A
+	WRITE_DISPLAY_BRIGHTNESS= 0x51
+	WRITE_CTRL_DISPLAY		= 0x53	#明るさ調整
+	POSITIVE_GAMMA			= 0xE0
+	NEGATIVE_GAMMA			= 0xE1
+	RGB_INTERFACE_CONTROL	= 0xB1
+	PORCH_SETTING			= 0xB2
+	GCTRL					= 0xBB
+	FRAME_RATE_CONTROL		= 0xC6
+	TFT_CMD_BYTE			= 0x00
+	TFT_DATA_BYTE			= 0x01
 
 	"""
-
+	GAMMA_SET				= 0x26
 	"""
+	GAMMA_CURVE1	= 0x01
+	GAMMA_CURVE2	= 0x02
+	GAMMA_CURVE3	= 0x04
+	GAMMA_CURVE4	= 0x08
+	GAMMA_CURVE		= GAMMA_CURVE1
+
 	def __init__(self):
 		pass
 
@@ -85,14 +96,20 @@ class VIDEO:
 			# [TFT_CMD_BYTE,  SOFTWARE_RESET],
 			[self.TFT_CMD_BYTE,  self.SLEEP_MODE_OFF],
 			# [TFT_CMD_BYTE,  DISPLAY_MODE_ON],
-			[self.TFT_CMD_BYTE,  self.TFT_DISPLAY_OFF],
-			# [TFT_CMD_BYTE,  TFT_DISPLAY_ON}]
+			[self.TFT_CMD_BYTE,  self.DISPLAY_OFF],
+			# [TFT_CMD_BYTE,  DISPLAY_ON}]
 			[self.TFT_CMD_BYTE,  self.PIXEL_FORMAT_SET],
 			[self.TFT_DATA_BYTE, self.RGB_BIT_WIDTH],
 			[self.TFT_CMD_BYTE,  self.MEMORY_ACCESS_CONTROL],
 			[self.TFT_DATA_BYTE, 0xA0],
 			[self.TFT_CMD_BYTE,  self.GAMMA_SET],
-			[self.TFT_DATA_BYTE, 0x01],
+			[self.TFT_DATA_BYTE, self.GAMMA_CURVE],
+			# [self.TFT_CMD_BYTE,  self.WRITE_DISPLAY_BRIGHTNESS],
+			# [self.TFT_DATA_BYTE, 0xff],
+			# [self.TFT_CMD_BYTE,  self.WRITE_CTRL_DISPLAY],
+			# [self.TFT_DATA_BYTE, 0x20],
+			[self.TFT_CMD_BYTE,  self.GCTRL],
+			[self.TFT_DATA_BYTE, 0x00],
 			[self.TFT_CMD_BYTE,  self.POSITIVE_GAMMA],
 			[self.TFT_DATA_BYTE, 0x0f],
 			[self.TFT_DATA_BYTE, 0x31],
@@ -117,18 +134,26 @@ class VIDEO:
 			[self.TFT_DATA_BYTE, 0x0f],
 			[self.TFT_CMD_BYTE,  self.RGB_INTERFACE_CONTROL],
 			[self.TFT_DATA_BYTE, 0x00],	# 0x40??
+			[self.TFT_CMD_BYTE,  self.PORCH_SETTING],
+			[self.TFT_DATA_BYTE, 0x1F],
+			[self.TFT_DATA_BYTE, 0x1F],
+			[self.TFT_DATA_BYTE, 0x00],
+			[self.TFT_DATA_BYTE, 0x1F],
+			[self.TFT_DATA_BYTE, 0x1F],
+			[self.TFT_CMD_BYTE,  self.FRAME_RATE_CONTROL],
+			[self.TFT_DATA_BYTE, 0x0F],
 			[self.TFT_CMD_BYTE,  self.COLUMN_ADDRESS_SET],
 			[self.TFT_DATA_BYTE, 0x00],
 			[self.TFT_DATA_BYTE, 0x00],
 			[self.TFT_DATA_BYTE, self.TFT_DISPLAY_HEIGHT_DATA >> 8],		# Display の描画向きによって、Height と Width の設定を切り替える。
 			[self.TFT_DATA_BYTE, self.TFT_DISPLAY_HEIGHT_DATA & 0xff],	# 今回は、240x320 を 320x240 の向きに変更するため、COL ADRS に Height を設定。
-			[self.TFT_CMD_BYTE,  self.PAGE_ADDRESS_SET],
+			[self.TFT_CMD_BYTE,  self.ROW_ADDRESS_SET],
 			[self.TFT_DATA_BYTE, 0x00],
 			[self.TFT_DATA_BYTE, 0x00],
 			[self.TFT_DATA_BYTE, self.TFT_DISPLAY_WIDTH_DATA >> 8],
 			[self.TFT_DATA_BYTE, self.TFT_DISPLAY_WIDTH_DATA & 0xff],
-			[self.TFT_CMD_BYTE,	self.DISPLAY_INVER_ON],					# 何故か描画色が反転してしまうため、色反転設定
-			[self.TFT_CMD_BYTE,  self.TFT_DISPLAY_ON],
+			[self.TFT_CMD_BYTE,	 self.DISPLAY_INVER_ON],					# 何故か描画色が反転してしまうため、色反転設定
+			[self.TFT_CMD_BYTE,  self.DISPLAY_ON],
 			[self.TFT_CMD_BYTE,  self.MEMORY_WRITE],
 		]
 

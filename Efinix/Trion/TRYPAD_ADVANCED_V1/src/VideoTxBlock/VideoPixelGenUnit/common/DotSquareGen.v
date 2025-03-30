@@ -5,7 +5,7 @@
 // 指定範囲で指定色の四角形データを出力する
 // 
 // 2022-09-29 座標が画面外の場合のドットデータ生成に対応、画面サイズがが2の乗数の場合、右・下端が正常描画されない点に注意
-// 
+// 2025-03-27 Line Valid に対応
 //----------------------------------------------------------
 module DotSquareGen #(
 	parameter pVHAW  			= 11,
@@ -16,7 +16,8 @@ module DotSquareGen #(
 	// Dst Pixel Stream I/F
 	output	[pDstColorDepth-1:0]		oPD,		// Pixel Data
 	output 								oVD,		// Pixel Valid
-	output								oFD,		// Frame End
+	output								oFD,		// Frame Valid
+	output								oLD,		// Line Valid
 	output	[pVHAW-1:0]					oBHPD,		// Base Horizontal Position
 	output	[pVVAW-1:0]					oBVPD,		// Base Vertical Position
 	output	[pVHAW-1:0]					oPHPD,		// Player Horizontal Position
@@ -24,7 +25,8 @@ module DotSquareGen #(
 	// Src Pixel Stream I/F
 	input	[pDstColorDepth-1:0]		iPS,		// Pixel Data
 	input								iVS,		// Pixel Valid
-	input								iFS,		// Pixel Valid
+	input								iFS,		// Frame Valid
+	input								iLS,		// Line Valid
 	input	[pVHAW-1:0]					iBHPS,		// Base Horizontal Position
 	input	[pVVAW-1:0]					iBVPS,		// Base Vertical Position
 	input	[pVHAW-1:0]					iPHPS,		// Player Horizontal Position
@@ -124,12 +126,12 @@ PipeLineBlend #(
 	.pPipeLine(1)
 ) PipeLineBlend (
 	// Dst Pixel Stream I/F
-	.oPD(oPD),			.oVD(oVD),		.oFD(oFD),
+	.oPD(oPD),			.oVD(oVD),		.oFD(oFD),	.oLD(oLD),
 	.oBHPD(oBHPD),		.oBVPD(oBVPD),
 	.oPHPD(oPHPD),		.oPVPD(oPVPD),
 	// Src Pixel Stream I/F
 	.iPSA(iPS),			.iPSB(rPSB),
-	.iVSA(iVS),			.iFS(iFS),
+	.iVSA(iVS),			.iFS(iFS),		.iLS(iLS),
 	.iBHPS(iBHPS),		.iBVPS(iBVPS),
 	.iPHPS(iPHPS),		.iPVPS(iPVPS),
 	// common

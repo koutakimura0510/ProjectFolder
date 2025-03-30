@@ -10,13 +10,15 @@ module VideoPixelGenUnit_tb;
 /**-----------------------------------------------------------------------------
  * System Simlation Parameter
  *-----------------------------------------------------------------------------*/
-localparam lpWaitCycle			= 100;
+localparam	lpSCLKCycle		= 4;	// CLK サイクル
+localparam	lpWaitCycle		= 20;
+localparam	lpVHA			= 80;	// 生成画像 横サイズ
+localparam	lpVVA			= 80;	// 生成画像 縦サイズ
 genvar x;		// System 共通変数
 
 /**-----------------------------------------------------------------------------
  * CLK RST Generator
  *-----------------------------------------------------------------------------*/
-localparam	lpSCLKCycle = 4;	// CLK サイクル
 
 reg	wSCLK	= 0;
 reg	wSRST	= 1;
@@ -62,8 +64,6 @@ endtask //usi_write
  * VideoTxCsr
  *-----------------------------------------------------------------------------*/
  // Video Timing Parametor
-localparam lpVHA	= 80;		// 生成画像 横サイズ
-localparam lpVVA	= 80;		// 生成画像 縦サイズ
 localparam lpVHAW = f_detect_bitwidth(lpVHA);	// Video Horizontal Active Width
 localparam lpVHBW = f_detect_bitwidth(2);		// Video Horizontal Back Width
 localparam lpVHFW = f_detect_bitwidth(2);		// Video Horizontal Front Width
@@ -75,6 +75,11 @@ localparam lpVVSW = f_detect_bitwidth(2);		// Video Vertical Sync Width
 // Color Depth Parametor
 localparam lpDstColorDepth 	= 16;	// RGB565
 localparam lpSynColorDepth	= 24;	// α8bit +  RGB565
+//
+parameter	pObjectAnimeNum			= 8;	// アニメーション可能なオブジェクトの個数
+parameter	pObjectAnimeTime		= 8;	// アニメーション指定時間の最大時間 Bit幅で指定する。1フレーム単位で処理するため、8bit幅だったら 最大255フレーム間隔で可能になる。
+parameter	pObjectAnimeXposWidth	= 16;	// [15:11] NC Bit, [10:0] xpos
+parameter	pObjectAnimeYposWidth	= 16;	// [15:11] NC Bit, [10:0] ypos
 //
 reg 		rBRST, rnBRST;
 wire		wBRST;
@@ -118,11 +123,18 @@ wire wSceneFrameRstCsr;
 wire wSceneAlphaMaxCsr;
 wire wSceneAlphaMinCsr;
 //
-wire [23:0] wBramWdCsr;
-wire [31:0] wBramAdrsCsr;
+wire [(pObjectAnimeNum * pObjectAnimeTime)-1:0] 		wObdAnimeFrameNumCsr;
+wire [(pObjectAnimeNum * pObjectAnimeXposWidth)-1:0] 	wObdAnimeXposCsr;
+wire [(pObjectAnimeNum * pObjectAnimeYposWidth)-1:0] 	wObdAnimeYposCsr;
 //
-wire [lpVHAW-1:0] wPdpHposCsr;
-wire [lpVVAW-1:0] wPdpVposCsr;
+wire [lpVHAW-1:0]	wBdpHposCsr;
+wire [lpVVAW-1:0]	wBdpVposCsr;
+wire [lpVHAW-1:0] 	wPdpXposCsr;
+wire [lpVVAW-1:0] 	wPdpYposCsr;
+wire 				wPdpInitCsr;
+//
+wire [23:0] 		wBramWdCsr;
+wire [31:0] 		wBramAdrsCsr;
 
 VideoTxCsr #(
 	// USIB
@@ -179,12 +191,19 @@ VideoTxCsr #(
 	.oSceneFrameRst(wSceneFrameRstCsr),
 	.iSceneAlphaMax(wSceneAlphaMaxCsr),
 	.iSceneAlphaMin(wSceneAlphaMinCsr),
+	//
+	.oObdAnimeFrameNum(wObdAnimeFrameNumCsr),
+	.oObdAnimeXpos(wObdAnimeXposCsr),
+	.oObdAnimeYpos(wObdAnimeYposCsr),
+	// Draw Position
+	.iBdpHpos(wBdpHposCsr),
+	.iBdpVpos(wBdpVposCsr),
+	.oPdpXpos(wPdpXposCsr),
+	.oPdpYpos(wPdpYposCsr),
+	.oPdpInit(wPdpInitCsr),
 	// Block Ram Cache
 	.oBramWd(wBramWdCsr),
 	.oBramAdrs(wBramAdrsCsr),
-	// Status
-	.iPdpHpos(wPdpHposCsr),
-	.iPdpVpos(wPdpVposCsr),
 	//
 	.iSRST(wSRST),	.iSCLK(wSCLK)
 );
@@ -203,6 +222,7 @@ wire [lpDstColorDepth-1:0] 	wVpgPD;
 reg  						qVpgRS;
 wire 						wVpgVD;
 wire 						wVpgFD;
+wire 						wVpgLD;
 
 VideoPixelGenUnit #(
 	.pVHA(lpVHA),
@@ -228,14 +248,19 @@ VideoPixelGenUnit #(
 	.iSceneFrameRst(),
 	.oSceneAlphaMax(),
 	.oSceneAlphaMin(),
+	//
+	.iObdAnimeFrameNum(wObdAnimeFrameNumCsr),
+	.iObdAnimeXpos(wObdAnimeXposCsr),
+	.iObdAnimeYpos(wObdAnimeYposCsr),
+	// Draw Position
+	.oBdpHpos(wPdpHposCsr),	.oBdpVpos(wPdpVposCsr),	.oBdpFe(),
+	.iPdpXpos(wPdpXposCsr),	.iPdpYpos(wPdpYposCsr),	.iPdpInit(wPdpInitCsr),
 	// Block Ram (Cache)
 	.iBramWd(wBramWdCsr),
 	.iBramAdrs(wBramAdrsCsr),
 	// Fifo I/F
 	.oPD(wVpgPD),		.iRS(qVpgRS),
-	.oVD(wVpgVD),		.oFD(wVpgFD),
-	// Control Status
-	.oBdpHpos(),		.oBdpVpos(),		.oBdpFe(),
+	.oVD(wVpgVD),		.oFD(wVpgFD),		.oLD(wVpgLD),
 	// common
 	.iRST(rBRST),		.inRST(rnBRST),		.iCLK(wSCLK)
 );
@@ -244,14 +269,14 @@ reg rEmp;
 
 always @(posedge wSCLK)
 begin
-	if (wSRST) 	rEmp <= 1'b1;
-	else 		rEmp <= ~rEmp;
+	if (wSRST) 	rEmp <= 1'b0;
+	else 		rEmp <= 1'b1;	// max
+	// else 		rEmp <= ~rEmp;	// toggle
 end
 
 always @*
 begin
 	// qVpgRS		<= ~wVpgEmp;
-	qVpgRS		<= rEmp;
 end
 
 /**-----------------------------------------------------------------------------
@@ -260,11 +285,13 @@ end
 reg [7:0] 	qBfsColorR, qBfsColorG, qBfsColorB;
 reg 		qBfsVde, qBfsAfe;
 wire 		wBfsSaveEnd;
+wire		wFull;
+reg			qBfsRst;
 
 BmpFileSaver #(
 	// .pFileSave(),
-	.pHdisplay(lpVHA),
-	.pVdisplay(lpVVA)
+	.pWidth(lpVHA),
+	.pHeight(lpVVA)
 	// .pBmpFormat(),
 	// .pBmpHeaderSize()
 ) BmpFileSaver (
@@ -273,6 +300,7 @@ BmpFileSaver #(
 	.iColorB(qBfsColorB),
 	.iVde(qBfsVde),
 	.iAFE(qBfsAfe),
+	.oFull(wFull),
 	.oSaveEnd(wBfsSaveEnd),
 	.iRST(rBRST),
 	.iCLK(wSCLK)
@@ -284,8 +312,9 @@ begin
 	qBfsColorG 	<= {wVpgPD[10:5],2'b00};
 	qBfsColorB 	<= {wVpgPD[4:0],3'b000};
 	qBfsVde		<= wVpgVD;
-	// qBfsAfe		<= wVpgFD & wVpgVD;
-	qBfsAfe		<= wVpgFD;
+	qBfsAfe		<= wVpgFD & wVpgVD & wVpgLD;
+	qVpgRS		<= rEmp & wFull;
+	// qBfsAfe		<= wVpgFD;
 end
 //-----------------------------------------------------------------------------
 task BmpFileSaveDone(
@@ -294,7 +323,7 @@ task BmpFileSaveDone(
 begin
 	while (wBfsSaveEnd == flag)
 	begin
-		#(lpSCLKCycle);
+		#(lpSCLKCycle/2);
 	end
 end
 endtask
@@ -316,13 +345,18 @@ begin
 	$dumpvars(0, VideoPixelGenUnit_tb);	// 引数0:下位モジュール表示, 1:Topのみ
 	$display(" ----- SIM START !!");
 	reset_init();
+	usi_write(1, `VIDEO_REG_BLOCK_RST);
 	usi_write(0, `VIDEO_REG_DOT_SQUARE_LEFT1);
-	usi_write(80, `VIDEO_REG_DOT_SQUARE_RIGHT1);
+	usi_write(60, `VIDEO_REG_DOT_SQUARE_RIGHT1);
 	usi_write(0, `VIDEO_REG_DOT_SQUARE_TOP1);
-	usi_write(80, `VIDEO_REG_DOT_SQUARE_UNDER1);
-	usi_write('h40ff00, `VIDEO_REG_DOT_SQUARE_COLOR1);
+	usi_write(60, `VIDEO_REG_DOT_SQUARE_UNDER1);
+	usi_write('h000000, `VIDEO_REG_DOT_SQUARE_COLOR1);
 	//
-	
+	usi_write(0, `VIDEO_REG_PLAYER_POS_XPOS);
+	usi_write(0, `VIDEO_REG_PLAYER_POS_YPOS);
+	usi_write(1, `VIDEO_REG_PLAYER_POS_INIT);
+	usi_write(0, `VIDEO_REG_PLAYER_POS_INIT);
+	//
 	fd = $fopen("./res/minoriko.bin", "rb");
 	$display("File FD %d", fd);
 	filesize = $fread(rRom, fd);
@@ -334,16 +368,67 @@ begin
 		rColor[23:16] = rRom[0+n*3];
 		rColor[15:8] = rRom[1+n*3];
 		rColor[7:0] = rRom[2+n*3];
+		// rColor[23:0] = 0;
 		// $display("Adrs %d = %h", n, rColor);
 		usi_write(32'h0100_0000 + n, `VIDEO_REG_BRAM_ADRS);
 		usi_write(rColor, `VIDEO_REG_BRAM_WD);
 	end
-	usi_write(32'h0, `VIDEO_REG_BRAM_ADRS);
+	
+	fd = $fopen("./res/minigame.bin", "rb");
+	// $display("File FD %d", fd);
+	filesize = $fread(rRom, fd);
+	// $display("FileSize %d ", filesize);
+	$fclose(fd);
+	
+	for (n = 0; n < 1024; n = n + 1)
+	begin
+		rColor[23:16] = rRom[0+n*3];
+		rColor[15:8] = rRom[1+n*3];
+		rColor[7:0] = rRom[2+n*3];
+		// rColor[23:0] = 24'h50ffff;
+		// $display("Adrs %d = %h", n, rColor);
+		usi_write(32'h0800_0000 + n, `VIDEO_REG_BRAM_ADRS);
+		usi_write(rColor, `VIDEO_REG_BRAM_WD);
+	end
+	
+	fd = $fopen("./res/block.bin", "rb");
+	// $display("File FD %d", fd);
+	filesize = $fread(rRom, fd);
+	// $display("FileSize %d ", filesize);
+	$fclose(fd);
+	
+	for (n = 0; n < 1024; n = n + 1)
+	begin
+		rColor[23:16] = rRom[0+n*3];
+		rColor[15:8] = rRom[1+n*3];
+		rColor[7:0] = rRom[2+n*3];
+		// rColor[23:0] = 24'h50ffff;
+		// $display("Adrs %d = %h", n, rColor);
+		usi_write(32'h1000_0000 + n, `VIDEO_REG_BRAM_ADRS);
+		usi_write(rColor, `VIDEO_REG_BRAM_WD);
+	end
+	
+	fd = $fopen("./res/output.bin", "rb");
+	// $display("File FD %d", fd);
+	filesize = $fread(rRom, fd);
+	// $display("FileSize %d ", filesize);
+	$fclose(fd);
+	
+	for (n = 0; n < 80; n = n + 1)
+	begin
+		rColor[7:0] = rRom[n];
+		usi_write(32'h0900_0000 + n, `VIDEO_REG_BRAM_ADRS);
+		usi_write(rColor[7:0], `VIDEO_REG_BRAM_WD);
+	end
 	
 	// Reset シーケンス
-	usi_write(1, `VIDEO_REG_BLOCK_RST);
-	#(lpSCLKCycle*lpWaitCycle);
+	usi_write(32'h0, `VIDEO_REG_BRAM_ADRS);
+	usi_write(0, `VIDEO_REG_PLAYER_POS_INIT);
 	usi_write(0, `VIDEO_REG_BLOCK_RST);
+	#(lpSCLKCycle*4);
+	usi_write(10, `VIDEO_REG_PLAYER_POS_XPOS);
+	usi_write(10, `VIDEO_REG_PLAYER_POS_YPOS);
+	// usi_write(1, `VIDEO_REG_PLAYER_POS_INIT);
 
 	for (n = 0; n < lpFrameCnt; n = n + 1)
 	begin

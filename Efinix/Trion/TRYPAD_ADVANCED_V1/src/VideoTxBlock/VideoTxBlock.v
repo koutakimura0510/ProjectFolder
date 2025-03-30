@@ -85,6 +85,11 @@ localparam lpVVSW = f_detect_bitwidth(pVVS);	// Video Vertical Sync Width
 localparam lpDstColorDepth 	= 16;	// RGB565
 localparam lpSynColorDepth	= 24;	// α8bit +  RGB565
 //
+parameter	pObjectAnimeNum			= 8;	// アニメーション可能なオブジェクトの個数
+parameter	pObjectAnimeTime		= 8;	// アニメーション指定時間の最大時間 Bit幅で指定する。1フレーム単位で処理するため、8bit幅だったら 最大255フレーム間隔で可能になる。
+parameter	pObjectAnimeXposWidth	= 16;	// [15:11] NC Bit, [10:0] xpos
+parameter	pObjectAnimeYposWidth	= 16;	// [15:11] NC Bit, [10:0] ypos
+//
 reg 		rBRST, rnBRST;
 wire		wBRST;
 //
@@ -104,6 +109,8 @@ wire [3:0]					wVtuMcuIMCsr;
 wire 						wVtuMcuGateCsr;
 wire						wVtuConverterRstCsr;
 wire						wVtuMcuBLCsr;
+wire [15:0]					wVtuBlDutyRatioCsr;
+wire [31:0]					wVtuBlIVtimerCsr;
 // 
 wire 						wMapXSizeCsr;
 wire 						wMapYSizeCsr;
@@ -127,11 +134,18 @@ wire wSceneFrameRstCsr;
 wire wSceneAlphaMaxCsr;
 wire wSceneAlphaMinCsr;
 //
-wire [23:0] wBramWdCsr;
-wire [31:0] wBramAdrsCsr;
+wire [(pObjectAnimeNum * pObjectAnimeTime)-1:0] 		wObdAnimeFrameNumCsr;
+wire [(pObjectAnimeNum * pObjectAnimeXposWidth)-1:0] 	wObdAnimeXposCsr;
+wire [(pObjectAnimeNum * pObjectAnimeYposWidth)-1:0] 	wObdAnimeYposCsr;
 //
-wire [lpVHAW-1:0] wPdpHposCsr;
-wire [lpVVAW-1:0] wPdpVposCsr;
+wire [lpVHAW-1:0] 	wBdpHposCsr;
+wire [lpVVAW-1:0] 	wBdpVposCsr;
+wire [lpVHAW-1:0] 	wPdpXposCsr;
+wire [lpVVAW-1:0] 	wPdpYposCsr;
+wire 				wPdpInitCsr;
+//
+wire [23:0]			wBramWdCsr;
+wire [31:0]			wBramAdrsCsr;
 
 VideoTxCsr #(
 	// USIB
@@ -145,7 +159,12 @@ VideoTxCsr #(
     .pVVAW(lpVVAW),	.pVVBW(lpVVBW),	.pVVFW(lpVVFW),	.pVVSW(lpVVSW),
 	// Video Control / Status
 	.pDstColorDepth(lpDstColorDepth),
-	.pSynColorDepth(lpSynColorDepth)
+	.pSynColorDepth(lpSynColorDepth),
+	//
+	.pObjectAnimeNum(pObjectAnimeNum),
+	.pObjectAnimeTime(pObjectAnimeTime),
+	.pObjectAnimeXposWidth(pObjectAnimeXposWidth),
+	.pObjectAnimeYposWidth(pObjectAnimeYposWidth)
 ) VideoTxCsr (
 	// Bus Master Read
 	.oSUsiRd(oSUsiRd),
@@ -166,6 +185,8 @@ VideoTxCsr #(
 	.oVtuMcuCSX(wVtuMcuCSXCsr),		.oVtuMcuRST(wVtuMcuRSTCsr),
 	.oVtuMcuIM(wVtuMcuIMCsr),		.oVtuMcuGate(wVtuMcuGateCsr),
 	.oVtuMcuBL(wVtuMcuBLCsr),
+	.oVtuBlDutyRatio(wVtuBlDutyRatioCsr),
+	.oVtuBlIVtimer(wVtuBlIVtimerCsr),
 	.oVtuConverterRst(wVtuConverterRstCsr),
 	// Vpg
 	.oVpgUnitRst(wVpgUnitRstCsr),
@@ -188,12 +209,19 @@ VideoTxCsr #(
 	.oSceneFrameRst(wSceneFrameRstCsr),
 	.iSceneAlphaMax(wSceneAlphaMaxCsr),
 	.iSceneAlphaMin(wSceneAlphaMinCsr),
+	//
+	.oObdAnimeFrameNum(wObdAnimeFrameNumCsr),
+	.oObdAnimeXpos(wObdAnimeXposCsr),
+	.oObdAnimeYpos(wObdAnimeYposCsr),
+	// Draw Position
+	.iBdpHpos(wPdpHposCsr),
+	.iBdpVpos(wPdpVposCsr),
+	.oPdpXpos(wPdpXposCsr),
+	.oPdpYpos(wPdpYposCsr),
+	.oPdpInit(wPdpInitCsr),
 	// Block Ram Cache
 	.oBramWd(wBramWdCsr),
 	.oBramAdrs(wBramAdrsCsr),
-	// Status
-	.iPdpHpos(wPdpHposCsr),
-	.iPdpVpos(wPdpVposCsr),
 	//
 	.iSRST(rBRST),	.iSCLK(iSCLK)
 );
@@ -231,7 +259,12 @@ VideoPixelGenUnit #(
 	.pVHAW(lpVHAW),
 	.pVVAW(lpVVAW),
 	.pDstColorDepth(lpDstColorDepth),
-	.pSynColorDepth(lpSynColorDepth)
+	.pSynColorDepth(lpSynColorDepth),
+	//
+	.pObjectAnimeNum(pObjectAnimeNum),
+	.pObjectAnimeTime(pObjectAnimeTime),
+	.pObjectAnimeXposWidth(pObjectAnimeXposWidth),
+	.pObjectAnimeYposWidth(pObjectAnimeYposWidth)
 ) VideoPixelGenUnit (
 	// Csr Dot Square Gen
 	.iDotSquareColor1(wDotSquareColor1Csr),	.iDotSquareLeft1(wDotSquareLeft1Csr),	.iDotSquareRight1(wDotSquareRight1Csr),	.iDotSquareTop1(wDotSquareTop1Csr),	.iDotSquareUnder1(wDotSquareUnder1Csr),
@@ -249,11 +282,18 @@ VideoPixelGenUnit #(
 	.iSceneFrameRst(wSceneFrameRstCsr),
 	.oSceneAlphaMax(wSceneAlphaMaxCsr),
 	.oSceneAlphaMin(wSceneAlphaMinCsr),
+	//
+	.iObdAnimeFrameNum(wObdAnimeFrameNumCsr),
+	.iObdAnimeXpos(wObdAnimeXposCsr),
+	.iObdAnimeYpos(wObdAnimeYposCsr),
+	// Draw Position
+	.oBdpHpos(wBdpHposCsr),	.oBdpVpos(wBdpVposCsr),	.oBdpFe(),
+	.iPdpXpos(wPdpXposCsr),
+	.iPdpYpos(wPdpYposCsr),
+	.iPdpInit(wPdpInitCsr),
 	// Block Ram (Cache)
 	.iBramWd(wBramWdCsr),
 	.iBramAdrs(wBramAdrsCsr),
-	// Control Status
-	.oBdpHpos(wPdpHposCsr),	.oBdpVpos(wPdpVposCsr),	.oBdpFe(),
 	// Dst Fifo Side
 	.oPD(wVpgPD),		.iRS(qVpgRS),
 	.oVD(wVpgVD),		.oFD(wVpgFD),
@@ -277,7 +317,7 @@ reg [lpDstColorDepth-1:0] 	qVtuDS;
 reg							qVtuWE;
 wire						wVtuFLL;
 
-VideoTftUnit VideoTftUnit(
+VideoTftUnit VideoTftUnit (
 	// Video Output Part
 	.oTftDQ(wTftDQ),			.oTftWRX(wTftWRX),	.oTftDCX(wTftDCX),
 	.oTftRDX(wTftRDX),			.oTftCSX(wTftCSX),	.oTftRST(wTftRST),
@@ -303,6 +343,25 @@ begin
 end
 
 /**----------------------------------------------------------------------------
+ * Back Light
+ *---------------------------------------------------------------------------*/
+wire wPwm;
+ 
+DutyGenerator #(
+	.pPWMDutyWidth(16),
+	.pIVtimerWidth(32)
+) TftBl (
+	.oPwm(wPwm),
+	.oDutyCycleCke(),
+	.oIVCke(),
+	.iPWMEn(wVtuMcuBLCsr),
+	.iDutyRatio(wVtuBlDutyRatioCsr),
+	.iIVtimer(wVtuBlIVtimerCsr),
+	// Common
+	.iRST(iSRST),	.iCLK(iSCLK)
+);
+
+/**----------------------------------------------------------------------------
  * Video Signals Coneect
  *---------------------------------------------------------------------------*/
 // Video TFT Signals
@@ -316,7 +375,7 @@ assign oVIDEO_IM[0]	= wTftIM[0];
 assign oVIDEO_IM[1]	= wTftIM[1];
 assign oVIDEO_IM[2]	= wTftIM[2];
 assign oVIDEO_IM[3]	= wTftIM[3];
-assign oVIDEO_BL	= wVtuMcuBLCsr;
+assign oVIDEO_BL	= wPwm;
 // Video Sync Signals
 assign oVIDEO_DCK 	= 1'b0;		// unused
 assign oVIDEO_HS 	= 1'b0;		//
