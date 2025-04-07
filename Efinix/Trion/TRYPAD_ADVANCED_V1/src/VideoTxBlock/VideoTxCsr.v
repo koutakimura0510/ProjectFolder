@@ -121,17 +121,21 @@ module VideoTxCsr #(
 	output 							oSceneFrameRst,
 	input							iSceneAlphaMax,
 	input 							iSceneAlphaMin,
-	// Draw Position
+	// Base Draw Position
 	input	[pVHAW-1:0]				iBdpHpos,
 	input	[pVVAW-1:0]				iBdpVpos,
+	// Player Draw Position
 	output	[pVHAW-1:0] 			oPdpXpos,
 	output	[pVVAW-1:0] 			oPdpYpos,
 	output							oPdpInit,
-	//
+	// Object Draw
+	output	[pObjectAnimeNum-1:0] 								oObdDrawEnable,
 	output	[(pObjectAnimeNum * pObjectAnimeTime)-1:0] 			oObdAnimeFrameNum,
 	output	[(pObjectAnimeNum * pObjectAnimeXposWidth)-1:0] 	oObdAnimeXpos,
 	output	[(pObjectAnimeNum * pObjectAnimeYposWidth)-1:0] 	oObdAnimeYpos,
-	// Blocm RAM Cache
+	// Player Draw
+	output	[ 3:0]					oPldDrawPlayerSel,
+	// Memory Mapchip Access
 	output	[23:0]					oBramWd,
 	output	[31:0]					oBramAdrs,
     // CLK Reset
@@ -211,15 +215,18 @@ reg [6:0] 						rSceneFrameTiming;		assign oSceneFrameTiming	= rSceneFrameTiming
 reg 							rSceneFrameAddEn;		assign oSceneFrameAddEn		= rSceneFrameAddEn;		// SceneChange Add Start
 reg 							rSceneFrameSubEn;		assign oSceneFrameSubEn		= rSceneFrameSubEn;		// SceneChange Sub Start
 reg 							rSceneFrameRst;			assign oSceneFrameRst		= rSceneFrameRst;		// local module Rst 信号
-//
-reg [(pObjectAnimeNum * pObjectAnimeTime)-1:0] 			rObdAnimeFrameNum;	assign oObdAnimeFrameNum	= rObdAnimeFrameNum;
-reg [(pObjectAnimeNum * pObjectAnimeXposWidth)-1:0] 	rObdAnimeXpos;		assign oObdAnimeXpos		= rObdAnimeXpos;
-reg [(pObjectAnimeNum * pObjectAnimeYposWidth)-1:0] 	rObdAnimeYpos;		assign oObdAnimeYpos		= rObdAnimeYpos;
-//
+// Player Draw Position
 reg [pVHAW-1:0]					rPdpXpos;				assign oPdpXpos				= rPdpXpos;
 reg [pVHAW-1:0]					rPdpYpos;				assign oPdpYpos				= rPdpYpos;
 reg 							rPdpInit;				assign oPdpInit				= rPdpInit;
-//
+// Object Draw
+reg [pObjectAnimeNum-1:0] 								rObdDrawEnable;		assign oObdDrawEnable		= rObdDrawEnable;
+reg [(pObjectAnimeNum * pObjectAnimeTime)-1:0] 			rObdAnimeFrameNum;	assign oObdAnimeFrameNum	= rObdAnimeFrameNum;
+reg [(pObjectAnimeNum * pObjectAnimeXposWidth)-1:0] 	rObdAnimeXpos;		assign oObdAnimeXpos		= rObdAnimeXpos;
+reg [(pObjectAnimeNum * pObjectAnimeYposWidth)-1:0] 	rObdAnimeYpos;		assign oObdAnimeYpos		= rObdAnimeYpos;
+// Player Draw
+reg [ 3:0] 						rPldDrawPlayerSel;		assign oPldDrawPlayerSel	= rPldDrawPlayerSel;
+// Memory Mapchip Access
 reg [23:0] 						rBramWd;				assign oBramWd				= rBramWd;				// Block Ram Write Data
 reg [31:0] 						rBramAdrs;				assign oBramAdrs			= rBramAdrs;			// Block Raw Adrs [31:24]=Cahce Adrs
 //
@@ -291,24 +298,21 @@ begin
 		rSceneFrameAddEn	<= 1'b0;
 		rSceneFrameSubEn	<= 1'b0;
 		rSceneFrameRst		<= 1'b1;
-		rObdAnimeFrameNum	<= {(pObjectAnimeNum * pObjectAnimeTime){1'b0}};
-		rObdAnimeXpos		<= {(pObjectAnimeNum * pObjectAnimeXposWidth){1'b0}};
-		rObdAnimeYpos		<= {(pObjectAnimeNum * pObjectAnimeYposWidth){1'b0}};
 		rPdpXpos			<= {(pVHAW){1'b0}};;
 		rPdpYpos			<= {(pVVAW){1'b0}};;
 		rPdpInit			<= 1'b1;
+		rObdDrawEnable		<= {pObjectAnimeNum{1'b0}};
+		rObdAnimeFrameNum	<= {(pObjectAnimeNum * pObjectAnimeTime){1'b0}};
+		rObdAnimeXpos		<= {(pObjectAnimeNum * pObjectAnimeXposWidth){1'b0}};
+		rObdAnimeYpos		<= {(pObjectAnimeNum * pObjectAnimeYposWidth){1'b0}};
+		rPldDrawPlayerSel	<= 4'd0;
 		rBramWd				<= 24'd0;
 		rBramAdrs			<= 32'd0;
 	end
 	else
 	begin
 		// DMA Info
-		rBlockRst					<= qCsrWCke[0] ? iSUsiWd[0:0] 				: rBlockRst;
-		rDmaEnable					<= iDmaDone	   ? rDmaCycleEnable 			: qCsrWCke[4] ? iSUsiWd[0:0] : rDmaEnable;
-		rDmaCycleEnable				<= qCsrWCke[8] ? iSUsiWd[0:0] 				: rDmaCycleEnable;
-		rDmaAdrsStart				<= qCsrWCke[9] ? iSUsiWd[pDmaAdrsWidth-1:0] : rDmaAdrsStart;
-		rDmaAdrsEnd					<= qCsrWCke[10] ? iSUsiWd[pDmaAdrsWidth-1:0] : rDmaAdrsEnd;
-		rDmaAdrsAdd					<= qCsrWCke[14] ? iSUsiWd[pDmaAdrsWidth-1:0] : rDmaAdrsAdd;
+		rBlockRst					<= qCsrWCke[0] ? iSUsiWd[0:0] 	: rBlockRst;
 		// Video Sync Gen
 		rVsgRst						<= qCsrWCke[20] ? iSUsiWd[0:0] : rVsgRst;
 		// Video Tft Unit
@@ -324,24 +328,28 @@ begin
 		rVtuMcuBL					<= qCsrWCke[59] ? iSUsiWd[0:0] : rVtuMcuBL;
 		rVtuBlDutyRatio				<= qCsrWCke[60] ? iSUsiWd[15:0] : rVtuBlDutyRatio;
 		rVtuBlIVtimer				<= qCsrWCke[61] ? iSUsiWd[31:0] : rVtuBlIVtimer;
-		// Vpg
+		// Vpg Memory Mapchip Access 90 ~ 99
 		rBramWd						<= qCsrWCke[97] ? iSUsiWd[23:0] : rBramWd;
 		rBramAdrs					<= qCsrWCke[98] ? iSUsiWd[31:0] : rBramAdrs;
 		rVpgUnitRst					<= qCsrWCke[99] ? iSUsiWd[0:0]  : rVpgUnitRst;
-		// Map Info
-		{rMapXSize, rMapYSize}		<= qCsrWCke[100] ? iSUsiWd[15:0]				: {rMapXSize, rMapYSize};
-		// Object
-		rObdAnimeFrameNum[  0+:32]	<= qCsrWCke[101] ? iSUsiWd[31:0]				: rObdAnimeFrameNum [  0+:32];
-		rObdAnimeFrameNum[ 32+:32]	<= qCsrWCke[102] ? iSUsiWd[31:0]				: rObdAnimeFrameNum [ 32+:32];
-		rObdAnimeXpos	 [  0+:32]	<= qCsrWCke[120] ? iSUsiWd[31:0]				: rObdAnimeXpos		[  0+:32];
-		rObdAnimeXpos	 [ 32+:32]	<= qCsrWCke[121] ? iSUsiWd[31:0]				: rObdAnimeXpos		[ 32+:32];
-		rObdAnimeXpos	 [ 64+:32]	<= qCsrWCke[122] ? iSUsiWd[31:0]				: rObdAnimeXpos		[ 64+:32];
-		rObdAnimeXpos	 [ 96+:32]	<= qCsrWCke[123] ? iSUsiWd[31:0]				: rObdAnimeXpos		[ 96+:32];
-		rObdAnimeYpos	 [  0+:32]	<= qCsrWCke[140] ? iSUsiWd[31:0]				: rObdAnimeYpos		[  0+:32];
-		rObdAnimeYpos	 [ 32+:32]	<= qCsrWCke[141] ? iSUsiWd[31:0]				: rObdAnimeYpos		[ 32+:32];
-		rObdAnimeYpos	 [ 64+:32]	<= qCsrWCke[142] ? iSUsiWd[31:0]				: rObdAnimeYpos		[ 64+:32];
-		rObdAnimeYpos	 [ 96+:32]	<= qCsrWCke[143] ? iSUsiWd[31:0]				: rObdAnimeYpos		[ 96+:32];
-		// Dot Square Gen
+		// Vpg Object 100 ~ 200
+		rObdDrawEnable	 [pObjectAnimeNum-1:0]	<= qCsrWCke[100] ? iSUsiWd[pObjectAnimeNum-1:0]	: rObdDrawEnable	[pObjectAnimeNum-1:0];
+		rObdAnimeFrameNum[(0*32)+:32]	<= qCsrWCke[101] ? iSUsiWd[31:0]			: rObdAnimeFrameNum [(0*32)+:32];
+		rObdAnimeFrameNum[(1*32)+:32]	<= qCsrWCke[102] ? iSUsiWd[31:0]			: rObdAnimeFrameNum [(1*32)+:32];
+		rObdAnimeFrameNum[(2*32)+:16]	<= qCsrWCke[103] ? iSUsiWd[15:0]			: rObdAnimeFrameNum [(2*32)+:16];
+		rObdAnimeXpos	 [(0*32)+:32]	<= qCsrWCke[120] ? iSUsiWd[31:0]			: rObdAnimeXpos		[(0*32)+:32];
+		rObdAnimeXpos	 [(1*32)+:32]	<= qCsrWCke[121] ? iSUsiWd[31:0]			: rObdAnimeXpos		[(1*32)+:32];
+		rObdAnimeXpos	 [(2*32)+:32]	<= qCsrWCke[122] ? iSUsiWd[31:0]			: rObdAnimeXpos		[(2*32)+:32];
+		rObdAnimeXpos	 [(3*32)+:32]	<= qCsrWCke[123] ? iSUsiWd[31:0]			: rObdAnimeXpos		[(3*32)+:32];
+		rObdAnimeXpos	 [(4*32)+:32]	<= qCsrWCke[124] ? iSUsiWd[31:0]			: rObdAnimeXpos		[(4*32)+:32];
+		rObdAnimeYpos	 [(0*32)+:32]	<= qCsrWCke[140] ? iSUsiWd[31:0]			: rObdAnimeYpos		[(0*32)+:32];
+		rObdAnimeYpos	 [(1*32)+:32]	<= qCsrWCke[141] ? iSUsiWd[31:0]			: rObdAnimeYpos		[(1*32)+:32];
+		rObdAnimeYpos	 [(2*32)+:32]	<= qCsrWCke[142] ? iSUsiWd[31:0]			: rObdAnimeYpos		[(2*32)+:32];
+		rObdAnimeYpos	 [(3*32)+:32]	<= qCsrWCke[143] ? iSUsiWd[31:0]			: rObdAnimeYpos		[(3*32)+:32];
+		rObdAnimeYpos	 [(4*32)+:32]	<= qCsrWCke[144] ? iSUsiWd[31:0]			: rObdAnimeYpos		[(4*32)+:32];
+		// Vpg Player
+		rPldDrawPlayerSel			<= qCsrWCke[170] ? iSUsiWd[ 3:0]				: rPldDrawPlayerSel;
+		// Vpg Dot Square Gen
 		rDotSquareColor1			<= qCsrWCke[200] ? iSUsiWd[pSynColorDepth-1:0]	: rDotSquareColor1;
 		rDotSquareLeft1				<= qCsrWCke[201] ? iSUsiWd[pVHAW:0]				: rDotSquareLeft1;
 		rDotSquareRight1			<= qCsrWCke[202] ? iSUsiWd[pVHAW:0]				: rDotSquareRight1;
@@ -377,6 +385,54 @@ begin
 		rDotSquareRight7			<= qCsrWCke[232] ? iSUsiWd[pVHAW:0]				: rDotSquareRight7;
 		rDotSquareTop7				<= qCsrWCke[233] ? iSUsiWd[pVVAW:0]				: rDotSquareTop7;
 		rDotSquareUnder7			<= qCsrWCke[234] ? iSUsiWd[pVVAW:0]				: rDotSquareUnder7;
+		// rDotSquareColor[(0 *  0)+:24]	<= qCsrWCke[200] ? iSUsiWd[pSynColorDepth-1:0]	: [(0 *  0)+:24];
+		// rDotSquareColor[(1 * 24)+:24]	<= qCsrWCke[201] ? iSUsiWd[pSynColorDepth-1:0]	: [(1 * 24)+:24];
+		// rDotSquareColor[(2 * 24)+:24]	<= qCsrWCke[202] ? iSUsiWd[pSynColorDepth-1:0]	: [(2 * 24)+:24];
+		// rDotSquareColor[(3 * 24)+:24]	<= qCsrWCke[203] ? iSUsiWd[pSynColorDepth-1:0]	: [(3 * 24)+:24];
+		// rDotSquareColor[(4 * 24)+:24]	<= qCsrWCke[204] ? iSUsiWd[pSynColorDepth-1:0]	: [(4 * 24)+:24];
+		// rDotSquareColor[(5 * 24)+:24]	<= qCsrWCke[205] ? iSUsiWd[pSynColorDepth-1:0]	: [(5 * 24)+:24];
+		// rDotSquareColor[(6 * 24)+:24]	<= qCsrWCke[206] ? iSUsiWd[pSynColorDepth-1:0]	: [(6 * 24)+:24];
+		// rDotSquareColor[(7 * 24)+:24]	<= qCsrWCke[207] ? iSUsiWd[pSynColorDepth-1:0]	: [(7 * 24)+:24];
+		
+		// rDotSquareLeft[(0 * 32)+:32]	<= qCsrWCke[201] ? iSUsiWd[31:0]				: rDotSquareLeft[(0 * 32)+:32];
+		// rDotSquareLeft[(1 * 32)+:32]	<= qCsrWCke[201] ? iSUsiWd[31:0]				: rDotSquareLeft[(0 * 32)+:32];
+		// rDotSquareLeft[(2 * 32)+:32]	<= qCsrWCke[201] ? iSUsiWd[31:0]				: rDotSquareLeft[(0 * 32)+:32];
+		// rDotSquareLeft[(3 * 32)+:32]	<= qCsrWCke[201] ? iSUsiWd[31:0]				: rDotSquareLeft[(0 * 32)+:32];
+		
+		
+		// rDotSquareRight1			<= qCsrWCke[202] ? iSUsiWd[pVHAW:0]				: rDotSquareRight1;
+		// rDotSquareTop1				<= qCsrWCke[203] ? iSUsiWd[pVVAW:0]				: rDotSquareTop1;
+		// rDotSquareUnder1			<= qCsrWCke[204] ? iSUsiWd[pVVAW:0]				: rDotSquareUnder1;
+		// rDotSquareColor2			<= qCsrWCke[205] ? iSUsiWd[pSynColorDepth-1:0]	: rDotSquareColor2;
+		// rDotSquareLeft2 			<= qCsrWCke[206] ? iSUsiWd[pVHAW:0]				: rDotSquareLeft2;
+		// rDotSquareRight2			<= qCsrWCke[207] ? iSUsiWd[pVHAW:0]				: rDotSquareRight2;
+		// rDotSquareTop2 				<= qCsrWCke[208] ? iSUsiWd[pVVAW:0]				: rDotSquareTop2;
+		// rDotSquareUnder2			<= qCsrWCke[209] ? iSUsiWd[pVVAW:0]				: rDotSquareUnder2;
+		// rDotSquareColor3			<= qCsrWCke[210] ? iSUsiWd[pSynColorDepth-1:0]	: rDotSquareColor3;
+		// rDotSquareLeft3				<= qCsrWCke[211] ? iSUsiWd[pVHAW:0]				: rDotSquareLeft3;
+		// rDotSquareRight3			<= qCsrWCke[212] ? iSUsiWd[pVHAW:0]				: rDotSquareRight3;
+		// rDotSquareTop3				<= qCsrWCke[213] ? iSUsiWd[pVVAW:0]				: rDotSquareTop3;
+		// rDotSquareUnder3			<= qCsrWCke[214] ? iSUsiWd[pVVAW:0]				: rDotSquareUnder3;
+		// rDotSquareColor4			<= qCsrWCke[215] ? iSUsiWd[pSynColorDepth-1:0]	: rDotSquareColor4;
+		// rDotSquareLeft4 			<= qCsrWCke[216] ? iSUsiWd[pVHAW:0]				: rDotSquareLeft4;
+		// rDotSquareRight4			<= qCsrWCke[217] ? iSUsiWd[pVHAW:0]				: rDotSquareRight4;
+		// rDotSquareTop4  			<= qCsrWCke[218] ? iSUsiWd[pVVAW:0]				: rDotSquareTop4;
+		// rDotSquareUnder4			<= qCsrWCke[219] ? iSUsiWd[pVVAW:0]				: rDotSquareUnder4;
+		// rDotSquareColor5			<= qCsrWCke[220] ? iSUsiWd[pSynColorDepth-1:0]	: rDotSquareColor5;
+		// rDotSquareLeft5				<= qCsrWCke[221] ? iSUsiWd[pVHAW:0]				: rDotSquareLeft5;
+		// rDotSquareRight5			<= qCsrWCke[222] ? iSUsiWd[pVHAW:0]				: rDotSquareRight5;
+		// rDotSquareTop5				<= qCsrWCke[223] ? iSUsiWd[pVVAW:0]				: rDotSquareTop5;
+		// rDotSquareUnder5			<= qCsrWCke[224] ? iSUsiWd[pVVAW:0]				: rDotSquareUnder5;
+		// rDotSquareColor6			<= qCsrWCke[225] ? iSUsiWd[pSynColorDepth-1:0]	: rDotSquareColor6;
+		// rDotSquareLeft6				<= qCsrWCke[226] ? iSUsiWd[pVHAW:0]				: rDotSquareLeft6;
+		// rDotSquareRight6			<= qCsrWCke[227] ? iSUsiWd[pVHAW:0]				: rDotSquareRight6;
+		// rDotSquareTop6				<= qCsrWCke[228] ? iSUsiWd[pVVAW:0]				: rDotSquareTop6;
+		// rDotSquareUnder6			<= qCsrWCke[229] ? iSUsiWd[pVVAW:0]				: rDotSquareUnder6;
+		// rDotSquareColor7			<= qCsrWCke[230] ? iSUsiWd[pSynColorDepth-1:0]	: rDotSquareColor7;
+		// rDotSquareLeft7				<= qCsrWCke[231] ? iSUsiWd[pVHAW:0]				: rDotSquareLeft7;
+		// rDotSquareRight7			<= qCsrWCke[232] ? iSUsiWd[pVHAW:0]				: rDotSquareRight7;
+		// rDotSquareTop7				<= qCsrWCke[233] ? iSUsiWd[pVVAW:0]				: rDotSquareTop7;
+		// rDotSquareUnder7			<= qCsrWCke[234] ? iSUsiWd[pVVAW:0]				: rDotSquareUnder7;
 		// Scene Change
 		rSceneColor					<= qCsrWCke[300] ? iSUsiWd[pSynColorDepth-1:0]	: rSceneColor;
 		rSceneFrameTiming			<= qCsrWCke[301] ? iSUsiWd[6:0] 				: rSceneFrameTiming;
@@ -437,18 +493,22 @@ begin
 		'd97:		rSUsiRd	<= {{(32 - 24				){1'b0}},	rBramWd				};
 		'd98:		rSUsiRd	<= {									rBramAdrs			};
 		'd99:		rSUsiRd	<= {{(32 - 1				){1'b0}},	rVpgUnitRst			};
-		'd100:		rSUsiRd	<= {{(32 - 16				){1'b0}},	rMapXSize, rMapYSize};
 		//
-		'd101:		rSUsiRd	<= {									rObdAnimeFrameNum[  0+:32]};
-		'd10:		rSUsiRd	<= {									rObdAnimeFrameNum[ 32+:32]};
-		'd120:		rSUsiRd	<= {									rObdAnimeXpos	 [  0+:32]};
-		'd121:		rSUsiRd	<= {									rObdAnimeXpos	 [ 32+:32]};
-		'd122:		rSUsiRd	<= {									rObdAnimeXpos	 [ 64+:32]};
-		'd123:		rSUsiRd	<= {									rObdAnimeXpos	 [ 96+:32]};
-		'd140:		rSUsiRd	<= {									rObdAnimeYpos	 [  0+:32]};
-		'd141:		rSUsiRd	<= {									rObdAnimeYpos	 [ 32+:32]};
-		'd142:		rSUsiRd	<= {									rObdAnimeYpos	 [ 64+:32]};
-		'd143:		rSUsiRd	<= {									rObdAnimeYpos	 [ 96+:32]};
+		'd100:		rSUsiRd	<= {{(32 - pObjectAnimeNum	){1'b0}},	rObdDrawEnable		};
+		'd101:		rSUsiRd	<= {									rObdAnimeFrameNum[(0*32)+:32]};
+		'd102:		rSUsiRd	<= {									rObdAnimeFrameNum[(1*32)+:32]};
+		'd103:		rSUsiRd	<= {									rObdAnimeFrameNum[(2*32)+:16]};
+		'd120:		rSUsiRd	<= {									rObdAnimeXpos	 [(0*32)+:32]};
+		'd121:		rSUsiRd	<= {									rObdAnimeXpos	 [(1*32)+:32]};
+		'd122:		rSUsiRd	<= {									rObdAnimeXpos	 [(2*32)+:32]};
+		'd123:		rSUsiRd	<= {									rObdAnimeXpos	 [(3*32)+:32]};
+		'd124:		rSUsiRd	<= {									rObdAnimeXpos	 [(4*32)+:32]};
+		'd140:		rSUsiRd	<= {									rObdAnimeYpos	 [(0*32)+:32]};
+		'd141:		rSUsiRd	<= {									rObdAnimeYpos	 [(1*32)+:32]};
+		'd142:		rSUsiRd	<= {									rObdAnimeYpos	 [(2*32)+:32]};
+		'd143:		rSUsiRd	<= {									rObdAnimeYpos	 [(3*32)+:32]};
+		'd144:		rSUsiRd	<= {									rObdAnimeYpos	 [(4*32)+:32]};
+		'd170:		rSUsiRd	<= {{(32 - 28				){1'b0}}, rPldDrawPlayerSel		};
 		//
 		'd200:		rSUsiRd	<= {{(32 - pSynColorDepth	){1'b0}}, rDotSquareColor1		};
 		'd201:		rSUsiRd	<= {{(32 - (pVHAW+1)		){1'b0}}, rDotSquareLeft1		};

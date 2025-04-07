@@ -32,6 +32,8 @@ module PlayerDraw #(
 	input	[pVVAW-1:0]				iBVPS,		// Base Vertical Position
 	input	[pVHAW-1:0]				iPHPS,		// Player Horizontal Position
 	input	[pVVAW-1:0]				iPVPS,		// Player Vertical Position
+	// Control / Status
+	input	[3:0]					iDrawPlayerSel,	// プレイヤー描画データの指定
 	// Memory Mapchip Access
 	input 	[23:0]					iBramWd,
 	input 	[31:0]					iBramAdrs,
@@ -45,27 +47,53 @@ module PlayerDraw #(
  * BRAM
  *-----------------------------------------------------------------------------*/
 localparam lpRamAdrsWidth = fBitWidth(pRamDepth);
-(* ram_style = "BLOCK" *) reg [pSynColorDepth-1:0] rPlayerRam [0:pRamDepth-1];
+(* ram_style = "BLOCK" *) reg [pSynColorDepth-1:0] rPlayerRam1 [0:pRamDepth-1];
+(* ram_style = "BLOCK" *) reg [pSynColorDepth-1:0] rPlayerRam2 [0:pRamDepth-1];
+(* ram_style = "BLOCK" *) reg [pSynColorDepth-1:0] rPlayerRam3 [0:pRamDepth-1];
+(* ram_style = "BLOCK" *) reg [pSynColorDepth-1:0] rPlayerRam4 [0:pRamDepth-1];
+(* ram_style = "BLOCK" *) reg [pSynColorDepth-1:0] rPlayerRam5 [0:pRamDepth-1];
+(* ram_style = "BLOCK" *) reg [pSynColorDepth-1:0] rPlayerRam6 [0:pRamDepth-1];
  
-reg [pSynColorDepth-1:0]	rPSB;
+reg [pSynColorDepth-1:0]	rPSB,			qPSB;
 reg [lpRamAdrsWidth-1:0] 	rRamRadrs;
-reg 						qRamRadrsCke, qRamRadrsRst;
-reg							qRamWe;
+reg 						qRamRadrsCke, 	qRamRadrsRst;
+reg	[5:0]					qRamWe;
 
 always @(posedge iCLK)
 begin
-	if (qRamWe)	rPlayerRam[iBramAdrs[lpRamAdrsWidth-1:0]] <= iBramWd;
-	rPSB 			<= qRamRadrsCke ? rPlayerRam[rRamRadrs] : 24'd0;
+	if (qRamWe[0])	rPlayerRam1[iBramAdrs[lpRamAdrsWidth-1:0]] <= iBramWd;
+	if (qRamWe[1])	rPlayerRam2[iBramAdrs[lpRamAdrsWidth-1:0]] <= iBramWd;
+	if (qRamWe[2])	rPlayerRam3[iBramAdrs[lpRamAdrsWidth-1:0]] <= iBramWd;
+	if (qRamWe[3])	rPlayerRam4[iBramAdrs[lpRamAdrsWidth-1:0]] <= iBramWd;
+	if (qRamWe[4])	rPlayerRam5[iBramAdrs[lpRamAdrsWidth-1:0]] <= iBramWd;
+	if (qRamWe[5])	rPlayerRam6[iBramAdrs[lpRamAdrsWidth-1:0]] <= iBramWd;
 	
 	if (iRST)				rRamRadrs <= {lpRamAdrsWidth{1'b0}};
 	else if (qRamRadrsRst)	rRamRadrs <= {lpRamAdrsWidth{1'b0}};
 	else if (qRamRadrsCke)	rRamRadrs <= rRamRadrs + 1'b1;
 	else 					rRamRadrs <= rRamRadrs;
+	
+	rPSB <= qPSB;
 end
 
 always @*
 begin
-	qRamWe			<= iBramAdrs[31:24] == pCacheBaseAdrs;
+	qRamWe[0]	<= iBramAdrs[31:24] == (pCacheBaseAdrs);
+	qRamWe[1]	<= iBramAdrs[31:24] == (pCacheBaseAdrs + 4'd1);
+	qRamWe[2]	<= iBramAdrs[31:24] == (pCacheBaseAdrs + 4'd2);
+	qRamWe[3]	<= iBramAdrs[31:24] == (pCacheBaseAdrs + 4'd3);
+	qRamWe[4]	<= iBramAdrs[31:24] == (pCacheBaseAdrs + 4'd4);
+	qRamWe[5]	<= iBramAdrs[31:24] == (pCacheBaseAdrs + 4'd5);
+	
+	case ({qRamRadrsCke,iDrawPlayerSel[3:0]})
+		'b1_0000:	qPSB <= rPlayerRam1[rRamRadrs];
+		'b1_0001:	qPSB <= rPlayerRam2[rRamRadrs];
+		'b1_0010:	qPSB <= rPlayerRam3[rRamRadrs];
+		'b1_0011:	qPSB <= rPlayerRam4[rRamRadrs];
+		'b1_0100:	qPSB <= rPlayerRam5[rRamRadrs];
+		'b1_0101:	qPSB <= rPlayerRam6[rRamRadrs];
+		default:	qPSB <= 24'd0;
+	endcase
 end
 
 /**-----------------------------------------------------------------------------

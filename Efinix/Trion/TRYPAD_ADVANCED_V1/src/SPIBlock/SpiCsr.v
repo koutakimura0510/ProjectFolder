@@ -118,12 +118,12 @@ begin
 		rSfmCsHoldTime	<= qCsrWCke10 	? iSUsiWd[pSfmNum*8-1:0]  		: rSfmCsHoldTime;
 		//
 		rSfmCpuWd[ 0+:8]<= qCsrWCke14 		? iSUsiWd[7:0]  			: rSfmCpuWd[ 0+:8];
-		rSfmCpuEn[0]	<= iSfmCpuDone[0]	? 1'b0						: qCsrWCke18 	? iSUsiWd[0]  	: rSfmCpuEn[0];
+		rSfmCpuEn[0]	<= iSfmCpuDone[0]	? 1'b0						: qCsrWCke18 	? iSUsiWd[0]  	: rSfmCpuEn[0];	// 1byte ごとにクリアされる想定
 		rSfmCpuCsCtrl	<= qCsrWCke1C 		? iSUsiWd[pSfmNum-1:0]  	: rSfmCpuCsCtrl;
 		rSfmCpuValid	<= qCsrWCke20 		? iSUsiWd[pSfmNum-1:0]  	: rSfmCpuValid;
 		//
 		rSfmCpuRd[ 0+:8]<= iSfmCpuDone[0]	? iSfmCpuRd[ 0+:8]			: rSfmCpuRd[ 0+:8];
-		rSfmDone[0]		<= iSfmCpuDone[0]	? 1'b1 						: qCsrWCke30 ? 1'b0 : rSfmDone[0];
+		rSfmDone[0]		<= iSfmCpuDone[0]	? 1'b1 						: qCsrWCke30 ? 1'b0 : rSfmDone[0];	// 0クリアが必要
 		//
 		rSspDeviceSel[2:0]	<= qCsrWCke34 ? iSUsiWd[2:0]				: rSspDeviceSel[2:0];
 		//

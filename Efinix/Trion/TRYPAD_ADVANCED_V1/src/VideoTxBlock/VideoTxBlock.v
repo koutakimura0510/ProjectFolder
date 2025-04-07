@@ -84,11 +84,11 @@ localparam lpVVSW = f_detect_bitwidth(pVVS);	// Video Vertical Sync Width
 //
 localparam lpDstColorDepth 	= 16;	// RGB565
 localparam lpSynColorDepth	= 24;	// α8bit +  RGB565
-//
-parameter	pObjectAnimeNum			= 8;	// アニメーション可能なオブジェクトの個数
+// Object Draw
+parameter	pObjectAnimeNum			= 10;	// アニメーション可能なオブジェクトの個数
 parameter	pObjectAnimeTime		= 8;	// アニメーション指定時間の最大時間 Bit幅で指定する。1フレーム単位で処理するため、8bit幅だったら 最大255フレーム間隔で可能になる。
-parameter	pObjectAnimeXposWidth	= 16;	// [15:11] NC Bit, [10:0] xpos
-parameter	pObjectAnimeYposWidth	= 16;	// [15:11] NC Bit, [10:0] ypos
+parameter	pObjectAnimeXposWidth	= 16;	// [15:11] NC Bit(将来の制御信号割当用), [10:0] xpos
+parameter	pObjectAnimeYposWidth	= 16;	// [15:11] NC Bit(将来の制御信号割当用), [10:0] ypos
 //
 reg 		rBRST, rnBRST;
 wire		wBRST;
@@ -114,7 +114,7 @@ wire [31:0]					wVtuBlIVtimerCsr;
 // 
 wire 						wMapXSizeCsr;
 wire 						wMapYSizeCsr;
-// Video Pixel Gen
+// Dot Square Gen
 wire [lpSynColorDepth-1:0]	wDotSquareColor1Csr, wDotSquareColor2Csr, wDotSquareColor3Csr, wDotSquareColor4Csr, wDotSquareColor5Csr, wDotSquareColor6Csr, wDotSquareColor7Csr;
 wire signed [lpVHAW:0] 	wDotSquareLeft1Csr,  wDotSquareRight1Csr, wDotSquareTop1Csr,   wDotSquareUnder1Csr;
 wire signed [lpVHAW:0] 	wDotSquareLeft2Csr,  wDotSquareRight2Csr, wDotSquareTop2Csr,   wDotSquareUnder2Csr;
@@ -123,9 +123,9 @@ wire signed [lpVHAW:0] 	wDotSquareLeft4Csr,  wDotSquareRight4Csr, wDotSquareTop4
 wire signed [lpVHAW:0] 	wDotSquareLeft5Csr,  wDotSquareRight5Csr, wDotSquareTop5Csr,   wDotSquareUnder5Csr;
 wire signed [lpVHAW:0] 	wDotSquareLeft6Csr,  wDotSquareRight6Csr, wDotSquareTop6Csr,   wDotSquareUnder6Csr;
 wire signed [lpVHAW:0] 	wDotSquareLeft7Csr,  wDotSquareRight7Csr, wDotSquareTop7Csr,   wDotSquareUnder7Csr;
-//
+// Unit Global Reset
 wire wVpgUnitRstCsr;
-//
+// Scene
 wire wSceneColorCsr;
 wire wSceneFrameTimingCsr;
 wire wSceneFrameAddEnCsr;
@@ -133,17 +133,21 @@ wire wSceneFrameSubEnCsr;
 wire wSceneFrameRstCsr;
 wire wSceneAlphaMaxCsr;
 wire wSceneAlphaMinCsr;
-//
-wire [(pObjectAnimeNum * pObjectAnimeTime)-1:0] 		wObdAnimeFrameNumCsr;
-wire [(pObjectAnimeNum * pObjectAnimeXposWidth)-1:0] 	wObdAnimeXposCsr;
-wire [(pObjectAnimeNum * pObjectAnimeYposWidth)-1:0] 	wObdAnimeYposCsr;
-//
+// Base Draw Position
 wire [lpVHAW-1:0] 	wBdpHposCsr;
 wire [lpVVAW-1:0] 	wBdpVposCsr;
+// Player Draw Position
 wire [lpVHAW-1:0] 	wPdpXposCsr;
 wire [lpVVAW-1:0] 	wPdpYposCsr;
 wire 				wPdpInitCsr;
-//
+// Object Draw
+wire [pObjectAnimeNum-1:0] 								wObdDrawEnableCsr;
+wire [(pObjectAnimeNum * pObjectAnimeTime)-1:0] 		wObdAnimeFrameNumCsr;
+wire [(pObjectAnimeNum * pObjectAnimeXposWidth)-1:0] 	wObdAnimeXposCsr;
+wire [(pObjectAnimeNum * pObjectAnimeYposWidth)-1:0] 	wObdAnimeYposCsr;
+// Player Draw
+wire [ 3:0]			wPldDrawPlayerSelCsr;
+// Memory Mapchip Access
 wire [23:0]			wBramWdCsr;
 wire [31:0]			wBramAdrsCsr;
 
@@ -209,17 +213,21 @@ VideoTxCsr #(
 	.oSceneFrameRst(wSceneFrameRstCsr),
 	.iSceneAlphaMax(wSceneAlphaMaxCsr),
 	.iSceneAlphaMin(wSceneAlphaMinCsr),
-	//
-	.oObdAnimeFrameNum(wObdAnimeFrameNumCsr),
-	.oObdAnimeXpos(wObdAnimeXposCsr),
-	.oObdAnimeYpos(wObdAnimeYposCsr),
-	// Draw Position
+	// Base Draw Position
 	.iBdpHpos(wPdpHposCsr),
 	.iBdpVpos(wPdpVposCsr),
+	// Player Draw Position
 	.oPdpXpos(wPdpXposCsr),
 	.oPdpYpos(wPdpYposCsr),
 	.oPdpInit(wPdpInitCsr),
-	// Block Ram Cache
+	// Object Draw
+	.oObdDrawEnable(wObdDrawEnableCsr),
+	.oObdAnimeFrameNum(wObdAnimeFrameNumCsr),
+	.oObdAnimeXpos(wObdAnimeXposCsr),
+	.oObdAnimeYpos(wObdAnimeYposCsr),
+	// Player Draw
+	.oPldDrawPlayerSel(wPldDrawPlayerSelCsr),
+	// Memory Mapchip Access
 	.oBramWd(wBramWdCsr),
 	.oBramAdrs(wBramAdrsCsr),
 	//
@@ -234,11 +242,6 @@ begin
 	rBRST	<= iSRST | wBRST;
 	rnBRST	<= inSRST & (~wBRST);
 end
-
-
-/**----------------------------------------------------------------------------
- * キャラクターの座標移動を司る
- *---------------------------------------------------------------------------*/
 
 /**----------------------------------------------------------------------------
  * Pgu に対するビデオデータの管理を司る
@@ -282,21 +285,22 @@ VideoPixelGenUnit #(
 	.iSceneFrameRst(wSceneFrameRstCsr),
 	.oSceneAlphaMax(wSceneAlphaMaxCsr),
 	.oSceneAlphaMin(wSceneAlphaMinCsr),
-	//
+	// Base Draw Position
+	.oBdpHpos(wBdpHposCsr),	.oBdpVpos(wBdpVposCsr),	.oBdpFe(),
+	// Player Draw Position
+	.iPdpXpos(wPdpXposCsr),	.iPdpYpos(wPdpYposCsr),	.iPdpInit(wPdpInitCsr),
+	// Object Draw
+	.iObdDrawEnable(wObdDrawEnableCsr),
 	.iObdAnimeFrameNum(wObdAnimeFrameNumCsr),
 	.iObdAnimeXpos(wObdAnimeXposCsr),
 	.iObdAnimeYpos(wObdAnimeYposCsr),
-	// Draw Position
-	.oBdpHpos(wBdpHposCsr),	.oBdpVpos(wBdpVposCsr),	.oBdpFe(),
-	.iPdpXpos(wPdpXposCsr),
-	.iPdpYpos(wPdpYposCsr),
-	.iPdpInit(wPdpInitCsr),
-	// Block Ram (Cache)
-	.iBramWd(wBramWdCsr),
-	.iBramAdrs(wBramAdrsCsr),
+	// Player Draw
+	.iPldDrawPlayerSel(wPldDrawPlayerSelCsr),
+	// Memory Mapchip Access
+	.iBramWd(wBramWdCsr),	.iBramAdrs(wBramAdrsCsr),
 	// Dst Fifo Side
-	.oPD(wVpgPD),		.iRS(qVpgRS),
-	.oVD(wVpgVD),		.oFD(wVpgFD),
+	.oPD(wVpgPD),			.iRS(qVpgRS),
+	.oVD(wVpgVD),			.oFD(wVpgFD),
 	// rst
 	.iUnitRst(wVpgUnitRstCsr),
 	// Common

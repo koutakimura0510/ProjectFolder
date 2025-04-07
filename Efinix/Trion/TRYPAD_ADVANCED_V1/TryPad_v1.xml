@@ -1,4 +1,4 @@
-<efx:project xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="TryPad_v1" description="" last_change="1743336745" sw_version="2024.2.294.3.14" last_run_state="pass" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="sync" place_ood="sync" route_ood="sync" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
+<efx:project xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="TryPad_v1" description="" last_change="1743940946" sw_version="2024.2.294.3.14" last_run_state="pass" last_run_flow="bitstream" config_result_in_sync="sync" design_ood="sync" place_ood="sync" route_ood="sync" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
     <efx:device_info>
         <efx:family name="Trion" />
         <efx:device name="T20Q144" />
@@ -15,11 +15,10 @@
         <efx:design_file name="src/SpiBlock/SpiCsr.v" version="default" library="default" />
         <efx:design_file name="src/SpiBlock/SpiBlock.v" version="default" library="default" />
         <efx:design_file name="src/SpiBlock/SpiSlavePort.v" version="default" library="default" />
-        <efx:design_file name="src/SpiBlock/SpiFlashUnit.v" version="default" library="default" />
+        <efx:design_file name="src/SpiBlock/SdioUnit.v" version="default" library="default" />
         <efx:design_file name="src/SpiBlock/SpiUsibBridge.v" version="default" library="default" />
         <efx:design_file name="src/SpiBlock/SpiDecoder.v" version="default" library="default" />
-        <efx:design_file name="src/SpiBlock/SpiFlashReadSequence.v" version="default" library="default" />
-        <efx:design_file name="src/SpiBlock/SpiFlashRom.v" version="default" library="default" />
+        <efx:design_file name="src/SpiBlock/SpiMaster.v" version="default" library="default" />
         <efx:design_file name="src/AudioTxBlock/AudioTxBlock.v" version="default" library="default" />
         <efx:design_file name="src/AudioTxBlock/AudioTxCsr.v" version="default" library="default" />
         <efx:design_file name="src/AudioTxBlock/AudioTxI2S.v" version="default" library="default" />

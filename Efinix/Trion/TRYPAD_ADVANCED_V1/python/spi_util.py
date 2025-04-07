@@ -23,7 +23,7 @@ class SPI:
 	def __init__(self, url="ftdi://ftdi:2232:0:1/1"):
 		self.ctrl = SpiController(cs_count=4)
 		self.ctrl.configure(url)
-		self.spi = self.ctrl.get_port(cs=3, freq=20E6, mode=0)
+		self.spi = self.ctrl.get_port(cs=3, freq=6E6, mode=0)
 
 	def read(self, adrs):
 		adrs |= FPGAREG.USI_READ_CMD

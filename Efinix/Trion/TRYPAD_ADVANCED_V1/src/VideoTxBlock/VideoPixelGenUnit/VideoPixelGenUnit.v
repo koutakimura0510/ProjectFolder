@@ -85,21 +85,25 @@ module VideoPixelGenUnit #(
 	input 							iSceneFrameRst,
 	output							oSceneAlphaMax,
 	output 							oSceneAlphaMin,
-	// Object
-	input	[(pObjectAnimeNum * pObjectAnimeTime)-1:0]		iObdAnimeFrameNum,
-	input	[(pObjectAnimeNum * pObjectAnimeXposWidth)-1:0] iObdAnimeXpos,
-	input	[(pObjectAnimeNum * pObjectAnimeYposWidth)-1:0] iObdAnimeYpos,
-	// Draw Position
+	// Base Draw Position
 	output	[pVHAW-1:0]				oBdpHpos,
 	output	[pVVAW-1:0]				oBdpVpos,
 	output							oBdpFe,
+	// Player Draw Position
 	input	[pVHAW-1:0]				iPdpXpos,
 	input	[pVVAW-1:0]				iPdpYpos,
 	input							iPdpInit,
-	//
+	// Object Draw
+	input	[pObjectAnimeNum-1:0]							iObdDrawEnable,
+	input	[(pObjectAnimeNum * pObjectAnimeTime)-1:0]		iObdAnimeFrameNum,
+	input	[(pObjectAnimeNum * pObjectAnimeXposWidth)-1:0] iObdAnimeXpos,
+	input	[(pObjectAnimeNum * pObjectAnimeYposWidth)-1:0] iObdAnimeYpos,
+	// Player Draw
+	input	[ 3:0]					iPldDrawPlayerSel,	// プレイヤー描画データの指定
+	// Memory Mapchip Access
 	input	[23:0]					iBramWd,
 	input	[31:0]					iBramAdrs,
-	// Fifo I/F
+	// Dst Fifo I/F
 	output	[pDstColorDepth-1:0] 	oPD,
 	input							iRS,
 	output							oVD,
@@ -107,7 +111,7 @@ module VideoPixelGenUnit #(
 	output							oLD,
 	// Unit RST
 	input	iUnitRst,
-	// CLK Reset
+	// Common
 	input	iRST,
 	input	inRST,
 	input	iCLK
@@ -309,6 +313,8 @@ PlayerDraw #(
 	.iPS(qPldPS),		.iVS(qPldVS),		.iFS(qPldFS),	.iLS(qPldLS),
 	.iBHPS(qPldBHPS),	.iBVPS(qPldBVPS),
 	.iPHPS(qPldPHPS),	.iPVPS(qPldPVPS),
+	// Control / Status
+	.iDrawPlayerSel(iPldDrawPlayerSel),
 	// Memory Mapchip Access
 	.iBramWd(iBramWd),	.iBramAdrs(iBramAdrs),
 	// common
@@ -358,12 +364,13 @@ ObjectDraw #(
 	.iPS(qObdPS),		.iVS(qObdVS),		.iFS(qObdFS),	.iLS(qObdLS),
 	.iBHPS(qObdBHPS),	.iBVPS(qObdBVPS),
 	.iPHPS(qObdPHPS),	.iPVPS(qObdPVPS),
-	// Memory Mapchip Access
-	.iBramWd(iBramWd),	.iBramAdrs(iBramAdrs),
-	// Draw & Animation Parameter
+	// Control / Status
+	.iDrawEnable(iObdDrawEnable),
 	.iAnimeFrameNum(iObdAnimeFrameNum),
 	.iAnimeXpos(iObdAnimeXpos),
 	.iAnimeYpos(iObdAnimeYpos),
+	// Memory Mapchip Access
+	.iBramWd(iBramWd),	.iBramAdrs(iBramAdrs),
 	// common
 	.iRST(iRST),		.iCLK(iCLK)
 );

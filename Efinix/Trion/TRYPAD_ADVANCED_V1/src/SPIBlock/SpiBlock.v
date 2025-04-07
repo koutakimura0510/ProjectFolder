@@ -145,60 +145,41 @@ SpiUsibBridge #(
 	.iSRST(iSRST),	.iSCLK(iSCLK)
 );
 
-//-----------------------------------------------------------------------------
-// Sfc Part
-//-----------------------------------------------------------------------------
-// localparam lpDqBitDepth = 16;
-
-// wire [pSfmNum-1:0] wSfuSck;
-// wire [pSfmNum-1:0] wSfuMosi;
-// wire [pSfmNum-1:0] wSfuMiso;
-// wire [pSfmNum-1:0] wSfuCs;
-// //
-// wire [lpDqBitDepth-1:0] wAtbRd [0:pSfmNum-1];
-// wire [pSfmNum-1:0] wAtbRvd;
-// wire [pSfmNum-1:0] wAtbEmp;
-// reg  [pSfmNum-1:0] qAtbRe;
-
-// generate
-// 	for (x = 0; x < pSfmNum; x = x + 1)
-// 	begin : SpiFlashUnitX
-// 		SpiFlashUnit #(
-// 			.pSfmNum(pSfmNum),
-// 			.pSfmPageWidth(lpSfmPageWidth)
-// 		) SpiFlashUnit (
-// 			// Serial Flash Memory
-// 			.oSfuSck(wSfuSck[x]),		.oSfuMosi(wSfuMosi[x]),
-// 			.iSfuMiso(wSfuMiso[x]),		.oSfuCs(wSfuCs[x]),
-// 			// Audio Data
-// 			.oRd(wAtbRd[x]),			.oRvd(wAtbRvd[x]),
-// 			.oEmp(wAtbEmp[x]),			.iRe(qAtbRe[x]),
-// 			// Logic Sfm Control
-// 			.iSfmEn(wSfmEnCsr[x]),
-// 			.iSfmCycleEn(wSfmCycleEnCsr[x]),
-// 			.iSfmDiv(wSfmDivCsr[(x+1)*8-1:(x*8)]),
-// 			.iSfmCsHoldTime(wSfmCsHoldTimeCsr[(x+1)*8-1:(x*8)]),
-// 			.iSfmStartAdrs(wSfmStartAdrsCsr[(x+1)*lpSfmPageWidth-1:(x*lpSfmPageWidth)]),
-// 			.iSfmEndAdrs(wSfmEndAdrsCsr[(x+1)*lpSfmPageWidth-1:(x*lpSfmPageWidth)]),
-// 			.oSfmDone(wSfmDoneCsr[x]),
-// 			.oSfmAdrsAdd(wSfmAdrsAddCsr[(x+1)*lpSfmPageWidth-1:(x*lpSfmPageWidth)]),
-// 			// Cpu Sfm Control
-// 			.iSfmCpuWd(wSfmCpuWdCsr[(x+1)*8-1:(x*8)]),
-// 			.iSfmCpuEn(wSfmCpuEnCsr[x]),
-// 			.iSfmCpuCsCtrl(wSfmCpuCsCtrlCsr[x]),
-// 			.iSfmCpuValid(wSfmCpuValidCsr[x]),
-// 			.oSfmCpuRd(wSfmCpuRdCsr[(x+1)*8-1:(x*8)]),
-// 			.oSfmCpuDone(wSfmCpuDoneCsr[x]),
-// 			// common
-// 			.iSRST(iSRST),	.inSRST(inSRST),	.iSCLK(iSCLK)
-// 		);
-// 	end
-// endgenerate
-
-// assign		oAtbDQ = {wAtbRd[1],wAtbRd[0]};
-// assign		oAtbVD = {wAtbRvd[1],wAtbRvd[0]};
-// always @*	qAtbRe[1:0] <= iAtbFLL;
-// always @*	qAtbRe[2] 	<= 1'b0;
+/**-----------------------------------------------------------------------------
+ * Sdio Part
+ *-----------------------------------------------------------------------------*/
+SdioUnit #(
+	.pSfmNum(pSfmNum),
+	.pSfmPageWidth(16)
+) SdioUnit (
+	// Serial Flash Memory
+	.oSpiSck(oSfmSck),
+	.oSpiMosi(oSfmMosi),
+	.iSpiMiso(iSfmMiso),
+	.oSpiCs(oSfmCs),
+	// Read Fifo I/F
+	.oRd(),
+	.oRvd(),
+	.oEmp(),
+	.iRe(),
+	// Control Status
+	.iSfmEn(wSfmEnCsr),
+	.iSfmCycleEn(wSfmCycleEnCsr),
+	.iSfmDiv(wSfmDivCsr),
+	.iSfmCsHoldTime(wSfmCsHoldTimeCsr),
+	.iSfmStartAdrs(wSfmStartAdrsCsr),
+	.iSfmEndAdrs(wSfmEndAdrsCsr),
+	.iSfmCpuWd(wSfmCpuWdCsr),
+	.iSfmCpuEn(wSfmCpuEnCsr),
+	.iSfmCpuCsCtrl(wSfmCpuCsCtrlCsr),
+	.iSfmCpuValid(wSfmCpuValidCsr),
+	.oSfmCpuRd(wSfmCpuRdCsr),
+	.oSfmCpuDone(wSfmCpuDoneCsr),
+	.oSfmDone(wSfmDoneCsr),
+	.oSfmAdrsAdd(wSfmAdrsAddCsr),
+	// common
+	.iSRST(iSRST),	.inSRST(inSRST),	.iSCLK(iSCLK)
+);
 
 /**-----------------------------------------------------------------------------
  * Spi Slave Port
@@ -236,9 +217,6 @@ begin
 	qSspMUsiRd	<= wSsmMUsiRd;
 end
 
-assign oSfmSck	= iSpiCs & iSpiSck;
-assign oSfmMosi	= iSpiCs & iSpiMosi;
-assign oSpiMiso = iSpiCs ? iSfmMiso : wSpiMiso;
-assign oSfmCs	= ~iSpiCs;
+assign oSpiMiso = wSpiMiso;
 
 endmodule

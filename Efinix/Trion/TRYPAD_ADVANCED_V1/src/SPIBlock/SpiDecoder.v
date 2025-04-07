@@ -13,6 +13,7 @@
  * V1.1 USIB 更新版に対応
  * V1.2 Slave mode の動作切り替えを rSpiDir から rnSpiDir に変更
  * V1.3 Master SPI 信号を Bridge で接続できるように大幅更新
+ * 2025-04-05 : adrs + data の組み合わせで、各 4byte ずつのバースト受信に対応
  *-----------------------------------------------------------------------------*/
 module SpiDecoder (
 	// External Port for CPU Master
@@ -36,7 +37,7 @@ module SpiDecoder (
 /**-----------------------------------------------------------------------------
  * FPGA Slave Part
  * SPI 信号をデコードし、レジスタ空間へアクセス
- * Adrs -> Data の順番で 4byte 受信する
+ * Adrs -> Data の順番で、それぞれ 4byte 受信する
  *-----------------------------------------------------------------------------*/
 reg [31:0]	rSpiMisoSft;
 reg [2:0] 	rSpiSckSft, 	rSpiCsSft,		rSpiMosiSft;
@@ -62,8 +63,8 @@ begin
 
 	// Decode Part
 	if (rSpiCsSft[2])		 	rGetDataSel[0] <= 1'd0;
-	else if (qGetDataSelCke) 	rGetDataSel[0] <= 1'b1;
-	else 					 	rGetDataSel[0] <= rGetDataSel[0];
+	else if (qGetDataSelCke) 	rGetDataSel[0] <= ~rGetDataSel[0];
+	else 					 	rGetDataSel[0] <=  rGetDataSel[0];
 	
 	if (rSpiCsSft[2])		 	rGetDataSel[7:1] <= 7'd0;
 	else 					 	rGetDataSel[7:1] <= {rGetDataSel[6:1],rGetDataSel[0]};

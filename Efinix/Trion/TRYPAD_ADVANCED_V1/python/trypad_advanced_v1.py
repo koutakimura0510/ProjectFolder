@@ -21,6 +21,9 @@ from pyftdi.ftdi import Ftdi
 from fpga_reg_map import FPGAREG
 from spi_util import SPI
 from video_util import VIDEO
+from timer_util import TimerManager
+from player_util import Player
+from object_util import GameObjectManager, GameObject, CircleMovingObject
 
 #-------------------------------------------------------------------------------
 # instance
@@ -28,38 +31,73 @@ from video_util import VIDEO
 spi = SPI()
 reg = FPGAREG()
 video = VIDEO()
+player = Player()
+game_maneger = GameObjectManager()
 
-# 
-player_xpos = 128
-player_ypos = 240-48
-player_delta = 2
+#-------------------------------------------------------------------------------
+# BRAM Write
+#-------------------------------------------------------------------------------
+def write_rgb_bram(filename, base_address, spi, reg):
+	try:
+		with open(filename, "rb") as f:
+			data = f.read()
+	except Exception as e:
+		print ("File Open Error", e)
+		return
 
-def player_position():
-	global player_xpos, player_ypos
-	global player_delta
-	max_xpos = 320 - 32
-	max_ypos = 240 - 48  #プレイヤーの高さ + 1ブロック床サイズ
-	sw = ~spi.read(reg.GPIO_REG_PUSH_SW) & 0xfff
+	num_pixels = len(data) // 3
+	payload = bytearray()
+	reg_bram_adrs = reg.VIDEO_REG_BRAM_ADRS | reg.USI_WRITE_CMD
+	reg_bram_wd = reg.VIDEO_REG_BRAM_WD | reg.USI_WRITE_CMD
 
-	if (sw & reg.SW_A):
-		delta = 4
-	else:
-		delta = 1
-	# print("SW",hex(sw)) # SW の bit 位置表示
+	for i in range(num_pixels):
+		color = data[i * 3] << 16 | data[1 + i * 3] << 8 | data[2 + i * 3]
+		bram_adrs = base_address + i + ((i<<14) & 0x0f00_0000)
+		payload += (
+			reg_bram_adrs.to_bytes(4, 'big') +
+			bram_adrs.to_bytes(4, 'big') +
+			reg_bram_wd.to_bytes(4, 'big') +
+			color.to_bytes(4, 'big')
+		)
 
-	if (sw & reg.SW_RIGHT):
-		player_xpos = min(player_xpos + delta, max_xpos)
-		spi.write(reg.VIDEO_REG_ANIME_XPOS1, player_xpos)
-	elif (sw & reg.SW_LEFT):
-		player_xpos = max(player_xpos - delta, 0)
-		spi.write(reg.VIDEO_REG_ANIME_XPOS1, player_xpos)
+		if (i + 1) % 16 == 0:
+			spi.spi.write(payload)
+			payload.clear()
 
-	if (sw & reg.SW_UP):
-		player_ypos = max(player_ypos - delta, 0)
-		spi.write(reg.VIDEO_REG_PLAYER_POS_YPOS, player_ypos)
-	elif (sw & reg.SW_DOWN):
-		player_ypos = min(player_ypos + delta, max_ypos)
-		spi.write(reg.VIDEO_REG_PLAYER_POS_YPOS, player_ypos)
+	if payload:
+		spi.spi.write(payload)
+
+#-------------------------------------------------------------------------------
+# BRAM Byte Write
+#-------------------------------------------------------------------------------
+def write_byte_bram(filename, base_address, spi, reg):
+	try:
+		with open(filename, "rb") as f:
+			data = f.read()
+	except Exception as e:
+		print ("File Open Error", e)
+		return
+
+	payload = bytearray()
+	reg_bram_adrs = reg.VIDEO_REG_BRAM_ADRS | reg.USI_WRITE_CMD
+	reg_bram_wd = reg.VIDEO_REG_BRAM_WD | reg.USI_WRITE_CMD
+
+	for i in range(len(data)):
+		bram_adrs = base_address + i + ((i<<14) & 0x0f00_0000)
+		value = data[i]
+		payload += (
+			reg_bram_adrs.to_bytes(4, 'big') +
+			bram_adrs.to_bytes(4, 'big') +
+			reg_bram_wd.to_bytes(4, 'big') +
+			value.to_bytes(4, 'big')
+		)
+
+		if (i + 1) % 2 == 0:
+			spi.spi.write(payload)
+			payload.clear()
+
+	if payload:
+		spi.spi.write(payload)
 
 
 #-------------------------------------------------------------------------------
@@ -70,62 +108,18 @@ def main():
 	spi.write(reg.VIDEO_REG_BLOCK_RST, 1)
 
 	start = time()
-
-	####
-	with open("res/minoriko.bin", "rb") as f:
-		data = f.read()
-
-	for i in range(1024):
-		color = data[i * 3] << 16 | data[1 + i * 3] << 8 | data[2 + i * 3]
-		# print(f"index {i}: {color:#06x}")
-		spi.write(reg.VIDEO_REG_BRAM_ADRS, 0x0100_0000 + i)
-		spi.write(reg.VIDEO_REG_BRAM_WD, color)
-
-	####
-	with open("res/minigame.bin", "rb") as f:
-		data = f.read()
-
-	for i in range(1024):
-		color = data[i * 3] << 16 | data[1 + i * 3] << 8 | data[2 + i * 3]
-		spi.write(reg.VIDEO_REG_BRAM_ADRS, 0x0800_0000 + i)
-		spi.write(reg.VIDEO_REG_BRAM_WD, color)
-
-	####
-	with open("res/output.bin", "rb") as f:
-		data = f.read()
-
-	for i in range(80):
-		spi.write(reg.VIDEO_REG_BRAM_ADRS, 0x0900_0000 + i)
-		spi.write(reg.VIDEO_REG_BRAM_WD, data[i])
-
-	####
-	with open("res/field1.bin", "rb") as f:
-		data = f.read()
-
-	for i in range(1024):
-		color = data[i * 3] << 16 | data[1 + i * 3] << 8 | data[2 + i * 3]
-		spi.write(reg.VIDEO_REG_BRAM_ADRS, 0x0A00_0000 + i)
-		spi.write(reg.VIDEO_REG_BRAM_WD, color)
-
-	####
-	with open("res/block.bin", "rb") as f:
-		data = f.read()
-
-	for i in range(1024*3):
-		color = data[i * 3] << 16 | data[1 + i * 3] << 8 | data[2 + i * 3]
-		# color = 0
-		adrs = 0x1000_0000 + i + ((i<<14) & 0xf000000)
-		spi.write(reg.VIDEO_REG_BRAM_ADRS, adrs)
-		spi.write(reg.VIDEO_REG_BRAM_WD, color)
-
-
+	write_rgb_bram("res/charachip.bin", 0x0100_0000, spi, reg)
+	write_rgb_bram("res/minigame.bin", 0x0800_0000, spi, reg)
+	write_rgb_bram("res/field1.bin", 0x0A00_0000, spi, reg)
+	write_rgb_bram("res/block.bin", 0x1000_0000, spi, reg)
+	write_byte_bram("res/output.bin", 0x0900_0000, spi, reg)
 	spi.write(reg.VIDEO_REG_BRAM_ADRS, 0x0000_0000)
 	end = time()
 	print(end-start)
 
 	"""
 	LCD の設定が、まだ FIX しておらず画面が明るすぎるので、
-	画面全体に黒画像を描画して、α値によって明るさ調整を行っている。
+	画面全体に薄い黒画像を描画して明るさ調整を行っている。
 	"""
 	video.rect_draw(1, top=0, under=240, left=0, right=320, color=0x00800000)
 	# video.rect_draw(2, top=240-32, under=240, left=32, right=320, color=0xFF00FF)
@@ -135,13 +129,41 @@ def main():
 	spi.write(reg.VIDEO_REG_PLAYER_POS_YPOS, 240-48)
 	spi.write(reg.VIDEO_REG_PLAYER_POS_INIT, 0)
 	spi.write(reg.VIDEO_REG_TFT_BL_EN, 0)
+	spi.write(reg.VIDEO_REG_OBJECT_ANIME_FRAME_NUM1, 0x10141820)
+	spi.write(reg.VIDEO_REG_OBJECT_ANIME_FRAME_NUM2, 0x24283403)
+	spi.write(reg.VIDEO_REG_PLAYER_DRAW_SEL, 1)
+	# spi.readf(reg.VIDEO_REG_ANIME_FRAME_NUM1)
+	# spi.readf(reg.VIDEO_REG_ANIME_XPOS1)
+	# spi.readf(reg.VIDEO_REG_ANIME_YPOS1)
 
-	spi.write(reg.VIDEO_REG_ANIME_FRAME_NUM1, 0x10101010)
-	spi.write(reg.VIDEO_REG_ANIME_XPOS1, 0x00000010)
-	spi.write(reg.VIDEO_REG_ANIME_YPOS1, 0x00000010)
-	spi.readf(reg.VIDEO_REG_ANIME_FRAME_NUM1)
-	spi.readf(reg.VIDEO_REG_ANIME_XPOS1)
-	spi.readf(reg.VIDEO_REG_ANIME_YPOS1)
+	obj0 = GameObject(x=0*32, y=0*32)
+	obj1 = GameObject(x=1*32, y=1*32)
+	obj2 = GameObject(x=2*32, y=2*32)
+	obj3 = GameObject(x=3*32, y=3*32)
+	obj4 = GameObject(x=4*32, y=4*32)
+	obj5 = GameObject(x=5*32, y=5*32)
+	obj6 = GameObject(x=6*32, y=6*32)
+	obj7 = GameObject(x=7*32, y=0*32)
+	obj8 = GameObject(x=8*32, y=1*32)
+	obj9 = GameObject(x=9*32, y=2*32)
+	# circle_obj = CircleMovingObject(x=80, y=60, radius=4, speed=0.1)
+	game_maneger.add_object(obj0, 0)
+	game_maneger.add_object(obj1, 1)
+	game_maneger.add_object(obj2, 2)
+	game_maneger.add_object(obj3, 3)
+	game_maneger.add_object(obj4, 4)
+	game_maneger.add_object(obj5, 5)
+	game_maneger.add_object(obj6, 6)
+	game_maneger.add_object(obj7, 7)
+	game_maneger.add_object(obj8, 8)
+	game_maneger.add_object(obj9, 9)
+
+	# game_maneger.remove_object(obj3)
+	game_maneger.update_objects()
+	game_maneger.draw_objects()
+	# spi.write(reg.VIDEO_REG_OBJECT_ENABLE, 0x01)
+	tmr = TimerManager()
+	tmr.add_timer("obj1")
 
 	"""
 	レジスタ設定完了後、モニタの設定を行う
@@ -150,8 +172,11 @@ def main():
 	video.st7789_init()
 
 	while True:
-		sleep(0.01)
-		player_position()
+		sw = ~spi.read(reg.GPIO_REG_PUSH_SW) & 0xfff
+		player.update_position(sw, 0.0166)
+		# if True == tmr.compare_time("obj1", 0.0166):
+		# 	game_maneger.update_objects()
+		# 	game_maneger.draw_objects()
 
 if __name__ == "__main__":
 	Ftdi.show_devices() # 接続されているデバイスのリストを表示
